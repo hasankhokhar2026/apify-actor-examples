@@ -1,0 +1,56 @@
+{
+  "description": "Configure the Airbnb scraper to extract listings, prices, ratings and host information for any location.",
+  "properties": {
+    "adults": {
+      "default": 1,
+      "description": "Number of adult guests. Affects pricing and availability.",
+      "maximum": 16,
+      "minimum": 1,
+      "title": "Number of Adults",
+      "type": "integer"
+    },
+    "checkIn": {
+      "description": "Check-in date in YYYY-MM-DD format (e.g., '2025-06-01'). Leave empty for general search without dates.",
+      "editor": "textfield",
+      "nullable": true,
+      "title": "Check-in Date",
+      "type": "string"
+    },
+    "checkOut": {
+      "description": "Check-out date in YYYY-MM-DD format (e.g., '2025-06-05'). Leave empty for general search without dates.",
+      "editor": "textfield",
+      "nullable": true,
+      "title": "Check-out Date",
+      "type": "string"
+    },
+    "location": {
+      "description": "The location to search for Airbnb listings (e.g., 'New York', 'Paris, France', 'Tokyo').",
+      "editor": "textfield",
+      "prefill": "New York",
+      "title": "Location",
+      "type": "string"
+    },
+    "maxItems": {
+      "default": 20,
+      "description": "Maximum number of Airbnb listings to scrape. The scraper returns up to 18 results per search page.",
+      "maximum": 100,
+      "minimum": 1,
+      "prefill": 5,
+      "title": "Maximum Listings",
+      "type": "integer"
+    },
+    "proxy": {
+      "description": "Proxy settings for the scraper. Recommended for large-scale scraping to avoid rate limiting.",
+      "editor": "proxy",
+      "sectionCaption": "Proxy and Browser Settings",
+      "title": "Proxy Configuration",
+      "type": "object"
+    }
+  },
+  "required": [
+    "location"
+  ],
+  "schemaVersion": 1,
+  "title": "Airbnb Scraper Input",
+  "type": "object"
+}

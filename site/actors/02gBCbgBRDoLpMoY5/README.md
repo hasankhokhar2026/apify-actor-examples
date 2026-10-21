@@ -1,0 +1,103 @@
+# Airbnb Listing Price & Location Finder
+
+Search Airbnb for any city, neighborhood, or region and get back structured listing data — price, rating, host status, GPS coordinates, and photos — straight from the search results, with no need to open each listing one by one.
+
+## What this actor does
+
+- Searches Airbnb listings for a location by name and reads the first page of results (usually under 20 listings)
+- Accepts check-in/check-out dates and guest count to return exact stay pricing instead of a generic nightly rate
+- Reports whether each listing's host is a Superhost and/or identity-verified
+- Returns GPS coordinates and up to 10 photo URLs per listing
+- Every record keeps the same columns: missing text comes back as an empty string, missing coordinates as `0`, and a listing without photos gets an empty `photos` list; `originalPrice` and `hostPhoto` are the exception and are left out entirely when a listing has no discount or no visible host photo
+
+## Output per listing
+
+- `id` — Airbnb's unique listing ID
+- `url` — direct link to the listing page
+- `name` — the property's title
+- `type` — property type and location, e.g. `Hotel in New York`
+- `subtitle` — the short description snippet shown under the listing
+- `price` — the current displayed price, e.g. `$150`
+- `originalPrice` — the pre-discount price, present only when the listing is discounted
+- `priceQualifier` — what the price covers, e.g. `per night` or `for 5 nights`
+- `rating` — average rating with review count, e.g. `4.85 (312)`
+- `isSuperhost` — whether the host has Superhost status
+- `isVerified` — whether the host's identity is verified
+- `hostPhoto` — URL of the host's profile photo, present only when one is visible on the search result
+- `latitude`, `longitude` — GPS coordinates of the listing (`0` when Airbnb doesn't provide them)
+- `photos` — up to 10 listing photo URLs (can be empty)
+- `searchUrl` — the Airbnb search URL the listing was found on
+- `scrapedAt` — when the actor fetched the search page (the same value on every record of a run)
+
+## Input
+
+| Field | Type | Default | Description |
+|---|---|---|---|
+| `location` | string | – | Location to search, e.g. `New York`, `Paris, France`, `Tokyo`. Required. |
+| `checkIn` | string | – | Check-in date (`YYYY-MM-DD`). Leave empty for a general search without dates. |
+| `checkOut` | string | – | Check-out date (`YYYY-MM-DD`). Leave empty for a general search without dates. |
+| `adults` | integer | `1` | Number of adult guests (1–16); affects pricing and availability. |
+| `maxItems` | integer | `20` | Maximum listings to return (1–100), capped by how many listings Airbnb's own search results page contains (typically under 20). |
+| `proxy` | object | – | Proxy configuration, recommended for larger runs to avoid rate limiting. |
+
+## Example: quick search, no dates
+
+```json
+{
+  "location": "New York",
+  "maxItems": 10
+}
+```
+
+## Example: a specific stay for two guests
+
+```json
+{
+  "location": "Paris, France",
+  "checkIn": "2026-07-01",
+  "checkOut": "2026-07-05",
+  "adults": 2,
+  "maxItems": 18
+}
+```
+
+## Example: large family group
+
+```json
+{
+  "location": "Orlando, FL",
+  "adults": 6,
+  "maxItems": 18
+}
+```
+
+## Use cases
+
+- **Travel planning** — pull the top search results for a destination into a spreadsheet to compare prices and ratings before booking
+- **Market research** — compare nightly rates and property mix across neighborhoods or cities
+- **Competitive analysis for hosts** — see how similarly positioned listings in your area are priced and rated
+- **Price monitoring** — re-run the same search over time to track how rates move for a destination
+- **Real estate research** — use listing GPS coordinates to map short-term rental density in an area
+
+## FAQ
+
+**How many listings can I get per search?**
+Each run reads a single Airbnb search results page, so the listing count is capped by how many results that page contains (typically under 20) regardless of how high you set `maxItems`. If Airbnb blocks the request or the page has no listings, the run is marked as failed with an explanation instead of returning an empty dataset.
+
+**Do I need to set check-in and check-out dates?**
+No — without dates you get Airbnb's general displayed pricing. With dates set, `price` reflects the actual total for that specific stay.
+
+**Why are some fields empty strings instead of missing?**
+Not every listing has a subtitle, rating, or similar text field — rather than removing those fields, the actor returns an empty string so every record keeps the same shape. The two exceptions are `originalPrice` and `hostPhoto`, which are left out of the record entirely when a listing has no discount or no visible host photo.
+
+**Do I need a proxy?**
+Not strictly, but a residential proxy is recommended for larger or repeated runs to avoid being rate-limited by Airbnb.
+
+**Does this require an Airbnb account?**
+No. It reads Airbnb's public search results, which don't require logging in.
+
+**What locations can I search?**
+Anything Airbnb itself supports — cities, neighborhoods, regions, countries, or specific addresses worldwide.
+
+**Is this affiliated with Airbnb?**
+No. This is an independent, third-party actor that reads Airbnb's publicly accessible search pages; it is not affiliated with or endorsed by Airbnb.

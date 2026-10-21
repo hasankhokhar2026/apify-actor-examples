@@ -1,0 +1,82 @@
+{
+  "description": "Download TikTok videos, slideshow images, covers, and audio to Apify Key-Value Store",
+  "properties": {
+    "assetTypes": {
+      "default": [
+        "video",
+        "cover"
+      ],
+      "description": "Which assets to download per post. 'video' = MP4 file, 'images' = slideshow frames, 'audio' = background music MP3, 'cover' = thumbnail JPEG.",
+      "editor": "select",
+      "items": {
+        "enum": [
+          "video",
+          "images",
+          "audio",
+          "cover"
+        ],
+        "type": "string"
+      },
+      "prefill": [
+        "cover"
+      ],
+      "title": "Asset Types",
+      "type": "array"
+    },
+    "filenameTemplate": {
+      "default": "{postId}_{type}_{ordinal}.{ext}",
+      "description": "KVS key template. Placeholders: {postId}, {type}, {ordinal}, {ext}. Example: {postId}_{type}_{ordinal}.{ext}",
+      "editor": "textfield",
+      "prefill": "{postId}_{type}_{ordinal}.{ext}",
+      "title": "Filename Template",
+      "type": "string"
+    },
+    "postIds": {
+      "description": "Numeric TikTok post IDs as strings (alternative to postUrls).",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "title": "Post IDs",
+      "type": "array"
+    },
+    "postUrls": {
+      "description": "TikTok post URLs to download (e.g. https://www.tiktok.com/@user/video/123). Accepts full URLs, short URLs, and bare numeric IDs.",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "prefill": [
+        "https://www.tiktok.com/@khaby.lame/video/7574844184952081686"
+      ],
+      "title": "Post URLs",
+      "type": "array"
+    },
+    "preferredQuality": {
+      "default": "best",
+      "description": "Target video quality. 'best' = highest bitrate. '720p', '540p', '360p' = closest match from bitrateInfo. 'smallest' = lowest bitrate.",
+      "editor": "select",
+      "enum": [
+        "best",
+        "720p",
+        "540p",
+        "360p",
+        "smallest"
+      ],
+      "enumTitles": [
+        "Best (highest bitrate)",
+        "720p",
+        "540p",
+        "360p",
+        "Smallest (lowest bitrate)"
+      ],
+      "prefill": "best",
+      "title": "Preferred Video Quality",
+      "type": "string"
+    }
+  },
+  "required": [],
+  "schemaVersion": 1,
+  "title": "TikTok Downloader API Input",
+  "type": "object"
+}

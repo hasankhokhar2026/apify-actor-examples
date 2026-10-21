@@ -1,0 +1,140 @@
+{
+  "actorSpecification": 1,
+  "fields": {
+    "assetType": {
+      "description": "Type of asset: video, image, audio, or cover",
+      "title": "Asset Type",
+      "type": "string"
+    },
+    "bitrate": {
+      "description": "Video bitrate in bps",
+      "title": "Bitrate",
+      "type": "integer"
+    },
+    "byteSize": {
+      "description": "File size in bytes",
+      "title": "Byte Size",
+      "type": "integer"
+    },
+    "codecType": {
+      "description": "Video codec (e.g. h264, h265)",
+      "title": "Codec",
+      "type": "string"
+    },
+    "definition": {
+      "description": "Video quality label (e.g. 720p, 540p)",
+      "title": "Definition",
+      "type": "string"
+    },
+    "downloadedAt": {
+      "description": "ISO 8601 timestamp when the file was downloaded",
+      "title": "Downloaded At",
+      "type": "string"
+    },
+    "duration": {
+      "description": "Video duration in seconds",
+      "title": "Duration (s)",
+      "type": "number"
+    },
+    "gearName": {
+      "description": "TikTok quality gear name (e.g. adapt_lowest_1, normal_720_0)",
+      "title": "Gear Name",
+      "type": "string"
+    },
+    "height": {
+      "description": "Video/image height in pixels",
+      "title": "Height",
+      "type": "integer"
+    },
+    "kvsKey": {
+      "description": "Key in Apify Key-Value Store where the file is saved",
+      "title": "KVS Key",
+      "type": "string"
+    },
+    "kvsUrl": {
+      "description": "Public Apify storage URL for the downloaded file",
+      "title": "KVS URL",
+      "type": "string"
+    },
+    "mimeType": {
+      "description": "MIME type of the downloaded file (e.g. video/mp4, image/jpeg)",
+      "title": "MIME Type",
+      "type": "string"
+    },
+    "ordinal": {
+      "description": "0-based index (for slideshow images)",
+      "title": "Ordinal",
+      "type": "integer"
+    },
+    "postId": {
+      "description": "Unique TikTok post ID",
+      "title": "Post ID",
+      "type": "string"
+    },
+    "postUrl": {
+      "description": "Full URL to the TikTok post",
+      "title": "Post URL",
+      "type": "string"
+    },
+    "width": {
+      "description": "Video/image width in pixels",
+      "title": "Width",
+      "type": "integer"
+    }
+  },
+  "title": "TikTok Downloads",
+  "views": {
+    "overview": {
+      "display": {
+        "component": "table",
+        "properties": {
+          "assetType": {
+            "format": "text",
+            "label": "Asset Type"
+          },
+          "byteSize": {
+            "format": "number",
+            "label": "Size (bytes)"
+          },
+          "definition": {
+            "format": "text",
+            "label": "Quality"
+          },
+          "downloadedAt": {
+            "format": "text",
+            "label": "Downloaded At"
+          },
+          "kvsUrl": {
+            "format": "link",
+            "label": "Download URL"
+          },
+          "mimeType": {
+            "format": "text",
+            "label": "MIME Type"
+          },
+          "ordinal": {
+            "format": "number",
+            "label": "Index"
+          },
+          "postId": {
+            "format": "text",
+            "label": "Post ID"
+          }
+        }
+      },
+      "title": "Downloaded Assets",
+      "transformation": {
+        "fields": [
+          "postId",
+          "assetType",
+          "ordinal",
+          "mimeType",
+          "byteSize",
+          "kvsUrl",
+          "definition",
+          "downloadedAt"
+        ]
+      }
+    }
+  }
+}
