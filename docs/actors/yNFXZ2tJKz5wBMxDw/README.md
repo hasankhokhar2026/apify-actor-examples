@@ -4,133 +4,110 @@
 
 # YouTube Caption & Whisper AI Transcript Extractor
 
-Get the transcript of any public YouTube video — timestamped segments, a full plain-text version, language info, and core video details — ready for AI pipelines, content repurposing, translation, and research.
-
-When a video has no captions at all (the uploader disabled them, or it's music-only with no on-screen text), optional AI transcription can transcribe the audio directly so you still get a usable transcript.
+Get clean, timestamped transcripts from YouTube — single videos, whole channels, or playlists — together with the metadata you need to organize, translate, and publish the result. Every row includes the full text, timed segments, caption-track details, chapters, and channel identity, with optional AI transcription and ready-to-use SRT or WebVTT subtitles.
 
 ## What this actor does
 
-- Returns every transcript segment with its start time, duration, and text, plus the full transcript as one string
-- Lets you request a specific caption language; YouTube's own translation is used when your language isn't natively available
-- With `useWhisper` on (the default), falls through to AI-generated transcription when YouTube has no captions at all, so you still get usable text
-- Processes multiple videos in one run, each pushed as its own record
-- Fields that don't apply to a given video (e.g. no `like_count` when YouTube didn't expose one) are left out of that record
+- **Three collection modes:** scrape specific video URLs, every upload from one or more channels, or every video in a playlist.
+- **Transcripts with timing:** full text, timestamped segments (start, duration, and end), optional word-level timings for auto-generated captions, and SRT/VTT export.
+- **Language selection and translation:** request a caption language; when the video has no track in that language, the actor translates through YouTube's own translation targets.
+- **Rich video and channel metadata:** exact publish time, channel handle/URL/avatar/verification, subscriber and comment display counts, chapters, most-replayed heatmap, caption tracks, translation targets, and access/live status.
+- **AI fallback:** when a video has no captions at all, optional Whisper transcription produces a transcript from the audio.
+- **Empty fields are omitted:** if a video genuinely lacks a data point (for example, no chapters), that field is left out of the record instead of being written as `null`.
 
 ## Output per video
 
-- `video_id`, `title`, `channel_name`, `channel_id`
-- `duration_seconds`, `views`, `like_count`, `published_date`, `thumbnail`
-- `category`, `keywords`, `description`
-- `is_live_content`, `is_upcoming`, `is_family_safe`
-- `transcript_language`, `transcript_language_name`, `requested_language`, `language_matched`
-- `is_auto_generated` — `true` for YouTube's auto-caption, `false` for manually uploaded captions, translated captions, or AI-generated output
-- `was_translated` — `true` only when YouTube translated an available caption track to your requested language
-- `transcript_source` — which path produced the transcript: `library`, `caption_url`, `android_player`, `innertube`, `playwright_dom`, or `whisper`
-- `language_probability` — language-detection confidence, only set when `transcript_source` is `whisper`
-- `available_languages` — every transcript language YouTube offers for the video
-- `segments` — timestamped entries, each with `start`, `dur` (seconds, as strings with three decimals) and `text`; left out when `outputFormat` is `text_only`
-- `full_text` — the whole transcript as one string; left out when `outputFormat` is `segments_only`
-- `segment_count`, `transcript_available`
-- `success` — `true` when a transcript was extracted
-- `error` — reason text when `success` is `false`
-- `inputUrl`, `scrapedAt`
-
-A video that fails gets a row with `success: false`, an `error` message, `inputUrl`, `scrapedAt` and whatever video details were found (an unrecognisable URL gets only the first four). If the run gets close to its timeout, videos not yet started are written as `success: false` rows with the error "Run time budget reached before processing", so every input still has a row. An input that fails validation (for example an empty `videoUrls` list) produces a single `success: false` row explaining why.
+- `video_id`, `title`, `channel_name`, `channel_id` — core video and channel identity
+- `canonicalUrl` — canonical `https://www.youtube.com/watch?v=...` URL
+- `published_date` — publication date (`YYYY-MM-DD`)
+- `publishedAt` — exact publication timestamp with timezone
+- `duration_seconds`, `views`, `like_count`, `category`, `keywords`, `description`
+- `thumbnail` — video thumbnail URL
+- `channelHandle`, `channelUrl`, `channelThumbnail`, `channelVerified`
+- `subscriberCountText` — display text such as `6.71M subscribers`
+- `subscriberCount` — approximate integer parsed from the display text
+- `commentCountText` — display text such as `10M` (not an exact integer)
+- `isUnlisted`, `is_family_safe`, `is_live_content`, `is_upcoming`
+- `accessStatus` — `ok`, `live`, `upcoming`, `age_restricted`, `private`, `unavailable`, `region_blocked`, or `login_required`
+- `wasLive`, `liveStatus` — `live`, `upcoming`, or `ended_live` when applicable
+- `scheduledStartTime` — scheduled or actual broadcast start for live/upcoming videos
+- `chapters[]` — `{ title, start, duration, startText }` for videos that expose chapters
+- `heatmap[]` — most-replayed buckets as `{ start, duration, intensity }`
+- `captionTracks[]` — `{ languageCode, languageName, isAutoGenerated, isTranslatable }`
+- `translationLanguages[]` — `{ languageCode, languageName }` targets YouTube offers
+- `requested_language`, `transcript_language`, `transcript_language_name`
+- `language_matched` — whether the returned transcript is in the requested language
+- `is_auto_generated` — `true` for YouTube auto-captions, `false` for manual/translated captions or AI output
+- `was_translated` — `true` only when YouTube translated the transcript into the requested language
+- `transcript_source` — `library`, `android_player`, `playwright_dom`, or `whisper`
+- `available_languages[]` — every caption track YouTube offers as `{ code, name, is_auto_generated }`
+- `segments[]` — `{ start, dur, end, text }` (seconds with millisecond precision); omitted for `text_only`, `srt`, and `vtt`
+- `full_text` — the complete transcript as one string; omitted for `segments_only`, `srt`, and `vtt`
+- `wordTimings[]` — `{ start, end, text }` word timings, only when `includeWordTimings` is on and the source is auto-generated
+- `srt`, `vtt` — subtitle text when `outputFormat` is `srt` or `vtt`
+- `segment_count`, `transcript_available`, `success`
+- `error` — human-readable explanation when no transcript was produced
+- `errorCode` — machine-readable reason: `captions_disabled`, `no_captions`, `age_restricted`, `login_required`, `blocked`, `unavailable`, `private`, `upcoming`, `live_no_transcript`, `timeout`, `invalid_url`, or `whisper_failed`
+- `retryable` — whether a later run may succeed (for example, a temporary block or timeout)
+- `language_probability` — language-detection confidence for AI transcripts
+- `inputUrl` — the URL that produced this row
+- `scrapedAt` — ISO timestamp of the scrape
 
 ## Input
 
-
 | Field | Type | Default | Description |
-| --- | --- | --- | --- |
-| `videoUrls` | Array | – | YouTube watch URLs, `youtu.be` short links, Shorts URLs, embed URLs, or plain 11-char video IDs. Required. |
-| `language` | String | `""` | Preferred language code (`en`, `es`, `fr`, `de`, `ja`, `ko`, …). Empty = best available. |
-| `includeAutoGenerated` | Boolean | `true` | Include YouTube auto-captions when manual ones aren't available. |
-| `useWhisper` | Boolean | `true` | Transcribe the video's audio with AI when YouTube has no transcript at all. Adds ~30-180 s per video. This output is derived speech-to-text, not a YouTube caption. |
-| `whisperModel` | Enum | `base` | `tiny`, `base`, `small`, `medium`, or `large-v3-turbo` |
-| `proxyCountry` | Enum | `US` | One of the 31 schema-supported country/region codes |
-| `outputFormat` | Enum | `full` | `full`, `text_only`, or `segments_only` |
+|---|---|---|---|
+| `mode` | String | `videos` | `videos` (specific URLs), `channel` (channel uploads), or `playlist` (playlist videos) |
+| `videoUrls` | Array | – | Watch URLs, `youtu.be` links, Shorts/embed URLs, or plain 11-character IDs (mode=videos). Duplicate IDs run once. |
+| `channelUrls` | Array | – | Channel URLs, `@handles`, or `UC...` IDs (mode=channel) |
+| `maxVideosPerChannel` | Integer | `50` | Maximum videos enumerated per channel (1–1,000) |
+| `playlistUrls` | Array | – | Playlist URLs or playlist IDs (mode=playlist) |
+| `maxVideosPerPlaylist` | Integer | `50` | Maximum videos enumerated per playlist (1–1,000) |
+| `language` | String | Auto-detect (video's original language) | Caption language to prefer, as a two-letter code such as `en`, `es`, `ja`, or `ar` |
+| `includeAutoGenerated` | Boolean | `true` | Use YouTube auto-generated captions when manual captions are unavailable |
+| `useWhisper` | Boolean | `true` | Transcribe the audio with AI when no YouTube transcript can be retrieved |
+| `whisperModel` | String | `base` | `tiny`, `base`, `small`, `medium`, or `large-v3-turbo` |
+| `includeWordTimings` | Boolean | `false` | Include word-level timings (auto-generated captions only) |
+| `maxWhisperMinutes` | Integer | – | Leave unset for no length limit; `0` disables AI explicitly; a positive value caps AI to that video length. |
+| `proxyCountry` | String | `US` | Country for the network connection, one of the 31 supported codes |
+| `outputFormat` | String | `full` | `full`, `text_only`, `segments_only`, `srt`, or `vtt` |
 
-### Supported URL formats
-
-- `https://www.youtube.com/watch?v=dQw4w9WgXcQ`
-- `https://youtu.be/dQw4w9WgXcQ`
-- `https://www.youtube.com/shorts/VIDEO_ID`
-- `https://www.youtube.com/embed/VIDEO_ID`
-- Plain 11-char ID: `dQw4w9WgXcQ`
-
-### Example input — multiple videos, English preferred
+### Example: several videos with SRT subtitles
 
 ```json
 {
+  "mode": "videos",
   "videoUrls": [
     "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-    "https://youtu.be/9bZkp7q19f0",
-    "https://www.youtube.com/shorts/abc123XYZ45"
+    "https://youtu.be/jNQXAC9IVRw",
+    "https://www.youtube.com/shorts/s5ORfA5W-M0"
   ],
   "language": "en",
-  "includeAutoGenerated": true
+  "outputFormat": "srt"
 }
 ```
 
-### Example input — AI transcription for videos with no captions
+### Example: every upload from a channel
 
 ```json
 {
-  "videoUrls": ["https://www.youtube.com/watch?v=XqZsoesa55w"],
-  "useWhisper": true,
-  "whisperModel": "small"
-}
-```
-
-## Examples
-
-
-```json
-{
-  "video_id": "dQw4w9WgXcQ",
-  "title": "Rick Astley - Never Gonna Give You Up (Official Video) (4K Remaster)",
-  "channel_name": "Rick Astley",
-  "channel_id": "UCuAXFkgsw1L7xaCfnd5JJOw",
-  "duration_seconds": 213,
-  "views": 1769190465,
-  "published_date": "2009-10-24",
-  "thumbnail": "https://i.ytimg.com/vi/dQw4w9WgXcQ/hqdefault.jpg",
-  "transcript_language": "en",
-  "transcript_language_name": "English",
-  "is_auto_generated": false,
-  "transcript_source": "caption_url",
-  "available_languages": [
-    { "code": "en", "name": "English", "is_auto_generated": false },
-    { "code": "es-419", "name": "Spanish (Latin America)", "is_auto_generated": false }
-  ],
-  "segments": [
-    { "start": "1.360", "dur": "1.680", "text": "[♪♪♪]" },
-    { "start": "18.640", "dur": "3.240", "text": "We're no strangers to love" }
-  ],
-  "segment_count": 61,
-  "full_text": "[♪♪♪] We're no strangers to love You know the rules and so do I ...",
-  "success": true,
-  "inputUrl": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-  "scrapedAt": "2026-05-05T13:42:18Z"
-}
-```
-
-### Example: English transcript
-
-```json
-{
-  "videoUrls": ["https://www.youtube.com/watch?v=dQw4w9WgXcQ"],
+  "mode": "channel",
+  "channelUrls": ["https://www.youtube.com/@TED"],
+  "maxVideosPerChannel": 25,
   "language": "en",
+  "includeWordTimings": true
+}
+```
+
+### Example: a playlist translated to Spanish
+
+```json
+{
+  "mode": "playlist",
+  "playlistUrls": ["https://www.youtube.com/playlist?list=PL1234567890abcdef"],
+  "maxVideosPerPlaylist": 100,
+  "language": "es",
   "outputFormat": "full"
-}
-```
-
-### Example: translated transcript
-
-```json
-{
-  "videoUrls": ["https://www.youtube.com/watch?v=dQw4w9WgXcQ"],
-  "language": "es"
 }
 ```
 
@@ -138,60 +115,60 @@ A video that fails gets a row with `success: false`, an `error` message, `inputU
 
 ```json
 {
-  "videoUrls": ["https://www.youtube.com/watch?v=dQw4w9WgXcQ"],
+  "mode": "videos",
+  "videoUrls": ["https://www.youtube.com/watch?v=IR1xf8jG7ug"],
   "useWhisper": true,
-  "whisperModel": "base"
+  "whisperModel": "small",
+  "maxWhisperMinutes": 20
 }
 ```
 
 ## Use cases
 
-
-- **AI training data** — Build text corpora from YouTube content for LLM fine-tuning or RAG pipelines.
-- **Content repurposing** — Turn long videos into blog posts, summaries, or social copy.
-- **Research and analysis** — Pull spoken content from lectures, interviews, podcasts, and documentaries.
-- **Subtitles and accessibility** — Retrieve captions for translation or accessibility workflows.
-- **SEO and keyword research** — Analyse spoken keywords and topics across YouTube content.
-- **Competitive intelligence** — Monitor what competitors say in their videos.
-- **Education** — Extract transcripts from online courses for indexing or study notes.
-- **Sentiment analysis** — Run sentiment or topic models against transcripts at scale.
+- **AI and RAG pipelines** — feed clean, timestamped transcripts into language models, search indexes, and knowledge bases.
+- **Content repurposing** — turn webinars, interviews, and long-form videos into articles, summaries, and social posts.
+- **Subtitling and localization** — export SRT/VTT and translate transcripts for multilingual audiences.
+- **Media monitoring** — follow a channel or playlist and collect everything its creators publish.
+- **Research and journalism** — quote speakers accurately with timestamps, chapters, and exact publish dates.
+- **Education and accessibility** — build searchable transcripts for lectures, courses, and public talks.
 
 ## FAQ
 
-
 **Which videos can I scrape?**
-Any public YouTube video that has manually created or auto-generated captions, plus — with `useWhisper` on — public videos without captions whose audio can be downloaded. Private videos, deleted videos, and members-only videos cannot be scraped — those return `success=false` with an error message.
+Any public YouTube video with manual or auto-generated captions, plus public videos without captions when AI transcription is enabled. Private, deleted, members-only, and age-restricted videos cannot be transcribed.
+
+**What happens with live, upcoming, or age-restricted videos?**
+The actor returns the metadata it can see (title, channel, dates, status) with `success: false` and a truthful `accessStatus` / `errorCode`. Live streams, premieres, and age-gated videos have no transcript until they become publicly playable.
 
 **What if a video has no captions at all?**
-Set `useWhisper: true` to transcribe the audio with AI. For clear speech, `whisperModel=base` is the sweet spot. For music, noisy audio, or short clips, use `whisperModel=small` for noticeably better accuracy.
+Keep `useWhisper` on and the actor transcribes the audio. `base` is a good balance; use `small` for accented speech, multiple speakers, or noisy recordings. Use `maxWhisperMinutes` to skip very long videos, or set it to `0` explicitly to turn AI off.
 
-**What if my requested language isn't available?**
-An exact match (`en`) is tried first, then regional variants (`en` matches `en-GB`, `en-US`), then the best available transcript. The `available_languages` field always lists everything on offer for that video.
+**How does the requested language work?**
+The actor first looks for a caption track in your language, then for a regional variant such as `en-GB` for `en`. If no track exists, it asks YouTube to translate an available track. `was_translated` and `language_matched` tell you exactly what happened.
 
-**What's the difference between `transcript_source` values?**
-- `caption_url` / `android_player` — pulled directly from YouTube's own published caption tracks (fastest, most reliable, real human or YouTube auto-captions).
-- `innertube` — pulled from an alternate YouTube data endpoint when the primary path didn't return captions.
-- `playwright_dom` — extracted straight from the video page's own transcript panel as a last resort.
-- `whisper` — generated with AI from the video's audio when YouTube has no captions at all.
+**Which output formats are available?**
+`full` returns text plus timed segments; `text_only` returns only the text; `segments_only` returns only the timed segments; `srt` and `vtt` return ready-to-use subtitle files. All formats keep the video metadata.
 
-**How accurate are auto-generated captions vs Whisper?**
-YouTube auto-captions are generally accurate for clear English speech. Whisper `base` is comparable for clean audio, and Whisper `small` typically beats YouTube on accents, multiple speakers, and noisy audio. Both struggle on music with non-vocal singing.
+**Can I collect a whole channel or playlist?**
+Yes. Choose `channel` or `playlist` mode and provide one or more URLs. You can cap each target with `maxVideosPerChannel` or `maxVideosPerPlaylist`. Duplicate videos across targets are collected once.
 
-**The Whisper output looks like garbage / repetitive text.**
-Whisper-tiny on music or near-silent clips can hallucinate repetitive phrases. The actor automatically detects this (low language-detection confidence + identical segment text) and returns `success=false` with an actionable error pointing you at a larger model. Re-run with `whisperModel=small` for music videos.
+**Are word-level timestamps available?**
+Yes, for videos with auto-generated YouTube captions. Turn on `includeWordTimings`; manually uploaded captions and AI transcripts do not expose word timings.
 
-**Can I scrape multiple videos in one run?**
-Yes — pass an array of URLs. Videos are processed a couple at a time and each is pushed as its own dataset row, so rows may not appear in the same order as your input; use `inputUrl` or `video_id` to match them up.
-
-**How current is the data?**
-Live — every run hits YouTube at request time. Schedule the actor for daily / hourly refreshes.
+**Do I need to set up a proxy?**
+No. The actor chooses a working connection to YouTube automatically. Just fill in the input and run it.
 
 **Is this affiliated with YouTube?**
-No. This is an independent, third-party actor that reads YouTube's publicly available caption data; it is not affiliated with, endorsed by, or operated by YouTube or Google.
+No. This is an independent, third-party actor that reads publicly available YouTube data. It is not affiliated with, endorsed by, or operated by YouTube or Google.
 
 ## Limitations
 
-- Private, members-only, age-restricted, and deleted videos cannot be scraped.
-- AI transcription adds roughly 30-180 s per video depending on length and model size.
-- AI transcription accuracy on heavy music or pure-instrumental audio is fundamentally limited regardless of model size.
-- YouTube can change how it serves captions at any time; a transient issue on YouTube's side may still cause `success=false` for individual videos.
+- YouTube sometimes blocks automated requests from cloud networks. The actor retries and switches connection paths automatically, but an occasional video may still return a truthful `success: false` row.
+- Age-restricted, members-only, private, deleted, live, and upcoming videos are metadata-only; they cannot be transcribed without a signed-in session.
+- Translation uses YouTube's own translation targets. If YouTube does not offer the requested language, the actor returns the original transcript with `language_matched: false` rather than inventing a translation. When YouTube login-walls the translation page for an automated connection, the same fallback applies.
+- AI transcription downloads the audio; when the connection is blocked, the actor retries through a residential path and still reports a truthful `whisper_failed` if the block persists.
+- Channel and playlist expansion reads YouTube's public listings and honours `maxVideosPerChannel` / `maxVideosPerPlaylist`; private, blocked or empty listings return fewer videos (or none) with a status note.
+- Chapters, heatmaps, and comment counts are not exposed for every video. They are omitted when YouTube does not provide them.
+- Subscriber and comment counts are display strings; `subscriberCount` is an approximation and `commentCountText` is not an exact integer.
+- AI transcription is not available for live or upcoming broadcasts, and its accuracy depends on audio quality, music, and the selected model.
+- Setting `maxWhisperMinutes` to `0` disables AI explicitly; leaving the field unset keeps the legacy no-length-limit behavior.
