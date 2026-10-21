@@ -1,0 +1,179 @@
+{
+  "properties": {
+    "cookie": {
+      "description": "Your LinkedIn session cookie. Accepts: (1) the li_at value from browser DevTools, or (2) full cookies JSON array from an extension like EditThisCookie.",
+      "editor": "textarea",
+      "isSecret": true,
+      "title": "LinkedIn Cookie",
+      "type": "string"
+    },
+    "datePosted": {
+      "default": "",
+      "description": "Filter to recent posts: past 24h, past week, past month.",
+      "editor": "select",
+      "enum": [
+        "",
+        "r86400",
+        "r604800",
+        "r2592000"
+      ],
+      "enumTitles": [
+        "Any time",
+        "Past 24 hours",
+        "Past week",
+        "Past month"
+      ],
+      "title": "Date Posted",
+      "type": "string"
+    },
+    "includeReposts": {
+      "default": true,
+      "description": "Include posts that are reposts/reshares of other content.",
+      "editor": "checkbox",
+      "title": "Include Reposts",
+      "type": "boolean"
+    },
+    "language": {
+      "default": "en_US",
+      "description": "Preferred LinkedIn locale.",
+      "editor": "select",
+      "enum": [
+        "en_US",
+        "en_GB",
+        "es_ES",
+        "fr_FR",
+        "de_DE",
+        "pt_BR",
+        "it_IT",
+        "nl_NL",
+        "ja_JP",
+        "zh_CN"
+      ],
+      "enumTitles": [
+        "English (US)",
+        "English (UK)",
+        "Spanish",
+        "French",
+        "German",
+        "Portuguese (BR)",
+        "Italian",
+        "Dutch",
+        "Japanese",
+        "Chinese (Simplified)"
+      ],
+      "title": "Language",
+      "type": "string"
+    },
+    "maxPostsPerProfile": {
+      "default": 50,
+      "description": "Maximum number of posts to scrape per profile.",
+      "editor": "number",
+      "maximum": 500,
+      "minimum": 1,
+      "title": "Max Posts Per Profile",
+      "type": "integer"
+    },
+    "mediaType": {
+      "description": "Only include posts of these media types. Leave empty to include all.",
+      "editor": "select",
+      "items": {
+        "enum": [
+          "text",
+          "image",
+          "video",
+          "article",
+          "document",
+          "carousel",
+          "repost",
+          "poll",
+          "event"
+        ],
+        "enumTitles": [
+          "Text only",
+          "Image",
+          "Video",
+          "Article",
+          "Document",
+          "Carousel",
+          "Repost",
+          "Poll",
+          "Event"
+        ],
+        "type": "string"
+      },
+      "title": "Media Type Filter",
+      "type": "array"
+    },
+    "minComments": {
+      "default": 0,
+      "description": "Only include posts with at least this many comments.",
+      "editor": "number",
+      "minimum": 0,
+      "title": "Minimum Comments",
+      "type": "integer"
+    },
+    "minReactions": {
+      "default": 0,
+      "description": "Only include posts with at least this many reactions.",
+      "editor": "number",
+      "minimum": 0,
+      "title": "Minimum Reactions",
+      "type": "integer"
+    },
+    "postTypes": {
+      "default": [
+        "text",
+        "image",
+        "video",
+        "article",
+        "document",
+        "repost"
+      ],
+      "description": "Only include posts of these types. Leave empty to include all.",
+      "editor": "select",
+      "items": {
+        "enum": [
+          "text",
+          "image",
+          "video",
+          "article",
+          "document",
+          "repost"
+        ],
+        "enumTitles": [
+          "Text",
+          "Image",
+          "Video",
+          "Article",
+          "Document",
+          "Repost"
+        ],
+        "type": "string"
+      },
+      "title": "Post Types",
+      "type": "array"
+    },
+    "profileUrls": {
+      "description": "LinkedIn profile URLs or usernames. Accepts: https://www.linkedin.com/in/williamhgates/, https://uk.linkedin.com/in/williamhgates, or just the username: williamhgates",
+      "editor": "stringList",
+      "prefill": [
+        "https://www.linkedin.com/in/adam-grant/"
+      ],
+      "title": "Profile URLs",
+      "type": "array"
+    },
+    "proxyConfiguration": {
+      "description": "Optional Apify proxy configuration. Residential proxy recommended for best results.",
+      "editor": "proxy",
+      "title": "Proxy Configuration",
+      "type": "object"
+    }
+  },
+  "required": [
+    "profileUrls",
+    "cookie"
+  ],
+  "schemaVersion": 1,
+  "title": "LinkedIn Profile Posts Scraper Input",
+  "type": "object"
+}

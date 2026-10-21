@@ -1,0 +1,817 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src &#x27;self&#x27;; script-src &#x27;self&#x27; &#x27;sha256-de62XKEY0F4+WKKnrjSTCiESgA8vieg1mDxkxc4ltf0=&#x27;; style-src &#x27;self&#x27;; img-src &#x27;self&#x27; https: data:; base-uri &#x27;self&#x27;; form-action &#x27;self&#x27;; object-src &#x27;none&#x27;"><title>YouTube Video, Playlist &amp; Channel Downloader with Metadata | Nimbryxo Studio</title><meta name="description" content="Download YouTube videos from direct links, playlists, channels, or search phrases at your chosen quality, with a public file link plus title, stats, description and subtitles per v"><meta name="robots" content="index,follow"><link rel="canonical" href="https://hasankhokhar2026.github.io/apify-actor-examples/actors/2Dxwy6cHWqWRHqhC9/"><meta property="og:title" content="YouTube Video, Playlist &amp; Channel Downloader with Metadata | Nimbryxo Studio"><meta property="og:description" content="Download YouTube videos from direct links, playlists, channels, or search phrases at your chosen quality, with a public file link plus title, stats, description and subtitles per v"><meta property="og:type" content="website"><meta property="og:url" content="https://hasankhokhar2026.github.io/apify-actor-examples/actors/2Dxwy6cHWqWRHqhC9/"><meta property="og:site_name" content="Nimbryxo Studio"><meta name="twitter:card" content="summary"><link rel="icon" href="/apify-actor-examples/assets/mark.svg?v=2d20f9dc334a" type="image/svg+xml"><link rel="stylesheet" href="/apify-actor-examples/assets/site.css?v=39545fd4a399"><link rel="stylesheet" href="/apify-actor-examples/assets/brand.css?v=eb0f935ade25"><link rel="alternate" type="application/rss+xml" title="Nimbryxo Studio guides" href="/apify-actor-examples/feed.xml"><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization","name":"Nimbryxo Studio","url":"https://hasankhokhar2026.github.io/apify-actor-examples/","sameAs":["https://apify.com/nimbryxo-studio"]},{"@type":"WebSite","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#website","name":"Nimbryxo Studio","url":"https://hasankhokhar2026.github.io/apify-actor-examples/","publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"inLanguage":"en"},{"@type":"WebPage","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/2Dxwy6cHWqWRHqhC9/#webpage","name":"YouTube Video, Playlist & Channel Downloader with Metadata","description":"Download YouTube videos from direct links, playlists, channels, or search phrases at your chosen quality, with a public file link plus title, stats, description and subtitles per video.","url":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/2Dxwy6cHWqWRHqhC9/","isPartOf":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#website"},"publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"inLanguage":"en","mainEntity":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/2Dxwy6cHWqWRHqhC9/#article"},"breadcrumb":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/2Dxwy6cHWqWRHqhC9/#breadcrumb"}},{"@type":"TechArticle","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/2Dxwy6cHWqWRHqhC9/#article","headline":"YouTube Video, Playlist & Channel Downloader with Metadata","name":"YouTube Video, Playlist & Channel Downloader with Metadata","description":"Download YouTube videos from direct links, playlists, channels, or search phrases at your chosen quality, with a public file link plus title, stats, description and subtitles per video.","url":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/2Dxwy6cHWqWRHqhC9/","author":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"mainEntityOfPage":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/2Dxwy6cHWqWRHqhC9/#webpage"},"inLanguage":"en"},{"@type":"BreadcrumbList","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/2Dxwy6cHWqWRHqhC9/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Nimbryxo Studio","item":"https://hasankhokhar2026.github.io/apify-actor-examples/"},{"@type":"ListItem","position":2,"name":"Actors","item":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/"},{"@type":"ListItem","position":3,"name":"YouTube Video, Playlist & Channel Downloader with Metadata","item":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/2Dxwy6cHWqWRHqhC9/"}]}]}</script><script src="/apify-actor-examples/assets/site.js?v=7cabac48dd31" defer></script></head><body class="theme-studio"><a href="#main" class="skip-link">Skip to content</a><header><div class="inner"><a href="/apify-actor-examples/" class="brand"><img src="/apify-actor-examples/assets/mark.svg?v=2d20f9dc334a" alt="" width="29" height="29">Nimbryxo Studio</a><nav aria-label="Main navigation"><a href="/apify-actor-examples/actors/" aria-current="page">Actors</a><a href="/apify-actor-examples/guides/">Guides</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></nav></div></header><main id="main"><div class="doc-layout"><aside class="contents" aria-label="On this page"><strong>Contents</strong><a href="#overview">Overview</a><a href="#published-readme">Published README</a><a href="#input-schema">Input schema</a><a href="#output-schema">Output schema</a><a href="#dataset-schema">Dataset schema</a><a href="#python-quickstart">Python quickstart</a></aside><article class="prose"><div class="breadcrumb"><a href="/apify-actor-examples/actors/">Actors</a><span>/</span><span>YouTube Video, Playlist &amp; Channel Downloader with Metadata</span></div><section id="overview"><h1 class="doc-title">YouTube Video, Playlist &amp; Channel Downloader with Metadata</h1><p class="lede">Download YouTube videos from direct links, playlists, channels, or search phrases at your chosen quality, with a public file link plus title, stats, description and subtitles per video.</p><div class="actions"><a class="button" href="https://apify.com/nimbryxo-studio/youtube-video-playlist-and-channel-downloader">Open on Apify</a><a class="text-link" href="https://github.com/hasankhokhar2026/apify-actor-examples/blob/main/docs/actors/2Dxwy6cHWqWRHqhC9/README.md">GitHub source</a></div></section><section class="schema-section" id="input-schema"><h2>Input schema</h2><p>Input fields, types, required flags, descriptions, defaults, and prefills come from the published definition. Prefill examples are distinct from defaults.</p><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>videoUrls</code></td><td>array</td><td>optional</td><td>YouTube video URLs to download.</td></tr><tr><td><code>videoQuality</code></td><td>string</td><td>optional</td><td>Preferred quality. Automatically falls back to the best available quality if the chosen resolution is unavailable. We highly recommend choosing 1080p or less for resolution for keeping the cost low. Higher the quality, higher the cost.</td></tr><tr><td><code>downloadSubtitles</code></td><td>boolean</td><td>optional</td><td>Download subtitle / caption files (English) alongside the video.</td></tr></tbody></table></div><details><summary>Show all input fields</summary><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>videoUrls</code></td><td>array</td><td>optional</td><td>YouTube video URLs to download.</td></tr><tr><td><code>videoQuality</code></td><td>string</td><td>optional</td><td>Preferred quality. Automatically falls back to the best available quality if the chosen resolution is unavailable. We highly recommend choosing 1080p or less for resolution for keeping the cost low. Higher the quality, higher the cost.</td></tr><tr><td><code>downloadSubtitles</code></td><td>boolean</td><td>optional</td><td>Download subtitle / caption files (English) alongside the video.</td></tr><tr><td><code>playlistUrls</code></td><td>array</td><td>optional</td><td>YouTube playlist URLs - all videos in each playlist will be downloaded.</td></tr><tr><td><code>channelUrls</code></td><td>array</td><td>optional</td><td>YouTube channel URLs (e.g. https://www.youtube.com/@ChannelName).</td></tr><tr><td><code>searchQueries</code></td><td>array</td><td>optional</td><td>Optional YouTube searches. The actor resolves up to maxVideosPerInput public video results per query.</td></tr><tr><td><code>maxVideosPerInput</code></td><td>integer</td><td>optional</td><td>Maximum number of videos to download per playlist, channel, or search query. Does not affect direct video URLs.</td></tr><tr><td><code>proxyCountry</code></td><td>string</td><td>optional</td><td>Country for the residential proxy IP. Change this if a video is geo-blocked in the default country.</td></tr><tr><td><code>extractMetadataOnly</code></td><td>boolean</td><td>optional</td><td>When enabled, extracts video metadata (title, description, view count, etc.) without downloading the actual video file. Much faster and uses no storage.</td></tr><tr><td><code>subtitleLanguages</code></td><td>array</td><td>optional</td><td>Subtitle language codes to download when Download Subtitles is enabled.</td></tr><tr><td><code>cookies</code></td><td>string</td><td>optional</td><td>Optional Netscape-format cookies.txt content for accessing age-restricted or members-only videos. Export from your browser using a cookies extension.</td></tr></tbody></table></div></details><p><a href="input-schema.json">Download the published input schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+  &quot;properties&quot;: {
+    &quot;channelUrls&quot;: {
+      &quot;description&quot;: &quot;YouTube channel URLs (e.g. https://www.youtube.com/@ChannelName).&quot;,
+      &quot;editor&quot;: &quot;stringList&quot;,
+      &quot;items&quot;: {
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;title&quot;: &quot;Channel URLs&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;cookies&quot;: {
+      &quot;description&quot;: &quot;Optional Netscape-format cookies.txt content for accessing age-restricted or members-only videos. Export from your browser using a cookies extension.&quot;,
+      &quot;editor&quot;: &quot;textarea&quot;,
+      &quot;title&quot;: &quot;Cookies (Netscape format)&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;downloadSubtitles&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;Download subtitle / caption files (English) alongside the video.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Download Subtitles&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;extractMetadataOnly&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;When enabled, extracts video metadata (title, description, view count, etc.) without downloading the actual video file. Much faster and uses no storage.&quot;,
+      &quot;prefill&quot;: true,
+      &quot;title&quot;: &quot;Metadata Only (No Download)&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;maxVideosPerInput&quot;: {
+      &quot;default&quot;: 10,
+      &quot;description&quot;: &quot;Maximum number of videos to download per playlist, channel, or search query. Does not affect direct video URLs.&quot;,
+      &quot;maximum&quot;: 500,
+      &quot;minimum&quot;: 1,
+      &quot;prefill&quot;: 1,
+      &quot;title&quot;: &quot;Max Videos Per Playlist / Channel&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;playlistUrls&quot;: {
+      &quot;description&quot;: &quot;YouTube playlist URLs - all videos in each playlist will be downloaded.&quot;,
+      &quot;editor&quot;: &quot;stringList&quot;,
+      &quot;items&quot;: {
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;sectionCaption&quot;: &quot;More Sources&quot;,
+      &quot;title&quot;: &quot;Playlist URLs&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;proxyCountry&quot;: {
+      &quot;default&quot;: &quot;US&quot;,
+      &quot;description&quot;: &quot;Country for the residential proxy IP. Change this if a video is geo-blocked in the default country.&quot;,
+      &quot;enum&quot;: [
+        &quot;US&quot;,
+        &quot;GB&quot;,
+        &quot;CA&quot;,
+        &quot;AU&quot;,
+        &quot;DE&quot;,
+        &quot;FR&quot;,
+        &quot;JP&quot;,
+        &quot;KR&quot;,
+        &quot;BR&quot;,
+        &quot;IN&quot;,
+        &quot;MX&quot;,
+        &quot;IT&quot;,
+        &quot;ES&quot;,
+        &quot;NL&quot;,
+        &quot;PL&quot;,
+        &quot;RU&quot;,
+        &quot;SE&quot;,
+        &quot;NO&quot;,
+        &quot;DK&quot;,
+        &quot;FI&quot;,
+        &quot;ZA&quot;,
+        &quot;SG&quot;,
+        &quot;HK&quot;,
+        &quot;TW&quot;,
+        &quot;ID&quot;,
+        &quot;MY&quot;,
+        &quot;TH&quot;,
+        &quot;PH&quot;,
+        &quot;AR&quot;,
+        &quot;CO&quot;,
+        &quot;CL&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;United States&quot;,
+        &quot;United Kingdom&quot;,
+        &quot;Canada&quot;,
+        &quot;Australia&quot;,
+        &quot;Germany&quot;,
+        &quot;France&quot;,
+        &quot;Japan&quot;,
+        &quot;South Korea&quot;,
+        &quot;Brazil&quot;,
+        &quot;India&quot;,
+        &quot;Mexico&quot;,
+        &quot;Italy&quot;,
+        &quot;Spain&quot;,
+        &quot;Netherlands&quot;,
+        &quot;Poland&quot;,
+        &quot;Russia&quot;,
+        &quot;Sweden&quot;,
+        &quot;Norway&quot;,
+        &quot;Denmark&quot;,
+        &quot;Finland&quot;,
+        &quot;South Africa&quot;,
+        &quot;Singapore&quot;,
+        &quot;Hong Kong&quot;,
+        &quot;Taiwan&quot;,
+        &quot;Indonesia&quot;,
+        &quot;Malaysia&quot;,
+        &quot;Thailand&quot;,
+        &quot;Philippines&quot;,
+        &quot;Argentina&quot;,
+        &quot;Colombia&quot;,
+        &quot;Chile&quot;
+      ],
+      &quot;sectionCaption&quot;: &quot;Advanced&quot;,
+      &quot;title&quot;: &quot;Proxy Country&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;searchQueries&quot;: {
+      &quot;description&quot;: &quot;Optional YouTube searches. The actor resolves up to maxVideosPerInput public video results per query.&quot;,
+      &quot;editor&quot;: &quot;stringList&quot;,
+      &quot;items&quot;: {
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;prefill&quot;: [
+        &quot;python tutorial for beginners&quot;
+      ],
+      &quot;title&quot;: &quot;YouTube Search Queries&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;subtitleLanguages&quot;: {
+      &quot;default&quot;: [
+        &quot;en&quot;
+      ],
+      &quot;description&quot;: &quot;Subtitle language codes to download when Download Subtitles is enabled.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;items&quot;: {
+        &quot;enum&quot;: [
+          &quot;en&quot;,
+          &quot;en-US&quot;,
+          &quot;en-GB&quot;,
+          &quot;es&quot;,
+          &quot;es-419&quot;,
+          &quot;pt&quot;,
+          &quot;pt-BR&quot;,
+          &quot;fr&quot;,
+          &quot;de&quot;,
+          &quot;it&quot;,
+          &quot;nl&quot;,
+          &quot;pl&quot;,
+          &quot;ru&quot;,
+          &quot;uk&quot;,
+          &quot;tr&quot;,
+          &quot;ar&quot;,
+          &quot;fa&quot;,
+          &quot;he&quot;,
+          &quot;hi&quot;,
+          &quot;bn&quot;,
+          &quot;ta&quot;,
+          &quot;te&quot;,
+          &quot;mr&quot;,
+          &quot;ur&quot;,
+          &quot;gu&quot;,
+          &quot;kn&quot;,
+          &quot;ml&quot;,
+          &quot;pa&quot;,
+          &quot;zh-Hans&quot;,
+          &quot;zh-Hant&quot;,
+          &quot;ja&quot;,
+          &quot;ko&quot;,
+          &quot;vi&quot;,
+          &quot;th&quot;,
+          &quot;id&quot;,
+          &quot;ms&quot;,
+          &quot;fil&quot;,
+          &quot;sv&quot;,
+          &quot;no&quot;,
+          &quot;da&quot;,
+          &quot;fi&quot;,
+          &quot;cs&quot;,
+          &quot;sk&quot;,
+          &quot;hu&quot;,
+          &quot;ro&quot;,
+          &quot;bg&quot;,
+          &quot;el&quot;,
+          &quot;hr&quot;,
+          &quot;sr&quot;,
+          &quot;sl&quot;,
+          &quot;lt&quot;,
+          &quot;lv&quot;,
+          &quot;et&quot;,
+          &quot;is&quot;,
+          &quot;sq&quot;,
+          &quot;mk&quot;,
+          &quot;bs&quot;,
+          &quot;ca&quot;,
+          &quot;gl&quot;,
+          &quot;eu&quot;,
+          &quot;af&quot;,
+          &quot;sw&quot;,
+          &quot;am&quot;,
+          &quot;km&quot;,
+          &quot;lo&quot;,
+          &quot;my&quot;,
+          &quot;ne&quot;,
+          &quot;si&quot;,
+          &quot;ka&quot;,
+          &quot;hy&quot;,
+          &quot;az&quot;,
+          &quot;kk&quot;,
+          &quot;ky&quot;,
+          &quot;uz&quot;,
+          &quot;mn&quot;,
+          &quot;mt&quot;,
+          &quot;cy&quot;,
+          &quot;ga&quot;
+        ],
+        &quot;enumTitles&quot;: [
+          &quot;English&quot;,
+          &quot;English (US)&quot;,
+          &quot;English (UK)&quot;,
+          &quot;Spanish&quot;,
+          &quot;Spanish (Latin America)&quot;,
+          &quot;Portuguese&quot;,
+          &quot;Portuguese (Brazil)&quot;,
+          &quot;French&quot;,
+          &quot;German&quot;,
+          &quot;Italian&quot;,
+          &quot;Dutch&quot;,
+          &quot;Polish&quot;,
+          &quot;Russian&quot;,
+          &quot;Ukrainian&quot;,
+          &quot;Turkish&quot;,
+          &quot;Arabic&quot;,
+          &quot;Persian&quot;,
+          &quot;Hebrew&quot;,
+          &quot;Hindi&quot;,
+          &quot;Bengali&quot;,
+          &quot;Tamil&quot;,
+          &quot;Telugu&quot;,
+          &quot;Marathi&quot;,
+          &quot;Urdu&quot;,
+          &quot;Gujarati&quot;,
+          &quot;Kannada&quot;,
+          &quot;Malayalam&quot;,
+          &quot;Punjabi&quot;,
+          &quot;Chinese (Simplified)&quot;,
+          &quot;Chinese (Traditional)&quot;,
+          &quot;Japanese&quot;,
+          &quot;Korean&quot;,
+          &quot;Vietnamese&quot;,
+          &quot;Thai&quot;,
+          &quot;Indonesian&quot;,
+          &quot;Malay&quot;,
+          &quot;Filipino&quot;,
+          &quot;Swedish&quot;,
+          &quot;Norwegian&quot;,
+          &quot;Danish&quot;,
+          &quot;Finnish&quot;,
+          &quot;Czech&quot;,
+          &quot;Slovak&quot;,
+          &quot;Hungarian&quot;,
+          &quot;Romanian&quot;,
+          &quot;Bulgarian&quot;,
+          &quot;Greek&quot;,
+          &quot;Croatian&quot;,
+          &quot;Serbian&quot;,
+          &quot;Slovenian&quot;,
+          &quot;Lithuanian&quot;,
+          &quot;Latvian&quot;,
+          &quot;Estonian&quot;,
+          &quot;Icelandic&quot;,
+          &quot;Albanian&quot;,
+          &quot;Macedonian&quot;,
+          &quot;Bosnian&quot;,
+          &quot;Catalan&quot;,
+          &quot;Galician&quot;,
+          &quot;Basque&quot;,
+          &quot;Afrikaans&quot;,
+          &quot;Swahili&quot;,
+          &quot;Amharic&quot;,
+          &quot;Khmer&quot;,
+          &quot;Lao&quot;,
+          &quot;Burmese&quot;,
+          &quot;Nepali&quot;,
+          &quot;Sinhala&quot;,
+          &quot;Georgian&quot;,
+          &quot;Armenian&quot;,
+          &quot;Azerbaijani&quot;,
+          &quot;Kazakh&quot;,
+          &quot;Kyrgyz&quot;,
+          &quot;Uzbek&quot;,
+          &quot;Mongolian&quot;,
+          &quot;Maltese&quot;,
+          &quot;Welsh&quot;,
+          &quot;Irish&quot;
+        ],
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;title&quot;: &quot;Subtitle Languages&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;videoQuality&quot;: {
+      &quot;default&quot;: &quot;720p&quot;,
+      &quot;description&quot;: &quot;Preferred quality. Automatically falls back to the best available quality if the chosen resolution is unavailable. We highly recommend choosing 1080p or less for resolution for keeping the cost low. Higher the quality, higher the cost.&quot;,
+      &quot;enum&quot;: [
+        &quot;best&quot;,
+        &quot;1080p&quot;,
+        &quot;720p&quot;,
+        &quot;480p&quot;,
+        &quot;360p&quot;,
+        &quot;audio_only&quot;,
+        &quot;worst&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;Best Available&quot;,
+        &quot;1080p&quot;,
+        &quot;720p&quot;,
+        &quot;480p&quot;,
+        &quot;360p&quot;,
+        &quot;Audio Only (MP3)&quot;,
+        &quot;Lowest (Fastest)&quot;
+      ],
+      &quot;prefill&quot;: &quot;1080p&quot;,
+      &quot;title&quot;: &quot;Video Quality&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;videoUrls&quot;: {
+      &quot;description&quot;: &quot;YouTube video URLs to download.&quot;,
+      &quot;editor&quot;: &quot;stringList&quot;,
+      &quot;items&quot;: {
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;prefill&quot;: [
+        &quot;https://www.youtube.com/watch?v=dQw4w9WgXcQ&quot;
+      ],
+      &quot;title&quot;: &quot;Video URLs&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    }
+  },
+  &quot;schemaVersion&quot;: 1,
+  &quot;title&quot;: &quot;YouTube Video Downloader Input&quot;,
+  &quot;type&quot;: &quot;object&quot;
+}
+</code></pre></details></section><section class="schema-section" id="output-schema"><h2>Output schema</h2><p>Published result links and storage locations. This schema is not an exhaustive contract for every field in a dataset record.</p><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>downloads</code></td><td>string</td><td>optional</td><td>Dataset containing all scraped download results with files, metadata, and subtitles.</td></tr></tbody></table></div><p><a href="output-schema.json">Download the published output schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+  &quot;actorOutputSchemaVersion&quot;: 1,
+  &quot;description&quot;: &quot;YouTube download results with file links, metadata, and subtitles.&quot;,
+  &quot;properties&quot;: {
+    &quot;downloads&quot;: {
+      &quot;description&quot;: &quot;Dataset containing all scraped download results with files, metadata, and subtitles.&quot;,
+      &quot;template&quot;: &quot;{{links.apiDefaultDatasetUrl}}/items&quot;,
+      &quot;title&quot;: &quot;YouTube Video Downloader dataset&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    }
+  },
+  &quot;title&quot;: &quot;YouTube Video, Playlist &amp; Channel Downloader with Metadata Output&quot;
+}
+</code></pre></details></section><section class="schema-section" id="dataset-schema"><h2>Dataset schema</h2><p>Published dataset views and any declared field definitions. A view can select only a subset of the returned record fields.</p><p><a href="dataset-schema.json">Download the published dataset schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+  &quot;actorSpecification&quot;: 1,
+  &quot;views&quot;: {
+    &quot;metadata&quot;: {
+      &quot;display&quot;: {
+        &quot;component&quot;: &quot;table&quot;,
+        &quot;properties&quot;: {
+          &quot;comment_count&quot;: {
+            &quot;label&quot;: &quot;Comments&quot;
+          },
+          &quot;description&quot;: {
+            &quot;label&quot;: &quot;Description&quot;
+          },
+          &quot;like_count&quot;: {
+            &quot;label&quot;: &quot;Likes&quot;
+          },
+          &quot;thumbnail&quot;: {
+            &quot;format&quot;: &quot;image&quot;,
+            &quot;label&quot;: &quot;Thumbnail&quot;
+          },
+          &quot;title&quot;: {
+            &quot;label&quot;: &quot;Title&quot;
+          },
+          &quot;upload_date&quot;: {
+            &quot;label&quot;: &quot;Upload Date&quot;
+          },
+          &quot;uploader&quot;: {
+            &quot;label&quot;: &quot;Channel&quot;
+          },
+          &quot;video_url&quot;: {
+            &quot;format&quot;: &quot;link&quot;,
+            &quot;label&quot;: &quot;Video URL&quot;
+          },
+          &quot;view_count&quot;: {
+            &quot;label&quot;: &quot;Views&quot;
+          }
+        }
+      },
+      &quot;title&quot;: &quot;Video Metadata&quot;,
+      &quot;transformation&quot;: {
+        &quot;fields&quot;: [
+          &quot;video_url&quot;,
+          &quot;video_id&quot;,
+          &quot;title&quot;,
+          &quot;description&quot;,
+          &quot;uploader&quot;,
+          &quot;uploader_id&quot;,
+          &quot;upload_date&quot;,
+          &quot;duration_seconds&quot;,
+          &quot;view_count&quot;,
+          &quot;like_count&quot;,
+          &quot;comment_count&quot;,
+          &quot;thumbnail&quot;,
+          &quot;tags&quot;,
+          &quot;categories&quot;,
+          &quot;download_status&quot;,
+          &quot;downloaded_at&quot;
+        ]
+      }
+    },
+    &quot;overview&quot;: {
+      &quot;display&quot;: {
+        &quot;component&quot;: &quot;table&quot;,
+        &quot;properties&quot;: {
+          &quot;download_status&quot;: {
+            &quot;label&quot;: &quot;Status&quot;
+          },
+          &quot;download_url&quot;: {
+            &quot;format&quot;: &quot;link&quot;,
+            &quot;label&quot;: &quot;Download Link&quot;
+          },
+          &quot;downloaded_at&quot;: {
+            &quot;format&quot;: &quot;datetime&quot;,
+            &quot;label&quot;: &quot;Downloaded At&quot;
+          },
+          &quot;duration_seconds&quot;: {
+            &quot;label&quot;: &quot;Duration (s)&quot;
+          },
+          &quot;like_count&quot;: {
+            &quot;label&quot;: &quot;Likes&quot;
+          },
+          &quot;resolution&quot;: {
+            &quot;label&quot;: &quot;Resolution&quot;
+          },
+          &quot;storage_key&quot;: {
+            &quot;label&quot;: &quot;Storage Key&quot;
+          },
+          &quot;title&quot;: {
+            &quot;label&quot;: &quot;Title&quot;
+          },
+          &quot;upload_date&quot;: {
+            &quot;label&quot;: &quot;Upload Date&quot;
+          },
+          &quot;uploader&quot;: {
+            &quot;label&quot;: &quot;Channel&quot;
+          },
+          &quot;video_url&quot;: {
+            &quot;format&quot;: &quot;link&quot;,
+            &quot;label&quot;: &quot;Video URL&quot;
+          },
+          &quot;view_count&quot;: {
+            &quot;label&quot;: &quot;Views&quot;
+          }
+        }
+      },
+      &quot;title&quot;: &quot;YouTube Videos&quot;,
+      &quot;transformation&quot;: {
+        &quot;fields&quot;: [
+          &quot;video_url&quot;,
+          &quot;title&quot;,
+          &quot;uploader&quot;,
+          &quot;upload_date&quot;,
+          &quot;duration_seconds&quot;,
+          &quot;view_count&quot;,
+          &quot;like_count&quot;,
+          &quot;resolution&quot;,
+          &quot;download_status&quot;,
+          &quot;download_url&quot;,
+          &quot;storage_key&quot;,
+          &quot;downloaded_at&quot;
+        ]
+      }
+    }
+  }
+}
+</code></pre></details></section><section class="schema-section" id="key-value-schema"><h2>Key-value schema</h2><p>Published key-value store definitions, when provided by this build.</p><p>This definition is not present in the default published build. See the published README for available documentation.</p></section><section id="published-readme"><h2>Published README</h2><details><summary>Read the full published documentation</summary><h2 id="readme-youtube-video-playlist-channel-downloader-with-metadata">YouTube Video, Playlist &amp; Channel Downloader with Metadata</h2>
+<p>Give this actor a video link, a playlist, a channel, or even a search phrase, and it resolves every video behind it, downloads each at your chosen quality, and hands back a public link to the file alongside the video's title, stats and description.</p>
+<h2 id="readme-what-this-actor-does">What this actor does</h2>
+<ul>
+<li><strong>Download videos</strong> from direct URLs, playlists, channels, or search results</li>
+<li><strong>Quality options:</strong> best available, 1080p, 720p, 480p, 360p, audio-only, or lowest</li>
+<li><strong>Subtitles:</strong> download caption files in one or more languages</li>
+<li><strong>Metadata-only mode:</strong> get full metadata without downloading the file</li>
+<li><strong>Empty fields are omitted</strong> — records only contain values that are actually populated (empty lists such as <code>subtitle_files</code> are left out too).</li>
+</ul>
+<h2 id="readme-output">Output</h2>
+<p>Each video produces one record in the output dataset. Here is an example of a single output record:</p>
+<pre><code class="language-json">{
+    &quot;video_url&quot;: &quot;https://www.youtube.com/watch?v=dQw4w9WgXcQ&quot;,
+    &quot;video_id&quot;: &quot;dQw4w9WgXcQ&quot;,
+    &quot;title&quot;: &quot;Rick Astley - Never Gonna Give You Up (Official Music Video)&quot;,
+    &quot;description&quot;: &quot;The official video for Never Gonna Give You Up by Rick Astley...&quot;,
+    &quot;uploader&quot;: &quot;Rick Astley&quot;,
+    &quot;uploader_id&quot;: &quot;@RickAstleyYT&quot;,
+    &quot;uploader_url&quot;: &quot;https://www.youtube.com/@RickAstleyYT&quot;,
+    &quot;upload_date&quot;: &quot;2009-10-25&quot;,
+    &quot;duration_seconds&quot;: 212.0,
+    &quot;view_count&quot;: 1400000000,
+    &quot;like_count&quot;: 16000000,
+    &quot;comment_count&quot;: 2200000,
+    &quot;thumbnail&quot;: &quot;https://api.apify.com/v2/key-value-stores/.../records/yt_dQw4w9WgXcQ_thumb.jpg&quot;,
+    &quot;tags&quot;: [&quot;rick astley&quot;, &quot;never gonna give you up&quot;, &quot;80s&quot;],
+    &quot;categories&quot;: [&quot;Music&quot;],
+    &quot;resolution&quot;: &quot;1280x720&quot;,
+    &quot;filesize_bytes&quot;: 28491776,
+    &quot;download_status&quot;: &quot;success&quot;,
+    &quot;download_url&quot;: &quot;https://api.apify.com/v2/key-value-stores/.../records/yt_dQw4w9WgXcQ.mp4&quot;,
+    &quot;storage_key&quot;: &quot;yt_dQw4w9WgXcQ.mp4&quot;,
+    &quot;source_label&quot;: &quot;direct&quot;,
+    &quot;record_type&quot;: &quot;result&quot;,
+    &quot;downloaded_at&quot;: &quot;2026-02-23T10:00:00Z&quot;
+}
+</code></pre>
+<h3 id="readme-output-fields">Output fields</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>video_url</code></td>
+<td>URL of the YouTube video</td>
+</tr>
+<tr>
+<td><code>video_id</code></td>
+<td>YouTube video ID</td>
+</tr>
+<tr>
+<td><code>title</code></td>
+<td>Title of the video</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td>Video description (up to 2000 characters)</td>
+</tr>
+<tr>
+<td><code>uploader</code></td>
+<td>Channel or uploader name</td>
+</tr>
+<tr>
+<td><code>uploader_id</code></td>
+<td>Channel or uploader ID</td>
+</tr>
+<tr>
+<td><code>uploader_url</code></td>
+<td>URL of the uploader's channel</td>
+</tr>
+<tr>
+<td><code>upload_date</code></td>
+<td>Upload date (YYYY-MM-DD)</td>
+</tr>
+<tr>
+<td><code>duration_seconds</code></td>
+<td>Duration of the video in seconds</td>
+</tr>
+<tr>
+<td><code>view_count</code></td>
+<td>Number of views</td>
+</tr>
+<tr>
+<td><code>like_count</code></td>
+<td>Number of likes</td>
+</tr>
+<tr>
+<td><code>comment_count</code></td>
+<td>Number of comments</td>
+</tr>
+<tr>
+<td><code>thumbnail</code></td>
+<td>URL of the video thumbnail (a stored copy after a successful download, YouTube's own image URL otherwise)</td>
+</tr>
+<tr>
+<td><code>tags</code></td>
+<td>Tags associated with the video</td>
+</tr>
+<tr>
+<td><code>categories</code></td>
+<td>Categories associated with the video</td>
+</tr>
+<tr>
+<td><code>resolution</code></td>
+<td>Resolution of the downloaded video (e.g. 1920x1080)</td>
+</tr>
+<tr>
+<td><code>filesize_bytes</code></td>
+<td>File size of the downloaded video in bytes</td>
+</tr>
+<tr>
+<td><code>is_live</code></td>
+<td>Whether the video is a live or upcoming broadcast</td>
+</tr>
+<tr>
+<td><code>video_meta</code></td>
+<td>Technical detail about the downloaded file: <code>width</code>, <code>height</code>, <code>fps</code>, <code>vcodec</code>, <code>acodec</code>, <code>ext</code>, <code>filesize_bytes</code>, <code>total_bitrate_kbps</code>, <code>aspect_ratio</code> (audio-only downloads omit the video-specific keys)</td>
+</tr>
+<tr>
+<td><code>download_status</code></td>
+<td>Status: <code>success</code>, <code>failed</code>, <code>no_video</code> (the download finished without a usable video file), <code>upload_failed</code> (downloaded but the file couldn't be stored), or <code>metadata_only</code></td>
+</tr>
+<tr>
+<td><code>download_url</code></td>
+<td>Public URL to download the video file</td>
+</tr>
+<tr>
+<td><code>storage_key</code></td>
+<td>Key of the video file in storage</td>
+</tr>
+<tr>
+<td><code>subtitle_files</code></td>
+<td>List of subtitle file keys</td>
+</tr>
+<tr>
+<td><code>subtitle_urls</code></td>
+<td>List of public URLs for subtitle files</td>
+</tr>
+<tr>
+<td><code>source_label</code></td>
+<td>Input source label (<code>direct</code>, <code>playlist:…</code>, <code>channel:…</code>, or <code>search:…</code>)</td>
+</tr>
+<tr>
+<td><code>record_type</code></td>
+<td>Always <code>result</code> for dataset rows</td>
+</tr>
+<tr>
+<td><code>search_query</code></td>
+<td>Search phrase on a failure row for a search that returned no videos</td>
+</tr>
+<tr>
+<td><code>error</code></td>
+<td>Error message if the download, metadata read or input resolution failed</td>
+</tr>
+<tr>
+<td><code>downloaded_at</code></td>
+<td>Timestamp of when the download was processed</td>
+</tr>
+</tbody>
+</table></div>
+<p>Besides one row per video, the dataset can contain failure rows (<code>download_status: &quot;failed&quot;</code> with an <code>error</code>): one for each playlist or channel that resolves to no videos (its URL is in <code>video_url</code>), one for each search phrase with no results (in <code>search_query</code>), and a single row when no input was given at all. Videos that are private, removed, unavailable or blocked for copyright are skipped without a row when downloading.</p>
+<h2 id="readme-input">Input</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>videoUrls</code></td>
+<td>array</td>
+<td>—</td>
+<td>Direct YouTube video URLs to download.</td>
+</tr>
+<tr>
+<td><code>playlistUrls</code></td>
+<td>array</td>
+<td>—</td>
+<td>YouTube playlist URLs — videos in the playlist are processed up to <code>maxVideosPerInput</code>.</td>
+</tr>
+<tr>
+<td><code>channelUrls</code></td>
+<td>array</td>
+<td>—</td>
+<td>YouTube channel URLs, handles, or IDs.</td>
+</tr>
+<tr>
+<td><code>searchQueries</code></td>
+<td>array</td>
+<td>—</td>
+<td>Search phrases; up to <code>maxVideosPerInput</code> public matches per phrase are resolved, never more than 50.</td>
+</tr>
+<tr>
+<td><code>videoQuality</code></td>
+<td>string</td>
+<td><code>720p</code></td>
+<td><code>best</code>, <code>1080p</code>, <code>720p</code>, <code>480p</code>, <code>360p</code>, <code>audio_only</code>, or <code>worst</code>. Falls back to the best available quality when the chosen one doesn't exist, and to the lowest quality if the file would not fit in the run's disk space.</td>
+</tr>
+<tr>
+<td><code>maxVideosPerInput</code></td>
+<td>integer</td>
+<td><code>10</code></td>
+<td>Maximum videos processed per playlist, channel, or search input (1–500; searches stop at 50). Direct video URLs are not limited.</td>
+</tr>
+<tr>
+<td><code>downloadSubtitles</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Download subtitle files alongside the video.</td>
+</tr>
+<tr>
+<td><code>subtitleLanguages</code></td>
+<td>array</td>
+<td><code>[&quot;en&quot;]</code></td>
+<td>Subtitle language codes to fetch when <code>downloadSubtitles</code> is on.</td>
+</tr>
+<tr>
+<td><code>extractMetadataOnly</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Return metadata without downloading the video file.</td>
+</tr>
+<tr>
+<td><code>proxyCountry</code></td>
+<td>string</td>
+<td><code>US</code></td>
+<td>Country of the built-in residential proxy (31 options) — change if a video is geo-blocked.</td>
+</tr>
+<tr>
+<td><code>cookies</code></td>
+<td>string</td>
+<td>—</td>
+<td>Optional Netscape-format <code>cookies.txt</code> content for age-restricted or members-only videos (not needed for public videos).</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="readme-example-input">Example input</h3>
+<pre><code class="language-json">{
+    &quot;videoUrls&quot;: [&quot;https://www.youtube.com/watch?v=dQw4w9WgXcQ&quot;],
+    &quot;videoQuality&quot;: &quot;720p&quot;,
+    &quot;downloadSubtitles&quot;: false,
+    &quot;maxVideosPerInput&quot;: 10,
+    &quot;proxyCountry&quot;: &quot;US&quot;
+}
+</code></pre>
+<p>Search example:</p>
+<pre><code class="language-json">{
+    &quot;searchQueries&quot;: [&quot;python tutorial for beginners&quot;],
+    &quot;maxVideosPerInput&quot;: 3,
+    &quot;videoQuality&quot;: &quot;480p&quot;,
+    &quot;extractMetadataOnly&quot;: true
+}
+</code></pre>
+<h3 id="readme-how-to-use">How to use</h3>
+<ol>
+<li><strong>Add your YouTube URLs</strong> — paste video URLs, playlist URLs, or channel URLs into the corresponding input fields.</li>
+<li><strong>Choose video quality</strong> — select your preferred resolution from the dropdown (defaults to 720p).</li>
+<li><strong>Configure options</strong> — optionally enable subtitle downloads, set a max video limit for playlists/channels, or change the proxy country.</li>
+<li><strong>Run the actor</strong> — click Start and the actor will process each video, downloading and storing the files.</li>
+<li><strong>Access your results</strong> — find all downloaded videos and metadata in the dataset. Each successfully downloaded video includes a public download link.</li>
+</ol>
+<h2 id="readme-examples">Examples</h2>
+<h3 id="readme-example-single-video">Example: single video</h3>
+<pre><code class="language-json">{
+  &quot;videoUrls&quot;: [&quot;https://www.youtube.com/watch?v=dQw4w9WgXcQ&quot;],
+  &quot;videoQuality&quot;: &quot;720p&quot;
+}
+</code></pre>
+<h3 id="readme-example-playlist-with-subtitles">Example: playlist with subtitles</h3>
+<pre><code class="language-json">{
+  &quot;playlistUrls&quot;: [&quot;https://www.youtube.com/playlist?list=PL-osiE80TeTt2d9bfVyTiXJA-UTHn6WwU&quot;],
+  &quot;maxVideosPerInput&quot;: 5,
+  &quot;downloadSubtitles&quot;: true,
+  &quot;subtitleLanguages&quot;: [&quot;en&quot;, &quot;es&quot;]
+}
+</code></pre>
+<h3 id="readme-example-metadata-only">Example: metadata only</h3>
+<pre><code class="language-json">{
+  &quot;searchQueries&quot;: [&quot;lofi beats&quot;],
+  &quot;maxVideosPerInput&quot;: 10,
+  &quot;extractMetadataOnly&quot;: true
+}
+</code></pre>
+<h2 id="readme-use-cases">Use cases</h2>
+<ul>
+<li><strong>Content archival</strong> — back up your favorite YouTube videos or entire channels before they disappear.</li>
+<li><strong>Research and analysis</strong> — collect video metadata (titles, descriptions, view counts, tags) at scale for content research, trend analysis, or competitive intelligence.</li>
+<li><strong>Media production</strong> — download source material for editing, compilation, or repurposing (always respect copyright).</li>
+<li><strong>Subtitle extraction</strong> — grab caption files for translation, accessibility, or content repurposing workflows.</li>
+<li><strong>Audio extraction</strong> — download podcast episodes, music, or audio content from YouTube without the video.</li>
+<li><strong>Dataset building</strong> — build structured datasets of YouTube video metadata for machine learning or analytics projects.</li>
+</ul>
+<h2 id="readme-faq">FAQ</h2>
+<h3 id="readme-how-do-i-download-a-single-youtube-video">How do I download a single YouTube video?</h3>
+<p>Paste the video URL into the <strong>Video URLs</strong> field and click Start. The actor will download the video and provide a public link to the file along with all available metadata.</p>
+<h3 id="readme-can-i-download-an-entire-youtube-playlist">Can I download an entire YouTube playlist?</h3>
+<p>Yes. Paste the playlist URL into the <strong>Playlist URLs</strong> field. The actor will automatically expand the playlist and download each video. Use <strong>Max Videos Per Playlist / Channel</strong> to limit the number of videos.</p>
+<h3 id="readme-can-i-download-videos-from-a-youtube-channel">Can I download videos from a YouTube channel?</h3>
+<p>Yes. Paste the channel URL (e.g. <code>https://www.youtube.com/@ChannelName</code>) into the <strong>Channel URLs</strong> field. The actor will fetch the latest videos from that channel.</p>
+<h3 id="readme-can-i-download-videos-from-a-youtube-search">Can I download videos from a YouTube search?</h3>
+<p>Yes. Add search phrases to <strong>Search Queries</strong>. Each phrase is resolved through
+YouTube's public search results, capped at <code>maxVideosPerInput</code> and never more than 50 results per phrase, and
+processed the same way as direct URLs.</p>
+<h3 id="readme-what-video-qualities-are-available">What video qualities are available?</h3>
+<p>You can choose from: Best Available, 1080p, 720p, 480p, 360p, Audio Only (no video), or Lowest (fastest download). If the selected quality is not available for a particular video, the actor automatically falls back to the best available option. If a very large file would not fit in the run's disk space, it downloads the lowest quality instead.</p>
+<h3 id="readme-can-i-download-just-the-audio-from-a-youtube-video">Can I download just the audio from a YouTube video?</h3>
+<p>Yes. Set the <strong>Video Quality</strong> to &quot;Audio Only&quot; and the actor will download only the audio track.</p>
+<h3 id="readme-can-i-download-subtitles">Can I download subtitles?</h3>
+<p>Yes. Enable the <strong>Download Subtitles</strong> option and the actor will download available caption files alongside the video. Subtitle files are stored separately with their own public URLs.</p>
+<h3 id="readme-what-if-a-video-is-geo-blocked-in-my-region">What if a video is geo-blocked in my region?</h3>
+<p>Change the <strong>Proxy Country</strong> setting to a country where the video is available. There are 31 options, including the United States, United Kingdom, Germany, France, Canada, Australia, Japan, India, Brazil, and Singapore.</p>
+<h3 id="readme-where-are-the-downloaded-files-stored">Where are the downloaded files stored?</h3>
+<p>Downloaded video files are uploaded to the Apify Key-Value Store. Each successfully downloaded video includes a <code>download_url</code> field in the output — this is a public link you can use to access the file directly.</p>
+<h3 id="readme-what-happens-if-a-download-fails">What happens if a download fails?</h3>
+<p>The output record for that video will have a <code>download_status</code> of <code>failed</code> along with an <code>error</code> field explaining what went wrong, and the actor continues with the remaining videos. The exception is a video that is private, removed, unavailable or blocked for copyright: it is skipped without a dataset row.</p>
+<h3 id="readme-can-i-get-video-metadata-without-downloading-the-actual-file">Can I get video metadata without downloading the actual file?</h3>
+<p>Yes. Download rows include the video's metadata (title, description, view counts, likes, tags, upload date, etc.) whenever it could be read, and a failed row may carry only the URL and the error.</p>
+<p>Enable the <strong>Metadata Only (No Download)</strong> option to skip the download entirely and get metadata in seconds — no storage is consumed.</p>
+<h3 id="readme-is-this-affiliated-with-youtube">Is this affiliated with YouTube?</h3>
+<p>No. This is an independent tool and is not affiliated with, endorsed by, or sponsored by YouTube or Google.</p>
+</details></section><section id="python-quickstart"><h2>Python quickstart</h2><p>Use a schema-derived input and the Python standard library to start a run. An Apify account and token are required for execution.</p><p><a href="/apify-actor-examples/guides/2Dxwy6cHWqWRHqhC9/">Open the step-by-step Python guide →</a></p></section><p class="source-note">Source build <code>JUaqrOIN08sc1v4xe</code>. Documentation is regenerated from the default published build; private drafts are not included.</p></article></div></main><footer class="footer"><strong>Nimbryxo Studio</strong><div class="footer-links"><a href="/apify-actor-examples/topics/">Topics</a><a href="/apify-actor-examples/sources/">Documentation sources</a><a href="https://apify.com/nimbryxo-studio">Apify</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></div></footer></body></html>

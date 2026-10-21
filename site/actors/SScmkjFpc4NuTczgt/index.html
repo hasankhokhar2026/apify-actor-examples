@@ -1,0 +1,1875 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src &#x27;self&#x27;; script-src &#x27;self&#x27; &#x27;sha256-F9fp8s1GrGaA0fRAisW4Pp+K6oxBG3xxFrjzFBHST04=&#x27;; style-src &#x27;self&#x27;; img-src &#x27;self&#x27; https: data:; base-uri &#x27;self&#x27;; form-action &#x27;self&#x27;; object-src &#x27;none&#x27;"><title>Google Maps Review &amp; Contributor Activity Scraper | Nimbryxo Studio</title><meta name="description" content="Get reviews for any Google Maps business or place, or switch to author mode to pull everything one Google reviewer has written. Includes ratings, review text, dates, likes, and own"><meta name="robots" content="index,follow"><link rel="canonical" href="https://hasankhokhar2026.github.io/apify-actor-examples/actors/SScmkjFpc4NuTczgt/"><meta property="og:title" content="Google Maps Review &amp; Contributor Activity Scraper | Nimbryxo Studio"><meta property="og:description" content="Get reviews for any Google Maps business or place, or switch to author mode to pull everything one Google reviewer has written. Includes ratings, review text, dates, likes, and own"><meta property="og:type" content="website"><meta property="og:url" content="https://hasankhokhar2026.github.io/apify-actor-examples/actors/SScmkjFpc4NuTczgt/"><meta property="og:site_name" content="Nimbryxo Studio"><meta name="twitter:card" content="summary"><link rel="icon" href="/apify-actor-examples/assets/mark.svg?v=2d20f9dc334a" type="image/svg+xml"><link rel="stylesheet" href="/apify-actor-examples/assets/site.css?v=39545fd4a399"><link rel="stylesheet" href="/apify-actor-examples/assets/brand.css?v=eb0f935ade25"><link rel="alternate" type="application/rss+xml" title="Nimbryxo Studio guides" href="/apify-actor-examples/feed.xml"><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization","name":"Nimbryxo Studio","url":"https://hasankhokhar2026.github.io/apify-actor-examples/","sameAs":["https://apify.com/nimbryxo-studio"]},{"@type":"WebSite","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#website","name":"Nimbryxo Studio","url":"https://hasankhokhar2026.github.io/apify-actor-examples/","publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"inLanguage":"en"},{"@type":"WebPage","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/SScmkjFpc4NuTczgt/#webpage","name":"Google Maps Review & Contributor Activity Scraper","description":"Get reviews for any Google Maps business or place, or switch to author mode to pull everything one Google reviewer has written. Includes ratings, review text, dates, likes, and owner replies.","url":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/SScmkjFpc4NuTczgt/","isPartOf":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#website"},"publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"inLanguage":"en","mainEntity":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/SScmkjFpc4NuTczgt/#article"},"breadcrumb":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/SScmkjFpc4NuTczgt/#breadcrumb"}},{"@type":"TechArticle","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/SScmkjFpc4NuTczgt/#article","headline":"Google Maps Review & Contributor Activity Scraper","name":"Google Maps Review & Contributor Activity Scraper","description":"Get reviews for any Google Maps business or place, or switch to author mode to pull everything one Google reviewer has written. Includes ratings, review text, dates, likes, and owner replies.","url":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/SScmkjFpc4NuTczgt/","author":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"mainEntityOfPage":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/SScmkjFpc4NuTczgt/#webpage"},"inLanguage":"en"},{"@type":"BreadcrumbList","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/SScmkjFpc4NuTczgt/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Nimbryxo Studio","item":"https://hasankhokhar2026.github.io/apify-actor-examples/"},{"@type":"ListItem","position":2,"name":"Actors","item":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/"},{"@type":"ListItem","position":3,"name":"Google Maps Review & Contributor Activity Scraper","item":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/SScmkjFpc4NuTczgt/"}]}]}</script><script src="/apify-actor-examples/assets/site.js?v=7cabac48dd31" defer></script></head><body class="theme-studio"><a href="#main" class="skip-link">Skip to content</a><header><div class="inner"><a href="/apify-actor-examples/" class="brand"><img src="/apify-actor-examples/assets/mark.svg?v=2d20f9dc334a" alt="" width="29" height="29">Nimbryxo Studio</a><nav aria-label="Main navigation"><a href="/apify-actor-examples/actors/" aria-current="page">Actors</a><a href="/apify-actor-examples/guides/">Guides</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></nav></div></header><main id="main"><div class="doc-layout"><aside class="contents" aria-label="On this page"><strong>Contents</strong><a href="#overview">Overview</a><a href="#published-readme">Published README</a><a href="#input-schema">Input schema</a><a href="#output-schema">Output schema</a><a href="#dataset-schema">Dataset schema</a><a href="#python-quickstart">Python quickstart</a></aside><article class="prose"><div class="breadcrumb"><a href="/apify-actor-examples/actors/">Actors</a><span>/</span><span>Google Maps Review &amp; Contributor Activity Scraper</span></div><section id="overview"><h1 class="doc-title">Google Maps Review &amp; Contributor Activity Scraper</h1><p class="lede">Get reviews for any Google Maps business or place, or switch to author mode to pull everything one Google reviewer has written. Includes ratings, review text, dates, likes, and owner replies.</p><div class="actions"><a class="button" href="https://apify.com/nimbryxo-studio/google-maps-review-and-contributor-activity">Open on Apify</a><a class="text-link" href="https://github.com/hasankhokhar2026/apify-actor-examples/blob/main/docs/actors/SScmkjFpc4NuTczgt/README.md">GitHub source</a></div></section><section class="schema-section" id="input-schema"><h2>Input schema</h2><p>Input fields, types, required flags, descriptions, defaults, and prefills come from the published definition. Prefill examples are distinct from defaults.</p><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>mode</code></td><td>string</td><td>optional</td><td>Reviews of places you list, reviews of places found by a search, or everything specific Google reviewers have published.</td></tr><tr><td><code>placeUrls</code></td><td>array</td><td>optional</td><td>Google Maps place links or IDs, one per line. Accepted: place links (also shared maps.app.goo.gl, goo.gl, g.page and share.google links, ?cid= links and review links), Place IDs starting with ChIJ, feature IDs like 0x89c259ab3c1ef289:0x3b67a41175949f55 and numeric CIDs. Used when collecting reviews of specific places.</td></tr><tr><td><code>searchQueries</code></td><td>array</td><td>optional</td><td>Google Maps searches such as &quot;dentists in Austin, TX&quot; or &quot;ramen Shibuya Tokyo&quot;. Include a city or area in each search. Used when finding places by search.</td></tr></tbody></table></div><details><summary>Show all input fields</summary><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>mode</code></td><td>string</td><td>optional</td><td>Reviews of places you list, reviews of places found by a search, or everything specific Google reviewers have published.</td></tr><tr><td><code>placeUrls</code></td><td>array</td><td>optional</td><td>Google Maps place links or IDs, one per line. Accepted: place links (also shared maps.app.goo.gl, goo.gl, g.page and share.google links, ?cid= links and review links), Place IDs starting with ChIJ, feature IDs like 0x89c259ab3c1ef289:0x3b67a41175949f55 and numeric CIDs. Used when collecting reviews of specific places.</td></tr><tr><td><code>searchQueries</code></td><td>array</td><td>optional</td><td>Google Maps searches such as &quot;dentists in Austin, TX&quot; or &quot;ramen Shibuya Tokyo&quot;. Include a city or area in each search. Used when finding places by search.</td></tr><tr><td><code>maxPlacesPerQuery</code></td><td>integer</td><td>optional</td><td>How many places to take from each search. One Google search lists about 120 to 360 places; when you ask for more, the actor also searches sub-areas of the same region to reach them.</td></tr><tr><td><code>contributorUrls</code></td><td>array</td><td>optional</td><td>Google Maps reviewer profile links (for example https://www.google.com/maps/contrib/108763873723673205857, or a shared maps.app.goo.gl profile link) or numeric reviewer IDs. Used when collecting everything specific reviewers have written.</td></tr><tr><td><code>maxReviews</code></td><td>integer</td><td>optional</td><td>Upper limit of reviews collected for each place, or for each reviewer. Google publishes up to 200 contributions per reviewer.</td></tr><tr><td><code>sortBy</code></td><td>string</td><td>optional</td><td>Order of a place&#x27;s reviews. Newest first and most relevant reach a place&#x27;s complete review history; Google lists at most 188 reviews per star level in rating order.</td></tr><tr><td><code>language</code></td><td>string</td><td>optional</td><td>Language of Google Maps labels such as &quot;2 weeks ago&quot;. Reviews written in another language also come with Google&#x27;s translation into this language.</td></tr><tr><td><code>reviewsNewerThan</code></td><td>string</td><td>optional</td><td>Keep reviews dated on or after this day, for example 2026-01-01, or a period such as 30 days. Reviews are then read newest first.</td></tr><tr><td><code>reviewsOlderThan</code></td><td>string</td><td>optional</td><td>Keep reviews dated on or before this day. Combine with &quot;Only reviews from&quot; for a date range.</td></tr><tr><td><code>keyword</code></td><td>string</td><td>optional</td><td>Words a review must mention, for example &quot;parking&quot; or &quot;long wait&quot;. For places this uses Google&#x27;s own review search, which also matches close word forms.</td></tr><tr><td><code>starRatings</code></td><td>array</td><td>optional</td><td>Keep only reviews with these star ratings. Leave empty for all ratings.</td></tr><tr><td><code>onlyWithText</code></td><td>boolean</td><td>optional</td><td>Skip star-only reviews that have no written text.</td></tr><tr><td><code>ownerReplyFilter</code></td><td>string</td><td>optional</td><td>Keep all reviews, only reviews the business replied to, or only reviews still without a reply.</td></tr><tr><td><code>onlyWithPhotos</code></td><td>boolean</td><td>optional</td><td>Keep only reviews that include photos or videos.</td></tr><tr><td><code>reviewLanguages</code></td><td>array</td><td>optional</td><td>Keep only reviews written in these languages, as two-letter codes such as en, es, ko. Leave empty for all languages.</td></tr><tr><td><code>monitoringKey</code></td><td>string</td><td>optional</td><td>Give scheduled runs the same name, for example my-restaurants. Each run then returns only reviews added or edited since the previous run with that name.</td></tr><tr><td><code>includePlaceSummary</code></td><td>boolean</td><td>optional</td><td>Adds one record per place with its rating breakdown by stars, review topics, location, contact details and how many reviews were collected. These records have recordType &quot;place&quot;.</td></tr><tr><td><code>includeContributorSummary</code></td><td>boolean</td><td>optional</td><td>Adds one record per reviewer with their Local Guide level, points and lifetime contribution counts. These records have recordType &quot;contributor&quot;.</td></tr><tr><td><code>includeReviewerDetails</code></td><td>boolean</td><td>optional</td><td>Turn off to leave out reviewer names, profile pictures, profile links and reviewer IDs from place reviews.</td></tr><tr><td><code>enrichReviewerProfiles</code></td><td>boolean</td><td>optional</td><td>For place reviews, also open each reviewer&#x27;s public profile to add likes, first-published and edited dates, view counts, owner-reply dates and the reviewer&#x27;s Local Guide level. Adds one request per reviewer. Reviews by private profiles, or older than a reviewer&#x27;s 200 most recent contributions, keep the standard fields.</td></tr><tr><td><code>includePartnerReviews</code></td><td>boolean</td><td>optional</td><td>Hotels on Google Maps also show reviews from partner sites such as Tripadvisor, Trip.com or Priceline. Turn on to add those reviews as separate records (recordType partnerReview), up to Max reviews per partner site, newest first. Places without partner reviews are not affected.</td></tr><tr><td><code>includePhotoDetails</code></td><td>boolean</td><td>optional</td><td>For place reviews with photos or videos, add the width, height and upload date of each one. Adds one request per photo.</td></tr></tbody></table></div></details><p><a href="input-schema.json">Download the published input schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+  &quot;properties&quot;: {
+    &quot;contributorUrls&quot;: {
+      &quot;description&quot;: &quot;Google Maps reviewer profile links (for example https://www.google.com/maps/contrib/108763873723673205857, or a shared maps.app.goo.gl profile link) or numeric reviewer IDs. Used when collecting everything specific reviewers have written.&quot;,
+      &quot;editor&quot;: &quot;stringList&quot;,
+      &quot;title&quot;: &quot;Reviewers&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;enrichReviewerProfiles&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;For place reviews, also open each reviewer&#x27;s public profile to add likes, first-published and edited dates, view counts, owner-reply dates and the reviewer&#x27;s Local Guide level. Adds one request per reviewer. Reviews by private profiles, or older than a reviewer&#x27;s 200 most recent contributions, keep the standard fields.&quot;,
+      &quot;title&quot;: &quot;Add likes, edit dates and Local Guide levels (slower)&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;includeContributorSummary&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;Adds one record per reviewer with their Local Guide level, points and lifetime contribution counts. These records have recordType \&quot;contributor\&quot;.&quot;,
+      &quot;title&quot;: &quot;Add a reviewer summary record&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;includePartnerReviews&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;Hotels on Google Maps also show reviews from partner sites such as Tripadvisor, Trip.com or Priceline. Turn on to add those reviews as separate records (recordType partnerReview), up to Max reviews per partner site, newest first. Places without partner reviews are not affected.&quot;,
+      &quot;title&quot;: &quot;Add hotel reviews from partner sites (Tripadvisor, Trip.com, …)&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;includePhotoDetails&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;For place reviews with photos or videos, add the width, height and upload date of each one. Adds one request per photo.&quot;,
+      &quot;title&quot;: &quot;Add photo details (size and upload date, slower)&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;includePlaceSummary&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;Adds one record per place with its rating breakdown by stars, review topics, location, contact details and how many reviews were collected. These records have recordType \&quot;place\&quot;.&quot;,
+      &quot;title&quot;: &quot;Add a place summary record&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;includeReviewerDetails&quot;: {
+      &quot;default&quot;: true,
+      &quot;description&quot;: &quot;Turn off to leave out reviewer names, profile pictures, profile links and reviewer IDs from place reviews.&quot;,
+      &quot;title&quot;: &quot;Include reviewer names and profiles&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;keyword&quot;: {
+      &quot;description&quot;: &quot;Words a review must mention, for example \&quot;parking\&quot; or \&quot;long wait\&quot;. For places this uses Google&#x27;s own review search, which also matches close word forms.&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;title&quot;: &quot;Only reviews mentioning&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;language&quot;: {
+      &quot;default&quot;: &quot;en&quot;,
+      &quot;description&quot;: &quot;Language of Google Maps labels such as \&quot;2 weeks ago\&quot;. Reviews written in another language also come with Google&#x27;s translation into this language.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;en&quot;,
+        &quot;es&quot;,
+        &quot;fr&quot;,
+        &quot;de&quot;,
+        &quot;it&quot;,
+        &quot;pt&quot;,
+        &quot;pt-BR&quot;,
+        &quot;ja&quot;,
+        &quot;ko&quot;,
+        &quot;zh&quot;,
+        &quot;zh-TW&quot;,
+        &quot;ar&quot;,
+        &quot;ru&quot;,
+        &quot;hi&quot;,
+        &quot;tr&quot;,
+        &quot;nl&quot;,
+        &quot;pl&quot;,
+        &quot;id&quot;,
+        &quot;th&quot;,
+        &quot;vi&quot;,
+        &quot;he&quot;,
+        &quot;sv&quot;,
+        &quot;uk&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;English&quot;,
+        &quot;Spanish&quot;,
+        &quot;French&quot;,
+        &quot;German&quot;,
+        &quot;Italian&quot;,
+        &quot;Portuguese&quot;,
+        &quot;Portuguese (Brazil)&quot;,
+        &quot;Japanese&quot;,
+        &quot;Korean&quot;,
+        &quot;Chinese (Simplified)&quot;,
+        &quot;Chinese (Traditional)&quot;,
+        &quot;Arabic&quot;,
+        &quot;Russian&quot;,
+        &quot;Hindi&quot;,
+        &quot;Turkish&quot;,
+        &quot;Dutch&quot;,
+        &quot;Polish&quot;,
+        &quot;Indonesian&quot;,
+        &quot;Thai&quot;,
+        &quot;Vietnamese&quot;,
+        &quot;Hebrew&quot;,
+        &quot;Swedish&quot;,
+        &quot;Ukrainian&quot;
+      ],
+      &quot;title&quot;: &quot;Language&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;maxPlacesPerQuery&quot;: {
+      &quot;default&quot;: 20,
+      &quot;description&quot;: &quot;How many places to take from each search. One Google search lists about 120 to 360 places; when you ask for more, the actor also searches sub-areas of the same region to reach them.&quot;,
+      &quot;maximum&quot;: 2000,
+      &quot;minimum&quot;: 1,
+      &quot;title&quot;: &quot;Places per search&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;maxReviews&quot;: {
+      &quot;default&quot;: 50,
+      &quot;description&quot;: &quot;Upper limit of reviews collected for each place, or for each reviewer. Google publishes up to 200 contributions per reviewer.&quot;,
+      &quot;maximum&quot;: 200000,
+      &quot;minimum&quot;: 1,
+      &quot;prefill&quot;: 5,
+      &quot;title&quot;: &quot;Maximum reviews per place or reviewer&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;mode&quot;: {
+      &quot;default&quot;: &quot;place&quot;,
+      &quot;description&quot;: &quot;Reviews of places you list, reviews of places found by a search, or everything specific Google reviewers have published.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;place&quot;,
+        &quot;search&quot;,
+        &quot;author&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;Reviews of specific places (links or IDs)&quot;,
+        &quot;Find places by search, then collect their reviews&quot;,
+        &quot;Everything specific reviewers have written&quot;
+      ],
+      &quot;prefill&quot;: &quot;place&quot;,
+      &quot;title&quot;: &quot;What do you want to collect?&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;monitoringKey&quot;: {
+      &quot;description&quot;: &quot;Give scheduled runs the same name, for example my-restaurants. Each run then returns only reviews added or edited since the previous run with that name.&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;sectionCaption&quot;: &quot;Output options&quot;,
+      &quot;title&quot;: &quot;Only new reviews since the last run (monitoring name)&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;onlyWithPhotos&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;Keep only reviews that include photos or videos.&quot;,
+      &quot;title&quot;: &quot;Only reviews with photos or videos&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;onlyWithText&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;Skip star-only reviews that have no written text.&quot;,
+      &quot;title&quot;: &quot;Only reviews with written text&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;ownerReplyFilter&quot;: {
+      &quot;default&quot;: &quot;any&quot;,
+      &quot;description&quot;: &quot;Keep all reviews, only reviews the business replied to, or only reviews still without a reply.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;any&quot;,
+        &quot;withReply&quot;,
+        &quot;withoutReply&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;Any&quot;,
+        &quot;Only reviews with an owner reply&quot;,
+        &quot;Only reviews without an owner reply&quot;
+      ],
+      &quot;title&quot;: &quot;Owner reply&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;placeUrls&quot;: {
+      &quot;description&quot;: &quot;Google Maps place links or IDs, one per line. Accepted: place links (also shared maps.app.goo.gl, goo.gl, g.page and share.google links, ?cid= links and review links), Place IDs starting with ChIJ, feature IDs like 0x89c259ab3c1ef289:0x3b67a41175949f55 and numeric CIDs. Used when collecting reviews of specific places.&quot;,
+      &quot;editor&quot;: &quot;stringList&quot;,
+      &quot;prefill&quot;: [
+        &quot;https://www.google.com/maps/place/Eiffel+Tower/@48.8583701,2.2944813,17z/data=!3m1!4b1!4m6!3m5!1s0x47e66e2964e34e2d:0x8ddca9ee380ef7e0!8m2!3d48.8583701!4d2.2944813!16zL20vMDJqODE&quot;
+      ],
+      &quot;title&quot;: &quot;Places&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;reviewLanguages&quot;: {
+      &quot;description&quot;: &quot;Keep only reviews written in these languages, as two-letter codes such as en, es, ko. Leave empty for all languages.&quot;,
+      &quot;editor&quot;: &quot;stringList&quot;,
+      &quot;title&quot;: &quot;Review languages&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;reviewsNewerThan&quot;: {
+      &quot;dateType&quot;: &quot;absoluteOrRelative&quot;,
+      &quot;description&quot;: &quot;Keep reviews dated on or after this day, for example 2026-01-01, or a period such as 30 days. Reviews are then read newest first.&quot;,
+      &quot;editor&quot;: &quot;datepicker&quot;,
+      &quot;sectionCaption&quot;: &quot;Filters&quot;,
+      &quot;title&quot;: &quot;Only reviews from&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;reviewsOlderThan&quot;: {
+      &quot;dateType&quot;: &quot;absoluteOrRelative&quot;,
+      &quot;description&quot;: &quot;Keep reviews dated on or before this day. Combine with \&quot;Only reviews from\&quot; for a date range.&quot;,
+      &quot;editor&quot;: &quot;datepicker&quot;,
+      &quot;title&quot;: &quot;Only reviews until&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;searchQueries&quot;: {
+      &quot;description&quot;: &quot;Google Maps searches such as \&quot;dentists in Austin, TX\&quot; or \&quot;ramen Shibuya Tokyo\&quot;. Include a city or area in each search. Used when finding places by search.&quot;,
+      &quot;editor&quot;: &quot;stringList&quot;,
+      &quot;title&quot;: &quot;Searches&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;sortBy&quot;: {
+      &quot;default&quot;: &quot;newest&quot;,
+      &quot;description&quot;: &quot;Order of a place&#x27;s reviews. Newest first and most relevant reach a place&#x27;s complete review history; Google lists at most 188 reviews per star level in rating order.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;newest&quot;,
+        &quot;relevant&quot;,
+        &quot;highest_rating&quot;,
+        &quot;lowest_rating&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;Newest first&quot;,
+        &quot;Most relevant&quot;,
+        &quot;Highest rating first&quot;,
+        &quot;Lowest rating first&quot;
+      ],
+      &quot;title&quot;: &quot;Sort reviews by&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;starRatings&quot;: {
+      &quot;description&quot;: &quot;Keep only reviews with these star ratings. Leave empty for all ratings.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;items&quot;: {
+        &quot;enum&quot;: [
+          &quot;1&quot;,
+          &quot;2&quot;,
+          &quot;3&quot;,
+          &quot;4&quot;,
+          &quot;5&quot;
+        ],
+        &quot;enumTitles&quot;: [
+          &quot;1 star&quot;,
+          &quot;2 stars&quot;,
+          &quot;3 stars&quot;,
+          &quot;4 stars&quot;,
+          &quot;5 stars&quot;
+        ],
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;title&quot;: &quot;Star ratings&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    }
+  },
+  &quot;required&quot;: [],
+  &quot;schemaVersion&quot;: 1,
+  &quot;title&quot;: &quot;Google Maps Review &amp; Contributor Activity Scraper&quot;,
+  &quot;type&quot;: &quot;object&quot;
+}
+</code></pre></details></section><section class="schema-section" id="output-schema"><h2>Output schema</h2><p>Published result links and storage locations. This schema is not an exhaustive contract for every field in a dataset record.</p><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>results</code></td><td>string</td><td>optional</td><td>All records in the default dataset</td></tr><tr><td><code>detailed</code></td><td>string</td><td>optional</td><td>Every review field, including translations, sub-ratings, visit details, media details and partner-site fields</td></tr><tr><td><code>placeSummaries</code></td><td>string</td><td>optional</td><td>Per-place records (when the place summary option is on): reviews per star, topics, partner sites, location, opening hours and collection status</td></tr></tbody></table></div><p><a href="output-schema.json">Download the published output schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+  &quot;actorOutputSchemaVersion&quot;: 1,
+  &quot;description&quot;: &quot;One record per Google Maps review (place and search modes), per reviewer contribution (reviewer mode) or per partner-site review on hotels, with ratings, full text, translations, dates, owner replies, photos and place context. Optional place and reviewer summary records.&quot;,
+  &quot;properties&quot;: {
+    &quot;detailed&quot;: {
+      &quot;description&quot;: &quot;Every review field, including translations, sub-ratings, visit details, media details and partner-site fields&quot;,
+      &quot;template&quot;: &quot;{{links.apiDefaultDatasetUrl}}/items?view=detailed&quot;,
+      &quot;title&quot;: &quot;Reviews (all fields)&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;placeSummaries&quot;: {
+      &quot;description&quot;: &quot;Per-place records (when the place summary option is on): reviews per star, topics, partner sites, location, opening hours and collection status&quot;,
+      &quot;template&quot;: &quot;{{links.apiDefaultDatasetUrl}}/items?view=places&quot;,
+      &quot;title&quot;: &quot;Place summaries&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;results&quot;: {
+      &quot;description&quot;: &quot;All records in the default dataset&quot;,
+      &quot;template&quot;: &quot;{{links.apiDefaultDatasetUrl}}/items&quot;,
+      &quot;title&quot;: &quot;Reviews&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    }
+  },
+  &quot;title&quot;: &quot;Google Maps Review &amp; Contributor Activity Scraper Output&quot;
+}
+</code></pre></details></section><section class="schema-section" id="dataset-schema"><h2>Dataset schema</h2><p>Published dataset views and any declared field definitions. A view can select only a subset of the returned record fields.</p><p><a href="dataset-schema.json">Download the published dataset schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+  &quot;actorSpecification&quot;: 1,
+  &quot;fields&quot;: {
+    &quot;properties&quot;: {
+      &quot;businessAddress&quot;: {
+        &quot;description&quot;: &quot;The place&#x27;s address.&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;businessCategories&quot;: {
+        &quot;description&quot;: &quot;All of the place&#x27;s categories.&quot;,
+        &quot;items&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        },
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;array&quot;
+      },
+      &quot;businessCategory&quot;: {
+        &quot;description&quot;: &quot;The place&#x27;s main category.&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;businessLatitude&quot;: {
+        &quot;description&quot;: &quot;The place&#x27;s latitude.&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;number&quot;
+      },
+      &quot;businessLongitude&quot;: {
+        &quot;description&quot;: &quot;The place&#x27;s longitude.&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;number&quot;
+      },
+      &quot;businessName&quot;: {
+        &quot;description&quot;: &quot;Name of the place.&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;businessRating&quot;: {
+        &quot;description&quot;: &quot;The place&#x27;s average rating.&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;number&quot;
+      },
+      &quot;businessTotalReviews&quot;: {
+        &quot;description&quot;: &quot;How many reviews Google shows for the place.&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;integer&quot;
+      },
+      &quot;cid&quot;: {
+        &quot;description&quot;: &quot;Google&#x27;s customer ID (CID) for the place.&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;contextLabels&quot;: {
+        &quot;description&quot;: &quot;&#x27;Label: value&#x27; strings built from Google&#x27;s structured review details.&quot;,
+        &quot;items&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        },
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;array&quot;
+      },
+      &quot;contributorAvatarUrl&quot;: {
+        &quot;description&quot;: &quot;Contributor avatar URL (reviewer mode).&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;contributorId&quot;: {
+        &quot;description&quot;: &quot;Contributor profile ID (reviewer mode).&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;contributorLocalGuideLevel&quot;: {
+        &quot;description&quot;: &quot;Contributor Local Guide level (reviewer mode).&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;integer&quot;
+      },
+      &quot;contributorName&quot;: {
+        &quot;description&quot;: &quot;Contributor name (reviewer mode).&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;contributorPoints&quot;: {
+        &quot;description&quot;: &quot;Contributor points (reviewer mode).&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;integer&quot;
+      },
+      &quot;contributorProfileUrl&quot;: {
+        &quot;description&quot;: &quot;Contributor profile URL (reviewer mode).&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;contributorTotalReviews&quot;: {
+        &quot;description&quot;: &quot;Reviews on the contributor&#x27;s profile (reviewer mode).&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;integer&quot;
+      },
+      &quot;countryCode&quot;: {
+        &quot;description&quot;: &quot;Place summary: the place&#x27;s country code.&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;description&quot;: {
+        &quot;description&quot;: &quot;Place summary: Google&#x27;s description of the place.&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;featureId&quot;: {
+        &quot;description&quot;: &quot;Google Maps feature ID (0x...:0x...).&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;isEdited&quot;: {
+        &quot;description&quot;: &quot;True when the review was edited after publishing, filled only with enrichReviewerProfiles on.&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;boolean&quot;
+      },
+      &quot;isRatingOnly&quot;: {
+        &quot;description&quot;: &quot;True when the review has a rating and no text.&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;boolean&quot;
+      },
+      &quot;isVerified&quot;: {
+        &quot;description&quot;: &quot;Never filled: Google does not publish a verified flag on reviews. Kept in the schema for older integrations.&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;boolean&quot;
+      },
+      &quot;kgmid&quot;: {
+        &quot;description&quot;: &quot;Google&#x27;s Knowledge Graph ID for the place.&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;likesCount&quot;: {
+        &quot;description&quot;: &quot;Review likes, filled only with enrichReviewerProfiles on.&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;integer&quot;
+      },
+      &quot;mentionedItems&quot;: {
+        &quot;description&quot;: &quot;Never filled as a separate field: the items a reviewer mentioned are in reviewContext (and contextLabels). Kept in the schema for older integrations.&quot;,
+        &quot;items&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        },
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;array&quot;
+      },
+      &quot;openingHours&quot;: {
+        &quot;description&quot;: &quot;Place summary: opening hours per weekday.&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;object&quot;
+      },
+      &quot;order&quot;: {
+        &quot;description&quot;: &quot;Position of the review in this place&#x27;s collected output, starting at 1.&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;integer&quot;
+      },
+      &quot;originalReviewLanguage&quot;: {
+        &quot;description&quot;: &quot;Original language when the review came with a translation.&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;ownerResponseDate&quot;: {
+        &quot;description&quot;: &quot;ISO 8601 owner-reply date; place mode needs enrichReviewerProfiles, reviewer mode always has it.&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;ownerResponseDateOriginal&quot;: {
+        &quot;description&quot;: &quot;The owner-reply date as Google prints it.&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;ownerResponseText&quot;: {
+        &quot;description&quot;: &quot;The owner&#x27;s public reply, when there is one.&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;ownerResponseTextTranslated&quot;: {
+        &quot;description&quot;: &quot;Google&#x27;s translation of the owner&#x27;s reply.&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;partnerReviewId&quot;: {
+        &quot;description&quot;: &quot;For partnerReview records: the review&#x27;s ID on the partner site.&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;partnerReviews&quot;: {
+        &quot;description&quot;: &quot;Place summary: partner sites Google lists for the place, with rating, scale, review count, link and a sample review.&quot;,
+        &quot;items&quot;: {
+          &quot;type&quot;: &quot;object&quot;
+        },
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;array&quot;
+      },
+      &quot;partnerReviewsDelivered&quot;: {
+        &quot;description&quot;: &quot;Place summary: how many partner-site reviews this run delivered (with includePartnerReviews on).&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;integer&quot;
+      },
+      &quot;partnerSource&quot;: {
+        &quot;description&quot;: &quot;For partnerReview records: the partner site Google syndicates the review from, such as Tripadvisor or Trip.com.&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;phone&quot;: {
+        &quot;description&quot;: &quot;Place summary: the place&#x27;s phone number.&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;photoDetails&quot;: {
+        &quot;description&quot;: &quot;With includePhotoDetails on: one entry per photo or video with url, width, height, uploadDate and, for videos, durationSeconds.&quot;,
+        &quot;items&quot;: {
+          &quot;type&quot;: &quot;object&quot;
+        },
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;array&quot;
+      },
+      &quot;photosInReview&quot;: {
+        &quot;description&quot;: &quot;Photo URLs attached to a review.&quot;,
+        &quot;items&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        },
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;array&quot;
+      },
+      &quot;placeAddress&quot;: {
+        &quot;description&quot;: &quot;Address of the reviewed place (reviewer mode).&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;placeCategory&quot;: {
+        &quot;description&quot;: &quot;Category of the reviewed place (reviewer mode).&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;placeId&quot;: {
+        &quot;description&quot;: &quot;Google&#x27;s Place ID (ChIJ...) when available.&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;placeLatitude&quot;: {
+        &quot;description&quot;: &quot;Latitude of the reviewed place (reviewer mode).&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;number&quot;
+      },
+      &quot;placeLongitude&quot;: {
+        &quot;description&quot;: &quot;Longitude of the reviewed place (reviewer mode).&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;number&quot;
+      },
+      &quot;placeName&quot;: {
+        &quot;description&quot;: &quot;Name of the reviewed place (reviewer mode).&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;placePriceRange&quot;: {
+        &quot;description&quot;: &quot;Price range of the reviewed place (reviewer mode).&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;placeRating&quot;: {
+        &quot;description&quot;: &quot;Rating of the reviewed place (reviewer mode).&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;number&quot;
+      },
+      &quot;placeTotalReviews&quot;: {
+        &quot;description&quot;: &quot;Review count of the reviewed place (reviewer mode).&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;integer&quot;
+      },
+      &quot;placeUrl&quot;: {
+        &quot;description&quot;: &quot;Google Maps URL of the place.&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;position&quot;: {
+        &quot;description&quot;: &quot;Position of the review in Google&#x27;s list (reviewer mode).&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;integer&quot;
+      },
+      &quot;rating&quot;: {
+        &quot;description&quot;: &quot;Rating on the review, and on partnerReview records on the partner&#x27;s own scale.&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;number&quot;
+      },
+      &quot;ratingHistogram&quot;: {
+        &quot;description&quot;: &quot;Place summary: how many reviews the place has for each star rating.&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;object&quot;
+      },
+      &quot;ratingScale&quot;: {
+        &quot;description&quot;: &quot;For partnerReview records: the scale of the partner rating, for example 5 or 10.&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;number&quot;
+      },
+      &quot;recordType&quot;: {
+        &quot;description&quot;: &quot;review, authorReview, partnerReview, place or contributor.&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;reviewContext&quot;: {
+        &quot;description&quot;: &quot;Google&#x27;s structured review details (meal type, price per person, dishes or items mentioned, and so on).&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;object&quot;
+      },
+      &quot;reviewCreatedAt&quot;: {
+        &quot;description&quot;: &quot;ISO 8601 first-published date, filled only with enrichReviewerProfiles on.&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;reviewDate&quot;: {
+        &quot;description&quot;: &quot;ISO 8601 date of the review&#x27;s last update (Google&#x27;s newest-order date).&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;reviewDateOriginal&quot;: {
+        &quot;description&quot;: &quot;The date as Google prints it (for example &#x27;2 weeks ago&#x27;). Partner reviews have only this relative date.&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;reviewId&quot;: {
+        &quot;description&quot;: &quot;Google&#x27;s review ID (reviews and authorReview records).&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;reviewLanguage&quot;: {
+        &quot;description&quot;: &quot;Language Google detected for the review text.&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;reviewPhotoCount&quot;: {
+        &quot;description&quot;: &quot;Number of photos attached to a review.&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;integer&quot;
+      },
+      &quot;reviewPhotoUrls&quot;: {
+        &quot;description&quot;: &quot;Alias of photosInReview kept for older integrations.&quot;,
+        &quot;items&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        },
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;array&quot;
+      },
+      &quot;reviewReportUrl&quot;: {
+        &quot;description&quot;: &quot;Google&#x27;s report-this-review URL.&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;reviewText&quot;: {
+        &quot;description&quot;: &quot;Review text, with Google&#x27;s HTML removed.&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;reviewTextTranslated&quot;: {
+        &quot;description&quot;: &quot;Google&#x27;s translation of the review into the chosen language.&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;reviewTopics&quot;: {
+        &quot;description&quot;: &quot;Place summary: Google&#x27;s review topic chips and how many reviews mention each.&quot;,
+        &quot;items&quot;: {
+          &quot;type&quot;: &quot;object&quot;
+        },
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;array&quot;
+      },
+      &quot;reviewUrl&quot;: {
+        &quot;description&quot;: &quot;Google Maps URL of the review.&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;reviewVideoUrls&quot;: {
+        &quot;description&quot;: &quot;Video URLs attached to a review.&quot;,
+        &quot;items&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        },
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;array&quot;
+      },
+      &quot;reviewViewCount&quot;: {
+        &quot;description&quot;: &quot;Review view count, filled only with enrichReviewerProfiles on.&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;integer&quot;
+      },
+      &quot;reviewerAvatarUrl&quot;: {
+        &quot;description&quot;: &quot;Reviewer avatar URL (omitted with includeReviewerDetails off).&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;reviewerEmoji&quot;: {
+        &quot;description&quot;: &quot;Never filled: Google does not publish an emoji next to reviewer names. Kept in the schema for older integrations.&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;reviewerId&quot;: {
+        &quot;description&quot;: &quot;Reviewer profile ID (omitted with includeReviewerDetails off).&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;reviewerIsLocalGuide&quot;: {
+        &quot;description&quot;: &quot;True when Google labels this reviewer &#x27;Local Guide&#x27; on the review.&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;boolean&quot;
+      },
+      &quot;reviewerLocalGuideLevel&quot;: {
+        &quot;description&quot;: &quot;Exact Local Guide level, filled only with enrichReviewerProfiles on.&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;integer&quot;
+      },
+      &quot;reviewerName&quot;: {
+        &quot;description&quot;: &quot;Name of the reviewer (omitted with includeReviewerDetails off).&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;reviewerPhotoCount&quot;: {
+        &quot;description&quot;: &quot;How many photos the reviewer has contributed, from Google&#x27;s review feed.&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;integer&quot;
+      },
+      &quot;reviewerProfileUrl&quot;: {
+        &quot;description&quot;: &quot;Reviewer profile URL (omitted with includeReviewerDetails off).&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;reviewerSubtitle&quot;: {
+        &quot;description&quot;: &quot;The status line Google prints under the reviewer&#x27;s name, such as &#x27;Local Guide · 53 reviews · 58 photos&#x27;, in the chosen language. Left out when Google&#x27;s exact wording for that language and those counts was not observed; the counts stay in reviewerTotalReviews and reviewerPhotoCount.&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;reviewerTotalReviews&quot;: {
+        &quot;description&quot;: &quot;How many reviews the reviewer has written, from Google&#x27;s review feed.&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;integer&quot;
+      },
+      &quot;reviewsDelivered&quot;: {
+        &quot;description&quot;: &quot;Place or contributor summary: how many reviews this run delivered.&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;integer&quot;
+      },
+      &quot;reviewsRemovedNotice&quot;: {
+        &quot;description&quot;: &quot;Place summary: Google&#x27;s notice that reviews were removed after legal complaints.&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;reviewsScanned&quot;: {
+        &quot;description&quot;: &quot;Place summary: how many reviews the actor read before stopping.&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;integer&quot;
+      },
+      &quot;scrapedAt&quot;: {
+        &quot;description&quot;: &quot;ISO 8601 time when the run collected the record.&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;searchQuery&quot;: {
+        &quot;description&quot;: &quot;The search query that found the place (search mode).&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;searchRank&quot;: {
+        &quot;description&quot;: &quot;The place&#x27;s rank in the search results (search mode).&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;integer&quot;
+      },
+      &quot;sortBy&quot;: {
+        &quot;description&quot;: &quot;The sort order that was requested.&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;sortConfirmed&quot;: {
+        &quot;description&quot;: &quot;True when the feed&#x27;s order matched the requested sort. False means the actor delivered what Google returned (for example the 188-per-star rating window).&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;boolean&quot;
+      },
+      &quot;sortStatus&quot;: {
+        &quot;description&quot;: &quot;confirmed or unconfirmed.&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;sourceUrl&quot;: {
+        &quot;description&quot;: &quot;The input that produced this record.&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;status&quot;: {
+        &quot;description&quot;: &quot;Place or contributor summary: ok, noReviews, notFound, invalid or partial.&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;statusReason&quot;: {
+        &quot;description&quot;: &quot;Place or contributor summary: plain-language explanation of the status.&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;stopReason&quot;: {
+        &quot;description&quot;: &quot;Place summary: why collection stopped, such as requestedCountReached, allReviewsCollected, dateCutoffReached or sourceStoppedResponding.&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;subRatings&quot;: {
+        &quot;description&quot;: &quot;Google&#x27;s numeric sub-ratings such as food or service, out of 5.&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;object&quot;
+      },
+      &quot;timezone&quot;: {
+        &quot;description&quot;: &quot;Place summary: the place&#x27;s time zone.&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;translatedLanguage&quot;: {
+        &quot;description&quot;: &quot;Language of reviewTextTranslated (the chosen language).&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;videosInReview&quot;: {
+        &quot;description&quot;: &quot;Number of videos attached to a review.&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;integer&quot;
+      },
+      &quot;visitDate&quot;: {
+        &quot;description&quot;: &quot;When the reviewer visited, when Google shows it.&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;website&quot;: {
+        &quot;description&quot;: &quot;Place summary: the place&#x27;s website.&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;string&quot;
+      }
+    },
+    &quot;type&quot;: &quot;object&quot;
+  },
+  &quot;title&quot;: &quot;Google Maps Reviews&quot;,
+  &quot;views&quot;: {
+    &quot;contributors&quot;: {
+      &quot;display&quot;: {
+        &quot;component&quot;: &quot;table&quot;,
+        &quot;properties&quot;: {
+          &quot;contributions&quot;: {
+            &quot;format&quot;: &quot;object&quot;,
+            &quot;label&quot;: &quot;Contribution counts&quot;
+          },
+          &quot;contributorAvatarUrl&quot;: {
+            &quot;format&quot;: &quot;link&quot;,
+            &quot;label&quot;: &quot;Contributor Avatar&quot;
+          },
+          &quot;contributorBio&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Bio&quot;
+          },
+          &quot;contributorId&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Contributor ID&quot;
+          },
+          &quot;contributorIsLocalGuide&quot;: {
+            &quot;format&quot;: &quot;boolean&quot;,
+            &quot;label&quot;: &quot;Local Guide&quot;
+          },
+          &quot;contributorLocalGuideLevel&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;contributorLocalGuideLevel&quot;
+          },
+          &quot;contributorName&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Contributor&quot;
+          },
+          &quot;contributorNextLevelPoints&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Points for next level&quot;
+          },
+          &quot;contributorPoints&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Contributor Points&quot;
+          },
+          &quot;contributorProfileUrl&quot;: {
+            &quot;format&quot;: &quot;link&quot;,
+            &quot;label&quot;: &quot;Contributor Profile URL&quot;
+          },
+          &quot;contributorTotalReviews&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;contributorTotalReviews&quot;
+          },
+          &quot;recordType&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;recordType&quot;
+          },
+          &quot;reviewsDelivered&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Reviews collected&quot;
+          },
+          &quot;scrapedAt&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Scraped At&quot;
+          },
+          &quot;sourceUrl&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;sourceUrl&quot;
+          },
+          &quot;status&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Status&quot;
+          },
+          &quot;statusReason&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Status details&quot;
+          }
+        }
+      },
+      &quot;title&quot;: &quot;Reviewer summaries&quot;,
+      &quot;transformation&quot;: {
+        &quot;fields&quot;: [
+          &quot;recordType&quot;,
+          &quot;contributorId&quot;,
+          &quot;contributorName&quot;,
+          &quot;contributorAvatarUrl&quot;,
+          &quot;contributorProfileUrl&quot;,
+          &quot;contributorIsLocalGuide&quot;,
+          &quot;contributorLocalGuideLevel&quot;,
+          &quot;contributorPoints&quot;,
+          &quot;contributorNextLevelPoints&quot;,
+          &quot;contributorTotalReviews&quot;,
+          &quot;contributorBio&quot;,
+          &quot;contributions&quot;,
+          &quot;status&quot;,
+          &quot;statusReason&quot;,
+          &quot;reviewsDelivered&quot;,
+          &quot;sourceUrl&quot;,
+          &quot;scrapedAt&quot;
+        ]
+      }
+    },
+    &quot;detailed&quot;: {
+      &quot;display&quot;: {
+        &quot;component&quot;: &quot;table&quot;,
+        &quot;properties&quot;: {
+          &quot;businessAddress&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Address&quot;
+          },
+          &quot;businessCategories&quot;: {
+            &quot;format&quot;: &quot;array&quot;,
+            &quot;label&quot;: &quot;Categories&quot;
+          },
+          &quot;businessCategory&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Category&quot;
+          },
+          &quot;businessLatitude&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Latitude&quot;
+          },
+          &quot;businessLongitude&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Longitude&quot;
+          },
+          &quot;businessName&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Business&quot;
+          },
+          &quot;businessRating&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Business Rating&quot;
+          },
+          &quot;businessTotalReviews&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Total Reviews&quot;
+          },
+          &quot;cid&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;CID&quot;
+          },
+          &quot;contextLabels&quot;: {
+            &quot;format&quot;: &quot;array&quot;,
+            &quot;label&quot;: &quot;Context Labels&quot;
+          },
+          &quot;contributorAvatarUrl&quot;: {
+            &quot;format&quot;: &quot;link&quot;,
+            &quot;label&quot;: &quot;Contributor Avatar&quot;
+          },
+          &quot;contributorId&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Contributor ID&quot;
+          },
+          &quot;contributorName&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Contributor&quot;
+          },
+          &quot;contributorPoints&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Contributor Points&quot;
+          },
+          &quot;contributorProfileUrl&quot;: {
+            &quot;format&quot;: &quot;link&quot;,
+            &quot;label&quot;: &quot;Contributor Profile URL&quot;
+          },
+          &quot;featureId&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Feature ID&quot;
+          },
+          &quot;isEdited&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;isEdited&quot;
+          },
+          &quot;isRatingOnly&quot;: {
+            &quot;format&quot;: &quot;boolean&quot;,
+            &quot;label&quot;: &quot;Stars only&quot;
+          },
+          &quot;isVerified&quot;: {
+            &quot;format&quot;: &quot;boolean&quot;,
+            &quot;label&quot;: &quot;Verified&quot;
+          },
+          &quot;likesCount&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Likes&quot;
+          },
+          &quot;mentionedItems&quot;: {
+            &quot;format&quot;: &quot;array&quot;,
+            &quot;label&quot;: &quot;Mentioned Items&quot;
+          },
+          &quot;order&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Order&quot;
+          },
+          &quot;originalReviewLanguage&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Original Language&quot;
+          },
+          &quot;ownerResponseDate&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Owner Reply Date&quot;
+          },
+          &quot;ownerResponseDateOriginal&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;ownerResponseDateOriginal&quot;
+          },
+          &quot;ownerResponseText&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Owner Reply&quot;
+          },
+          &quot;ownerResponseTextTranslated&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Owner reply (translated)&quot;
+          },
+          &quot;partnerReviewId&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Partner review ID&quot;
+          },
+          &quot;partnerSource&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Partner site&quot;
+          },
+          &quot;photoDetails&quot;: {
+            &quot;format&quot;: &quot;array&quot;,
+            &quot;label&quot;: &quot;Photo details&quot;
+          },
+          &quot;photosInReview&quot;: {
+            &quot;format&quot;: &quot;array&quot;,
+            &quot;label&quot;: &quot;Photos&quot;
+          },
+          &quot;placeAddress&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Reviewed Place Address&quot;
+          },
+          &quot;placeCategory&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Place category&quot;
+          },
+          &quot;placeId&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Place ID&quot;
+          },
+          &quot;placeLatitude&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Place latitude&quot;
+          },
+          &quot;placeLongitude&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Place longitude&quot;
+          },
+          &quot;placeName&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Reviewed Place&quot;
+          },
+          &quot;placePriceRange&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Price range&quot;
+          },
+          &quot;placeRating&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Place rating&quot;
+          },
+          &quot;placeTotalReviews&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Place reviews&quot;
+          },
+          &quot;placeUrl&quot;: {
+            &quot;format&quot;: &quot;link&quot;,
+            &quot;label&quot;: &quot;Place URL&quot;
+          },
+          &quot;position&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Position&quot;
+          },
+          &quot;rating&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Rating&quot;
+          },
+          &quot;ratingScale&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Partner rating scale&quot;
+          },
+          &quot;recordType&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;recordType&quot;
+          },
+          &quot;reviewContext&quot;: {
+            &quot;format&quot;: &quot;object&quot;,
+            &quot;label&quot;: &quot;Visit details&quot;
+          },
+          &quot;reviewCreatedAt&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;First published&quot;
+          },
+          &quot;reviewDate&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Date (ISO)&quot;
+          },
+          &quot;reviewDateOriginal&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Date (Original)&quot;
+          },
+          &quot;reviewId&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Review ID&quot;
+          },
+          &quot;reviewLanguage&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Language&quot;
+          },
+          &quot;reviewPhotoCount&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Contributor Review Photo Count&quot;
+          },
+          &quot;reviewPhotoUrls&quot;: {
+            &quot;format&quot;: &quot;array&quot;,
+            &quot;label&quot;: &quot;Contributor Review Photos&quot;
+          },
+          &quot;reviewReportUrl&quot;: {
+            &quot;format&quot;: &quot;link&quot;,
+            &quot;label&quot;: &quot;Report link&quot;
+          },
+          &quot;reviewText&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Review&quot;
+          },
+          &quot;reviewTextTranslated&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Translated review&quot;
+          },
+          &quot;reviewUrl&quot;: {
+            &quot;format&quot;: &quot;link&quot;,
+            &quot;label&quot;: &quot;Review link&quot;
+          },
+          &quot;reviewVideoUrls&quot;: {
+            &quot;format&quot;: &quot;array&quot;,
+            &quot;label&quot;: &quot;Videos&quot;
+          },
+          &quot;reviewViewCount&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Views&quot;
+          },
+          &quot;reviewerAvatarUrl&quot;: {
+            &quot;format&quot;: &quot;link&quot;,
+            &quot;label&quot;: &quot;Avatar&quot;
+          },
+          &quot;reviewerEmoji&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Reviewer Emoji&quot;
+          },
+          &quot;reviewerId&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Reviewer ID&quot;
+          },
+          &quot;reviewerIsLocalGuide&quot;: {
+            &quot;format&quot;: &quot;boolean&quot;,
+            &quot;label&quot;: &quot;Local Guide&quot;
+          },
+          &quot;reviewerLocalGuideLevel&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Local Guide Level&quot;
+          },
+          &quot;reviewerName&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Reviewer&quot;
+          },
+          &quot;reviewerPhotoCount&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Reviewer Photo Count&quot;
+          },
+          &quot;reviewerProfileUrl&quot;: {
+            &quot;format&quot;: &quot;link&quot;,
+            &quot;label&quot;: &quot;Profile URL&quot;
+          },
+          &quot;reviewerSubtitle&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Reviewer Subtitle&quot;
+          },
+          &quot;reviewerTotalReviews&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Reviewer Total Reviews&quot;
+          },
+          &quot;scrapedAt&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Scraped At&quot;
+          },
+          &quot;searchQuery&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Search&quot;
+          },
+          &quot;searchRank&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Search rank&quot;
+          },
+          &quot;sortBy&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Requested Sort&quot;
+          },
+          &quot;sortConfirmed&quot;: {
+            &quot;format&quot;: &quot;boolean&quot;,
+            &quot;label&quot;: &quot;Sort Confirmed&quot;
+          },
+          &quot;sortStatus&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Sort Status&quot;
+          },
+          &quot;sourceUrl&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;sourceUrl&quot;
+          },
+          &quot;subRatings&quot;: {
+            &quot;format&quot;: &quot;object&quot;,
+            &quot;label&quot;: &quot;Sub-ratings&quot;
+          },
+          &quot;translatedLanguage&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Translated into&quot;
+          },
+          &quot;videosInReview&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Videos In Review&quot;
+          },
+          &quot;visitDate&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Visit Date&quot;
+          }
+        }
+      },
+      &quot;title&quot;: &quot;Detailed&quot;,
+      &quot;transformation&quot;: {
+        &quot;fields&quot;: [
+          &quot;recordType&quot;,
+          &quot;reviewId&quot;,
+          &quot;reviewerName&quot;,
+          &quot;reviewerAvatarUrl&quot;,
+          &quot;reviewerProfileUrl&quot;,
+          &quot;reviewerSubtitle&quot;,
+          &quot;reviewerLocalGuideLevel&quot;,
+          &quot;reviewerTotalReviews&quot;,
+          &quot;reviewerPhotoCount&quot;,
+          &quot;reviewerEmoji&quot;,
+          &quot;contributorId&quot;,
+          &quot;contributorName&quot;,
+          &quot;contributorAvatarUrl&quot;,
+          &quot;contributorProfileUrl&quot;,
+          &quot;contributorPoints&quot;,
+          &quot;rating&quot;,
+          &quot;reviewText&quot;,
+          &quot;reviewLanguage&quot;,
+          &quot;originalReviewLanguage&quot;,
+          &quot;reviewDate&quot;,
+          &quot;reviewDateOriginal&quot;,
+          &quot;isEdited&quot;,
+          &quot;likesCount&quot;,
+          &quot;photosInReview&quot;,
+          &quot;reviewPhotoUrls&quot;,
+          &quot;reviewPhotoCount&quot;,
+          &quot;videosInReview&quot;,
+          &quot;photoDetails&quot;,
+          &quot;ownerResponseText&quot;,
+          &quot;ownerResponseDate&quot;,
+          &quot;ownerResponseDateOriginal&quot;,
+          &quot;isVerified&quot;,
+          &quot;visitDate&quot;,
+          &quot;mentionedItems&quot;,
+          &quot;contextLabels&quot;,
+          &quot;businessName&quot;,
+          &quot;businessRating&quot;,
+          &quot;businessTotalReviews&quot;,
+          &quot;businessCategory&quot;,
+          &quot;businessAddress&quot;,
+          &quot;placeName&quot;,
+          &quot;placeAddress&quot;,
+          &quot;placeId&quot;,
+          &quot;featureId&quot;,
+          &quot;placeUrl&quot;,
+          &quot;sourceUrl&quot;,
+          &quot;order&quot;,
+          &quot;position&quot;,
+          &quot;sortBy&quot;,
+          &quot;sortConfirmed&quot;,
+          &quot;sortStatus&quot;,
+          &quot;scrapedAt&quot;,
+          &quot;reviewUrl&quot;,
+          &quot;reviewReportUrl&quot;,
+          &quot;reviewTextTranslated&quot;,
+          &quot;translatedLanguage&quot;,
+          &quot;reviewerId&quot;,
+          &quot;reviewerIsLocalGuide&quot;,
+          &quot;reviewVideoUrls&quot;,
+          &quot;ownerResponseTextTranslated&quot;,
+          &quot;subRatings&quot;,
+          &quot;reviewContext&quot;,
+          &quot;reviewCreatedAt&quot;,
+          &quot;reviewViewCount&quot;,
+          &quot;isRatingOnly&quot;,
+          &quot;businessCategories&quot;,
+          &quot;businessLatitude&quot;,
+          &quot;businessLongitude&quot;,
+          &quot;cid&quot;,
+          &quot;placeLatitude&quot;,
+          &quot;placeLongitude&quot;,
+          &quot;placeCategory&quot;,
+          &quot;placeRating&quot;,
+          &quot;placeTotalReviews&quot;,
+          &quot;placePriceRange&quot;,
+          &quot;searchQuery&quot;,
+          &quot;searchRank&quot;,
+          &quot;partnerSource&quot;,
+          &quot;partnerReviewId&quot;,
+          &quot;ratingScale&quot;
+        ]
+      }
+    },
+    &quot;overview&quot;: {
+      &quot;display&quot;: {
+        &quot;component&quot;: &quot;table&quot;,
+        &quot;properties&quot;: {
+          &quot;businessName&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Business&quot;
+          },
+          &quot;likesCount&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Likes&quot;
+          },
+          &quot;rating&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Rating&quot;
+          },
+          &quot;reviewDate&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Date&quot;
+          },
+          &quot;reviewText&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Review&quot;
+          },
+          &quot;reviewerName&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Reviewer&quot;
+          },
+          &quot;sortBy&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Requested Sort&quot;
+          },
+          &quot;sortConfirmed&quot;: {
+            &quot;format&quot;: &quot;boolean&quot;,
+            &quot;label&quot;: &quot;Sort Confirmed&quot;
+          }
+        }
+      },
+      &quot;title&quot;: &quot;Reviews&quot;,
+      &quot;transformation&quot;: {
+        &quot;fields&quot;: [
+          &quot;recordType&quot;,
+          &quot;reviewerName&quot;,
+          &quot;rating&quot;,
+          &quot;reviewText&quot;,
+          &quot;reviewDate&quot;,
+          &quot;likesCount&quot;,
+          &quot;businessName&quot;,
+          &quot;sortBy&quot;,
+          &quot;sortConfirmed&quot;,
+          &quot;sourceUrl&quot;,
+          &quot;scrapedAt&quot;
+        ]
+      }
+    },
+    &quot;places&quot;: {
+      &quot;display&quot;: {
+        &quot;component&quot;: &quot;table&quot;,
+        &quot;properties&quot;: {
+          &quot;businessAddress&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Address&quot;
+          },
+          &quot;businessCategories&quot;: {
+            &quot;format&quot;: &quot;array&quot;,
+            &quot;label&quot;: &quot;Categories&quot;
+          },
+          &quot;businessCategory&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Category&quot;
+          },
+          &quot;businessLatitude&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Latitude&quot;
+          },
+          &quot;businessLongitude&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Longitude&quot;
+          },
+          &quot;businessName&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Business&quot;
+          },
+          &quot;businessRating&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Business Rating&quot;
+          },
+          &quot;businessTotalReviews&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Total Reviews&quot;
+          },
+          &quot;cid&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;CID&quot;
+          },
+          &quot;countryCode&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Country&quot;
+          },
+          &quot;description&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Description&quot;
+          },
+          &quot;featureId&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Feature ID&quot;
+          },
+          &quot;kgmid&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Knowledge Graph ID&quot;
+          },
+          &quot;openingHours&quot;: {
+            &quot;format&quot;: &quot;object&quot;,
+            &quot;label&quot;: &quot;Opening hours&quot;
+          },
+          &quot;partnerReviews&quot;: {
+            &quot;format&quot;: &quot;array&quot;,
+            &quot;label&quot;: &quot;Reviews on partner sites&quot;
+          },
+          &quot;partnerReviewsDelivered&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Partner reviews delivered&quot;
+          },
+          &quot;phone&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Phone&quot;
+          },
+          &quot;placeId&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Place ID&quot;
+          },
+          &quot;placeUrl&quot;: {
+            &quot;format&quot;: &quot;link&quot;,
+            &quot;label&quot;: &quot;Place URL&quot;
+          },
+          &quot;ratingHistogram&quot;: {
+            &quot;format&quot;: &quot;object&quot;,
+            &quot;label&quot;: &quot;Reviews per star&quot;
+          },
+          &quot;recordType&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;recordType&quot;
+          },
+          &quot;reviewTopics&quot;: {
+            &quot;format&quot;: &quot;array&quot;,
+            &quot;label&quot;: &quot;Review topics&quot;
+          },
+          &quot;reviewsDelivered&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Reviews collected&quot;
+          },
+          &quot;reviewsRemovedNotice&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Removed-reviews notice&quot;
+          },
+          &quot;reviewsScanned&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Reviews read&quot;
+          },
+          &quot;scrapedAt&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Scraped At&quot;
+          },
+          &quot;searchQuery&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Search&quot;
+          },
+          &quot;searchRank&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Search rank&quot;
+          },
+          &quot;sourceUrl&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;sourceUrl&quot;
+          },
+          &quot;status&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Status&quot;
+          },
+          &quot;statusReason&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Status details&quot;
+          },
+          &quot;stopReason&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Stopped because&quot;
+          },
+          &quot;timezone&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Time zone&quot;
+          },
+          &quot;website&quot;: {
+            &quot;format&quot;: &quot;link&quot;,
+            &quot;label&quot;: &quot;Website&quot;
+          }
+        }
+      },
+      &quot;title&quot;: &quot;Place summaries&quot;,
+      &quot;transformation&quot;: {
+        &quot;fields&quot;: [
+          &quot;recordType&quot;,
+          &quot;businessName&quot;,
+          &quot;businessRating&quot;,
+          &quot;businessTotalReviews&quot;,
+          &quot;ratingHistogram&quot;,
+          &quot;reviewTopics&quot;,
+          &quot;businessCategory&quot;,
+          &quot;businessCategories&quot;,
+          &quot;businessAddress&quot;,
+          &quot;businessLatitude&quot;,
+          &quot;businessLongitude&quot;,
+          &quot;phone&quot;,
+          &quot;website&quot;,
+          &quot;timezone&quot;,
+          &quot;countryCode&quot;,
+          &quot;description&quot;,
+          &quot;reviewsRemovedNotice&quot;,
+          &quot;partnerReviews&quot;,
+          &quot;openingHours&quot;,
+          &quot;placeId&quot;,
+          &quot;featureId&quot;,
+          &quot;cid&quot;,
+          &quot;kgmid&quot;,
+          &quot;placeUrl&quot;,
+          &quot;sourceUrl&quot;,
+          &quot;searchQuery&quot;,
+          &quot;searchRank&quot;,
+          &quot;status&quot;,
+          &quot;statusReason&quot;,
+          &quot;partnerReviewsDelivered&quot;,
+          &quot;reviewsDelivered&quot;,
+          &quot;reviewsScanned&quot;,
+          &quot;stopReason&quot;,
+          &quot;scrapedAt&quot;
+        ]
+      }
+    }
+  }
+}
+</code></pre></details></section><section class="schema-section" id="key-value-schema"><h2>Key-value schema</h2><p>Published key-value store definitions, when provided by this build.</p><p>This definition is not present in the default published build. See the published README for available documentation.</p></section><section id="published-readme"><h2>Published README</h2><details><summary>Read the full published documentation</summary><h2 id="readme-google-maps-review-contributor-activity-scraper">Google Maps Review &amp; Contributor Activity Scraper</h2>
+<p>Turn Google Maps reviews into a clean spreadsheet. Paste a list of places, describe the places you want with a search such as <em>&quot;dentists in Austin, TX&quot;</em>, or point at Google reviewers' profiles. You get every review's stars, full text with Google's translation, exact date, owner reply, photos and videos, food/service/atmosphere sub-ratings and visit details. No Google account, API key or cookies are needed.</p>
+<h2 id="readme-what-this-actor-does">What this actor does</h2>
+<ul>
+<li><strong>Whole review histories, not a sample.</strong> Newest-first and most-relevant orders go all the way back to a place's first review (a place with 27,335 reviews returned all 27,335).</li>
+<li><strong>Every way of choosing places.</strong> Mix place links, Place IDs (<code>ChIJ…</code>), feature IDs (<code>0x…:0x…</code>), CIDs, shared <code>maps.app.goo.gl</code> / <code>share.google</code> / <code>g.page</code> links and review links; search like a local (&quot;dentists in Austin, TX&quot;) and expand into sub-areas to reach around 1,000 places; or collect up to 200 recent contributions per reviewer profile.</li>
+<li><strong>Filters, order and monitoring.</strong> Date range, keywords, stars, written text, owner replies, photos/videos and review language; newest, most relevant, highest or lowest rating; scheduled runs with <code>monitoringKey</code> return only reviews added or edited since the previous one.</li>
+<li><strong>Rich, honest records.</strong> Full text with Google's translation, exact dates, owner replies, photos and videos, sub-ratings, visit context, reviewer identity, place facts, rating histogram and topic chips. Every row says whether the requested order was confirmed, and place summaries say why collection stopped.</li>
+<li><strong>Empty fields are omitted.</strong> Fields Google doesn't show for a record are left out instead of being empty; links to places that no longer exist are reported, never swapped for a lookalike business.</li>
+</ul>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Mode</th>
+<th>You provide</th>
+<th>You get</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Reviews of specific places</td>
+<td>Links or IDs of places</td>
+<td>Reviews of each place, plus optional place summaries</td>
+</tr>
+<tr>
+<td>Find places by search</td>
+<td>Searches such as &quot;ramen Shibuya Tokyo&quot;</td>
+<td>The places Google ranks for each search, their reviews, and the search and rank they came from</td>
+</tr>
+<tr>
+<td>Everything specific reviewers have written</td>
+<td>Reviewer profile links or numeric IDs</td>
+<td>Each reviewer's reviews and star-only ratings across all places, plus optional reviewer summaries</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="readme-output-per-record">Output per record</h2>
+<p>Every record has a <code>recordType</code>: <code>review</code> (a place review), <code>authorReview</code> (a reviewer's contribution), and, when enabled, <code>place</code> and <code>contributor</code> summary records. Fields that Google does not show for a record are left out instead of being empty.</p>
+<h3 id="readme-place-review-review">Place review (<code>review</code>)</h3>
+<pre><code class="language-json">{
+  &quot;recordType&quot;: &quot;review&quot;,
+  &quot;reviewId&quot;: &quot;Ci9DQUlRQUNvZENodHljRjlvT2twcVJsbFlkVUV0WjBGcldrNHdVRFpxWjBoc01YYxAB&quot;,
+  &quot;rating&quot;: 5,
+  &quot;reviewText&quot;: &quot;Absolutely stunning at night, the sparkle every hour is magical.&quot;,
+  &quot;reviewLanguage&quot;: &quot;en&quot;,
+  &quot;reviewDate&quot;: &quot;2026-10-19T09:31:51.751+00:00&quot;,
+  &quot;reviewDateOriginal&quot;: &quot;8 minutes ago&quot;,
+  &quot;reviewUrl&quot;: &quot;https://www.google.com/maps/reviews/data=!4m8!14m7!1m6!2m5!1sCi9DQUlR…&quot;,
+  &quot;reviewerName&quot;: &quot;Ajay C.&quot;,
+  &quot;reviewerId&quot;: &quot;113024036179217636785&quot;,
+  &quot;reviewerProfileUrl&quot;: &quot;https://www.google.com/maps/contrib/113024036179217636785/reviews&quot;,
+  &quot;reviewerTotalReviews&quot;: 3,
+  &quot;reviewerPhotoCount&quot;: 3,
+  &quot;reviewerIsLocalGuide&quot;: false,
+  &quot;subRatings&quot;: { &quot;Food&quot;: 5, &quot;Service&quot;: 4, &quot;Atmosphere&quot;: 5 },
+  &quot;reviewContext&quot;: { &quot;Meal type&quot;: &quot;Dinner&quot;, &quot;Price per person&quot;: &quot;$20 to $30&quot; },
+  &quot;visitDate&quot;: &quot;Visited in October&quot;,
+  &quot;businessName&quot;: &quot;Eiffel Tower&quot;,
+  &quot;businessRating&quot;: 4.7,
+  &quot;businessTotalReviews&quot;: 498339,
+  &quot;businessCategory&quot;: &quot;Historical landmark&quot;,
+  &quot;businessAddress&quot;: &quot;Av. Gustave Eiffel, 75007 Paris, France&quot;,
+  &quot;businessLatitude&quot;: 48.8583701,
+  &quot;businessLongitude&quot;: 2.2944813,
+  &quot;placeId&quot;: &quot;ChIJLU7jZClu5kcR4PcOOO6p3I0&quot;,
+  &quot;featureId&quot;: &quot;0x47e66e2964e34e2d:0x8ddca9ee380ef7e0&quot;,
+  &quot;cid&quot;: &quot;10222232094831998944&quot;,
+  &quot;placeUrl&quot;: &quot;https://www.google.com/maps/place/?q=place_id:ChIJLU7jZClu5kcR4PcOOO6p3I0&quot;,
+  &quot;order&quot;: 1,
+  &quot;sortBy&quot;: &quot;newest&quot;,
+  &quot;sortConfirmed&quot;: true,
+  &quot;sortStatus&quot;: &quot;confirmed&quot;,
+  &quot;scrapedAt&quot;: &quot;2026-10-19T09:39:52+00:00&quot;
+}
+</code></pre>
+<p>Other review fields when Google shows them: <code>reviewTextTranslated</code> + <code>translatedLanguage</code> + <code>originalReviewLanguage</code> (reviews in another language), <code>photosInReview</code>, <code>reviewPhotoCount</code>, <code>reviewVideoUrls</code>, <code>videosInReview</code>, <code>ownerResponseText</code>, <code>ownerResponseDateOriginal</code>, <code>ownerResponseTextTranslated</code>, <code>contextLabels</code>, <code>reviewReportUrl</code>, <code>businessCategories</code>, <code>searchQuery</code> and <code>searchRank</code> (search mode). <code>reviewerSubtitle</code> (the line Google prints under the reviewer's name, such as &quot;Local Guide · 37 reviews · 5 photos&quot;, in the chosen language). With <code>enrichReviewerProfiles</code> on: <code>reviewerLocalGuideLevel</code>, <code>likesCount</code>, <code>isEdited</code>, <code>reviewCreatedAt</code>, <code>reviewViewCount</code> and <code>ownerResponseDate</code>. With <code>includePhotoDetails</code> on: <code>photoDetails</code>, one entry per photo or video with <code>url</code>, <code>width</code>, <code>height</code>, <code>uploadDate</code> and, for videos, <code>durationSeconds</code>.</p>
+<h3 id="readme-reviewer-contribution-authorreview">Reviewer contribution (<code>authorReview</code>)</h3>
+<p>Reviewer fields (<code>contributorId</code>, <code>contributorName</code>, <code>contributorAvatarUrl</code>, <code>contributorProfileUrl</code>, <code>contributorLocalGuideLevel</code>, <code>contributorPoints</code>, <code>contributorTotalReviews</code>), the review (<code>reviewId</code>, <code>rating</code>, <code>reviewText</code>, <code>reviewLanguage</code>, <code>reviewDate</code> = last update, <code>reviewCreatedAt</code> = first published, <code>isEdited</code>, <code>reviewDateOriginal</code>, <code>likesCount</code>, <code>reviewViewCount</code>, <code>isRatingOnly</code>, <code>reviewUrl</code>, <code>reviewPhotoUrls</code>, <code>reviewPhotoCount</code>, <code>subRatings</code>, <code>reviewContext</code>, <code>contextLabels</code>, <code>ownerResponseText</code>, <code>ownerResponseDate</code>, <code>ownerResponseDateOriginal</code>), and the reviewed place (<code>placeName</code>, <code>placeAddress</code>, <code>placeId</code>, <code>featureId</code>, <code>placeUrl</code>, <code>placeLatitude</code>, <code>placeLongitude</code>, <code>placeCategory</code>, <code>placeRating</code>, <code>placeTotalReviews</code>, <code>placePriceRange</code>), plus <code>position</code> (rank in the reviewer's list), <code>sourceUrl</code> and <code>scrapedAt</code>.</p>
+<h3 id="readme-place-summary-place-optional">Place summary (<code>place</code>, optional)</h3>
+<p>Name, address, all categories, coordinates, phone, website, time zone, country, description, rating, total reviews, <strong><code>ratingHistogram</code></strong> (reviews per star), <strong><code>reviewTopics</code></strong> (Google's topic chips with how many reviews mention each), <strong><code>openingHours</code></strong> (per weekday), <strong><code>partnerReviews</code></strong> (hotels and some restaurants: rating, scale, review count, link and a sample review from sites such as Tripadvisor or Booking.com), <strong><code>reviewsRemovedNotice</code></strong> (Google's notice that reviews were removed after legal complaints, shown for some places in Germany), Place ID / feature ID / CID / Knowledge Graph ID, and collection results: <code>reviewsDelivered</code>, <code>partnerReviewsDelivered</code> (with <code>includePartnerReviews</code>), <code>reviewsScanned</code>, <code>stopReason</code> (for example <code>requestedCountReached</code>, <code>allReviewsCollected</code>, <code>dateCutoffReached</code>, <code>noNewReviewsSinceLastRun</code>), <code>status</code> (<code>ok</code>, <code>noReviews</code>, <code>notFound</code>, <code>invalid</code>, <code>partial</code>) and <code>statusReason</code>.</p>
+<h3 id="readme-partner-site-review-partnerreview-optional">Partner-site review (<code>partnerReview</code>, optional)</h3>
+<p>With <code>includePartnerReviews</code>, hotels also get one record per review Google shows from a partner site: <code>partnerSource</code> (for example <code>Tripadvisor</code>), <code>partnerReviewId</code>, <code>rating</code> with <code>ratingScale</code> (some sites rate out of 10), <code>reviewText</code>, <code>reviewDateOriginal</code> (Google shows partner reviews with a relative date such as &quot;2 weeks ago&quot;), <code>reviewerName</code>, <code>reviewUrl</code> (the review on the partner site), <code>ownerResponseText</code> when the hotel replied, the place fields (<code>businessName</code>, <code>placeId</code>, <code>featureId</code>, …) and <code>order</code>. Partner sites are read newest first.</p>
+<h3 id="readme-reviewer-summary-contributor-optional">Reviewer summary (<code>contributor</code>, optional)</h3>
+<p>Name, Local Guide level and points, points needed for the next level, bio, <strong><code>contributions</code></strong> (lifetime counts of reviews, ratings, photos, videos, answers, edits, places added and more), <code>status</code> (<code>public</code>, <code>private</code>, <code>notFound</code>) and <code>reviewsDelivered</code>.</p>
+<h3 id="readme-likes-edit-dates-and-local-guide-levels">Likes, edit dates and Local Guide levels</h3>
+<p>Google shows likes, first-published and edit dates, view counts, owner-reply dates and exact Local Guide levels only on reviewer profiles. Reviewer mode always has them. In place and search modes, turn on <code>enrichReviewerProfiles</code> and the actor looks up each reviewer once and adds them to the matching reviews. In practice this fills about 8 in 10 reviews; the rest were written by reviewers with private profiles, or are older than the reviewer's 200 most recent contributions. <code>reviewerLocalGuideLevel</code> is added for every reviewer with a public level, including private profiles. View counts are Google's running counters and can differ slightly between two lookups. Without the option, <code>reviewerIsLocalGuide</code> is <code>true</code> for reviewers Google labels &quot;Local Guide&quot; on the review. <code>reviewerSubtitle</code> is filled when the actor knows Google's exact wording for that language and those counts; otherwise it is left out and the counts are still in <code>reviewerTotalReviews</code> and <code>reviewerPhotoCount</code>. <code>reviewerEmoji</code> and <code>isVerified</code> are not published by Google and stay in the schema for older integrations; the dishes a reviewer recommends (the old <code>mentionedItems</code>) are in <code>reviewContext</code>.</p>
+<h2 id="readme-input">Input</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>mode</code></td>
+<td>select</td>
+<td><code>place</code></td>
+<td><code>place</code> = reviews of the places you list; <code>search</code> = find places by search, then their reviews; <code>author</code> = everything specific reviewers wrote</td>
+</tr>
+<tr>
+<td><code>placeUrls</code></td>
+<td>list</td>
+<td>–</td>
+<td>Place links or IDs, one per line: place links, shared <code>maps.app.goo.gl</code> / <code>share.google</code> / <code>g.page</code> links, <code>?cid=</code> links, review links, <code>ChIJ…</code> Place IDs, <code>0x…:0x…</code> feature IDs, numeric CIDs</td>
+</tr>
+<tr>
+<td><code>searchQueries</code></td>
+<td>list</td>
+<td>–</td>
+<td>Searches like &quot;dentists in Austin, TX&quot;; include a city or area</td>
+</tr>
+<tr>
+<td><code>maxPlacesPerQuery</code></td>
+<td>integer</td>
+<td><code>20</code></td>
+<td>Places taken from each search (1–2,000), in Google's ranking; above about 120 places the actor also searches sub-areas</td>
+</tr>
+<tr>
+<td><code>contributorUrls</code></td>
+<td>list</td>
+<td>–</td>
+<td>Reviewer profile links (<code>https://www.google.com/maps/contrib/&lt;id&gt;</code>, or a shared <code>maps.app.goo.gl</code> profile link) or numeric reviewer IDs</td>
+</tr>
+<tr>
+<td><code>maxReviews</code></td>
+<td>integer</td>
+<td><code>50</code></td>
+<td>Maximum reviews <strong>per place or per reviewer</strong> (1–200,000; reviewers publish at most 200)</td>
+</tr>
+<tr>
+<td><code>sortBy</code></td>
+<td>select</td>
+<td><code>newest</code></td>
+<td><code>newest</code>, <code>relevant</code>, <code>highest_rating</code>, <code>lowest_rating</code></td>
+</tr>
+<tr>
+<td><code>language</code></td>
+<td>select</td>
+<td><code>en</code></td>
+<td>Language of labels such as &quot;2 weeks ago&quot;; foreign-language reviews also get Google's translation into it. 23 languages</td>
+</tr>
+<tr>
+<td><code>reviewsNewerThan</code></td>
+<td>date</td>
+<td>–</td>
+<td>Keep reviews from this day on, e.g. <code>2026-01-01</code> or <code>30 days</code></td>
+</tr>
+<tr>
+<td><code>reviewsOlderThan</code></td>
+<td>date</td>
+<td>–</td>
+<td>Keep reviews up to this day (use both for a range)</td>
+</tr>
+<tr>
+<td><code>keyword</code></td>
+<td>text</td>
+<td>–</td>
+<td>Only reviews mentioning these words</td>
+</tr>
+<tr>
+<td><code>starRatings</code></td>
+<td>multi-select</td>
+<td>–</td>
+<td>Only these star ratings, e.g. <code>[&quot;1&quot;, &quot;2&quot;]</code></td>
+</tr>
+<tr>
+<td><code>onlyWithText</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Skip star-only reviews without written text</td>
+</tr>
+<tr>
+<td><code>ownerReplyFilter</code></td>
+<td>select</td>
+<td><code>any</code></td>
+<td><code>any</code>, <code>withReply</code>, <code>withoutReply</code></td>
+</tr>
+<tr>
+<td><code>onlyWithPhotos</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Only reviews with photos or videos</td>
+</tr>
+<tr>
+<td><code>reviewLanguages</code></td>
+<td>list</td>
+<td>–</td>
+<td>Only reviews written in these languages, e.g. <code>ko</code>, <code>es</code></td>
+</tr>
+<tr>
+<td><code>monitoringKey</code></td>
+<td>text</td>
+<td>–</td>
+<td>Same name on scheduled runs → only reviews added or edited since the last run with that name</td>
+</tr>
+<tr>
+<td><code>includePlaceSummary</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Add one summary record per place</td>
+</tr>
+<tr>
+<td><code>includeContributorSummary</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Add one summary record per reviewer</td>
+</tr>
+<tr>
+<td><code>includeReviewerDetails</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td>Turn off to leave reviewer names, pictures, profile links and IDs out of place reviews</td>
+</tr>
+<tr>
+<td><code>enrichReviewerProfiles</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Place and search modes: also look up each reviewer's public profile to add likes, first-published and edit dates, view counts, owner-reply dates and the exact Local Guide level. Slower</td>
+</tr>
+<tr>
+<td><code>includePartnerReviews</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Hotels: also collect the reviews Google shows from partner sites such as Tripadvisor, Trip.com or Priceline, as <code>partnerReview</code> records. <code>maxReviews</code> applies to each partner site, the same way it applies to each place</td>
+</tr>
+<tr>
+<td><code>includePhotoDetails</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Add width, height and upload date (and video length) for every photo and video in place reviews. One extra request per photo</td>
+</tr>
+</tbody>
+</table></div>
+<p>Inputs saved for earlier versions keep working. A single <code>placeUrl</code> or <code>placeId</code>, a single <code>contributorUrl</code> and old proxy settings are all accepted. <strong>Change in this version:</strong> in reviewer mode, <code>maxReviews</code> now applies to each reviewer separately (it used to be a total for the whole run).</p>
+<h3 id="readme-example-newest-reviews-of-two-places">Example: newest reviews of two places</h3>
+<pre><code class="language-json">{
+  &quot;placeUrls&quot;: [
+    &quot;https://www.google.com/maps/place/Eiffel+Tower/@48.8583701,2.2944813,17z/data=!3m1!4b1!4m6!3m5!1s0x47e66e2964e34e2d:0x8ddca9ee380ef7e0!8m2!3d48.8583701!4d2.2944813&quot;,
+    &quot;ChIJifIePKtZwokRVZ-UdRGkZzs&quot;
+  ],
+  &quot;maxReviews&quot;: 200
+}
+</code></pre>
+<h3 id="readme-example-one-and-two-star-reviews-for-a-city-s-top-dentists">Example: one- and two-star reviews for a city's top dentists</h3>
+<pre><code class="language-json">{
+  &quot;mode&quot;: &quot;search&quot;,
+  &quot;searchQueries&quot;: [&quot;dentists in Boise, Idaho&quot;],
+  &quot;maxPlacesPerQuery&quot;: 30,
+  &quot;starRatings&quot;: [&quot;1&quot;, &quot;2&quot;],
+  &quot;reviewsNewerThan&quot;: &quot;90 days&quot;,
+  &quot;maxReviews&quot;: 500,
+  &quot;includePlaceSummary&quot;: true
+}
+</code></pre>
+<h3 id="readme-example-everything-two-reviewers-wrote">Example: everything two reviewers wrote</h3>
+<pre><code class="language-json">{
+  &quot;mode&quot;: &quot;author&quot;,
+  &quot;contributorUrls&quot;: [&quot;https://www.google.com/maps/contrib/108763873723673205857&quot;, &quot;100413133939170473725&quot;],
+  &quot;maxReviews&quot;: 200,
+  &quot;includeContributorSummary&quot;: true
+}
+</code></pre>
+<h3 id="readme-example-daily-monitoring-returns-only-new-reviews">Example: daily monitoring returns only new reviews</h3>
+<pre><code class="language-json">{ &quot;placeUrls&quot;: [&quot;ChIJifIePKtZwokRVZ-UdRGkZzs&quot;], &quot;monitoringKey&quot;: &quot;my-pizzerias&quot;, &quot;maxReviews&quot;: 1000 }
+</code></pre>
+<h2 id="readme-use-cases">Use cases</h2>
+<ul>
+<li><strong>Reputation tracking for branches and franchises:</strong> schedule a monitoring run over every location and get only the new reviews each morning.</li>
+<li><strong>Competitor and market research:</strong> run a search for a category and city, then compare rating breakdowns, topics and complaints.</li>
+<li><strong>Customer-experience analytics:</strong> feed full texts, translations and sub-ratings into sentiment or topic models.</li>
+<li><strong>Lead generation for agencies:</strong> find businesses with recent low ratings or without owner replies.</li>
+<li><strong>Trust and safety:</strong> review a reviewer's whole activity, spot unusual patterns, and see which places they reviewed and when.</li>
+</ul>
+<h2 id="readme-faq">FAQ</h2>
+<p><strong>Do I need a Google account, API key or cookies?</strong> No. The actor reads what Google Maps shows to anyone who is not signed in.</p>
+<p><strong>Do I need to set up a proxy?</strong> No. The actor chooses its connection itself and switches automatically if Google slows it down. There are no proxy settings to configure.</p>
+<p><strong>Why does a place give fewer reviews than its total?</strong> Google's total also counts reviews it no longer displays. On a full newest-first collection the actor reads everything Google still lists, and the place summary shows exactly how many reviews were read and why collection stopped.</p>
+<p><strong>Can I get only new reviews every day?</strong> Yes. Set <code>monitoringKey</code> to any name and schedule the run. Set <code>maxReviews</code> high enough to cover the reviews expected between two runs.</p>
+<p><strong>Is the requested order trustworthy?</strong> Every place review carries <code>sortConfirmed</code>. It is <code>true</code> only when the row continues the requested order.</p>
+<p><strong>What happens with a link to a closed or removed place?</strong> It is skipped with a clear reason, and with place summaries enabled you get a <code>notFound</code> record. The actor never collects reviews from a different business with a similar name. A shared link that opens something other than a place (a reviewer profile, a photo, a video) is skipped with a reason saying what it opens.</p>
+<p><strong>Can I get likes or Local Guide levels for place reviews?</strong> Yes, turn on <code>enrichReviewerProfiles</code>. It makes one extra request per reviewer, so runs take longer. The status message says how many reviews were filled.</p>
+<p><strong>Do I get the reviews hotels show from Tripadvisor or Booking.com?</strong> Yes. Turn on <code>includePartnerReviews</code> and every review Google shows from those sites is added as a <code>partnerReview</code> record, up to <code>maxReviews</code> per site. The place summary also lists each partner site's rating and review count in <code>partnerReviews</code>.</p>
+<p><strong>Can I collect reviews in another language?</strong> Choose a language and Google's labels plus translations come in that language. Each review's original text and language are kept as well.</p>
+<p><strong>Is this an official Google product?</strong> No. It is an independent tool that collects publicly visible Google Maps data.</p>
+<h2 id="readme-how-many-reviews-can-i-get">How many reviews can I get?</h2>
+<ul>
+<li><strong>Newest first or most relevant:</strong> the complete history of a place, down to its first review.</li>
+<li><strong>Highest or lowest rating first:</strong> Google lists at most 188 reviews per star level in these orders. When you also pick star ratings, the actor collects the rest of those stars newest first and marks those rows with <code>sortConfirmed: false</code>.</li>
+<li><strong>Reviewers:</strong> up to 200 of each reviewer's most recently updated reviews and ratings. That is the full history of most reviewers.</li>
+<li><strong>Searches:</strong> one Google search lists about 120 to 360 places. Ask for more with <code>maxPlacesPerQuery</code> and the actor also searches up to about 80 sub-areas around them, small ones in dense city centres and larger ones where places are spread out: &quot;restaurants in Istanbul&quot; went from 200 to 1,200 places. Places far outside the searched area are left out, and small markets simply end when there are no more places (for example about 90 dentists in Bozeman, Montana).</li>
+<li>Speed: long newest-first histories (places with 1,000+ reviews) are read in several date ranges at once and merged back into exact newest-first order, which shortens big collections; how much it saves depends on how quickly Google serves the parallel ranges (a 25,000-review walk took about 15 minutes on Apify's cloud). Several places are collected in parallel.</li>
+<li>Filters (stars, written text, owner reply, photos, review language) are applied while reviews are read. When few reviews match, for example an owner-reply filter on a place that never replies, the actor keeps reading back through the history. Add a date range to keep such runs short; the status message and place summary show how many reviews were read.</li>
+</ul>
+<h2 id="readme-limitations">Limitations</h2>
+<ul>
+<li><strong>Likes and edit dates in place mode</strong> come from reviewer profiles, so reviews by private profiles, or older than a reviewer's 200 most recent contributions, can't get them. Workaround: run reviewer mode on the reviewers you care about.</li>
+<li><strong>Rating-ordered collection</strong> stops at 188 reviews per star level in Google's own order. Workaround: pick the star ratings you want; the rest of those stars are collected newest first (<code>sortConfirmed: false</code>).</li>
+<li><strong>Reviewer mode</strong> returns at most the 200 most recently updated contributions per profile; Google does not page further. Private profiles return no reviews and are reported as <code>private</code>.</li>
+<li><strong>Partner-site reviews</strong> are the ones Google shows on the hotel page, which can be far fewer than the partner site itself has (one hotel: 176 Tripadvisor reviews on Google, 7,499 on Tripadvisor), and they carry a relative date only.</li>
+<li><strong>Single reviews by link:</strong> a review link is read as its place, and that place's reviews are collected. Use <code>keyword</code> or a date range to find one review quickly.</li>
+<li><strong>Price level</strong> is not part of Google's public data for signed-out visitors. <strong>Photo locations</strong> are not published: Google returns the place's position for every photo, so it is not output.</li>
+<li><strong>Very large places take time:</strong> a full 500,000-review history is still a long collection even when read in parallel. Use date filters or <code>maxReviews</code> for faster runs; a date range now starts reading at its end date instead of at today.</li>
+</ul>
+<p>Please use the data responsibly and in line with Google's terms and applicable privacy laws. Turn off <code>includeReviewerDetails</code> when you don't need reviewer identities.</p>
+</details></section><section id="python-quickstart"><h2>Python quickstart</h2><p>Use a schema-derived input and the Python standard library to start a run. An Apify account and token are required for execution.</p><p><a href="/apify-actor-examples/guides/SScmkjFpc4NuTczgt/">Open the step-by-step Python guide →</a></p></section><p class="source-note">Source build <code>JH65XCXfaCu7jh0t2</code>. Documentation is regenerated from the default published build; private drafts are not included.</p></article></div></main><footer class="footer"><strong>Nimbryxo Studio</strong><div class="footer-links"><a href="/apify-actor-examples/topics/">Topics</a><a href="/apify-actor-examples/sources/">Documentation sources</a><a href="https://apify.com/nimbryxo-studio">Apify</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></div></footer></body></html>

@@ -1,0 +1,661 @@
+{
+  "actorSpecification": 1,
+  "fields": {
+    "AIGCDescription": {
+      "description": "Description for AI-generated content label",
+      "title": "AIGC Description",
+      "type": "string"
+    },
+    "adLabelVersion": {
+      "description": "Ad label version; non-zero when the post is a sponsored ad",
+      "title": "Ad Label Version",
+      "type": "integer"
+    },
+    "aiContentLabel": {
+      "description": "Which AI label TikTok shows: 'creatorLabeled' (Creator labeled as AI-generated) or 'aiGeneratedMedia' (Contains AI-generated media)",
+      "enum": [
+        "creatorLabeled",
+        "aiGeneratedMedia"
+      ],
+      "title": "AI label",
+      "type": "string"
+    },
+    "author": {
+      "description": "Author/creator information at time of scraping",
+      "properties": {
+        "avatarUrl": {
+          "title": "Avatar URL",
+          "type": "string"
+        },
+        "bio": {
+          "title": "Bio",
+          "type": "string"
+        },
+        "displayName": {
+          "title": "Display Name",
+          "type": "string"
+        },
+        "followerCount": {
+          "title": "Followers",
+          "type": "integer"
+        },
+        "followingCount": {
+          "title": "Following",
+          "type": "integer"
+        },
+        "heartCount": {
+          "title": "Hearts/Likes",
+          "type": "integer"
+        },
+        "id": {
+          "title": "User ID",
+          "type": "string"
+        },
+        "privateAccount": {
+          "title": "Private Account",
+          "type": "boolean"
+        },
+        "roomId": {
+          "title": "Live Room ID (non-empty when live)",
+          "type": "string"
+        },
+        "secUid": {
+          "title": "Secure UID",
+          "type": "string"
+        },
+        "username": {
+          "title": "Username",
+          "type": "string"
+        },
+        "verified": {
+          "title": "Verified",
+          "type": "boolean"
+        },
+        "videoCount": {
+          "title": "Videos",
+          "type": "integer"
+        }
+      },
+      "title": "Author",
+      "type": "object"
+    },
+    "caption": {
+      "description": "Post caption/description text including hashtags and mentions",
+      "title": "Caption",
+      "type": "string"
+    },
+    "captionMentionsHandle": {
+      "description": "True when the caption contains the text @handle of the tracked account",
+      "title": "Caption types @handle",
+      "type": "boolean"
+    },
+    "collectCount": {
+      "description": "Number of times post was bookmarked/collected",
+      "title": "Collect Count",
+      "type": "integer"
+    },
+    "commentCount": {
+      "description": "Number of comments",
+      "title": "Comment Count",
+      "type": "integer"
+    },
+    "commentStatus": {
+      "description": "Comment permission setting (0=all, 1=friends, 2=none)",
+      "title": "Comment Status",
+      "type": "integer"
+    },
+    "createTime": {
+      "description": "Unix timestamp (seconds) when the post was created",
+      "title": "Create Time (Unix)",
+      "type": "integer"
+    },
+    "createdAt": {
+      "description": "ISO 8601 UTC datetime when the post was created",
+      "title": "Created At",
+      "type": "string"
+    },
+    "downloadedVideoUrl": {
+      "description": "Permanent link to the video file saved in this run's storage (only when 'Save video files' is on)",
+      "title": "Saved video file",
+      "type": "string"
+    },
+    "duetEnabled": {
+      "description": "Whether the creator allows duets with this video",
+      "title": "Duet Enabled",
+      "type": "boolean"
+    },
+    "forFriend": {
+      "description": "Whether the post is restricted to friends only",
+      "title": "For Friend",
+      "type": "boolean"
+    },
+    "foundVia": {
+      "description": "'search' = returned by TikTok search; 'relatedVideos' = found in the related videos of a post that tags the account",
+      "enum": [
+        "search",
+        "relatedVideos"
+      ],
+      "title": "Found via",
+      "type": "string"
+    },
+    "hashtags": {
+      "description": "Hashtags used in the post caption",
+      "items": {
+        "properties": {
+          "id": {
+            "title": "Hashtag ID",
+            "type": "string"
+          },
+          "isCommerce": {
+            "title": "Is Commerce",
+            "type": "boolean"
+          },
+          "name": {
+            "title": "Hashtag Name",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "title": "Hashtags",
+      "type": "array"
+    },
+    "images": {
+      "description": "Images for slideshow posts (postType='slideshow')",
+      "items": {
+        "properties": {
+          "height": {
+            "title": "Height",
+            "type": "integer"
+          },
+          "ordinal": {
+            "title": "Index",
+            "type": "integer"
+          },
+          "urlList": {
+            "title": "Image URLs",
+            "type": "array"
+          },
+          "width": {
+            "title": "Width",
+            "type": "integer"
+          }
+        },
+        "type": "object"
+      },
+      "title": "Slideshow Images",
+      "type": "array"
+    },
+    "isAd": {
+      "description": "Whether this post is a paid advertisement",
+      "title": "Is Ad",
+      "type": "boolean"
+    },
+    "isAigc": {
+      "description": "True when TikTok shows an AI-generated label on the post (creator-labeled or detected)",
+      "title": "Is AI Generated Content",
+      "type": "boolean"
+    },
+    "isECVideo": {
+      "description": "Shopping video flag, when TikTok reports it for the post",
+      "title": "Is E-Commerce Video",
+      "type": "boolean"
+    },
+    "isMentionConfirmed": {
+      "description": "True when mentionType is 'tagged'",
+      "title": "Tagged",
+      "type": "boolean"
+    },
+    "isOwnPost": {
+      "description": "True when the tracked account published the post itself",
+      "title": "Posted by the tracked account",
+      "type": "boolean"
+    },
+    "isPaidPartnership": {
+      "description": "True when TikTok shows the 'Paid partnership' label on the post",
+      "title": "Paid partnership",
+      "type": "boolean"
+    },
+    "likeCount": {
+      "description": "Number of likes/diggs",
+      "title": "Like Count",
+      "type": "integer"
+    },
+    "locationCreated": {
+      "description": "ISO country code where the post was created (e.g. 'US', 'BR'); only when 'Add the country each post was made in' is on",
+      "title": "Post country",
+      "type": "string"
+    },
+    "mediaUrlExpiresAt": {
+      "description": "ISO 8601 UTC datetime when signed media URLs (video/cover) expire",
+      "title": "Media URL Expires At",
+      "type": "string"
+    },
+    "mentionEntry": {
+      "description": "The tag that points at the tracked account (tagged posts only)",
+      "properties": {
+        "awemeId": {
+          "title": "Linked post ID (if any)",
+          "type": "string"
+        },
+        "displayText": {
+          "title": "Text shown in the caption (often the display name, e.g. @Gymshark)",
+          "type": "string"
+        },
+        "end": {
+          "title": "End position in caption (UTF-16 units)",
+          "type": "integer"
+        },
+        "secUid": {
+          "title": "Tagged account secUid",
+          "type": "string"
+        },
+        "start": {
+          "title": "Start position in caption (UTF-16 units, as in JavaScript)",
+          "type": "integer"
+        },
+        "userId": {
+          "title": "Tagged account ID",
+          "type": "string"
+        },
+        "username": {
+          "title": "Tagged handle",
+          "type": "string"
+        }
+      },
+      "title": "Matching tag",
+      "type": "object"
+    },
+    "mentionType": {
+      "description": "Why the post matched: 'tagged' (caption contains TikTok's clickable tag of the account), 'captionText' (caption types @handle without a working tag) or 'searchResult' (returned by TikTok search for the handle, account not named in the caption)",
+      "enum": [
+        "tagged",
+        "captionText",
+        "searchResult"
+      ],
+      "title": "Mention type",
+      "type": "string"
+    },
+    "mentions": {
+      "description": "Every account tagged in the caption",
+      "items": {
+        "properties": {
+          "awemeId": {
+            "title": "Linked post ID (if any)",
+            "type": "string"
+          },
+          "displayText": {
+            "title": "Text shown in the caption",
+            "type": "string"
+          },
+          "end": {
+            "title": "End position (UTF-16 units)",
+            "type": "integer"
+          },
+          "secUid": {
+            "title": "Account secUid",
+            "type": "string"
+          },
+          "start": {
+            "title": "Start position (UTF-16 units)",
+            "type": "integer"
+          },
+          "userId": {
+            "title": "Account ID",
+            "type": "string"
+          },
+          "username": {
+            "title": "Handle",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "title": "All tags in the caption",
+      "type": "array"
+    },
+    "music": {
+      "description": "Sound/music used in the post",
+      "properties": {
+        "album": {
+          "title": "Album",
+          "type": "string"
+        },
+        "authorName": {
+          "title": "Author",
+          "type": "string"
+        },
+        "coverUrl": {
+          "title": "Cover URL",
+          "type": "string"
+        },
+        "dspLinks": {
+          "title": "DSP Links (Spotify, Apple Music, etc.)",
+          "type": "array"
+        },
+        "duration": {
+          "title": "Duration (s)",
+          "type": "integer"
+        },
+        "id": {
+          "title": "Music ID",
+          "type": "string"
+        },
+        "isCommerceMusic": {
+          "title": "Is Commerce Music",
+          "type": "boolean"
+        },
+        "isCopyrighted": {
+          "title": "Is Copyrighted",
+          "type": "boolean"
+        },
+        "isPrivate": {
+          "title": "Is Private Sound",
+          "type": "boolean"
+        },
+        "isUnlimitedMusic": {
+          "title": "Is Unlimited Music",
+          "type": "boolean"
+        },
+        "original": {
+          "title": "Original Sound",
+          "type": "boolean"
+        },
+        "playUrl": {
+          "title": "Play URL",
+          "type": "string"
+        },
+        "shootDuration": {
+          "title": "Shoot Duration (s)",
+          "type": "number"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        }
+      },
+      "title": "Music",
+      "type": "object"
+    },
+    "originalItem": {
+      "description": "Whether this post is an original (non-duet, non-stitch) creation",
+      "title": "Original Item",
+      "type": "boolean"
+    },
+    "playCount": {
+      "description": "Number of video plays",
+      "title": "Play Count",
+      "type": "integer"
+    },
+    "poi": {
+      "description": "TikTok place attached to the post (name, address, city, country, category), when the creator added one",
+      "title": "Location tag",
+      "type": "object"
+    },
+    "postId": {
+      "description": "TikTok's unique post/video ID (string to preserve 64-bit precision)",
+      "title": "Post ID",
+      "type": "string"
+    },
+    "postType": {
+      "description": "'video' or 'slideshow' (photo carousel)",
+      "title": "Post Type",
+      "type": "string"
+    },
+    "postUrl": {
+      "description": "Link to the post on TikTok (/video/ for videos, /photo/ for slideshows)",
+      "title": "Post URL",
+      "type": "string"
+    },
+    "privateItem": {
+      "description": "Whether the post is set to private",
+      "title": "Private Item",
+      "type": "boolean"
+    },
+    "rank": {
+      "description": "0-based order in which the post was first found for this account across all searches",
+      "title": "Rank",
+      "type": "integer"
+    },
+    "relatedToPostId": {
+      "description": "For posts found via related videos: the post whose related list contained it",
+      "title": "Related to post",
+      "type": "string"
+    },
+    "repostCount": {
+      "description": "Number of reposts",
+      "title": "Repost Count",
+      "type": "integer"
+    },
+    "scrapedAt": {
+      "description": "ISO 8601 UTC time of collection",
+      "title": "Scraped at",
+      "type": "string"
+    },
+    "searchCountry": {
+      "description": "Country the TikTok search ran from (only when 'Search from country' is set)",
+      "title": "Searched from",
+      "type": "string"
+    },
+    "searchQuery": {
+      "description": "The TikTok search text that first returned this post",
+      "title": "Search that found it",
+      "type": "string"
+    },
+    "searchUrl": {
+      "description": "Open the same TikTok search in a browser",
+      "title": "Search link",
+      "type": "string"
+    },
+    "shareCount": {
+      "description": "Number of shares",
+      "title": "Share Count",
+      "type": "integer"
+    },
+    "shareEnabled": {
+      "description": "Whether sharing is enabled for this post",
+      "title": "Share Enabled",
+      "type": "boolean"
+    },
+    "stitchEnabled": {
+      "description": "Whether the creator allows stitching this video",
+      "title": "Stitch Enabled",
+      "type": "boolean"
+    },
+    "targetDisplayName": {
+      "description": "Display name of the tracked account",
+      "title": "Tracked account name",
+      "type": "string"
+    },
+    "targetFollowerCount": {
+      "description": "Follower count of the tracked account at scrape time",
+      "title": "Tracked account followers",
+      "type": "integer"
+    },
+    "targetSecUid": {
+      "description": "TikTok's secure user ID of the tracked account",
+      "title": "Tracked account secUid",
+      "type": "string"
+    },
+    "targetUserId": {
+      "description": "TikTok's numeric ID of the tracked account",
+      "title": "Tracked account ID",
+      "type": "string"
+    },
+    "targetUsername": {
+      "description": "Handle of the tracked account this post was found for (lowercase, without @)",
+      "title": "Tracked account",
+      "type": "string"
+    },
+    "targetVerified": {
+      "description": "Whether the tracked account has TikTok's verified badge",
+      "title": "Tracked account verified",
+      "type": "boolean"
+    },
+    "textLanguage": {
+      "description": "Detected language code of the caption text",
+      "title": "Text Language",
+      "type": "string"
+    },
+    "video": {
+      "description": "Video technical metadata and signed play/cover URLs",
+      "properties": {
+        "bitrate": {
+          "title": "Bitrate",
+          "type": "integer"
+        },
+        "bitrateInfo": {
+          "description": "All available quality/bitrate variants with play URLs",
+          "title": "Bitrate Info",
+          "type": "array"
+        },
+        "codecType": {
+          "title": "Codec",
+          "type": "string"
+        },
+        "cover": {
+          "title": "Cover Image URL",
+          "type": "string"
+        },
+        "definition": {
+          "title": "Definition",
+          "type": "string"
+        },
+        "downloadAddr": {
+          "title": "Download URL (plays only inside TikTok)",
+          "type": "string"
+        },
+        "duration": {
+          "title": "Duration (s)",
+          "type": "integer"
+        },
+        "dynamicCover": {
+          "title": "Dynamic Cover URL",
+          "type": "string"
+        },
+        "format": {
+          "title": "Format",
+          "type": "string"
+        },
+        "height": {
+          "title": "Height (px)",
+          "type": "integer"
+        },
+        "originCover": {
+          "title": "Original Cover URL",
+          "type": "string"
+        },
+        "playUrl": {
+          "title": "Play URL (plays only inside TikTok)",
+          "type": "string"
+        },
+        "ratio": {
+          "title": "Aspect Ratio",
+          "type": "string"
+        },
+        "size": {
+          "title": "File Size (bytes)",
+          "type": "string"
+        },
+        "subtitleInfos": {
+          "title": "Subtitle tracks",
+          "type": "array"
+        },
+        "videoQuality": {
+          "title": "Video Quality Label",
+          "type": "string"
+        },
+        "volumeInfo": {
+          "description": "Audio loudness and peak level metadata",
+          "title": "Volume Info",
+          "type": "object"
+        },
+        "width": {
+          "title": "Width (px)",
+          "type": "integer"
+        }
+      },
+      "title": "Video",
+      "type": "object"
+    }
+  },
+  "title": "TikTok mentions",
+  "views": {
+    "overview": {
+      "description": "Posts that tag or mention each tracked account, with the reason they matched.",
+      "display": {
+        "component": "table",
+        "properties": {
+          "author.followerCount": {
+            "format": "number",
+            "label": "Author followers"
+          },
+          "author.username": {
+            "format": "text",
+            "label": "Posted by"
+          },
+          "caption": {
+            "format": "text",
+            "label": "Caption"
+          },
+          "commentCount": {
+            "format": "number",
+            "label": "Comments"
+          },
+          "createdAt": {
+            "format": "date",
+            "label": "Posted"
+          },
+          "likeCount": {
+            "format": "number",
+            "label": "Likes"
+          },
+          "mentionType": {
+            "format": "text",
+            "label": "Mention type"
+          },
+          "playCount": {
+            "format": "number",
+            "label": "Views"
+          },
+          "postType": {
+            "format": "text",
+            "label": "Type"
+          },
+          "postUrl": {
+            "format": "link",
+            "label": "Post"
+          },
+          "shareCount": {
+            "format": "number",
+            "label": "Shares"
+          },
+          "targetUsername": {
+            "format": "text",
+            "label": "Tracked account"
+          }
+        }
+      },
+      "title": "Mentions overview",
+      "transformation": {
+        "fields": [
+          "targetUsername",
+          "mentionType",
+          "postUrl",
+          "caption",
+          "createdAt",
+          "author.username",
+          "author.followerCount",
+          "playCount",
+          "likeCount",
+          "commentCount",
+          "shareCount",
+          "postType"
+        ],
+        "flatten": [
+          "author"
+        ]
+      }
+    }
+  }
+}

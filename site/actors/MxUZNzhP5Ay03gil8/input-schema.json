@@ -1,0 +1,142 @@
+{
+  "properties": {
+    "asins": {
+      "description": "List of bare Amazon ASINs (10-character product IDs) to scrape, as an alternative/addition to productUrls. Builds /dp/{ASIN} URLs on amazon.com (or the first productUrls domain, if provided).",
+      "editor": "stringList",
+      "example": [
+        "B09X7MPX8L",
+        "B08H75RTZ8"
+      ],
+      "items": {
+        "type": "string"
+      },
+      "sectionCaption": "Inputs",
+      "title": "ASINs",
+      "type": "array"
+    },
+    "deliveryCountry": {
+      "description": "Best-effort delivery country to set before scraping (used together with postalCode). Affects buy-box availability/price for some products.",
+      "editor": "textfield",
+      "sectionCaption": "Inputs",
+      "title": "Delivery Country",
+      "type": "string"
+    },
+    "includeRelatedProducts": {
+      "default": false,
+      "description": "Include a best-effort relatedProducts[] array (Frequently Bought Together / From the Brand / Similar Brands) on each record.",
+      "sectionCaption": "Inputs",
+      "title": "Include Related Products",
+      "type": "boolean"
+    },
+    "postalCode": {
+      "description": "Best-effort ZIP/postal code to set as the delivery destination before scraping.",
+      "editor": "textfield",
+      "sectionCaption": "Inputs",
+      "title": "Postal Code",
+      "type": "string"
+    },
+    "productUrls": {
+      "description": "List of Amazon product URLs to scrape. Use direct product URLs (e.g., amazon.com/dp/ASIN). Supports multiple Amazon domains (amazon.com, amazon.co.uk, amazon.de, etc.)",
+      "editor": "stringList",
+      "example": [
+        "https://www.amazon.com/dp/B07ZPKBL9V",
+        "https://www.amazon.com/dp/B08H75RTZ8"
+      ],
+      "items": {
+        "type": "string"
+      },
+      "prefill": [
+        "https://www.amazon.com/dp/B09X7MPX8L",
+        "https://www.amazon.com/dp/B08H75RTZ8"
+      ],
+      "sectionCaption": "Inputs",
+      "sectionDescription": "Product URLs to scrape. Each URL must point to an Amazon product page (any of the supported country domains).",
+      "title": "Product URLs",
+      "type": "array"
+    },
+    "proxyConfiguration": {
+      "default": {
+        "useApifyProxy": true
+      },
+      "description": "Apify Proxy configuration. Defaults to AUTO (datacenter-first); the actor automatically escalates to a residential proxy for a domain session if it detects a block, so most users never need to change this.",
+      "editor": "proxy",
+      "prefill": {
+        "useApifyProxy": true
+      },
+      "sectionCaption": "Proxy & Anti-bot",
+      "sectionDescription": "Proxy and geo-targeting controls. AUTO-first with automatic residential escalation on detected blocks.",
+      "title": "Proxy Configuration",
+      "type": "object"
+    },
+    "proxyCountry": {
+      "default": "AUTO",
+      "description": "Proxy country for geo-targeting. Use AUTO to automatically select based on Amazon domain.",
+      "editor": "select",
+      "enum": [
+        "AUTO",
+        "US",
+        "GB",
+        "DE",
+        "FR",
+        "ES",
+        "IT",
+        "CA",
+        "AU",
+        "JP",
+        "IN",
+        "BR",
+        "MX",
+        "NL",
+        "SE",
+        "PL",
+        "TR",
+        "AE",
+        "SA",
+        "SG",
+        "BE",
+        "EG"
+      ],
+      "enumTitles": [
+        "Auto (based on domain)",
+        "United States",
+        "United Kingdom",
+        "Germany",
+        "France",
+        "Spain",
+        "Italy",
+        "Canada",
+        "Australia",
+        "Japan",
+        "India",
+        "Brazil",
+        "Mexico",
+        "Netherlands",
+        "Sweden",
+        "Poland",
+        "Turkey",
+        "United Arab Emirates",
+        "Saudi Arabia",
+        "Singapore",
+        "Belgium",
+        "Egypt"
+      ],
+      "title": "Proxy Country",
+      "type": "string"
+    },
+    "rateLimitDelay": {
+      "default": 2,
+      "description": "Delay between requests in seconds to avoid rate limiting",
+      "editor": "number",
+      "maximum": 30,
+      "minimum": 1,
+      "sectionCaption": "Performance",
+      "sectionDescription": "Tune request pacing. Higher delays reduce the chance of being challenged.",
+      "title": "Rate Limit Delay (seconds)",
+      "type": "integer"
+    }
+  },
+  "required": [],
+  "schemaVersion": 1,
+  "title": "Amazon Product Scraper Input",
+  "type": "object"
+}

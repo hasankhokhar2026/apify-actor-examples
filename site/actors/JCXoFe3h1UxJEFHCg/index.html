@@ -1,0 +1,984 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src &#x27;self&#x27;; script-src &#x27;self&#x27; &#x27;sha256-V+zgFSsKNOmCK5zJV5KcyJy0IdTFZD6r2YAW1do5t6Y=&#x27;; style-src &#x27;self&#x27;; img-src &#x27;self&#x27; https: data:; base-uri &#x27;self&#x27;; form-action &#x27;self&#x27;; object-src &#x27;none&#x27;"><title>Indeed Global Job Scraper with Company Salary Reports | Nimbryxo Studio</title><meta name="description" content="Search Indeed jobs across 62 countries by keyword, location, or filters for job type, remote status, experience, education, and salary. Returns full descriptions, structured salari"><meta name="robots" content="index,follow"><link rel="canonical" href="https://hasankhokhar2026.github.io/apify-actor-examples/actors/JCXoFe3h1UxJEFHCg/"><meta property="og:title" content="Indeed Global Job Scraper with Company Salary Reports | Nimbryxo Studio"><meta property="og:description" content="Search Indeed jobs across 62 countries by keyword, location, or filters for job type, remote status, experience, education, and salary. Returns full descriptions, structured salari"><meta property="og:type" content="website"><meta property="og:url" content="https://hasankhokhar2026.github.io/apify-actor-examples/actors/JCXoFe3h1UxJEFHCg/"><meta property="og:site_name" content="Nimbryxo Studio"><meta name="twitter:card" content="summary"><link rel="icon" href="/apify-actor-examples/assets/mark.svg?v=2d20f9dc334a" type="image/svg+xml"><link rel="stylesheet" href="/apify-actor-examples/assets/site.css?v=39545fd4a399"><link rel="stylesheet" href="/apify-actor-examples/assets/brand.css?v=eb0f935ade25"><link rel="alternate" type="application/rss+xml" title="Nimbryxo Studio guides" href="/apify-actor-examples/feed.xml"><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization","name":"Nimbryxo Studio","url":"https://hasankhokhar2026.github.io/apify-actor-examples/","sameAs":["https://apify.com/nimbryxo-studio"]},{"@type":"WebSite","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#website","name":"Nimbryxo Studio","url":"https://hasankhokhar2026.github.io/apify-actor-examples/","publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"inLanguage":"en"},{"@type":"WebPage","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/JCXoFe3h1UxJEFHCg/#webpage","name":"Indeed Global Job Scraper with Company Salary Reports","description":"Search Indeed jobs across 62 countries by keyword, location, or filters for job type, remote status, experience, education, and salary. Returns full descriptions, structured salaries, and each employer's ratings and salary-by-title reports.","url":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/JCXoFe3h1UxJEFHCg/","isPartOf":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#website"},"publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"inLanguage":"en","mainEntity":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/JCXoFe3h1UxJEFHCg/#article"},"breadcrumb":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/JCXoFe3h1UxJEFHCg/#breadcrumb"}},{"@type":"TechArticle","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/JCXoFe3h1UxJEFHCg/#article","headline":"Indeed Global Job Scraper with Company Salary Reports","name":"Indeed Global Job Scraper with Company Salary Reports","description":"Search Indeed jobs across 62 countries by keyword, location, or filters for job type, remote status, experience, education, and salary. Returns full descriptions, structured salaries, and each employer's ratings and salary-by-title reports.","url":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/JCXoFe3h1UxJEFHCg/","author":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"mainEntityOfPage":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/JCXoFe3h1UxJEFHCg/#webpage"},"inLanguage":"en"},{"@type":"BreadcrumbList","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/JCXoFe3h1UxJEFHCg/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Nimbryxo Studio","item":"https://hasankhokhar2026.github.io/apify-actor-examples/"},{"@type":"ListItem","position":2,"name":"Actors","item":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/"},{"@type":"ListItem","position":3,"name":"Indeed Global Job Scraper with Company Salary Reports","item":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/JCXoFe3h1UxJEFHCg/"}]}]}</script><script src="/apify-actor-examples/assets/site.js?v=7cabac48dd31" defer></script></head><body class="theme-studio"><a href="#main" class="skip-link">Skip to content</a><header><div class="inner"><a href="/apify-actor-examples/" class="brand"><img src="/apify-actor-examples/assets/mark.svg?v=2d20f9dc334a" alt="" width="29" height="29">Nimbryxo Studio</a><nav aria-label="Main navigation"><a href="/apify-actor-examples/actors/" aria-current="page">Actors</a><a href="/apify-actor-examples/guides/">Guides</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></nav></div></header><main id="main"><div class="doc-layout"><aside class="contents" aria-label="On this page"><strong>Contents</strong><a href="#overview">Overview</a><a href="#published-readme">Published README</a><a href="#input-schema">Input schema</a><a href="#output-schema">Output schema</a><a href="#dataset-schema">Dataset schema</a><a href="#python-quickstart">Python quickstart</a></aside><article class="prose"><div class="breadcrumb"><a href="/apify-actor-examples/actors/">Actors</a><span>/</span><span>Indeed Global Job Scraper with Company Salary Reports</span></div><section id="overview"><h1 class="doc-title">Indeed Global Job Scraper with Company Salary Reports</h1><p class="lede">Search Indeed jobs across 62 countries by keyword, location, or filters for job type, remote status, experience, education, and salary. Returns full descriptions, structured salaries, and each employer&#x27;s ratings and salary-by-title reports.</p><div class="actions"><a class="button" href="https://apify.com/nimbryxo-studio/indeed-global-job-scraper-with-company-salary">Open on Apify</a><a class="text-link" href="https://github.com/hasankhokhar2026/apify-actor-examples/blob/main/docs/actors/JCXoFe3h1UxJEFHCg/README.md">GitHub source</a></div></section><section class="schema-section" id="input-schema"><h2>Input schema</h2><p>Input fields, types, required flags, descriptions, defaults, and prefills come from the published definition. Prefill examples are distinct from defaults.</p><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>position</code></td><td>string</td><td>optional</td><td>Job title, skill or keywords, e.g. `web developer`, `nurse`. Search one company&#x27;s jobs with `company:Amazon`, titles only with `title:(data analyst)`; quotes, OR and -exclusions work too.</td></tr><tr><td><code>location</code></td><td>string</td><td>optional</td><td>City, region or postal code, e.g. `San Francisco`, `Austin, TX`, `10001`, `London`. Leave empty to search the whole country.</td></tr><tr><td><code>country</code></td><td>string</td><td>optional</td><td>Indeed country site to search. Results come in the site&#x27;s language and salaries in its currency.</td></tr></tbody></table></div><details><summary>Show all input fields</summary><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>position</code></td><td>string</td><td>optional</td><td>Job title, skill or keywords, e.g. `web developer`, `nurse`. Search one company&#x27;s jobs with `company:Amazon`, titles only with `title:(data analyst)`; quotes, OR and -exclusions work too.</td></tr><tr><td><code>location</code></td><td>string</td><td>optional</td><td>City, region or postal code, e.g. `San Francisco`, `Austin, TX`, `10001`, `London`. Leave empty to search the whole country.</td></tr><tr><td><code>country</code></td><td>string</td><td>optional</td><td>Indeed country site to search. Results come in the site&#x27;s language and salaries in its currency.</td></tr><tr><td><code>maxItemsPerSearch</code></td><td>integer</td><td>optional</td><td>Maximum number of jobs to save for each search (the keyword search and each search URL). Indeed shows up to about 1,000 jobs for one search; split large searches by location or filters to collect more.</td></tr><tr><td><code>jobType</code></td><td>string</td><td>optional</td><td>Employment type.</td></tr><tr><td><code>workplaceType</code></td><td>string</td><td>optional</td><td>Where the work happens.</td></tr><tr><td><code>datePosted</code></td><td>string</td><td>optional</td><td>Only jobs added to Indeed within this period.</td></tr><tr><td><code>experienceLevel</code></td><td>string</td><td>optional</td><td>Required experience level.</td></tr><tr><td><code>educationLevel</code></td><td>string</td><td>optional</td><td>Required education.</td></tr><tr><td><code>salaryMin</code></td><td>integer</td><td>optional</td><td>Only jobs whose salary range reaches at least this yearly amount, in the country&#x27;s currency (hourly and monthly pay is converted to yearly). Jobs without any salary information are excluded.</td></tr><tr><td><code>easyApplyOnly</code></td><td>boolean</td><td>optional</td><td>Only jobs you can apply to directly on Indeed.</td></tr><tr><td><code>radius</code></td><td>integer</td><td>optional</td><td>Distance around the location (Indeed&#x27;s default is 25). Ignored without a location.</td></tr><tr><td><code>radiusUnit</code></td><td>string</td><td>optional</td><td>Unit of the search radius.</td></tr><tr><td><code>sort</code></td><td>string</td><td>optional</td><td>Order of the search results.</td></tr><tr><td><code>startUrls</code></td><td>array</td><td>optional</td><td>Indeed search result URLs (any country, with their filters), job URLs (`…/viewjob?jk=…`) or job IDs. Each search URL is scraped as its own search; job URLs are fetched directly. Filters chosen above are added to search URLs.</td></tr><tr><td><code>includeCompanyRatings</code></td><td>boolean</td><td>optional</td><td>Add each employer&#x27;s Indeed rating, review count, category ratings (work-life balance, pay &amp; benefits, job security, management, culture), CEO approval, founding year, work wellbeing score and average salaries by job title. Each company is looked up once per run; turn off for the fastest runs with the least proxy traffic.</td></tr><tr><td><code>includeDescriptionHtml</code></td><td>boolean</td><td>optional</td><td>Also save the job description as HTML (`descriptionHtml`) with its formatting. The plain-text `description` is always included.</td></tr><tr><td><code>saveOnlyUniqueItems</code></td><td>boolean</td><td>optional</td><td>Save each job once even when several searches find it. Jobs are always unique within one search.</td></tr></tbody></table></div></details><p><a href="input-schema.json">Download the published input schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+  &quot;description&quot;: &quot;Search Indeed jobs by keywords and location in 62 countries, or paste Indeed search, company and job URLs. Every job comes with its full description, salary, job types, benefits, coordinates, contacts and the employer&#x27;s ratings and salaries.&quot;,
+  &quot;properties&quot;: {
+    &quot;country&quot;: {
+      &quot;default&quot;: &quot;US&quot;,
+      &quot;description&quot;: &quot;Indeed country site to search. Results come in the site&#x27;s language and salaries in its currency.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;US&quot;,
+        &quot;AR&quot;,
+        &quot;AU&quot;,
+        &quot;AT&quot;,
+        &quot;BH&quot;,
+        &quot;BE&quot;,
+        &quot;BR&quot;,
+        &quot;CA&quot;,
+        &quot;CL&quot;,
+        &quot;CN&quot;,
+        &quot;CO&quot;,
+        &quot;CR&quot;,
+        &quot;CZ&quot;,
+        &quot;DK&quot;,
+        &quot;EC&quot;,
+        &quot;EG&quot;,
+        &quot;FI&quot;,
+        &quot;FR&quot;,
+        &quot;DE&quot;,
+        &quot;GR&quot;,
+        &quot;HK&quot;,
+        &quot;HU&quot;,
+        &quot;IN&quot;,
+        &quot;ID&quot;,
+        &quot;IE&quot;,
+        &quot;IL&quot;,
+        &quot;IT&quot;,
+        &quot;JP&quot;,
+        &quot;KW&quot;,
+        &quot;LU&quot;,
+        &quot;MY&quot;,
+        &quot;MX&quot;,
+        &quot;MA&quot;,
+        &quot;NL&quot;,
+        &quot;NZ&quot;,
+        &quot;NG&quot;,
+        &quot;NO&quot;,
+        &quot;OM&quot;,
+        &quot;PK&quot;,
+        &quot;PA&quot;,
+        &quot;PE&quot;,
+        &quot;PH&quot;,
+        &quot;PL&quot;,
+        &quot;PT&quot;,
+        &quot;QA&quot;,
+        &quot;RO&quot;,
+        &quot;SA&quot;,
+        &quot;SG&quot;,
+        &quot;ZA&quot;,
+        &quot;KR&quot;,
+        &quot;ES&quot;,
+        &quot;SE&quot;,
+        &quot;CH&quot;,
+        &quot;TW&quot;,
+        &quot;TH&quot;,
+        &quot;TR&quot;,
+        &quot;UA&quot;,
+        &quot;AE&quot;,
+        &quot;GB&quot;,
+        &quot;UY&quot;,
+        &quot;VE&quot;,
+        &quot;VN&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;United States&quot;,
+        &quot;Argentina&quot;,
+        &quot;Australia&quot;,
+        &quot;Austria&quot;,
+        &quot;Bahrain&quot;,
+        &quot;Belgium&quot;,
+        &quot;Brazil&quot;,
+        &quot;Canada&quot;,
+        &quot;Chile&quot;,
+        &quot;China&quot;,
+        &quot;Colombia&quot;,
+        &quot;Costa Rica&quot;,
+        &quot;Czech Republic&quot;,
+        &quot;Denmark&quot;,
+        &quot;Ecuador&quot;,
+        &quot;Egypt&quot;,
+        &quot;Finland&quot;,
+        &quot;France&quot;,
+        &quot;Germany&quot;,
+        &quot;Greece&quot;,
+        &quot;Hong Kong&quot;,
+        &quot;Hungary&quot;,
+        &quot;India&quot;,
+        &quot;Indonesia&quot;,
+        &quot;Ireland&quot;,
+        &quot;Israel&quot;,
+        &quot;Italy&quot;,
+        &quot;Japan&quot;,
+        &quot;Kuwait&quot;,
+        &quot;Luxembourg&quot;,
+        &quot;Malaysia&quot;,
+        &quot;Mexico&quot;,
+        &quot;Morocco&quot;,
+        &quot;Netherlands&quot;,
+        &quot;New Zealand&quot;,
+        &quot;Nigeria&quot;,
+        &quot;Norway&quot;,
+        &quot;Oman&quot;,
+        &quot;Pakistan&quot;,
+        &quot;Panama&quot;,
+        &quot;Peru&quot;,
+        &quot;Philippines&quot;,
+        &quot;Poland&quot;,
+        &quot;Portugal&quot;,
+        &quot;Qatar&quot;,
+        &quot;Romania&quot;,
+        &quot;Saudi Arabia&quot;,
+        &quot;Singapore&quot;,
+        &quot;South Africa&quot;,
+        &quot;South Korea&quot;,
+        &quot;Spain&quot;,
+        &quot;Sweden&quot;,
+        &quot;Switzerland&quot;,
+        &quot;Taiwan&quot;,
+        &quot;Thailand&quot;,
+        &quot;Turkey&quot;,
+        &quot;Ukraine&quot;,
+        &quot;United Arab Emirates&quot;,
+        &quot;United Kingdom&quot;,
+        &quot;Uruguay&quot;,
+        &quot;Venezuela&quot;,
+        &quot;Vietnam&quot;
+      ],
+      &quot;prefill&quot;: &quot;US&quot;,
+      &quot;title&quot;: &quot;Country&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;datePosted&quot;: {
+      &quot;default&quot;: &quot;&quot;,
+      &quot;description&quot;: &quot;Only jobs added to Indeed within this period.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;&quot;,
+        &quot;1&quot;,
+        &quot;3&quot;,
+        &quot;7&quot;,
+        &quot;14&quot;,
+        &quot;30&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;Any time&quot;,
+        &quot;Last 24 hours&quot;,
+        &quot;Last 3 days&quot;,
+        &quot;Last 7 days&quot;,
+        &quot;Last 14 days&quot;,
+        &quot;Last 30 days&quot;
+      ],
+      &quot;title&quot;: &quot;Date posted&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;easyApplyOnly&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;Only jobs you can apply to directly on Indeed.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Easy apply only&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;educationLevel&quot;: {
+      &quot;default&quot;: &quot;&quot;,
+      &quot;description&quot;: &quot;Required education.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;&quot;,
+        &quot;noDegree&quot;,
+        &quot;highSchool&quot;,
+        &quot;associate&quot;,
+        &quot;bachelor&quot;,
+        &quot;master&quot;,
+        &quot;doctoral&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;Any&quot;,
+        &quot;No degree required&quot;,
+        &quot;High school diploma or GED&quot;,
+        &quot;Associate degree&quot;,
+        &quot;Bachelor&#x27;s degree&quot;,
+        &quot;Master&#x27;s degree&quot;,
+        &quot;Doctoral degree&quot;
+      ],
+      &quot;title&quot;: &quot;Education level&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;experienceLevel&quot;: {
+      &quot;default&quot;: &quot;&quot;,
+      &quot;description&quot;: &quot;Required experience level.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;&quot;,
+        &quot;noExperience&quot;,
+        &quot;entry&quot;,
+        &quot;mid&quot;,
+        &quot;senior&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;Any&quot;,
+        &quot;No experience needed&quot;,
+        &quot;Entry level&quot;,
+        &quot;Mid level&quot;,
+        &quot;Senior level&quot;
+      ],
+      &quot;title&quot;: &quot;Experience level&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;includeCompanyRatings&quot;: {
+      &quot;default&quot;: true,
+      &quot;description&quot;: &quot;Add each employer&#x27;s Indeed rating, review count, category ratings (work-life balance, pay &amp; benefits, job security, management, culture), CEO approval, founding year, work wellbeing score and average salaries by job title. Each company is looked up once per run; turn off for the fastest runs with the least proxy traffic.&quot;,
+      &quot;prefill&quot;: true,
+      &quot;sectionCaption&quot;: &quot;Output&quot;,
+      &quot;title&quot;: &quot;Include company ratings and salaries&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;includeDescriptionHtml&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;Also save the job description as HTML (`descriptionHtml`) with its formatting. The plain-text `description` is always included.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Include description HTML&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;jobType&quot;: {
+      &quot;default&quot;: &quot;&quot;,
+      &quot;description&quot;: &quot;Employment type.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;&quot;,
+        &quot;fulltime&quot;,
+        &quot;parttime&quot;,
+        &quot;contract&quot;,
+        &quot;temporary&quot;,
+        &quot;internship&quot;,
+        &quot;permanent&quot;,
+        &quot;seasonal&quot;,
+        &quot;perdiem&quot;,
+        &quot;freelance&quot;,
+        &quot;apprenticeship&quot;,
+        &quot;volunteer&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;Any&quot;,
+        &quot;Full-time&quot;,
+        &quot;Part-time&quot;,
+        &quot;Contract&quot;,
+        &quot;Temporary&quot;,
+        &quot;Internship&quot;,
+        &quot;Permanent&quot;,
+        &quot;Seasonal&quot;,
+        &quot;Per diem&quot;,
+        &quot;Freelance&quot;,
+        &quot;Apprenticeship&quot;,
+        &quot;Volunteer&quot;
+      ],
+      &quot;sectionCaption&quot;: &quot;Filters&quot;,
+      &quot;sectionDescription&quot;: &quot;Indeed&#x27;s own search filters. Every job returned matches all selected filters.&quot;,
+      &quot;title&quot;: &quot;Job type&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;location&quot;: {
+      &quot;description&quot;: &quot;City, region or postal code, e.g. `San Francisco`, `Austin, TX`, `10001`, `London`. Leave empty to search the whole country.&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;prefill&quot;: &quot;San Francisco&quot;,
+      &quot;title&quot;: &quot;Location&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;maxItemsPerSearch&quot;: {
+      &quot;default&quot;: 100,
+      &quot;description&quot;: &quot;Maximum number of jobs to save for each search (the keyword search and each search URL). Indeed shows up to about 1,000 jobs for one search; split large searches by location or filters to collect more.&quot;,
+      &quot;maximum&quot;: 10000,
+      &quot;minimum&quot;: 1,
+      &quot;prefill&quot;: 5,
+      &quot;title&quot;: &quot;Max jobs per search&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;position&quot;: {
+      &quot;description&quot;: &quot;Job title, skill or keywords, e.g. `web developer`, `nurse`. Search one company&#x27;s jobs with `company:Amazon`, titles only with `title:(data analyst)`; quotes, OR and -exclusions work too.&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;prefill&quot;: &quot;web developer&quot;,
+      &quot;title&quot;: &quot;Position or keywords&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;radius&quot;: {
+      &quot;description&quot;: &quot;Distance around the location (Indeed&#x27;s default is 25). Ignored without a location.&quot;,
+      &quot;maximum&quot;: 500,
+      &quot;minimum&quot;: 0,
+      &quot;title&quot;: &quot;Search radius&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;radiusUnit&quot;: {
+      &quot;default&quot;: &quot;miles&quot;,
+      &quot;description&quot;: &quot;Unit of the search radius.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;miles&quot;,
+        &quot;kilometers&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;Miles&quot;,
+        &quot;Kilometers&quot;
+      ],
+      &quot;title&quot;: &quot;Radius unit&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;salaryMin&quot;: {
+      &quot;description&quot;: &quot;Only jobs whose salary range reaches at least this yearly amount, in the country&#x27;s currency (hourly and monthly pay is converted to yearly). Jobs without any salary information are excluded.&quot;,
+      &quot;maximum&quot;: 10000000,
+      &quot;minimum&quot;: 0,
+      &quot;title&quot;: &quot;Minimum yearly salary&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;saveOnlyUniqueItems&quot;: {
+      &quot;default&quot;: true,
+      &quot;description&quot;: &quot;Save each job once even when several searches find it. Jobs are always unique within one search.&quot;,
+      &quot;prefill&quot;: true,
+      &quot;title&quot;: &quot;Remove duplicates across searches&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;sort&quot;: {
+      &quot;default&quot;: &quot;relevance&quot;,
+      &quot;description&quot;: &quot;Order of the search results.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;relevance&quot;,
+        &quot;date&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;Relevance&quot;,
+        &quot;Date (newest first)&quot;
+      ],
+      &quot;title&quot;: &quot;Sort by&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;startUrls&quot;: {
+      &quot;description&quot;: &quot;Indeed search result URLs (any country, with their filters), job URLs (`…/viewjob?jk=…`) or job IDs. Each search URL is scraped as its own search; job URLs are fetched directly. Filters chosen above are added to search URLs.&quot;,
+      &quot;editor&quot;: &quot;stringList&quot;,
+      &quot;sectionCaption&quot;: &quot;Indeed URLs&quot;,
+      &quot;title&quot;: &quot;Indeed URLs&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;workplaceType&quot;: {
+      &quot;default&quot;: &quot;&quot;,
+      &quot;description&quot;: &quot;Where the work happens.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;&quot;,
+        &quot;remote&quot;,
+        &quot;hybrid&quot;,
+        &quot;inPerson&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;Any&quot;,
+        &quot;Remote&quot;,
+        &quot;Hybrid&quot;,
+        &quot;In-person&quot;
+      ],
+      &quot;title&quot;: &quot;Remote / hybrid / in-person&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    }
+  },
+  &quot;schemaVersion&quot;: 1,
+  &quot;title&quot;: &quot;Indeed Jobs Scraper&quot;,
+  &quot;type&quot;: &quot;object&quot;
+}
+</code></pre></details></section><section class="schema-section" id="output-schema"><h2>Output schema</h2><p>Published result links and storage locations. This schema is not an exhaustive contract for every field in a dataset record.</p><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>jobs</code></td><td>string</td><td>optional</td><td>Jobs</td></tr><tr><td><code>salaries</code></td><td>string</td><td>optional</td><td>Salaries</td></tr><tr><td><code>companies</code></td><td>string</td><td>optional</td><td>Companies</td></tr><tr><td><code>locations</code></td><td>string</td><td>optional</td><td>Locations</td></tr><tr><td><code>contacts</code></td><td>string</td><td>optional</td><td>Contacts</td></tr></tbody></table></div><p><a href="output-schema.json">Download the published output schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+  &quot;actorOutputSchemaVersion&quot;: 1,
+  &quot;description&quot;: &quot;One record per Indeed job listing, with salary, location, benefits, contacts, and the employer&#x27;s rating and salary-by-title report.&quot;,
+  &quot;properties&quot;: {
+    &quot;companies&quot;: {
+      &quot;template&quot;: &quot;{{links.apiDefaultDatasetUrl}}/items?view=companies&quot;,
+      &quot;title&quot;: &quot;Companies&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;contacts&quot;: {
+      &quot;template&quot;: &quot;{{links.apiDefaultDatasetUrl}}/items?view=contacts&quot;,
+      &quot;title&quot;: &quot;Contacts&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;jobs&quot;: {
+      &quot;template&quot;: &quot;{{links.apiDefaultDatasetUrl}}/items&quot;,
+      &quot;title&quot;: &quot;Jobs&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;locations&quot;: {
+      &quot;template&quot;: &quot;{{links.apiDefaultDatasetUrl}}/items?view=locations&quot;,
+      &quot;title&quot;: &quot;Locations&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;salaries&quot;: {
+      &quot;template&quot;: &quot;{{links.apiDefaultDatasetUrl}}/items?view=salaries&quot;,
+      &quot;title&quot;: &quot;Salaries&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    }
+  },
+  &quot;title&quot;: &quot;Indeed Global Job Scraper with Company Salary Reports Output&quot;,
+  &quot;type&quot;: &quot;object&quot;
+}
+</code></pre></details></section><section class="schema-section" id="dataset-schema"><h2>Dataset schema</h2><p>Published dataset views and any declared field definitions. A view can select only a subset of the returned record fields.</p><p><a href="dataset-schema.json">Download the published dataset schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+  &quot;actorSpecification&quot;: 1,
+  &quot;title&quot;: &quot;Indeed jobs&quot;,
+  &quot;views&quot;: {
+    &quot;companies&quot;: {
+      &quot;display&quot;: {
+        &quot;component&quot;: &quot;table&quot;,
+        &quot;properties&quot;: {
+          &quot;company&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Company&quot;
+          },
+          &quot;companyCeoApproval&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;CEO approval %&quot;
+          },
+          &quot;companyFounded&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Founded&quot;
+          },
+          &quot;companyHeadquarters&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Headquarters&quot;
+          },
+          &quot;companyIndustry&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Industry&quot;
+          },
+          &quot;companyRevenue&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Revenue&quot;
+          },
+          &quot;companySize&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Employees&quot;
+          },
+          &quot;companyUrl&quot;: {
+            &quot;format&quot;: &quot;link&quot;,
+            &quot;label&quot;: &quot;Indeed company page&quot;
+          },
+          &quot;companyWebsite&quot;: {
+            &quot;format&quot;: &quot;link&quot;,
+            &quot;label&quot;: &quot;Website&quot;
+          },
+          &quot;rating&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Rating&quot;
+          },
+          &quot;reviewsCount&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Reviews&quot;
+          }
+        }
+      },
+      &quot;title&quot;: &quot;Companies&quot;,
+      &quot;transformation&quot;: {
+        &quot;fields&quot;: [
+          &quot;company&quot;,
+          &quot;rating&quot;,
+          &quot;reviewsCount&quot;,
+          &quot;companyCeoApproval&quot;,
+          &quot;companyIndustry&quot;,
+          &quot;companySize&quot;,
+          &quot;companyRevenue&quot;,
+          &quot;companyFounded&quot;,
+          &quot;companyHeadquarters&quot;,
+          &quot;companyWebsite&quot;,
+          &quot;companyUrl&quot;
+        ]
+      }
+    },
+    &quot;contacts&quot;: {
+      &quot;display&quot;: {
+        &quot;component&quot;: &quot;table&quot;,
+        &quot;properties&quot;: {
+          &quot;company&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Company&quot;
+          },
+          &quot;companyWebsite&quot;: {
+            &quot;format&quot;: &quot;link&quot;,
+            &quot;label&quot;: &quot;Company website&quot;
+          },
+          &quot;emails&quot;: {
+            &quot;format&quot;: &quot;array&quot;,
+            &quot;label&quot;: &quot;Emails&quot;
+          },
+          &quot;externalApplyLink&quot;: {
+            &quot;format&quot;: &quot;link&quot;,
+            &quot;label&quot;: &quot;Apply link&quot;
+          },
+          &quot;location&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Location&quot;
+          },
+          &quot;phoneNumbers&quot;: {
+            &quot;format&quot;: &quot;array&quot;,
+            &quot;label&quot;: &quot;Phone numbers&quot;
+          },
+          &quot;positionName&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Job title&quot;
+          },
+          &quot;url&quot;: {
+            &quot;format&quot;: &quot;link&quot;,
+            &quot;label&quot;: &quot;Indeed link&quot;
+          }
+        }
+      },
+      &quot;title&quot;: &quot;Contacts&quot;,
+      &quot;transformation&quot;: {
+        &quot;fields&quot;: [
+          &quot;positionName&quot;,
+          &quot;company&quot;,
+          &quot;emails&quot;,
+          &quot;phoneNumbers&quot;,
+          &quot;externalApplyLink&quot;,
+          &quot;companyWebsite&quot;,
+          &quot;location&quot;,
+          &quot;url&quot;
+        ]
+      }
+    },
+    &quot;locations&quot;: {
+      &quot;display&quot;: {
+        &quot;component&quot;: &quot;table&quot;,
+        &quot;properties&quot;: {
+          &quot;city&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;City&quot;
+          },
+          &quot;company&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Company&quot;
+          },
+          &quot;countryCode&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Country&quot;
+          },
+          &quot;latitude&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Latitude&quot;
+          },
+          &quot;longitude&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Longitude&quot;
+          },
+          &quot;positionName&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Job title&quot;
+          },
+          &quot;postalCode&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Postal code&quot;
+          },
+          &quot;remoteWorkType&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Workplace&quot;
+          },
+          &quot;state&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;State/region&quot;
+          },
+          &quot;streetAddress&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Street&quot;
+          }
+        }
+      },
+      &quot;title&quot;: &quot;Locations&quot;,
+      &quot;transformation&quot;: {
+        &quot;fields&quot;: [
+          &quot;positionName&quot;,
+          &quot;company&quot;,
+          &quot;streetAddress&quot;,
+          &quot;city&quot;,
+          &quot;state&quot;,
+          &quot;postalCode&quot;,
+          &quot;countryCode&quot;,
+          &quot;latitude&quot;,
+          &quot;longitude&quot;,
+          &quot;remoteWorkType&quot;
+        ]
+      }
+    },
+    &quot;overview&quot;: {
+      &quot;display&quot;: {
+        &quot;component&quot;: &quot;table&quot;,
+        &quot;properties&quot;: {
+          &quot;company&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Company&quot;
+          },
+          &quot;easyApply&quot;: {
+            &quot;format&quot;: &quot;boolean&quot;,
+            &quot;label&quot;: &quot;Easy apply&quot;
+          },
+          &quot;jobType&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Job type&quot;
+          },
+          &quot;location&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Location&quot;
+          },
+          &quot;positionName&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Job title&quot;
+          },
+          &quot;postedAt&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Posted&quot;
+          },
+          &quot;rating&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Company rating&quot;
+          },
+          &quot;remoteWorkType&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Workplace&quot;
+          },
+          &quot;salary&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Salary&quot;
+          },
+          &quot;url&quot;: {
+            &quot;format&quot;: &quot;link&quot;,
+            &quot;label&quot;: &quot;Indeed link&quot;
+          }
+        }
+      },
+      &quot;title&quot;: &quot;Jobs&quot;,
+      &quot;transformation&quot;: {
+        &quot;fields&quot;: [
+          &quot;positionName&quot;,
+          &quot;company&quot;,
+          &quot;rating&quot;,
+          &quot;location&quot;,
+          &quot;salary&quot;,
+          &quot;jobType&quot;,
+          &quot;remoteWorkType&quot;,
+          &quot;postedAt&quot;,
+          &quot;easyApply&quot;,
+          &quot;url&quot;
+        ]
+      }
+    },
+    &quot;salaries&quot;: {
+      &quot;display&quot;: {
+        &quot;component&quot;: &quot;table&quot;,
+        &quot;properties&quot;: {
+          &quot;company&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Company&quot;
+          },
+          &quot;location&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Location&quot;
+          },
+          &quot;payTypes&quot;: {
+            &quot;format&quot;: &quot;array&quot;,
+            &quot;label&quot;: &quot;Pay&quot;
+          },
+          &quot;positionName&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Job title&quot;
+          },
+          &quot;salaryAnnualMax&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Annual max&quot;
+          },
+          &quot;salaryAnnualMin&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Annual min&quot;
+          },
+          &quot;salaryCurrency&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Currency&quot;
+          },
+          &quot;salaryMax&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Max&quot;
+          },
+          &quot;salaryMin&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Min&quot;
+          },
+          &quot;salaryPeriod&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Period&quot;
+          },
+          &quot;url&quot;: {
+            &quot;format&quot;: &quot;link&quot;,
+            &quot;label&quot;: &quot;Indeed link&quot;
+          }
+        }
+      },
+      &quot;title&quot;: &quot;Salaries&quot;,
+      &quot;transformation&quot;: {
+        &quot;fields&quot;: [
+          &quot;positionName&quot;,
+          &quot;company&quot;,
+          &quot;location&quot;,
+          &quot;salaryMin&quot;,
+          &quot;salaryMax&quot;,
+          &quot;salaryPeriod&quot;,
+          &quot;salaryCurrency&quot;,
+          &quot;salaryAnnualMin&quot;,
+          &quot;salaryAnnualMax&quot;,
+          &quot;payTypes&quot;,
+          &quot;url&quot;
+        ]
+      }
+    }
+  }
+}
+</code></pre></details></section><section class="schema-section" id="key-value-schema"><h2>Key-value schema</h2><p>Published key-value store definitions, when provided by this build.</p><p>This definition is not present in the default published build. See the published README for available documentation.</p></section><section id="published-readme"><h2>Published README</h2><details><summary>Read the full published documentation</summary><h2 id="readme-indeed-global-job-scraper-with-company-salary-reports">Indeed Global Job Scraper with Company Salary Reports</h2>
+<p>Search Indeed's 62 country sites by keyword and location, by Indeed's own filters, or by pasting Indeed URLs, and get back full job descriptions, structured salaries, benefits, exact location with coordinates, recruiter contact details found in the posting, and the employer's own Indeed company profile — rating, review count, category ratings, and average salaries by job title. No Indeed account, login, or cookies needed.</p>
+<h2 id="readme-what-this-actor-does">What this actor does</h2>
+<ul>
+<li>Searches by position/keywords and location, or accepts Indeed search URLs, company job pages, job URLs, and bare job IDs</li>
+<li>Applies Indeed's own filters: job type, remote/hybrid/in-person, date posted, experience level, education level, minimum salary, easy apply, and search radius</li>
+<li>Returns the full job description (never a shortened snippet), with structured salary fields normalized to a yearly figure for comparison across pay periods</li>
+<li>Optionally enriches each employer with their Indeed rating, review count, five category ratings, CEO approval, founding year, work-wellbeing score, and average salaries by job title</li>
+<li>Picks out any email addresses or phone numbers an employer wrote directly into the job description</li>
+<li>Deduplicates jobs found by more than one search within the same run</li>
+<li>Fields a job or company doesn't have data for (e.g. no salary, no company rating) are left out of that record</li>
+</ul>
+<h2 id="readme-output-per-job">Output per job</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Group</th>
+<th>Fields</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Job</td>
+<td><code>id</code>, <code>positionName</code>, <code>normalizedTitle</code>, <code>url</code>, <code>description</code>, <code>descriptionHtml</code> (when <code>includeDescriptionHtml</code> is on), <code>jobType</code>, <code>jobTypes</code>, <code>remoteWorkType</code>, <code>experienceLevel</code>, <code>educationLevels</code>, <code>workSchedule</code>, <code>occupations</code>, <code>attributes</code>, <code>language</code>, <code>source</code></td>
+</tr>
+<tr>
+<td>Salary</td>
+<td><code>salary</code> (as shown on Indeed), <code>salaryMin</code>, <code>salaryMax</code>, <code>salaryPeriod</code>, <code>salaryCurrency</code>, <code>salaryAnnualMin</code>, <code>salaryAnnualMax</code>, <code>salarySource</code>, <code>payTypes</code></td>
+</tr>
+<tr>
+<td>Benefits &amp; schedule</td>
+<td><code>benefits</code>, <code>schedules</code></td>
+</tr>
+<tr>
+<td>Location</td>
+<td><code>location</code>, <code>streetAddress</code>, <code>neighborhood</code>, <code>city</code>, <code>county</code>, <code>state</code>, <code>stateName</code>, <code>postalCode</code>, <code>countryCode</code>, <code>countryName</code>, <code>latitude</code>, <code>longitude</code></td>
+</tr>
+<tr>
+<td>Dates</td>
+<td><code>postedAt</code>, <code>postingDateParsed</code>, <code>datePostedISO</code>, <code>datePublishedISO</code>, <code>validThrough</code>, <code>isExpired</code></td>
+</tr>
+<tr>
+<td>Applying &amp; contacts</td>
+<td><code>easyApply</code>, <code>externalApplyLink</code>, <code>emails</code>, <code>phoneNumbers</code> (international format), <code>urgentlyHiring</code>, <code>highVolumeHiring</code></td>
+</tr>
+<tr>
+<td>Company ratings (when <code>includeCompanyRatings</code> is on)</td>
+<td><code>rating</code>, <code>reviewsCount</code>, <code>companyRatings</code> (work-life balance, compensation and benefits, job security and advancement, management, culture), <code>companyCeoApproval</code>, <code>companyFounded</code>, <code>companySalaries</code> (average pay by job title with category, period, and reported-salary count), <code>companyWorkWellbeing</code> (happiness, purpose, satisfaction, stress-free, and more 0–100 scores)</td>
+</tr>
+<tr>
+<td>Company</td>
+<td><code>company</code>, <code>companyId</code>, <code>companyUrl</code>, <code>companyLogo</code>, <code>companySize</code>, <code>companyRevenue</code>, <code>companyIndustry</code>, <code>companyWebsite</code>, <code>companyDescription</code>, <code>companyCeo</code>, <code>companyHeadquarters</code>, <code>companyInfo</code> (addresses, stock symbol, social links, and more)</td>
+</tr>
+<tr>
+<td>Context</td>
+<td><code>searchQuery</code>, <code>searchLocation</code>, <code>country</code>, <code>scrapedAt</code></td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="readme-example-output-row-shortened">Example output row (shortened)</h3>
+<pre><code class="language-json">{
+  &quot;id&quot;: &quot;6b86092e2a95d2c2&quot;,
+  &quot;positionName&quot;: &quot;Sr. Machine Learning Engineer&quot;,
+  &quot;company&quot;: &quot;DocuSign&quot;,
+  &quot;url&quot;: &quot;https://www.indeed.com/viewjob?jk=6b86092e2a95d2c2&quot;,
+  &quot;city&quot;: &quot;Seattle&quot;,
+  &quot;state&quot;: &quot;WA&quot;,
+  &quot;salary&quot;: &quot;$178,900 - $262,825 a year&quot;,
+  &quot;salaryAnnualMin&quot;: 178900,
+  &quot;salaryAnnualMax&quot;: 262825,
+  &quot;jobTypes&quot;: [&quot;Permanent&quot;, &quot;Full-time&quot;],
+  &quot;remoteWorkType&quot;: &quot;Hybrid&quot;,
+  &quot;benefits&quot;: [&quot;Paid parental leave&quot;, &quot;Health insurance&quot;, &quot;Paid time off&quot;],
+  &quot;rating&quot;: 3.5,
+  &quot;reviewsCount&quot;: 139,
+  &quot;companySalaries&quot;: [
+    { &quot;title&quot;: &quot;Software Engineer&quot;, &quot;salary&quot;: &quot;$170,461&quot;, &quot;amount&quot;: 170461, &quot;period&quot;: &quot;YEARLY&quot;, &quot;reportedSalaries&quot;: 17 }
+  ],
+  &quot;scrapedAt&quot;: &quot;2026-10-08T06:59:29Z&quot;
+}
+</code></pre>
+<h2 id="readme-input">Input</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>position</code></td>
+<td>string</td>
+<td>–</td>
+<td>Job title, skill, or keywords. Supports <code>company:Name</code>, <code>title:(…)</code>, quotes, <code>OR</code>, and <code>-exclusions</code></td>
+</tr>
+<tr>
+<td><code>location</code></td>
+<td>string</td>
+<td>–</td>
+<td>City, region, or postal code; leave empty to search the whole country. <code>remote</code> (or <code>anywhere</code>, <code>work from home</code>) is treated as the remote workplace filter instead of a place</td>
+</tr>
+<tr>
+<td><code>country</code></td>
+<td>string</td>
+<td><code>US</code></td>
+<td>Indeed country site to search (62 countries)</td>
+</tr>
+<tr>
+<td><code>maxItemsPerSearch</code></td>
+<td>integer</td>
+<td><code>100</code></td>
+<td>Max jobs to save per search, i.e. the keyword search and each search URL (Indeed shows up to ~1,000 per search). Job URLs and IDs are always all fetched</td>
+</tr>
+<tr>
+<td><code>jobType</code></td>
+<td>string</td>
+<td><code>&quot;&quot;</code> (any)</td>
+<td><code>fulltime</code>, <code>parttime</code>, <code>contract</code>, <code>temporary</code>, <code>internship</code>, <code>permanent</code>, <code>seasonal</code>, <code>perdiem</code>, <code>freelance</code>, <code>apprenticeship</code>, <code>volunteer</code></td>
+</tr>
+<tr>
+<td><code>workplaceType</code></td>
+<td>string</td>
+<td><code>&quot;&quot;</code> (any)</td>
+<td><code>remote</code>, <code>hybrid</code>, or <code>inPerson</code></td>
+</tr>
+<tr>
+<td><code>datePosted</code></td>
+<td>string</td>
+<td><code>&quot;&quot;</code> (any time)</td>
+<td><code>1</code>, <code>3</code>, <code>7</code>, <code>14</code>, or <code>30</code> (days)</td>
+</tr>
+<tr>
+<td><code>experienceLevel</code></td>
+<td>string</td>
+<td><code>&quot;&quot;</code> (any)</td>
+<td><code>noExperience</code>, <code>entry</code>, <code>mid</code>, <code>senior</code></td>
+</tr>
+<tr>
+<td><code>educationLevel</code></td>
+<td>string</td>
+<td><code>&quot;&quot;</code> (any)</td>
+<td><code>noDegree</code>, <code>highSchool</code>, <code>associate</code>, <code>bachelor</code>, <code>master</code>, <code>doctoral</code></td>
+</tr>
+<tr>
+<td><code>salaryMin</code></td>
+<td>integer</td>
+<td>–</td>
+<td>Minimum yearly salary in the country's currency; jobs with no salary are excluded when set</td>
+</tr>
+<tr>
+<td><code>easyApplyOnly</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Only jobs you can apply to directly on Indeed</td>
+</tr>
+<tr>
+<td><code>radius</code></td>
+<td>integer</td>
+<td>–</td>
+<td>Search radius around <code>location</code> (Indeed's own default is 25); ignored without a location</td>
+</tr>
+<tr>
+<td><code>radiusUnit</code></td>
+<td>string</td>
+<td><code>miles</code></td>
+<td><code>miles</code> or <code>kilometers</code></td>
+</tr>
+<tr>
+<td><code>sort</code></td>
+<td>string</td>
+<td><code>relevance</code></td>
+<td><code>relevance</code> or <code>date</code> (newest first)</td>
+</tr>
+<tr>
+<td><code>startUrls</code></td>
+<td>array</td>
+<td>–</td>
+<td>Indeed search URLs, company job pages (<code>/cmp/Name/jobs</code>), job URLs, or job IDs. The filters chosen above are added to search URLs that don't set their own</td>
+</tr>
+<tr>
+<td><code>includeCompanyRatings</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td>Add the employer's rating, review count, category ratings, CEO approval, founding year, wellbeing score, and average salaries by job title</td>
+</tr>
+<tr>
+<td><code>includeDescriptionHtml</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Also save the description as HTML (the plain-text <code>description</code> is always included)</td>
+</tr>
+<tr>
+<td><code>saveOnlyUniqueItems</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td>Save each job once even when several searches find it</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="readme-example-remote-full-time-data-analyst-jobs-from-the-last-week">Example: remote full-time data analyst jobs from the last week</h3>
+<pre><code class="language-json">{
+  &quot;position&quot;: &quot;data analyst&quot;,
+  &quot;country&quot;: &quot;US&quot;,
+  &quot;workplaceType&quot;: &quot;remote&quot;,
+  &quot;jobType&quot;: &quot;fulltime&quot;,
+  &quot;datePosted&quot;: &quot;7&quot;,
+  &quot;maxItemsPerSearch&quot;: 200
+}
+</code></pre>
+<h3 id="readme-example-senior-engineering-jobs-paying-at-least-150-000-in-seattle">Example: senior engineering jobs paying at least $150,000 in Seattle</h3>
+<pre><code class="language-json">{
+  &quot;position&quot;: &quot;software engineer&quot;,
+  &quot;location&quot;: &quot;Seattle, WA&quot;,
+  &quot;experienceLevel&quot;: &quot;senior&quot;,
+  &quot;salaryMin&quot;: 150000,
+  &quot;maxItemsPerSearch&quot;: 500
+}
+</code></pre>
+<h3 id="readme-example-nurse-jobs-on-the-uk-site">Example: nurse jobs on the UK site</h3>
+<pre><code class="language-json">{ &quot;position&quot;: &quot;nurse&quot;, &quot;location&quot;: &quot;London&quot;, &quot;country&quot;: &quot;GB&quot;, &quot;maxItemsPerSearch&quot;: 300 }
+</code></pre>
+<h3 id="readme-example-a-filtered-search-url-plus-one-specific-job">Example: a filtered search URL plus one specific job</h3>
+<pre><code class="language-json">{
+  &quot;startUrls&quot;: [
+    &quot;https://www.indeed.com/jobs?q=electrician&amp;l=Denver%2C+CO&amp;jt=contract&amp;fromage=14&quot;,
+    &quot;https://www.indeed.com/viewjob?jk=6b86092e2a95d2c2&quot;
+  ]
+}
+</code></pre>
+<h2 id="readme-use-cases">Use cases</h2>
+<ul>
+<li><strong>Job market and salary research</strong> — compare pay by title, city, and country using normalized yearly salaries and employer salary reports</li>
+<li><strong>Lead generation for recruiters and staffing agencies</strong> — find companies hiring now, with size, revenue, industry, and recruiter contact details found in listings</li>
+<li><strong>Employer reputation research</strong> — compare employers by Indeed rating, review count, category ratings, and CEO approval</li>
+<li><strong>Job board aggregation</strong> — pull deduplicated listings with full descriptions and apply links</li>
+<li><strong>Competitor hiring intelligence</strong> — track which roles a company is opening with a <code>company:Name</code> search</li>
+<li><strong>Remote-work and benefits analysis</strong> — measure remote/hybrid share, benefits, and schedules by role or region</li>
+</ul>
+<h2 id="readme-faq">FAQ</h2>
+<p><strong>How many jobs can I get per search?</strong>
+Indeed shows up to about 1,000 jobs for a single search. To collect more, run several searches with different locations, job types, date ranges, or keywords as separate entries in <code>startUrls</code> — with <code>saveOnlyUniqueItems</code> on, jobs found by more than one search are still saved once. If the run approaches its timeout, it stops starting new pages and keeps everything saved so far.</p>
+<p><strong>Why do some jobs have no salary?</strong>
+Many employers don't publish pay on Indeed, so salary fields only appear when Indeed shows one for that job. <code>salaryAnnualMin</code>/<code>salaryAnnualMax</code> convert hourly, daily, weekly, and monthly pay to a yearly figure so jobs are easy to compare.</p>
+<p><strong>How does the minimum salary filter work?</strong>
+Only jobs whose salary range reaches your minimum yearly amount (in the country's currency) are kept — using the employer's own salary or, when the employer gives none, Indeed's own estimate (<code>salarySource</code> tells you which). Jobs without any salary data are excluded entirely.</p>
+<p><strong>How do I get all jobs from one company?</strong>
+Search <code>company:CompanyName</code> as the position (e.g. <code>company:Amazon</code>), optionally with a location, or paste the company's Indeed jobs page URL into <code>startUrls</code>. Single jobs can be added the same way, as a job URL (<code>…/viewjob?jk=…</code>, from any supported country site) or a bare job ID.</p>
+<p><strong>Does it extract contact details?</strong>
+Emails and phone numbers that the employer wrote directly into the job description are saved in <code>emails</code> and <code>phoneNumbers</code> (international format). Most employers ask candidates to apply through Indeed or their own careers site, so only a minority of jobs include contact details this way.</p>
+<p><strong>Which countries are supported?</strong>
+62 Indeed sites, including the United States, United Kingdom, Canada, Australia, India, Germany, France, Japan, Brazil, and Mexico. Results come back in the local language with salaries in the local currency, same as browsing the local Indeed site directly.</p>
+<p><strong>Is it legal to scrape Indeed?</strong>
+This actor collects publicly available job listings. Listings can contain personal data (a recruiter's name, email, or phone number) that laws like GDPR and CCPA cover, so use that data only for a legitimate purpose and in line with Indeed's own terms. If you're unsure, consult a lawyer.</p>
+<p><strong>Why might a search return nothing?</strong>
+The keywords may not match any jobs in that location, or the filters may be too strict together; the run then finishes with an empty dataset and a status message saying no jobs matched. If Indeed rejected the search or couldn't be reached and nothing at all was saved, the run is marked as failed with a message explaining which, so you can retry.</p>
+<p><strong>What if I leave the input empty, or set only filters?</strong>
+With filters (or a non-US <code>country</code>) but no position, location or URLs, the actor searches every job in that country matching the filters. A completely empty input runs a small example search (<code>web developer</code> in <code>San Francisco</code>) so you can see the output format.</p>
+<p><strong>Is this affiliated with Indeed?</strong>
+No. This is an independent, third-party actor that reads Indeed's publicly available job listings; it is not operated by or affiliated with Indeed.</p>
+</details></section><section id="python-quickstart"><h2>Python quickstart</h2><p>Use a schema-derived input and the Python standard library to start a run. An Apify account and token are required for execution.</p><p><a href="/apify-actor-examples/guides/JCXoFe3h1UxJEFHCg/">Open the step-by-step Python guide →</a></p></section><p class="source-note">Source build <code>2b97RY0UTNOGMXtFc</code>. Documentation is regenerated from the default published build; private drafts are not included.</p></article></div></main><footer class="footer"><strong>Nimbryxo Studio</strong><div class="footer-links"><a href="/apify-actor-examples/topics/">Topics</a><a href="/apify-actor-examples/sources/">Documentation sources</a><a href="https://apify.com/nimbryxo-studio">Apify</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></div></footer></body></html>

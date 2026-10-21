@@ -1,0 +1,116 @@
+# LinkedIn Post Comment & Reply Thread Extractor
+
+Feed this actor one or more LinkedIn post links and a session cookie, and it returns the top-level comments on each post (up to your per-post limit) — optionally with nested reply threads — as structured rows with author identity, engagement counts, and linked profiles.
+
+## What this actor does
+
+- Scrapes top-level comments from one or more LinkedIn post URLs, with a relevance or recency sort preference.
+- Optionally follows reply threads up to 3 levels deep, emitting each reply as its own row linked to its parent via `parentCommentId`.
+- Classifies each commenter as a person or company page, and pulls any LinkedIn profile or company links out of the comment text.
+- Filters out comments below a minimum reaction count, and can exclude comments from person or company authors entirely.
+- Omits text and URL fields it couldn't populate for a given comment; the counts (`reactionsCount`, `repliesCount`, `authorFollowersCount`), `isReply` and `authorType` are always present.
+
+## Output per comment
+
+| Field | Description |
+|---|---|
+| `commentId` | Unique numeric ID for the comment. |
+| `postUrl` | Canonical URL of the source post. |
+| `postId` | Numeric activity ID of the source post. |
+| `authorName` | Commenter's full name. |
+| `authorProfileUrl` | URL to the commenter's LinkedIn profile or company page. |
+| `authorHeadline` | Commenter's headline/title. |
+| `authorAvatar` | CDN URL of the commenter's profile photo. |
+| `authorType` | `PERSON`, `COMPANY`, or `UNKNOWN` when it can't be determined. |
+| `authorFollowersCount` | Commenter's follower count, when LinkedIn exposes one (0 otherwise). |
+| `commentText` | Full text of the comment. |
+| `commentedAt` | ISO 8601 UTC timestamp of when the comment was posted. |
+| `commentEditedAt` | ISO 8601 UTC timestamp of the last edit, when the comment was edited. |
+| `reactionsCount` | Total reactions on the comment (`0` when none or unknown). |
+| `reactionBreakdown` | Reaction counts by type (e.g. `like`, `praise`), when more than one type is present. |
+| `repliesCount` | Number of replies to this comment (`0` when none or unknown). |
+| `isReply` | `true` if this row is a reply, `false` if top-level. |
+| `parentCommentId` | ID of the parent comment (replies only). |
+| `mentionedUsers` | LinkedIn profile URLs (`linkedin.com/in/...`) that appear in the comment text, when any are present. |
+| `mentionedCompanies` | Company slugs from `linkedin.com/company/...` links in the comment text, when any are present. |
+| `attachmentImageUrl` | URL of an attached image, when the comment includes one. |
+| `attachmentVideoUrl` | URL of an attached video, when the comment includes one. |
+| `scrapedAt` | ISO 8601 UTC timestamp of when the row was scraped. |
+
+If no cookie is supplied, or the supplied cookie is or becomes invalid, the run writes a record with `_status: "no_data"`, `_reason`, `_message`, `_help` and `scrapedAt` fields explaining what to fix, and stops. Comments already saved before the cookie stopped working stay in the dataset.
+
+## Input
+
+| Field | Type | Default | Description |
+|---|---|---|---|
+| `postUrls` | List of strings | – | LinkedIn post URLs to scrape comments from. Accepts `/feed/update/urn:li:activity:ID/` or `/posts/username_slug-ID/` formats. Required. |
+| `cookie` | String | – | A LinkedIn session cookie: either the `li_at` value, or the full cookies JSON array exported from a browser extension. Required. |
+| `maxCommentsPerPost` | Integer | `50` | Maximum top-level comments to scrape per post (1–500). Replies don't count toward it. |
+| `includeReplies` | Boolean | `false` | Also fetch replies to top-level comments, each output as its own row. |
+| `replyDepth` | Integer | `1` | How many reply levels to recurse when `includeReplies` is on: `1` = direct replies, up to `3`. Up to 10 replies are read per comment. |
+| `sortBy` | String (select) | `RELEVANCE` | `RELEVANCE` (LinkedIn's "Most relevant") or `RECENT` (newest first). A preference only: depending on how LinkedIn serves a post's comments, they may come back in LinkedIn's default order. |
+| `minReactions` | Integer | `0` | Skip comments and replies with fewer than this many reactions. `0` disables the filter. |
+| `language` | String (select) | `en` | Preferred LinkedIn UI language; influences which translation of comment text is returned. |
+| `excludeAuthorTypes` | List of strings | `[]` | Drop comments and replies from the selected author types: `PERSON`, `COMPANY`. Comments whose author type is `UNKNOWN` are always kept. |
+| `proxyConfiguration` | Object | – | Optional Apify proxy settings. |
+
+### Example: default run
+
+```json
+{
+  "postUrls": ["https://www.linkedin.com/feed/update/urn:li:activity:7329761432933134337/"],
+  "cookie": "YOUR_LI_AT_VALUE",
+  "maxCommentsPerPost": 50
+}
+```
+
+### Example: with nested replies, newest first
+
+```json
+{
+  "postUrls": ["https://www.linkedin.com/posts/williamhgates_climate-7329761432933134337/"],
+  "cookie": "YOUR_LI_AT_VALUE",
+  "includeReplies": true,
+  "replyDepth": 2,
+  "sortBy": "RECENT"
+}
+```
+
+### Example: high-engagement comments from people only
+
+```json
+{
+  "postUrls": ["https://www.linkedin.com/feed/update/urn:li:activity:7329761432933134337/"],
+  "cookie": "YOUR_LI_AT_VALUE",
+  "minReactions": 10,
+  "excludeAuthorTypes": ["COMPANY"]
+}
+```
+
+## Use cases
+
+- **Audience sentiment** — read how people are reacting to a company announcement or thought-leadership post.
+- **Lead discovery** — surface engaged commenters as warm prospects, filtered to real people by `excludeAuthorTypes`.
+- **Influencer research** — see who's actively replying to a creator's posts and how deep the conversation threads go.
+- **Brand monitoring** — track mentions of your company or product inside comment threads on relevant posts.
+- **Community moderation review** — pull full reply chains to review how a sensitive post's discussion unfolded.
+
+## FAQ
+
+**Does this need a LinkedIn account?** Yes. A valid session cookie (`li_at` or an exported cookies JSON array) from a logged-in account is required to read comment data.
+
+**Why would `authorName` be missing from a comment?** Deleted accounts or heavily restricted profiles can leave author fields empty. If a comment has no extractable ID at all, it's skipped entirely.
+
+**Does the actor see deleted comments?** No. Deleted comments are removed from LinkedIn's own response, so the actor only sees whatever is still live at scrape time.
+
+**How deep do reply threads go?** Up to 3 levels via `replyDepth`, only when `includeReplies` is enabled. At each level the actor reads up to 10 replies per comment, and replies beyond the chosen depth aren't fetched.
+
+**Why did I get fewer comments than `maxCommentsPerPost`?** The post may simply have fewer comments, `minReactions`/`excludeAuthorTypes` may have dropped some, or LinkedIn may serve that post's comments in a way that only exposes its first batch. Comments are not de-duplicated across different input URLs pointing to the same post.
+
+**Can I scrape comments on a post I don't have access to?** No. Only posts visible to the account behind your cookie can be scraped — private or connection-restricted posts outside your network will fail.
+
+**Why is a cookie required for public-looking posts?** LinkedIn's comment data isn't available through any unauthenticated public endpoint, even for posts that appear public in a browser without logging in.
+
+**What happens if my cookie expires mid-run?** The run stops and adds a record with `_status: "no_data"` plus a `_reason`/`_message`/`_help` explanation; any comment rows saved before that point remain. Log into LinkedIn, copy a fresh `li_at` value, and start a new run.
+
+**Is this affiliated with LinkedIn?** No. This is an independent tool and is not affiliated with, endorsed by, or sponsored by LinkedIn Corporation.

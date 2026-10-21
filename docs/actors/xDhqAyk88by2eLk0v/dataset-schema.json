@@ -1,0 +1,187 @@
+{
+  "actorSpecification": 1,
+  "title": "Facebook Posts Data",
+  "views": {
+    "engagement": {
+      "display": {
+        "component": "table",
+        "properties": {
+          "author.name": {
+            "format": "text",
+            "label": "Author"
+          },
+          "commentsCount": {
+            "format": "number",
+            "label": "Comments"
+          },
+          "contentType": {
+            "format": "text",
+            "label": "Type"
+          },
+          "creationTimeIso": {
+            "format": "date",
+            "label": "Posted"
+          },
+          "permalinkUrl": {
+            "format": "link",
+            "label": "URL"
+          },
+          "postId": {
+            "format": "text",
+            "label": "Post ID"
+          },
+          "reactionBreakdown": {
+            "format": "object",
+            "label": "Reactions by type"
+          },
+          "reactionsTotal": {
+            "format": "number",
+            "label": "Reactions"
+          },
+          "sharesCount": {
+            "format": "number",
+            "label": "Shares"
+          }
+        }
+      },
+      "title": "Engagement",
+      "transformation": {
+        "fields": [
+          "postId",
+          "contentType",
+          "author.name",
+          "reactionsTotal",
+          "reactionBreakdown",
+          "commentsCount",
+          "sharesCount",
+          "creationTimeIso",
+          "permalinkUrl"
+        ]
+      }
+    },
+    "overview": {
+      "display": {
+        "component": "table",
+        "properties": {
+          "author.name": {
+            "format": "text",
+            "label": "Author"
+          },
+          "commentsCount": {
+            "format": "number",
+            "label": "Comments"
+          },
+          "creationTime": {
+            "format": "number",
+            "label": "Posted (Unix)"
+          },
+          "permalinkUrl": {
+            "format": "link",
+            "label": "URL"
+          },
+          "postId": {
+            "format": "text",
+            "label": "Post ID"
+          },
+          "postType": {
+            "format": "text",
+            "label": "Type"
+          },
+          "reactionsTotal": {
+            "format": "number",
+            "label": "Reactions"
+          },
+          "sharesCount": {
+            "format": "number",
+            "label": "Shares"
+          },
+          "text": {
+            "format": "text",
+            "label": "Text"
+          }
+        }
+      },
+      "title": "Posts Overview",
+      "transformation": {
+        "fields": [
+          "postId",
+          "postType",
+          "text",
+          "author.name",
+          "reactionsTotal",
+          "commentsCount",
+          "sharesCount",
+          "creationTime",
+          "permalinkUrl"
+        ]
+      }
+    },
+    "videos": {
+      "display": {
+        "component": "table",
+        "properties": {
+          "author.name": {
+            "format": "text",
+            "label": "Author"
+          },
+          "commentsCount": {
+            "format": "number",
+            "label": "Comments"
+          },
+          "contentType": {
+            "format": "text",
+            "label": "Type"
+          },
+          "creationTimeIso": {
+            "format": "date",
+            "label": "Posted"
+          },
+          "permalinkUrl": {
+            "format": "link",
+            "label": "URL"
+          },
+          "postId": {
+            "format": "text",
+            "label": "Post ID"
+          },
+          "reactionsTotal": {
+            "format": "number",
+            "label": "Reactions"
+          },
+          "sharesCount": {
+            "format": "number",
+            "label": "Shares"
+          },
+          "text": {
+            "format": "text",
+            "label": "Text"
+          },
+          "videoViewCount": {
+            "format": "number",
+            "label": "Video views (alt. metric)"
+          },
+          "viewsCount": {
+            "format": "number",
+            "label": "Views"
+          }
+        }
+      },
+      "title": "Videos & reels",
+      "transformation": {
+        "fields": [
+          "postId",
+          "contentType",
+          "text",
+          "author.name",
+          "viewsCount",
+          "videoViewCount",
+          "reactionsTotal",
+          "commentsCount",
+          "sharesCount",
+          "creationTimeIso",
+          "permalinkUrl"
+        ]
+      }
+    }
+  }
+}

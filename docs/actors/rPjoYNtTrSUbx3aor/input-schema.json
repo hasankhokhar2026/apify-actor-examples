@@ -1,0 +1,134 @@
+{
+  "description": "Search worldmarket.com by keyword, or browse a department. No login, cookies, or paid proxy required.",
+  "properties": {
+    "category": {
+      "description": "Browse an entire World Market department.",
+      "editor": "select",
+      "enum": [
+        "bestSellers",
+        "bath",
+        "clothingAndJewelry",
+        "decorAndPillows",
+        "dining",
+        "foodAndDrinks",
+        "freeShipping",
+        "furniture",
+        "gifts",
+        "holidays",
+        "kitchen",
+        "lighting",
+        "newAndTrending",
+        "outdoor",
+        "rugs",
+        "sale",
+        "wallDecorAndMirrors"
+      ],
+      "enumTitles": [
+        "Best Sellers",
+        "Bath & Body",
+        "Clothing & Jewelry",
+        "Decor & Pillows",
+        "Dining",
+        "Food & Drinks",
+        "Free Shipping",
+        "Furniture",
+        "Gifts",
+        "Holidays",
+        "Kitchen",
+        "Lighting",
+        "New & Trending",
+        "Outdoor",
+        "Rugs",
+        "Sale / Clearance",
+        "Wall Decor & Mirrors"
+      ],
+      "title": "Department (mode=byCategory)",
+      "type": "string"
+    },
+    "maxItems": {
+      "default": 20,
+      "description": "Hard cap on emitted products.",
+      "maximum": 200,
+      "minimum": 1,
+      "prefill": 20,
+      "title": "Max items",
+      "type": "integer"
+    },
+    "maxPrice": {
+      "description": "Drop products priced above this amount.",
+      "maximum": 100000,
+      "minimum": 0,
+      "title": "Maximum price (USD)",
+      "type": "integer"
+    },
+    "minPrice": {
+      "description": "Drop products priced below this amount.",
+      "maximum": 100000,
+      "minimum": 0,
+      "title": "Minimum price (USD)",
+      "type": "integer"
+    },
+    "mode": {
+      "default": "search",
+      "description": "What to fetch.",
+      "editor": "select",
+      "enum": [
+        "search",
+        "byCategory",
+        "byProductUrls"
+      ],
+      "enumTitles": [
+        "Search by keyword",
+        "Browse by department",
+        "Lookup specific product URLs"
+      ],
+      "prefill": "search",
+      "title": "Mode",
+      "type": "string"
+    },
+    "productUrls": {
+      "default": [],
+      "description": "Direct worldmarket.com product-page URLs (e.g. `https://www.worldmarket.com/p/<slug>-<id>.html`).",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Product URLs (mode=byProductUrls)",
+      "type": "array"
+    },
+    "searchQuery": {
+      "default": "candle",
+      "description": "Free-text keyword search (mode=search), e.g. `candle`, `dining chair`, `chocolate`.",
+      "editor": "textfield",
+      "prefill": "candle",
+      "title": "Search query",
+      "type": "string"
+    },
+    "sortBy": {
+      "default": "bestselling",
+      "description": "Sort order for search/category results.",
+      "editor": "select",
+      "enum": [
+        "bestselling",
+        "newArrivals",
+        "ratingHighToLow",
+        "priceLowToHigh",
+        "priceHighToLow"
+      ],
+      "enumTitles": [
+        "Bestselling",
+        "New Arrivals",
+        "Rating: High to Low",
+        "Price: Low to High",
+        "Price: High to Low"
+      ],
+      "prefill": "bestselling",
+      "title": "Sort order",
+      "type": "string"
+    }
+  },
+  "required": [
+    "mode"
+  ],
+  "schemaVersion": 1,
+  "title": "World Market Product Scraper Input",
+  "type": "object"
+}

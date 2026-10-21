@@ -1,0 +1,75 @@
+{
+  "description": "Extract structured data from Facebook pages — either provide direct page URLs, or discover pages by keyword and location. Provide session cookies for the most reliable discovery and full contact/business details.",
+  "properties": {
+    "cookies": {
+      "description": "Facebook session cookies. STRONGLY RECOMMENDED — without valid cookies, Facebook blocks ~94% of discovered pages with a login wall, most contact/business fields (phone, email, address, hours) will be empty, and page discovery itself is far less reliable. Accepts EITHER (1) a JSON array of Playwright-style cookie objects, OR (2) a raw `name=value; name2=value2` Cookie header string. Required cookies: c_user, xs, datr, fr, sb. Export them from your logged-in Facebook session via browser DevTools (Application > Cookies > facebook.com). Example: [{\"name\":\"c_user\",\"value\":\"1000...\",\"domain\":\".facebook.com\",\"path\":\"/\"}]",
+      "editor": "textfield",
+      "prefill": "",
+      "sectionCaption": "Authentication",
+      "sectionDescription": "Facebook session cookies are strongly recommended. Without them, most pages return a login wall and contact/business fields will be missing. The scraper always uses residential IPs — providing cookies from any browser session will work.",
+      "title": "Facebook Session Cookies",
+      "type": "string"
+    },
+    "includeReviews": {
+      "default": true,
+      "description": "Fetch and include real reviews (reviewer name, recommend/don't-recommend verdict, review text, date) for each page, when available. Adds one extra request per page. Disable for faster/cheaper runs if you don't need reviews.",
+      "title": "Include Reviews",
+      "type": "boolean"
+    },
+    "locations": {
+      "description": "Optional locations to combine with each search term for location-aware discovery. For example, adding 'London' will search for 'Coffee Shop London'.",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "prefill": [
+        "London"
+      ],
+      "title": "Locations",
+      "type": "array"
+    },
+    "maxItems": {
+      "default": 60,
+      "description": "Maximum number of page rows to output. For 500–1000+ results, provide Facebook session cookies and use multiple search terms or locations to maximize discovery. Also scales SERP pagination depth automatically.",
+      "maximum": 5000,
+      "minimum": 1,
+      "prefill": 10,
+      "title": "Maximum Items",
+      "type": "integer"
+    },
+    "searchTerms": {
+      "description": "Search terms for page discovery. Each term is combined with each location (if provided) to find matching Facebook pages. Either searchTerms or startUrls is required.",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "prefill": [
+        "Coffee Shop"
+      ],
+      "title": "Search Terms",
+      "type": "array"
+    },
+    "startUrls": {
+      "description": "Direct list of Facebook page URLs to scrape (skips keyword/location discovery entirely for these). Accepts full page URLs, e.g. https://www.facebook.com/McDonalds. Can be combined with searchTerms — results from both are merged. Either startUrls or searchTerms is required.",
+      "editor": "requestListSources",
+      "items": {
+        "properties": {
+          "url": {
+            "description": "URL of a Facebook page to scrape, e.g. https://www.facebook.com/McDonalds",
+            "title": "URL of a Facebook page",
+            "type": "string"
+          }
+        },
+        "required": [
+          "url"
+        ],
+        "type": "object"
+      },
+      "title": "Facebook Page URLs",
+      "type": "array"
+    }
+  },
+  "schemaVersion": 1,
+  "title": "Facebook Pages Scraper Input",
+  "type": "object"
+}

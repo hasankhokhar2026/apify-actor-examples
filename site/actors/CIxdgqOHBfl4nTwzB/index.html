@@ -1,0 +1,407 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src &#x27;self&#x27;; script-src &#x27;self&#x27; &#x27;sha256-U7JCTuRzIfeEBtZhZrp66Tsac26qiL70hvy4fK6fxK0=&#x27;; style-src &#x27;self&#x27;; img-src &#x27;self&#x27; https: data:; base-uri &#x27;self&#x27;; form-action &#x27;self&#x27;; object-src &#x27;none&#x27;"><title>LinkedIn Activity Feed Scraper with Engagement Filters | Nimbryxo Studio</title><meta name="description" content="Pull posts, articles, and reposts from LinkedIn profile activity feeds, with reaction/comment/date filters and a per-reaction-type breakdown. Requires a LinkedIn session cookie."><meta name="robots" content="index,follow"><link rel="canonical" href="https://hasankhokhar2026.github.io/apify-actor-examples/actors/CIxdgqOHBfl4nTwzB/"><meta property="og:title" content="LinkedIn Activity Feed Scraper with Engagement Filters | Nimbryxo Studio"><meta property="og:description" content="Pull posts, articles, and reposts from LinkedIn profile activity feeds, with reaction/comment/date filters and a per-reaction-type breakdown. Requires a LinkedIn session cookie."><meta property="og:type" content="website"><meta property="og:url" content="https://hasankhokhar2026.github.io/apify-actor-examples/actors/CIxdgqOHBfl4nTwzB/"><meta property="og:site_name" content="Nimbryxo Studio"><meta name="twitter:card" content="summary"><link rel="icon" href="/apify-actor-examples/assets/mark.svg?v=2d20f9dc334a" type="image/svg+xml"><link rel="stylesheet" href="/apify-actor-examples/assets/site.css?v=39545fd4a399"><link rel="stylesheet" href="/apify-actor-examples/assets/brand.css?v=eb0f935ade25"><link rel="alternate" type="application/rss+xml" title="Nimbryxo Studio guides" href="/apify-actor-examples/feed.xml"><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization","name":"Nimbryxo Studio","url":"https://hasankhokhar2026.github.io/apify-actor-examples/","sameAs":["https://apify.com/nimbryxo-studio"]},{"@type":"WebSite","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#website","name":"Nimbryxo Studio","url":"https://hasankhokhar2026.github.io/apify-actor-examples/","publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"inLanguage":"en"},{"@type":"WebPage","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/CIxdgqOHBfl4nTwzB/#webpage","name":"LinkedIn Activity Feed Scraper with Engagement Filters","description":"Pull posts, articles, and reposts from LinkedIn profile activity feeds, with reaction/comment/date filters and a per-reaction-type breakdown. Requires a LinkedIn session cookie.","url":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/CIxdgqOHBfl4nTwzB/","isPartOf":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#website"},"publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"inLanguage":"en","mainEntity":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/CIxdgqOHBfl4nTwzB/#article"},"breadcrumb":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/CIxdgqOHBfl4nTwzB/#breadcrumb"}},{"@type":"TechArticle","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/CIxdgqOHBfl4nTwzB/#article","headline":"LinkedIn Activity Feed Scraper with Engagement Filters","name":"LinkedIn Activity Feed Scraper with Engagement Filters","description":"Pull posts, articles, and reposts from LinkedIn profile activity feeds, with reaction/comment/date filters and a per-reaction-type breakdown. Requires a LinkedIn session cookie.","url":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/CIxdgqOHBfl4nTwzB/","author":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"mainEntityOfPage":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/CIxdgqOHBfl4nTwzB/#webpage"},"inLanguage":"en"},{"@type":"BreadcrumbList","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/CIxdgqOHBfl4nTwzB/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Nimbryxo Studio","item":"https://hasankhokhar2026.github.io/apify-actor-examples/"},{"@type":"ListItem","position":2,"name":"Actors","item":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/"},{"@type":"ListItem","position":3,"name":"LinkedIn Activity Feed Scraper with Engagement Filters","item":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/CIxdgqOHBfl4nTwzB/"}]}]}</script><script src="/apify-actor-examples/assets/site.js?v=7cabac48dd31" defer></script></head><body class="theme-studio"><a href="#main" class="skip-link">Skip to content</a><header><div class="inner"><a href="/apify-actor-examples/" class="brand"><img src="/apify-actor-examples/assets/mark.svg?v=2d20f9dc334a" alt="" width="29" height="29">Nimbryxo Studio</a><nav aria-label="Main navigation"><a href="/apify-actor-examples/actors/" aria-current="page">Actors</a><a href="/apify-actor-examples/guides/">Guides</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></nav></div></header><main id="main"><div class="doc-layout"><aside class="contents" aria-label="On this page"><strong>Contents</strong><a href="#overview">Overview</a><a href="#published-readme">Published README</a><a href="#input-schema">Input schema</a><a href="#output-schema">Output schema</a><a href="#dataset-schema">Dataset schema</a><a href="#python-quickstart">Python quickstart</a></aside><article class="prose"><div class="breadcrumb"><a href="/apify-actor-examples/actors/">Actors</a><span>/</span><span>LinkedIn Activity Feed Scraper with Engagement Filters</span></div><section id="overview"><h1 class="doc-title">LinkedIn Activity Feed Scraper with Engagement Filters</h1><p class="lede">Pull posts, articles, and reposts from LinkedIn profile activity feeds, with reaction/comment/date filters and a per-reaction-type breakdown. Requires a LinkedIn session cookie.</p><div class="actions"><a class="button" href="https://apify.com/nimbryxo-studio/linkedin-activity-feed-scraper-with-engagement">Open on Apify</a><a class="text-link" href="https://github.com/hasankhokhar2026/apify-actor-examples/blob/main/docs/actors/CIxdgqOHBfl4nTwzB/README.md">GitHub source</a></div></section><section class="schema-section" id="input-schema"><h2>Input schema</h2><p>Input fields, types, required flags, descriptions, defaults, and prefills come from the published definition. Prefill examples are distinct from defaults.</p><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>profileUrls</code></td><td>array</td><td>required</td><td>LinkedIn profile URLs or usernames. Accepts: https://www.linkedin.com/in/williamhgates/, https://uk.linkedin.com/in/williamhgates, or just the username: williamhgates</td></tr><tr><td><code>cookie</code></td><td>string</td><td>required</td><td>Your LinkedIn session cookie. Accepts: (1) the li_at value from browser DevTools, or (2) full cookies JSON array from an extension like EditThisCookie.</td></tr><tr><td><code>maxPostsPerProfile</code></td><td>integer</td><td>optional</td><td>Maximum number of posts to scrape per profile.</td></tr></tbody></table></div><details><summary>Show all input fields</summary><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>profileUrls</code></td><td>array</td><td>required</td><td>LinkedIn profile URLs or usernames. Accepts: https://www.linkedin.com/in/williamhgates/, https://uk.linkedin.com/in/williamhgates, or just the username: williamhgates</td></tr><tr><td><code>cookie</code></td><td>string</td><td>required</td><td>Your LinkedIn session cookie. Accepts: (1) the li_at value from browser DevTools, or (2) full cookies JSON array from an extension like EditThisCookie.</td></tr><tr><td><code>maxPostsPerProfile</code></td><td>integer</td><td>optional</td><td>Maximum number of posts to scrape per profile.</td></tr><tr><td><code>mediaType</code></td><td>array</td><td>optional</td><td>Only include posts of these media types. Leave empty to include all.</td></tr><tr><td><code>postTypes</code></td><td>array</td><td>optional</td><td>Only include posts of these types. Leave empty to include all.</td></tr><tr><td><code>datePosted</code></td><td>string</td><td>optional</td><td>Filter to recent posts: past 24h, past week, past month.</td></tr><tr><td><code>minReactions</code></td><td>integer</td><td>optional</td><td>Only include posts with at least this many reactions.</td></tr><tr><td><code>minComments</code></td><td>integer</td><td>optional</td><td>Only include posts with at least this many comments.</td></tr><tr><td><code>language</code></td><td>string</td><td>optional</td><td>Preferred LinkedIn locale.</td></tr><tr><td><code>includeReposts</code></td><td>boolean</td><td>optional</td><td>Include posts that are reposts/reshares of other content.</td></tr><tr><td><code>proxyConfiguration</code></td><td>object</td><td>optional</td><td>Optional Apify proxy configuration. Residential proxy recommended for best results.</td></tr></tbody></table></div></details><p><a href="input-schema.json">Download the published input schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+  &quot;properties&quot;: {
+    &quot;cookie&quot;: {
+      &quot;description&quot;: &quot;Your LinkedIn session cookie. Accepts: (1) the li_at value from browser DevTools, or (2) full cookies JSON array from an extension like EditThisCookie.&quot;,
+      &quot;editor&quot;: &quot;textarea&quot;,
+      &quot;isSecret&quot;: true,
+      &quot;title&quot;: &quot;LinkedIn Cookie&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;datePosted&quot;: {
+      &quot;default&quot;: &quot;&quot;,
+      &quot;description&quot;: &quot;Filter to recent posts: past 24h, past week, past month.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;&quot;,
+        &quot;r86400&quot;,
+        &quot;r604800&quot;,
+        &quot;r2592000&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;Any time&quot;,
+        &quot;Past 24 hours&quot;,
+        &quot;Past week&quot;,
+        &quot;Past month&quot;
+      ],
+      &quot;title&quot;: &quot;Date Posted&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;includeReposts&quot;: {
+      &quot;default&quot;: true,
+      &quot;description&quot;: &quot;Include posts that are reposts/reshares of other content.&quot;,
+      &quot;editor&quot;: &quot;checkbox&quot;,
+      &quot;title&quot;: &quot;Include Reposts&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;language&quot;: {
+      &quot;default&quot;: &quot;en_US&quot;,
+      &quot;description&quot;: &quot;Preferred LinkedIn locale.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;en_US&quot;,
+        &quot;en_GB&quot;,
+        &quot;es_ES&quot;,
+        &quot;fr_FR&quot;,
+        &quot;de_DE&quot;,
+        &quot;pt_BR&quot;,
+        &quot;it_IT&quot;,
+        &quot;nl_NL&quot;,
+        &quot;ja_JP&quot;,
+        &quot;zh_CN&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;English (US)&quot;,
+        &quot;English (UK)&quot;,
+        &quot;Spanish&quot;,
+        &quot;French&quot;,
+        &quot;German&quot;,
+        &quot;Portuguese (BR)&quot;,
+        &quot;Italian&quot;,
+        &quot;Dutch&quot;,
+        &quot;Japanese&quot;,
+        &quot;Chinese (Simplified)&quot;
+      ],
+      &quot;title&quot;: &quot;Language&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;maxPostsPerProfile&quot;: {
+      &quot;default&quot;: 50,
+      &quot;description&quot;: &quot;Maximum number of posts to scrape per profile.&quot;,
+      &quot;editor&quot;: &quot;number&quot;,
+      &quot;maximum&quot;: 500,
+      &quot;minimum&quot;: 1,
+      &quot;title&quot;: &quot;Max Posts Per Profile&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;mediaType&quot;: {
+      &quot;description&quot;: &quot;Only include posts of these media types. Leave empty to include all.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;items&quot;: {
+        &quot;enum&quot;: [
+          &quot;text&quot;,
+          &quot;image&quot;,
+          &quot;video&quot;,
+          &quot;article&quot;,
+          &quot;document&quot;,
+          &quot;carousel&quot;,
+          &quot;repost&quot;,
+          &quot;poll&quot;,
+          &quot;event&quot;
+        ],
+        &quot;enumTitles&quot;: [
+          &quot;Text only&quot;,
+          &quot;Image&quot;,
+          &quot;Video&quot;,
+          &quot;Article&quot;,
+          &quot;Document&quot;,
+          &quot;Carousel&quot;,
+          &quot;Repost&quot;,
+          &quot;Poll&quot;,
+          &quot;Event&quot;
+        ],
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;title&quot;: &quot;Media Type Filter&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;minComments&quot;: {
+      &quot;default&quot;: 0,
+      &quot;description&quot;: &quot;Only include posts with at least this many comments.&quot;,
+      &quot;editor&quot;: &quot;number&quot;,
+      &quot;minimum&quot;: 0,
+      &quot;title&quot;: &quot;Minimum Comments&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;minReactions&quot;: {
+      &quot;default&quot;: 0,
+      &quot;description&quot;: &quot;Only include posts with at least this many reactions.&quot;,
+      &quot;editor&quot;: &quot;number&quot;,
+      &quot;minimum&quot;: 0,
+      &quot;title&quot;: &quot;Minimum Reactions&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;postTypes&quot;: {
+      &quot;default&quot;: [
+        &quot;text&quot;,
+        &quot;image&quot;,
+        &quot;video&quot;,
+        &quot;article&quot;,
+        &quot;document&quot;,
+        &quot;repost&quot;
+      ],
+      &quot;description&quot;: &quot;Only include posts of these types. Leave empty to include all.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;items&quot;: {
+        &quot;enum&quot;: [
+          &quot;text&quot;,
+          &quot;image&quot;,
+          &quot;video&quot;,
+          &quot;article&quot;,
+          &quot;document&quot;,
+          &quot;repost&quot;
+        ],
+        &quot;enumTitles&quot;: [
+          &quot;Text&quot;,
+          &quot;Image&quot;,
+          &quot;Video&quot;,
+          &quot;Article&quot;,
+          &quot;Document&quot;,
+          &quot;Repost&quot;
+        ],
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;title&quot;: &quot;Post Types&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;profileUrls&quot;: {
+      &quot;description&quot;: &quot;LinkedIn profile URLs or usernames. Accepts: https://www.linkedin.com/in/williamhgates/, https://uk.linkedin.com/in/williamhgates, or just the username: williamhgates&quot;,
+      &quot;editor&quot;: &quot;stringList&quot;,
+      &quot;prefill&quot;: [
+        &quot;https://www.linkedin.com/in/adam-grant/&quot;
+      ],
+      &quot;title&quot;: &quot;Profile URLs&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;proxyConfiguration&quot;: {
+      &quot;description&quot;: &quot;Optional Apify proxy configuration. Residential proxy recommended for best results.&quot;,
+      &quot;editor&quot;: &quot;proxy&quot;,
+      &quot;title&quot;: &quot;Proxy Configuration&quot;,
+      &quot;type&quot;: &quot;object&quot;
+    }
+  },
+  &quot;required&quot;: [
+    &quot;profileUrls&quot;,
+    &quot;cookie&quot;
+  ],
+  &quot;schemaVersion&quot;: 1,
+  &quot;title&quot;: &quot;LinkedIn Profile Posts Scraper Input&quot;,
+  &quot;type&quot;: &quot;object&quot;
+}
+</code></pre></details></section><section class="schema-section" id="output-schema"><h2>Output schema</h2><p>Published result links and storage locations. This schema is not an exhaustive contract for every field in a dataset record.</p><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>posts</code></td><td>string</td><td>optional</td><td>Dataset containing all scraped LinkedIn posts.</td></tr></tbody></table></div><p><a href="output-schema.json">Download the published output schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+  &quot;actorOutputSchemaVersion&quot;: 1,
+  &quot;description&quot;: &quot;One record per LinkedIn post, with content, media, engagement counts, and a per-reaction-type breakdown.&quot;,
+  &quot;properties&quot;: {
+    &quot;posts&quot;: {
+      &quot;description&quot;: &quot;Dataset containing all scraped LinkedIn posts.&quot;,
+      &quot;template&quot;: &quot;{{links.apiDefaultDatasetUrl}}/items&quot;,
+      &quot;title&quot;: &quot;Profile posts&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    }
+  },
+  &quot;title&quot;: &quot;LinkedIn Activity Feed Scraper with Engagement Filters Output&quot;
+}
+</code></pre></details></section><section class="schema-section" id="dataset-schema"><h2>Dataset schema</h2><p>Published dataset views and any declared field definitions. A view can select only a subset of the returned record fields.</p><p><a href="dataset-schema.json">Download the published dataset schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+  &quot;actorSpecification&quot;: 1,
+  &quot;title&quot;: &quot;LinkedIn Profile Posts&quot;,
+  &quot;views&quot;: {
+    &quot;overview&quot;: {
+      &quot;display&quot;: {
+        &quot;component&quot;: &quot;table&quot;,
+        &quot;properties&quot;: {
+          &quot;authorName&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Author&quot;
+          },
+          &quot;commentsCount&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Comments&quot;
+          },
+          &quot;content&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Content&quot;
+          },
+          &quot;mediaType&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Media Type&quot;
+          },
+          &quot;postUrl&quot;: {
+            &quot;format&quot;: &quot;link&quot;,
+            &quot;label&quot;: &quot;Post URL&quot;
+          },
+          &quot;postedAt&quot;: {
+            &quot;format&quot;: &quot;datetime&quot;,
+            &quot;label&quot;: &quot;Posted At&quot;
+          },
+          &quot;reactionsCount&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Reactions&quot;
+          },
+          &quot;repostsCount&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Reposts&quot;
+          }
+        }
+      },
+      &quot;title&quot;: &quot;Posts&quot;,
+      &quot;transformation&quot;: {
+        &quot;fields&quot;: [
+          &quot;authorName&quot;,
+          &quot;postedAt&quot;,
+          &quot;content&quot;,
+          &quot;mediaType&quot;,
+          &quot;reactionsCount&quot;,
+          &quot;commentsCount&quot;,
+          &quot;repostsCount&quot;,
+          &quot;postUrl&quot;
+        ]
+      }
+    }
+  }
+}
+</code></pre></details></section><section class="schema-section" id="key-value-schema"><h2>Key-value schema</h2><p>Published key-value store definitions, when provided by this build.</p><p>This definition is not present in the default published build. See the published README for available documentation.</p></section><section id="published-readme"><h2>Published README</h2><details><summary>Read the full published documentation</summary><h2 id="readme-linkedin-activity-feed-scraper-with-engagement-filters">LinkedIn Activity Feed Scraper with Engagement Filters</h2>
+<p>Pull posts, articles, and reposts from one or more LinkedIn profiles' activity feeds (newest first, up to your per-profile limit), with filters for media type, post age, and minimum engagement, so you can go straight to the content that matters instead of sifting through a raw feed dump.</p>
+<h2 id="readme-what-this-actor-does">What this actor does</h2>
+<ul>
+<li>Scrapes the activity feed of any number of LinkedIn profiles in one run</li>
+<li>Labels each post with its format: text, image, video, article, document, carousel, poll, event, or repost</li>
+<li>Reports reaction, comment, and repost totals, plus a breakdown by reaction type (like, celebrate, love, insightful, support, funny, curious) when LinkedIn provides one</li>
+<li>Filters results by media type, post type, how recently it was posted, minimum reactions, and minimum comments — so you only get posts worth keeping</li>
+<li>Fields a post doesn't have (e.g. no article preview, no poll options) are left out of that record</li>
+</ul>
+<h2 id="readme-output-per-post">Output per post</h2>
+<ul>
+<li><code>postId</code>, <code>postUrl</code>, <code>postedAt</code></li>
+<li><code>authorName</code>, <code>authorProfileUrl</code>, <code>authorHeadline</code>, <code>authorAvatar</code></li>
+<li><code>content</code> — full post text</li>
+<li><code>mediaType</code> — <code>text</code>, <code>image</code>, <code>video</code>, <code>article</code>, <code>document</code>, <code>carousel</code>, <code>repost</code>, <code>poll</code>, or <code>event</code></li>
+<li><code>mediaUrls</code>, <code>mediaItems</code> — media attached to the post</li>
+<li><code>articleTitle</code>, <code>articleUrl</code> — when the post shares an article</li>
+<li><code>linkPreview</code> — link preview card, when the post shares a plain URL</li>
+<li><code>documentUrl</code> — attached document link, for document posts</li>
+<li><code>pollOptions</code> — poll choices, for poll posts</li>
+<li><code>hashtags</code>, <code>mentionedPeople</code>, <code>mentionedCompanies</code></li>
+<li><code>repostOf</code> — details of the original post, when this post is a repost</li>
+<li><code>reactionsCount</code>, <code>commentsCount</code>, <code>repostsCount</code>, <code>viewsCount</code></li>
+<li><code>reactionBreakdown</code> — counts per reaction type, when available</li>
+<li><code>inputProfileUrl</code> — the profile URL this post came from</li>
+<li><code>scrapedAt</code> — ISO 8601 timestamp</li>
+</ul>
+<p>If the cookie is missing or LinkedIn rejects it before any profile is read, the dataset instead gets a single status row rather than post records: <code>_status: &quot;no_data&quot;</code>, <code>_reason</code> (<code>cookie-missing</code> or <code>cookie-invalid</code>), <code>_message</code>, <code>_help</code> (how to export a fresh cookie) and <code>scrapedAt</code>. If the session expires part-way through a run, the run stops and keeps the posts already saved. Profiles whose username can't be read or resolved are skipped without a row.</p>
+<h2 id="readme-input">Input</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>profileUrls</code></td>
+<td>array</td>
+<td>–</td>
+<td>LinkedIn profile URLs or bare usernames to scrape. Required.</td>
+</tr>
+<tr>
+<td><code>cookie</code></td>
+<td>string</td>
+<td>–</td>
+<td>Your LinkedIn session cookie (<code>li_at</code> value or full cookies JSON array). Required.</td>
+</tr>
+<tr>
+<td><code>maxPostsPerProfile</code></td>
+<td>integer</td>
+<td><code>50</code></td>
+<td>Maximum posts to collect per profile (1–500)</td>
+</tr>
+<tr>
+<td><code>mediaType</code></td>
+<td>array</td>
+<td>–</td>
+<td>Only keep posts of these media types: <code>text</code>, <code>image</code>, <code>video</code>, <code>article</code>, <code>document</code>, <code>carousel</code>, <code>repost</code>, <code>poll</code>, <code>event</code>. Empty keeps all</td>
+</tr>
+<tr>
+<td><code>postTypes</code></td>
+<td>array</td>
+<td><code>[&quot;text&quot;,&quot;image&quot;,&quot;video&quot;,&quot;article&quot;,&quot;document&quot;,&quot;repost&quot;]</code></td>
+<td>Another type list. Left at its default (all six), it doesn't filter anything; any other selection is added to <code>mediaType</code> and posts matching either list are kept</td>
+</tr>
+<tr>
+<td><code>datePosted</code></td>
+<td>string</td>
+<td><code>&quot;&quot;</code> (any time)</td>
+<td><code>r86400</code> (past 24h), <code>r604800</code> (past week), or <code>r2592000</code> (past month), measured from the moment of the run</td>
+</tr>
+<tr>
+<td><code>minReactions</code></td>
+<td>integer</td>
+<td><code>0</code></td>
+<td>Skip posts with fewer reactions than this</td>
+</tr>
+<tr>
+<td><code>minComments</code></td>
+<td>integer</td>
+<td><code>0</code></td>
+<td>Skip posts with fewer comments than this</td>
+</tr>
+<tr>
+<td><code>language</code></td>
+<td>string</td>
+<td><code>en_US</code></td>
+<td>Accepted locale values: <code>en_US</code>, <code>en_GB</code>, <code>es_ES</code>, <code>fr_FR</code>, <code>de_DE</code>, <code>pt_BR</code>, <code>it_IT</code>, <code>nl_NL</code>, <code>ja_JP</code>, <code>zh_CN</code>. Currently not used, so it doesn't change the output</td>
+</tr>
+<tr>
+<td><code>includeReposts</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td>Include posts that are reposts/reshares of other content</td>
+</tr>
+<tr>
+<td><code>proxyConfiguration</code></td>
+<td>object</td>
+<td>–</td>
+<td>Optional Apify proxy configuration; a residential proxy is recommended</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="readme-example-recent-posts-from-several-profiles">Example: recent posts from several profiles</h3>
+<pre><code class="language-json">{
+  &quot;profileUrls&quot;: [&quot;https://www.linkedin.com/in/williamhgates/&quot;, &quot;adam-grant&quot;],
+  &quot;cookie&quot;: &quot;YOUR_LI_AT_COOKIE&quot;,
+  &quot;maxPostsPerProfile&quot;: 50
+}
+</code></pre>
+<h3 id="readme-example-only-high-engagement-posts-from-the-past-month">Example: only high-engagement posts from the past month</h3>
+<pre><code class="language-json">{
+  &quot;profileUrls&quot;: [&quot;https://www.linkedin.com/in/williamhgates/&quot;],
+  &quot;cookie&quot;: &quot;YOUR_LI_AT_COOKIE&quot;,
+  &quot;datePosted&quot;: &quot;r2592000&quot;,
+  &quot;minReactions&quot;: 500,
+  &quot;includeReposts&quot;: false
+}
+</code></pre>
+<h3 id="readme-example-only-video-and-article-posts">Example: only video and article posts</h3>
+<pre><code class="language-json">{
+  &quot;profileUrls&quot;: [&quot;williamhgates&quot;],
+  &quot;cookie&quot;: &quot;YOUR_LI_AT_COOKIE&quot;,
+  &quot;mediaType&quot;: [&quot;video&quot;, &quot;article&quot;]
+}
+</code></pre>
+<h2 id="readme-use-cases">Use cases</h2>
+<ul>
+<li><strong>Thought-leadership research</strong> — see what topics a profile's audience actually engages with</li>
+<li><strong>Competitor content tracking</strong> — monitor what competitors or key industry accounts are posting</li>
+<li><strong>Lead generation</strong> — spot active, high-engagement prospects worth reaching out to</li>
+<li><strong>Influencer vetting</strong> — check real engagement rates before a sponsorship or partnership</li>
+<li><strong>Brand monitoring</strong> — track how often and how a profile mentions your brand or product</li>
+</ul>
+<h2 id="readme-faq">FAQ</h2>
+<p><strong>Why does this need a cookie?</strong>
+LinkedIn's activity feed is only available through an authenticated session, so a valid <code>li_at</code> session cookie is required to read it.</p>
+<p><strong>How many posts can I pull per profile?</strong>
+Up to 500 via <code>maxPostsPerProfile</code>, though less active profiles may simply not have that many posts in their feed. The limit counts posts that pass your filters; with strict filters the actor keeps paging through the feed until it reaches the limit or the feed runs out.</p>
+<p><strong>How does <code>datePosted</code> work?</strong>
+It compares each post's <code>postedAt</code> with the run time and drops older posts; posts without a readable date are kept.</p>
+<p><strong>What's the difference between <code>mediaType</code> and <code>postTypes</code>?</strong>
+Both check the same per-post <code>mediaType</code> value. <code>mediaType</code> is the main filter and offers all nine formats. <code>postTypes</code> only matters when you change it from its default of six types: your selection is then merged with <code>mediaType</code>, so a post is kept if it matches either list. To narrow results, use <code>mediaType</code> alone and leave <code>postTypes</code> at its default.</p>
+<p><strong>Why is <code>reactionBreakdown</code> sometimes missing?</strong>
+LinkedIn doesn't always expose a per-type reaction breakdown for a post. When it isn't available, the field is left off that record instead of being filled with zeros.</p>
+<p><strong>Will reposts clutter my results?</strong>
+Only if you want them to — set <code>includeReposts</code> to <code>false</code> to drop reshared content and keep only original posts.</p>
+<p><strong>Can I scrape a profile I'm not connected to?</strong>
+Yes, as long as the profile's activity is visible to the account behind your cookie — the same visibility rules that apply when you browse LinkedIn normally apply here.</p>
+<p><strong>Is this affiliated with LinkedIn?</strong>
+No. This is an independent, third-party actor; it isn't operated by or affiliated with LinkedIn.</p>
+</details></section><section id="python-quickstart"><h2>Python quickstart</h2><p>Use a schema-derived input and the Python standard library to start a run. An Apify account and token are required for execution.</p><p><a href="/apify-actor-examples/guides/CIxdgqOHBfl4nTwzB/">Open the step-by-step Python guide →</a></p></section><p class="source-note">Source build <code>w30MSJRDABivfJPFP</code>. Documentation is regenerated from the default published build; private drafts are not included.</p></article></div></main><footer class="footer"><strong>Nimbryxo Studio</strong><div class="footer-links"><a href="/apify-actor-examples/topics/">Topics</a><a href="/apify-actor-examples/sources/">Documentation sources</a><a href="https://apify.com/nimbryxo-studio">Apify</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></div></footer></body></html>

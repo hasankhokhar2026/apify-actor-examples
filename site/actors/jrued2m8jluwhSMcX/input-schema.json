@@ -1,0 +1,80 @@
+{
+  "description": "Scrape YouTube video comments with full metadata including author info, likes, timestamps, and reply threads.",
+  "properties": {
+    "commentKeywordFilter": {
+      "description": "Only return comments (and their replies) whose text contains this word or phrase (case-insensitive). Leave empty to return all comments. A top-level comment that doesn't match is skipped entirely, so its replies are not checked or fetched.",
+      "editor": "textfield",
+      "title": "Comment Keyword Filter",
+      "type": "string"
+    },
+    "includeReplies": {
+      "default": true,
+      "description": "Whether to fetch reply threads for each comment.",
+      "prefill": false,
+      "title": "Include Replies",
+      "type": "boolean"
+    },
+    "maxComments": {
+      "default": 100,
+      "description": "Maximum number of top-level comments to scrape per video. Replies are fetched separately and do not count toward this limit.",
+      "editor": "number",
+      "maximum": 50000,
+      "minimum": 1,
+      "prefill": 5,
+      "title": "Max Comments Per Video",
+      "type": "integer"
+    },
+    "maxRepliesPerComment": {
+      "default": 5,
+      "description": "Maximum number of replies to fetch per top-level comment. Set to 0 to skip replies even if Include Replies is enabled.",
+      "editor": "number",
+      "maximum": 100,
+      "minimum": 0,
+      "title": "Max Replies Per Comment",
+      "type": "integer"
+    },
+    "minLikeCount": {
+      "default": 0,
+      "description": "Only return comments and replies with at least this many likes. Set to 0 to disable.",
+      "editor": "number",
+      "maximum": 1000000000,
+      "minimum": 0,
+      "title": "Minimum Like Count",
+      "type": "integer"
+    },
+    "sortBy": {
+      "default": "top",
+      "description": "How to sort comments. 'Top comments' shows most relevant/liked first. 'Newest first' shows chronologically newest.",
+      "editor": "select",
+      "enum": [
+        "top",
+        "newest"
+      ],
+      "enumTitles": [
+        "Top comments",
+        "Newest first"
+      ],
+      "title": "Sort Comments By",
+      "type": "string"
+    },
+    "videoUrls": {
+      "description": "YouTube video URLs, short links (youtu.be), shorts URLs, or plain video IDs.",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "prefill": [
+        "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+      ],
+      "title": "Video URLs",
+      "type": "array"
+    }
+  },
+  "required": [
+    "videoUrls"
+  ],
+  "schemaVersion": 1,
+  "title": "YouTube Comment Scraper Input",
+  "type": "object"
+}

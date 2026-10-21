@@ -1,0 +1,1083 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src &#x27;self&#x27;; script-src &#x27;self&#x27; &#x27;sha256-Ei5q0iEungY3+Kq7ePbkYhS6vWB8e1FgaZ68UMhKS3I=&#x27;; style-src &#x27;self&#x27;; img-src &#x27;self&#x27; https: data:; base-uri &#x27;self&#x27;; form-action &#x27;self&#x27;; object-src &#x27;none&#x27;"><title>Reddit Multi-Mode Scraper for Posts, Comments &amp; Profiles | Nimbryxo Studio</title><meta name="description" content="Pick one of five modes to pull subreddit posts, full comment threads, user profiles, keyword search results or curated community listings from Reddit, each with deep post/comment f"><meta name="robots" content="index,follow"><link rel="canonical" href="https://hasankhokhar2026.github.io/apify-actor-examples/actors/TvCs8gaYvL352HNwD/"><meta property="og:title" content="Reddit Multi-Mode Scraper for Posts, Comments &amp; Profiles | Nimbryxo Studio"><meta property="og:description" content="Pick one of five modes to pull subreddit posts, full comment threads, user profiles, keyword search results or curated community listings from Reddit, each with deep post/comment f"><meta property="og:type" content="website"><meta property="og:url" content="https://hasankhokhar2026.github.io/apify-actor-examples/actors/TvCs8gaYvL352HNwD/"><meta property="og:site_name" content="Nimbryxo Studio"><meta name="twitter:card" content="summary"><link rel="icon" href="/apify-actor-examples/assets/mark.svg?v=2d20f9dc334a" type="image/svg+xml"><link rel="stylesheet" href="/apify-actor-examples/assets/site.css?v=39545fd4a399"><link rel="stylesheet" href="/apify-actor-examples/assets/brand.css?v=eb0f935ade25"><link rel="alternate" type="application/rss+xml" title="Nimbryxo Studio guides" href="/apify-actor-examples/feed.xml"><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization","name":"Nimbryxo Studio","url":"https://hasankhokhar2026.github.io/apify-actor-examples/","sameAs":["https://apify.com/nimbryxo-studio"]},{"@type":"WebSite","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#website","name":"Nimbryxo Studio","url":"https://hasankhokhar2026.github.io/apify-actor-examples/","publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"inLanguage":"en"},{"@type":"WebPage","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/TvCs8gaYvL352HNwD/#webpage","name":"Reddit Multi-Mode Scraper for Posts, Comments & Profiles","description":"Pick one of five modes to pull subreddit posts, full comment threads, user profiles, keyword search results or curated community listings from Reddit, each with deep post/comment filters. No account or API key needed.","url":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/TvCs8gaYvL352HNwD/","isPartOf":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#website"},"publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"inLanguage":"en","mainEntity":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/TvCs8gaYvL352HNwD/#article"},"breadcrumb":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/TvCs8gaYvL352HNwD/#breadcrumb"}},{"@type":"TechArticle","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/TvCs8gaYvL352HNwD/#article","headline":"Reddit Multi-Mode Scraper for Posts, Comments & Profiles","name":"Reddit Multi-Mode Scraper for Posts, Comments & Profiles","description":"Pick one of five modes to pull subreddit posts, full comment threads, user profiles, keyword search results or curated community listings from Reddit, each with deep post/comment filters. No account or API key needed.","url":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/TvCs8gaYvL352HNwD/","author":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"mainEntityOfPage":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/TvCs8gaYvL352HNwD/#webpage"},"inLanguage":"en"},{"@type":"BreadcrumbList","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/TvCs8gaYvL352HNwD/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Nimbryxo Studio","item":"https://hasankhokhar2026.github.io/apify-actor-examples/"},{"@type":"ListItem","position":2,"name":"Actors","item":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/"},{"@type":"ListItem","position":3,"name":"Reddit Multi-Mode Scraper for Posts, Comments & Profiles","item":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/TvCs8gaYvL352HNwD/"}]}]}</script><script src="/apify-actor-examples/assets/site.js?v=7cabac48dd31" defer></script></head><body class="theme-studio"><a href="#main" class="skip-link">Skip to content</a><header><div class="inner"><a href="/apify-actor-examples/" class="brand"><img src="/apify-actor-examples/assets/mark.svg?v=2d20f9dc334a" alt="" width="29" height="29">Nimbryxo Studio</a><nav aria-label="Main navigation"><a href="/apify-actor-examples/actors/" aria-current="page">Actors</a><a href="/apify-actor-examples/guides/">Guides</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></nav></div></header><main id="main"><div class="doc-layout"><aside class="contents" aria-label="On this page"><strong>Contents</strong><a href="#overview">Overview</a><a href="#published-readme">Published README</a><a href="#input-schema">Input schema</a><a href="#output-schema">Output schema</a><a href="#dataset-schema">Dataset schema</a><a href="#python-quickstart">Python quickstart</a></aside><article class="prose"><div class="breadcrumb"><a href="/apify-actor-examples/actors/">Actors</a><span>/</span><span>Reddit Multi-Mode Scraper for Posts, Comments &amp; Profiles</span></div><section id="overview"><h1 class="doc-title">Reddit Multi-Mode Scraper for Posts, Comments &amp; Profiles</h1><p class="lede">Pick one of five modes to pull subreddit posts, full comment threads, user profiles, keyword search results or curated community listings from Reddit, each with deep post/comment filters. No account or API key needed.</p><div class="actions"><a class="button" href="https://apify.com/nimbryxo-studio/reddit-multi-mode-scraper-for-posts-comments">Open on Apify</a><a class="text-link" href="https://github.com/hasankhokhar2026/apify-actor-examples/blob/main/docs/actors/TvCs8gaYvL352HNwD/README.md">GitHub source</a></div></section><section class="schema-section" id="input-schema"><h2>Input schema</h2><p>Input fields, types, required flags, descriptions, defaults, and prefills come from the published definition. Prefill examples are distinct from defaults.</p><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>mode</code></td><td>string</td><td>required</td><td>Choose which Reddit data to scrape: subreddit posts, post comment threads, user profiles, keyword search, or curated community discovery (no keyword needed).</td></tr><tr><td><code>subreddits</code></td><td>array</td><td>optional</td><td>List of subreddits to scrape. Accepts names (python), r/ names or full URLs.</td></tr><tr><td><code>maxPosts</code></td><td>integer</td><td>optional</td><td>Maximum posts per subreddit / user / keyword. In profile mode this caps the &#x27;posts&#x27;/&#x27;overview&#x27; sections&#x27; post count only — see maxComments for the comment count cap.</td></tr></tbody></table></div><details><summary>Show all input fields</summary><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>mode</code></td><td>string</td><td>required</td><td>Choose which Reddit data to scrape: subreddit posts, post comment threads, user profiles, keyword search, or curated community discovery (no keyword needed).</td></tr><tr><td><code>subreddits</code></td><td>array</td><td>optional</td><td>List of subreddits to scrape. Accepts names (python), r/ names or full URLs.</td></tr><tr><td><code>maxPosts</code></td><td>integer</td><td>optional</td><td>Maximum posts per subreddit / user / keyword. In profile mode this caps the &#x27;posts&#x27;/&#x27;overview&#x27; sections&#x27; post count only — see maxComments for the comment count cap.</td></tr><tr><td><code>maxItems</code></td><td>integer</td><td>optional</td><td>Global safety cap on the total number of records pushed across the whole run (all modes and all inputs).</td></tr><tr><td><code>sort</code></td><td>string</td><td>optional</td><td>How to sort posts (subreddit mode), search results (search mode), or a user&#x27;s post/comment history (profile mode — &#x27;rising&#x27;/&#x27;best&#x27; fall back to &#x27;new&#x27; for profile mode since Reddit&#x27;s user listing doesn&#x27;t support them).</td></tr><tr><td><code>timeFilter</code></td><td>string</td><td>optional</td><td>Time range for &#x27;top&#x27;/&#x27;controversial&#x27; sort (subreddit mode, profile mode) or search results (search mode).</td></tr><tr><td><code>postUrls</code></td><td>array</td><td>optional</td><td>List of Reddit post URLs (or comment URLs / post IDs) to scrape comment threads from.</td></tr><tr><td><code>maxComments</code></td><td>integer</td><td>optional</td><td>Maximum comments per post (comments mode), per keyword (search mode), or per user&#x27;s comment history (profile mode, &#x27;comments&#x27;/&#x27;overview&#x27; sections — capped independently from maxPosts).</td></tr><tr><td><code>commentSort</code></td><td>string</td><td>optional</td><td>How to sort comment threads (comments mode).</td></tr><tr><td><code>includePost</code></td><td>boolean</td><td>optional</td><td>Emit the parent post record before each thread&#x27;s comments.</td></tr><tr><td><code>usernames</code></td><td>array</td><td>optional</td><td>List of Reddit usernames to scrape (names, u/ names or profile URLs).</td></tr><tr><td><code>includeProfileInfo</code></td><td>boolean</td><td>optional</td><td>Emit a user_profile record with karma breakdown, premium, verified email, moderator flags, account age.</td></tr><tr><td><code>includeTrophies</code></td><td>boolean</td><td>optional</td><td>Also fetch the user&#x27;s trophy case (names + icon URLs) from their profile page.</td></tr><tr><td><code>includeModeratedSubreddits</code></td><td>boolean</td><td>optional</td><td>Also fetch the list of communities the user moderates (subreddit name, subscribers, type, mod permissions) and attach it to the user_profile record. Omitted when the user moderates nothing.</td></tr><tr><td><code>sections</code></td><td>array</td><td>optional</td><td>Which history sections to scrape (profile mode). &#x27;Overview&#x27; returns the combined posts + comments feed.</td></tr><tr><td><code>restrictSubreddits</code></td><td>array</td><td>optional</td><td>Only keep a user&#x27;s posts/comments made in these subreddits (case-insensitive). Accepts bare names (python), r/ prefixed (r/python), or subreddit URLs. Leave empty to include every subreddit in the user&#x27;s history.</td></tr><tr><td><code>keyword</code></td><td>string</td><td>optional</td><td>Only keep a user&#x27;s posts/comments whose title, self-text or comment body contains this text (case-insensitive substring match). Leave empty to disable.</td></tr><tr><td><code>keywords</code></td><td>array</td><td>optional</td><td>Keywords to search for. Advanced syntax supported: &quot;exact phrase&quot;, python AND rust, -exclude, author:name, flair:tag, subreddit:name, site:domain.</td></tr><tr><td><code>searchPosts</code></td><td>boolean</td><td>optional</td><td>Include posts in keyword search results.</td></tr><tr><td><code>searchComments</code></td><td>boolean</td><td>optional</td><td>Include comments in keyword search results.</td></tr><tr><td><code>searchCommunities</code></td><td>boolean</td><td>optional</td><td>Include subreddits in keyword search results.</td></tr><tr><td><code>searchUsers</code></td><td>boolean</td><td>optional</td><td>Include Reddit accounts whose username matches the keyword (user discovery). Reddit&#x27;s account search always searches globally (subreddit scoping doesn&#x27;t apply) and returns a single page of up to 100 accounts per keyword.</td></tr><tr><td><code>withinCommunity</code></td><td>string</td><td>optional</td><td>Restrict the keyword search to a single subreddit (name, r/name or URL). Applies to post and comment search only — Reddit&#x27;s own search API does not support scoping community (subreddit) or user results to a single subreddit, so &#x27;Search communities&#x27; and &#x27;Search users&#x27; always search globally regardless of this field.</td></tr><tr><td><code>maxCommunities</code></td><td>integer</td><td>optional</td><td>Maximum subreddits returned per keyword (search mode), or maximum communities returned overall (discover mode).</td></tr><tr><td><code>discoverListing</code></td><td>string</td><td>optional</td><td>Which of Reddit&#x27;s own curated community listings to walk (discover mode) — no keyword required. &#x27;Popular&#x27; mirrors r/popular&#x27;s trending communities, &#x27;New&#x27; is the newest-created public communities, &#x27;Default&#x27; is Reddit&#x27;s default-subscribed set for new accounts.</td></tr><tr><td><code>maxUsers</code></td><td>integer</td><td>optional</td><td>Maximum Reddit accounts returned per keyword. Reddit serves at most ~100 accounts per query regardless of this cap.</td></tr><tr><td><code>includeNSFW</code></td><td>boolean</td><td>optional</td><td>Include NSFW posts (or NSFW communities in discover mode) in results.</td></tr><tr><td><code>onlyWithFlair</code></td><td>boolean</td><td>optional</td><td>Drop posts without a flair tag. Has no effect on comments, search mode or communities.</td></tr><tr><td><code>fullSubreddit</code></td><td>boolean</td><td>optional</td><td>Walk &#x27;New&#x27; posts as deep as Reddit allows (~1,000 per listing) instead of the first pages.</td></tr><tr><td><code>includeSubredditInfo</code></td><td>boolean</td><td>optional</td><td>Emit one &#x27;community&#x27; record per subreddit (subscribers, description, rules-related flags, banner/icon, NSFW status, etc.) before its posts.</td></tr><tr><td><code>includeSubredditRules</code></td><td>boolean</td><td>optional</td><td>Also fetch each subreddit&#x27;s posting rules (name, description, violation reason, priority) and attach them to the community record. Only takes effect when &#x27;Include community info record&#x27; is also on; omitted when the subreddit has no rules.</td></tr><tr><td><code>titleContains</code></td><td>string</td><td>optional</td><td>Only keep posts whose title contains this text (case-insensitive substring match). Has no effect on comments/communities/users. Leave empty to keep all titles.</td></tr><tr><td><code>contentContains</code></td><td>string</td><td>optional</td><td>Only keep self (text) posts whose body contains this text (case-insensitive substring match). Link/image/video posts have no body text and are excluded when this is set. Has no effect on comments/communities/users. Leave empty to keep all posts.</td></tr><tr><td><code>flairContains</code></td><td>string</td><td>optional</td><td>Only keep posts whose link flair contains this text (case-insensitive substring match). Has no effect on comments/communities/users. Leave empty to keep all flairs.</td></tr><tr><td><code>authorFlairContains</code></td><td>string</td><td>optional</td><td>Only keep posts whose author flair contains this text (case-insensitive substring match). Has no effect on comments/communities/users. Leave empty to keep all.</td></tr><tr><td><code>domain</code></td><td>string</td><td>optional</td><td>Only keep posts whose link domain contains this text (case-insensitive, e.g. &#x27;youtube.com&#x27; or &#x27;self.python&#x27;). Has no effect on comments/communities/users. Leave empty to keep all domains.</td></tr><tr><td><code>distinguished</code></td><td>string</td><td>optional</td><td>Only keep posts distinguished by Reddit as moderator, admin or special (e.g. Reddit-team) posts, or only regular (non-distinguished) posts. Has no effect on comments/communities/users. Leave unset to keep all posts.</td></tr><tr><td><code>minAwards</code></td><td>integer</td><td>optional</td><td>Only keep posts with at least this many total awards. Has no effect on comments/communities/users. Leave unset to keep all posts.</td></tr><tr><td><code>onlyOriginalContent</code></td><td>boolean</td><td>optional</td><td>When enabled, only posts the author tagged as original content are kept. Has no effect on comments/communities/users.</td></tr><tr><td><code>excludeArchived</code></td><td>boolean</td><td>optional</td><td>When enabled, posts that Reddit has archived (locked from further voting/commenting after 6 months) are dropped from the results. Has no effect on comments/communities/users.</td></tr><tr><td><code>excludeKeywords</code></td><td>array</td><td>optional</td><td>Drop posts whose title, self-text body or flair contains any of these keywords or phrases (case-insensitive substring match) — useful for filtering out megathreads, giveaways or spam boilerplate. Has no effect on comments/communities/users. Leave empty to keep all posts.</td></tr><tr><td><code>minContentLength</code></td><td>integer</td><td>optional</td><td>Only keep self (text) posts whose body is at least this many characters long. Link/image/video posts have no body and are excluded when this is set. Has no effect on comments/communities/users. Leave unset to keep all lengths.</td></tr><tr><td><code>maxContentLength</code></td><td>integer</td><td>optional</td><td>Only keep self (text) posts whose body is at most this many characters long. Has no effect on comments/communities/users. Leave unset to keep all lengths.</td></tr><tr><td><code>authors</code></td><td>array</td><td>optional</td><td>Only keep posts submitted by one of these usernames (bare name or u/-prefixed, case-insensitive). Has no effect on comments/communities/users or profile mode (already scoped to the given usernames). Leave empty to keep posts from all authors.</td></tr><tr><td><code>excludeAuthors</code></td><td>array</td><td>optional</td><td>Drop posts submitted by any of these usernames (bare name or u/-prefixed, case-insensitive) — useful for filtering out bots (e.g. AutoModerator) or known spam accounts. Has no effect on comments/communities/users or profile mode. Leave empty to keep posts from all authors.</td></tr><tr><td><code>postType</code></td><td>string</td><td>optional</td><td>Keep only posts of the selected content type. Leave unset to keep all types. Has no effect on comments/communities/users.</td></tr><tr><td><code>minPostComments</code></td><td>integer</td><td>optional</td><td>Only keep posts that have at least this many comments (the post&#x27;s own comment count — not to be confused with &#x27;Maximum comments&#x27; above, which caps how many comment records are scraped in comments/search mode). Has no effect on comments/communities/users.</td></tr><tr><td><code>maxPostComments</code></td><td>integer</td><td>optional</td><td>Only keep posts that have at most this many comments. Useful for finding under-discussed posts. Has no effect on comments/communities/users.</td></tr><tr><td><code>minUpvoteRatio</code></td><td>number</td><td>optional</td><td>Only keep posts whose upvote ratio (fraction of votes that are upvotes, 0-1) is at or above this value. Useful for filtering out controversial/divisive posts. Has no effect on comments/communities/users.</td></tr><tr><td><code>excludeStickied</code></td><td>boolean</td><td>optional</td><td>When enabled, posts pinned/stickied in their community are dropped from the results.</td></tr><tr><td><code>excludeRemoved</code></td><td>boolean</td><td>optional</td><td>When enabled, posts removed by a moderator, Reddit, or deleted by their author (marker: removed_by_category) are dropped from the results.</td></tr><tr><td><code>excludeCrossposts</code></td><td>boolean</td><td>optional</td><td>When enabled, posts that are crossposts from another subreddit are dropped, keeping only original submissions.</td></tr><tr><td><code>excludeSpoilers</code></td><td>boolean</td><td>optional</td><td>When enabled, posts marked as a spoiler by their author are dropped from the results.</td></tr><tr><td><code>excludeLocked</code></td><td>boolean</td><td>optional</td><td>When enabled, posts with comments locked by a moderator are dropped from the results.</td></tr><tr><td><code>excludeDeletedAuthor</code></td><td>boolean</td><td>optional</td><td>When enabled, posts whose author account was deleted (shown as [deleted]/[removed]) are dropped from the results.</td></tr><tr><td><code>minScore</code></td><td>integer</td><td>optional</td><td>Only keep posts/comments with a score (upvotes minus downvotes) at or above this value. Leave unset to keep all scores.</td></tr><tr><td><code>maxScore</code></td><td>integer</td><td>optional</td><td>Only keep posts/comments with a score (upvotes minus downvotes) at or below this value. Useful for finding overlooked/low-visibility items. Leave unset to keep all scores.</td></tr><tr><td><code>minCommunitySubscribers</code></td><td>integer</td><td>optional</td><td>Only keep communities (subreddits) with at least this many subscribers. Applies when &#x27;Search communities&#x27; is enabled (search mode) or always (discover mode). Leave unset to keep all sizes.</td></tr><tr><td><code>maxCommunitySubscribers</code></td><td>integer</td><td>optional</td><td>Only keep communities (subreddits) with at most this many subscribers. Useful for finding small/niche communities. Applies when &#x27;Search communities&#x27; is enabled (search mode) or always (discover mode). Leave unset to keep all sizes.</td></tr><tr><td><code>minUserKarma</code></td><td>integer</td><td>optional</td><td>Only keep Reddit accounts with at least this much total karma. Applies when &#x27;Search users&#x27; is enabled; ignored otherwise. Leave unset to keep all accounts.</td></tr><tr><td><code>maxUserKarma</code></td><td>integer</td><td>optional</td><td>Only keep Reddit accounts with at most this much total karma. Useful for finding newer/low-karma accounts. Applies when &#x27;Search users&#x27; is enabled; ignored otherwise. Leave unset to keep all accounts.</td></tr><tr><td><code>postedAfter</code></td><td>string</td><td>optional</td><td>Only keep posts/comments created on or after this date (UTC).</td></tr><tr><td><code>postedBefore</code></td><td>string</td><td>optional</td><td>Only keep posts/comments created on or before this date (UTC).</td></tr></tbody></table></div></details><p><a href="input-schema.json">Download the published input schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+  &quot;properties&quot;: {
+    &quot;authorFlairContains&quot;: {
+      &quot;description&quot;: &quot;Only keep posts whose author flair contains this text (case-insensitive substring match). Has no effect on comments/communities/users. Leave empty to keep all.&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;example&quot;: &quot;Moderator&quot;,
+      &quot;title&quot;: &quot;Author flair contains keyword (subreddit/profile/search modes)&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;authors&quot;: {
+      &quot;description&quot;: &quot;Only keep posts submitted by one of these usernames (bare name or u/-prefixed, case-insensitive). Has no effect on comments/communities/users or profile mode (already scoped to the given usernames). Leave empty to keep posts from all authors.&quot;,
+      &quot;editor&quot;: &quot;stringList&quot;,
+      &quot;example&quot;: [
+        &quot;spez&quot;
+      ],
+      &quot;title&quot;: &quot;Only posts by these authors (subreddit &amp; search modes)&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;commentSort&quot;: {
+      &quot;default&quot;: &quot;confidence&quot;,
+      &quot;description&quot;: &quot;How to sort comment threads (comments mode).&quot;,
+      &quot;enum&quot;: [
+        &quot;confidence&quot;,
+        &quot;top&quot;,
+        &quot;new&quot;,
+        &quot;controversial&quot;,
+        &quot;old&quot;,
+        &quot;qa&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;Best (Confidence)&quot;,
+        &quot;Top&quot;,
+        &quot;New&quot;,
+        &quot;Controversial&quot;,
+        &quot;Old&quot;,
+        &quot;Q&amp;A&quot;
+      ],
+      &quot;prefill&quot;: &quot;confidence&quot;,
+      &quot;title&quot;: &quot;Sort comments by&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;contentContains&quot;: {
+      &quot;description&quot;: &quot;Only keep self (text) posts whose body contains this text (case-insensitive substring match). Link/image/video posts have no body text and are excluded when this is set. Has no effect on comments/communities/users. Leave empty to keep all posts.&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;example&quot;: &quot;tutorial&quot;,
+      &quot;title&quot;: &quot;Post text contains keyword (subreddit/profile/search modes)&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;discoverListing&quot;: {
+      &quot;default&quot;: &quot;popular&quot;,
+      &quot;description&quot;: &quot;Which of Reddit&#x27;s own curated community listings to walk (discover mode) — no keyword required. &#x27;Popular&#x27; mirrors r/popular&#x27;s trending communities, &#x27;New&#x27; is the newest-created public communities, &#x27;Default&#x27; is Reddit&#x27;s default-subscribed set for new accounts.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;popular&quot;,
+        &quot;new&quot;,
+        &quot;default&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;Popular (trending)&quot;,
+        &quot;New (newest communities)&quot;,
+        &quot;Default (starter set)&quot;
+      ],
+      &quot;prefill&quot;: &quot;popular&quot;,
+      &quot;title&quot;: &quot;Community listing (discover mode)&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;distinguished&quot;: {
+      &quot;description&quot;: &quot;Only keep posts distinguished by Reddit as moderator, admin or special (e.g. Reddit-team) posts, or only regular (non-distinguished) posts. Has no effect on comments/communities/users. Leave unset to keep all posts.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;moderator&quot;,
+        &quot;admin&quot;,
+        &quot;special&quot;,
+        &quot;none&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;Moderator posts only&quot;,
+        &quot;Admin posts only&quot;,
+        &quot;Special (official) posts only&quot;,
+        &quot;Regular posts only (exclude all distinguished)&quot;
+      ],
+      &quot;title&quot;: &quot;Distinguished (official) posts only (subreddit/profile/search modes)&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;domain&quot;: {
+      &quot;description&quot;: &quot;Only keep posts whose link domain contains this text (case-insensitive, e.g. &#x27;youtube.com&#x27; or &#x27;self.python&#x27;). Has no effect on comments/communities/users. Leave empty to keep all domains.&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;example&quot;: &quot;youtube.com&quot;,
+      &quot;title&quot;: &quot;Domain contains (subreddit/profile/search modes)&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;excludeArchived&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;When enabled, posts that Reddit has archived (locked from further voting/commenting after 6 months) are dropped from the results. Has no effect on comments/communities/users.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Exclude archived posts (subreddit/profile/search modes)&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;excludeAuthors&quot;: {
+      &quot;description&quot;: &quot;Drop posts submitted by any of these usernames (bare name or u/-prefixed, case-insensitive) — useful for filtering out bots (e.g. AutoModerator) or known spam accounts. Has no effect on comments/communities/users or profile mode. Leave empty to keep posts from all authors.&quot;,
+      &quot;editor&quot;: &quot;stringList&quot;,
+      &quot;example&quot;: [
+        &quot;AutoModerator&quot;
+      ],
+      &quot;title&quot;: &quot;Exclude posts by these authors (subreddit &amp; search modes)&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;excludeCrossposts&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;When enabled, posts that are crossposts from another subreddit are dropped, keeping only original submissions.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Exclude crossposts (subreddit/profile/search modes)&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;excludeDeletedAuthor&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;When enabled, posts whose author account was deleted (shown as [deleted]/[removed]) are dropped from the results.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Exclude posts with a deleted author (subreddit/profile/search modes)&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;excludeKeywords&quot;: {
+      &quot;description&quot;: &quot;Drop posts whose title, self-text body or flair contains any of these keywords or phrases (case-insensitive substring match) — useful for filtering out megathreads, giveaways or spam boilerplate. Has no effect on comments/communities/users. Leave empty to keep all posts.&quot;,
+      &quot;editor&quot;: &quot;stringList&quot;,
+      &quot;example&quot;: [
+        &quot;megathread&quot;
+      ],
+      &quot;title&quot;: &quot;Exclude keywords (subreddit/profile/search modes)&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;excludeLocked&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;When enabled, posts with comments locked by a moderator are dropped from the results.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Exclude locked posts (subreddit/profile/search modes)&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;excludeRemoved&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;When enabled, posts removed by a moderator, Reddit, or deleted by their author (marker: removed_by_category) are dropped from the results.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Exclude removed/deleted posts (subreddit/profile/search modes)&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;excludeSpoilers&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;When enabled, posts marked as a spoiler by their author are dropped from the results.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Exclude spoiler-tagged posts (subreddit/profile/search modes)&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;excludeStickied&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;When enabled, posts pinned/stickied in their community are dropped from the results.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Exclude stickied/pinned posts (subreddit/profile/search modes)&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;flairContains&quot;: {
+      &quot;description&quot;: &quot;Only keep posts whose link flair contains this text (case-insensitive substring match). Has no effect on comments/communities/users. Leave empty to keep all flairs.&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;example&quot;: &quot;Discussion&quot;,
+      &quot;title&quot;: &quot;Flair contains keyword (subreddit/profile/search modes)&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;fullSubreddit&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;Walk &#x27;New&#x27; posts as deep as Reddit allows (~1,000 per listing) instead of the first pages.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Full subreddit mode (subreddit mode)&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;includeModeratedSubreddits&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;Also fetch the list of communities the user moderates (subreddit name, subscribers, type, mod permissions) and attach it to the user_profile record. Omitted when the user moderates nothing.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Include moderated subreddits (profile mode)&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;includeNSFW&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;Include NSFW posts (or NSFW communities in discover mode) in results.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Include NSFW (18+) content&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;includePost&quot;: {
+      &quot;default&quot;: true,
+      &quot;description&quot;: &quot;Emit the parent post record before each thread&#x27;s comments.&quot;,
+      &quot;prefill&quot;: true,
+      &quot;title&quot;: &quot;Include parent post (comments mode)&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;includeProfileInfo&quot;: {
+      &quot;default&quot;: true,
+      &quot;description&quot;: &quot;Emit a user_profile record with karma breakdown, premium, verified email, moderator flags, account age.&quot;,
+      &quot;prefill&quot;: true,
+      &quot;title&quot;: &quot;Include profile info record (profile mode)&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;includeSubredditInfo&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;Emit one &#x27;community&#x27; record per subreddit (subscribers, description, rules-related flags, banner/icon, NSFW status, etc.) before its posts.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Include community info record (subreddit mode)&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;includeSubredditRules&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;Also fetch each subreddit&#x27;s posting rules (name, description, violation reason, priority) and attach them to the community record. Only takes effect when &#x27;Include community info record&#x27; is also on; omitted when the subreddit has no rules.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Include subreddit rules (subreddit mode)&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;includeTrophies&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;Also fetch the user&#x27;s trophy case (names + icon URLs) from their profile page.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Include trophies (profile mode)&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;keyword&quot;: {
+      &quot;description&quot;: &quot;Only keep a user&#x27;s posts/comments whose title, self-text or comment body contains this text (case-insensitive substring match). Leave empty to disable.&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;example&quot;: &quot;climate&quot;,
+      &quot;title&quot;: &quot;Keyword filter (profile mode)&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;keywords&quot;: {
+      &quot;description&quot;: &quot;Keywords to search for. Advanced syntax supported: \&quot;exact phrase\&quot;, python AND rust, -exclude, author:name, flair:tag, subreddit:name, site:domain.&quot;,
+      &quot;editor&quot;: &quot;stringList&quot;,
+      &quot;example&quot;: [
+        &quot;machine learning&quot;
+      ],
+      &quot;prefill&quot;: [],
+      &quot;title&quot;: &quot;Keywords (search mode)&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;maxComments&quot;: {
+      &quot;default&quot;: 100,
+      &quot;description&quot;: &quot;Maximum comments per post (comments mode), per keyword (search mode), or per user&#x27;s comment history (profile mode, &#x27;comments&#x27;/&#x27;overview&#x27; sections — capped independently from maxPosts).&quot;,
+      &quot;maximum&quot;: 100000,
+      &quot;minimum&quot;: 0,
+      &quot;prefill&quot;: 100,
+      &quot;title&quot;: &quot;Maximum comments&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;maxCommunities&quot;: {
+      &quot;default&quot;: 10,
+      &quot;description&quot;: &quot;Maximum subreddits returned per keyword (search mode), or maximum communities returned overall (discover mode).&quot;,
+      &quot;maximum&quot;: 1000,
+      &quot;minimum&quot;: 0,
+      &quot;prefill&quot;: 10,
+      &quot;title&quot;: &quot;Maximum communities per keyword (search mode) / total (discover mode)&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;maxCommunitySubscribers&quot;: {
+      &quot;description&quot;: &quot;Only keep communities (subreddits) with at most this many subscribers. Useful for finding small/niche communities. Applies when &#x27;Search communities&#x27; is enabled (search mode) or always (discover mode). Leave unset to keep all sizes.&quot;,
+      &quot;example&quot;: 1000000,
+      &quot;maximum&quot;: 1000000000,
+      &quot;minimum&quot;: 0,
+      &quot;title&quot;: &quot;Maximum community subscribers (search / discover modes)&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;maxContentLength&quot;: {
+      &quot;description&quot;: &quot;Only keep self (text) posts whose body is at most this many characters long. Has no effect on comments/communities/users. Leave unset to keep all lengths.&quot;,
+      &quot;example&quot;: 5000,
+      &quot;maximum&quot;: 1000000,
+      &quot;minimum&quot;: 0,
+      &quot;title&quot;: &quot;Maximum post body length (characters) (subreddit/profile/search modes)&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;maxItems&quot;: {
+      &quot;default&quot;: 100000,
+      &quot;description&quot;: &quot;Global safety cap on the total number of records pushed across the whole run (all modes and all inputs).&quot;,
+      &quot;maximum&quot;: 1000000,
+      &quot;minimum&quot;: 1,
+      &quot;prefill&quot;: 100000,
+      &quot;title&quot;: &quot;Maximum total records&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;maxPostComments&quot;: {
+      &quot;description&quot;: &quot;Only keep posts that have at most this many comments. Useful for finding under-discussed posts. Has no effect on comments/communities/users.&quot;,
+      &quot;example&quot;: 500,
+      &quot;maximum&quot;: 1000000,
+      &quot;minimum&quot;: 0,
+      &quot;title&quot;: &quot;Maximum comments on the post (subreddit/profile/search modes)&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;maxPosts&quot;: {
+      &quot;default&quot;: 25,
+      &quot;description&quot;: &quot;Maximum posts per subreddit / user / keyword. In profile mode this caps the &#x27;posts&#x27;/&#x27;overview&#x27; sections&#x27; post count only — see maxComments for the comment count cap.&quot;,
+      &quot;maximum&quot;: 5000,
+      &quot;minimum&quot;: 1,
+      &quot;prefill&quot;: 25,
+      &quot;title&quot;: &quot;Maximum posts&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;maxScore&quot;: {
+      &quot;description&quot;: &quot;Only keep posts/comments with a score (upvotes minus downvotes) at or below this value. Useful for finding overlooked/low-visibility items. Leave unset to keep all scores.&quot;,
+      &quot;example&quot;: 1000,
+      &quot;maximum&quot;: 1000000,
+      &quot;minimum&quot;: -1000000,
+      &quot;title&quot;: &quot;Maximum score (subreddit/comments/profile/search modes)&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;maxUserKarma&quot;: {
+      &quot;description&quot;: &quot;Only keep Reddit accounts with at most this much total karma. Useful for finding newer/low-karma accounts. Applies when &#x27;Search users&#x27; is enabled; ignored otherwise. Leave unset to keep all accounts.&quot;,
+      &quot;example&quot;: 100000,
+      &quot;maximum&quot;: 1000000000,
+      &quot;minimum&quot;: 0,
+      &quot;title&quot;: &quot;Maximum total karma (search mode)&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;maxUsers&quot;: {
+      &quot;default&quot;: 25,
+      &quot;description&quot;: &quot;Maximum Reddit accounts returned per keyword. Reddit serves at most ~100 accounts per query regardless of this cap.&quot;,
+      &quot;maximum&quot;: 100,
+      &quot;minimum&quot;: 0,
+      &quot;prefill&quot;: 25,
+      &quot;title&quot;: &quot;Maximum users per keyword (search mode)&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;minAwards&quot;: {
+      &quot;description&quot;: &quot;Only keep posts with at least this many total awards. Has no effect on comments/communities/users. Leave unset to keep all posts.&quot;,
+      &quot;example&quot;: 1,
+      &quot;maximum&quot;: 1000000,
+      &quot;minimum&quot;: 0,
+      &quot;title&quot;: &quot;Minimum awards received (subreddit/profile/search modes)&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;minCommunitySubscribers&quot;: {
+      &quot;description&quot;: &quot;Only keep communities (subreddits) with at least this many subscribers. Applies when &#x27;Search communities&#x27; is enabled (search mode) or always (discover mode). Leave unset to keep all sizes.&quot;,
+      &quot;example&quot;: 1000,
+      &quot;maximum&quot;: 1000000000,
+      &quot;minimum&quot;: 0,
+      &quot;title&quot;: &quot;Minimum community subscribers (search / discover modes)&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;minContentLength&quot;: {
+      &quot;description&quot;: &quot;Only keep self (text) posts whose body is at least this many characters long. Link/image/video posts have no body and are excluded when this is set. Has no effect on comments/communities/users. Leave unset to keep all lengths.&quot;,
+      &quot;example&quot;: 100,
+      &quot;maximum&quot;: 1000000,
+      &quot;minimum&quot;: 0,
+      &quot;title&quot;: &quot;Minimum post body length (characters) (subreddit/profile/search modes)&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;minPostComments&quot;: {
+      &quot;description&quot;: &quot;Only keep posts that have at least this many comments (the post&#x27;s own comment count — not to be confused with &#x27;Maximum comments&#x27; above, which caps how many comment records are scraped in comments/search mode). Has no effect on comments/communities/users.&quot;,
+      &quot;example&quot;: 5,
+      &quot;maximum&quot;: 1000000,
+      &quot;minimum&quot;: 0,
+      &quot;title&quot;: &quot;Minimum comments on the post (subreddit/profile/search modes)&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;minScore&quot;: {
+      &quot;description&quot;: &quot;Only keep posts/comments with a score (upvotes minus downvotes) at or above this value. Leave unset to keep all scores.&quot;,
+      &quot;example&quot;: 10,
+      &quot;maximum&quot;: 1000000,
+      &quot;minimum&quot;: -1000000,
+      &quot;title&quot;: &quot;Minimum score (subreddit/comments/profile/search modes)&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;minUpvoteRatio&quot;: {
+      &quot;description&quot;: &quot;Only keep posts whose upvote ratio (fraction of votes that are upvotes, 0-1) is at or above this value. Useful for filtering out controversial/divisive posts. Has no effect on comments/communities/users.&quot;,
+      &quot;example&quot;: 0.8,
+      &quot;maximum&quot;: 1,
+      &quot;minimum&quot;: 0,
+      &quot;title&quot;: &quot;Minimum upvote ratio (subreddit/profile/search modes)&quot;,
+      &quot;type&quot;: &quot;number&quot;
+    },
+    &quot;minUserKarma&quot;: {
+      &quot;description&quot;: &quot;Only keep Reddit accounts with at least this much total karma. Applies when &#x27;Search users&#x27; is enabled; ignored otherwise. Leave unset to keep all accounts.&quot;,
+      &quot;example&quot;: 1000,
+      &quot;maximum&quot;: 1000000000,
+      &quot;minimum&quot;: 0,
+      &quot;title&quot;: &quot;Minimum total karma (search mode)&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;mode&quot;: {
+      &quot;default&quot;: &quot;subreddit&quot;,
+      &quot;description&quot;: &quot;Choose which Reddit data to scrape: subreddit posts, post comment threads, user profiles, keyword search, or curated community discovery (no keyword needed).&quot;,
+      &quot;enum&quot;: [
+        &quot;subreddit&quot;,
+        &quot;comments&quot;,
+        &quot;profile&quot;,
+        &quot;search&quot;,
+        &quot;discover&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;Subreddit posts&quot;,
+        &quot;Comments&quot;,
+        &quot;Profile&quot;,
+        &quot;Search&quot;,
+        &quot;Discover communities&quot;
+      ],
+      &quot;prefill&quot;: &quot;subreddit&quot;,
+      &quot;title&quot;: &quot;Scraping Mode&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;onlyOriginalContent&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;When enabled, only posts the author tagged as original content are kept. Has no effect on comments/communities/users.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Only original content (OC) posts (subreddit/profile/search modes)&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;onlyWithFlair&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;Drop posts without a flair tag. Has no effect on comments, search mode or communities.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Only posts that have a flair (subreddit mode, profile mode)&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;postType&quot;: {
+      &quot;description&quot;: &quot;Keep only posts of the selected content type. Leave unset to keep all types. Has no effect on comments/communities/users.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;self&quot;,
+        &quot;link&quot;,
+        &quot;image&quot;,
+        &quot;video&quot;,
+        &quot;gallery&quot;,
+        &quot;poll&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;Text (self post)&quot;,
+        &quot;Link&quot;,
+        &quot;Image&quot;,
+        &quot;Video&quot;,
+        &quot;Gallery&quot;,
+        &quot;Poll&quot;
+      ],
+      &quot;title&quot;: &quot;Only posts of this type (subreddit/profile/search modes)&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;postUrls&quot;: {
+      &quot;description&quot;: &quot;List of Reddit post URLs (or comment URLs / post IDs) to scrape comment threads from.&quot;,
+      &quot;editor&quot;: &quot;stringList&quot;,
+      &quot;example&quot;: [
+        &quot;https://www.reddit.com/r/programming/comments/1vqukkf/&quot;
+      ],
+      &quot;prefill&quot;: [],
+      &quot;title&quot;: &quot;Post URLs (comments mode)&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;postedAfter&quot;: {
+      &quot;description&quot;: &quot;Only keep posts/comments created on or after this date (UTC).&quot;,
+      &quot;editor&quot;: &quot;datepicker&quot;,
+      &quot;example&quot;: &quot;2025-01-01&quot;,
+      &quot;title&quot;: &quot;Created on or after (YYYY-MM-DD)&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;postedBefore&quot;: {
+      &quot;description&quot;: &quot;Only keep posts/comments created on or before this date (UTC).&quot;,
+      &quot;editor&quot;: &quot;datepicker&quot;,
+      &quot;example&quot;: &quot;2025-12-31&quot;,
+      &quot;title&quot;: &quot;Created on or before (YYYY-MM-DD)&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;restrictSubreddits&quot;: {
+      &quot;description&quot;: &quot;Only keep a user&#x27;s posts/comments made in these subreddits (case-insensitive). Accepts bare names (python), r/ prefixed (r/python), or subreddit URLs. Leave empty to include every subreddit in the user&#x27;s history.&quot;,
+      &quot;editor&quot;: &quot;stringList&quot;,
+      &quot;example&quot;: [
+        &quot;AskReddit&quot;,
+        &quot;r/technology&quot;
+      ],
+      &quot;title&quot;: &quot;Restrict to subreddits (profile mode)&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;searchComments&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;Include comments in keyword search results.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Search comments (search mode)&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;searchCommunities&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;Include subreddits in keyword search results.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Search communities (search mode)&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;searchPosts&quot;: {
+      &quot;default&quot;: true,
+      &quot;description&quot;: &quot;Include posts in keyword search results.&quot;,
+      &quot;prefill&quot;: true,
+      &quot;title&quot;: &quot;Search posts (search mode)&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;searchUsers&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;Include Reddit accounts whose username matches the keyword (user discovery). Reddit&#x27;s account search always searches globally (subreddit scoping doesn&#x27;t apply) and returns a single page of up to 100 accounts per keyword.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Search users (search mode)&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;sections&quot;: {
+      &quot;default&quot;: [
+        &quot;posts&quot;
+      ],
+      &quot;description&quot;: &quot;Which history sections to scrape (profile mode). &#x27;Overview&#x27; returns the combined posts + comments feed.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;example&quot;: [
+        &quot;posts&quot;,
+        &quot;comments&quot;
+      ],
+      &quot;items&quot;: {
+        &quot;enum&quot;: [
+          &quot;overview&quot;,
+          &quot;posts&quot;,
+          &quot;comments&quot;
+        ],
+        &quot;enumTitles&quot;: [
+          &quot;Overview (posts + comments)&quot;,
+          &quot;Posts&quot;,
+          &quot;Comments&quot;
+        ],
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;prefill&quot;: [
+        &quot;posts&quot;
+      ],
+      &quot;title&quot;: &quot;Profile sections (profile mode)&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;sort&quot;: {
+      &quot;default&quot;: &quot;hot&quot;,
+      &quot;description&quot;: &quot;How to sort posts (subreddit mode), search results (search mode), or a user&#x27;s post/comment history (profile mode — &#x27;rising&#x27;/&#x27;best&#x27; fall back to &#x27;new&#x27; for profile mode since Reddit&#x27;s user listing doesn&#x27;t support them).&quot;,
+      &quot;enum&quot;: [
+        &quot;relevance&quot;,
+        &quot;hot&quot;,
+        &quot;new&quot;,
+        &quot;top&quot;,
+        &quot;rising&quot;,
+        &quot;controversial&quot;,
+        &quot;best&quot;,
+        &quot;comments&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;Relevance&quot;,
+        &quot;Hot&quot;,
+        &quot;New&quot;,
+        &quot;Top&quot;,
+        &quot;Rising&quot;,
+        &quot;Controversial&quot;,
+        &quot;Best&quot;,
+        &quot;Comment count&quot;
+      ],
+      &quot;prefill&quot;: &quot;hot&quot;,
+      &quot;title&quot;: &quot;Sort posts by&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;subreddits&quot;: {
+      &quot;description&quot;: &quot;List of subreddits to scrape. Accepts names (python), r/ names or full URLs.&quot;,
+      &quot;editor&quot;: &quot;stringList&quot;,
+      &quot;example&quot;: [
+        &quot;python&quot;,
+        &quot;r/programming&quot;
+      ],
+      &quot;prefill&quot;: [
+        &quot;python&quot;
+      ],
+      &quot;title&quot;: &quot;Subreddits (subreddit mode)&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;timeFilter&quot;: {
+      &quot;default&quot;: &quot;day&quot;,
+      &quot;description&quot;: &quot;Time range for &#x27;top&#x27;/&#x27;controversial&#x27; sort (subreddit mode, profile mode) or search results (search mode).&quot;,
+      &quot;enum&quot;: [
+        &quot;hour&quot;,
+        &quot;day&quot;,
+        &quot;week&quot;,
+        &quot;month&quot;,
+        &quot;year&quot;,
+        &quot;all&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;Past Hour&quot;,
+        &quot;Past Day&quot;,
+        &quot;Past Week&quot;,
+        &quot;Past Month&quot;,
+        &quot;Past Year&quot;,
+        &quot;All Time&quot;
+      ],
+      &quot;prefill&quot;: &quot;day&quot;,
+      &quot;title&quot;: &quot;Time filter&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;titleContains&quot;: {
+      &quot;description&quot;: &quot;Only keep posts whose title contains this text (case-insensitive substring match). Has no effect on comments/communities/users. Leave empty to keep all titles.&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;example&quot;: &quot;launch&quot;,
+      &quot;title&quot;: &quot;Title contains keyword (subreddit/profile/search modes)&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;usernames&quot;: {
+      &quot;description&quot;: &quot;List of Reddit usernames to scrape (names, u/ names or profile URLs).&quot;,
+      &quot;editor&quot;: &quot;stringList&quot;,
+      &quot;example&quot;: [
+        &quot;spez&quot;
+      ],
+      &quot;prefill&quot;: [],
+      &quot;title&quot;: &quot;Usernames (profile mode)&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;withinCommunity&quot;: {
+      &quot;description&quot;: &quot;Restrict the keyword search to a single subreddit (name, r/name or URL). Applies to post and comment search only — Reddit&#x27;s own search API does not support scoping community (subreddit) or user results to a single subreddit, so &#x27;Search communities&#x27; and &#x27;Search users&#x27; always search globally regardless of this field.&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;example&quot;: &quot;r/technology&quot;,
+      &quot;title&quot;: &quot;Limit search to ONE community (search mode)&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    }
+  },
+  &quot;required&quot;: [
+    &quot;mode&quot;
+  ],
+  &quot;schemaVersion&quot;: 1,
+  &quot;title&quot;: &quot;Reddit MCP Scraper Input&quot;,
+  &quot;type&quot;: &quot;object&quot;
+}
+</code></pre></details></section><section class="schema-section" id="output-schema"><h2>Output schema</h2><p>Published result links and storage locations. This schema is not an exhaustive contract for every field in a dataset record.</p><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>redditRecords</code></td><td>string</td><td>optional</td><td>Dataset containing the records for the selected mode (post, comment, community, or user_profile records — distinguished by the `dataType` field). Shape depends on the `mode` input.</td></tr></tbody></table></div><p><a href="output-schema.json">Download the published output schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+  &quot;actorOutputSchemaVersion&quot;: 1,
+  &quot;description&quot;: &quot;Reddit records from the mode you picked — posts, comment threads, communities, or user profiles, distinguished by a dataType field.&quot;,
+  &quot;properties&quot;: {
+    &quot;redditRecords&quot;: {
+      &quot;description&quot;: &quot;Dataset containing the records for the selected mode (post, comment, community, or user_profile records — distinguished by the `dataType` field). Shape depends on the `mode` input.&quot;,
+      &quot;template&quot;: &quot;{{links.apiDefaultDatasetUrl}}/items&quot;,
+      &quot;title&quot;: &quot;Reddit records&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    }
+  },
+  &quot;title&quot;: &quot;Reddit Multi-Mode Scraper for Posts, Comments &amp; Profiles Output&quot;
+}
+</code></pre></details></section><section class="schema-section" id="dataset-schema"><h2>Dataset schema</h2><p>Published dataset views and any declared field definitions. A view can select only a subset of the returned record fields.</p><p><a href="dataset-schema.json">Download the published dataset schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+  &quot;actorSpecification&quot;: 1,
+  &quot;views&quot;: {
+    &quot;overview&quot;: {
+      &quot;display&quot;: {
+        &quot;component&quot;: &quot;table&quot;,
+        &quot;properties&quot;: {}
+      },
+      &quot;title&quot;: &quot;Reddit Records&quot;,
+      &quot;transformation&quot;: {
+        &quot;fields&quot;: [
+          &quot;dataType&quot;,
+          &quot;subreddit_prefixed&quot;,
+          &quot;title&quot;,
+          &quot;author&quot;,
+          &quot;score&quot;,
+          &quot;num_comments&quot;,
+          &quot;url&quot;,
+          &quot;created_at&quot;
+        ]
+      }
+    }
+  }
+}
+</code></pre></details></section><section class="schema-section" id="key-value-schema"><h2>Key-value schema</h2><p>Published key-value store definitions, when provided by this build.</p><p>This definition is not present in the default published build. See the published README for available documentation.</p></section><section id="published-readme"><h2>Published README</h2><details><summary>Read the full published documentation</summary><h2 id="readme-reddit-multi-mode-scraper-for-posts-comments-profiles">Reddit Multi-Mode Scraper for Posts, Comments &amp; Profiles</h2>
+<p>A single mode switch is the only thing standing between you and five different slices of Reddit: a subreddit's post listing, a post's full nested comment thread, a user's profile and history, a keyword search across posts/comments/communities/users, or Reddit's own curated community listings. Every record comes back as flat JSON with a <code>dataType</code> tag so mixed-mode datasets stay easy to sort through, and no account or API key is needed to run any of the five.</p>
+<h2 id="readme-what-this-actor-does">What this actor does</h2>
+<ul>
+<li><strong>Five modes in one actor:</strong> <code>subreddit</code> (posts from any community), <code>comments</code> (full nested comment threads for a post), <code>profile</code> (a user's karma, flags and post/comment history), <code>search</code> (keyword search across posts, comments, communities and users) and <code>discover</code> (Reddit's own curated community listings — popular/new/default, no keyword needed)</li>
+<li><strong>Deep filtering:</strong> score range, comment-count range, upvote ratio, post type, date range, title/body/flair &quot;contains&quot; text match, domain, author allow/deny lists, distinguished (mod/admin) posts, awards, original-content-only, and exclusion toggles for stickied/removed/crossposted/spoiler/locked/archived/deleted-author posts</li>
+<li><strong>Rich media &amp; embeds:</strong> image/gallery URLs, video technical metadata (duration, resolution, bitrate), poll data, and external oEmbed metadata (provider, title, thumbnail, embed HTML) for link posts pointing at YouTube, Imgur, Twitch, Vimeo and similar sites</li>
+<li><strong>Works with AI agents:</strong> every record carries a <code>dataType</code> field (<code>post</code> / <code>comment</code> / <code>community</code> / <code>user_profile</code>), so mixed datasets are easy for downstream tools — including LLM agents connected via the Apify MCP server — to filter and consume</li>
+<li><strong>Empty fields are omitted</strong> — every record only contains the keys Reddit actually returned, so you never have to defend against stray <code>null</code>/empty values</li>
+</ul>
+<h2 id="readme-output-per-post-mode-subreddit-search-profile">Output: per-post (mode = <code>subreddit</code> / <code>search</code> / <code>profile</code>)</h2>
+<p>Emitted by subreddit mode, by search mode when &quot;Search posts&quot; is on, and by profile mode's posts/overview sections.</p>
+<ul>
+<li><strong>Identity</strong> — <code>post_id</code>, <code>post_name</code>, <code>subreddit</code>, <code>subreddit_prefixed</code>, <code>subreddit_id</code>, <code>subreddit_subscribers</code>, <code>subreddit_type</code></li>
+<li><strong>Content</strong> — <code>title</code>, <code>author</code> (bare username), <code>author_meta</code> (lean author-identity object: <code>username</code>, <code>id</code>, <code>flair</code> + background/text color/css class/richtext/template id, <code>is_premium</code>, <code>is_blocked</code>, <code>has_patreon_flair</code> — built from data already on the post, no extra requests), <code>content</code> (self-post body, markdown), <code>content_html</code>, <code>content_url</code>, <code>url</code> / <code>permalink</code>, <code>url_overridden_by_dest</code>, <code>domain</code>, <code>post_hint</code>, <code>is_self</code>, <code>post_type</code> (self/link/image/video/gallery/poll)</li>
+<li><strong>Engagement</strong> — <code>score</code>, <code>ups</code>, <code>downs</code>, <code>upvote_ratio</code>, <code>num_comments</code>, <code>num_crossposts</code>, <code>num_duplicates</code>, <code>gilded</code>, <code>total_awards_received</code>, <code>awards[]</code> (name, count, coin price, icon)</li>
+<li><strong>Flair</strong> — <code>link_flair</code> (+ background/text color, css class, richtext, template id)</li>
+<li><strong>Media</strong> — <code>thumbnail_url</code>/<code>thumbnail_width</code>/<code>thumbnail_height</code>, <code>media_type</code>, <code>has_media</code>, <code>images[]</code>, <code>gallery_images[]</code>, <code>gallery_count</code>, <code>video_url</code>, <code>video_duration_seconds</code>, <code>video_width</code>, <code>video_height</code>, <code>video_has_audio</code>, <code>video_bitrate_kbps</code>, <code>poll_data</code> (options, vote count, end time)</li>
+<li><strong>External embeds</strong> — <code>embed_provider</code>, <code>embed_type</code>, <code>embed_title</code>, <code>embed_author_name</code>, <code>embed_thumbnail_url</code>, <code>embed_html</code>, <code>embed_width</code>, <code>embed_height</code> (YouTube/Imgur/Twitch/Vimeo etc. link posts)</li>
+<li><strong>Flags</strong> — <code>is_stickied</code>, <code>is_locked</code>, <code>is_archived</code>, <code>is_pinned</code>, <code>is_nsfw</code>, <code>is_spoiler</code>, <code>is_original_content</code>, <code>is_crosspost</code> (+ <code>crosspost_parent_id</code>), <code>is_crosspostable</code>, <code>is_meta</code>, <code>distinguished</code> (moderator/admin/special), <code>removed_by_category</code>, <code>content_categories</code>, <code>quarantine</code></li>
+<li><strong>Timestamps &amp; metadata</strong> — <code>created_utc</code>, <code>created_at</code>, <code>edited</code>, <code>edited_at</code>, <code>crawled_at</code>, <code>source</code> (<code>json</code>/<code>dom</code>), <code>search_term</code> (search mode only), <code>dataType: &quot;post&quot;</code></li>
+</ul>
+<h2 id="readme-output-per-comment-mode-comments-search-profile">Output: per-comment (mode = <code>comments</code> / <code>search</code> / <code>profile</code>)</h2>
+<p>Emitted by comments mode (full nested threads), by search mode when &quot;Search comments&quot; is on, and by profile mode's comments/overview sections.</p>
+<ul>
+<li><strong>Identity &amp; linkage</strong> — <code>comment_id</code>, <code>comment_name</code>, <code>post_id</code>, <code>post_url</code>, <code>post_title</code>, <code>link_id</code>, <code>parent_id</code>, <code>parent_kind</code> (post/comment), <code>depth</code> (0 = top-level), <code>subreddit</code>, <code>subreddit_prefixed</code>, <code>subreddit_id</code>, <code>subreddit_type</code></li>
+<li><strong>Content</strong> — <code>body</code>, <code>body_html</code>, <code>author</code> (bare username), <code>author_meta</code> (lean author-identity object: <code>username</code>, <code>id</code>, <code>flair</code> + colors/css class/richtext/template id, <code>is_premium</code>, <code>is_blocked</code>, <code>has_patreon_flair</code> — built from data already on the comment, no extra requests)</li>
+<li><strong>Engagement</strong> — <code>score</code>, <code>ups</code>, <code>downs</code>, <code>score_hidden</code>, <code>controversiality</code>, <code>gilded</code>, <code>total_awards_received</code>, <code>awards[]</code></li>
+<li><strong>Flags</strong> — <code>is_op</code> (comment author = post author), <code>is_stickied</code>, <code>is_locked</code>, <code>distinguished</code>, <code>archived</code>, <code>collapsed</code> (+ <code>collapsed_reason</code>, <code>collapsed_because_crowd_control</code>, <code>collapsed_reason_code</code>), <code>removed_by_category</code></li>
+<li><strong>Timestamps &amp; metadata</strong> — <code>created_utc</code>, <code>created_at</code>, <code>edited</code>, <code>edited_at</code>, <code>permalink</code>, <code>crawled_at</code>, <code>source</code>, <code>search_term</code> (search mode only), <code>dataType: &quot;comment&quot;</code></li>
+</ul>
+<h2 id="readme-output-per-community-mode-subreddit-with-community-info-search-discover">Output: per-community (mode = <code>subreddit</code> with community info / <code>search</code> / <code>discover</code>)</h2>
+<p>Emitted by subreddit mode when &quot;Include community info record&quot; is on, by search mode when &quot;Search communities&quot; is on, and always by discover mode.</p>
+<ul>
+<li><strong>Identity</strong> — <code>subreddit</code>, <code>subreddit_prefixed</code>, <code>subreddit_id</code>, <code>url</code>, <code>title</code></li>
+<li><strong>Description</strong> — <code>description</code>, <code>description_html</code>, <code>public_description</code>, <code>public_description_html</code>, <code>submit_text</code>, <code>submit_text_html</code>, <code>submit_text_label</code>, <code>submit_link_label</code></li>
+<li><strong>Size &amp; activity</strong> — <code>subscribers</code>, <code>active_user_count</code>, <code>created_utc</code>, <code>created_at</code></li>
+<li><strong>Type &amp; rules</strong> — <code>subreddit_type</code> (public/restricted/private/user), <code>submission_type</code>, <code>restrict_posting</code>, <code>restrict_commenting</code>, <code>over18</code>, <code>quarantine</code>, <code>wiki_enabled</code>, <code>lang</code>, <code>advertiser_category</code>, <code>rules[]</code> (name, description, violation reason, priority — only when &quot;Include subreddit rules&quot; is on)</li>
+<li><strong>Appearance</strong> — <code>community_icon</code>, <code>icon_img</code> (+ width/height), <code>banner_img</code> (+ width/height), <code>banner_background_image</code>, <code>banner_background_color</code>, <code>mobile_banner_image</code>, <code>header_img</code> (+ width/height), <code>header_title</code>, <code>primary_color</code>, <code>key_color</code></li>
+<li><strong>Content permissions</strong> — <code>allow_images</code>, <code>allow_videos</code>, <code>allow_videogifs</code>, <code>allow_galleries</code>, <code>allow_polls</code>, <code>allowed_media_in_comments</code>, <code>spoilers_enabled</code>, <code>original_content_tag_enabled</code>, <code>all_original_content</code></li>
+<li><strong>Flair configuration</strong> — <code>link_flair_enabled</code> (+ position), <code>user_flair_enabled_in_sr</code> (+ position, type, text, richtext, template id, colors)</li>
+<li><strong>Metadata</strong> — <code>crawled_at</code>, <code>source</code>, <code>search_term</code> (search mode only), <code>dataType: &quot;community&quot;</code></li>
+</ul>
+<h2 id="readme-output-per-user-profile-mode-profile-search">Output: per-user_profile (mode = <code>profile</code> / <code>search</code>)</h2>
+<p>Emitted by profile mode, and by search mode when &quot;Search users&quot; is on (accounts whose username matches the keyword).</p>
+<ul>
+<li><strong>Identity</strong> — <code>username</code>, <code>user_id</code>, <code>profile_url</code>, <code>icon_img</code> (avatar), <code>snoovatar_img</code> (+ <code>snoovatar_size</code>)</li>
+<li><strong>Karma breakdown</strong> — <code>post_karma</code>, <code>comment_karma</code>, <code>total_karma</code>, <code>awardee_karma</code> (received from awards), <code>awarder_karma</code> (given as awards)</li>
+<li><strong>Account flags</strong> — <code>is_gold</code> (Reddit Premium), <code>is_mod</code>, <code>is_employee</code>, <code>has_verified_email</code>, <code>verified</code>, <code>accept_followers</code>, <code>hide_from_robots</code></li>
+<li><strong>Profile subreddit</strong> — <code>user_subreddit</code> object: display name, title, subscriber count, icon, banner, bio (<code>public_description</code>), NSFW flag, type, URL</li>
+<li><strong>Optional enrichment</strong> — <code>trophies[]</code> (name + icon URL, when &quot;Include trophies&quot; is on), <code>moderated_subreddits[]</code> (subreddit, subscribers, type, mod permissions — when &quot;Include moderated subreddits&quot; is on)</li>
+<li><strong>Timestamps &amp; metadata</strong> — <code>created_utc</code>, <code>created_at</code> (account creation), <code>crawled_at</code>, <code>source</code>, <code>search_term</code> (search mode only), <code>dataType: &quot;user_profile&quot;</code></li>
+</ul>
+<h2 id="readme-input">Input</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>mode</code></td>
+<td>string</td>
+<td><code>subreddit</code></td>
+<td><code>subreddit</code> / <code>comments</code> / <code>profile</code> / <code>search</code> / <code>discover</code></td>
+</tr>
+<tr>
+<td><code>subreddits</code></td>
+<td>array</td>
+<td>–</td>
+<td>Subreddits to scrape (mode=subreddit). Accepts names, <code>r/</code> names or full URLs. If left empty, r/python is scraped</td>
+</tr>
+<tr>
+<td><code>maxPosts</code></td>
+<td>int</td>
+<td><code>25</code></td>
+<td>Max posts per subreddit/user/keyword (mode=subreddit/profile/search)</td>
+</tr>
+<tr>
+<td><code>maxItems</code></td>
+<td>int</td>
+<td><code>100000</code></td>
+<td>Global safety cap on total records across the whole run (all modes)</td>
+</tr>
+<tr>
+<td><code>sort</code></td>
+<td>string</td>
+<td><code>hot</code></td>
+<td>Post/result sort — <code>hot</code>/<code>new</code>/<code>top</code>/<code>rising</code>/<code>controversial</code>/<code>best</code> (subreddit; other values fall back to <code>hot</code>), <code>new</code>/<code>hot</code>/<code>top</code>/<code>controversial</code> (profile; other values fall back to <code>new</code>), <code>relevance</code>/<code>hot</code>/<code>top</code>/<code>new</code>/<code>comments</code> (search; the default <code>hot</code> is used unless you pick another). In subreddit mode, <code>fullSubreddit</code> or a <code>postedAfter</code> date switches the listing to <code>new</code></td>
+</tr>
+<tr>
+<td><code>timeFilter</code></td>
+<td>string</td>
+<td><code>day</code></td>
+<td>Time range for <code>top</code>/<code>controversial</code> sort (subreddit, profile), for <code>top</code>-sorted post and community search, and for comment search (search) — <code>hour</code>/<code>day</code>/<code>week</code>/<code>month</code>/<code>year</code>/<code>all</code></td>
+</tr>
+<tr>
+<td><code>postUrls</code></td>
+<td>array</td>
+<td>–</td>
+<td>Post URLs, comment URLs, share links or IDs to scrape (mode=comments)</td>
+</tr>
+<tr>
+<td><code>maxComments</code></td>
+<td>int</td>
+<td><code>100</code></td>
+<td>Max comments per post (comments), per keyword (search), or per user's comment history (profile)</td>
+</tr>
+<tr>
+<td><code>commentSort</code></td>
+<td>string</td>
+<td><code>confidence</code></td>
+<td>Comment sort — <code>confidence</code>/<code>top</code>/<code>new</code>/<code>controversial</code>/<code>old</code>/<code>qa</code> (mode=comments)</td>
+</tr>
+<tr>
+<td><code>includePost</code></td>
+<td>bool</td>
+<td><code>true</code></td>
+<td>Emit the parent post record before its comment thread (mode=comments)</td>
+</tr>
+<tr>
+<td><code>usernames</code></td>
+<td>array</td>
+<td>–</td>
+<td>Reddit usernames to scrape — names, <code>u/</code> names or profile URLs (mode=profile). If left empty, u/spez is scraped</td>
+</tr>
+<tr>
+<td><code>includeProfileInfo</code></td>
+<td>bool</td>
+<td><code>true</code></td>
+<td>Emit a user_profile record with karma/flags/account age (mode=profile)</td>
+</tr>
+<tr>
+<td><code>includeTrophies</code></td>
+<td>bool</td>
+<td><code>false</code></td>
+<td>Also fetch the user's trophy case (mode=profile)</td>
+</tr>
+<tr>
+<td><code>includeModeratedSubreddits</code></td>
+<td>bool</td>
+<td><code>false</code></td>
+<td>Also fetch the communities the user moderates (mode=profile)</td>
+</tr>
+<tr>
+<td><code>sections</code></td>
+<td>array</td>
+<td><code>[&quot;posts&quot;]</code></td>
+<td>Which history sections to scrape — <code>overview</code>/<code>posts</code>/<code>comments</code> (mode=profile)</td>
+</tr>
+<tr>
+<td><code>restrictSubreddits</code></td>
+<td>array</td>
+<td>–</td>
+<td>Only keep history from these subreddits (mode=profile)</td>
+</tr>
+<tr>
+<td><code>keyword</code></td>
+<td>string</td>
+<td>–</td>
+<td>Substring match on title/content/body (mode=profile)</td>
+</tr>
+<tr>
+<td><code>keywords</code></td>
+<td>array</td>
+<td>–</td>
+<td>Keywords to search for; supports <code>&quot;exact phrase&quot;</code>, <code>AND</code>, <code>-exclude</code>, <code>author:</code>, <code>flair:</code>, <code>subreddit:</code>, <code>site:</code> syntax (mode=search)</td>
+</tr>
+<tr>
+<td><code>searchPosts</code></td>
+<td>bool</td>
+<td><code>true</code></td>
+<td>Include posts in search results (mode=search)</td>
+</tr>
+<tr>
+<td><code>searchComments</code></td>
+<td>bool</td>
+<td><code>false</code></td>
+<td>Include comments in search results (mode=search)</td>
+</tr>
+<tr>
+<td><code>searchCommunities</code></td>
+<td>bool</td>
+<td><code>false</code></td>
+<td>Include subreddits in search results (mode=search)</td>
+</tr>
+<tr>
+<td><code>searchUsers</code></td>
+<td>bool</td>
+<td><code>false</code></td>
+<td>Include matching Reddit accounts in search results (mode=search)</td>
+</tr>
+<tr>
+<td><code>withinCommunity</code></td>
+<td>string</td>
+<td>–</td>
+<td>Restrict post/comment search to one subreddit (mode=search)</td>
+</tr>
+<tr>
+<td><code>maxCommunities</code></td>
+<td>int</td>
+<td><code>10</code></td>
+<td>Max subreddits per keyword (search) or total (discover)</td>
+</tr>
+<tr>
+<td><code>maxUsers</code></td>
+<td>int</td>
+<td><code>25</code></td>
+<td>Max accounts per keyword — Reddit caps at ~100 regardless (mode=search)</td>
+</tr>
+<tr>
+<td><code>discoverListing</code></td>
+<td>string</td>
+<td><code>popular</code></td>
+<td><code>popular</code>/<code>new</code>/<code>default</code> curated listing (mode=discover)</td>
+</tr>
+<tr>
+<td><code>includeNSFW</code></td>
+<td>bool</td>
+<td><code>false</code></td>
+<td>Include NSFW posts (subreddit, profile, search), or NSFW communities in discover mode</td>
+</tr>
+<tr>
+<td><code>onlyWithFlair</code></td>
+<td>bool</td>
+<td><code>false</code></td>
+<td>Drop posts without a flair tag (subreddit, profile)</td>
+</tr>
+<tr>
+<td><code>fullSubreddit</code></td>
+<td>bool</td>
+<td><code>false</code></td>
+<td>Walk &quot;New&quot; posts as deep as Reddit allows (~1,000) instead of the first pages (mode=subreddit)</td>
+</tr>
+<tr>
+<td><code>includeSubredditInfo</code></td>
+<td>bool</td>
+<td><code>false</code></td>
+<td>Emit one community record per subreddit before its posts (mode=subreddit)</td>
+</tr>
+<tr>
+<td><code>includeSubredditRules</code></td>
+<td>bool</td>
+<td><code>false</code></td>
+<td>Attach posting rules to the community record — requires <code>includeSubredditInfo</code> (mode=subreddit)</td>
+</tr>
+<tr>
+<td><code>titleContains</code> / <code>contentContains</code> / <code>flairContains</code> / <code>authorFlairContains</code></td>
+<td>string</td>
+<td>–</td>
+<td>Keep only posts whose title/body/flair/author-flair contains this text (subreddit, profile, search)</td>
+</tr>
+<tr>
+<td><code>domain</code></td>
+<td>string</td>
+<td>–</td>
+<td>Keep only posts whose link domain contains this text (subreddit, profile, search)</td>
+</tr>
+<tr>
+<td><code>distinguished</code></td>
+<td>string</td>
+<td>–</td>
+<td><code>moderator</code>/<code>admin</code>/<code>special</code>/<code>none</code> (subreddit, profile, search)</td>
+</tr>
+<tr>
+<td><code>minAwards</code></td>
+<td>int</td>
+<td>–</td>
+<td>Keep only posts with at least this many total awards (subreddit, profile, search)</td>
+</tr>
+<tr>
+<td><code>onlyOriginalContent</code></td>
+<td>bool</td>
+<td><code>false</code></td>
+<td>Keep only posts tagged as original content (subreddit, profile, search)</td>
+</tr>
+<tr>
+<td><code>excludeStickied</code> / <code>excludeRemoved</code> / <code>excludeCrossposts</code> / <code>excludeSpoilers</code> / <code>excludeLocked</code> / <code>excludeDeletedAuthor</code> / <code>excludeArchived</code></td>
+<td>bool</td>
+<td><code>false</code></td>
+<td>Drop stickied/removed/crossposted/spoiler/locked/deleted-author/archived posts (subreddit, profile, search)</td>
+</tr>
+<tr>
+<td><code>excludeKeywords</code></td>
+<td>array</td>
+<td>–</td>
+<td>Drop posts whose title/body/flair contains any of these terms (subreddit, profile, search)</td>
+</tr>
+<tr>
+<td><code>minContentLength</code> / <code>maxContentLength</code></td>
+<td>int</td>
+<td>–</td>
+<td>Keep only self posts whose body length (characters) is in this range (subreddit, profile, search)</td>
+</tr>
+<tr>
+<td><code>authors</code> / <code>excludeAuthors</code></td>
+<td>array</td>
+<td>–</td>
+<td>Keep/drop posts by these usernames (subreddit, search)</td>
+</tr>
+<tr>
+<td><code>postType</code></td>
+<td>string</td>
+<td>–</td>
+<td>Keep only posts of this type — <code>self</code>/<code>link</code>/<code>image</code>/<code>video</code>/<code>gallery</code>/<code>poll</code> (subreddit, profile, search)</td>
+</tr>
+<tr>
+<td><code>minPostComments</code> / <code>maxPostComments</code></td>
+<td>int</td>
+<td>–</td>
+<td>Keep only posts with a comment count in this range (subreddit, profile, search)</td>
+</tr>
+<tr>
+<td><code>minUpvoteRatio</code></td>
+<td>number</td>
+<td>–</td>
+<td>Keep only posts with an upvote ratio at or above this value, 0-1 (subreddit, profile, search)</td>
+</tr>
+<tr>
+<td><code>minScore</code> / <code>maxScore</code></td>
+<td>int</td>
+<td>–</td>
+<td>Keep only posts/comments with a score in this range (subreddit, comments, profile, search). In comments mode and comment search, score and date are the only filters applied to comments</td>
+</tr>
+<tr>
+<td><code>minCommunitySubscribers</code> / <code>maxCommunitySubscribers</code></td>
+<td>int</td>
+<td>–</td>
+<td>Keep only communities with a subscriber count in this range (search with <code>searchCommunities</code>, discover)</td>
+</tr>
+<tr>
+<td><code>minUserKarma</code> / <code>maxUserKarma</code></td>
+<td>int</td>
+<td>–</td>
+<td>Keep only accounts with a total karma in this range (search with <code>searchUsers</code>)</td>
+</tr>
+<tr>
+<td><code>postedAfter</code> / <code>postedBefore</code></td>
+<td>string (date)</td>
+<td>–</td>
+<td>Keep only posts/comments created on/after or on/before this UTC date, <code>YYYY-MM-DD</code> (subreddit, comments, profile, search; not discover)</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="readme-example-subreddit-posts">Example: subreddit posts</h2>
+<pre><code class="language-json">{
+  &quot;mode&quot;: &quot;subreddit&quot;,
+  &quot;subreddits&quot;: [&quot;python&quot;, &quot;r/programming&quot;],
+  &quot;sort&quot;: &quot;top&quot;,
+  &quot;timeFilter&quot;: &quot;week&quot;,
+  &quot;maxPosts&quot;: 50,
+  &quot;includeSubredditInfo&quot;: true
+}
+</code></pre>
+<h2 id="readme-example-comment-thread">Example: comment thread</h2>
+<pre><code class="language-json">{
+  &quot;mode&quot;: &quot;comments&quot;,
+  &quot;postUrls&quot;: [&quot;https://www.reddit.com/r/programming/comments/1vqukkf/&quot;],
+  &quot;commentSort&quot;: &quot;top&quot;,
+  &quot;maxComments&quot;: 200
+}
+</code></pre>
+<h2 id="readme-example-user-profile">Example: user profile</h2>
+<pre><code class="language-json">{
+  &quot;mode&quot;: &quot;profile&quot;,
+  &quot;usernames&quot;: [&quot;spez&quot;],
+  &quot;sections&quot;: [&quot;posts&quot;, &quot;comments&quot;],
+  &quot;includeTrophies&quot;: true,
+  &quot;maxPosts&quot;: 25,
+  &quot;maxComments&quot;: 25
+}
+</code></pre>
+<h2 id="readme-example-keyword-search">Example: keyword search</h2>
+<pre><code class="language-json">{
+  &quot;mode&quot;: &quot;search&quot;,
+  &quot;keywords&quot;: [&quot;machine learning&quot;],
+  &quot;searchPosts&quot;: true,
+  &quot;searchCommunities&quot;: true,
+  &quot;timeFilter&quot;: &quot;month&quot;
+}
+</code></pre>
+<h2 id="readme-example-discover-trending-communities">Example: discover trending communities</h2>
+<pre><code class="language-json">{
+  &quot;mode&quot;: &quot;discover&quot;,
+  &quot;discoverListing&quot;: &quot;popular&quot;,
+  &quot;maxCommunities&quot;: 25,
+  &quot;minCommunitySubscribers&quot;: 100000
+}
+</code></pre>
+<h2 id="readme-use-cases">Use cases</h2>
+<ul>
+<li><strong>Market research &amp; brand monitoring</strong> — track mentions of a product, brand or competitor across subreddits on a schedule</li>
+<li><strong>Lead generation</strong> — find high-intent posts and comments matching your keywords via search mode</li>
+<li><strong>AI/ML training data</strong> — build clean, structured Reddit corpora (posts + comments + profiles) for fine-tuning or RAG</li>
+<li><strong>Community intelligence</strong> — discover and profile the subreddits that matter for any topic or niche</li>
+<li><strong>User research &amp; credibility checks</strong> — analyze an account's karma, activity history and moderator status</li>
+<li><strong>Trend discovery</strong> — use discover mode to see what's trending on Reddit right now without knowing a keyword in advance</li>
+</ul>
+<h2 id="readme-faq">FAQ</h2>
+<p><strong>Do I need a Reddit API key or login?</strong>
+No. The actor reads Reddit's public web data — no API key, OAuth app or cookies required.</p>
+<p><strong>Why five modes in one actor?</strong>
+One actor means one input form and datasets that compose — the <code>dataType</code> field on every record tells you whether it's a post, comment, community or user profile, so you can combine runs from different modes and still filter downstream easily. Each run uses one mode.</p>
+<p><strong>How is discover mode different from search mode's community search?</strong>
+Search mode finds communities matching a keyword you supply. Discover mode browses Reddit's own curated listings (popular / new / default) with no keyword at all — useful for &quot;what's trending on Reddit right now&quot; queries.</p>
+<p><strong>Can I find Reddit users by keyword?</strong>
+Yes — enable &quot;Search users&quot; in search mode to get accounts whose username matches the keyword, with the same karma breakdown and verification/mod/gold flags as profile mode. Reddit's account search always searches globally (subreddit scoping doesn't apply) and returns up to ~100 accounts per keyword.</p>
+<p><strong>Why are some fields missing from a record?</strong>
+Reddit simply doesn't return every field for every post/comment/community — for example, <code>num_duplicates</code> is only present on link posts, and <code>video_url</code> only appears on Reddit-hosted videos. Rather than fill in <code>null</code>, the actor omits fields Reddit didn't return.</p>
+<p><strong>How fresh is the data?</strong>
+Every record is scraped in real time when the actor run starts — there is no caching layer. Each record's <code>crawled_at</code> field is the exact scrape timestamp.</p>
+<p><strong>Is a subreddit's moderator list included?</strong>
+No — community records don't list a subreddit's moderators. For a user, <code>includeModeratedSubreddits</code> adds the communities that account moderates to its profile record.</p>
+<p><strong>Is this affiliated with Reddit?</strong>
+No. This is an independent, third-party actor that reads Reddit's publicly accessible web data. It is not affiliated with, endorsed by, or sponsored by Reddit, Inc.</p>
+<p><strong>Can AI agents use this actor?</strong>
+Yes — every record's <code>dataType</code> field and consistent schema make output easy to consume programmatically, and the actor is compatible with the Apify MCP server for use as a tool by AI agents, alongside the standard REST API, and JSON/CSV/Excel/XML/HTML export.</p>
+<p><strong>What are the practical limits?</strong>
+Reddit's own listings stop after roughly 1,000 posts, and its keyword search usually returns fewer results than that per query, so <code>maxPosts</code> values above those depths won't add more. Comment search (search mode with <code>searchComments</code>) is slower than post/community search and returns only the comments that load on Reddit's comment-search results page. <code>maxItems</code> caps the total records of the whole run.</p>
+</details></section><section id="python-quickstart"><h2>Python quickstart</h2><p>Use a schema-derived input and the Python standard library to start a run. An Apify account and token are required for execution.</p><p><a href="/apify-actor-examples/guides/TvCs8gaYvL352HNwD/">Open the step-by-step Python guide →</a></p></section><p class="source-note">Source build <code>DyWUitngCmA4sbXe6</code>. Documentation is regenerated from the default published build; private drafts are not included.</p></article></div></main><footer class="footer"><strong>Nimbryxo Studio</strong><div class="footer-links"><a href="/apify-actor-examples/topics/">Topics</a><a href="/apify-actor-examples/sources/">Documentation sources</a><a href="https://apify.com/nimbryxo-studio">Apify</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></div></footer></body></html>

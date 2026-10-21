@@ -1,0 +1,126 @@
+# World Market Product Scraper
+
+Scrape **World Market** (worldmarket.com), the US home decor, furniture, and specialty international food retailer. Search by keyword, browse a department, or look up specific product pages, and get price, brand, item number, category, description, images, availability, and customer rating for every product. No login, cookies, or paid proxy required.
+
+## What this actor does
+
+- **Three modes:** `search` (keyword), `byCategory` (browse a department), `byProductUrls` (direct lookup)
+- **17 browsable sections**: departments such as furniture, decor, kitchen, dining, bath, food & drinks and gifts, plus collections like best sellers, new & trending, sale and free shipping
+- **Sort options** (search and department modes): bestselling, new arrivals, rating, price low-to-high, price high-to-low
+- **Price range filtering** on each product's scraped `price` (its lowest variant price), in every mode
+- **Multi-size / multi-color products:** returns the lowest listed price plus the highest (`priceMax`) when a product has several variants
+- **Empty fields are omitted** — every record only contains fields that were actually found
+
+## Output per product
+
+- `title` — product name
+- `price` — lowest current price across all variants (USD), when the product page shows one
+- `priceMax` — highest variant price, only present when a product has multiple sizes/colors at different prices
+- `currency` — currency code from the product page (`USD`)
+- `brand`
+- `itemNumber` — World Market's internal item/SKU number
+- `category` — breadcrumb path (e.g. `Furniture > Living Room Furniture > Sectionals`)
+- `description`
+- `imageUrls[]` — up to 8 product images
+- `productUrl`
+- `availability` — `In Stock`, `Out of Stock`, `Limited Availability`, `Preorder`, or `Sold Out`; for multi-variant products it is `In Stock` when any variant is
+- `variants[]` — per-variant breakdown (color or size, whichever the product varies by), only present when a product has 2+ selectable variants: each entry has `label`, `sku`, `price`, and `availability`
+- `rating` — average customer rating (1–5), only present when the product has reviews
+- `reviewCount` — only present when the product has reviews
+- `recordType: "product"`, `scrapedAt`
+
+## Input
+
+| Field | Type | Default | Description |
+|---|---|---|---|
+| `mode` | string | `search` | `search` / `byCategory` / `byProductUrls` |
+| `searchQuery` | string | `candle` | Free-text keyword (mode=search) |
+| `category` | string | – | Department or collection to browse (mode=byCategory; required there) — see list below |
+| `productUrls` | array | – | Direct worldmarket.com product-page URLs (mode=byProductUrls); only the first `maxItems` unique URLs are fetched |
+| `sortBy` | string | `bestselling` | `bestselling` / `newArrivals` / `ratingHighToLow` / `priceLowToHigh` / `priceHighToLow`; ignored in `byProductUrls` |
+| `minPrice` | int | – | Drop products priced below this amount (USD); when set, products without a price are dropped |
+| `maxPrice` | int | – | Drop products priced above this amount (USD); when set, products without a price are dropped |
+| `maxItems` | int | `20` | Hard cap on emitted products (1–200) |
+
+`category` accepts: `bestSellers`, `bath`, `clothingAndJewelry`, `decorAndPillows`, `dining`, `foodAndDrinks`, `freeShipping`, `furniture`, `gifts`, `holidays`, `kitchen`, `lighting`, `newAndTrending`, `outdoor`, `rugs`, `sale`, `wallDecorAndMirrors`.
+
+### Example: keyword search
+
+```json
+{
+  "mode": "search",
+  "searchQuery": "dining chair",
+  "sortBy": "ratingHighToLow",
+  "maxItems": 30
+}
+```
+
+### Example: browse a department with a price range
+
+```json
+{
+  "mode": "byCategory",
+  "category": "kitchen",
+  "sortBy": "priceLowToHigh",
+  "minPrice": 10,
+  "maxPrice": 50,
+  "maxItems": 50
+}
+```
+
+### Example: look up specific products
+
+```json
+{
+  "mode": "byProductUrls",
+  "productUrls": [
+    "https://www.worldmarket.com/p/apothecary-lavender-tonic-scented-candle-128547.html"
+  ]
+}
+```
+
+### Example: browsing food & drinks for gifting
+
+```json
+{
+  "mode": "byCategory",
+  "category": "foodAndDrinks",
+  "sortBy": "bestselling",
+  "maxItems": 40
+}
+```
+
+## Use cases
+
+- **Price monitoring** — track World Market prices for competitive intelligence
+- **Catalog enrichment** — pull structured product data (brand, category, images) into a PIM
+- **Market research** — analyze best-selling home decor and specialty food trends
+- **Deal alerts** — combine `sortBy: priceLowToHigh` with `minPrice`/`maxPrice` to spot bargains
+- **Affiliate content** — build gift guides and roundups sourced from real, live product data
+- **Inventory / availability tracking** — monitor `availability` for specific items over time
+
+## FAQ
+
+**Is this affiliated with World Market / Cost Plus World Market?**
+No. This is an independent, third-party actor that reads the same public pages any shopper's browser sees. It is not affiliated with, endorsed by, or connected to World Market.
+
+**Do I need to log in or provide cookies?**
+No. World Market publishes full product data (including price) on public pages without requiring an account.
+
+**Why do some products show a `priceMax` and others don't?**
+World Market sells many products in multiple sizes or colors at different price points. `price` is always the lowest available price; `priceMax` is only included when a higher-priced variant exists.
+
+**Why don't all products have a `rating` or `reviewCount`?**
+Those fields are only included for products that have at least one customer review. Newer or niche items may not have any yet, and the field is omitted rather than showing a fake `0`. Every product's own page is fetched regardless of mode, so ratings are populated in `search` and `byCategory` results too, not just `byProductUrls`. Products whose page can't be loaded are skipped.
+
+**How many products can I scrape in one run?**
+Up to 200 per run via `maxItems`. For larger catalogs, run the actor multiple times with different `category` or `searchQuery` values.
+
+**Does `byCategory` cover every sub-category?**
+Each of the 17 options opens one fixed "shop all" page, and a few of them are narrower than the name suggests: `bath` is bath & body, `outdoor` is outdoor decor, `wallDecorAndMirrors` is wall art, and `sale` is clearance. For other slices, use `search` with a keyword, or `byProductUrls` for specific items. `searchQuery` is not applied in `byCategory` mode.
+
+**How is `sortBy` applied?**
+`bestselling` and `newArrivals` keep World Market's own listing order. For the price and rating sorts, the actor re-sorts the collected products itself (products without a price or rating go last), because the site's own order is only approximate.
+
+**How fresh is the data?**
+Every run fetches live pages directly from worldmarket.com — there is no caching, so prices and availability reflect the current listing at run time.

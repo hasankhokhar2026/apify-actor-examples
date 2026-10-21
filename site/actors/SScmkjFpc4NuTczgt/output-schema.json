@@ -1,0 +1,25 @@
+{
+  "actorOutputSchemaVersion": 1,
+  "description": "One record per Google Maps review (place and search modes), per reviewer contribution (reviewer mode) or per partner-site review on hotels, with ratings, full text, translations, dates, owner replies, photos and place context. Optional place and reviewer summary records.",
+  "properties": {
+    "detailed": {
+      "description": "Every review field, including translations, sub-ratings, visit details, media details and partner-site fields",
+      "template": "{{links.apiDefaultDatasetUrl}}/items?view=detailed",
+      "title": "Reviews (all fields)",
+      "type": "string"
+    },
+    "placeSummaries": {
+      "description": "Per-place records (when the place summary option is on): reviews per star, topics, partner sites, location, opening hours and collection status",
+      "template": "{{links.apiDefaultDatasetUrl}}/items?view=places",
+      "title": "Place summaries",
+      "type": "string"
+    },
+    "results": {
+      "description": "All records in the default dataset",
+      "template": "{{links.apiDefaultDatasetUrl}}/items",
+      "title": "Reviews",
+      "type": "string"
+    }
+  },
+  "title": "Google Maps Review & Contributor Activity Scraper Output"
+}

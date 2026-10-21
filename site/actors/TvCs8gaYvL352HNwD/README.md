@@ -1,0 +1,211 @@
+# Reddit Multi-Mode Scraper for Posts, Comments & Profiles
+
+A single mode switch is the only thing standing between you and five different slices of Reddit: a subreddit's post listing, a post's full nested comment thread, a user's profile and history, a keyword search across posts/comments/communities/users, or Reddit's own curated community listings. Every record comes back as flat JSON with a `dataType` tag so mixed-mode datasets stay easy to sort through, and no account or API key is needed to run any of the five.
+
+## What this actor does
+
+- **Five modes in one actor:** `subreddit` (posts from any community), `comments` (full nested comment threads for a post), `profile` (a user's karma, flags and post/comment history), `search` (keyword search across posts, comments, communities and users) and `discover` (Reddit's own curated community listings — popular/new/default, no keyword needed)
+- **Deep filtering:** score range, comment-count range, upvote ratio, post type, date range, title/body/flair "contains" text match, domain, author allow/deny lists, distinguished (mod/admin) posts, awards, original-content-only, and exclusion toggles for stickied/removed/crossposted/spoiler/locked/archived/deleted-author posts
+- **Rich media & embeds:** image/gallery URLs, video technical metadata (duration, resolution, bitrate), poll data, and external oEmbed metadata (provider, title, thumbnail, embed HTML) for link posts pointing at YouTube, Imgur, Twitch, Vimeo and similar sites
+- **Works with AI agents:** every record carries a `dataType` field (`post` / `comment` / `community` / `user_profile`), so mixed datasets are easy for downstream tools — including LLM agents connected via the Apify MCP server — to filter and consume
+- **Empty fields are omitted** — every record only contains the keys Reddit actually returned, so you never have to defend against stray `null`/empty values
+
+## Output: per-post (mode = `subreddit` / `search` / `profile`)
+
+Emitted by subreddit mode, by search mode when "Search posts" is on, and by profile mode's posts/overview sections.
+
+- **Identity** — `post_id`, `post_name`, `subreddit`, `subreddit_prefixed`, `subreddit_id`, `subreddit_subscribers`, `subreddit_type`
+- **Content** — `title`, `author` (bare username), `author_meta` (lean author-identity object: `username`, `id`, `flair` + background/text color/css class/richtext/template id, `is_premium`, `is_blocked`, `has_patreon_flair` — built from data already on the post, no extra requests), `content` (self-post body, markdown), `content_html`, `content_url`, `url` / `permalink`, `url_overridden_by_dest`, `domain`, `post_hint`, `is_self`, `post_type` (self/link/image/video/gallery/poll)
+- **Engagement** — `score`, `ups`, `downs`, `upvote_ratio`, `num_comments`, `num_crossposts`, `num_duplicates`, `gilded`, `total_awards_received`, `awards[]` (name, count, coin price, icon)
+- **Flair** — `link_flair` (+ background/text color, css class, richtext, template id)
+- **Media** — `thumbnail_url`/`thumbnail_width`/`thumbnail_height`, `media_type`, `has_media`, `images[]`, `gallery_images[]`, `gallery_count`, `video_url`, `video_duration_seconds`, `video_width`, `video_height`, `video_has_audio`, `video_bitrate_kbps`, `poll_data` (options, vote count, end time)
+- **External embeds** — `embed_provider`, `embed_type`, `embed_title`, `embed_author_name`, `embed_thumbnail_url`, `embed_html`, `embed_width`, `embed_height` (YouTube/Imgur/Twitch/Vimeo etc. link posts)
+- **Flags** — `is_stickied`, `is_locked`, `is_archived`, `is_pinned`, `is_nsfw`, `is_spoiler`, `is_original_content`, `is_crosspost` (+ `crosspost_parent_id`), `is_crosspostable`, `is_meta`, `distinguished` (moderator/admin/special), `removed_by_category`, `content_categories`, `quarantine`
+- **Timestamps & metadata** — `created_utc`, `created_at`, `edited`, `edited_at`, `crawled_at`, `source` (`json`/`dom`), `search_term` (search mode only), `dataType: "post"`
+
+## Output: per-comment (mode = `comments` / `search` / `profile`)
+
+Emitted by comments mode (full nested threads), by search mode when "Search comments" is on, and by profile mode's comments/overview sections.
+
+- **Identity & linkage** — `comment_id`, `comment_name`, `post_id`, `post_url`, `post_title`, `link_id`, `parent_id`, `parent_kind` (post/comment), `depth` (0 = top-level), `subreddit`, `subreddit_prefixed`, `subreddit_id`, `subreddit_type`
+- **Content** — `body`, `body_html`, `author` (bare username), `author_meta` (lean author-identity object: `username`, `id`, `flair` + colors/css class/richtext/template id, `is_premium`, `is_blocked`, `has_patreon_flair` — built from data already on the comment, no extra requests)
+- **Engagement** — `score`, `ups`, `downs`, `score_hidden`, `controversiality`, `gilded`, `total_awards_received`, `awards[]`
+- **Flags** — `is_op` (comment author = post author), `is_stickied`, `is_locked`, `distinguished`, `archived`, `collapsed` (+ `collapsed_reason`, `collapsed_because_crowd_control`, `collapsed_reason_code`), `removed_by_category`
+- **Timestamps & metadata** — `created_utc`, `created_at`, `edited`, `edited_at`, `permalink`, `crawled_at`, `source`, `search_term` (search mode only), `dataType: "comment"`
+
+## Output: per-community (mode = `subreddit` with community info / `search` / `discover`)
+
+Emitted by subreddit mode when "Include community info record" is on, by search mode when "Search communities" is on, and always by discover mode.
+
+- **Identity** — `subreddit`, `subreddit_prefixed`, `subreddit_id`, `url`, `title`
+- **Description** — `description`, `description_html`, `public_description`, `public_description_html`, `submit_text`, `submit_text_html`, `submit_text_label`, `submit_link_label`
+- **Size & activity** — `subscribers`, `active_user_count`, `created_utc`, `created_at`
+- **Type & rules** — `subreddit_type` (public/restricted/private/user), `submission_type`, `restrict_posting`, `restrict_commenting`, `over18`, `quarantine`, `wiki_enabled`, `lang`, `advertiser_category`, `rules[]` (name, description, violation reason, priority — only when "Include subreddit rules" is on)
+- **Appearance** — `community_icon`, `icon_img` (+ width/height), `banner_img` (+ width/height), `banner_background_image`, `banner_background_color`, `mobile_banner_image`, `header_img` (+ width/height), `header_title`, `primary_color`, `key_color`
+- **Content permissions** — `allow_images`, `allow_videos`, `allow_videogifs`, `allow_galleries`, `allow_polls`, `allowed_media_in_comments`, `spoilers_enabled`, `original_content_tag_enabled`, `all_original_content`
+- **Flair configuration** — `link_flair_enabled` (+ position), `user_flair_enabled_in_sr` (+ position, type, text, richtext, template id, colors)
+- **Metadata** — `crawled_at`, `source`, `search_term` (search mode only), `dataType: "community"`
+
+## Output: per-user_profile (mode = `profile` / `search`)
+
+Emitted by profile mode, and by search mode when "Search users" is on (accounts whose username matches the keyword).
+
+- **Identity** — `username`, `user_id`, `profile_url`, `icon_img` (avatar), `snoovatar_img` (+ `snoovatar_size`)
+- **Karma breakdown** — `post_karma`, `comment_karma`, `total_karma`, `awardee_karma` (received from awards), `awarder_karma` (given as awards)
+- **Account flags** — `is_gold` (Reddit Premium), `is_mod`, `is_employee`, `has_verified_email`, `verified`, `accept_followers`, `hide_from_robots`
+- **Profile subreddit** — `user_subreddit` object: display name, title, subscriber count, icon, banner, bio (`public_description`), NSFW flag, type, URL
+- **Optional enrichment** — `trophies[]` (name + icon URL, when "Include trophies" is on), `moderated_subreddits[]` (subreddit, subscribers, type, mod permissions — when "Include moderated subreddits" is on)
+- **Timestamps & metadata** — `created_utc`, `created_at` (account creation), `crawled_at`, `source`, `search_term` (search mode only), `dataType: "user_profile"`
+
+## Input
+
+| Field | Type | Default | Description |
+|---|---|---|---|
+| `mode` | string | `subreddit` | `subreddit` / `comments` / `profile` / `search` / `discover` |
+| `subreddits` | array | – | Subreddits to scrape (mode=subreddit). Accepts names, `r/` names or full URLs. If left empty, r/python is scraped |
+| `maxPosts` | int | `25` | Max posts per subreddit/user/keyword (mode=subreddit/profile/search) |
+| `maxItems` | int | `100000` | Global safety cap on total records across the whole run (all modes) |
+| `sort` | string | `hot` | Post/result sort — `hot`/`new`/`top`/`rising`/`controversial`/`best` (subreddit; other values fall back to `hot`), `new`/`hot`/`top`/`controversial` (profile; other values fall back to `new`), `relevance`/`hot`/`top`/`new`/`comments` (search; the default `hot` is used unless you pick another). In subreddit mode, `fullSubreddit` or a `postedAfter` date switches the listing to `new` |
+| `timeFilter` | string | `day` | Time range for `top`/`controversial` sort (subreddit, profile), for `top`-sorted post and community search, and for comment search (search) — `hour`/`day`/`week`/`month`/`year`/`all` |
+| `postUrls` | array | – | Post URLs, comment URLs, share links or IDs to scrape (mode=comments) |
+| `maxComments` | int | `100` | Max comments per post (comments), per keyword (search), or per user's comment history (profile) |
+| `commentSort` | string | `confidence` | Comment sort — `confidence`/`top`/`new`/`controversial`/`old`/`qa` (mode=comments) |
+| `includePost` | bool | `true` | Emit the parent post record before its comment thread (mode=comments) |
+| `usernames` | array | – | Reddit usernames to scrape — names, `u/` names or profile URLs (mode=profile). If left empty, u/spez is scraped |
+| `includeProfileInfo` | bool | `true` | Emit a user_profile record with karma/flags/account age (mode=profile) |
+| `includeTrophies` | bool | `false` | Also fetch the user's trophy case (mode=profile) |
+| `includeModeratedSubreddits` | bool | `false` | Also fetch the communities the user moderates (mode=profile) |
+| `sections` | array | `["posts"]` | Which history sections to scrape — `overview`/`posts`/`comments` (mode=profile) |
+| `restrictSubreddits` | array | – | Only keep history from these subreddits (mode=profile) |
+| `keyword` | string | – | Substring match on title/content/body (mode=profile) |
+| `keywords` | array | – | Keywords to search for; supports `"exact phrase"`, `AND`, `-exclude`, `author:`, `flair:`, `subreddit:`, `site:` syntax (mode=search) |
+| `searchPosts` | bool | `true` | Include posts in search results (mode=search) |
+| `searchComments` | bool | `false` | Include comments in search results (mode=search) |
+| `searchCommunities` | bool | `false` | Include subreddits in search results (mode=search) |
+| `searchUsers` | bool | `false` | Include matching Reddit accounts in search results (mode=search) |
+| `withinCommunity` | string | – | Restrict post/comment search to one subreddit (mode=search) |
+| `maxCommunities` | int | `10` | Max subreddits per keyword (search) or total (discover) |
+| `maxUsers` | int | `25` | Max accounts per keyword — Reddit caps at ~100 regardless (mode=search) |
+| `discoverListing` | string | `popular` | `popular`/`new`/`default` curated listing (mode=discover) |
+| `includeNSFW` | bool | `false` | Include NSFW posts (subreddit, profile, search), or NSFW communities in discover mode |
+| `onlyWithFlair` | bool | `false` | Drop posts without a flair tag (subreddit, profile) |
+| `fullSubreddit` | bool | `false` | Walk "New" posts as deep as Reddit allows (~1,000) instead of the first pages (mode=subreddit) |
+| `includeSubredditInfo` | bool | `false` | Emit one community record per subreddit before its posts (mode=subreddit) |
+| `includeSubredditRules` | bool | `false` | Attach posting rules to the community record — requires `includeSubredditInfo` (mode=subreddit) |
+| `titleContains` / `contentContains` / `flairContains` / `authorFlairContains` | string | – | Keep only posts whose title/body/flair/author-flair contains this text (subreddit, profile, search) |
+| `domain` | string | – | Keep only posts whose link domain contains this text (subreddit, profile, search) |
+| `distinguished` | string | – | `moderator`/`admin`/`special`/`none` (subreddit, profile, search) |
+| `minAwards` | int | – | Keep only posts with at least this many total awards (subreddit, profile, search) |
+| `onlyOriginalContent` | bool | `false` | Keep only posts tagged as original content (subreddit, profile, search) |
+| `excludeStickied` / `excludeRemoved` / `excludeCrossposts` / `excludeSpoilers` / `excludeLocked` / `excludeDeletedAuthor` / `excludeArchived` | bool | `false` | Drop stickied/removed/crossposted/spoiler/locked/deleted-author/archived posts (subreddit, profile, search) |
+| `excludeKeywords` | array | – | Drop posts whose title/body/flair contains any of these terms (subreddit, profile, search) |
+| `minContentLength` / `maxContentLength` | int | – | Keep only self posts whose body length (characters) is in this range (subreddit, profile, search) |
+| `authors` / `excludeAuthors` | array | – | Keep/drop posts by these usernames (subreddit, search) |
+| `postType` | string | – | Keep only posts of this type — `self`/`link`/`image`/`video`/`gallery`/`poll` (subreddit, profile, search) |
+| `minPostComments` / `maxPostComments` | int | – | Keep only posts with a comment count in this range (subreddit, profile, search) |
+| `minUpvoteRatio` | number | – | Keep only posts with an upvote ratio at or above this value, 0-1 (subreddit, profile, search) |
+| `minScore` / `maxScore` | int | – | Keep only posts/comments with a score in this range (subreddit, comments, profile, search). In comments mode and comment search, score and date are the only filters applied to comments |
+| `minCommunitySubscribers` / `maxCommunitySubscribers` | int | – | Keep only communities with a subscriber count in this range (search with `searchCommunities`, discover) |
+| `minUserKarma` / `maxUserKarma` | int | – | Keep only accounts with a total karma in this range (search with `searchUsers`) |
+| `postedAfter` / `postedBefore` | string (date) | – | Keep only posts/comments created on/after or on/before this UTC date, `YYYY-MM-DD` (subreddit, comments, profile, search; not discover) |
+
+## Example: subreddit posts
+
+```json
+{
+  "mode": "subreddit",
+  "subreddits": ["python", "r/programming"],
+  "sort": "top",
+  "timeFilter": "week",
+  "maxPosts": 50,
+  "includeSubredditInfo": true
+}
+```
+
+## Example: comment thread
+
+```json
+{
+  "mode": "comments",
+  "postUrls": ["https://www.reddit.com/r/programming/comments/1vqukkf/"],
+  "commentSort": "top",
+  "maxComments": 200
+}
+```
+
+## Example: user profile
+
+```json
+{
+  "mode": "profile",
+  "usernames": ["spez"],
+  "sections": ["posts", "comments"],
+  "includeTrophies": true,
+  "maxPosts": 25,
+  "maxComments": 25
+}
+```
+
+## Example: keyword search
+
+```json
+{
+  "mode": "search",
+  "keywords": ["machine learning"],
+  "searchPosts": true,
+  "searchCommunities": true,
+  "timeFilter": "month"
+}
+```
+
+## Example: discover trending communities
+
+```json
+{
+  "mode": "discover",
+  "discoverListing": "popular",
+  "maxCommunities": 25,
+  "minCommunitySubscribers": 100000
+}
+```
+
+## Use cases
+
+- **Market research & brand monitoring** — track mentions of a product, brand or competitor across subreddits on a schedule
+- **Lead generation** — find high-intent posts and comments matching your keywords via search mode
+- **AI/ML training data** — build clean, structured Reddit corpora (posts + comments + profiles) for fine-tuning or RAG
+- **Community intelligence** — discover and profile the subreddits that matter for any topic or niche
+- **User research & credibility checks** — analyze an account's karma, activity history and moderator status
+- **Trend discovery** — use discover mode to see what's trending on Reddit right now without knowing a keyword in advance
+
+## FAQ
+
+**Do I need a Reddit API key or login?**
+No. The actor reads Reddit's public web data — no API key, OAuth app or cookies required.
+
+**Why five modes in one actor?**
+One actor means one input form and datasets that compose — the `dataType` field on every record tells you whether it's a post, comment, community or user profile, so you can combine runs from different modes and still filter downstream easily. Each run uses one mode.
+
+**How is discover mode different from search mode's community search?**
+Search mode finds communities matching a keyword you supply. Discover mode browses Reddit's own curated listings (popular / new / default) with no keyword at all — useful for "what's trending on Reddit right now" queries.
+
+**Can I find Reddit users by keyword?**
+Yes — enable "Search users" in search mode to get accounts whose username matches the keyword, with the same karma breakdown and verification/mod/gold flags as profile mode. Reddit's account search always searches globally (subreddit scoping doesn't apply) and returns up to ~100 accounts per keyword.
+
+**Why are some fields missing from a record?**
+Reddit simply doesn't return every field for every post/comment/community — for example, `num_duplicates` is only present on link posts, and `video_url` only appears on Reddit-hosted videos. Rather than fill in `null`, the actor omits fields Reddit didn't return.
+
+**How fresh is the data?**
+Every record is scraped in real time when the actor run starts — there is no caching layer. Each record's `crawled_at` field is the exact scrape timestamp.
+
+**Is a subreddit's moderator list included?**
+No — community records don't list a subreddit's moderators. For a user, `includeModeratedSubreddits` adds the communities that account moderates to its profile record.
+
+**Is this affiliated with Reddit?**
+No. This is an independent, third-party actor that reads Reddit's publicly accessible web data. It is not affiliated with, endorsed by, or sponsored by Reddit, Inc.
+
+**Can AI agents use this actor?**
+Yes — every record's `dataType` field and consistent schema make output easy to consume programmatically, and the actor is compatible with the Apify MCP server for use as a tool by AI agents, alongside the standard REST API, and JSON/CSV/Excel/XML/HTML export.
+
+**What are the practical limits?**
+Reddit's own listings stop after roughly 1,000 posts, and its keyword search usually returns fewer results than that per query, so `maxPosts` values above those depths won't add more. Comment search (search mode with `searchComments`) is slower than post/community search and returns only the comments that load on Reddit's comment-search results page. `maxItems` caps the total records of the whole run.

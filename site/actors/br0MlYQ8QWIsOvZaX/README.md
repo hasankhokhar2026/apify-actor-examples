@@ -1,0 +1,94 @@
+# B2B Lead Discovery by Job Title, Location & Industry
+
+Combine a job title with any mix of location, industry, and company name, and this actor searches the public web for matching professionals, then returns their name, title, company, LinkedIn profile, and a best-guess work email.
+
+## What this actor does
+
+- Builds one search per job title combined with each company name and location, or with each location and industry when no companies are given, and searches the public web for matching LinkedIn profiles. Industries are not used when `companyNames` is filled in.
+- Parses each match into a structured lead: full name, job title, company, location, and LinkedIn profile URL.
+- Looks up each lead's company website and generates a likely work email in the `first.last@domain` format (`first@domain` when only one name is known).
+- Checks that the guessed email's domain is set up to receive mail before including it.
+- Deduplicates leads by LinkedIn profile URL so the same person isn't returned twice across overlapping queries.
+
+## Output per lead
+
+| Field | Description |
+|---|---|
+| `full_name` | The lead's full name. |
+| `first_name` | First name. |
+| `last_name` | Last name. |
+| `title` | Job title as found in the search result. |
+| `company_name` | Company name, when it could be parsed from the result. |
+| `company_domain` | The company's website domain, when discovered. |
+| `location` | Location, when mentioned in the result. |
+| `linkedin_url` | URL of the lead's LinkedIn profile. |
+| `email` | A pattern-guessed work email address with a mail-capable domain, when one could be generated and verified. |
+| `scraped_at` | ISO 8601 UTC timestamp of when the lead was found. |
+
+Every lead carries all ten fields. Values that couldn't be resolved (`title`, `last_name`, `company_name`, `company_domain`, `location`, `email`) come back as an empty string rather than a guess presented as fact.
+
+## Input
+
+| Field | Type | Default | Description |
+|---|---|---|---|
+| `jobTitles` | List of strings | – | Job titles to search for (e.g. `"CEO"`, `"Software Engineer"`). Each title generates its own search query. Required. |
+| `locations` | List of strings | `[]` | Locations to target (e.g. `"New York"`, `"United States"`). Leave empty to search globally. |
+| `industries` | List of strings | `[]` | Industries to filter by (e.g. `"SaaS"`, `"Healthcare"`); added to the search query. Ignored when `companyNames` is set. |
+| `companyNames` | List of strings | `[]` | Specific companies to target. Leave empty to search across all companies. |
+| `maxLeads` | Integer | `100` | Maximum number of leads to return (values above 500 are capped at 500). Each search query yields at most 30 results, so a run with few query combinations can end below this number. |
+
+### Example: a single role and city
+
+```json
+{
+  "jobTitles": ["VP of Marketing"],
+  "locations": ["Austin"],
+  "maxLeads": 25
+}
+```
+
+### Example: multiple roles across target companies
+
+```json
+{
+  "jobTitles": ["CTO", "VP of Engineering"],
+  "companyNames": ["Stripe", "Shopify"],
+  "maxLeads": 50
+}
+```
+
+### Example: industry-targeted search with no location limit
+
+```json
+{
+  "jobTitles": ["Head of Growth"],
+  "industries": ["SaaS"],
+  "maxLeads": 100
+}
+```
+
+## Use cases
+
+- **Sales prospecting** — build a contact list of decision-makers at target companies before outreach.
+- **Recruiting** — find people currently holding a specific title to approach about new roles.
+- **Market mapping** — see who holds a given role across an industry or region.
+- **Account research** — pull the relevant contacts at a shortlist of named companies.
+- **List building** — generate a starting point for a CRM import, to be verified before use.
+
+## FAQ
+
+**Do I need an API key or account to use this?** No. It searches public web results and doesn't require any login, API key, or paid data source.
+
+**How is the email address generated?** It's a pattern guess — `first.last@domain`, or `first@domain` when there's no last name — built from the lead's name and their company's discovered domain, then checked for a domain that can receive mail. It is not pulled from a verified database and is not guaranteed to be the person's real address.
+
+**Why is `email` empty for some leads?** Either the company's domain couldn't be discovered, or the guessed address's domain failed the mail-capability check, so no guess is shown rather than presenting an unverified one as fact.
+
+**Why is `company_name` or `location` sometimes blank?** Those fields are parsed out of the search result text; when a result doesn't mention them clearly, the field is left blank rather than guessed.
+
+**Can I search without specifying a location?** Yes — leave `locations` empty to search globally for the given job titles.
+
+**Will I get duplicate leads if my job titles overlap?** No. Leads are deduplicated by LinkedIn profile URL across all generated search queries in a run.
+
+**How many leads can one run return?** Up to `maxLeads`, capped at 500. Each generated query contributes at most 30 search results (fewer once duplicates and non-profile results are dropped), so a single job title with no other filters yields at most about 30 leads. Add more titles, locations, industries or companies to generate more queries.
+
+**Is this affiliated with LinkedIn?** No. This is an independent tool that reads publicly accessible search results; it is not affiliated with, endorsed by, or sponsored by LinkedIn Corporation.

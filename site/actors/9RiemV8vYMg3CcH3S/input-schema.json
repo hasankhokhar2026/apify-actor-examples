@@ -1,0 +1,49 @@
+{
+  "properties": {
+    "concurrency": {
+      "default": 10,
+      "description": "Number of emails to verify in parallel. Higher values are faster but may trigger rate limits on SMTP servers.",
+      "editor": "number",
+      "maximum": 50,
+      "minimum": 1,
+      "title": "Concurrency",
+      "type": "integer"
+    },
+    "emails": {
+      "description": "List of email addresses to verify",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "prefill": [
+        "test@gmail.com",
+        "invalid@nonexistent-domain-xyz123.com"
+      ],
+      "title": "Email Addresses",
+      "type": "array"
+    },
+    "verificationDepth": {
+      "default": "standard",
+      "description": "How thoroughly to verify each email. Basic: syntax + MX only. Standard: adds disposable, role-based, and free provider checks. Deep: adds SMTP mailbox verification and catch-all detection.",
+      "editor": "select",
+      "enum": [
+        "basic",
+        "standard",
+        "deep"
+      ],
+      "enumTitles": [
+        "Basic (Syntax + MX)",
+        "Standard (+ Disposable, Role, Free Provider)",
+        "Deep (+ SMTP Verification, Catch-all)"
+      ],
+      "title": "Verification Depth",
+      "type": "string"
+    }
+  },
+  "required": [
+    "emails"
+  ],
+  "schemaVersion": 1,
+  "title": "Email Verifier Input",
+  "type": "object"
+}

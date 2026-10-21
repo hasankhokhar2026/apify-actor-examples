@@ -1,0 +1,621 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src &#x27;self&#x27;; script-src &#x27;self&#x27; &#x27;sha256-W7nCtckL/h5H31xh96cITtEiP7qss326HQoJj4qbaz4=&#x27;; style-src &#x27;self&#x27;; img-src &#x27;self&#x27; https: data:; base-uri &#x27;self&#x27;; form-action &#x27;self&#x27;; object-src &#x27;none&#x27;"><title>Naukri.com Job Listings Extractor with Salary &amp; Skills | Nimbryxo Studio</title><meta name="description" content="Pull job listings from Naukri.com by search URL or by keyword, location, experience, salary, job age and work-mode filters, with company rating, skills and recruiter detail per pos"><meta name="robots" content="index,follow"><link rel="canonical" href="https://hasankhokhar2026.github.io/apify-actor-examples/actors/Jfbzt9vLDGEVoJVyI/"><meta property="og:title" content="Naukri.com Job Listings Extractor with Salary &amp; Skills | Nimbryxo Studio"><meta property="og:description" content="Pull job listings from Naukri.com by search URL or by keyword, location, experience, salary, job age and work-mode filters, with company rating, skills and recruiter detail per pos"><meta property="og:type" content="website"><meta property="og:url" content="https://hasankhokhar2026.github.io/apify-actor-examples/actors/Jfbzt9vLDGEVoJVyI/"><meta property="og:site_name" content="Nimbryxo Studio"><meta name="twitter:card" content="summary"><link rel="icon" href="/apify-actor-examples/assets/mark.svg?v=2d20f9dc334a" type="image/svg+xml"><link rel="stylesheet" href="/apify-actor-examples/assets/site.css?v=39545fd4a399"><link rel="stylesheet" href="/apify-actor-examples/assets/brand.css?v=eb0f935ade25"><link rel="alternate" type="application/rss+xml" title="Nimbryxo Studio guides" href="/apify-actor-examples/feed.xml"><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization","name":"Nimbryxo Studio","url":"https://hasankhokhar2026.github.io/apify-actor-examples/","sameAs":["https://apify.com/nimbryxo-studio"]},{"@type":"WebSite","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#website","name":"Nimbryxo Studio","url":"https://hasankhokhar2026.github.io/apify-actor-examples/","publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"inLanguage":"en"},{"@type":"WebPage","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/Jfbzt9vLDGEVoJVyI/#webpage","name":"Naukri.com Job Listings Extractor with Salary & Skills","description":"Pull job listings from Naukri.com by search URL or by keyword, location, experience, salary, job age and work-mode filters, with company rating, skills and recruiter detail per posting.","url":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/Jfbzt9vLDGEVoJVyI/","isPartOf":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#website"},"publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"inLanguage":"en","mainEntity":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/Jfbzt9vLDGEVoJVyI/#article"},"breadcrumb":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/Jfbzt9vLDGEVoJVyI/#breadcrumb"}},{"@type":"TechArticle","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/Jfbzt9vLDGEVoJVyI/#article","headline":"Naukri.com Job Listings Extractor with Salary & Skills","name":"Naukri.com Job Listings Extractor with Salary & Skills","description":"Pull job listings from Naukri.com by search URL or by keyword, location, experience, salary, job age and work-mode filters, with company rating, skills and recruiter detail per posting.","url":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/Jfbzt9vLDGEVoJVyI/","author":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"mainEntityOfPage":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/Jfbzt9vLDGEVoJVyI/#webpage"},"inLanguage":"en"},{"@type":"BreadcrumbList","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/Jfbzt9vLDGEVoJVyI/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Nimbryxo Studio","item":"https://hasankhokhar2026.github.io/apify-actor-examples/"},{"@type":"ListItem","position":2,"name":"Actors","item":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/"},{"@type":"ListItem","position":3,"name":"Naukri.com Job Listings Extractor with Salary & Skills","item":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/Jfbzt9vLDGEVoJVyI/"}]}]}</script><script src="/apify-actor-examples/assets/site.js?v=7cabac48dd31" defer></script></head><body class="theme-studio"><a href="#main" class="skip-link">Skip to content</a><header><div class="inner"><a href="/apify-actor-examples/" class="brand"><img src="/apify-actor-examples/assets/mark.svg?v=2d20f9dc334a" alt="" width="29" height="29">Nimbryxo Studio</a><nav aria-label="Main navigation"><a href="/apify-actor-examples/actors/" aria-current="page">Actors</a><a href="/apify-actor-examples/guides/">Guides</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></nav></div></header><main id="main"><div class="doc-layout"><aside class="contents" aria-label="On this page"><strong>Contents</strong><a href="#overview">Overview</a><a href="#published-readme">Published README</a><a href="#input-schema">Input schema</a><a href="#output-schema">Output schema</a><a href="#dataset-schema">Dataset schema</a><a href="#python-quickstart">Python quickstart</a></aside><article class="prose"><div class="breadcrumb"><a href="/apify-actor-examples/actors/">Actors</a><span>/</span><span>Naukri.com Job Listings Extractor with Salary &amp; Skills</span></div><section id="overview"><h1 class="doc-title">Naukri.com Job Listings Extractor with Salary &amp; Skills</h1><p class="lede">Pull job listings from Naukri.com by search URL or by keyword, location, experience, salary, job age and work-mode filters, with company rating, skills and recruiter detail per posting.</p><div class="actions"><a class="button" href="https://apify.com/nimbryxo-studio/naukri-com-job-listings-extractor-with-salary">Open on Apify</a><a class="text-link" href="https://github.com/hasankhokhar2026/apify-actor-examples/blob/main/docs/actors/Jfbzt9vLDGEVoJVyI/README.md">GitHub source</a></div></section><section class="schema-section" id="input-schema"><h2>Input schema</h2><p>Input fields, types, required flags, descriptions, defaults, and prefills come from the published definition. Prefill examples are distinct from defaults.</p><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>searchUrl</code></td><td>string</td><td>optional</td><td>A Naukri.com search URL to scrape. Paste any URL from https://www.naukri.com — the scraper parses the slug and filters automatically. If empty, the structured filter fields below are used instead.</td></tr><tr><td><code>maxItems</code></td><td>integer</td><td>optional</td><td>Maximum number of job listings to return. Each Naukri API page returns up to 20 jobs.</td></tr><tr><td><code>keyword</code></td><td>string</td><td>optional</td><td>Job title or keyword (e.g., &quot;python developer&quot;, &quot;data scientist&quot;). Used only when Search URL is empty.</td></tr></tbody></table></div><details><summary>Show all input fields</summary><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>searchUrl</code></td><td>string</td><td>optional</td><td>A Naukri.com search URL to scrape. Paste any URL from https://www.naukri.com — the scraper parses the slug and filters automatically. If empty, the structured filter fields below are used instead.</td></tr><tr><td><code>maxItems</code></td><td>integer</td><td>optional</td><td>Maximum number of job listings to return. Each Naukri API page returns up to 20 jobs.</td></tr><tr><td><code>keyword</code></td><td>string</td><td>optional</td><td>Job title or keyword (e.g., &quot;python developer&quot;, &quot;data scientist&quot;). Used only when Search URL is empty.</td></tr><tr><td><code>location</code></td><td>string</td><td>optional</td><td>City name (e.g., &quot;bangalore&quot;, &quot;delhi-ncr&quot;, &quot;mumbai&quot;, &quot;hyderabad&quot;). Used only when Search URL is empty.</td></tr><tr><td><code>experienceYears</code></td><td>integer</td><td>optional</td><td>Years of experience required.</td></tr><tr><td><code>salaryLakhs</code></td><td>string</td><td>optional</td><td>Annual salary range in lakhs.</td></tr><tr><td><code>jobAge</code></td><td>string</td><td>optional</td><td>Only include jobs posted within the last N days.</td></tr><tr><td><code>jobType</code></td><td>string</td><td>optional</td><td>Employment type filter.</td></tr><tr><td><code>workMode</code></td><td>string</td><td>optional</td><td>Filter by remote or hybrid work. Naukri does not have an explicit &#x27;office&#x27; filter — office is the default state of every listing, so leave this empty for office jobs.</td></tr><tr><td><code>sortBy</code></td><td>string</td><td>optional</td><td>How results are ordered.</td></tr></tbody></table></div></details><p><a href="input-schema.json">Download the published input schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+  &quot;properties&quot;: {
+    &quot;experienceYears&quot;: {
+      &quot;description&quot;: &quot;Years of experience required.&quot;,
+      &quot;editor&quot;: &quot;number&quot;,
+      &quot;maximum&quot;: 30,
+      &quot;minimum&quot;: 0,
+      &quot;nullable&quot;: true,
+      &quot;title&quot;: &quot;Experience (years)&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;jobAge&quot;: {
+      &quot;description&quot;: &quot;Only include jobs posted within the last N days.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;1&quot;,
+        &quot;3&quot;,
+        &quot;7&quot;,
+        &quot;15&quot;,
+        &quot;30&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;Last 1 day&quot;,
+        &quot;Last 3 days&quot;,
+        &quot;Last 7 days&quot;,
+        &quot;Last 15 days&quot;,
+        &quot;Last 30 days&quot;
+      ],
+      &quot;nullable&quot;: true,
+      &quot;title&quot;: &quot;Job Age (days)&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;jobType&quot;: {
+      &quot;description&quot;: &quot;Employment type filter.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;full-time&quot;,
+        &quot;part-time&quot;,
+        &quot;internship&quot;,
+        &quot;contractual&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;Full-time&quot;,
+        &quot;Part-time&quot;,
+        &quot;Internship&quot;,
+        &quot;Contractual&quot;
+      ],
+      &quot;nullable&quot;: true,
+      &quot;title&quot;: &quot;Job Type&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;keyword&quot;: {
+      &quot;description&quot;: &quot;Job title or keyword (e.g., \&quot;python developer\&quot;, \&quot;data scientist\&quot;). Used only when Search URL is empty.&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;nullable&quot;: true,
+      &quot;title&quot;: &quot;Keyword&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;location&quot;: {
+      &quot;description&quot;: &quot;City name (e.g., \&quot;bangalore\&quot;, \&quot;delhi-ncr\&quot;, \&quot;mumbai\&quot;, \&quot;hyderabad\&quot;). Used only when Search URL is empty.&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;nullable&quot;: true,
+      &quot;title&quot;: &quot;Location&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;maxItems&quot;: {
+      &quot;default&quot;: 50,
+      &quot;description&quot;: &quot;Maximum number of job listings to return. Each Naukri API page returns up to 20 jobs.&quot;,
+      &quot;editor&quot;: &quot;number&quot;,
+      &quot;maximum&quot;: 800,
+      &quot;minimum&quot;: 1,
+      &quot;prefill&quot;: 5,
+      &quot;title&quot;: &quot;Max Items&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;salaryLakhs&quot;: {
+      &quot;description&quot;: &quot;Annual salary range in lakhs.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;0-3&quot;,
+        &quot;3-6&quot;,
+        &quot;6-10&quot;,
+        &quot;10-15&quot;,
+        &quot;15-25&quot;,
+        &quot;25+&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;0 - 3 Lakhs&quot;,
+        &quot;3 - 6 Lakhs&quot;,
+        &quot;6 - 10 Lakhs&quot;,
+        &quot;10 - 15 Lakhs&quot;,
+        &quot;15 - 25 Lakhs&quot;,
+        &quot;25+ Lakhs&quot;
+      ],
+      &quot;nullable&quot;: true,
+      &quot;title&quot;: &quot;Salary Range (Lakhs INR/yr)&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;searchUrl&quot;: {
+      &quot;description&quot;: &quot;A Naukri.com search URL to scrape. Paste any URL from https://www.naukri.com — the scraper parses the slug and filters automatically. If empty, the structured filter fields below are used instead.&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;prefill&quot;: &quot;https://www.naukri.com/python-developer-jobs-in-bangalore&quot;,
+      &quot;title&quot;: &quot;Naukri Search URL&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;sortBy&quot;: {
+      &quot;default&quot;: &quot;relevance&quot;,
+      &quot;description&quot;: &quot;How results are ordered.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;relevance&quot;,
+        &quot;date&quot;,
+        &quot;salary&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;Relevance&quot;,
+        &quot;Date (newest first)&quot;,
+        &quot;Salary (highest first)&quot;
+      ],
+      &quot;title&quot;: &quot;Sort By&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;workMode&quot;: {
+      &quot;description&quot;: &quot;Filter by remote or hybrid work. Naukri does not have an explicit &#x27;office&#x27; filter — office is the default state of every listing, so leave this empty for office jobs.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;remote&quot;,
+        &quot;hybrid&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;Remote (work from home)&quot;,
+        &quot;Hybrid&quot;
+      ],
+      &quot;nullable&quot;: true,
+      &quot;title&quot;: &quot;Work Mode&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    }
+  },
+  &quot;required&quot;: [],
+  &quot;schemaVersion&quot;: 1,
+  &quot;title&quot;: &quot;Naukri Scraper Input&quot;,
+  &quot;type&quot;: &quot;object&quot;
+}
+</code></pre></details></section><section class="schema-section" id="output-schema"><h2>Output schema</h2><p>Published result links and storage locations. This schema is not an exhaustive contract for every field in a dataset record.</p><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>jobs</code></td><td>string</td><td>optional</td><td>Dataset of scraped Naukri job listings</td></tr></tbody></table></div><p><a href="output-schema.json">Download the published output schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+  &quot;actorOutputSchemaVersion&quot;: 1,
+  &quot;description&quot;: &quot;Naukri.com job listings with title, company, location, experience, salary, skills, and description.&quot;,
+  &quot;properties&quot;: {
+    &quot;jobs&quot;: {
+      &quot;description&quot;: &quot;Dataset of scraped Naukri job listings&quot;,
+      &quot;template&quot;: &quot;{{links.apiDefaultDatasetUrl}}/items&quot;,
+      &quot;title&quot;: &quot;Naukri Jobs&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    }
+  },
+  &quot;title&quot;: &quot;Naukri.com Job Listings Extractor with Salary &amp; Skills Output&quot;
+}
+</code></pre></details></section><section class="schema-section" id="dataset-schema"><h2>Dataset schema</h2><p>Published dataset views and any declared field definitions. A view can select only a subset of the returned record fields.</p><p><a href="dataset-schema.json">Download the published dataset schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+  &quot;actorSpecification&quot;: 1,
+  &quot;fields&quot;: {
+    &quot;properties&quot;: {
+      &quot;applyCount&quot;: {
+        &quot;description&quot;: &quot;How many applied&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;integer&quot;
+      },
+      &quot;companyId&quot;: {
+        &quot;description&quot;: &quot;Naukri company ID&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;companyName&quot;: {
+        &quot;description&quot;: &quot;Company name&quot;,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;companyRating&quot;: {
+        &quot;description&quot;: &quot;AmbitionBox aggregate rating (out of 5)&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;number&quot;
+      },
+      &quot;companyReviewCount&quot;: {
+        &quot;description&quot;: &quot;Number of AmbitionBox reviews&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;integer&quot;
+      },
+      &quot;description&quot;: {
+        &quot;description&quot;: &quot;Short job description snippet&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;experience&quot;: {
+        &quot;description&quot;: &quot;Required experience range&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;id&quot;: {
+        &quot;description&quot;: &quot;Naukri job ID&quot;,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;industry&quot;: {
+        &quot;description&quot;: &quot;Industry&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;jobTypeFlags&quot;: {
+        &quot;description&quot;: &quot;Job type flags (premium, easy_apply, walk_in)&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;array&quot;
+      },
+      &quot;location&quot;: {
+        &quot;description&quot;: &quot;Job location (city, possibly multiple)&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;logoUrl&quot;: {
+        &quot;description&quot;: &quot;Company logo image URL&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;postedAt&quot;: {
+        &quot;description&quot;: &quot;When the job was posted (UTC ISO timestamp)&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;postedDate&quot;: {
+        &quot;description&quot;: &quot;When the job was posted (as displayed, e.g. &#x27;2 days ago&#x27;)&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;recruiterName&quot;: {
+        &quot;description&quot;: &quot;Recruiter name&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;role&quot;: {
+        &quot;description&quot;: &quot;Job role category&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;salary&quot;: {
+        &quot;description&quot;: &quot;Salary range as displayed&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;scrapedAt&quot;: {
+        &quot;description&quot;: &quot;UTC timestamp when scraped&quot;,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;skills&quot;: {
+        &quot;description&quot;: &quot;Skill tags&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;array&quot;
+      },
+      &quot;title&quot;: {
+        &quot;description&quot;: &quot;Job title&quot;,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;url&quot;: {
+        &quot;description&quot;: &quot;Full Naukri job listing URL&quot;,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;vacancies&quot;: {
+        &quot;description&quot;: &quot;Number of vacancies&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;integer&quot;
+      }
+    },
+    &quot;type&quot;: &quot;object&quot;
+  },
+  &quot;title&quot;: &quot;Naukri Jobs&quot;,
+  &quot;views&quot;: {
+    &quot;detailed&quot;: {
+      &quot;display&quot;: {
+        &quot;component&quot;: &quot;table&quot;,
+        &quot;properties&quot;: {
+          &quot;companyName&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Company&quot;
+          },
+          &quot;companyRating&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Rating&quot;
+          },
+          &quot;companyReviewCount&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Reviews&quot;
+          },
+          &quot;description&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Description&quot;
+          },
+          &quot;experience&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Experience&quot;
+          },
+          &quot;industry&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Industry&quot;
+          },
+          &quot;location&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Location&quot;
+          },
+          &quot;postedDate&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Posted&quot;
+          },
+          &quot;role&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Role&quot;
+          },
+          &quot;salary&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Salary&quot;
+          },
+          &quot;skills&quot;: {
+            &quot;format&quot;: &quot;array&quot;,
+            &quot;label&quot;: &quot;Skills&quot;
+          },
+          &quot;title&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Title&quot;
+          },
+          &quot;url&quot;: {
+            &quot;format&quot;: &quot;link&quot;,
+            &quot;label&quot;: &quot;Listing&quot;
+          }
+        }
+      },
+      &quot;title&quot;: &quot;Detailed&quot;,
+      &quot;transformation&quot;: {
+        &quot;fields&quot;: [
+          &quot;title&quot;,
+          &quot;companyName&quot;,
+          &quot;companyRating&quot;,
+          &quot;companyReviewCount&quot;,
+          &quot;location&quot;,
+          &quot;experience&quot;,
+          &quot;salary&quot;,
+          &quot;skills&quot;,
+          &quot;industry&quot;,
+          &quot;role&quot;,
+          &quot;postedDate&quot;,
+          &quot;description&quot;,
+          &quot;url&quot;
+        ]
+      }
+    },
+    &quot;overview&quot;: {
+      &quot;display&quot;: {
+        &quot;component&quot;: &quot;table&quot;,
+        &quot;properties&quot;: {
+          &quot;companyName&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Company&quot;
+          },
+          &quot;experience&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Experience&quot;
+          },
+          &quot;location&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Location&quot;
+          },
+          &quot;postedDate&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Posted&quot;
+          },
+          &quot;salary&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Salary&quot;
+          },
+          &quot;title&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Title&quot;
+          },
+          &quot;url&quot;: {
+            &quot;format&quot;: &quot;link&quot;,
+            &quot;label&quot;: &quot;Listing&quot;
+          }
+        }
+      },
+      &quot;title&quot;: &quot;Overview&quot;,
+      &quot;transformation&quot;: {
+        &quot;fields&quot;: [
+          &quot;title&quot;,
+          &quot;companyName&quot;,
+          &quot;location&quot;,
+          &quot;experience&quot;,
+          &quot;salary&quot;,
+          &quot;postedDate&quot;,
+          &quot;url&quot;
+        ]
+      }
+    }
+  }
+}
+</code></pre></details></section><section class="schema-section" id="key-value-schema"><h2>Key-value schema</h2><p>Published key-value store definitions, when provided by this build.</p><p>This definition is not present in the default published build. See the published README for available documentation.</p></section><section id="published-readme"><h2>Published README</h2><details><summary>Read the full published documentation</summary><h2 id="readme-naukri-com-job-listings-extractor-with-salary-skills">Naukri.com Job Listings Extractor with Salary &amp; Skills</h2>
+<p>Naukri.com is one of India's best-known job boards, and this actor turns any search on it into structured data. Paste a search URL or fill in keyword/location/salary filters, and get back one record per job posting with company, pay, skills and recruiter detail.</p>
+<h2 id="readme-what-this-actor-does">What this actor does</h2>
+<ul>
+<li>Scrapes job listings either from a pasted Naukri search URL or from structured filter fields (keyword, location, experience, salary, job age, job type, work mode).</li>
+<li>Returns company detail alongside each job, including AmbitionBox rating and review count when Naukri publishes one for that employer.</li>
+<li>Pulls the skill tags Naukri attaches to each posting, along with industry and role category.</li>
+<li>Captures posting freshness (Naukri's relative label plus an absolute creation timestamp when Naukri provides one), vacancy count, and application count.</li>
+<li>Omits any field Naukri didn't supply for a given listing, so records never carry empty placeholders.</li>
+</ul>
+<h2 id="readme-output-per-job">Output per job</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>Naukri's internal job ID.</td>
+</tr>
+<tr>
+<td><code>title</code></td>
+<td>Job title as posted.</td>
+</tr>
+<tr>
+<td><code>url</code></td>
+<td>Full URL of the job listing on Naukri.</td>
+</tr>
+<tr>
+<td><code>companyName</code></td>
+<td>Hiring company's name.</td>
+</tr>
+<tr>
+<td><code>companyId</code></td>
+<td>Naukri's internal company ID.</td>
+</tr>
+<tr>
+<td><code>companyRating</code></td>
+<td>AmbitionBox rating out of 5, when available for the company.</td>
+</tr>
+<tr>
+<td><code>companyReviewCount</code></td>
+<td>Number of AmbitionBox reviews behind that rating.</td>
+</tr>
+<tr>
+<td><code>location</code></td>
+<td>Job location(s); may list several cities.</td>
+</tr>
+<tr>
+<td><code>experience</code></td>
+<td>Required experience range, as shown on Naukri.</td>
+</tr>
+<tr>
+<td><code>salary</code></td>
+<td>Salary range as displayed on the listing.</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td>Job description snippet.</td>
+</tr>
+<tr>
+<td><code>skills</code></td>
+<td>Skill tags attached to the posting.</td>
+</tr>
+<tr>
+<td><code>industry</code></td>
+<td>Industry category.</td>
+</tr>
+<tr>
+<td><code>role</code></td>
+<td>Job role category/sub-function.</td>
+</tr>
+<tr>
+<td><code>jobTypeFlags</code></td>
+<td>Badges such as <code>premium</code>, <code>easy_apply</code>, or <code>walk_in</code>.</td>
+</tr>
+<tr>
+<td><code>postedDate</code></td>
+<td>Relative posting age as shown on Naukri (e.g. &quot;2 days ago&quot;).</td>
+</tr>
+<tr>
+<td><code>postedAt</code></td>
+<td>Absolute posting timestamp (UTC), taken from Naukri's own creation time for the job when it is provided.</td>
+</tr>
+<tr>
+<td><code>logoUrl</code></td>
+<td>Company logo image URL.</td>
+</tr>
+<tr>
+<td><code>vacancies</code></td>
+<td>Number of open vacancies on the posting.</td>
+</tr>
+<tr>
+<td><code>applyCount</code></td>
+<td>Number of applicants shown on the posting.</td>
+</tr>
+<tr>
+<td><code>recruiterName</code></td>
+<td>Recruiter's name, when Naukri lists one.</td>
+</tr>
+<tr>
+<td><code>scrapedAt</code></td>
+<td>UTC timestamp of when the record was scraped (always present).</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="readme-input">Input</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>searchUrl</code></td>
+<td>String</td>
+<td>–</td>
+<td>A Naukri.com search URL to scrape; its job-title/location slug and <code>k</code>/<code>l</code>/<code>experience</code>/<code>jobAge</code> query parameters are parsed automatically. Salary, job type, work mode and sort are not read from the URL — set those via their own fields below.</td>
+</tr>
+<tr>
+<td><code>maxItems</code></td>
+<td>Integer</td>
+<td><code>50</code></td>
+<td>Maximum number of job listings to return.</td>
+</tr>
+<tr>
+<td><code>keyword</code></td>
+<td>String</td>
+<td>–</td>
+<td>Job title or keyword. If <code>searchUrl</code> is also set, this overrides the keyword parsed from the URL.</td>
+</tr>
+<tr>
+<td><code>location</code></td>
+<td>String</td>
+<td>–</td>
+<td>City name (e.g. <code>bangalore</code>, <code>delhi-ncr</code>). If <code>searchUrl</code> is also set, this overrides the location parsed from the URL.</td>
+</tr>
+<tr>
+<td><code>experienceYears</code></td>
+<td>Integer</td>
+<td>–</td>
+<td>Years of experience required (0–30).</td>
+</tr>
+<tr>
+<td><code>salaryLakhs</code></td>
+<td>String (select)</td>
+<td>–</td>
+<td>Annual salary band in lakhs INR: <code>0-3</code>, <code>3-6</code>, <code>6-10</code>, <code>10-15</code>, <code>15-25</code>, <code>25+</code>.</td>
+</tr>
+<tr>
+<td><code>jobAge</code></td>
+<td>String (select)</td>
+<td>–</td>
+<td>Only jobs posted within the last N days: <code>1</code>, <code>3</code>, <code>7</code>, <code>15</code>, <code>30</code>.</td>
+</tr>
+<tr>
+<td><code>jobType</code></td>
+<td>String (select)</td>
+<td>–</td>
+<td><code>full-time</code>, <code>part-time</code>, <code>internship</code>, or <code>contractual</code>.</td>
+</tr>
+<tr>
+<td><code>workMode</code></td>
+<td>String (select)</td>
+<td>–</td>
+<td><code>remote</code> or <code>hybrid</code>. There is no office-only option: leaving it empty returns jobs of every work mode.</td>
+</tr>
+<tr>
+<td><code>sortBy</code></td>
+<td>String (select)</td>
+<td><code>relevance</code></td>
+<td><code>relevance</code>, <code>date</code> (newest first), or <code>salary</code> (highest first).</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="readme-example-search-url">Example: search URL</h3>
+<pre><code class="language-json">{
+  &quot;searchUrl&quot;: &quot;https://www.naukri.com/python-developer-jobs-in-bangalore&quot;,
+  &quot;maxItems&quot;: 50
+}
+</code></pre>
+<h3 id="readme-example-structured-filters">Example: structured filters</h3>
+<pre><code class="language-json">{
+  &quot;keyword&quot;: &quot;data scientist&quot;,
+  &quot;location&quot;: &quot;hyderabad&quot;,
+  &quot;experienceYears&quot;: 3,
+  &quot;salaryLakhs&quot;: &quot;10-15&quot;,
+  &quot;jobAge&quot;: &quot;7&quot;,
+  &quot;sortBy&quot;: &quot;date&quot;,
+  &quot;maxItems&quot;: 100
+}
+</code></pre>
+<h3 id="readme-example-remote-internships">Example: remote internships</h3>
+<pre><code class="language-json">{
+  &quot;keyword&quot;: &quot;machine learning intern&quot;,
+  &quot;workMode&quot;: &quot;remote&quot;,
+  &quot;jobType&quot;: &quot;internship&quot;,
+  &quot;maxItems&quot;: 30
+}
+</code></pre>
+<h2 id="readme-use-cases">Use cases</h2>
+<ul>
+<li><strong>Recruitment agencies</strong> building talent pipelines or tracking which roles competitors are hiring for.</li>
+<li><strong>Job seekers</strong> automating discovery of new postings that match a skill set or city.</li>
+<li><strong>HR and compensation teams</strong> benchmarking salary ranges for a role across companies and cities.</li>
+<li><strong>Market researchers</strong> tracking hiring volume by industry or location over time.</li>
+<li><strong>Data teams</strong> building a dataset of India's job market for analysis or model training.</li>
+</ul>
+<h2 id="readme-faq">FAQ</h2>
+<p><strong>Do I need a Naukri account to use this?</strong> No. It reads Naukri's public job search results; no login or cookies are required.</p>
+<p><strong>What's the difference between pasting a URL and using the filter fields?</strong> Pasting a <code>searchUrl</code> lets you reuse a search you already built on Naukri's site — its keyword, location, experience and job-age are read back out of the URL. The filter fields build an equivalent search from scratch when you'd rather not construct the URL yourself. If both are given, the filter fields (<code>keyword</code>, <code>location</code>, <code>experienceYears</code>, <code>jobAge</code>) override the matching value parsed from the URL; <code>salaryLakhs</code>, <code>jobType</code>, <code>workMode</code> and <code>sortBy</code> are never read from the URL, so set those directly regardless of whether <code>searchUrl</code> is used.</p>
+<p><strong>How many jobs can I get in one run?</strong> Up to the <code>maxItems</code> cap you set (maximum 800). For broader coverage than that, split your search by city, keyword, or salary band and run multiple inputs.</p>
+<p><strong>Why is <code>companyRating</code> missing for some jobs?</strong> Only companies with an AmbitionBox rating on Naukri carry this field; smaller or newer employers often don't have one yet.</p>
+<p><strong>Why is <code>postedAt</code> missing when <code>postedDate</code> is present?</strong> The two come from different values in Naukri's listing data: <code>postedDate</code> is the relative label shown on the card (&quot;2 days ago&quot;), while <code>postedAt</code> is Naukri's creation timestamp for the job. When Naukri omits that timestamp, only the relative label is returned.</p>
+<p><strong>Can I combine multiple filters, like experience and salary and job type?</strong> Yes — all the filter fields apply together, whether or not <code>searchUrl</code> is also set.</p>
+<p><strong>How fresh is the data?</strong> Each run queries Naukri live, so results reflect whatever is currently listed on the site at run time.</p>
+<p><strong>Is this affiliated with Naukri.com?</strong> No. This is an independent tool and is not affiliated with, endorsed by, or sponsored by Naukri.com or its owner.</p>
+</details></section><section id="python-quickstart"><h2>Python quickstart</h2><p>Use a schema-derived input and the Python standard library to start a run. An Apify account and token are required for execution.</p><p><a href="/apify-actor-examples/guides/Jfbzt9vLDGEVoJVyI/">Open the step-by-step Python guide →</a></p></section><p class="source-note">Source build <code>Ni7LYah1xMt322T5c</code>. Documentation is regenerated from the default published build; private drafts are not included.</p></article></div></main><footer class="footer"><strong>Nimbryxo Studio</strong><div class="footer-links"><a href="/apify-actor-examples/topics/">Topics</a><a href="/apify-actor-examples/sources/">Documentation sources</a><a href="https://apify.com/nimbryxo-studio">Apify</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></div></footer></body></html>

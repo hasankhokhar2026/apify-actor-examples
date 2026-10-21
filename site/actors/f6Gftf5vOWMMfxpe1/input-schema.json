@@ -1,0 +1,213 @@
+{
+  "description": "Search Bilibili videos, fetch single videos by bvid/aid/URL, popular feed, or partition rankings — via public api.bilibili.com endpoints. No login required.",
+  "properties": {
+    "aids": {
+      "default": [],
+      "description": "Bilibili numeric video IDs (aid), e.g. 170001",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Aids (mode=byVideoUrl)",
+      "type": "array"
+    },
+    "bvids": {
+      "default": [],
+      "description": "Bilibili BV IDs, e.g. BV1xx411c7mD",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "BVids (mode=byVideoUrl)",
+      "type": "array"
+    },
+    "containsKeyword": {
+      "description": "Only keep videos whose title, description or author contains this substring (case-insensitive).",
+      "editor": "textfield",
+      "title": "Title/author keyword",
+      "type": "string"
+    },
+    "duration": {
+      "default": "0",
+      "description": "Keep only videos within this length range (mode=search).",
+      "editor": "select",
+      "enum": [
+        "0",
+        "1",
+        "2",
+        "3",
+        "4"
+      ],
+      "enumTitles": [
+        "All lengths",
+        "Under 10 minutes",
+        "10-30 minutes",
+        "30-60 minutes",
+        "Over 60 minutes"
+      ],
+      "prefill": "0",
+      "title": "Search duration filter (mode=search)",
+      "type": "string"
+    },
+    "maxItems": {
+      "default": 20,
+      "description": "Hard cap on emitted records.",
+      "maximum": 500,
+      "minimum": 1,
+      "prefill": 20,
+      "title": "Max items",
+      "type": "integer"
+    },
+    "minViewCount": {
+      "description": "Drop videos with fewer views.",
+      "maximum": 1000000000,
+      "minimum": 0,
+      "title": "Min view count",
+      "type": "integer"
+    },
+    "mode": {
+      "default": "search",
+      "description": "What to fetch.",
+      "editor": "select",
+      "enum": [
+        "search",
+        "byVideoUrl",
+        "popular",
+        "ranking"
+      ],
+      "enumTitles": [
+        "Search videos by keyword",
+        "Fetch videos by bvid / aid / URL",
+        "Popular feed",
+        "Partition ranking"
+      ],
+      "prefill": "search",
+      "title": "Mode",
+      "type": "string"
+    },
+    "order": {
+      "default": "totalrank",
+      "description": "Search result ordering (mode=search).",
+      "editor": "select",
+      "enum": [
+        "totalrank",
+        "click",
+        "pubdate",
+        "danmaku",
+        "scores"
+      ],
+      "enumTitles": [
+        "Total rank (default)",
+        "Most viewed",
+        "Newest",
+        "Most danmaku",
+        "Rating score"
+      ],
+      "prefill": "totalrank",
+      "title": "Search sort (mode=search)",
+      "type": "string"
+    },
+    "rid": {
+      "default": "0",
+      "description": "Bilibili partition id (mode=ranking).",
+      "editor": "select",
+      "enum": [
+        "0",
+        "1",
+        "3",
+        "4",
+        "5",
+        "36",
+        "119",
+        "129",
+        "155",
+        "160",
+        "181",
+        "188",
+        "211",
+        "217",
+        "223"
+      ],
+      "enumTitles": [
+        "All (全站)",
+        "Anime (动画)",
+        "Music (音乐)",
+        "Game (游戏)",
+        "Entertainment (娱乐)",
+        "Knowledge (知识)",
+        "Guichu (鬼畜)",
+        "Dance (舞蹈)",
+        "Fashion (时尚)",
+        "Life (生活)",
+        "Movie (影视)",
+        "Digital (数码)",
+        "Food (美食)",
+        "Animal (动物圈)",
+        "Car (汽车)"
+      ],
+      "prefill": "0",
+      "title": "Ranking partition (mode=ranking)",
+      "type": "string"
+    },
+    "searchQuery": {
+      "default": "python",
+      "description": "Keyword, e.g. `python` or `美食`.",
+      "editor": "textfield",
+      "prefill": "python",
+      "title": "Search query (mode=search)",
+      "type": "string"
+    },
+    "tids": {
+      "default": "0",
+      "description": "Narrow search results to one Bilibili partition, same ids as ranking (mode=search).",
+      "editor": "select",
+      "enum": [
+        "0",
+        "1",
+        "3",
+        "4",
+        "5",
+        "36",
+        "119",
+        "129",
+        "155",
+        "160",
+        "181",
+        "188",
+        "211",
+        "217",
+        "223"
+      ],
+      "enumTitles": [
+        "All partitions",
+        "Anime (动画)",
+        "Music (音乐)",
+        "Game (游戏)",
+        "Entertainment (娱乐)",
+        "Knowledge (知识)",
+        "Guichu (鬼畜)",
+        "Dance (舞蹈)",
+        "Fashion (时尚)",
+        "Life (生活)",
+        "Movie (影视)",
+        "Digital (数码)",
+        "Food (美食)",
+        "Animal (动物圈)",
+        "Car (汽车)"
+      ],
+      "prefill": "0",
+      "title": "Search partition filter (mode=search)",
+      "type": "string"
+    },
+    "videoUrls": {
+      "default": [],
+      "description": "Bilibili video URLs, e.g. https://www.bilibili.com/video/BV1xx411c7mD/",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Video URLs (mode=byVideoUrl)",
+      "type": "array"
+    }
+  },
+  "required": [
+    "mode"
+  ],
+  "schemaVersion": 1,
+  "title": "Bilibili Video Scraper Input",
+  "type": "object"
+}

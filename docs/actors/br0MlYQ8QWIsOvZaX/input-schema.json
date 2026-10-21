@@ -1,0 +1,62 @@
+{
+  "description": "Find B2B leads by job title, location, and industry using free public search data. No API keys needed.",
+  "properties": {
+    "companyNames": {
+      "default": [],
+      "description": "Specific companies to target (e.g. 'Google', 'Microsoft'). Leave empty to search all companies.",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "title": "Company Names",
+      "type": "array"
+    },
+    "industries": {
+      "default": [],
+      "description": "Industries to filter by (e.g. 'SaaS', 'Healthcare', 'Finance'). Appended to search query for filtering.",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "title": "Industries",
+      "type": "array"
+    },
+    "jobTitles": {
+      "description": "Job titles to search for (e.g. 'Software Engineer', 'CEO', 'Marketing Manager'). Each title generates a separate search query.",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "prefill": [
+        "CEO"
+      ],
+      "title": "Job Titles",
+      "type": "array"
+    },
+    "locations": {
+      "default": [],
+      "description": "Locations to target (e.g. 'New York', 'California', 'United States'). Leave empty to search globally.",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "title": "Locations",
+      "type": "array"
+    },
+    "maxLeads": {
+      "default": 100,
+      "description": "Maximum number of leads to return. Higher values require more search queries and take longer.",
+      "maximum": 500,
+      "minimum": 1,
+      "title": "Max Leads",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "jobTitles"
+  ],
+  "schemaVersion": 1,
+  "title": "Lead Finder Input",
+  "type": "object"
+}

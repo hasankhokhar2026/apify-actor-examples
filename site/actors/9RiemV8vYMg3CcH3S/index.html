@@ -1,0 +1,299 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src &#x27;self&#x27;; script-src &#x27;self&#x27; &#x27;sha256-L2bHmL0+4Qp1/+WzqCrIfOAxocceeq7rknZvnIewJ78=&#x27;; style-src &#x27;self&#x27;; img-src &#x27;self&#x27; https: data:; base-uri &#x27;self&#x27;; form-action &#x27;self&#x27;; object-src &#x27;none&#x27;"><title>Bulk Email Deliverability &amp; SMTP Verification | Nimbryxo Studio</title><meta name="description" content="Check email addresses for syntax, MX records, disposable and role-based domains, and optionally SMTP mailbox existence and catch-all behavior, with a verdict and confidence score p"><meta name="robots" content="index,follow"><link rel="canonical" href="https://hasankhokhar2026.github.io/apify-actor-examples/actors/9RiemV8vYMg3CcH3S/"><meta property="og:title" content="Bulk Email Deliverability &amp; SMTP Verification | Nimbryxo Studio"><meta property="og:description" content="Check email addresses for syntax, MX records, disposable and role-based domains, and optionally SMTP mailbox existence and catch-all behavior, with a verdict and confidence score p"><meta property="og:type" content="website"><meta property="og:url" content="https://hasankhokhar2026.github.io/apify-actor-examples/actors/9RiemV8vYMg3CcH3S/"><meta property="og:site_name" content="Nimbryxo Studio"><meta name="twitter:card" content="summary"><link rel="icon" href="/apify-actor-examples/assets/mark.svg?v=2d20f9dc334a" type="image/svg+xml"><link rel="stylesheet" href="/apify-actor-examples/assets/site.css?v=39545fd4a399"><link rel="stylesheet" href="/apify-actor-examples/assets/brand.css?v=eb0f935ade25"><link rel="alternate" type="application/rss+xml" title="Nimbryxo Studio guides" href="/apify-actor-examples/feed.xml"><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization","name":"Nimbryxo Studio","url":"https://hasankhokhar2026.github.io/apify-actor-examples/","sameAs":["https://apify.com/nimbryxo-studio"]},{"@type":"WebSite","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#website","name":"Nimbryxo Studio","url":"https://hasankhokhar2026.github.io/apify-actor-examples/","publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"inLanguage":"en"},{"@type":"WebPage","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/9RiemV8vYMg3CcH3S/#webpage","name":"Bulk Email Deliverability & SMTP Verification","description":"Check email addresses for syntax, MX records, disposable and role-based domains, and optionally SMTP mailbox existence and catch-all behavior, with a verdict and confidence score per address.","url":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/9RiemV8vYMg3CcH3S/","isPartOf":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#website"},"publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"inLanguage":"en","mainEntity":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/9RiemV8vYMg3CcH3S/#article"},"breadcrumb":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/9RiemV8vYMg3CcH3S/#breadcrumb"}},{"@type":"TechArticle","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/9RiemV8vYMg3CcH3S/#article","headline":"Bulk Email Deliverability & SMTP Verification","name":"Bulk Email Deliverability & SMTP Verification","description":"Check email addresses for syntax, MX records, disposable and role-based domains, and optionally SMTP mailbox existence and catch-all behavior, with a verdict and confidence score per address.","url":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/9RiemV8vYMg3CcH3S/","author":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"mainEntityOfPage":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/9RiemV8vYMg3CcH3S/#webpage"},"inLanguage":"en"},{"@type":"BreadcrumbList","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/9RiemV8vYMg3CcH3S/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Nimbryxo Studio","item":"https://hasankhokhar2026.github.io/apify-actor-examples/"},{"@type":"ListItem","position":2,"name":"Actors","item":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/"},{"@type":"ListItem","position":3,"name":"Bulk Email Deliverability & SMTP Verification","item":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/9RiemV8vYMg3CcH3S/"}]}]}</script><script src="/apify-actor-examples/assets/site.js?v=7cabac48dd31" defer></script></head><body class="theme-studio"><a href="#main" class="skip-link">Skip to content</a><header><div class="inner"><a href="/apify-actor-examples/" class="brand"><img src="/apify-actor-examples/assets/mark.svg?v=2d20f9dc334a" alt="" width="29" height="29">Nimbryxo Studio</a><nav aria-label="Main navigation"><a href="/apify-actor-examples/actors/" aria-current="page">Actors</a><a href="/apify-actor-examples/guides/">Guides</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></nav></div></header><main id="main"><div class="doc-layout"><aside class="contents" aria-label="On this page"><strong>Contents</strong><a href="#overview">Overview</a><a href="#published-readme">Published README</a><a href="#input-schema">Input schema</a><a href="#output-schema">Output schema</a><a href="#dataset-schema">Dataset schema</a><a href="#python-quickstart">Python quickstart</a></aside><article class="prose"><div class="breadcrumb"><a href="/apify-actor-examples/actors/">Actors</a><span>/</span><span>Bulk Email Deliverability &amp; SMTP Verification</span></div><section id="overview"><h1 class="doc-title">Bulk Email Deliverability &amp; SMTP Verification</h1><p class="lede">Check email addresses for syntax, MX records, disposable and role-based domains, and optionally SMTP mailbox existence and catch-all behavior, with a verdict and confidence score per address.</p><div class="actions"><a class="button" href="https://apify.com/nimbryxo-studio/bulk-email-deliverability-and-smtp-verification">Open on Apify</a><a class="text-link" href="https://github.com/hasankhokhar2026/apify-actor-examples/blob/main/docs/actors/9RiemV8vYMg3CcH3S/README.md">GitHub source</a></div></section><section class="schema-section" id="input-schema"><h2>Input schema</h2><p>Input fields, types, required flags, descriptions, defaults, and prefills come from the published definition. Prefill examples are distinct from defaults.</p><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>emails</code></td><td>array</td><td>required</td><td>List of email addresses to verify</td></tr><tr><td><code>verificationDepth</code></td><td>string</td><td>optional</td><td>How thoroughly to verify each email. Basic: syntax + MX only. Standard: adds disposable, role-based, and free provider checks. Deep: adds SMTP mailbox verification and catch-all detection.</td></tr><tr><td><code>concurrency</code></td><td>integer</td><td>optional</td><td>Number of emails to verify in parallel. Higher values are faster but may trigger rate limits on SMTP servers.</td></tr></tbody></table></div><p><a href="input-schema.json">Download the published input schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+  &quot;properties&quot;: {
+    &quot;concurrency&quot;: {
+      &quot;default&quot;: 10,
+      &quot;description&quot;: &quot;Number of emails to verify in parallel. Higher values are faster but may trigger rate limits on SMTP servers.&quot;,
+      &quot;editor&quot;: &quot;number&quot;,
+      &quot;maximum&quot;: 50,
+      &quot;minimum&quot;: 1,
+      &quot;title&quot;: &quot;Concurrency&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;emails&quot;: {
+      &quot;description&quot;: &quot;List of email addresses to verify&quot;,
+      &quot;editor&quot;: &quot;stringList&quot;,
+      &quot;items&quot;: {
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;prefill&quot;: [
+        &quot;test@gmail.com&quot;,
+        &quot;invalid@nonexistent-domain-xyz123.com&quot;
+      ],
+      &quot;title&quot;: &quot;Email Addresses&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;verificationDepth&quot;: {
+      &quot;default&quot;: &quot;standard&quot;,
+      &quot;description&quot;: &quot;How thoroughly to verify each email. Basic: syntax + MX only. Standard: adds disposable, role-based, and free provider checks. Deep: adds SMTP mailbox verification and catch-all detection.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;basic&quot;,
+        &quot;standard&quot;,
+        &quot;deep&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;Basic (Syntax + MX)&quot;,
+        &quot;Standard (+ Disposable, Role, Free Provider)&quot;,
+        &quot;Deep (+ SMTP Verification, Catch-all)&quot;
+      ],
+      &quot;title&quot;: &quot;Verification Depth&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    }
+  },
+  &quot;required&quot;: [
+    &quot;emails&quot;
+  ],
+  &quot;schemaVersion&quot;: 1,
+  &quot;title&quot;: &quot;Email Verifier Input&quot;,
+  &quot;type&quot;: &quot;object&quot;
+}
+</code></pre></details></section><section class="schema-section" id="output-schema"><h2>Output schema</h2><p>Published result links and storage locations. This schema is not an exhaustive contract for every field in a dataset record.</p><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>results</code></td><td>string</td><td>optional</td><td>Dataset containing verification results for each email address</td></tr></tbody></table></div><p><a href="output-schema.json">Download the published output schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+  &quot;actorOutputSchemaVersion&quot;: 1,
+  &quot;description&quot;: &quot;Verification results for each email address with verdict, confidence score, and detailed checks.&quot;,
+  &quot;properties&quot;: {
+    &quot;results&quot;: {
+      &quot;description&quot;: &quot;Dataset containing verification results for each email address&quot;,
+      &quot;template&quot;: &quot;{{links.apiDefaultDatasetUrl}}/items&quot;,
+      &quot;title&quot;: &quot;Email Verification Results&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    }
+  },
+  &quot;title&quot;: &quot;Bulk Email Deliverability &amp; SMTP Verification Output&quot;
+}
+</code></pre></details></section><section class="schema-section" id="dataset-schema"><h2>Dataset schema</h2><p>Published dataset views and any declared field definitions. A view can select only a subset of the returned record fields.</p><p><a href="dataset-schema.json">Download the published dataset schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+  &quot;actorSpecification&quot;: 1,
+  &quot;fields&quot;: {},
+  &quot;views&quot;: {
+    &quot;detailed&quot;: {
+      &quot;display&quot;: {
+        &quot;component&quot;: &quot;table&quot;,
+        &quot;properties&quot;: {
+          &quot;checks&quot;: {
+            &quot;format&quot;: &quot;object&quot;,
+            &quot;label&quot;: &quot;Checks&quot;
+          },
+          &quot;confidence&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Confidence&quot;
+          },
+          &quot;email&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Email&quot;
+          },
+          &quot;mxHost&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;MX Host&quot;
+          },
+          &quot;reason&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Reason&quot;
+          },
+          &quot;verdict&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Verdict&quot;
+          },
+          &quot;verifiedAt&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Verified At&quot;
+          }
+        }
+      },
+      &quot;title&quot;: &quot;Detailed&quot;,
+      &quot;transformation&quot;: {
+        &quot;fields&quot;: [
+          &quot;email&quot;,
+          &quot;verdict&quot;,
+          &quot;confidence&quot;,
+          &quot;checks&quot;,
+          &quot;mxHost&quot;,
+          &quot;reason&quot;,
+          &quot;verifiedAt&quot;
+        ]
+      }
+    },
+    &quot;overview&quot;: {
+      &quot;display&quot;: {
+        &quot;component&quot;: &quot;table&quot;,
+        &quot;properties&quot;: {
+          &quot;confidence&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Confidence&quot;
+          },
+          &quot;email&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Email&quot;
+          },
+          &quot;mxHost&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;MX Host&quot;
+          },
+          &quot;reason&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Reason&quot;
+          },
+          &quot;verdict&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Verdict&quot;
+          },
+          &quot;verifiedAt&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Verified At&quot;
+          }
+        }
+      },
+      &quot;title&quot;: &quot;Overview&quot;,
+      &quot;transformation&quot;: {
+        &quot;fields&quot;: [
+          &quot;email&quot;,
+          &quot;verdict&quot;,
+          &quot;confidence&quot;,
+          &quot;mxHost&quot;,
+          &quot;reason&quot;,
+          &quot;verifiedAt&quot;
+        ]
+      }
+    }
+  }
+}
+</code></pre></details></section><section class="schema-section" id="key-value-schema"><h2>Key-value schema</h2><p>Published key-value store definitions, when provided by this build.</p><p>This definition is not present in the default published build. See the published README for available documentation.</p></section><section id="published-readme"><h2>Published README</h2><details><summary>Read the full published documentation</summary><h2 id="readme-bulk-email-deliverability-smtp-verification">Bulk Email Deliverability &amp; SMTP Verification</h2>
+<p>Feed this actor a list of email addresses and it checks each one's real deliverability — not just whether it's formatted correctly, but whether its domain can receive mail, whether it's a disposable or role-based address, and, at the deepest setting, whether the mailbox itself actually exists.</p>
+<h2 id="readme-what-this-actor-does">What this actor does</h2>
+<ul>
+<li>Validates email syntax and confirms the domain has valid MX (mail-exchange) records.</li>
+<li>Flags disposable/temporary email domains (matched against a bundled disposable-domain list) and role-based addresses such as <code>admin@</code>, <code>info@</code> or <code>support@</code>.</li>
+<li>Identifies addresses on common free consumer providers such as Gmail, Yahoo or Outlook (matched against a built-in list of domains).</li>
+<li>At the deepest verification setting, connects to the mail server to check whether the specific mailbox exists and whether the domain accepts any address at all (catch-all).</li>
+<li>Returns one record per unique address (duplicates are removed case-insensitively) with a verdict and a confidence score. Checks that were skipped at your chosen depth, or that came back inconclusive, are <code>null</code> inside <code>checks</code> rather than a guessed true/false.</li>
+</ul>
+<h2 id="readme-output-per-email">Output per email</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>email</code></td>
+<td>The normalized email address that was checked (the trimmed input as typed when the syntax check fails).</td>
+</tr>
+<tr>
+<td><code>verdict</code></td>
+<td><code>valid</code>, <code>invalid</code>, <code>risky</code>, <code>disposable</code>, or <code>unknown</code>.</td>
+</tr>
+<tr>
+<td><code>confidence</code></td>
+<td>Confidence score from 0 to 100 for the verdict.</td>
+</tr>
+<tr>
+<td><code>checks.syntax</code></td>
+<td>Whether the address is correctly formatted.</td>
+</tr>
+<tr>
+<td><code>checks.mxRecord</code></td>
+<td>Whether the domain has valid mail-exchange records.</td>
+</tr>
+<tr>
+<td><code>checks.smtp</code></td>
+<td><code>true</code> if the mail server accepted the mailbox, <code>false</code> if it answered &quot;mailbox not found&quot;. <code>null</code> unless <code>verificationDepth</code> is <code>deep</code>, and also <code>null</code> in deep mode when the server's answer was inconclusive (timeout, temporary rejection, policy block).</td>
+</tr>
+<tr>
+<td><code>checks.disposable</code></td>
+<td>Whether the domain is a known disposable/temporary provider. <code>null</code> at <code>basic</code> depth.</td>
+</tr>
+<tr>
+<td><code>checks.roleBased</code></td>
+<td>Whether the address is a shared role address (e.g. <code>support@</code>). <code>null</code> at <code>basic</code> depth.</td>
+</tr>
+<tr>
+<td><code>checks.freeProvider</code></td>
+<td>Whether the domain is a free consumer email provider. <code>null</code> at <code>basic</code> depth.</td>
+</tr>
+<tr>
+<td><code>checks.catchAll</code></td>
+<td>Whether the domain accepted mail for a made-up test address at that domain. <code>null</code> unless <code>verificationDepth</code> is <code>deep</code>, or when that test was inconclusive.</td>
+</tr>
+<tr>
+<td><code>mxHost</code></td>
+<td>The domain's highest-priority mail server hostname; <code>null</code> when the syntax check failed or no MX record was found.</td>
+</tr>
+<tr>
+<td><code>reason</code></td>
+<td>Human-readable explanation for a non-valid verdict; <code>null</code> when the verdict is <code>valid</code>.</td>
+</tr>
+<tr>
+<td><code>verifiedAt</code></td>
+<td>ISO 8601 UTC timestamp of when the email was checked.</td>
+</tr>
+</tbody>
+</table></div>
+<p>If an unexpected error interrupts the check of one address, that address still gets a record: <code>verdict</code> is <code>unknown</code>, <code>confidence</code> is <code>0</code>, every <code>checks</code> value, <code>mxHost</code> and <code>verifiedAt</code> are <code>null</code>, and <code>reason</code> starts with <code>Verification error:</code>. When the syntax check fails, the remaining <code>checks</code> values are <code>null</code>; when no MX record is found, the disposable, role, free-provider, SMTP and catch-all checks stay <code>null</code>.</p>
+<h2 id="readme-input">Input</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>emails</code></td>
+<td>List of strings</td>
+<td>–</td>
+<td>Email addresses to verify. Required.</td>
+</tr>
+<tr>
+<td><code>verificationDepth</code></td>
+<td>String (select)</td>
+<td><code>standard</code></td>
+<td><code>basic</code> (syntax + MX only), <code>standard</code> (adds disposable/role-based/free-provider checks), or <code>deep</code> (adds mailbox-level SMTP verification and catch-all detection).</td>
+</tr>
+<tr>
+<td><code>concurrency</code></td>
+<td>Integer</td>
+<td><code>10</code></td>
+<td>Number of emails verified in parallel (1–50).</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="readme-example-quick-syntax-and-mx-check">Example: quick syntax and MX check</h3>
+<pre><code class="language-json">{
+  &quot;emails&quot;: [&quot;user@example.com&quot;, &quot;test@gmail.com&quot;],
+  &quot;verificationDepth&quot;: &quot;basic&quot;
+}
+</code></pre>
+<h3 id="readme-example-standard-list-cleaning-pass">Example: standard list-cleaning pass</h3>
+<pre><code class="language-json">{
+  &quot;emails&quot;: [&quot;user@example.com&quot;, &quot;admin@tempmail.com&quot;, &quot;sales@company.org&quot;],
+  &quot;verificationDepth&quot;: &quot;standard&quot;,
+  &quot;concurrency&quot;: 20
+}
+</code></pre>
+<h3 id="readme-example-maximum-accuracy-deep-check">Example: maximum-accuracy deep check</h3>
+<pre><code class="language-json">{
+  &quot;emails&quot;: [&quot;prospect@target-company.com&quot;],
+  &quot;verificationDepth&quot;: &quot;deep&quot;,
+  &quot;concurrency&quot;: 5
+}
+</code></pre>
+<h2 id="readme-use-cases">Use cases</h2>
+<ul>
+<li><strong>List cleaning</strong> — strip disposable and undeliverable addresses from a mailing list before a campaign.</li>
+<li><strong>Sign-up form validation</strong> — batch-check addresses collected through a form to catch typos and throwaway domains.</li>
+<li><strong>Sales list hygiene</strong> — verify prospect emails scraped or purchased elsewhere before outreach.</li>
+<li><strong>Bounce-rate reduction</strong> — screen a list ahead of sending to avoid hitting invalid mailboxes.</li>
+<li><strong>CRM data quality</strong> — periodically re-check stored contact emails for ones that have gone stale.</li>
+</ul>
+<h2 id="readme-faq">FAQ</h2>
+<p><strong>How accurate is the verification?</strong> <code>standard</code> depth catches syntax errors, missing MX records, disposable domains and role-based addresses. <code>deep</code> mode adds a mailbox-level SMTP check, but many mail servers rate-limit, greylist or refuse such checks. When that happens <code>checks.smtp</code> is <code>null</code>, and an address on a domain with MX records is still reported as <code>valid</code> with partial confidence, so a <code>valid</code> verdict on its own doesn't prove the mailbox exists.</p>
+<p><strong>When is an address marked &quot;risky&quot;?</strong> In <code>deep</code> mode the actor also asks the domain's mail server about a made-up address. If the server accepts that too, the domain is treated as catch-all: an accepted mailbox there proves little, so the verdict becomes <code>risky</code> and the confidence drops.</p>
+<p><strong>What does an &quot;unknown&quot; verdict mean?</strong> It appears when the check of that address hit an unexpected error. The <code>reason</code> field carries the error text and the <code>checks</code> values are <code>null</code>. A blocked or timed-out SMTP check does not produce <code>unknown</code>; see the accuracy answer above.</p>
+<p><strong>Why are some <code>checks</code> fields <code>null</code>?</strong> Each verification depth only runs a subset of checks, and checking stops early once an address fails syntax or has no MX record. Checks that weren't run, or whose answer was inconclusive, come back as <code>null</code> rather than a guessed value.</p>
+<p><strong>What counts as a role-based address?</strong> Addresses like <code>admin@</code>, <code>info@</code>, or <code>support@</code> that are typically shared by a team rather than belonging to one person — these tend to have higher bounce and lower engagement rates.</p>
+<p><strong>Can I verify large batches?</strong> Yes. Raise <code>concurrency</code> (up to 50) to speed up large lists. Records are written to the dataset once every address has been checked, so the dataset stays empty until the run is nearly finished.</p>
+<p><strong>Does this rely on any third-party verification service?</strong> No. MX and SMTP checks query DNS and the domain's own mail servers directly, and the disposable, role and free-provider checks use lists bundled with the actor.</p>
+</details></section><section id="python-quickstart"><h2>Python quickstart</h2><p>Use a schema-derived input and the Python standard library to start a run. An Apify account and token are required for execution.</p><p><a href="/apify-actor-examples/guides/9RiemV8vYMg3CcH3S/">Open the step-by-step Python guide →</a></p></section><p class="source-note">Source build <code>fENPkrRTVUG1ZZsjz</code>. Documentation is regenerated from the default published build; private drafts are not included.</p></article></div></main><footer class="footer"><strong>Nimbryxo Studio</strong><div class="footer-links"><a href="/apify-actor-examples/topics/">Topics</a><a href="/apify-actor-examples/sources/">Documentation sources</a><a href="https://apify.com/nimbryxo-studio">Apify</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></div></footer></body></html>

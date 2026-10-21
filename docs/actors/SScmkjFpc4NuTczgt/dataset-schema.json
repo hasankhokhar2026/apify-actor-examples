@@ -1,0 +1,1279 @@
+{
+  "actorSpecification": 1,
+  "fields": {
+    "properties": {
+      "businessAddress": {
+        "description": "The place's address.",
+        "nullable": true,
+        "type": "string"
+      },
+      "businessCategories": {
+        "description": "All of the place's categories.",
+        "items": {
+          "type": "string"
+        },
+        "nullable": true,
+        "type": "array"
+      },
+      "businessCategory": {
+        "description": "The place's main category.",
+        "nullable": true,
+        "type": "string"
+      },
+      "businessLatitude": {
+        "description": "The place's latitude.",
+        "nullable": true,
+        "type": "number"
+      },
+      "businessLongitude": {
+        "description": "The place's longitude.",
+        "nullable": true,
+        "type": "number"
+      },
+      "businessName": {
+        "description": "Name of the place.",
+        "nullable": true,
+        "type": "string"
+      },
+      "businessRating": {
+        "description": "The place's average rating.",
+        "nullable": true,
+        "type": "number"
+      },
+      "businessTotalReviews": {
+        "description": "How many reviews Google shows for the place.",
+        "nullable": true,
+        "type": "integer"
+      },
+      "cid": {
+        "description": "Google's customer ID (CID) for the place.",
+        "nullable": true,
+        "type": "string"
+      },
+      "contextLabels": {
+        "description": "'Label: value' strings built from Google's structured review details.",
+        "items": {
+          "type": "string"
+        },
+        "nullable": true,
+        "type": "array"
+      },
+      "contributorAvatarUrl": {
+        "description": "Contributor avatar URL (reviewer mode).",
+        "nullable": true,
+        "type": "string"
+      },
+      "contributorId": {
+        "description": "Contributor profile ID (reviewer mode).",
+        "nullable": true,
+        "type": "string"
+      },
+      "contributorLocalGuideLevel": {
+        "description": "Contributor Local Guide level (reviewer mode).",
+        "nullable": true,
+        "type": "integer"
+      },
+      "contributorName": {
+        "description": "Contributor name (reviewer mode).",
+        "nullable": true,
+        "type": "string"
+      },
+      "contributorPoints": {
+        "description": "Contributor points (reviewer mode).",
+        "nullable": true,
+        "type": "integer"
+      },
+      "contributorProfileUrl": {
+        "description": "Contributor profile URL (reviewer mode).",
+        "nullable": true,
+        "type": "string"
+      },
+      "contributorTotalReviews": {
+        "description": "Reviews on the contributor's profile (reviewer mode).",
+        "nullable": true,
+        "type": "integer"
+      },
+      "countryCode": {
+        "description": "Place summary: the place's country code.",
+        "nullable": true,
+        "type": "string"
+      },
+      "description": {
+        "description": "Place summary: Google's description of the place.",
+        "nullable": true,
+        "type": "string"
+      },
+      "featureId": {
+        "description": "Google Maps feature ID (0x...:0x...).",
+        "nullable": true,
+        "type": "string"
+      },
+      "isEdited": {
+        "description": "True when the review was edited after publishing, filled only with enrichReviewerProfiles on.",
+        "nullable": true,
+        "type": "boolean"
+      },
+      "isRatingOnly": {
+        "description": "True when the review has a rating and no text.",
+        "nullable": true,
+        "type": "boolean"
+      },
+      "isVerified": {
+        "description": "Never filled: Google does not publish a verified flag on reviews. Kept in the schema for older integrations.",
+        "nullable": true,
+        "type": "boolean"
+      },
+      "kgmid": {
+        "description": "Google's Knowledge Graph ID for the place.",
+        "nullable": true,
+        "type": "string"
+      },
+      "likesCount": {
+        "description": "Review likes, filled only with enrichReviewerProfiles on.",
+        "nullable": true,
+        "type": "integer"
+      },
+      "mentionedItems": {
+        "description": "Never filled as a separate field: the items a reviewer mentioned are in reviewContext (and contextLabels). Kept in the schema for older integrations.",
+        "items": {
+          "type": "string"
+        },
+        "nullable": true,
+        "type": "array"
+      },
+      "openingHours": {
+        "description": "Place summary: opening hours per weekday.",
+        "nullable": true,
+        "type": "object"
+      },
+      "order": {
+        "description": "Position of the review in this place's collected output, starting at 1.",
+        "nullable": true,
+        "type": "integer"
+      },
+      "originalReviewLanguage": {
+        "description": "Original language when the review came with a translation.",
+        "nullable": true,
+        "type": "string"
+      },
+      "ownerResponseDate": {
+        "description": "ISO 8601 owner-reply date; place mode needs enrichReviewerProfiles, reviewer mode always has it.",
+        "nullable": true,
+        "type": "string"
+      },
+      "ownerResponseDateOriginal": {
+        "description": "The owner-reply date as Google prints it.",
+        "nullable": true,
+        "type": "string"
+      },
+      "ownerResponseText": {
+        "description": "The owner's public reply, when there is one.",
+        "nullable": true,
+        "type": "string"
+      },
+      "ownerResponseTextTranslated": {
+        "description": "Google's translation of the owner's reply.",
+        "nullable": true,
+        "type": "string"
+      },
+      "partnerReviewId": {
+        "description": "For partnerReview records: the review's ID on the partner site.",
+        "nullable": true,
+        "type": "string"
+      },
+      "partnerReviews": {
+        "description": "Place summary: partner sites Google lists for the place, with rating, scale, review count, link and a sample review.",
+        "items": {
+          "type": "object"
+        },
+        "nullable": true,
+        "type": "array"
+      },
+      "partnerReviewsDelivered": {
+        "description": "Place summary: how many partner-site reviews this run delivered (with includePartnerReviews on).",
+        "nullable": true,
+        "type": "integer"
+      },
+      "partnerSource": {
+        "description": "For partnerReview records: the partner site Google syndicates the review from, such as Tripadvisor or Trip.com.",
+        "nullable": true,
+        "type": "string"
+      },
+      "phone": {
+        "description": "Place summary: the place's phone number.",
+        "nullable": true,
+        "type": "string"
+      },
+      "photoDetails": {
+        "description": "With includePhotoDetails on: one entry per photo or video with url, width, height, uploadDate and, for videos, durationSeconds.",
+        "items": {
+          "type": "object"
+        },
+        "nullable": true,
+        "type": "array"
+      },
+      "photosInReview": {
+        "description": "Photo URLs attached to a review.",
+        "items": {
+          "type": "string"
+        },
+        "nullable": true,
+        "type": "array"
+      },
+      "placeAddress": {
+        "description": "Address of the reviewed place (reviewer mode).",
+        "nullable": true,
+        "type": "string"
+      },
+      "placeCategory": {
+        "description": "Category of the reviewed place (reviewer mode).",
+        "nullable": true,
+        "type": "string"
+      },
+      "placeId": {
+        "description": "Google's Place ID (ChIJ...) when available.",
+        "nullable": true,
+        "type": "string"
+      },
+      "placeLatitude": {
+        "description": "Latitude of the reviewed place (reviewer mode).",
+        "nullable": true,
+        "type": "number"
+      },
+      "placeLongitude": {
+        "description": "Longitude of the reviewed place (reviewer mode).",
+        "nullable": true,
+        "type": "number"
+      },
+      "placeName": {
+        "description": "Name of the reviewed place (reviewer mode).",
+        "nullable": true,
+        "type": "string"
+      },
+      "placePriceRange": {
+        "description": "Price range of the reviewed place (reviewer mode).",
+        "nullable": true,
+        "type": "string"
+      },
+      "placeRating": {
+        "description": "Rating of the reviewed place (reviewer mode).",
+        "nullable": true,
+        "type": "number"
+      },
+      "placeTotalReviews": {
+        "description": "Review count of the reviewed place (reviewer mode).",
+        "nullable": true,
+        "type": "integer"
+      },
+      "placeUrl": {
+        "description": "Google Maps URL of the place.",
+        "nullable": true,
+        "type": "string"
+      },
+      "position": {
+        "description": "Position of the review in Google's list (reviewer mode).",
+        "nullable": true,
+        "type": "integer"
+      },
+      "rating": {
+        "description": "Rating on the review, and on partnerReview records on the partner's own scale.",
+        "nullable": true,
+        "type": "number"
+      },
+      "ratingHistogram": {
+        "description": "Place summary: how many reviews the place has for each star rating.",
+        "nullable": true,
+        "type": "object"
+      },
+      "ratingScale": {
+        "description": "For partnerReview records: the scale of the partner rating, for example 5 or 10.",
+        "nullable": true,
+        "type": "number"
+      },
+      "recordType": {
+        "description": "review, authorReview, partnerReview, place or contributor.",
+        "nullable": true,
+        "type": "string"
+      },
+      "reviewContext": {
+        "description": "Google's structured review details (meal type, price per person, dishes or items mentioned, and so on).",
+        "nullable": true,
+        "type": "object"
+      },
+      "reviewCreatedAt": {
+        "description": "ISO 8601 first-published date, filled only with enrichReviewerProfiles on.",
+        "nullable": true,
+        "type": "string"
+      },
+      "reviewDate": {
+        "description": "ISO 8601 date of the review's last update (Google's newest-order date).",
+        "nullable": true,
+        "type": "string"
+      },
+      "reviewDateOriginal": {
+        "description": "The date as Google prints it (for example '2 weeks ago'). Partner reviews have only this relative date.",
+        "nullable": true,
+        "type": "string"
+      },
+      "reviewId": {
+        "description": "Google's review ID (reviews and authorReview records).",
+        "nullable": true,
+        "type": "string"
+      },
+      "reviewLanguage": {
+        "description": "Language Google detected for the review text.",
+        "nullable": true,
+        "type": "string"
+      },
+      "reviewPhotoCount": {
+        "description": "Number of photos attached to a review.",
+        "nullable": true,
+        "type": "integer"
+      },
+      "reviewPhotoUrls": {
+        "description": "Alias of photosInReview kept for older integrations.",
+        "items": {
+          "type": "string"
+        },
+        "nullable": true,
+        "type": "array"
+      },
+      "reviewReportUrl": {
+        "description": "Google's report-this-review URL.",
+        "nullable": true,
+        "type": "string"
+      },
+      "reviewText": {
+        "description": "Review text, with Google's HTML removed.",
+        "nullable": true,
+        "type": "string"
+      },
+      "reviewTextTranslated": {
+        "description": "Google's translation of the review into the chosen language.",
+        "nullable": true,
+        "type": "string"
+      },
+      "reviewTopics": {
+        "description": "Place summary: Google's review topic chips and how many reviews mention each.",
+        "items": {
+          "type": "object"
+        },
+        "nullable": true,
+        "type": "array"
+      },
+      "reviewUrl": {
+        "description": "Google Maps URL of the review.",
+        "nullable": true,
+        "type": "string"
+      },
+      "reviewVideoUrls": {
+        "description": "Video URLs attached to a review.",
+        "items": {
+          "type": "string"
+        },
+        "nullable": true,
+        "type": "array"
+      },
+      "reviewViewCount": {
+        "description": "Review view count, filled only with enrichReviewerProfiles on.",
+        "nullable": true,
+        "type": "integer"
+      },
+      "reviewerAvatarUrl": {
+        "description": "Reviewer avatar URL (omitted with includeReviewerDetails off).",
+        "nullable": true,
+        "type": "string"
+      },
+      "reviewerEmoji": {
+        "description": "Never filled: Google does not publish an emoji next to reviewer names. Kept in the schema for older integrations.",
+        "nullable": true,
+        "type": "string"
+      },
+      "reviewerId": {
+        "description": "Reviewer profile ID (omitted with includeReviewerDetails off).",
+        "nullable": true,
+        "type": "string"
+      },
+      "reviewerIsLocalGuide": {
+        "description": "True when Google labels this reviewer 'Local Guide' on the review.",
+        "nullable": true,
+        "type": "boolean"
+      },
+      "reviewerLocalGuideLevel": {
+        "description": "Exact Local Guide level, filled only with enrichReviewerProfiles on.",
+        "nullable": true,
+        "type": "integer"
+      },
+      "reviewerName": {
+        "description": "Name of the reviewer (omitted with includeReviewerDetails off).",
+        "nullable": true,
+        "type": "string"
+      },
+      "reviewerPhotoCount": {
+        "description": "How many photos the reviewer has contributed, from Google's review feed.",
+        "nullable": true,
+        "type": "integer"
+      },
+      "reviewerProfileUrl": {
+        "description": "Reviewer profile URL (omitted with includeReviewerDetails off).",
+        "nullable": true,
+        "type": "string"
+      },
+      "reviewerSubtitle": {
+        "description": "The status line Google prints under the reviewer's name, such as 'Local Guide · 53 reviews · 58 photos', in the chosen language. Left out when Google's exact wording for that language and those counts was not observed; the counts stay in reviewerTotalReviews and reviewerPhotoCount.",
+        "nullable": true,
+        "type": "string"
+      },
+      "reviewerTotalReviews": {
+        "description": "How many reviews the reviewer has written, from Google's review feed.",
+        "nullable": true,
+        "type": "integer"
+      },
+      "reviewsDelivered": {
+        "description": "Place or contributor summary: how many reviews this run delivered.",
+        "nullable": true,
+        "type": "integer"
+      },
+      "reviewsRemovedNotice": {
+        "description": "Place summary: Google's notice that reviews were removed after legal complaints.",
+        "nullable": true,
+        "type": "string"
+      },
+      "reviewsScanned": {
+        "description": "Place summary: how many reviews the actor read before stopping.",
+        "nullable": true,
+        "type": "integer"
+      },
+      "scrapedAt": {
+        "description": "ISO 8601 time when the run collected the record.",
+        "nullable": true,
+        "type": "string"
+      },
+      "searchQuery": {
+        "description": "The search query that found the place (search mode).",
+        "nullable": true,
+        "type": "string"
+      },
+      "searchRank": {
+        "description": "The place's rank in the search results (search mode).",
+        "nullable": true,
+        "type": "integer"
+      },
+      "sortBy": {
+        "description": "The sort order that was requested.",
+        "nullable": true,
+        "type": "string"
+      },
+      "sortConfirmed": {
+        "description": "True when the feed's order matched the requested sort. False means the actor delivered what Google returned (for example the 188-per-star rating window).",
+        "nullable": true,
+        "type": "boolean"
+      },
+      "sortStatus": {
+        "description": "confirmed or unconfirmed.",
+        "nullable": true,
+        "type": "string"
+      },
+      "sourceUrl": {
+        "description": "The input that produced this record.",
+        "nullable": true,
+        "type": "string"
+      },
+      "status": {
+        "description": "Place or contributor summary: ok, noReviews, notFound, invalid or partial.",
+        "nullable": true,
+        "type": "string"
+      },
+      "statusReason": {
+        "description": "Place or contributor summary: plain-language explanation of the status.",
+        "nullable": true,
+        "type": "string"
+      },
+      "stopReason": {
+        "description": "Place summary: why collection stopped, such as requestedCountReached, allReviewsCollected, dateCutoffReached or sourceStoppedResponding.",
+        "nullable": true,
+        "type": "string"
+      },
+      "subRatings": {
+        "description": "Google's numeric sub-ratings such as food or service, out of 5.",
+        "nullable": true,
+        "type": "object"
+      },
+      "timezone": {
+        "description": "Place summary: the place's time zone.",
+        "nullable": true,
+        "type": "string"
+      },
+      "translatedLanguage": {
+        "description": "Language of reviewTextTranslated (the chosen language).",
+        "nullable": true,
+        "type": "string"
+      },
+      "videosInReview": {
+        "description": "Number of videos attached to a review.",
+        "nullable": true,
+        "type": "integer"
+      },
+      "visitDate": {
+        "description": "When the reviewer visited, when Google shows it.",
+        "nullable": true,
+        "type": "string"
+      },
+      "website": {
+        "description": "Place summary: the place's website.",
+        "nullable": true,
+        "type": "string"
+      }
+    },
+    "type": "object"
+  },
+  "title": "Google Maps Reviews",
+  "views": {
+    "contributors": {
+      "display": {
+        "component": "table",
+        "properties": {
+          "contributions": {
+            "format": "object",
+            "label": "Contribution counts"
+          },
+          "contributorAvatarUrl": {
+            "format": "link",
+            "label": "Contributor Avatar"
+          },
+          "contributorBio": {
+            "format": "text",
+            "label": "Bio"
+          },
+          "contributorId": {
+            "format": "text",
+            "label": "Contributor ID"
+          },
+          "contributorIsLocalGuide": {
+            "format": "boolean",
+            "label": "Local Guide"
+          },
+          "contributorLocalGuideLevel": {
+            "format": "text",
+            "label": "contributorLocalGuideLevel"
+          },
+          "contributorName": {
+            "format": "text",
+            "label": "Contributor"
+          },
+          "contributorNextLevelPoints": {
+            "format": "number",
+            "label": "Points for next level"
+          },
+          "contributorPoints": {
+            "format": "number",
+            "label": "Contributor Points"
+          },
+          "contributorProfileUrl": {
+            "format": "link",
+            "label": "Contributor Profile URL"
+          },
+          "contributorTotalReviews": {
+            "format": "text",
+            "label": "contributorTotalReviews"
+          },
+          "recordType": {
+            "format": "text",
+            "label": "recordType"
+          },
+          "reviewsDelivered": {
+            "format": "number",
+            "label": "Reviews collected"
+          },
+          "scrapedAt": {
+            "format": "text",
+            "label": "Scraped At"
+          },
+          "sourceUrl": {
+            "format": "text",
+            "label": "sourceUrl"
+          },
+          "status": {
+            "format": "text",
+            "label": "Status"
+          },
+          "statusReason": {
+            "format": "text",
+            "label": "Status details"
+          }
+        }
+      },
+      "title": "Reviewer summaries",
+      "transformation": {
+        "fields": [
+          "recordType",
+          "contributorId",
+          "contributorName",
+          "contributorAvatarUrl",
+          "contributorProfileUrl",
+          "contributorIsLocalGuide",
+          "contributorLocalGuideLevel",
+          "contributorPoints",
+          "contributorNextLevelPoints",
+          "contributorTotalReviews",
+          "contributorBio",
+          "contributions",
+          "status",
+          "statusReason",
+          "reviewsDelivered",
+          "sourceUrl",
+          "scrapedAt"
+        ]
+      }
+    },
+    "detailed": {
+      "display": {
+        "component": "table",
+        "properties": {
+          "businessAddress": {
+            "format": "text",
+            "label": "Address"
+          },
+          "businessCategories": {
+            "format": "array",
+            "label": "Categories"
+          },
+          "businessCategory": {
+            "format": "text",
+            "label": "Category"
+          },
+          "businessLatitude": {
+            "format": "number",
+            "label": "Latitude"
+          },
+          "businessLongitude": {
+            "format": "number",
+            "label": "Longitude"
+          },
+          "businessName": {
+            "format": "text",
+            "label": "Business"
+          },
+          "businessRating": {
+            "format": "number",
+            "label": "Business Rating"
+          },
+          "businessTotalReviews": {
+            "format": "number",
+            "label": "Total Reviews"
+          },
+          "cid": {
+            "format": "text",
+            "label": "CID"
+          },
+          "contextLabels": {
+            "format": "array",
+            "label": "Context Labels"
+          },
+          "contributorAvatarUrl": {
+            "format": "link",
+            "label": "Contributor Avatar"
+          },
+          "contributorId": {
+            "format": "text",
+            "label": "Contributor ID"
+          },
+          "contributorName": {
+            "format": "text",
+            "label": "Contributor"
+          },
+          "contributorPoints": {
+            "format": "number",
+            "label": "Contributor Points"
+          },
+          "contributorProfileUrl": {
+            "format": "link",
+            "label": "Contributor Profile URL"
+          },
+          "featureId": {
+            "format": "text",
+            "label": "Feature ID"
+          },
+          "isEdited": {
+            "format": "text",
+            "label": "isEdited"
+          },
+          "isRatingOnly": {
+            "format": "boolean",
+            "label": "Stars only"
+          },
+          "isVerified": {
+            "format": "boolean",
+            "label": "Verified"
+          },
+          "likesCount": {
+            "format": "number",
+            "label": "Likes"
+          },
+          "mentionedItems": {
+            "format": "array",
+            "label": "Mentioned Items"
+          },
+          "order": {
+            "format": "number",
+            "label": "Order"
+          },
+          "originalReviewLanguage": {
+            "format": "text",
+            "label": "Original Language"
+          },
+          "ownerResponseDate": {
+            "format": "text",
+            "label": "Owner Reply Date"
+          },
+          "ownerResponseDateOriginal": {
+            "format": "text",
+            "label": "ownerResponseDateOriginal"
+          },
+          "ownerResponseText": {
+            "format": "text",
+            "label": "Owner Reply"
+          },
+          "ownerResponseTextTranslated": {
+            "format": "text",
+            "label": "Owner reply (translated)"
+          },
+          "partnerReviewId": {
+            "format": "text",
+            "label": "Partner review ID"
+          },
+          "partnerSource": {
+            "format": "text",
+            "label": "Partner site"
+          },
+          "photoDetails": {
+            "format": "array",
+            "label": "Photo details"
+          },
+          "photosInReview": {
+            "format": "array",
+            "label": "Photos"
+          },
+          "placeAddress": {
+            "format": "text",
+            "label": "Reviewed Place Address"
+          },
+          "placeCategory": {
+            "format": "text",
+            "label": "Place category"
+          },
+          "placeId": {
+            "format": "text",
+            "label": "Place ID"
+          },
+          "placeLatitude": {
+            "format": "number",
+            "label": "Place latitude"
+          },
+          "placeLongitude": {
+            "format": "number",
+            "label": "Place longitude"
+          },
+          "placeName": {
+            "format": "text",
+            "label": "Reviewed Place"
+          },
+          "placePriceRange": {
+            "format": "text",
+            "label": "Price range"
+          },
+          "placeRating": {
+            "format": "number",
+            "label": "Place rating"
+          },
+          "placeTotalReviews": {
+            "format": "number",
+            "label": "Place reviews"
+          },
+          "placeUrl": {
+            "format": "link",
+            "label": "Place URL"
+          },
+          "position": {
+            "format": "number",
+            "label": "Position"
+          },
+          "rating": {
+            "format": "number",
+            "label": "Rating"
+          },
+          "ratingScale": {
+            "format": "number",
+            "label": "Partner rating scale"
+          },
+          "recordType": {
+            "format": "text",
+            "label": "recordType"
+          },
+          "reviewContext": {
+            "format": "object",
+            "label": "Visit details"
+          },
+          "reviewCreatedAt": {
+            "format": "text",
+            "label": "First published"
+          },
+          "reviewDate": {
+            "format": "text",
+            "label": "Date (ISO)"
+          },
+          "reviewDateOriginal": {
+            "format": "text",
+            "label": "Date (Original)"
+          },
+          "reviewId": {
+            "format": "text",
+            "label": "Review ID"
+          },
+          "reviewLanguage": {
+            "format": "text",
+            "label": "Language"
+          },
+          "reviewPhotoCount": {
+            "format": "number",
+            "label": "Contributor Review Photo Count"
+          },
+          "reviewPhotoUrls": {
+            "format": "array",
+            "label": "Contributor Review Photos"
+          },
+          "reviewReportUrl": {
+            "format": "link",
+            "label": "Report link"
+          },
+          "reviewText": {
+            "format": "text",
+            "label": "Review"
+          },
+          "reviewTextTranslated": {
+            "format": "text",
+            "label": "Translated review"
+          },
+          "reviewUrl": {
+            "format": "link",
+            "label": "Review link"
+          },
+          "reviewVideoUrls": {
+            "format": "array",
+            "label": "Videos"
+          },
+          "reviewViewCount": {
+            "format": "number",
+            "label": "Views"
+          },
+          "reviewerAvatarUrl": {
+            "format": "link",
+            "label": "Avatar"
+          },
+          "reviewerEmoji": {
+            "format": "text",
+            "label": "Reviewer Emoji"
+          },
+          "reviewerId": {
+            "format": "text",
+            "label": "Reviewer ID"
+          },
+          "reviewerIsLocalGuide": {
+            "format": "boolean",
+            "label": "Local Guide"
+          },
+          "reviewerLocalGuideLevel": {
+            "format": "number",
+            "label": "Local Guide Level"
+          },
+          "reviewerName": {
+            "format": "text",
+            "label": "Reviewer"
+          },
+          "reviewerPhotoCount": {
+            "format": "number",
+            "label": "Reviewer Photo Count"
+          },
+          "reviewerProfileUrl": {
+            "format": "link",
+            "label": "Profile URL"
+          },
+          "reviewerSubtitle": {
+            "format": "text",
+            "label": "Reviewer Subtitle"
+          },
+          "reviewerTotalReviews": {
+            "format": "number",
+            "label": "Reviewer Total Reviews"
+          },
+          "scrapedAt": {
+            "format": "text",
+            "label": "Scraped At"
+          },
+          "searchQuery": {
+            "format": "text",
+            "label": "Search"
+          },
+          "searchRank": {
+            "format": "number",
+            "label": "Search rank"
+          },
+          "sortBy": {
+            "format": "text",
+            "label": "Requested Sort"
+          },
+          "sortConfirmed": {
+            "format": "boolean",
+            "label": "Sort Confirmed"
+          },
+          "sortStatus": {
+            "format": "text",
+            "label": "Sort Status"
+          },
+          "sourceUrl": {
+            "format": "text",
+            "label": "sourceUrl"
+          },
+          "subRatings": {
+            "format": "object",
+            "label": "Sub-ratings"
+          },
+          "translatedLanguage": {
+            "format": "text",
+            "label": "Translated into"
+          },
+          "videosInReview": {
+            "format": "number",
+            "label": "Videos In Review"
+          },
+          "visitDate": {
+            "format": "text",
+            "label": "Visit Date"
+          }
+        }
+      },
+      "title": "Detailed",
+      "transformation": {
+        "fields": [
+          "recordType",
+          "reviewId",
+          "reviewerName",
+          "reviewerAvatarUrl",
+          "reviewerProfileUrl",
+          "reviewerSubtitle",
+          "reviewerLocalGuideLevel",
+          "reviewerTotalReviews",
+          "reviewerPhotoCount",
+          "reviewerEmoji",
+          "contributorId",
+          "contributorName",
+          "contributorAvatarUrl",
+          "contributorProfileUrl",
+          "contributorPoints",
+          "rating",
+          "reviewText",
+          "reviewLanguage",
+          "originalReviewLanguage",
+          "reviewDate",
+          "reviewDateOriginal",
+          "isEdited",
+          "likesCount",
+          "photosInReview",
+          "reviewPhotoUrls",
+          "reviewPhotoCount",
+          "videosInReview",
+          "photoDetails",
+          "ownerResponseText",
+          "ownerResponseDate",
+          "ownerResponseDateOriginal",
+          "isVerified",
+          "visitDate",
+          "mentionedItems",
+          "contextLabels",
+          "businessName",
+          "businessRating",
+          "businessTotalReviews",
+          "businessCategory",
+          "businessAddress",
+          "placeName",
+          "placeAddress",
+          "placeId",
+          "featureId",
+          "placeUrl",
+          "sourceUrl",
+          "order",
+          "position",
+          "sortBy",
+          "sortConfirmed",
+          "sortStatus",
+          "scrapedAt",
+          "reviewUrl",
+          "reviewReportUrl",
+          "reviewTextTranslated",
+          "translatedLanguage",
+          "reviewerId",
+          "reviewerIsLocalGuide",
+          "reviewVideoUrls",
+          "ownerResponseTextTranslated",
+          "subRatings",
+          "reviewContext",
+          "reviewCreatedAt",
+          "reviewViewCount",
+          "isRatingOnly",
+          "businessCategories",
+          "businessLatitude",
+          "businessLongitude",
+          "cid",
+          "placeLatitude",
+          "placeLongitude",
+          "placeCategory",
+          "placeRating",
+          "placeTotalReviews",
+          "placePriceRange",
+          "searchQuery",
+          "searchRank",
+          "partnerSource",
+          "partnerReviewId",
+          "ratingScale"
+        ]
+      }
+    },
+    "overview": {
+      "display": {
+        "component": "table",
+        "properties": {
+          "businessName": {
+            "format": "text",
+            "label": "Business"
+          },
+          "likesCount": {
+            "format": "number",
+            "label": "Likes"
+          },
+          "rating": {
+            "format": "number",
+            "label": "Rating"
+          },
+          "reviewDate": {
+            "format": "text",
+            "label": "Date"
+          },
+          "reviewText": {
+            "format": "text",
+            "label": "Review"
+          },
+          "reviewerName": {
+            "format": "text",
+            "label": "Reviewer"
+          },
+          "sortBy": {
+            "format": "text",
+            "label": "Requested Sort"
+          },
+          "sortConfirmed": {
+            "format": "boolean",
+            "label": "Sort Confirmed"
+          }
+        }
+      },
+      "title": "Reviews",
+      "transformation": {
+        "fields": [
+          "recordType",
+          "reviewerName",
+          "rating",
+          "reviewText",
+          "reviewDate",
+          "likesCount",
+          "businessName",
+          "sortBy",
+          "sortConfirmed",
+          "sourceUrl",
+          "scrapedAt"
+        ]
+      }
+    },
+    "places": {
+      "display": {
+        "component": "table",
+        "properties": {
+          "businessAddress": {
+            "format": "text",
+            "label": "Address"
+          },
+          "businessCategories": {
+            "format": "array",
+            "label": "Categories"
+          },
+          "businessCategory": {
+            "format": "text",
+            "label": "Category"
+          },
+          "businessLatitude": {
+            "format": "number",
+            "label": "Latitude"
+          },
+          "businessLongitude": {
+            "format": "number",
+            "label": "Longitude"
+          },
+          "businessName": {
+            "format": "text",
+            "label": "Business"
+          },
+          "businessRating": {
+            "format": "number",
+            "label": "Business Rating"
+          },
+          "businessTotalReviews": {
+            "format": "number",
+            "label": "Total Reviews"
+          },
+          "cid": {
+            "format": "text",
+            "label": "CID"
+          },
+          "countryCode": {
+            "format": "text",
+            "label": "Country"
+          },
+          "description": {
+            "format": "text",
+            "label": "Description"
+          },
+          "featureId": {
+            "format": "text",
+            "label": "Feature ID"
+          },
+          "kgmid": {
+            "format": "text",
+            "label": "Knowledge Graph ID"
+          },
+          "openingHours": {
+            "format": "object",
+            "label": "Opening hours"
+          },
+          "partnerReviews": {
+            "format": "array",
+            "label": "Reviews on partner sites"
+          },
+          "partnerReviewsDelivered": {
+            "format": "number",
+            "label": "Partner reviews delivered"
+          },
+          "phone": {
+            "format": "text",
+            "label": "Phone"
+          },
+          "placeId": {
+            "format": "text",
+            "label": "Place ID"
+          },
+          "placeUrl": {
+            "format": "link",
+            "label": "Place URL"
+          },
+          "ratingHistogram": {
+            "format": "object",
+            "label": "Reviews per star"
+          },
+          "recordType": {
+            "format": "text",
+            "label": "recordType"
+          },
+          "reviewTopics": {
+            "format": "array",
+            "label": "Review topics"
+          },
+          "reviewsDelivered": {
+            "format": "number",
+            "label": "Reviews collected"
+          },
+          "reviewsRemovedNotice": {
+            "format": "text",
+            "label": "Removed-reviews notice"
+          },
+          "reviewsScanned": {
+            "format": "number",
+            "label": "Reviews read"
+          },
+          "scrapedAt": {
+            "format": "text",
+            "label": "Scraped At"
+          },
+          "searchQuery": {
+            "format": "text",
+            "label": "Search"
+          },
+          "searchRank": {
+            "format": "number",
+            "label": "Search rank"
+          },
+          "sourceUrl": {
+            "format": "text",
+            "label": "sourceUrl"
+          },
+          "status": {
+            "format": "text",
+            "label": "Status"
+          },
+          "statusReason": {
+            "format": "text",
+            "label": "Status details"
+          },
+          "stopReason": {
+            "format": "text",
+            "label": "Stopped because"
+          },
+          "timezone": {
+            "format": "text",
+            "label": "Time zone"
+          },
+          "website": {
+            "format": "link",
+            "label": "Website"
+          }
+        }
+      },
+      "title": "Place summaries",
+      "transformation": {
+        "fields": [
+          "recordType",
+          "businessName",
+          "businessRating",
+          "businessTotalReviews",
+          "ratingHistogram",
+          "reviewTopics",
+          "businessCategory",
+          "businessCategories",
+          "businessAddress",
+          "businessLatitude",
+          "businessLongitude",
+          "phone",
+          "website",
+          "timezone",
+          "countryCode",
+          "description",
+          "reviewsRemovedNotice",
+          "partnerReviews",
+          "openingHours",
+          "placeId",
+          "featureId",
+          "cid",
+          "kgmid",
+          "placeUrl",
+          "sourceUrl",
+          "searchQuery",
+          "searchRank",
+          "status",
+          "statusReason",
+          "partnerReviewsDelivered",
+          "reviewsDelivered",
+          "reviewsScanned",
+          "stopReason",
+          "scrapedAt"
+        ]
+      }
+    }
+  }
+}

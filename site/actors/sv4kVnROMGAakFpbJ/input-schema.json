@@ -1,0 +1,66 @@
+{
+  "description": "Search for places on TripAdvisor or provide direct URLs to extract detailed place data including ratings, rankings, contact info, and more.",
+  "properties": {
+    "maxItems": {
+      "default": 50,
+      "description": "Maximum number of places to return per search query.",
+      "maximum": 100,
+      "minimum": 1,
+      "prefill": 50,
+      "title": "Maximum Results",
+      "type": "integer"
+    },
+    "placeType": {
+      "default": "all",
+      "description": "Filter search results by place type.",
+      "editor": "select",
+      "enum": [
+        "all",
+        "hotel",
+        "restaurant",
+        "attraction"
+      ],
+      "enumTitles": [
+        "All types",
+        "Hotels only",
+        "Restaurants only",
+        "Attractions only"
+      ],
+      "title": "Place Type",
+      "type": "string"
+    },
+    "proxyConfiguration": {
+      "description": "Proxy settings. Residential proxy recommended for search queries. Not needed for direct URLs.",
+      "editor": "proxy",
+      "sectionCaption": "Proxy",
+      "sectionDescription": "Search queries use a browser with proxy to bypass anti-bot protection. Direct URLs work without proxy.",
+      "title": "Proxy Configuration",
+      "type": "object"
+    },
+    "searchQueries": {
+      "description": "Search terms to find places on TripAdvisor. Examples: 'hotels in Paris', 'best restaurants NYC', 'attractions London'.",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "prefill": [
+        "hotels in New York"
+      ],
+      "title": "Search Queries",
+      "type": "array"
+    },
+    "startUrls": {
+      "description": "Direct TripAdvisor place URLs (Hotel_Review, Restaurant_Review, Attraction_Review pages).",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "title": "Direct URLs",
+      "type": "array"
+    }
+  },
+  "required": [],
+  "schemaVersion": 1,
+  "title": "TripAdvisor Scraper Input",
+  "type": "object"
+}

@@ -1,0 +1,243 @@
+{
+  "description": "Browse wholesale suppliers on WholesaleCentral.com by category or keyword search. Filter by supplier type, location, and minimum order.",
+  "properties": {
+    "category": {
+      "default": "Apparel",
+      "description": "Product category to browse (mode=byCategory). Use `customCategorySlug` to target a narrower sub-category not listed here.",
+      "editor": "select",
+      "enum": [
+        "Amazon-FBA",
+        "As-Seen-On-TV",
+        "Baby-Products",
+        "C-Store-Items",
+        "Telephone-Cellular",
+        "Closeout-Suppliers",
+        "Computer-Products",
+        "Dollar-Store",
+        "DVDs-Videos",
+        "Food-Grocery",
+        "Knives",
+        "Lawn-Garden",
+        "Military-Goods",
+        "Office-Supplies",
+        "Perfume",
+        "Pet-Supplies",
+        "Religious-Items",
+        "Self-Defense-Security",
+        "Souvenirs",
+        "Survival-emergency-kits",
+        "Tools-Hardware",
+        "Vape-Products-Eliquids-Smoking-Products",
+        "Watches",
+        "Apparel",
+        "Art-Supplies",
+        "Automotive",
+        "Business-Opportunities",
+        "Business-Services",
+        "Candles-Incense-Potpourri",
+        "CBD-products",
+        "Collectibles",
+        "Crafts-Supplies",
+        "Dropshippers",
+        "Electronics",
+        "Fashion-Accessories",
+        "General-Merchandise",
+        "Gifts",
+        "Handbags-Luggage",
+        "Health-Beauty",
+        "Holiday-Seasonal",
+        "Home-Furnishing-Housewares",
+        "Jewelry",
+        "Leather",
+        "Made-In-USA",
+        "Novelties",
+        "Party-Items-Greeting-Cards",
+        "Professional-Supplies",
+        "Promotional",
+        "Regional-Ethnic",
+        "Shoes-Footwear",
+        "Smoking-Products",
+        "Sporting-Goods",
+        "Store-Dealer-Supplies",
+        "Sunglasses-Eyewear",
+        "Toys-Hobbies",
+        "Home-Goods-Asian-Sources"
+      ],
+      "enumTitles": [
+        "Amazon FBA Suppliers",
+        "As Seen On TV",
+        "Baby Items",
+        "C-Store Items",
+        "Cell Phone Accessories",
+        "Closeout Suppliers",
+        "Computer Products",
+        "Dollar Store",
+        "DVDs & Videos",
+        "Food & Grocery",
+        "Wholesale Knives & Swords",
+        "Lawn & Garden",
+        "Military Goods",
+        "Wholesale School Supplies",
+        "Perfume",
+        "Pet Supplies",
+        "Religious Items",
+        "Self-Defense, Security",
+        "Souvenirs",
+        "Survival & Emergency Kits",
+        "Wholesale Tools & Hardware",
+        "Vape Products / E-Liquids",
+        "Wholesale Watches",
+        "Wholesale Clothing",
+        "Art & Supplies",
+        "Automotive",
+        "Business Opportunities",
+        "Business Services",
+        "Candles, Oils, Incense",
+        "CBD",
+        "Collectibles",
+        "Crafts & Supplies",
+        "Dropshippers (all niches)",
+        "Wholesale Electronics",
+        "Wholesale Fashion Accessories",
+        "General Merchandise",
+        "Gifts",
+        "Wholesale Handbags",
+        "Wholesale Health & Beauty",
+        "Holiday & Seasonal",
+        "Housewares / Home Decor",
+        "Wholesale Jewelry",
+        "Wholesale Leather",
+        "Made In USA",
+        "Novelties",
+        "Party Supplies & Greeting Cards",
+        "Professional Supplies",
+        "Promotional Products",
+        "Regional & Ethnic",
+        "Wholesale Shoes & Footwear",
+        "Wholesale Smoking Products",
+        "Wholesale Sporting Goods",
+        "Store / Dealer Supplies",
+        "Wholesale Sunglasses",
+        "Wholesale Toys & Games",
+        "Wholesale Home Goods (Asian Sources)"
+      ],
+      "prefill": "Apparel",
+      "title": "Category",
+      "type": "string"
+    },
+    "customCategorySlug": {
+      "description": "Override `category` with any WholesaleCentral.com category slug, e.g. `Mens-Apparel` or `CBD-gummies-edibles`. Find slugs by browsing wholesalecentral.com/category/*.",
+      "editor": "textfield",
+      "title": "Custom category slug (advanced)",
+      "type": "string"
+    },
+    "featuredOnly": {
+      "default": false,
+      "description": "Only include suppliers WholesaleCentral.com badges as a \"Featured\" (premium/paid) listing.",
+      "prefill": false,
+      "title": "Featured listings only",
+      "type": "boolean"
+    },
+    "fetchSupplierDetails": {
+      "default": true,
+      "description": "Visit each supplier's detail page to enrich records with phone, full address, website URL, and social media links. Slower but more complete.",
+      "prefill": false,
+      "title": "Fetch phone/address/website per supplier",
+      "type": "boolean"
+    },
+    "keyword": {
+      "description": "Only include suppliers whose name or description contains this text (case-insensitive). Applies on top of `category` (mode=byCategory).",
+      "editor": "textfield",
+      "title": "Keyword filter",
+      "type": "string"
+    },
+    "maxItems": {
+      "default": 20,
+      "description": "Hard cap on emitted records.",
+      "maximum": 500,
+      "minimum": 1,
+      "prefill": 20,
+      "title": "Max items",
+      "type": "integer"
+    },
+    "maxMinimumOrderUSD": {
+      "description": "Only include suppliers whose minimum order is at most this amount. Suppliers with no disclosed minimum are always included.",
+      "maximum": 100000,
+      "minimum": 0,
+      "title": "Max minimum order (USD)",
+      "type": "integer"
+    },
+    "mode": {
+      "default": "byCategory",
+      "description": "What to fetch.",
+      "editor": "select",
+      "enum": [
+        "byCategory",
+        "search"
+      ],
+      "enumTitles": [
+        "Browse suppliers by category",
+        "Keyword search across all categories"
+      ],
+      "prefill": "byCategory",
+      "title": "Mode",
+      "type": "string"
+    },
+    "proxyConfiguration": {
+      "default": {
+        "useApifyProxy": false
+      },
+      "description": "WholesaleCentral.com's bot-detection challenge is passed automatically by a real headless browser on a direct connection. Apify's shared/AUTO datacenter proxy is observed to be significantly slower and less reliable against this specific site's WAF, so proxy defaults to off; only enable it if you need to spread a very high-volume run across multiple IPs.",
+      "editor": "proxy",
+      "prefill": {
+        "useApifyProxy": false
+      },
+      "title": "Proxy configuration",
+      "type": "object"
+    },
+    "searchQuery": {
+      "default": "bluetooth speakers",
+      "description": "Free-text keyword search (mode=search), e.g. `bluetooth speakers`.",
+      "editor": "textfield",
+      "prefill": "bluetooth speakers",
+      "title": "Search query",
+      "type": "string"
+    },
+    "state": {
+      "description": "Only include suppliers whose listed location contains this text, e.g. `California` or `Texas`.",
+      "editor": "textfield",
+      "title": "Location filter",
+      "type": "string"
+    },
+    "supplierType": {
+      "default": "all",
+      "description": "Restrict results to a supplier taxonomy WholesaleCentral.com distinguishes structurally. `wholesaler`/`manufacturer`/`importer` are not separately tagged by the source, so they browse the category unrestricted (same as `all`).",
+      "editor": "select",
+      "enum": [
+        "all",
+        "wholesaler",
+        "manufacturer",
+        "importer",
+        "dropshipper",
+        "liquidator"
+      ],
+      "enumTitles": [
+        "All supplier types",
+        "Wholesaler (unrestricted)",
+        "Manufacturer (unrestricted)",
+        "Importer (unrestricted)",
+        "Dropshipper (Dropshippers department)",
+        "Liquidator (Closeout Suppliers department)"
+      ],
+      "prefill": "all",
+      "title": "Supplier type",
+      "type": "string"
+    }
+  },
+  "required": [
+    "mode"
+  ],
+  "schemaVersion": 1,
+  "title": "Wholesale Central Supplier Directory Scraper Input",
+  "type": "object"
+}

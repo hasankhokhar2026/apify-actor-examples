@@ -1,0 +1,622 @@
+{
+  "properties": {
+    "authorFlairContains": {
+      "description": "Only keep posts whose author flair contains this text (case-insensitive substring match). Has no effect on comments/communities/users. Leave empty to keep all.",
+      "editor": "textfield",
+      "example": "Moderator",
+      "title": "Author flair contains keyword (subreddit/profile/search modes)",
+      "type": "string"
+    },
+    "authors": {
+      "description": "Only keep posts submitted by one of these usernames (bare name or u/-prefixed, case-insensitive). Has no effect on comments/communities/users or profile mode (already scoped to the given usernames). Leave empty to keep posts from all authors.",
+      "editor": "stringList",
+      "example": [
+        "spez"
+      ],
+      "title": "Only posts by these authors (subreddit & search modes)",
+      "type": "array"
+    },
+    "commentSort": {
+      "default": "confidence",
+      "description": "How to sort comment threads (comments mode).",
+      "enum": [
+        "confidence",
+        "top",
+        "new",
+        "controversial",
+        "old",
+        "qa"
+      ],
+      "enumTitles": [
+        "Best (Confidence)",
+        "Top",
+        "New",
+        "Controversial",
+        "Old",
+        "Q&A"
+      ],
+      "prefill": "confidence",
+      "title": "Sort comments by",
+      "type": "string"
+    },
+    "contentContains": {
+      "description": "Only keep self (text) posts whose body contains this text (case-insensitive substring match). Link/image/video posts have no body text and are excluded when this is set. Has no effect on comments/communities/users. Leave empty to keep all posts.",
+      "editor": "textfield",
+      "example": "tutorial",
+      "title": "Post text contains keyword (subreddit/profile/search modes)",
+      "type": "string"
+    },
+    "discoverListing": {
+      "default": "popular",
+      "description": "Which of Reddit's own curated community listings to walk (discover mode) — no keyword required. 'Popular' mirrors r/popular's trending communities, 'New' is the newest-created public communities, 'Default' is Reddit's default-subscribed set for new accounts.",
+      "editor": "select",
+      "enum": [
+        "popular",
+        "new",
+        "default"
+      ],
+      "enumTitles": [
+        "Popular (trending)",
+        "New (newest communities)",
+        "Default (starter set)"
+      ],
+      "prefill": "popular",
+      "title": "Community listing (discover mode)",
+      "type": "string"
+    },
+    "distinguished": {
+      "description": "Only keep posts distinguished by Reddit as moderator, admin or special (e.g. Reddit-team) posts, or only regular (non-distinguished) posts. Has no effect on comments/communities/users. Leave unset to keep all posts.",
+      "editor": "select",
+      "enum": [
+        "moderator",
+        "admin",
+        "special",
+        "none"
+      ],
+      "enumTitles": [
+        "Moderator posts only",
+        "Admin posts only",
+        "Special (official) posts only",
+        "Regular posts only (exclude all distinguished)"
+      ],
+      "title": "Distinguished (official) posts only (subreddit/profile/search modes)",
+      "type": "string"
+    },
+    "domain": {
+      "description": "Only keep posts whose link domain contains this text (case-insensitive, e.g. 'youtube.com' or 'self.python'). Has no effect on comments/communities/users. Leave empty to keep all domains.",
+      "editor": "textfield",
+      "example": "youtube.com",
+      "title": "Domain contains (subreddit/profile/search modes)",
+      "type": "string"
+    },
+    "excludeArchived": {
+      "default": false,
+      "description": "When enabled, posts that Reddit has archived (locked from further voting/commenting after 6 months) are dropped from the results. Has no effect on comments/communities/users.",
+      "prefill": false,
+      "title": "Exclude archived posts (subreddit/profile/search modes)",
+      "type": "boolean"
+    },
+    "excludeAuthors": {
+      "description": "Drop posts submitted by any of these usernames (bare name or u/-prefixed, case-insensitive) — useful for filtering out bots (e.g. AutoModerator) or known spam accounts. Has no effect on comments/communities/users or profile mode. Leave empty to keep posts from all authors.",
+      "editor": "stringList",
+      "example": [
+        "AutoModerator"
+      ],
+      "title": "Exclude posts by these authors (subreddit & search modes)",
+      "type": "array"
+    },
+    "excludeCrossposts": {
+      "default": false,
+      "description": "When enabled, posts that are crossposts from another subreddit are dropped, keeping only original submissions.",
+      "prefill": false,
+      "title": "Exclude crossposts (subreddit/profile/search modes)",
+      "type": "boolean"
+    },
+    "excludeDeletedAuthor": {
+      "default": false,
+      "description": "When enabled, posts whose author account was deleted (shown as [deleted]/[removed]) are dropped from the results.",
+      "prefill": false,
+      "title": "Exclude posts with a deleted author (subreddit/profile/search modes)",
+      "type": "boolean"
+    },
+    "excludeKeywords": {
+      "description": "Drop posts whose title, self-text body or flair contains any of these keywords or phrases (case-insensitive substring match) — useful for filtering out megathreads, giveaways or spam boilerplate. Has no effect on comments/communities/users. Leave empty to keep all posts.",
+      "editor": "stringList",
+      "example": [
+        "megathread"
+      ],
+      "title": "Exclude keywords (subreddit/profile/search modes)",
+      "type": "array"
+    },
+    "excludeLocked": {
+      "default": false,
+      "description": "When enabled, posts with comments locked by a moderator are dropped from the results.",
+      "prefill": false,
+      "title": "Exclude locked posts (subreddit/profile/search modes)",
+      "type": "boolean"
+    },
+    "excludeRemoved": {
+      "default": false,
+      "description": "When enabled, posts removed by a moderator, Reddit, or deleted by their author (marker: removed_by_category) are dropped from the results.",
+      "prefill": false,
+      "title": "Exclude removed/deleted posts (subreddit/profile/search modes)",
+      "type": "boolean"
+    },
+    "excludeSpoilers": {
+      "default": false,
+      "description": "When enabled, posts marked as a spoiler by their author are dropped from the results.",
+      "prefill": false,
+      "title": "Exclude spoiler-tagged posts (subreddit/profile/search modes)",
+      "type": "boolean"
+    },
+    "excludeStickied": {
+      "default": false,
+      "description": "When enabled, posts pinned/stickied in their community are dropped from the results.",
+      "prefill": false,
+      "title": "Exclude stickied/pinned posts (subreddit/profile/search modes)",
+      "type": "boolean"
+    },
+    "flairContains": {
+      "description": "Only keep posts whose link flair contains this text (case-insensitive substring match). Has no effect on comments/communities/users. Leave empty to keep all flairs.",
+      "editor": "textfield",
+      "example": "Discussion",
+      "title": "Flair contains keyword (subreddit/profile/search modes)",
+      "type": "string"
+    },
+    "fullSubreddit": {
+      "default": false,
+      "description": "Walk 'New' posts as deep as Reddit allows (~1,000 per listing) instead of the first pages.",
+      "prefill": false,
+      "title": "Full subreddit mode (subreddit mode)",
+      "type": "boolean"
+    },
+    "includeModeratedSubreddits": {
+      "default": false,
+      "description": "Also fetch the list of communities the user moderates (subreddit name, subscribers, type, mod permissions) and attach it to the user_profile record. Omitted when the user moderates nothing.",
+      "prefill": false,
+      "title": "Include moderated subreddits (profile mode)",
+      "type": "boolean"
+    },
+    "includeNSFW": {
+      "default": false,
+      "description": "Include NSFW posts (or NSFW communities in discover mode) in results.",
+      "prefill": false,
+      "title": "Include NSFW (18+) content",
+      "type": "boolean"
+    },
+    "includePost": {
+      "default": true,
+      "description": "Emit the parent post record before each thread's comments.",
+      "prefill": true,
+      "title": "Include parent post (comments mode)",
+      "type": "boolean"
+    },
+    "includeProfileInfo": {
+      "default": true,
+      "description": "Emit a user_profile record with karma breakdown, premium, verified email, moderator flags, account age.",
+      "prefill": true,
+      "title": "Include profile info record (profile mode)",
+      "type": "boolean"
+    },
+    "includeSubredditInfo": {
+      "default": false,
+      "description": "Emit one 'community' record per subreddit (subscribers, description, rules-related flags, banner/icon, NSFW status, etc.) before its posts.",
+      "prefill": false,
+      "title": "Include community info record (subreddit mode)",
+      "type": "boolean"
+    },
+    "includeSubredditRules": {
+      "default": false,
+      "description": "Also fetch each subreddit's posting rules (name, description, violation reason, priority) and attach them to the community record. Only takes effect when 'Include community info record' is also on; omitted when the subreddit has no rules.",
+      "prefill": false,
+      "title": "Include subreddit rules (subreddit mode)",
+      "type": "boolean"
+    },
+    "includeTrophies": {
+      "default": false,
+      "description": "Also fetch the user's trophy case (names + icon URLs) from their profile page.",
+      "prefill": false,
+      "title": "Include trophies (profile mode)",
+      "type": "boolean"
+    },
+    "keyword": {
+      "description": "Only keep a user's posts/comments whose title, self-text or comment body contains this text (case-insensitive substring match). Leave empty to disable.",
+      "editor": "textfield",
+      "example": "climate",
+      "title": "Keyword filter (profile mode)",
+      "type": "string"
+    },
+    "keywords": {
+      "description": "Keywords to search for. Advanced syntax supported: \"exact phrase\", python AND rust, -exclude, author:name, flair:tag, subreddit:name, site:domain.",
+      "editor": "stringList",
+      "example": [
+        "machine learning"
+      ],
+      "prefill": [],
+      "title": "Keywords (search mode)",
+      "type": "array"
+    },
+    "maxComments": {
+      "default": 100,
+      "description": "Maximum comments per post (comments mode), per keyword (search mode), or per user's comment history (profile mode, 'comments'/'overview' sections — capped independently from maxPosts).",
+      "maximum": 100000,
+      "minimum": 0,
+      "prefill": 100,
+      "title": "Maximum comments",
+      "type": "integer"
+    },
+    "maxCommunities": {
+      "default": 10,
+      "description": "Maximum subreddits returned per keyword (search mode), or maximum communities returned overall (discover mode).",
+      "maximum": 1000,
+      "minimum": 0,
+      "prefill": 10,
+      "title": "Maximum communities per keyword (search mode) / total (discover mode)",
+      "type": "integer"
+    },
+    "maxCommunitySubscribers": {
+      "description": "Only keep communities (subreddits) with at most this many subscribers. Useful for finding small/niche communities. Applies when 'Search communities' is enabled (search mode) or always (discover mode). Leave unset to keep all sizes.",
+      "example": 1000000,
+      "maximum": 1000000000,
+      "minimum": 0,
+      "title": "Maximum community subscribers (search / discover modes)",
+      "type": "integer"
+    },
+    "maxContentLength": {
+      "description": "Only keep self (text) posts whose body is at most this many characters long. Has no effect on comments/communities/users. Leave unset to keep all lengths.",
+      "example": 5000,
+      "maximum": 1000000,
+      "minimum": 0,
+      "title": "Maximum post body length (characters) (subreddit/profile/search modes)",
+      "type": "integer"
+    },
+    "maxItems": {
+      "default": 100000,
+      "description": "Global safety cap on the total number of records pushed across the whole run (all modes and all inputs).",
+      "maximum": 1000000,
+      "minimum": 1,
+      "prefill": 100000,
+      "title": "Maximum total records",
+      "type": "integer"
+    },
+    "maxPostComments": {
+      "description": "Only keep posts that have at most this many comments. Useful for finding under-discussed posts. Has no effect on comments/communities/users.",
+      "example": 500,
+      "maximum": 1000000,
+      "minimum": 0,
+      "title": "Maximum comments on the post (subreddit/profile/search modes)",
+      "type": "integer"
+    },
+    "maxPosts": {
+      "default": 25,
+      "description": "Maximum posts per subreddit / user / keyword. In profile mode this caps the 'posts'/'overview' sections' post count only — see maxComments for the comment count cap.",
+      "maximum": 5000,
+      "minimum": 1,
+      "prefill": 25,
+      "title": "Maximum posts",
+      "type": "integer"
+    },
+    "maxScore": {
+      "description": "Only keep posts/comments with a score (upvotes minus downvotes) at or below this value. Useful for finding overlooked/low-visibility items. Leave unset to keep all scores.",
+      "example": 1000,
+      "maximum": 1000000,
+      "minimum": -1000000,
+      "title": "Maximum score (subreddit/comments/profile/search modes)",
+      "type": "integer"
+    },
+    "maxUserKarma": {
+      "description": "Only keep Reddit accounts with at most this much total karma. Useful for finding newer/low-karma accounts. Applies when 'Search users' is enabled; ignored otherwise. Leave unset to keep all accounts.",
+      "example": 100000,
+      "maximum": 1000000000,
+      "minimum": 0,
+      "title": "Maximum total karma (search mode)",
+      "type": "integer"
+    },
+    "maxUsers": {
+      "default": 25,
+      "description": "Maximum Reddit accounts returned per keyword. Reddit serves at most ~100 accounts per query regardless of this cap.",
+      "maximum": 100,
+      "minimum": 0,
+      "prefill": 25,
+      "title": "Maximum users per keyword (search mode)",
+      "type": "integer"
+    },
+    "minAwards": {
+      "description": "Only keep posts with at least this many total awards. Has no effect on comments/communities/users. Leave unset to keep all posts.",
+      "example": 1,
+      "maximum": 1000000,
+      "minimum": 0,
+      "title": "Minimum awards received (subreddit/profile/search modes)",
+      "type": "integer"
+    },
+    "minCommunitySubscribers": {
+      "description": "Only keep communities (subreddits) with at least this many subscribers. Applies when 'Search communities' is enabled (search mode) or always (discover mode). Leave unset to keep all sizes.",
+      "example": 1000,
+      "maximum": 1000000000,
+      "minimum": 0,
+      "title": "Minimum community subscribers (search / discover modes)",
+      "type": "integer"
+    },
+    "minContentLength": {
+      "description": "Only keep self (text) posts whose body is at least this many characters long. Link/image/video posts have no body and are excluded when this is set. Has no effect on comments/communities/users. Leave unset to keep all lengths.",
+      "example": 100,
+      "maximum": 1000000,
+      "minimum": 0,
+      "title": "Minimum post body length (characters) (subreddit/profile/search modes)",
+      "type": "integer"
+    },
+    "minPostComments": {
+      "description": "Only keep posts that have at least this many comments (the post's own comment count — not to be confused with 'Maximum comments' above, which caps how many comment records are scraped in comments/search mode). Has no effect on comments/communities/users.",
+      "example": 5,
+      "maximum": 1000000,
+      "minimum": 0,
+      "title": "Minimum comments on the post (subreddit/profile/search modes)",
+      "type": "integer"
+    },
+    "minScore": {
+      "description": "Only keep posts/comments with a score (upvotes minus downvotes) at or above this value. Leave unset to keep all scores.",
+      "example": 10,
+      "maximum": 1000000,
+      "minimum": -1000000,
+      "title": "Minimum score (subreddit/comments/profile/search modes)",
+      "type": "integer"
+    },
+    "minUpvoteRatio": {
+      "description": "Only keep posts whose upvote ratio (fraction of votes that are upvotes, 0-1) is at or above this value. Useful for filtering out controversial/divisive posts. Has no effect on comments/communities/users.",
+      "example": 0.8,
+      "maximum": 1,
+      "minimum": 0,
+      "title": "Minimum upvote ratio (subreddit/profile/search modes)",
+      "type": "number"
+    },
+    "minUserKarma": {
+      "description": "Only keep Reddit accounts with at least this much total karma. Applies when 'Search users' is enabled; ignored otherwise. Leave unset to keep all accounts.",
+      "example": 1000,
+      "maximum": 1000000000,
+      "minimum": 0,
+      "title": "Minimum total karma (search mode)",
+      "type": "integer"
+    },
+    "mode": {
+      "default": "subreddit",
+      "description": "Choose which Reddit data to scrape: subreddit posts, post comment threads, user profiles, keyword search, or curated community discovery (no keyword needed).",
+      "enum": [
+        "subreddit",
+        "comments",
+        "profile",
+        "search",
+        "discover"
+      ],
+      "enumTitles": [
+        "Subreddit posts",
+        "Comments",
+        "Profile",
+        "Search",
+        "Discover communities"
+      ],
+      "prefill": "subreddit",
+      "title": "Scraping Mode",
+      "type": "string"
+    },
+    "onlyOriginalContent": {
+      "default": false,
+      "description": "When enabled, only posts the author tagged as original content are kept. Has no effect on comments/communities/users.",
+      "prefill": false,
+      "title": "Only original content (OC) posts (subreddit/profile/search modes)",
+      "type": "boolean"
+    },
+    "onlyWithFlair": {
+      "default": false,
+      "description": "Drop posts without a flair tag. Has no effect on comments, search mode or communities.",
+      "prefill": false,
+      "title": "Only posts that have a flair (subreddit mode, profile mode)",
+      "type": "boolean"
+    },
+    "postType": {
+      "description": "Keep only posts of the selected content type. Leave unset to keep all types. Has no effect on comments/communities/users.",
+      "editor": "select",
+      "enum": [
+        "self",
+        "link",
+        "image",
+        "video",
+        "gallery",
+        "poll"
+      ],
+      "enumTitles": [
+        "Text (self post)",
+        "Link",
+        "Image",
+        "Video",
+        "Gallery",
+        "Poll"
+      ],
+      "title": "Only posts of this type (subreddit/profile/search modes)",
+      "type": "string"
+    },
+    "postUrls": {
+      "description": "List of Reddit post URLs (or comment URLs / post IDs) to scrape comment threads from.",
+      "editor": "stringList",
+      "example": [
+        "https://www.reddit.com/r/programming/comments/1vqukkf/"
+      ],
+      "prefill": [],
+      "title": "Post URLs (comments mode)",
+      "type": "array"
+    },
+    "postedAfter": {
+      "description": "Only keep posts/comments created on or after this date (UTC).",
+      "editor": "datepicker",
+      "example": "2025-01-01",
+      "title": "Created on or after (YYYY-MM-DD)",
+      "type": "string"
+    },
+    "postedBefore": {
+      "description": "Only keep posts/comments created on or before this date (UTC).",
+      "editor": "datepicker",
+      "example": "2025-12-31",
+      "title": "Created on or before (YYYY-MM-DD)",
+      "type": "string"
+    },
+    "restrictSubreddits": {
+      "description": "Only keep a user's posts/comments made in these subreddits (case-insensitive). Accepts bare names (python), r/ prefixed (r/python), or subreddit URLs. Leave empty to include every subreddit in the user's history.",
+      "editor": "stringList",
+      "example": [
+        "AskReddit",
+        "r/technology"
+      ],
+      "title": "Restrict to subreddits (profile mode)",
+      "type": "array"
+    },
+    "searchComments": {
+      "default": false,
+      "description": "Include comments in keyword search results.",
+      "prefill": false,
+      "title": "Search comments (search mode)",
+      "type": "boolean"
+    },
+    "searchCommunities": {
+      "default": false,
+      "description": "Include subreddits in keyword search results.",
+      "prefill": false,
+      "title": "Search communities (search mode)",
+      "type": "boolean"
+    },
+    "searchPosts": {
+      "default": true,
+      "description": "Include posts in keyword search results.",
+      "prefill": true,
+      "title": "Search posts (search mode)",
+      "type": "boolean"
+    },
+    "searchUsers": {
+      "default": false,
+      "description": "Include Reddit accounts whose username matches the keyword (user discovery). Reddit's account search always searches globally (subreddit scoping doesn't apply) and returns a single page of up to 100 accounts per keyword.",
+      "prefill": false,
+      "title": "Search users (search mode)",
+      "type": "boolean"
+    },
+    "sections": {
+      "default": [
+        "posts"
+      ],
+      "description": "Which history sections to scrape (profile mode). 'Overview' returns the combined posts + comments feed.",
+      "editor": "select",
+      "example": [
+        "posts",
+        "comments"
+      ],
+      "items": {
+        "enum": [
+          "overview",
+          "posts",
+          "comments"
+        ],
+        "enumTitles": [
+          "Overview (posts + comments)",
+          "Posts",
+          "Comments"
+        ],
+        "type": "string"
+      },
+      "prefill": [
+        "posts"
+      ],
+      "title": "Profile sections (profile mode)",
+      "type": "array"
+    },
+    "sort": {
+      "default": "hot",
+      "description": "How to sort posts (subreddit mode), search results (search mode), or a user's post/comment history (profile mode — 'rising'/'best' fall back to 'new' for profile mode since Reddit's user listing doesn't support them).",
+      "enum": [
+        "relevance",
+        "hot",
+        "new",
+        "top",
+        "rising",
+        "controversial",
+        "best",
+        "comments"
+      ],
+      "enumTitles": [
+        "Relevance",
+        "Hot",
+        "New",
+        "Top",
+        "Rising",
+        "Controversial",
+        "Best",
+        "Comment count"
+      ],
+      "prefill": "hot",
+      "title": "Sort posts by",
+      "type": "string"
+    },
+    "subreddits": {
+      "description": "List of subreddits to scrape. Accepts names (python), r/ names or full URLs.",
+      "editor": "stringList",
+      "example": [
+        "python",
+        "r/programming"
+      ],
+      "prefill": [
+        "python"
+      ],
+      "title": "Subreddits (subreddit mode)",
+      "type": "array"
+    },
+    "timeFilter": {
+      "default": "day",
+      "description": "Time range for 'top'/'controversial' sort (subreddit mode, profile mode) or search results (search mode).",
+      "enum": [
+        "hour",
+        "day",
+        "week",
+        "month",
+        "year",
+        "all"
+      ],
+      "enumTitles": [
+        "Past Hour",
+        "Past Day",
+        "Past Week",
+        "Past Month",
+        "Past Year",
+        "All Time"
+      ],
+      "prefill": "day",
+      "title": "Time filter",
+      "type": "string"
+    },
+    "titleContains": {
+      "description": "Only keep posts whose title contains this text (case-insensitive substring match). Has no effect on comments/communities/users. Leave empty to keep all titles.",
+      "editor": "textfield",
+      "example": "launch",
+      "title": "Title contains keyword (subreddit/profile/search modes)",
+      "type": "string"
+    },
+    "usernames": {
+      "description": "List of Reddit usernames to scrape (names, u/ names or profile URLs).",
+      "editor": "stringList",
+      "example": [
+        "spez"
+      ],
+      "prefill": [],
+      "title": "Usernames (profile mode)",
+      "type": "array"
+    },
+    "withinCommunity": {
+      "description": "Restrict the keyword search to a single subreddit (name, r/name or URL). Applies to post and comment search only — Reddit's own search API does not support scoping community (subreddit) or user results to a single subreddit, so 'Search communities' and 'Search users' always search globally regardless of this field.",
+      "editor": "textfield",
+      "example": "r/technology",
+      "title": "Limit search to ONE community (search mode)",
+      "type": "string"
+    }
+  },
+  "required": [
+    "mode"
+  ],
+  "schemaVersion": 1,
+  "title": "Reddit MCP Scraper Input",
+  "type": "object"
+}

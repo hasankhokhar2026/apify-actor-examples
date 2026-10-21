@@ -1,0 +1,240 @@
+{
+  "actorSpecification": 1,
+  "fields": {
+    "properties": {
+      "applyCount": {
+        "description": "How many applied",
+        "nullable": true,
+        "type": "integer"
+      },
+      "companyId": {
+        "description": "Naukri company ID",
+        "nullable": true,
+        "type": "string"
+      },
+      "companyName": {
+        "description": "Company name",
+        "type": "string"
+      },
+      "companyRating": {
+        "description": "AmbitionBox aggregate rating (out of 5)",
+        "nullable": true,
+        "type": "number"
+      },
+      "companyReviewCount": {
+        "description": "Number of AmbitionBox reviews",
+        "nullable": true,
+        "type": "integer"
+      },
+      "description": {
+        "description": "Short job description snippet",
+        "nullable": true,
+        "type": "string"
+      },
+      "experience": {
+        "description": "Required experience range",
+        "nullable": true,
+        "type": "string"
+      },
+      "id": {
+        "description": "Naukri job ID",
+        "type": "string"
+      },
+      "industry": {
+        "description": "Industry",
+        "nullable": true,
+        "type": "string"
+      },
+      "jobTypeFlags": {
+        "description": "Job type flags (premium, easy_apply, walk_in)",
+        "nullable": true,
+        "type": "array"
+      },
+      "location": {
+        "description": "Job location (city, possibly multiple)",
+        "nullable": true,
+        "type": "string"
+      },
+      "logoUrl": {
+        "description": "Company logo image URL",
+        "nullable": true,
+        "type": "string"
+      },
+      "postedAt": {
+        "description": "When the job was posted (UTC ISO timestamp)",
+        "nullable": true,
+        "type": "string"
+      },
+      "postedDate": {
+        "description": "When the job was posted (as displayed, e.g. '2 days ago')",
+        "nullable": true,
+        "type": "string"
+      },
+      "recruiterName": {
+        "description": "Recruiter name",
+        "nullable": true,
+        "type": "string"
+      },
+      "role": {
+        "description": "Job role category",
+        "nullable": true,
+        "type": "string"
+      },
+      "salary": {
+        "description": "Salary range as displayed",
+        "nullable": true,
+        "type": "string"
+      },
+      "scrapedAt": {
+        "description": "UTC timestamp when scraped",
+        "type": "string"
+      },
+      "skills": {
+        "description": "Skill tags",
+        "nullable": true,
+        "type": "array"
+      },
+      "title": {
+        "description": "Job title",
+        "type": "string"
+      },
+      "url": {
+        "description": "Full Naukri job listing URL",
+        "type": "string"
+      },
+      "vacancies": {
+        "description": "Number of vacancies",
+        "nullable": true,
+        "type": "integer"
+      }
+    },
+    "type": "object"
+  },
+  "title": "Naukri Jobs",
+  "views": {
+    "detailed": {
+      "display": {
+        "component": "table",
+        "properties": {
+          "companyName": {
+            "format": "text",
+            "label": "Company"
+          },
+          "companyRating": {
+            "format": "number",
+            "label": "Rating"
+          },
+          "companyReviewCount": {
+            "format": "number",
+            "label": "Reviews"
+          },
+          "description": {
+            "format": "text",
+            "label": "Description"
+          },
+          "experience": {
+            "format": "text",
+            "label": "Experience"
+          },
+          "industry": {
+            "format": "text",
+            "label": "Industry"
+          },
+          "location": {
+            "format": "text",
+            "label": "Location"
+          },
+          "postedDate": {
+            "format": "text",
+            "label": "Posted"
+          },
+          "role": {
+            "format": "text",
+            "label": "Role"
+          },
+          "salary": {
+            "format": "text",
+            "label": "Salary"
+          },
+          "skills": {
+            "format": "array",
+            "label": "Skills"
+          },
+          "title": {
+            "format": "text",
+            "label": "Title"
+          },
+          "url": {
+            "format": "link",
+            "label": "Listing"
+          }
+        }
+      },
+      "title": "Detailed",
+      "transformation": {
+        "fields": [
+          "title",
+          "companyName",
+          "companyRating",
+          "companyReviewCount",
+          "location",
+          "experience",
+          "salary",
+          "skills",
+          "industry",
+          "role",
+          "postedDate",
+          "description",
+          "url"
+        ]
+      }
+    },
+    "overview": {
+      "display": {
+        "component": "table",
+        "properties": {
+          "companyName": {
+            "format": "text",
+            "label": "Company"
+          },
+          "experience": {
+            "format": "text",
+            "label": "Experience"
+          },
+          "location": {
+            "format": "text",
+            "label": "Location"
+          },
+          "postedDate": {
+            "format": "text",
+            "label": "Posted"
+          },
+          "salary": {
+            "format": "text",
+            "label": "Salary"
+          },
+          "title": {
+            "format": "text",
+            "label": "Title"
+          },
+          "url": {
+            "format": "link",
+            "label": "Listing"
+          }
+        }
+      },
+      "title": "Overview",
+      "transformation": {
+        "fields": [
+          "title",
+          "companyName",
+          "location",
+          "experience",
+          "salary",
+          "postedDate",
+          "url"
+        ]
+      }
+    }
+  }
+}

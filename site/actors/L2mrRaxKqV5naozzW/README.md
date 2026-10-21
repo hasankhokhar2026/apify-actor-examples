@@ -1,0 +1,136 @@
+# M.Video Russia Electronics Product & Review Scraper
+
+M.Video (mvideo.ru) is one of Russia's largest electronics and appliance retailers. This actor searches its catalog by keyword, browses any of its top-level categories with server-side filters, or pulls full product detail — including customer reviews — for a specific list of products.
+
+## What this actor does
+
+- **Three modes:** `search`, `byCategory`, `productDetails`
+- **89 curated categories** — TVs, smartphones, laptops, kitchen appliances, and more, plus a free-text override for any sub-category
+- **Price, rating and in-stock filters** — plus brand and seller filters for `byCategory`
+- **Full specifications** — flattened spec tables (screen size, resolution, capacity, etc.) for products in `search`/`productDetails` mode, whenever the product page lists them
+- **Customer reviews** — up to 20 of the most helpful reviews per product (text, pros/cons, recommendation, star rating breakdown, % who recommend), in `search`/`productDetails` mode when `maxReviews` is above 0
+- **Similar products** — alternate SKUs in the same model line (e.g. other screen sizes/colors of the same TV), with a productUrl and a description of how each differs
+- **Seller info** — legal entity name, brand/marketing name, INN, OGRN, phone, address
+- **Category breadcrumb trail** — both plain names and `{name, categoryId}` objects (the `categoryId` is directly usable as `categoryUrl` input)
+- **Empty fields are omitted**
+
+## Output: per-product listing (mode = `byCategory`)
+
+- `productId`, `name`
+- `productUrl` / `sourceUrl`
+- `categoryId`, `categoryName`
+- `salePrice`, `basePrice`, `discountPercent`, `currency` (RUB), `bonusAmount`
+- `badgeText` — promotional badge label mvideo.ru attaches to the listing (e.g. a discount-campaign name), when present
+- `ratingStar`, `ratingCount`
+- `availabilityStatus` — mvideo.ru's own stock-status code for the listing
+- `inStock`, `isNew`, `isPreorder`, `isLastChance`
+- `imageUrl`, `imageUrls[]`
+- `recordType: "product"`, `scrapedAt`
+
+## Output: full product details (mode = `search` / `productDetails`)
+
+- `productId`, `name`, `modelName`, `brandName`, `brandId`
+- `productUrl` / `sourceUrl`
+- `categoryId`, `categoryName`, `breadcrumbs[]`, `breadcrumbPath[]` (`{name, categoryId}`)
+- `salePrice`, `basePrice`, `discountPercent`, `currency` (RUB), `bonusAmount`
+- `ratingStar`, `ratingCount`
+- `ratingBreakdown` (`{"1": count, ..., "5": count}`), `recommendPercent` and `reviews[]` (`{reviewId, author, score, text, benefits, drawbacks, recommended, likes, dislikes, date, photoCount}`) — only when `maxReviews` is above 0
+- `inStock`, `storeOnly`, `isPreorder`
+- `imageUrl`, `imageUrls[]`
+- `description`, `specifications[]` (`{name, value}` pairs)
+- `similarProducts[]` (`{productId, productUrl, differences[]}`) — alternate SKUs in the same model line
+- `weightKg`
+- `sellerId`, `sellerName`, `sellerLegalName`, `sellerInn`, `sellerOgrn`, `sellerPhone`, `sellerAddress`
+- `recordType: "product"`, `scrapedAt`
+
+## Input
+
+| Field | Type | Default | Description |
+|---|---|---|---|
+| `mode` | string | `search` | `search` / `byCategory` / `productDetails` |
+| `searchQuery` | string | `телевизор` | Free-text query (mode=search) |
+| `category` | string (select) | `""` | One of 89 top-level categories (mode=byCategory) |
+| `categoryUrl` | string | – | Custom category URL/ID, overrides `category` |
+| `productUrls` | array | `[]` | Product URLs or numeric IDs (mode=productDetails) |
+| `sortOrder` | string | `popularity` | `popularity` / `priceAsc` / `priceDesc` (mode=byCategory) |
+| `brands` | array | `[]` | Only these brands (mode=byCategory) — lowercase filter slug, e.g. `samsung`, `lg` |
+| `sellers` | array | `[]` | Only these marketplace sellers (mode=byCategory) — lowercase filter slug, e.g. `mvideo`, `mediamarkt` |
+| `minPrice` / `maxPrice` | integer | – | Sale-price range filter in RUB. In `byCategory` the site applies it to the listing; in other modes fetched products are checked, and products without a price are kept |
+| `minRating` | number | – | Minimum customer rating (0-5); unrated products are dropped when set |
+| `inStockOnly` | boolean | `false` | Only emit in-stock products |
+| `maxItems` | integer | `10` | Hard cap on emitted records (1-2000; `mode=search` caps at ~10 regardless — see FAQ) |
+| `maxReviews` | integer | `5` | Most-helpful customer reviews to attach per product (0-20; `search`/`productDetails` only; `0` skips fetching reviews) |
+| `proxyConfiguration` | object | `{"useApifyProxy": true}` | Apify Proxy — see FAQ ("Do I need to provide a proxy?") |
+
+### Example: search
+
+```json
+{ "mode": "search", "searchQuery": "ноутбук", "maxItems": 10 }
+```
+
+### Example: browse a category, cheapest first, in stock only
+
+```json
+{
+  "mode": "byCategory",
+  "category": "1",
+  "sortOrder": "priceAsc",
+  "inStockOnly": true,
+  "maxItems": 50
+}
+```
+
+### Example: browse a category filtered by brand, seller, and price range (server-side)
+
+```json
+{
+  "mode": "byCategory",
+  "categoryUrl": "https://www.mvideo.ru/televizory-i-cifrovoe-tv-1/televizory-65",
+  "brands": ["samsung", "lg"],
+  "sellers": ["mvideo"],
+  "minPrice": 20000,
+  "maxPrice": 60000,
+  "maxItems": 50
+}
+```
+
+### Example: full details for specific products
+
+```json
+{
+  "mode": "productDetails",
+  "productUrls": [
+    "https://www.mvideo.ru/products/televizor-general-electronics-ge55lqs2-401211841",
+    "401211839"
+  ]
+}
+```
+
+## Use cases
+
+- **Price monitoring** — track prices/discounts across a category over time
+- **Market research** — compare brand assortment and pricing in Russian electronics retail
+- **Product catalog enrichment** — pull specifications and images for a known list of products
+- **Competitive intelligence** — monitor seller/stock status for specific SKUs
+- **Review analysis** — pull actual customer review text, pros/cons, and star-rating distribution for sentiment analysis
+- **Cross-sell / assortment mapping** — discover sibling SKUs (other sizes/colors) via `similarProducts`
+
+## FAQ
+
+**Do I need to provide a proxy?** No — `proxyConfiguration` defaults to Apify Proxy's automatic datacenter selection. If mvideo.ru blocks every attempt made that way, the actor switches to a Russian residential proxy on its own, regardless of this setting.
+
+**Why do some products have fewer fields than others?** Fields are only included when mvideo.ru actually returns a value for that product (e.g. not every product has a customer rating yet, or a discount).
+
+**What currency are prices in?** Russian rubles (RUB) — mvideo.ru only sells in the Russian market.
+
+**How do I find the right value for `brands`/`sellers`?** These map to mvideo.ru's own category filters. For brand/seller names written in Latin script — the vast majority (Samsung, LG, Sony, Xiaomi, MediaMarkt, etc.) — just use the lowercase name with spaces replaced by hyphens; the actor normalizes this for you. If a value doesn't narrow results as expected, open the category page on mvideo.ru in a browser, expand the "Бренд" (Brand) or "Продавец" (Seller) filter, and use the exact slug shown there. Cyrillic brand/seller names (e.g. `Самсунг`) are **not** auto-translated to their Latin slug — if none of your `brands`/`sellers` values resolve to a usable slug, that filter is skipped entirely (a warning is logged) rather than the run returning zero results, so always use the Latin slug.
+
+**What sort order does `priceAsc`/`priceDesc` guarantee?** The actor asks mvideo.ru for its own price ordering and keeps results in the order the site returns them, without re-sorting. The site's ordering may not be perfectly monotonic by price, so expect the occasional out-of-order listing.
+
+**Can I get more than 10 results from `mode=search`?** No — `search` takes at most the first 10 products mvideo.ru suggests for the query, and the price/rating/stock filters can reduce that further. For broad discovery, find the product's category via one search, then switch to `mode=byCategory` with that category for full pagination.
+
+**How fresh is the data?** Real-time — every run fetches current prices, stock status, and ratings directly from mvideo.ru.
+
+**What if nothing is found or the site blocks the run?** The dataset stays empty and the run's status message explains why (no matches, no products passing your filters, or the site blocking every attempt). No placeholder records are written.
+
+**Is this actor affiliated with mvideo.ru?** No — this is an independent, third-party actor that reads mvideo.ru's own publicly reachable product data. It is not affiliated with, endorsed by, or operated by M.Video.

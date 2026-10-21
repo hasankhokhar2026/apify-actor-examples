@@ -1,0 +1,60 @@
+{
+  "description": "Scrape TikTok hashtag metadata and/or posts. Metadata mode is always reliable. Posts mode may be blocked by TikTok; auto mode tries posts then falls back gracefully.",
+  "properties": {
+    "hashtags": {
+      "description": "List of TikTok hashtags to scrape. You can include or omit the # symbol. Example: comedy, #dance, fyp",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "prefill": [
+        "fyp"
+      ],
+      "title": "Hashtags",
+      "type": "array"
+    },
+    "includeHashtagMetadata": {
+      "default": true,
+      "description": "When scraping posts, also emit a 'hashtag_metadata' record with the challenge stats (videoCount, viewCount, description, etc.) at the start of each hashtag's results.",
+      "prefill": true,
+      "title": "Include Hashtag Metadata",
+      "type": "boolean"
+    },
+    "maxPostsPerHashtag": {
+      "default": 50,
+      "description": "Maximum number of posts to scrape per hashtag (when mode includes posts). Set to 0 to skip posts entirely (equivalent to metadata-only mode). Has no effect in metadata-only mode.",
+      "maximum": 500,
+      "minimum": 0,
+      "prefill": 5,
+      "title": "Max Posts Per Hashtag",
+      "type": "integer"
+    },
+    "mode": {
+      "default": "auto",
+      "description": "What to scrape per hashtag. 'metadata' emits one stats record per hashtag (always works). 'posts' fetches videos (may be blocked). 'topPosts' tries a search fallback. 'auto' tries posts, falls back to topPosts, then metadata-only.",
+      "editor": "select",
+      "enum": [
+        "auto",
+        "metadata",
+        "posts",
+        "topPosts"
+      ],
+      "enumTitles": [
+        "Auto (posts → topPosts → metadata fallback)",
+        "Metadata only (hashtag stats, always reliable)",
+        "Posts (videos — may be blocked by TikTok)",
+        "Top Posts (search-based fallback, best-effort)"
+      ],
+      "prefill": "metadata",
+      "title": "Scrape Mode",
+      "type": "string"
+    }
+  },
+  "required": [
+    "hashtags"
+  ],
+  "schemaVersion": 1,
+  "title": "TikTok Hashtag Scraper Input",
+  "type": "object"
+}

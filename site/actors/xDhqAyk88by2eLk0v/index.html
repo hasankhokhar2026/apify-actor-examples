@@ -1,0 +1,770 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src &#x27;self&#x27;; script-src &#x27;self&#x27; &#x27;sha256-J1SioVjOLx8+MtXqK9YY8M+4alZHDB3lrb27Hizaswc=&#x27;; style-src &#x27;self&#x27;; img-src &#x27;self&#x27; https: data:; base-uri &#x27;self&#x27;; form-action &#x27;self&#x27;; object-src &#x27;none&#x27;"><title>Facebook Timeline Posts &amp; Reel Transcript Extractor | Nimbryxo Studio</title><meta name="description" content="Pull recent posts and Reels from a public Facebook Page or Profile, or fetch one post by its link, with text, reaction breakdown, comments, media, and real auto-generated video cap"><meta name="robots" content="index,follow"><link rel="canonical" href="https://hasankhokhar2026.github.io/apify-actor-examples/actors/xDhqAyk88by2eLk0v/"><meta property="og:title" content="Facebook Timeline Posts &amp; Reel Transcript Extractor | Nimbryxo Studio"><meta property="og:description" content="Pull recent posts and Reels from a public Facebook Page or Profile, or fetch one post by its link, with text, reaction breakdown, comments, media, and real auto-generated video cap"><meta property="og:type" content="website"><meta property="og:url" content="https://hasankhokhar2026.github.io/apify-actor-examples/actors/xDhqAyk88by2eLk0v/"><meta property="og:site_name" content="Nimbryxo Studio"><meta name="twitter:card" content="summary"><link rel="icon" href="/apify-actor-examples/assets/mark.svg?v=2d20f9dc334a" type="image/svg+xml"><link rel="stylesheet" href="/apify-actor-examples/assets/site.css?v=39545fd4a399"><link rel="stylesheet" href="/apify-actor-examples/assets/brand.css?v=eb0f935ade25"><link rel="alternate" type="application/rss+xml" title="Nimbryxo Studio guides" href="/apify-actor-examples/feed.xml"><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization","name":"Nimbryxo Studio","url":"https://hasankhokhar2026.github.io/apify-actor-examples/","sameAs":["https://apify.com/nimbryxo-studio"]},{"@type":"WebSite","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#website","name":"Nimbryxo Studio","url":"https://hasankhokhar2026.github.io/apify-actor-examples/","publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"inLanguage":"en"},{"@type":"WebPage","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/xDhqAyk88by2eLk0v/#webpage","name":"Facebook Timeline Posts & Reel Transcript Extractor","description":"Pull recent posts and Reels from a public Facebook Page or Profile, or fetch one post by its link, with text, reaction breakdown, comments, media, and real auto-generated video captions. No login or cookies required.","url":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/xDhqAyk88by2eLk0v/","isPartOf":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#website"},"publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"inLanguage":"en","mainEntity":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/xDhqAyk88by2eLk0v/#article"},"breadcrumb":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/xDhqAyk88by2eLk0v/#breadcrumb"}},{"@type":"TechArticle","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/xDhqAyk88by2eLk0v/#article","headline":"Facebook Timeline Posts & Reel Transcript Extractor","name":"Facebook Timeline Posts & Reel Transcript Extractor","description":"Pull recent posts and Reels from a public Facebook Page or Profile, or fetch one post by its link, with text, reaction breakdown, comments, media, and real auto-generated video captions. No login or cookies required.","url":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/xDhqAyk88by2eLk0v/","author":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"mainEntityOfPage":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/xDhqAyk88by2eLk0v/#webpage"},"inLanguage":"en"},{"@type":"BreadcrumbList","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/xDhqAyk88by2eLk0v/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Nimbryxo Studio","item":"https://hasankhokhar2026.github.io/apify-actor-examples/"},{"@type":"ListItem","position":2,"name":"Actors","item":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/"},{"@type":"ListItem","position":3,"name":"Facebook Timeline Posts & Reel Transcript Extractor","item":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/xDhqAyk88by2eLk0v/"}]}]}</script><script src="/apify-actor-examples/assets/site.js?v=7cabac48dd31" defer></script></head><body class="theme-studio"><a href="#main" class="skip-link">Skip to content</a><header><div class="inner"><a href="/apify-actor-examples/" class="brand"><img src="/apify-actor-examples/assets/mark.svg?v=2d20f9dc334a" alt="" width="29" height="29">Nimbryxo Studio</a><nav aria-label="Main navigation"><a href="/apify-actor-examples/actors/" aria-current="page">Actors</a><a href="/apify-actor-examples/guides/">Guides</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></nav></div></header><main id="main"><div class="doc-layout"><aside class="contents" aria-label="On this page"><strong>Contents</strong><a href="#overview">Overview</a><a href="#published-readme">Published README</a><a href="#input-schema">Input schema</a><a href="#output-schema">Output schema</a><a href="#dataset-schema">Dataset schema</a><a href="#python-quickstart">Python quickstart</a></aside><article class="prose"><div class="breadcrumb"><a href="/apify-actor-examples/actors/">Actors</a><span>/</span><span>Facebook Timeline Posts &amp; Reel Transcript Extractor</span></div><section id="overview"><h1 class="doc-title">Facebook Timeline Posts &amp; Reel Transcript Extractor</h1><p class="lede">Pull recent posts and Reels from a public Facebook Page or Profile, or fetch one post by its link, with text, reaction breakdown, comments, media, and real auto-generated video captions. No login or cookies required.</p><div class="actions"><a class="button" href="https://apify.com/nimbryxo-studio/facebook-timeline-posts-and-reel-transcript">Open on Apify</a><a class="text-link" href="https://github.com/hasankhokhar2026/apify-actor-examples/blob/main/docs/actors/xDhqAyk88by2eLk0v/README.md">GitHub source</a></div></section><section class="schema-section" id="input-schema"><h2>Input schema</h2><p>Input fields, types, required flags, descriptions, defaults, and prefills come from the published definition. Prefill examples are distinct from defaults.</p><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>startUrls</code></td><td>array</td><td>required</td><td>Mix any public Facebook links. A Page or Profile link (facebook.com/nike, profile.php?id=…, /people/…/…) returns its timeline posts. A post, reel, video, photo, watch, share (facebook.com/share/…, fb.watch/…), permalink.php, story.php or public group post link returns that single post. Group feeds, events, Marketplace and search pages are not supported.</td></tr><tr><td><code>maxItems</code></td><td>integer</td><td>optional</td><td>How many posts to collect from each Page or Profile link, newest first. Posts removed by the filters below don&#x27;t count. Single post links always return one post.</td></tr><tr><td><code>onlyPostsNewerThan</code></td><td>string</td><td>optional</td><td>Page and Profile links only: keep posts published after this moment. Accepts a date (2026-01-01), a full ISO 8601 timestamp, or a relative period such as &quot;7 days&quot;, &quot;2 weeks&quot;, &quot;3 months&quot; or &quot;1 year&quot;.</td></tr></tbody></table></div><details><summary>Show all input fields</summary><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>startUrls</code></td><td>array</td><td>required</td><td>Mix any public Facebook links. A Page or Profile link (facebook.com/nike, profile.php?id=…, /people/…/…) returns its timeline posts. A post, reel, video, photo, watch, share (facebook.com/share/…, fb.watch/…), permalink.php, story.php or public group post link returns that single post. Group feeds, events, Marketplace and search pages are not supported.</td></tr><tr><td><code>maxItems</code></td><td>integer</td><td>optional</td><td>How many posts to collect from each Page or Profile link, newest first. Posts removed by the filters below don&#x27;t count. Single post links always return one post.</td></tr><tr><td><code>onlyPostsNewerThan</code></td><td>string</td><td>optional</td><td>Page and Profile links only: keep posts published after this moment. Accepts a date (2026-01-01), a full ISO 8601 timestamp, or a relative period such as &quot;7 days&quot;, &quot;2 weeks&quot;, &quot;3 months&quot; or &quot;1 year&quot;.</td></tr><tr><td><code>onlyPostsOlderThan</code></td><td>string</td><td>optional</td><td>Page and Profile links only: keep posts published before this moment. Same formats as &quot;Only posts newer than&quot;. Combine both for a date window.</td></tr><tr><td><code>contentTypes</code></td><td>array</td><td>optional</td><td>Page and Profile links only: keep only these kinds of posts. Leave empty to keep everything. When matching posts are rare, the timeline scan stops after 20 × the post limit (at least 50) scanned posts and the run status says so.</td></tr><tr><td><code>minReactions</code></td><td>integer</td><td>optional</td><td>Page and Profile links only: skip posts with fewer reactions than this.</td></tr><tr><td><code>minComments</code></td><td>integer</td><td>optional</td><td>Page and Profile links only: skip posts with fewer comments than this.</td></tr><tr><td><code>includeTopComments</code></td><td>boolean</td><td>optional</td><td>Attach the comments Facebook shows under each post (about 1-10 per post) at no extra cost.</td></tr><tr><td><code>fetchAllComments</code></td><td>boolean</td><td>optional</td><td>Collect the full comment list of every post into allComments, up to the limit below. Adds a few requests per post.</td></tr><tr><td><code>maxCommentsPerPost</code></td><td>integer</td><td>optional</td><td>Upper limit for allComments on each post. Replies count toward this limit when replies are included.</td></tr><tr><td><code>commentsSortOrder</code></td><td>string</td><td>optional</td><td>Order in which allComments are collected. &quot;Newest first&quot; is the best choice for monitoring recent discussion.</td></tr><tr><td><code>onlyCommentsNewerThan</code></td><td>string</td><td>optional</td><td>Keep only comments posted after this moment in allComments: a date (2026-01-01), ISO timestamp, or period such as &quot;1 day&quot; or &quot;2 weeks&quot;. Comments are then read newest first.</td></tr><tr><td><code>includeCommentReplies</code></td><td>boolean</td><td>optional</td><td>Add each comment&#x27;s reply thread (including replies to replies) as a replies list inside the comment.</td></tr><tr><td><code>includeCommentReactions</code></td><td>boolean</td><td>optional</td><td>Add each comment&#x27;s reactions split by type (Like, Love, Haha, …) with exact totals, also for busy comments Facebook shows as &quot;1.2K&quot;. Adds one request per comment that has reactions.</td></tr><tr><td><code>fetchVideoCaptions</code></td><td>boolean</td><td>optional</td><td>For videos and reels that have captions, download Facebook&#x27;s own caption file and add it as a transcript (SRT text plus plain text). These are Facebook&#x27;s captions, not independent speech-to-text.</td></tr><tr><td><code>fetchReelDetails</code></td><td>boolean</td><td>optional</td><td>For reels, add the audio track (title, original audio or song, album art) and whether the reel can be remixed. Adds one request per reel.</td></tr><tr><td><code>fetchSharedPostDetails</code></td><td>boolean</td><td>optional</td><td>For posts that re-share another post, add the original post&#x27;s text, type and counters to sharedPost. Adds one request per shared post.</td></tr><tr><td><code>fetchAllAlbumPhotos</code></td><td>boolean</td><td>optional</td><td>The timeline shows at most five photos of an album post. Turn this on to list every photo of the album.</td></tr><tr><td><code>rehostMedia</code></td><td>string</td><td>optional</td><td>Facebook&#x27;s media links stop working after a few days. Copies are stored with this run and keep working; the original link stays in the matching …Original field.</td></tr></tbody></table></div></details><p><a href="input-schema.json">Download the published input schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+  &quot;description&quot;: &quot;Paste Facebook Page, Profile, post, reel, video or share links. Page and Profile links return their timeline posts; every other link returns that one post.&quot;,
+  &quot;properties&quot;: {
+    &quot;commentsSortOrder&quot;: {
+      &quot;default&quot;: &quot;mostRelevant&quot;,
+      &quot;description&quot;: &quot;Order in which allComments are collected. \&quot;Newest first\&quot; is the best choice for monitoring recent discussion.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;mostRelevant&quot;,
+        &quot;newest&quot;,
+        &quot;all&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;Most relevant (Facebook&#x27;s default)&quot;,
+        &quot;Newest first&quot;,
+        &quot;All comments, unfiltered&quot;
+      ],
+      &quot;title&quot;: &quot;Comment order&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;contentTypes&quot;: {
+      &quot;default&quot;: [],
+      &quot;description&quot;: &quot;Page and Profile links only: keep only these kinds of posts. Leave empty to keep everything. When matching posts are rare, the timeline scan stops after 20 × the post limit (at least 50) scanned posts and the run status says so.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;items&quot;: {
+        &quot;enum&quot;: [
+          &quot;text&quot;,
+          &quot;photo&quot;,
+          &quot;album&quot;,
+          &quot;video&quot;,
+          &quot;reel&quot;,
+          &quot;link&quot;,
+          &quot;share&quot;,
+          &quot;live&quot;
+        ],
+        &quot;enumTitles&quot;: [
+          &quot;Text only&quot;,
+          &quot;Single photo&quot;,
+          &quot;Photo album (several photos)&quot;,
+          &quot;Video&quot;,
+          &quot;Reel&quot;,
+          &quot;Link with preview&quot;,
+          &quot;Shared post&quot;,
+          &quot;Live video&quot;
+        ],
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;title&quot;: &quot;Content types&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;fetchAllAlbumPhotos&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;The timeline shows at most five photos of an album post. Turn this on to list every photo of the album.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Fetch every album photo&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;fetchAllComments&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;Collect the full comment list of every post into allComments, up to the limit below. Adds a few requests per post.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Fetch all comments&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;fetchReelDetails&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;For reels, add the audio track (title, original audio or song, album art) and whether the reel can be remixed. Adds one request per reel.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Reel audio and remix details&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;fetchSharedPostDetails&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;For posts that re-share another post, add the original post&#x27;s text, type and counters to sharedPost. Adds one request per shared post.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Original text of shared posts&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;fetchVideoCaptions&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;For videos and reels that have captions, download Facebook&#x27;s own caption file and add it as a transcript (SRT text plus plain text). These are Facebook&#x27;s captions, not independent speech-to-text.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;sectionCaption&quot;: &quot;Media&quot;,
+      &quot;title&quot;: &quot;Fetch video transcripts&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;includeCommentReactions&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;Add each comment&#x27;s reactions split by type (Like, Love, Haha, …) with exact totals, also for busy comments Facebook shows as \&quot;1.2K\&quot;. Adds one request per comment that has reactions.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Reactions by type on comments&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;includeCommentReplies&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;Add each comment&#x27;s reply thread (including replies to replies) as a replies list inside the comment.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Include replies&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;includeTopComments&quot;: {
+      &quot;default&quot;: true,
+      &quot;description&quot;: &quot;Attach the comments Facebook shows under each post (about 1-10 per post) at no extra cost.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;sectionCaption&quot;: &quot;Comments&quot;,
+      &quot;title&quot;: &quot;Include top comments&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;maxCommentsPerPost&quot;: {
+      &quot;default&quot;: 100,
+      &quot;description&quot;: &quot;Upper limit for allComments on each post. Replies count toward this limit when replies are included.&quot;,
+      &quot;maximum&quot;: 5000,
+      &quot;minimum&quot;: 1,
+      &quot;title&quot;: &quot;Max comments per post&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;maxItems&quot;: {
+      &quot;default&quot;: 20,
+      &quot;description&quot;: &quot;How many posts to collect from each Page or Profile link, newest first. Posts removed by the filters below don&#x27;t count. Single post links always return one post.&quot;,
+      &quot;maximum&quot;: 10000,
+      &quot;minimum&quot;: 1,
+      &quot;prefill&quot;: 1,
+      &quot;sectionCaption&quot;: &quot;Timeline limits and filters&quot;,
+      &quot;title&quot;: &quot;Max posts per Page or Profile&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;minComments&quot;: {
+      &quot;description&quot;: &quot;Page and Profile links only: skip posts with fewer comments than this.&quot;,
+      &quot;maximum&quot;: 100000000,
+      &quot;minimum&quot;: 0,
+      &quot;title&quot;: &quot;Minimum comments&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;minReactions&quot;: {
+      &quot;description&quot;: &quot;Page and Profile links only: skip posts with fewer reactions than this.&quot;,
+      &quot;maximum&quot;: 100000000,
+      &quot;minimum&quot;: 0,
+      &quot;title&quot;: &quot;Minimum reactions&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;onlyCommentsNewerThan&quot;: {
+      &quot;description&quot;: &quot;Keep only comments posted after this moment in allComments: a date (2026-01-01), ISO timestamp, or period such as \&quot;1 day\&quot; or \&quot;2 weeks\&quot;. Comments are then read newest first.&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;title&quot;: &quot;Only comments newer than&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;onlyPostsNewerThan&quot;: {
+      &quot;description&quot;: &quot;Page and Profile links only: keep posts published after this moment. Accepts a date (2026-01-01), a full ISO 8601 timestamp, or a relative period such as \&quot;7 days\&quot;, \&quot;2 weeks\&quot;, \&quot;3 months\&quot; or \&quot;1 year\&quot;.&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;title&quot;: &quot;Only posts newer than&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;onlyPostsOlderThan&quot;: {
+      &quot;description&quot;: &quot;Page and Profile links only: keep posts published before this moment. Same formats as \&quot;Only posts newer than\&quot;. Combine both for a date window.&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;title&quot;: &quot;Only posts older than&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;rehostMedia&quot;: {
+      &quot;default&quot;: &quot;images&quot;,
+      &quot;description&quot;: &quot;Facebook&#x27;s media links stop working after a few days. Copies are stored with this run and keep working; the original link stays in the matching …Original field.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;images&quot;,
+        &quot;imagesAndVideos&quot;,
+        &quot;none&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;Images (photos, thumbnails, link and author pictures)&quot;,
+        &quot;Images and videos (larger, slower)&quot;,
+        &quot;No copies, keep Facebook&#x27;s links&quot;
+      ],
+      &quot;prefill&quot;: &quot;none&quot;,
+      &quot;title&quot;: &quot;Keep permanent media copies&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;startUrls&quot;: {
+      &quot;description&quot;: &quot;Mix any public Facebook links. A Page or Profile link (facebook.com/nike, profile.php?id=…, /people/…/…) returns its timeline posts. A post, reel, video, photo, watch, share (facebook.com/share/…, fb.watch/…), permalink.php, story.php or public group post link returns that single post. Group feeds, events, Marketplace and search pages are not supported.&quot;,
+      &quot;editor&quot;: &quot;requestListSources&quot;,
+      &quot;example&quot;: [
+        {
+          &quot;url&quot;: &quot;https://www.facebook.com/nike&quot;
+        },
+        {
+          &quot;url&quot;: &quot;https://www.facebook.com/reel/2995026330636892/&quot;
+        }
+      ],
+      &quot;items&quot;: {
+        &quot;properties&quot;: {
+          &quot;url&quot;: {
+            &quot;description&quot;: &quot;A Facebook Page, Profile, post, reel, video or share link.&quot;,
+            &quot;title&quot;: &quot;URL&quot;,
+            &quot;type&quot;: &quot;string&quot;
+          }
+        },
+        &quot;required&quot;: [
+          &quot;url&quot;
+        ],
+        &quot;type&quot;: &quot;object&quot;
+      },
+      &quot;prefill&quot;: [
+        {
+          &quot;url&quot;: &quot;https://www.facebook.com/pepsi/posts/1054998311204476&quot;
+        }
+      ],
+      &quot;title&quot;: &quot;Facebook links&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    }
+  },
+  &quot;required&quot;: [
+    &quot;startUrls&quot;
+  ],
+  &quot;schemaVersion&quot;: 1,
+  &quot;title&quot;: &quot;Facebook Timeline Posts &amp; Reel Transcript Extractor Input&quot;,
+  &quot;type&quot;: &quot;object&quot;
+}
+</code></pre></details></section><section class="schema-section" id="output-schema"><h2>Output schema</h2><p>Published result links and storage locations. This schema is not an exhaustive contract for every field in a dataset record.</p><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>posts</code></td><td>string</td><td>optional</td><td>Dataset containing all scraped Facebook posts.</td></tr></tbody></table></div><p><a href="output-schema.json">Download the published output schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+  &quot;actorOutputSchemaVersion&quot;: 1,
+  &quot;description&quot;: &quot;One record per Facebook post, reel or video: text, author, reactions by type, comment and share counts, video views, media links, link previews, comments with replies and optional transcripts.&quot;,
+  &quot;properties&quot;: {
+    &quot;posts&quot;: {
+      &quot;description&quot;: &quot;Dataset containing all scraped Facebook posts.&quot;,
+      &quot;template&quot;: &quot;{{links.apiDefaultDatasetUrl}}/items&quot;,
+      &quot;title&quot;: &quot;Facebook posts&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    }
+  },
+  &quot;title&quot;: &quot;Facebook Timeline Posts &amp; Reel Transcript Extractor Output&quot;,
+  &quot;type&quot;: &quot;object&quot;
+}
+</code></pre></details></section><section class="schema-section" id="dataset-schema"><h2>Dataset schema</h2><p>Published dataset views and any declared field definitions. A view can select only a subset of the returned record fields.</p><p><a href="dataset-schema.json">Download the published dataset schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+  &quot;actorSpecification&quot;: 1,
+  &quot;title&quot;: &quot;Facebook Posts Data&quot;,
+  &quot;views&quot;: {
+    &quot;engagement&quot;: {
+      &quot;display&quot;: {
+        &quot;component&quot;: &quot;table&quot;,
+        &quot;properties&quot;: {
+          &quot;author.name&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Author&quot;
+          },
+          &quot;commentsCount&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Comments&quot;
+          },
+          &quot;contentType&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Type&quot;
+          },
+          &quot;creationTimeIso&quot;: {
+            &quot;format&quot;: &quot;date&quot;,
+            &quot;label&quot;: &quot;Posted&quot;
+          },
+          &quot;permalinkUrl&quot;: {
+            &quot;format&quot;: &quot;link&quot;,
+            &quot;label&quot;: &quot;URL&quot;
+          },
+          &quot;postId&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Post ID&quot;
+          },
+          &quot;reactionBreakdown&quot;: {
+            &quot;format&quot;: &quot;object&quot;,
+            &quot;label&quot;: &quot;Reactions by type&quot;
+          },
+          &quot;reactionsTotal&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Reactions&quot;
+          },
+          &quot;sharesCount&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Shares&quot;
+          }
+        }
+      },
+      &quot;title&quot;: &quot;Engagement&quot;,
+      &quot;transformation&quot;: {
+        &quot;fields&quot;: [
+          &quot;postId&quot;,
+          &quot;contentType&quot;,
+          &quot;author.name&quot;,
+          &quot;reactionsTotal&quot;,
+          &quot;reactionBreakdown&quot;,
+          &quot;commentsCount&quot;,
+          &quot;sharesCount&quot;,
+          &quot;creationTimeIso&quot;,
+          &quot;permalinkUrl&quot;
+        ]
+      }
+    },
+    &quot;overview&quot;: {
+      &quot;display&quot;: {
+        &quot;component&quot;: &quot;table&quot;,
+        &quot;properties&quot;: {
+          &quot;author.name&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Author&quot;
+          },
+          &quot;commentsCount&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Comments&quot;
+          },
+          &quot;creationTime&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Posted (Unix)&quot;
+          },
+          &quot;permalinkUrl&quot;: {
+            &quot;format&quot;: &quot;link&quot;,
+            &quot;label&quot;: &quot;URL&quot;
+          },
+          &quot;postId&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Post ID&quot;
+          },
+          &quot;postType&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Type&quot;
+          },
+          &quot;reactionsTotal&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Reactions&quot;
+          },
+          &quot;sharesCount&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Shares&quot;
+          },
+          &quot;text&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Text&quot;
+          }
+        }
+      },
+      &quot;title&quot;: &quot;Posts Overview&quot;,
+      &quot;transformation&quot;: {
+        &quot;fields&quot;: [
+          &quot;postId&quot;,
+          &quot;postType&quot;,
+          &quot;text&quot;,
+          &quot;author.name&quot;,
+          &quot;reactionsTotal&quot;,
+          &quot;commentsCount&quot;,
+          &quot;sharesCount&quot;,
+          &quot;creationTime&quot;,
+          &quot;permalinkUrl&quot;
+        ]
+      }
+    },
+    &quot;videos&quot;: {
+      &quot;display&quot;: {
+        &quot;component&quot;: &quot;table&quot;,
+        &quot;properties&quot;: {
+          &quot;author.name&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Author&quot;
+          },
+          &quot;commentsCount&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Comments&quot;
+          },
+          &quot;contentType&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Type&quot;
+          },
+          &quot;creationTimeIso&quot;: {
+            &quot;format&quot;: &quot;date&quot;,
+            &quot;label&quot;: &quot;Posted&quot;
+          },
+          &quot;permalinkUrl&quot;: {
+            &quot;format&quot;: &quot;link&quot;,
+            &quot;label&quot;: &quot;URL&quot;
+          },
+          &quot;postId&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Post ID&quot;
+          },
+          &quot;reactionsTotal&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Reactions&quot;
+          },
+          &quot;sharesCount&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Shares&quot;
+          },
+          &quot;text&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Text&quot;
+          },
+          &quot;videoViewCount&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Video views (alt. metric)&quot;
+          },
+          &quot;viewsCount&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Views&quot;
+          }
+        }
+      },
+      &quot;title&quot;: &quot;Videos &amp; reels&quot;,
+      &quot;transformation&quot;: {
+        &quot;fields&quot;: [
+          &quot;postId&quot;,
+          &quot;contentType&quot;,
+          &quot;text&quot;,
+          &quot;author.name&quot;,
+          &quot;viewsCount&quot;,
+          &quot;videoViewCount&quot;,
+          &quot;reactionsTotal&quot;,
+          &quot;commentsCount&quot;,
+          &quot;sharesCount&quot;,
+          &quot;creationTimeIso&quot;,
+          &quot;permalinkUrl&quot;
+        ]
+      }
+    }
+  }
+}
+</code></pre></details></section><section class="schema-section" id="key-value-schema"><h2>Key-value schema</h2><p>Published key-value store definitions, when provided by this build.</p><p>This definition is not present in the default published build. See the published README for available documentation.</p></section><section id="published-readme"><h2>Published README</h2><details><summary>Read the full published documentation</summary><h2 id="readme-facebook-timeline-posts-reel-transcript-extractor">Facebook Timeline Posts &amp; Reel Transcript Extractor</h2>
+<p>Turn any public Facebook Page or Profile into a clean, spreadsheet-ready feed of its posts, or look up individual posts, reels and videos straight from their links. Every record carries the post text, the author, reaction counts split by type, comment and share totals, play counts for videos and reels, photo and video files, link-card details, and, when you ask for them, the full comment threads and Facebook's own reel and video captions. You don't need a Facebook account, cookies or any proxy setup.</p>
+<h2 id="readme-what-this-actor-does">What this actor does</h2>
+<ul>
+<li><strong>Reads whole timelines, not only the first screen.</strong> Collect a few posts or thousands from each Page or Profile, newest first. Narrow them down with a date window, content types (reels, albums, links, shared posts and more), or minimum reactions and comments.</li>
+<li><strong>Opens almost any Facebook link.</strong> Post, reel, video, watch, photo, <code>permalink.php</code>, <code>story.php</code>, mobile, public group post and share links (<code>facebook.com/share/…</code>, <code>fb.watch/…</code>) each return that one post, so a list of links you collected elsewhere can be enriched in one run.</li>
+<li><strong>Counts and conversations, included.</strong> Video and reel records include the play count Facebook displays plus its two other view metrics; reactions come per type (Like, Love, Care, Haha, Wow, Sad, Angry and seasonal ones) next to the total. Pick the comment order (most relevant, newest or unfiltered) and optionally include each comment's reply thread, with its author, profile picture, time, reaction count and direct link.</li>
+<li><strong>Keeps the media usable.</strong> Every photo of an album, link-preview cards, the shared post behind a re-share, and permanent copies of images (videos optional), because Facebook's own media links expire after a few days.</li>
+<li><strong>Empty fields are omitted.</strong> Fields Facebook doesn't show for a post are left out instead of filled with blanks.</li>
+</ul>
+<h2 id="readme-output-per-post">Output per post</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>postId</code></td>
+<td>Facebook's numeric post ID</td>
+</tr>
+<tr>
+<td><code>permalinkUrl</code></td>
+<td>Direct link to the post, reel or video</td>
+</tr>
+<tr>
+<td><code>postType</code></td>
+<td><code>photo</code>, <code>video</code>, <code>reel</code> or <code>text</code> (from the first photo/video; link shares and re-shares are <code>text</code>)</td>
+</tr>
+<tr>
+<td><code>contentType</code></td>
+<td>Finer type: <code>text</code>, <code>photo</code>, <code>album</code>, <code>video</code>, <code>reel</code>, <code>link</code>, <code>share</code> or <code>live</code></td>
+</tr>
+<tr>
+<td><code>text</code></td>
+<td>Full post text</td>
+</tr>
+<tr>
+<td><code>hashtags</code></td>
+<td>Hashtags in the text</td>
+</tr>
+<tr>
+<td><code>mentions</code></td>
+<td>Tagged people and Pages: <code>{id, name, url}</code></td>
+</tr>
+<tr>
+<td><code>externalLinks</code></td>
+<td>Links in the text, as their real destination (not a tracking redirect)</td>
+</tr>
+<tr>
+<td><code>creationTime</code> / <code>creationTimeIso</code></td>
+<td>Publication time as a Unix timestamp and as ISO 8601 (UTC)</td>
+</tr>
+<tr>
+<td><code>backdatedTime</code> / <code>backdatedTimeIso</code> / <code>backdatedTimeGranularity</code></td>
+<td>The date the author set for a backdated post (for example a life event in 1985) and how precise it is (<code>DAY</code>, <code>MONTH</code>, <code>YEAR</code>)</td>
+</tr>
+<tr>
+<td><code>author</code></td>
+<td><code>{id, name, url, profilePictureUrl, profileUrlIsFallback}</code>; the flag is <code>true</code> only when Facebook gave no profile link and one was built from the numeric ID</td>
+</tr>
+<tr>
+<td><code>collaborators</code></td>
+<td>Co-authors of a joint post: <code>{id, name, url}</code></td>
+</tr>
+<tr>
+<td><code>attachments</code></td>
+<td>Photos (<code>id</code>, <code>url</code>, <code>width</code>, <code>height</code>, <code>accessibilityCaption</code>) and videos (<code>videoUrlHd</code>, <code>videoUrlSd</code>, <code>thumbnailUrl</code>, <code>durationMs</code>, <code>width</code>, <code>height</code>, <code>isReel</code>, <code>isLive</code>, <code>captionsAvailable</code>, plus <code>videoTranscript</code>, <code>videoTranscriptText</code>, <code>videoTranscriptLocale</code> and <code>videoTranscriptFormat</code> when transcripts are requested)</td>
+</tr>
+<tr>
+<td><code>albumPhotoCount</code></td>
+<td>Total photos in an album post</td>
+</tr>
+<tr>
+<td><code>linkPreview</code></td>
+<td>Link card: <code>{url, title, description, source, domain, imageUrl}</code></td>
+</tr>
+<tr>
+<td><code>sharedPost</code></td>
+<td>The original post behind a re-share: <code>{postId, url, author, creationTime, creationTimeIso, text}</code>, plus <code>contentType</code>, <code>reactionsTotal</code>, <code>commentsCount</code>, <code>sharesCount</code> and <code>viewsCount</code> with &quot;Original text of shared posts&quot;</td>
+</tr>
+<tr>
+<td><code>reelAudio</code> / <code>remix</code></td>
+<td>Reels with &quot;Reel audio and remix details&quot;: <code>{title, type, id, albumArtUrl, isOriginalAudio}</code> and <code>{isRemixable, status}</code></td>
+</tr>
+<tr>
+<td><code>musicTitle</code></td>
+<td>Song used in a reel or video</td>
+</tr>
+<tr>
+<td><code>location</code></td>
+<td>Place the post was checked in at: <code>{id, name, url}</code></td>
+</tr>
+<tr>
+<td><code>taggedProfiles</code></td>
+<td>People or Pages tagged with &quot;is with&quot;: <code>{id, name, url}</code></td>
+</tr>
+<tr>
+<td><code>reactionsTotal</code> / <code>reactionBreakdown</code></td>
+<td>Total reactions and <code>[{type, count}]</code> per reaction type</td>
+</tr>
+<tr>
+<td><code>commentsCount</code> / <code>sharesCount</code></td>
+<td>Totals as shown by Facebook</td>
+</tr>
+<tr>
+<td><code>viewsCount</code></td>
+<td>Plays shown on the video or reel (the &quot;views&quot; number on Facebook)</td>
+</tr>
+<tr>
+<td><code>videoViewCount</code> / <code>videoPostViewCount</code></td>
+<td>Facebook's two other view metrics for videos and reels</td>
+</tr>
+<tr>
+<td><code>feedbackId</code></td>
+<td>Facebook's engagement ID for the post, handy for joining with other comment datasets</td>
+</tr>
+<tr>
+<td><code>isAd</code></td>
+<td><code>true</code> when Facebook marks the post as sponsored</td>
+</tr>
+<tr>
+<td><code>topComments</code></td>
+<td>Comments shown under the post</td>
+</tr>
+<tr>
+<td><code>allComments</code></td>
+<td>Full comment list when &quot;Fetch all comments&quot; is on</td>
+</tr>
+<tr>
+<td><code>inputUrl</code></td>
+<td>The link from your input, normalized</td>
+</tr>
+<tr>
+<td><code>scrapedAt</code></td>
+<td>When the record was collected (ISO 8601)</td>
+</tr>
+<tr>
+<td><code>recordType</code></td>
+<td>Always <code>post</code></td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Comment fields</strong> (in <code>topComments</code>, <code>allComments</code> and <code>replies</code>): <code>commentId</code>, <code>commentUrl</code>, <code>text</code>, <code>author {id, name, url, profilePictureUrl}</code>, <code>createdTime</code>, <code>createdTimeIso</code>, <code>reactionsTotal</code> (or <code>reactionsCountText</code> such as &quot;1.2K&quot; when Facebook only shows a rounded figure), <code>reactionBreakdown</code> (per type, exact, with &quot;Reactions by type on comments&quot;), <code>replyCount</code>, <code>depth</code>, <code>parentCommentId</code>, <code>imageUrl</code> and <code>replies</code>.</p>
+<p><strong>Media copies:</strong> when a file is copied into the run's storage, the field holds the permanent copy and <code>&lt;field&gt;Original</code> keeps Facebook's link (for example <code>url</code> and <code>urlOriginal</code>). Links left on Facebook's servers get <code>&lt;field&gt;ExpiresAt</code>, the moment they stop working.</p>
+<p>Fields with no value for a given post are left out rather than filled with empty values.</p>
+<h2 id="readme-input">Input</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>startUrls</code></td>
+<td>array</td>
+<td>–</td>
+<td><strong>Required.</strong> Page, Profile, post, reel, video, photo, watch or share links, in any mix</td>
+</tr>
+<tr>
+<td><code>maxItems</code></td>
+<td>integer</td>
+<td><code>20</code></td>
+<td>Posts per Page or Profile (1-10,000)</td>
+</tr>
+<tr>
+<td><code>onlyPostsNewerThan</code></td>
+<td>string</td>
+<td>–</td>
+<td>Keep timeline posts after a date (<code>2026-01-01</code>), ISO timestamp, or period (<code>7 days</code>, <code>3 months</code>)</td>
+</tr>
+<tr>
+<td><code>onlyPostsOlderThan</code></td>
+<td>string</td>
+<td>–</td>
+<td>Keep timeline posts before a date; combine both for a window</td>
+</tr>
+<tr>
+<td><code>contentTypes</code></td>
+<td>array</td>
+<td>all</td>
+<td>Keep only <code>text</code>, <code>photo</code>, <code>album</code>, <code>video</code>, <code>reel</code>, <code>link</code>, <code>share</code> and/or <code>live</code> posts</td>
+</tr>
+<tr>
+<td><code>minReactions</code> / <code>minComments</code></td>
+<td>integer</td>
+<td>–</td>
+<td>Skip timeline posts below these engagement levels</td>
+</tr>
+<tr>
+<td><code>includeTopComments</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td>Comments shown under each post</td>
+</tr>
+<tr>
+<td><code>fetchAllComments</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Full comment lists into <code>allComments</code></td>
+</tr>
+<tr>
+<td><code>maxCommentsPerPost</code></td>
+<td>integer</td>
+<td><code>100</code></td>
+<td>Limit for <code>allComments</code> (1-5,000); replies count toward it</td>
+</tr>
+<tr>
+<td><code>commentsSortOrder</code></td>
+<td>select</td>
+<td><code>mostRelevant</code></td>
+<td><code>mostRelevant</code>, <code>newest</code> or <code>all</code> (unfiltered), in Facebook's own ordering</td>
+</tr>
+<tr>
+<td><code>onlyCommentsNewerThan</code></td>
+<td>string</td>
+<td>–</td>
+<td>Keep only comments after a date or period (<code>1 day</code>); read newest first</td>
+</tr>
+<tr>
+<td><code>includeCommentReplies</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Reply threads inside each comment</td>
+</tr>
+<tr>
+<td><code>includeCommentReactions</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Each comment's reactions by type with exact totals</td>
+</tr>
+<tr>
+<td><code>fetchVideoCaptions</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Facebook's caption files as transcripts</td>
+</tr>
+<tr>
+<td><code>fetchReelDetails</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Reel audio track and remix setting</td>
+</tr>
+<tr>
+<td><code>fetchSharedPostDetails</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Text and counters of the original behind each re-share</td>
+</tr>
+<tr>
+<td><code>fetchAllAlbumPhotos</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Every photo of album posts (the timeline shows up to five)</td>
+</tr>
+<tr>
+<td><code>rehostMedia</code></td>
+<td>select</td>
+<td><code>images</code></td>
+<td><code>images</code>, <code>imagesAndVideos</code> or <code>none</code></td>
+</tr>
+</tbody>
+</table></div>
+<p>Date, content-type and engagement filters apply to Page and Profile links. A direct post link always returns its post.</p>
+<h3 id="readme-example-last-30-days-of-a-brand-s-reels-with-transcripts">Example: last 30 days of a brand's reels, with transcripts</h3>
+<pre><code class="language-json">{
+  &quot;startUrls&quot;: [{ &quot;url&quot;: &quot;https://www.facebook.com/nike&quot; }],
+  &quot;maxItems&quot;: 100,
+  &quot;onlyPostsNewerThan&quot;: &quot;30 days&quot;,
+  &quot;contentTypes&quot;: [&quot;reel&quot;],
+  &quot;fetchVideoCaptions&quot;: true
+}
+</code></pre>
+<h3 id="readme-example-a-news-page-s-most-discussed-posts-in-a-fixed-window">Example: a news Page's most discussed posts in a fixed window</h3>
+<pre><code class="language-json">{
+  &quot;startUrls&quot;: [{ &quot;url&quot;: &quot;https://www.facebook.com/nytimes&quot; }],
+  &quot;maxItems&quot;: 50,
+  &quot;onlyPostsNewerThan&quot;: &quot;2026-09-01&quot;,
+  &quot;onlyPostsOlderThan&quot;: &quot;2026-10-01&quot;,
+  &quot;minComments&quot;: 500
+}
+</code></pre>
+<h3 id="readme-example-enrich-a-list-of-post-and-reel-links-with-full-newest-first-comment-threads">Example: enrich a list of post and reel links with full, newest-first comment threads</h3>
+<pre><code class="language-json">{
+  &quot;startUrls&quot;: [
+    { &quot;url&quot;: &quot;https://www.facebook.com/pepsi/posts/1054998311204476&quot; },
+    { &quot;url&quot;: &quot;https://www.facebook.com/reel/2995026330636892/&quot; },
+    { &quot;url&quot;: &quot;https://fb.watch/72TEK5emY-/&quot; }
+  ],
+  &quot;fetchAllComments&quot;: true,
+  &quot;commentsSortOrder&quot;: &quot;newest&quot;,
+  &quot;includeCommentReplies&quot;: true,
+  &quot;maxCommentsPerPost&quot;: 500
+}
+</code></pre>
+<h3 id="readme-example-archive-a-club-s-photo-albums-with-permanent-image-copies">Example: archive a club's photo albums with permanent image copies</h3>
+<pre><code class="language-json">{
+  &quot;startUrls&quot;: [{ &quot;url&quot;: &quot;https://www.facebook.com/fcbarcelona&quot; }],
+  &quot;maxItems&quot;: 40,
+  &quot;contentTypes&quot;: [&quot;album&quot;, &quot;photo&quot;],
+  &quot;fetchAllAlbumPhotos&quot;: true,
+  &quot;rehostMedia&quot;: &quot;images&quot;
+}
+</code></pre>
+<h2 id="readme-use-cases">Use cases</h2>
+<ul>
+<li><strong>Competitor and brand tracking:</strong> chart posting cadence, formats and reactions by type for any set of Pages.</li>
+<li><strong>Reel and video performance reports:</strong> compare play counts across creators, and read what was said through the caption transcripts.</li>
+<li><strong>Audience research:</strong> collect entire comment threads, replies included, for sentiment or topic analysis.</li>
+<li><strong>Newsroom and fact-check work:</strong> freeze a viral post's text, media, counters and discussion at a known moment.</li>
+<li><strong>Content archiving:</strong> keep album photos and media copies that still open after Facebook's links expire.</li>
+<li><strong>Lead and partner discovery:</strong> find who comments on, collaborates with, or is re-shared by a Page.</li>
+</ul>
+<h2 id="readme-faq">FAQ</h2>
+<p><strong>Do I need a Facebook login, cookies or a proxy?</strong>
+No. The actor reads only what Facebook shows to logged-out visitors and picks its connection method automatically. There is nothing to configure.</p>
+<p><strong>How many posts can I get from one Page?</strong>
+As many as Facebook publicly lists, up to 10,000 per link per run. Some Pages and personal profiles show only a handful of posts to everyone, logged in or not. In that case the run stops when the timeline ends and the status message says so.</p>
+<p><strong>Why did a link return no post?</strong>
+The status message names every link that produced nothing and why: removed or private content (including videos Facebook hides from logged-out visitors), links that aren't posts or Pages (group feeds, events, Marketplace), or a page that Facebook restricts in some countries. Region-restricted pages show &quot;not available in &lt;country&gt;&quot; and are reported as such instead of being retried.</p>
+<p><strong>Are video view counts exact?</strong>
+Yes. <code>viewsCount</code> is the full integer behind the rounded number Facebook displays (for example 422,708 behind &quot;422K&quot;). Photo, text and link posts have no public view count, so the field is left out for them.</p>
+<p><strong>Is the transcript AI-generated?</strong>
+No. It is the caption file Facebook created or the uploader added. Roughly a third of videos have one, in many languages, and English is preferred when available. Videos without captions simply have no transcript.</p>
+<p><strong>Why do some comment reactions read &quot;1.2K&quot;?</strong>
+Next to each comment, Facebook only shows a rounded figure for busy comments, and that is what <code>reactionsCountText</code> keeps. Turn on &quot;Reactions by type on comments&quot; to get the exact total and the split by reaction type for every comment.</p>
+<p><strong>Do the photo and video links keep working?</strong>
+Facebook's media links expire after one to five days. By default every post image (photos, video thumbnails, link pictures and the author's picture) is copied into the run's storage and the copy is what you receive, with Facebook's original kept beside it. Choose <code>imagesAndVideos</code> to copy videos too, or <code>none</code> to keep only Facebook's links, each with its expiry time. Profile pictures inside comments always stay on Facebook's servers, so download them soon after the run if you need them.</p>
+<p><strong>Can I monitor a Page on a schedule?</strong>
+Yes. Schedule the actor with &quot;Only posts newer than&quot; set to the schedule interval (for example <code>1 day</code>) to receive only the new posts each time.</p>
+<p><strong>What can't this actor collect?</strong>
+These limits come from what Facebook shows to logged-out visitors:</p>
+<ul>
+<li>Some Pages and personal profiles show only a few posts to everyone, logged in or not. The run stops when that public timeline ends.</li>
+<li>Pages restricted in the country of the connection are reported as &quot;not available in &lt;country&gt;&quot;.</li>
+<li>Videos hidden from logged-out visitors are reported as unavailable.</li>
+<li>Live viewer counts and a post's edit history aren't shown to logged-out visitors.</li>
+<li>Authors of group posts and some commenters appear with a masked ID and no profile link, because Facebook hides them from the public.</li>
+<li>Some link previews carry no description, because the linked site doesn't provide one.</li>
+<li>Album videos beyond the first five are listed with their ID and thumbnail. Open the video's own link for the playable file.</li>
+<li>Reels come from the Page's timeline, which includes the reels a Page posts; filter them with &quot;Content types: Reel&quot;.</li>
+<li>A post that Facebook adds to a timeline after your run, with an earlier timestamp, appears only in the next run. When scheduling, let &quot;Only posts newer than&quot; overlap the previous run a little (for example <code>2 days</code> for a daily schedule).</li>
+<li>Facebook shows slightly different posts to different visitors and connections. A run can occasionally omit a post that another visitor sees at the same moment, most often near the top of a timeline; a later run usually returns it. The run stays newest-first and reports exactly what its connection was shown.</li>
+</ul>
+<p><strong>Is this affiliated with Facebook or Meta?</strong>
+No. It is an independent tool that reads publicly available Facebook pages. It is not endorsed by or connected to Meta Platforms, Inc.</p>
+</details></section><section id="python-quickstart"><h2>Python quickstart</h2><p>Use a schema-derived input and the Python standard library to start a run. An Apify account and token are required for execution.</p><p><a href="/apify-actor-examples/guides/xDhqAyk88by2eLk0v/">Open the step-by-step Python guide →</a></p></section><p class="source-note">Source build <code>2UujWfpn7EOKxWDbO</code>. Documentation is regenerated from the default published build; private drafts are not included.</p></article></div></main><footer class="footer"><strong>Nimbryxo Studio</strong><div class="footer-links"><a href="/apify-actor-examples/topics/">Topics</a><a href="/apify-actor-examples/sources/">Documentation sources</a><a href="https://apify.com/nimbryxo-studio">Apify</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></div></footer></body></html>

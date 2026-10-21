@@ -1,0 +1,143 @@
+{
+  "properties": {
+    "experienceYears": {
+      "description": "Years of experience required.",
+      "editor": "number",
+      "maximum": 30,
+      "minimum": 0,
+      "nullable": true,
+      "title": "Experience (years)",
+      "type": "integer"
+    },
+    "jobAge": {
+      "description": "Only include jobs posted within the last N days.",
+      "editor": "select",
+      "enum": [
+        "1",
+        "3",
+        "7",
+        "15",
+        "30"
+      ],
+      "enumTitles": [
+        "Last 1 day",
+        "Last 3 days",
+        "Last 7 days",
+        "Last 15 days",
+        "Last 30 days"
+      ],
+      "nullable": true,
+      "title": "Job Age (days)",
+      "type": "string"
+    },
+    "jobType": {
+      "description": "Employment type filter.",
+      "editor": "select",
+      "enum": [
+        "full-time",
+        "part-time",
+        "internship",
+        "contractual"
+      ],
+      "enumTitles": [
+        "Full-time",
+        "Part-time",
+        "Internship",
+        "Contractual"
+      ],
+      "nullable": true,
+      "title": "Job Type",
+      "type": "string"
+    },
+    "keyword": {
+      "description": "Job title or keyword (e.g., \"python developer\", \"data scientist\"). Used only when Search URL is empty.",
+      "editor": "textfield",
+      "nullable": true,
+      "title": "Keyword",
+      "type": "string"
+    },
+    "location": {
+      "description": "City name (e.g., \"bangalore\", \"delhi-ncr\", \"mumbai\", \"hyderabad\"). Used only when Search URL is empty.",
+      "editor": "textfield",
+      "nullable": true,
+      "title": "Location",
+      "type": "string"
+    },
+    "maxItems": {
+      "default": 50,
+      "description": "Maximum number of job listings to return. Each Naukri API page returns up to 20 jobs.",
+      "editor": "number",
+      "maximum": 800,
+      "minimum": 1,
+      "prefill": 5,
+      "title": "Max Items",
+      "type": "integer"
+    },
+    "salaryLakhs": {
+      "description": "Annual salary range in lakhs.",
+      "editor": "select",
+      "enum": [
+        "0-3",
+        "3-6",
+        "6-10",
+        "10-15",
+        "15-25",
+        "25+"
+      ],
+      "enumTitles": [
+        "0 - 3 Lakhs",
+        "3 - 6 Lakhs",
+        "6 - 10 Lakhs",
+        "10 - 15 Lakhs",
+        "15 - 25 Lakhs",
+        "25+ Lakhs"
+      ],
+      "nullable": true,
+      "title": "Salary Range (Lakhs INR/yr)",
+      "type": "string"
+    },
+    "searchUrl": {
+      "description": "A Naukri.com search URL to scrape. Paste any URL from https://www.naukri.com — the scraper parses the slug and filters automatically. If empty, the structured filter fields below are used instead.",
+      "editor": "textfield",
+      "prefill": "https://www.naukri.com/python-developer-jobs-in-bangalore",
+      "title": "Naukri Search URL",
+      "type": "string"
+    },
+    "sortBy": {
+      "default": "relevance",
+      "description": "How results are ordered.",
+      "editor": "select",
+      "enum": [
+        "relevance",
+        "date",
+        "salary"
+      ],
+      "enumTitles": [
+        "Relevance",
+        "Date (newest first)",
+        "Salary (highest first)"
+      ],
+      "title": "Sort By",
+      "type": "string"
+    },
+    "workMode": {
+      "description": "Filter by remote or hybrid work. Naukri does not have an explicit 'office' filter — office is the default state of every listing, so leave this empty for office jobs.",
+      "editor": "select",
+      "enum": [
+        "remote",
+        "hybrid"
+      ],
+      "enumTitles": [
+        "Remote (work from home)",
+        "Hybrid"
+      ],
+      "nullable": true,
+      "title": "Work Mode",
+      "type": "string"
+    }
+  },
+  "required": [],
+  "schemaVersion": 1,
+  "title": "Naukri Scraper Input",
+  "type": "object"
+}

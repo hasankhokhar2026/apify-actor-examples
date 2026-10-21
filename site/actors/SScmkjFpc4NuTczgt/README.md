@@ -1,0 +1,208 @@
+# Google Maps Review & Contributor Activity Scraper
+
+Turn Google Maps reviews into a clean spreadsheet. Paste a list of places, describe the places you want with a search such as *"dentists in Austin, TX"*, or point at Google reviewers' profiles. You get every review's stars, full text with Google's translation, exact date, owner reply, photos and videos, food/service/atmosphere sub-ratings and visit details. No Google account, API key or cookies are needed.
+
+## What this actor does
+
+- **Whole review histories, not a sample.** Newest-first and most-relevant orders go all the way back to a place's first review (a place with 27,335 reviews returned all 27,335).
+- **Every way of choosing places.** Mix place links, Place IDs (`ChIJ…`), feature IDs (`0x…:0x…`), CIDs, shared `maps.app.goo.gl` / `share.google` / `g.page` links and review links; search like a local ("dentists in Austin, TX") and expand into sub-areas to reach around 1,000 places; or collect up to 200 recent contributions per reviewer profile.
+- **Filters, order and monitoring.** Date range, keywords, stars, written text, owner replies, photos/videos and review language; newest, most relevant, highest or lowest rating; scheduled runs with `monitoringKey` return only reviews added or edited since the previous one.
+- **Rich, honest records.** Full text with Google's translation, exact dates, owner replies, photos and videos, sub-ratings, visit context, reviewer identity, place facts, rating histogram and topic chips. Every row says whether the requested order was confirmed, and place summaries say why collection stopped.
+- **Empty fields are omitted.** Fields Google doesn't show for a record are left out instead of being empty; links to places that no longer exist are reported, never swapped for a lookalike business.
+
+
+| Mode | You provide | You get |
+|---|---|---|
+| Reviews of specific places | Links or IDs of places | Reviews of each place, plus optional place summaries |
+| Find places by search | Searches such as "ramen Shibuya Tokyo" | The places Google ranks for each search, their reviews, and the search and rank they came from |
+| Everything specific reviewers have written | Reviewer profile links or numeric IDs | Each reviewer's reviews and star-only ratings across all places, plus optional reviewer summaries |
+
+## Output per record
+
+Every record has a `recordType`: `review` (a place review), `authorReview` (a reviewer's contribution), and, when enabled, `place` and `contributor` summary records. Fields that Google does not show for a record are left out instead of being empty.
+
+### Place review (`review`)
+
+```json
+{
+  "recordType": "review",
+  "reviewId": "Ci9DQUlRQUNvZENodHljRjlvT2twcVJsbFlkVUV0WjBGcldrNHdVRFpxWjBoc01YYxAB",
+  "rating": 5,
+  "reviewText": "Absolutely stunning at night, the sparkle every hour is magical.",
+  "reviewLanguage": "en",
+  "reviewDate": "2026-10-19T09:31:51.751+00:00",
+  "reviewDateOriginal": "8 minutes ago",
+  "reviewUrl": "https://www.google.com/maps/reviews/data=!4m8!14m7!1m6!2m5!1sCi9DQUlR…",
+  "reviewerName": "Ajay C.",
+  "reviewerId": "113024036179217636785",
+  "reviewerProfileUrl": "https://www.google.com/maps/contrib/113024036179217636785/reviews",
+  "reviewerTotalReviews": 3,
+  "reviewerPhotoCount": 3,
+  "reviewerIsLocalGuide": false,
+  "subRatings": { "Food": 5, "Service": 4, "Atmosphere": 5 },
+  "reviewContext": { "Meal type": "Dinner", "Price per person": "$20 to $30" },
+  "visitDate": "Visited in October",
+  "businessName": "Eiffel Tower",
+  "businessRating": 4.7,
+  "businessTotalReviews": 498339,
+  "businessCategory": "Historical landmark",
+  "businessAddress": "Av. Gustave Eiffel, 75007 Paris, France",
+  "businessLatitude": 48.8583701,
+  "businessLongitude": 2.2944813,
+  "placeId": "ChIJLU7jZClu5kcR4PcOOO6p3I0",
+  "featureId": "0x47e66e2964e34e2d:0x8ddca9ee380ef7e0",
+  "cid": "10222232094831998944",
+  "placeUrl": "https://www.google.com/maps/place/?q=place_id:ChIJLU7jZClu5kcR4PcOOO6p3I0",
+  "order": 1,
+  "sortBy": "newest",
+  "sortConfirmed": true,
+  "sortStatus": "confirmed",
+  "scrapedAt": "2026-10-19T09:39:52+00:00"
+}
+```
+
+Other review fields when Google shows them: `reviewTextTranslated` + `translatedLanguage` + `originalReviewLanguage` (reviews in another language), `photosInReview`, `reviewPhotoCount`, `reviewVideoUrls`, `videosInReview`, `ownerResponseText`, `ownerResponseDateOriginal`, `ownerResponseTextTranslated`, `contextLabels`, `reviewReportUrl`, `businessCategories`, `searchQuery` and `searchRank` (search mode). `reviewerSubtitle` (the line Google prints under the reviewer's name, such as "Local Guide · 37 reviews · 5 photos", in the chosen language). With `enrichReviewerProfiles` on: `reviewerLocalGuideLevel`, `likesCount`, `isEdited`, `reviewCreatedAt`, `reviewViewCount` and `ownerResponseDate`. With `includePhotoDetails` on: `photoDetails`, one entry per photo or video with `url`, `width`, `height`, `uploadDate` and, for videos, `durationSeconds`.
+
+### Reviewer contribution (`authorReview`)
+
+Reviewer fields (`contributorId`, `contributorName`, `contributorAvatarUrl`, `contributorProfileUrl`, `contributorLocalGuideLevel`, `contributorPoints`, `contributorTotalReviews`), the review (`reviewId`, `rating`, `reviewText`, `reviewLanguage`, `reviewDate` = last update, `reviewCreatedAt` = first published, `isEdited`, `reviewDateOriginal`, `likesCount`, `reviewViewCount`, `isRatingOnly`, `reviewUrl`, `reviewPhotoUrls`, `reviewPhotoCount`, `subRatings`, `reviewContext`, `contextLabels`, `ownerResponseText`, `ownerResponseDate`, `ownerResponseDateOriginal`), and the reviewed place (`placeName`, `placeAddress`, `placeId`, `featureId`, `placeUrl`, `placeLatitude`, `placeLongitude`, `placeCategory`, `placeRating`, `placeTotalReviews`, `placePriceRange`), plus `position` (rank in the reviewer's list), `sourceUrl` and `scrapedAt`.
+
+### Place summary (`place`, optional)
+
+Name, address, all categories, coordinates, phone, website, time zone, country, description, rating, total reviews, **`ratingHistogram`** (reviews per star), **`reviewTopics`** (Google's topic chips with how many reviews mention each), **`openingHours`** (per weekday), **`partnerReviews`** (hotels and some restaurants: rating, scale, review count, link and a sample review from sites such as Tripadvisor or Booking.com), **`reviewsRemovedNotice`** (Google's notice that reviews were removed after legal complaints, shown for some places in Germany), Place ID / feature ID / CID / Knowledge Graph ID, and collection results: `reviewsDelivered`, `partnerReviewsDelivered` (with `includePartnerReviews`), `reviewsScanned`, `stopReason` (for example `requestedCountReached`, `allReviewsCollected`, `dateCutoffReached`, `noNewReviewsSinceLastRun`), `status` (`ok`, `noReviews`, `notFound`, `invalid`, `partial`) and `statusReason`.
+
+### Partner-site review (`partnerReview`, optional)
+
+With `includePartnerReviews`, hotels also get one record per review Google shows from a partner site: `partnerSource` (for example `Tripadvisor`), `partnerReviewId`, `rating` with `ratingScale` (some sites rate out of 10), `reviewText`, `reviewDateOriginal` (Google shows partner reviews with a relative date such as "2 weeks ago"), `reviewerName`, `reviewUrl` (the review on the partner site), `ownerResponseText` when the hotel replied, the place fields (`businessName`, `placeId`, `featureId`, …) and `order`. Partner sites are read newest first.
+
+### Reviewer summary (`contributor`, optional)
+
+Name, Local Guide level and points, points needed for the next level, bio, **`contributions`** (lifetime counts of reviews, ratings, photos, videos, answers, edits, places added and more), `status` (`public`, `private`, `notFound`) and `reviewsDelivered`.
+
+### Likes, edit dates and Local Guide levels
+
+Google shows likes, first-published and edit dates, view counts, owner-reply dates and exact Local Guide levels only on reviewer profiles. Reviewer mode always has them. In place and search modes, turn on `enrichReviewerProfiles` and the actor looks up each reviewer once and adds them to the matching reviews. In practice this fills about 8 in 10 reviews; the rest were written by reviewers with private profiles, or are older than the reviewer's 200 most recent contributions. `reviewerLocalGuideLevel` is added for every reviewer with a public level, including private profiles. View counts are Google's running counters and can differ slightly between two lookups. Without the option, `reviewerIsLocalGuide` is `true` for reviewers Google labels "Local Guide" on the review. `reviewerSubtitle` is filled when the actor knows Google's exact wording for that language and those counts; otherwise it is left out and the counts are still in `reviewerTotalReviews` and `reviewerPhotoCount`. `reviewerEmoji` and `isVerified` are not published by Google and stay in the schema for older integrations; the dishes a reviewer recommends (the old `mentionedItems`) are in `reviewContext`.
+
+## Input
+
+| Field | Type | Default | Description |
+|---|---|---|---|
+| `mode` | select | `place` | `place` = reviews of the places you list; `search` = find places by search, then their reviews; `author` = everything specific reviewers wrote |
+| `placeUrls` | list | – | Place links or IDs, one per line: place links, shared `maps.app.goo.gl` / `share.google` / `g.page` links, `?cid=` links, review links, `ChIJ…` Place IDs, `0x…:0x…` feature IDs, numeric CIDs |
+| `searchQueries` | list | – | Searches like "dentists in Austin, TX"; include a city or area |
+| `maxPlacesPerQuery` | integer | `20` | Places taken from each search (1–2,000), in Google's ranking; above about 120 places the actor also searches sub-areas |
+| `contributorUrls` | list | – | Reviewer profile links (`https://www.google.com/maps/contrib/<id>`, or a shared `maps.app.goo.gl` profile link) or numeric reviewer IDs |
+| `maxReviews` | integer | `50` | Maximum reviews **per place or per reviewer** (1–200,000; reviewers publish at most 200) |
+| `sortBy` | select | `newest` | `newest`, `relevant`, `highest_rating`, `lowest_rating` |
+| `language` | select | `en` | Language of labels such as "2 weeks ago"; foreign-language reviews also get Google's translation into it. 23 languages |
+| `reviewsNewerThan` | date | – | Keep reviews from this day on, e.g. `2026-01-01` or `30 days` |
+| `reviewsOlderThan` | date | – | Keep reviews up to this day (use both for a range) |
+| `keyword` | text | – | Only reviews mentioning these words |
+| `starRatings` | multi-select | – | Only these star ratings, e.g. `["1", "2"]` |
+| `onlyWithText` | boolean | `false` | Skip star-only reviews without written text |
+| `ownerReplyFilter` | select | `any` | `any`, `withReply`, `withoutReply` |
+| `onlyWithPhotos` | boolean | `false` | Only reviews with photos or videos |
+| `reviewLanguages` | list | – | Only reviews written in these languages, e.g. `ko`, `es` |
+| `monitoringKey` | text | – | Same name on scheduled runs → only reviews added or edited since the last run with that name |
+| `includePlaceSummary` | boolean | `false` | Add one summary record per place |
+| `includeContributorSummary` | boolean | `false` | Add one summary record per reviewer |
+| `includeReviewerDetails` | boolean | `true` | Turn off to leave reviewer names, pictures, profile links and IDs out of place reviews |
+| `enrichReviewerProfiles` | boolean | `false` | Place and search modes: also look up each reviewer's public profile to add likes, first-published and edit dates, view counts, owner-reply dates and the exact Local Guide level. Slower |
+| `includePartnerReviews` | boolean | `false` | Hotels: also collect the reviews Google shows from partner sites such as Tripadvisor, Trip.com or Priceline, as `partnerReview` records. `maxReviews` applies to each partner site, the same way it applies to each place |
+| `includePhotoDetails` | boolean | `false` | Add width, height and upload date (and video length) for every photo and video in place reviews. One extra request per photo |
+
+Inputs saved for earlier versions keep working. A single `placeUrl` or `placeId`, a single `contributorUrl` and old proxy settings are all accepted. **Change in this version:** in reviewer mode, `maxReviews` now applies to each reviewer separately (it used to be a total for the whole run).
+
+### Example: newest reviews of two places
+
+```json
+{
+  "placeUrls": [
+    "https://www.google.com/maps/place/Eiffel+Tower/@48.8583701,2.2944813,17z/data=!3m1!4b1!4m6!3m5!1s0x47e66e2964e34e2d:0x8ddca9ee380ef7e0!8m2!3d48.8583701!4d2.2944813",
+    "ChIJifIePKtZwokRVZ-UdRGkZzs"
+  ],
+  "maxReviews": 200
+}
+```
+
+### Example: one- and two-star reviews for a city's top dentists
+
+```json
+{
+  "mode": "search",
+  "searchQueries": ["dentists in Boise, Idaho"],
+  "maxPlacesPerQuery": 30,
+  "starRatings": ["1", "2"],
+  "reviewsNewerThan": "90 days",
+  "maxReviews": 500,
+  "includePlaceSummary": true
+}
+```
+
+### Example: everything two reviewers wrote
+
+```json
+{
+  "mode": "author",
+  "contributorUrls": ["https://www.google.com/maps/contrib/108763873723673205857", "100413133939170473725"],
+  "maxReviews": 200,
+  "includeContributorSummary": true
+}
+```
+
+### Example: daily monitoring returns only new reviews
+
+```json
+{ "placeUrls": ["ChIJifIePKtZwokRVZ-UdRGkZzs"], "monitoringKey": "my-pizzerias", "maxReviews": 1000 }
+```
+
+## Use cases
+
+- **Reputation tracking for branches and franchises:** schedule a monitoring run over every location and get only the new reviews each morning.
+- **Competitor and market research:** run a search for a category and city, then compare rating breakdowns, topics and complaints.
+- **Customer-experience analytics:** feed full texts, translations and sub-ratings into sentiment or topic models.
+- **Lead generation for agencies:** find businesses with recent low ratings or without owner replies.
+- **Trust and safety:** review a reviewer's whole activity, spot unusual patterns, and see which places they reviewed and when.
+
+## FAQ
+
+**Do I need a Google account, API key or cookies?** No. The actor reads what Google Maps shows to anyone who is not signed in.
+
+**Do I need to set up a proxy?** No. The actor chooses its connection itself and switches automatically if Google slows it down. There are no proxy settings to configure.
+
+**Why does a place give fewer reviews than its total?** Google's total also counts reviews it no longer displays. On a full newest-first collection the actor reads everything Google still lists, and the place summary shows exactly how many reviews were read and why collection stopped.
+
+**Can I get only new reviews every day?** Yes. Set `monitoringKey` to any name and schedule the run. Set `maxReviews` high enough to cover the reviews expected between two runs.
+
+**Is the requested order trustworthy?** Every place review carries `sortConfirmed`. It is `true` only when the row continues the requested order.
+
+**What happens with a link to a closed or removed place?** It is skipped with a clear reason, and with place summaries enabled you get a `notFound` record. The actor never collects reviews from a different business with a similar name. A shared link that opens something other than a place (a reviewer profile, a photo, a video) is skipped with a reason saying what it opens.
+
+**Can I get likes or Local Guide levels for place reviews?** Yes, turn on `enrichReviewerProfiles`. It makes one extra request per reviewer, so runs take longer. The status message says how many reviews were filled.
+
+**Do I get the reviews hotels show from Tripadvisor or Booking.com?** Yes. Turn on `includePartnerReviews` and every review Google shows from those sites is added as a `partnerReview` record, up to `maxReviews` per site. The place summary also lists each partner site's rating and review count in `partnerReviews`.
+
+**Can I collect reviews in another language?** Choose a language and Google's labels plus translations come in that language. Each review's original text and language are kept as well.
+
+**Is this an official Google product?** No. It is an independent tool that collects publicly visible Google Maps data.
+
+## How many reviews can I get?
+
+- **Newest first or most relevant:** the complete history of a place, down to its first review.
+- **Highest or lowest rating first:** Google lists at most 188 reviews per star level in these orders. When you also pick star ratings, the actor collects the rest of those stars newest first and marks those rows with `sortConfirmed: false`.
+- **Reviewers:** up to 200 of each reviewer's most recently updated reviews and ratings. That is the full history of most reviewers.
+- **Searches:** one Google search lists about 120 to 360 places. Ask for more with `maxPlacesPerQuery` and the actor also searches up to about 80 sub-areas around them, small ones in dense city centres and larger ones where places are spread out: "restaurants in Istanbul" went from 200 to 1,200 places. Places far outside the searched area are left out, and small markets simply end when there are no more places (for example about 90 dentists in Bozeman, Montana).
+- Speed: long newest-first histories (places with 1,000+ reviews) are read in several date ranges at once and merged back into exact newest-first order, which shortens big collections; how much it saves depends on how quickly Google serves the parallel ranges (a 25,000-review walk took about 15 minutes on Apify's cloud). Several places are collected in parallel.
+- Filters (stars, written text, owner reply, photos, review language) are applied while reviews are read. When few reviews match, for example an owner-reply filter on a place that never replies, the actor keeps reading back through the history. Add a date range to keep such runs short; the status message and place summary show how many reviews were read.
+
+## Limitations
+
+- **Likes and edit dates in place mode** come from reviewer profiles, so reviews by private profiles, or older than a reviewer's 200 most recent contributions, can't get them. Workaround: run reviewer mode on the reviewers you care about.
+- **Rating-ordered collection** stops at 188 reviews per star level in Google's own order. Workaround: pick the star ratings you want; the rest of those stars are collected newest first (`sortConfirmed: false`).
+- **Reviewer mode** returns at most the 200 most recently updated contributions per profile; Google does not page further. Private profiles return no reviews and are reported as `private`.
+- **Partner-site reviews** are the ones Google shows on the hotel page, which can be far fewer than the partner site itself has (one hotel: 176 Tripadvisor reviews on Google, 7,499 on Tripadvisor), and they carry a relative date only.
+- **Single reviews by link:** a review link is read as its place, and that place's reviews are collected. Use `keyword` or a date range to find one review quickly.
+- **Price level** is not part of Google's public data for signed-out visitors. **Photo locations** are not published: Google returns the place's position for every photo, so it is not output.
+- **Very large places take time:** a full 500,000-review history is still a long collection even when read in parallel. Use date filters or `maxReviews` for faster runs; a date range now starts reading at its end date instead of at today.
+
+Please use the data responsibly and in line with Google's terms and applicable privacy laws. Turn off `includeReviewerDetails` when you don't need reviewer identities.

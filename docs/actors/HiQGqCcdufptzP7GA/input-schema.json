@@ -1,0 +1,171 @@
+{
+  "properties": {
+    "companyUrls": {
+      "description": "LinkedIn company page URLs or slugs. Accepts: https://www.linkedin.com/company/microsoft/, https://www.linkedin.com/company/microsoft/about/, or just the slug: microsoft",
+      "editor": "stringList",
+      "prefill": [
+        "https://www.linkedin.com/company/hubspot/"
+      ],
+      "title": "Company URLs",
+      "type": "array"
+    },
+    "connectionDegree": {
+      "default": "",
+      "description": "Filter by LinkedIn connection degree: F = 1st, S = 2nd, O = 3rd+",
+      "editor": "select",
+      "enum": [
+        "",
+        "F",
+        "S",
+        "O"
+      ],
+      "enumTitles": [
+        "All connections",
+        "1st degree only",
+        "2nd degree only",
+        "3rd degree+"
+      ],
+      "title": "Connection Degree",
+      "type": "string"
+    },
+    "cookie": {
+      "description": "Your LinkedIn session cookie. Accepts: (1) the li_at value from browser DevTools, or (2) full cookies JSON array from an extension like EditThisCookie.",
+      "editor": "textarea",
+      "isSecret": true,
+      "title": "LinkedIn Cookie",
+      "type": "string"
+    },
+    "currentCompany": {
+      "default": true,
+      "description": "When true, restrict results to people currently working at the company. When false, include past employees as well.",
+      "editor": "checkbox",
+      "title": "Restrict to Current Employees",
+      "type": "boolean"
+    },
+    "function": {
+      "default": "",
+      "description": "Filter employees by job function (e.g., Engineering, Sales).",
+      "editor": "select",
+      "enum": [
+        "",
+        "Engineering",
+        "Sales",
+        "Marketing",
+        "Operations",
+        "Finance",
+        "Human Resources",
+        "Design",
+        "Product",
+        "Customer Service",
+        "Information Technology",
+        "Legal",
+        "Other"
+      ],
+      "enumTitles": [
+        "All functions",
+        "Engineering",
+        "Sales",
+        "Marketing",
+        "Operations",
+        "Finance",
+        "Human Resources",
+        "Design",
+        "Product",
+        "Customer Service",
+        "Information Technology",
+        "Legal",
+        "Other"
+      ],
+      "title": "Job Function",
+      "type": "string"
+    },
+    "keywords": {
+      "description": "Optional keyword to narrow results (e.g., 'Software Engineer', 'VP Sales'). Leave blank to return all visible employees.",
+      "editor": "textfield",
+      "title": "Keyword Filter",
+      "type": "string"
+    },
+    "language": {
+      "default": "",
+      "description": "Filter by primary profile language.",
+      "editor": "select",
+      "enum": [
+        "",
+        "en",
+        "es",
+        "fr",
+        "de",
+        "pt",
+        "it",
+        "nl",
+        "zh",
+        "ja"
+      ],
+      "enumTitles": [
+        "Any language",
+        "English",
+        "Spanish",
+        "French",
+        "German",
+        "Portuguese",
+        "Italian",
+        "Dutch",
+        "Chinese",
+        "Japanese"
+      ],
+      "title": "Profile Language",
+      "type": "string"
+    },
+    "location": {
+      "description": "Filter employees by location (e.g., 'New York', 'London', 'Remote').",
+      "editor": "textfield",
+      "title": "Location Filter",
+      "type": "string"
+    },
+    "maxEmployees": {
+      "default": 50,
+      "description": "Maximum number of employee profiles to scrape per company. LinkedIn typically surfaces 200-1000 employees for large companies.",
+      "editor": "number",
+      "maximum": 1000,
+      "minimum": 1,
+      "title": "Max Employees Per Company",
+      "type": "integer"
+    },
+    "proxyConfiguration": {
+      "description": "Optional Apify proxy configuration. Residential proxy recommended for best results.",
+      "editor": "proxy",
+      "title": "Proxy Configuration",
+      "type": "object"
+    },
+    "seniorityLevel": {
+      "default": "",
+      "description": "Filter by seniority level.",
+      "editor": "select",
+      "enum": [
+        "",
+        "Entry",
+        "Associate",
+        "Mid-Senior",
+        "Director",
+        "Executive"
+      ],
+      "enumTitles": [
+        "All levels",
+        "Entry",
+        "Associate",
+        "Mid-Senior",
+        "Director",
+        "Executive"
+      ],
+      "title": "Seniority Level",
+      "type": "string"
+    }
+  },
+  "required": [
+    "companyUrls",
+    "cookie"
+  ],
+  "schemaVersion": 1,
+  "title": "LinkedIn Company Employees Scraper Input",
+  "type": "object"
+}

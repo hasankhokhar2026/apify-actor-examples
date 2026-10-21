@@ -1,0 +1,128 @@
+{
+  "properties": {
+    "cookie": {
+      "description": "Your LinkedIn session cookie. Accepts either: (1) the li_at value from browser DevTools → Application → Cookies, or (2) full cookies JSON array exported from an extension like EditThisCookie.",
+      "editor": "textarea",
+      "isSecret": true,
+      "title": "LinkedIn Cookie",
+      "type": "string"
+    },
+    "excludeAuthorTypes": {
+      "default": [],
+      "description": "Drop comments authored by the selected actor types. PERSON = individual member profiles, COMPANY = company / organization pages.",
+      "editor": "select",
+      "items": {
+        "enum": [
+          "PERSON",
+          "COMPANY"
+        ],
+        "enumTitles": [
+          "Person",
+          "Company"
+        ],
+        "type": "string"
+      },
+      "prefill": [],
+      "title": "Exclude Author Types",
+      "type": "array",
+      "uniqueItems": true
+    },
+    "includeReplies": {
+      "default": false,
+      "description": "Whether to fetch replies to top-level comments. Each reply is output as a separate dataset row with isReply=true and parentCommentId linking to the parent.",
+      "prefill": false,
+      "title": "Include Replies",
+      "type": "boolean"
+    },
+    "language": {
+      "default": "en",
+      "description": "Preferred LinkedIn UI language. Sets the Accept-Language header and x-li-lang for Voyager API calls; influences which translations LinkedIn returns for comment text.",
+      "editor": "select",
+      "enum": [
+        "en",
+        "es",
+        "fr",
+        "de",
+        "pt"
+      ],
+      "enumTitles": [
+        "English",
+        "Spanish",
+        "French",
+        "German",
+        "Portuguese"
+      ],
+      "prefill": "en",
+      "title": "Language",
+      "type": "string"
+    },
+    "maxCommentsPerPost": {
+      "default": 50,
+      "description": "Maximum number of top-level comments to scrape per post.",
+      "editor": "number",
+      "maximum": 500,
+      "minimum": 1,
+      "prefill": 50,
+      "title": "Max Comments Per Post",
+      "type": "integer"
+    },
+    "minReactions": {
+      "default": 0,
+      "description": "Skip comments with fewer than this many reactions (likes + other reaction types). 0 disables the filter and emits every comment.",
+      "editor": "number",
+      "maximum": 100000,
+      "minimum": 0,
+      "prefill": 0,
+      "title": "Minimum Reactions",
+      "type": "integer"
+    },
+    "postUrls": {
+      "description": "LinkedIn post URLs to scrape comments from. Accepts formats like: https://www.linkedin.com/feed/update/urn:li:activity:7329761432933134337/ or https://www.linkedin.com/posts/username_some-slug-7329761432933134337/. Use a public, high-engagement post URL for best results. The prefill example uses a Bill Gates post from early 2025.",
+      "editor": "stringList",
+      "prefill": [
+        "https://www.linkedin.com/feed/update/urn:li:activity:7329761432933134337/"
+      ],
+      "title": "Post URLs",
+      "type": "array"
+    },
+    "proxyConfiguration": {
+      "description": "Optional Apify proxy configuration. Residential proxy recommended for best results.",
+      "editor": "proxy",
+      "title": "Proxy Configuration",
+      "type": "object"
+    },
+    "replyDepth": {
+      "default": 1,
+      "description": "How many levels deep to recurse when fetching replies. Only honored when Include Replies is enabled. 1 = direct replies only, 2 = replies of replies, 3 = three levels.",
+      "editor": "number",
+      "maximum": 3,
+      "minimum": 1,
+      "prefill": 1,
+      "title": "Reply Depth",
+      "type": "integer"
+    },
+    "sortBy": {
+      "default": "RELEVANCE",
+      "description": "Sort order for comments. RELEVANCE uses LinkedIn's default 'Most relevant'. RECENT shows newest first.",
+      "editor": "select",
+      "enum": [
+        "RELEVANCE",
+        "RECENT"
+      ],
+      "enumTitles": [
+        "Most relevant",
+        "Most recent"
+      ],
+      "prefill": "RELEVANCE",
+      "title": "Sort Comments By",
+      "type": "string"
+    }
+  },
+  "required": [
+    "postUrls",
+    "cookie"
+  ],
+  "schemaVersion": 1,
+  "title": "LinkedIn Comments Scraper Input",
+  "type": "object"
+}

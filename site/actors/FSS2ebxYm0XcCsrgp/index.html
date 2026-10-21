@@ -1,0 +1,483 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src &#x27;self&#x27;; script-src &#x27;self&#x27; &#x27;sha256-6VqSOzfYiYacoKM1vN4Tb3QESjIHBOybkft0MCXL57k=&#x27;; style-src &#x27;self&#x27;; img-src &#x27;self&#x27; https: data:; base-uri &#x27;self&#x27;; form-action &#x27;self&#x27;; object-src &#x27;none&#x27;"><title>TikTok Hashtag Video Feed &amp; Stats Extractor | Nimbryxo Studio</title><meta name="description" content="Collect a TikTok hashtag&#x27;s total view/video counts plus the video feed underneath it - captions, author, music, and engagement - with automatic fallback when the feed is blocked."><meta name="robots" content="index,follow"><link rel="canonical" href="https://hasankhokhar2026.github.io/apify-actor-examples/actors/FSS2ebxYm0XcCsrgp/"><meta property="og:title" content="TikTok Hashtag Video Feed &amp; Stats Extractor | Nimbryxo Studio"><meta property="og:description" content="Collect a TikTok hashtag&#x27;s total view/video counts plus the video feed underneath it - captions, author, music, and engagement - with automatic fallback when the feed is blocked."><meta property="og:type" content="website"><meta property="og:url" content="https://hasankhokhar2026.github.io/apify-actor-examples/actors/FSS2ebxYm0XcCsrgp/"><meta property="og:site_name" content="Nimbryxo Studio"><meta name="twitter:card" content="summary"><link rel="icon" href="/apify-actor-examples/assets/mark.svg?v=2d20f9dc334a" type="image/svg+xml"><link rel="stylesheet" href="/apify-actor-examples/assets/site.css?v=39545fd4a399"><link rel="stylesheet" href="/apify-actor-examples/assets/brand.css?v=eb0f935ade25"><link rel="alternate" type="application/rss+xml" title="Nimbryxo Studio guides" href="/apify-actor-examples/feed.xml"><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization","name":"Nimbryxo Studio","url":"https://hasankhokhar2026.github.io/apify-actor-examples/","sameAs":["https://apify.com/nimbryxo-studio"]},{"@type":"WebSite","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#website","name":"Nimbryxo Studio","url":"https://hasankhokhar2026.github.io/apify-actor-examples/","publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"inLanguage":"en"},{"@type":"WebPage","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/FSS2ebxYm0XcCsrgp/#webpage","name":"TikTok Hashtag Video Feed & Stats Extractor","description":"Collect a TikTok hashtag's total view/video counts plus the video feed underneath it - captions, author, music, and engagement - with automatic fallback when the feed is blocked.","url":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/FSS2ebxYm0XcCsrgp/","isPartOf":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#website"},"publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"inLanguage":"en","mainEntity":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/FSS2ebxYm0XcCsrgp/#article"},"breadcrumb":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/FSS2ebxYm0XcCsrgp/#breadcrumb"}},{"@type":"TechArticle","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/FSS2ebxYm0XcCsrgp/#article","headline":"TikTok Hashtag Video Feed & Stats Extractor","name":"TikTok Hashtag Video Feed & Stats Extractor","description":"Collect a TikTok hashtag's total view/video counts plus the video feed underneath it - captions, author, music, and engagement - with automatic fallback when the feed is blocked.","url":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/FSS2ebxYm0XcCsrgp/","author":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"mainEntityOfPage":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/FSS2ebxYm0XcCsrgp/#webpage"},"inLanguage":"en"},{"@type":"BreadcrumbList","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/FSS2ebxYm0XcCsrgp/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Nimbryxo Studio","item":"https://hasankhokhar2026.github.io/apify-actor-examples/"},{"@type":"ListItem","position":2,"name":"Actors","item":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/"},{"@type":"ListItem","position":3,"name":"TikTok Hashtag Video Feed & Stats Extractor","item":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/FSS2ebxYm0XcCsrgp/"}]}]}</script><script src="/apify-actor-examples/assets/site.js?v=7cabac48dd31" defer></script></head><body class="theme-studio"><a href="#main" class="skip-link">Skip to content</a><header><div class="inner"><a href="/apify-actor-examples/" class="brand"><img src="/apify-actor-examples/assets/mark.svg?v=2d20f9dc334a" alt="" width="29" height="29">Nimbryxo Studio</a><nav aria-label="Main navigation"><a href="/apify-actor-examples/actors/" aria-current="page">Actors</a><a href="/apify-actor-examples/guides/">Guides</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></nav></div></header><main id="main"><div class="doc-layout"><aside class="contents" aria-label="On this page"><strong>Contents</strong><a href="#overview">Overview</a><a href="#published-readme">Published README</a><a href="#input-schema">Input schema</a><a href="#output-schema">Output schema</a><a href="#dataset-schema">Dataset schema</a><a href="#python-quickstart">Python quickstart</a></aside><article class="prose"><div class="breadcrumb"><a href="/apify-actor-examples/actors/">Actors</a><span>/</span><span>TikTok Hashtag Video Feed &amp; Stats Extractor</span></div><section id="overview"><h1 class="doc-title">TikTok Hashtag Video Feed &amp; Stats Extractor</h1><p class="lede">Collect a TikTok hashtag&#x27;s total view/video counts plus the video feed underneath it - captions, author, music, and engagement - with automatic fallback when the feed is blocked.</p><div class="actions"><a class="button" href="https://apify.com/nimbryxo-studio/tiktok-hashtag-video-feed-and-stats-extractor">Open on Apify</a><a class="text-link" href="https://github.com/hasankhokhar2026/apify-actor-examples/blob/main/docs/actors/FSS2ebxYm0XcCsrgp/README.md">GitHub source</a></div></section><section class="schema-section" id="input-schema"><h2>Input schema</h2><p>Input fields, types, required flags, descriptions, defaults, and prefills come from the published definition. Prefill examples are distinct from defaults.</p><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>hashtags</code></td><td>array</td><td>required</td><td>List of TikTok hashtags to scrape. You can include or omit the # symbol. Example: comedy, #dance, fyp</td></tr><tr><td><code>mode</code></td><td>string</td><td>optional</td><td>What to scrape per hashtag. &#x27;metadata&#x27; emits one stats record per hashtag (always works). &#x27;posts&#x27; fetches videos (may be blocked). &#x27;topPosts&#x27; tries a search fallback. &#x27;auto&#x27; tries posts, falls back to topPosts, then metadata-only.</td></tr><tr><td><code>maxPostsPerHashtag</code></td><td>integer</td><td>optional</td><td>Maximum number of posts to scrape per hashtag (when mode includes posts). Set to 0 to skip posts entirely (equivalent to metadata-only mode). Has no effect in metadata-only mode.</td></tr></tbody></table></div><details><summary>Show all input fields</summary><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>hashtags</code></td><td>array</td><td>required</td><td>List of TikTok hashtags to scrape. You can include or omit the # symbol. Example: comedy, #dance, fyp</td></tr><tr><td><code>mode</code></td><td>string</td><td>optional</td><td>What to scrape per hashtag. &#x27;metadata&#x27; emits one stats record per hashtag (always works). &#x27;posts&#x27; fetches videos (may be blocked). &#x27;topPosts&#x27; tries a search fallback. &#x27;auto&#x27; tries posts, falls back to topPosts, then metadata-only.</td></tr><tr><td><code>maxPostsPerHashtag</code></td><td>integer</td><td>optional</td><td>Maximum number of posts to scrape per hashtag (when mode includes posts). Set to 0 to skip posts entirely (equivalent to metadata-only mode). Has no effect in metadata-only mode.</td></tr><tr><td><code>includeHashtagMetadata</code></td><td>boolean</td><td>optional</td><td>When scraping posts, also emit a &#x27;hashtag_metadata&#x27; record with the challenge stats (videoCount, viewCount, description, etc.) at the start of each hashtag&#x27;s results.</td></tr></tbody></table></div></details><p><a href="input-schema.json">Download the published input schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+  &quot;description&quot;: &quot;Scrape TikTok hashtag metadata and/or posts. Metadata mode is always reliable. Posts mode may be blocked by TikTok; auto mode tries posts then falls back gracefully.&quot;,
+  &quot;properties&quot;: {
+    &quot;hashtags&quot;: {
+      &quot;description&quot;: &quot;List of TikTok hashtags to scrape. You can include or omit the # symbol. Example: comedy, #dance, fyp&quot;,
+      &quot;editor&quot;: &quot;stringList&quot;,
+      &quot;items&quot;: {
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;minItems&quot;: 1,
+      &quot;prefill&quot;: [
+        &quot;fyp&quot;
+      ],
+      &quot;title&quot;: &quot;Hashtags&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;includeHashtagMetadata&quot;: {
+      &quot;default&quot;: true,
+      &quot;description&quot;: &quot;When scraping posts, also emit a &#x27;hashtag_metadata&#x27; record with the challenge stats (videoCount, viewCount, description, etc.) at the start of each hashtag&#x27;s results.&quot;,
+      &quot;prefill&quot;: true,
+      &quot;title&quot;: &quot;Include Hashtag Metadata&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;maxPostsPerHashtag&quot;: {
+      &quot;default&quot;: 50,
+      &quot;description&quot;: &quot;Maximum number of posts to scrape per hashtag (when mode includes posts). Set to 0 to skip posts entirely (equivalent to metadata-only mode). Has no effect in metadata-only mode.&quot;,
+      &quot;maximum&quot;: 500,
+      &quot;minimum&quot;: 0,
+      &quot;prefill&quot;: 5,
+      &quot;title&quot;: &quot;Max Posts Per Hashtag&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;mode&quot;: {
+      &quot;default&quot;: &quot;auto&quot;,
+      &quot;description&quot;: &quot;What to scrape per hashtag. &#x27;metadata&#x27; emits one stats record per hashtag (always works). &#x27;posts&#x27; fetches videos (may be blocked). &#x27;topPosts&#x27; tries a search fallback. &#x27;auto&#x27; tries posts, falls back to topPosts, then metadata-only.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;auto&quot;,
+        &quot;metadata&quot;,
+        &quot;posts&quot;,
+        &quot;topPosts&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;Auto (posts → topPosts → metadata fallback)&quot;,
+        &quot;Metadata only (hashtag stats, always reliable)&quot;,
+        &quot;Posts (videos — may be blocked by TikTok)&quot;,
+        &quot;Top Posts (search-based fallback, best-effort)&quot;
+      ],
+      &quot;prefill&quot;: &quot;metadata&quot;,
+      &quot;title&quot;: &quot;Scrape Mode&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    }
+  },
+  &quot;required&quot;: [
+    &quot;hashtags&quot;
+  ],
+  &quot;schemaVersion&quot;: 1,
+  &quot;title&quot;: &quot;TikTok Hashtag Scraper Input&quot;,
+  &quot;type&quot;: &quot;object&quot;
+}
+</code></pre></details></section><section class="schema-section" id="output-schema"><h2>Output schema</h2><p>Published result links and storage locations. This schema is not an exhaustive contract for every field in a dataset record.</p><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>data</code></td><td>string</td><td>optional</td><td>Dataset containing hashtag metadata records and/or post records. Use &#x27;recordType&#x27; field to distinguish: &#x27;hashtag_metadata&#x27; rows have challenge stats; post rows have full video metadata.</td></tr></tbody></table></div><p><a href="output-schema.json">Download the published output schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+  &quot;actorOutputSchemaVersion&quot;: 1,
+  &quot;description&quot;: &quot;Hashtag stats records (video/view counts) and TikTok video records (caption, author, music, engagement) collected per hashtag.&quot;,
+  &quot;properties&quot;: {
+    &quot;data&quot;: {
+      &quot;description&quot;: &quot;Dataset containing hashtag metadata records and/or post records. Use &#x27;recordType&#x27; field to distinguish: &#x27;hashtag_metadata&#x27; rows have challenge stats; post rows have full video metadata.&quot;,
+      &quot;template&quot;: &quot;{{links.apiDefaultDatasetUrl}}/items&quot;,
+      &quot;title&quot;: &quot;Hashtag Data&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    }
+  },
+  &quot;title&quot;: &quot;TikTok Hashtag Video Feed &amp; Stats Extractor Output&quot;
+}
+</code></pre></details></section><section class="schema-section" id="dataset-schema"><h2>Dataset schema</h2><p>Published dataset views and any declared field definitions. A view can select only a subset of the returned record fields.</p><p><a href="dataset-schema.json">Download the published dataset schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+  &quot;actorSpecification&quot;: 1,
+  &quot;fields&quot;: {
+    &quot;announcementBody&quot;: {
+      &quot;description&quot;: &quot;Optional challenge announcement body text&quot;,
+      &quot;title&quot;: &quot;Announcement Body&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;announcementTitle&quot;: {
+      &quot;description&quot;: &quot;Optional challenge announcement title&quot;,
+      &quot;title&quot;: &quot;Announcement Title&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;author&quot;: {
+      &quot;description&quot;: &quot;Author snapshot at time of scraping (id, username, displayName, followerCount, etc.)&quot;,
+      &quot;title&quot;: &quot;Author&quot;,
+      &quot;type&quot;: &quot;object&quot;
+    },
+    &quot;caption&quot;: {
+      &quot;description&quot;: &quot;Post caption/description text&quot;,
+      &quot;title&quot;: &quot;Caption&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;collectCount&quot;: {
+      &quot;description&quot;: &quot;Number of times post was saved/collected&quot;,
+      &quot;title&quot;: &quot;Collect Count&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;commentCount&quot;: {
+      &quot;description&quot;: &quot;Number of comments&quot;,
+      &quot;title&quot;: &quot;Comment Count&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;coverLarger&quot;: {
+      &quot;description&quot;: &quot;Large cover banner image URL&quot;,
+      &quot;title&quot;: &quot;Cover Image (Large)&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;coverMedium&quot;: {
+      &quot;description&quot;: &quot;Medium cover banner image URL&quot;,
+      &quot;title&quot;: &quot;Cover Image (Medium)&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;coverThumb&quot;: {
+      &quot;description&quot;: &quot;Thumbnail cover image URL&quot;,
+      &quot;title&quot;: &quot;Cover Image (Thumb)&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;createTime&quot;: {
+      &quot;description&quot;: &quot;Unix timestamp when the post was created&quot;,
+      &quot;title&quot;: &quot;Create Time&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;createdAt&quot;: {
+      &quot;description&quot;: &quot;ISO 8601 timestamp of post creation (UTC)&quot;,
+      &quot;title&quot;: &quot;Created At&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;desc&quot;: {
+      &quot;description&quot;: &quot;Optional hashtag description&quot;,
+      &quot;title&quot;: &quot;Description&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;duetEnabled&quot;: {
+      &quot;description&quot;: &quot;Whether duets are allowed on this post&quot;,
+      &quot;title&quot;: &quot;Duet Enabled&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;hashtagId&quot;: {
+      &quot;description&quot;: &quot;TikTok internal challenge ID (string)&quot;,
+      &quot;title&quot;: &quot;Hashtag ID&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;hashtagName&quot;: {
+      &quot;description&quot;: &quot;Canonical hashtag name as TikTok stores it&quot;,
+      &quot;title&quot;: &quot;Hashtag Name&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;hashtags&quot;: {
+      &quot;description&quot;: &quot;Hashtags used in the post, each with id and name&quot;,
+      &quot;title&quot;: &quot;Hashtags&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;images&quot;: {
+      &quot;description&quot;: &quot;Slideshow images for photo posts (postType=&#x27;slideshow&#x27;). Each item has ordinal, width, height, urlList.&quot;,
+      &quot;title&quot;: &quot;Images&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;isAd&quot;: {
+      &quot;description&quot;: &quot;Whether the post is a paid advertisement&quot;,
+      &quot;title&quot;: &quot;Is Ad&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;isCommerce&quot;: {
+      &quot;description&quot;: &quot;Whether this is a commercial/brand hashtag&quot;,
+      &quot;title&quot;: &quot;Is Commerce&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;likeCount&quot;: {
+      &quot;description&quot;: &quot;Number of likes&quot;,
+      &quot;title&quot;: &quot;Like Count&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;locationCreated&quot;: {
+      &quot;description&quot;: &quot;Country code where the post was created&quot;,
+      &quot;title&quot;: &quot;Location Created&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;mediaUrlExpiresAt&quot;: {
+      &quot;description&quot;: &quot;ISO 8601 UTC timestamp when signed media URLs expire&quot;,
+      &quot;title&quot;: &quot;Media URL Expires At&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;mentions&quot;: {
+      &quot;description&quot;: &quot;@mentions in the caption with username and offsets&quot;,
+      &quot;title&quot;: &quot;Mentions&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;music&quot;: {
+      &quot;description&quot;: &quot;Music/sound used in the post (id, title, authorName, duration, playUrl)&quot;,
+      &quot;title&quot;: &quot;Music&quot;,
+      &quot;type&quot;: &quot;object&quot;
+    },
+    &quot;playCount&quot;: {
+      &quot;description&quot;: &quot;Number of video plays&quot;,
+      &quot;title&quot;: &quot;Play Count&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;postId&quot;: {
+      &quot;description&quot;: &quot;Unique TikTok post/video ID (string)&quot;,
+      &quot;title&quot;: &quot;Post ID&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;postType&quot;: {
+      &quot;description&quot;: &quot;Either &#x27;video&#x27; or &#x27;slideshow&#x27;&quot;,
+      &quot;title&quot;: &quot;Post Type&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;postUrl&quot;: {
+      &quot;description&quot;: &quot;Direct URL to the TikTok post&quot;,
+      &quot;title&quot;: &quot;Post URL&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;profileLarger&quot;: {
+      &quot;description&quot;: &quot;Large profile/cover image URL for the hashtag&quot;,
+      &quot;title&quot;: &quot;Profile Image (Large)&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;profileMedium&quot;: {
+      &quot;description&quot;: &quot;Medium profile image URL for the hashtag&quot;,
+      &quot;title&quot;: &quot;Profile Image (Medium)&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;profileThumb&quot;: {
+      &quot;description&quot;: &quot;Thumbnail profile image URL for the hashtag&quot;,
+      &quot;title&quot;: &quot;Profile Image (Thumb)&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;recordType&quot;: {
+      &quot;description&quot;: &quot;Discriminator: &#x27;hashtag_metadata&#x27; for challenge stats rows, absent for post rows&quot;,
+      &quot;title&quot;: &quot;Record Type&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;repostCount&quot;: {
+      &quot;description&quot;: &quot;Number of reposts (from statsV2)&quot;,
+      &quot;title&quot;: &quot;Repost Count&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;searchedHashtag&quot;: {
+      &quot;description&quot;: &quot;The normalized hashtag input that produced this record (without #)&quot;,
+      &quot;title&quot;: &quot;Searched Hashtag&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;shareCount&quot;: {
+      &quot;description&quot;: &quot;Number of shares&quot;,
+      &quot;title&quot;: &quot;Share Count&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;shareEnabled&quot;: {
+      &quot;description&quot;: &quot;Whether sharing is enabled on this post&quot;,
+      &quot;title&quot;: &quot;Share Enabled&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;shareMeta&quot;: {
+      &quot;description&quot;: &quot;Share metadata object with title and desc fields&quot;,
+      &quot;title&quot;: &quot;Share Meta&quot;,
+      &quot;type&quot;: &quot;object&quot;
+    },
+    &quot;stitchEnabled&quot;: {
+      &quot;description&quot;: &quot;Whether stitching is allowed on this post&quot;,
+      &quot;title&quot;: &quot;Stitch Enabled&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;textLanguage&quot;: {
+      &quot;description&quot;: &quot;Language code of the caption text&quot;,
+      &quot;title&quot;: &quot;Text Language&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;video&quot;: {
+      &quot;description&quot;: &quot;Video metadata (width, height, duration, ratio, playUrl, cover, etc.)&quot;,
+      &quot;title&quot;: &quot;Video&quot;,
+      &quot;type&quot;: &quot;object&quot;
+    },
+    &quot;videoCount&quot;: {
+      &quot;description&quot;: &quot;Total number of videos using this hashtag (from statsV2, string to avoid overflow)&quot;,
+      &quot;title&quot;: &quot;Video Count&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;viewCount&quot;: {
+      &quot;description&quot;: &quot;Total views across all videos using this hashtag (from statsV2, string)&quot;,
+      &quot;title&quot;: &quot;View Count&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    }
+  },
+  &quot;title&quot;: &quot;TikTok Hashtag Scraper Dataset&quot;,
+  &quot;views&quot;: {
+    &quot;overview&quot;: {
+      &quot;display&quot;: {
+        &quot;component&quot;: &quot;table&quot;,
+        &quot;properties&quot;: {
+          &quot;caption&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Caption&quot;
+          },
+          &quot;commentCount&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Comments&quot;
+          },
+          &quot;hashtagName&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Hashtag Name&quot;
+          },
+          &quot;likeCount&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Likes&quot;
+          },
+          &quot;playCount&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Plays&quot;
+          },
+          &quot;postId&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Post ID&quot;
+          },
+          &quot;postUrl&quot;: {
+            &quot;format&quot;: &quot;link&quot;,
+            &quot;label&quot;: &quot;Post URL&quot;
+          },
+          &quot;recordType&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Type&quot;
+          },
+          &quot;searchedHashtag&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Hashtag&quot;
+          },
+          &quot;videoCount&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Video Count&quot;
+          },
+          &quot;viewCount&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;View Count&quot;
+          }
+        }
+      },
+      &quot;title&quot;: &quot;Overview&quot;,
+      &quot;transformation&quot;: {
+        &quot;fields&quot;: [
+          &quot;recordType&quot;,
+          &quot;searchedHashtag&quot;,
+          &quot;hashtagName&quot;,
+          &quot;videoCount&quot;,
+          &quot;viewCount&quot;,
+          &quot;postId&quot;,
+          &quot;caption&quot;,
+          &quot;playCount&quot;,
+          &quot;likeCount&quot;,
+          &quot;commentCount&quot;,
+          &quot;postUrl&quot;
+        ]
+      }
+    }
+  }
+}
+</code></pre></details></section><section class="schema-section" id="key-value-schema"><h2>Key-value schema</h2><p>Published key-value store definitions, when provided by this build.</p><p>This definition is not present in the default published build. See the published README for available documentation.</p></section><section id="published-readme"><h2>Published README</h2><details><summary>Read the full published documentation</summary><h2 id="readme-tiktok-hashtag-video-feed-stats-extractor">TikTok Hashtag Video Feed &amp; Stats Extractor</h2>
+<p>Pull videos and aggregate stats from any TikTok hashtag page without logging in. Point it at one or more hashtags and get back each hashtag's total view/video counts, plus the individual video feed underneath it — captions, author details, music, and engagement counts — in one dataset.</p>
+<h2 id="readme-what-this-actor-does">What this actor does</h2>
+<ul>
+<li>Accepts any number of hashtags, with or without the <code>#</code> symbol, and processes each independently</li>
+<li>Pulls hashtag-level stats (total video count, total view count, commerce flag, cover images) from the hashtag's TikTok page</li>
+<li>Pages through the video feed under each hashtag (<code>posts</code> mode) with per-video captions, author, music, and engagement metrics, up to <code>maxPostsPerHashtag</code></li>
+<li>In <code>auto</code> mode, falls back from the hashtag feed to a single page of TikTok keyword-search results (<code>topPosts</code>), and finally to the stats record alone, when the feed is blocked; <code>posts</code> mode has no such fallback</li>
+<li>Empty fields are omitted from every record</li>
+</ul>
+<h2 id="readme-output-per-hashtag-metadata-record">Output per hashtag metadata record</h2>
+<ul>
+<li><code>recordType</code> — always <code>&quot;hashtag_metadata&quot;</code></li>
+<li><code>searchedHashtag</code> — the hashtag you requested, lowercased and without <code>#</code></li>
+<li><code>hashtagId</code> — TikTok's internal challenge ID</li>
+<li><code>hashtagName</code> — normalized hashtag name without <code>#</code></li>
+<li><code>desc</code> — hashtag description text</li>
+<li><code>videoCount</code> — total videos posted under this hashtag, as TikTok reports it (a numeric string, since counts can be very large)</li>
+<li><code>viewCount</code> — total views across all videos under this hashtag (numeric string)</li>
+<li><code>isCommerce</code> — whether TikTok classifies this as a branded/commercial hashtag</li>
+<li><code>profileLarger</code> / <code>profileMedium</code> / <code>profileThumb</code> / <code>coverLarger</code> / <code>coverMedium</code> / <code>coverThumb</code> — cover image URLs, when TikTok provides them</li>
+<li><code>announcementTitle</code> / <code>announcementBody</code> — hashtag campaign announcement text, when present</li>
+<li><code>shareMeta</code> — <code>{title, desc}</code> used for social-sharing previews</li>
+</ul>
+<p>This record is written first for each hashtag when <code>includeHashtagMetadata</code> is on, and always in <code>metadata</code> mode. In <code>topPosts</code> mode, if TikTok doesn't return the hashtag's stats, the record still appears but holds only <code>recordType</code> and <code>searchedHashtag</code>.</p>
+<h2 id="readme-output-per-video-record">Output per video record</h2>
+<ul>
+<li><code>recordType</code> — always <code>&quot;post&quot;</code></li>
+<li><code>searchedHashtag</code> — the hashtag this video was found under</li>
+<li><code>postId</code>, <code>postType</code> (<code>video</code> or <code>slideshow</code>), <code>postUrl</code></li>
+<li><code>caption</code>, <code>textLanguage</code>, <code>locationCreated</code></li>
+<li><code>createTime</code> (Unix epoch), <code>createdAt</code> (ISO 8601)</li>
+<li><code>stitchEnabled</code>, <code>shareEnabled</code>, <code>duetEnabled</code>, <code>isAd</code></li>
+<li><code>playCount</code>, <code>likeCount</code>, <code>commentCount</code>, <code>shareCount</code>, <code>collectCount</code>, <code>repostCount</code></li>
+<li><code>author</code> — <code>{id, secUid, username, displayName, bio, verified, privateAccount, roomId, avatarUrl, followerCount, followingCount, heartCount, videoCount}</code> (the counts appear when TikTok includes them with the video)</li>
+<li><code>music</code> — <code>{id, title, authorName, original, duration, album, playUrl, coverUrl}</code></li>
+<li><code>video</code> — <code>{width, height, duration, ratio, playUrl, cover}</code></li>
+<li><code>images[]</code> — slide images with <code>{ordinal, width, height, urlList}</code>, present only for slideshow posts</li>
+<li><code>hashtags[]</code> — hashtags tagged in the caption (including the one you searched, when present), as <code>{name, id, isCommerce}</code></li>
+<li><code>mentions[]</code> — <code>@</code> mentions in the caption, as <code>{username, start, end, awemeId}</code> (character offsets in the caption)</li>
+<li><code>mediaUrlExpiresAt</code> — expiry timestamp of the signed media URLs, when detectable</li>
+</ul>
+<h2 id="readme-input">Input</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>hashtags</code></td>
+<td>array</td>
+<td>–</td>
+<td>Hashtags to scrape, with or without <code>#</code> (required, at least one)</td>
+</tr>
+<tr>
+<td><code>mode</code></td>
+<td>string</td>
+<td><code>auto</code></td>
+<td><code>metadata</code> (stats only), <code>posts</code> (hashtag video feed), <code>topPosts</code> (one page of keyword-search results, at most 50 videos), or <code>auto</code> (posts → topPosts → stats only)</td>
+</tr>
+<tr>
+<td><code>maxPostsPerHashtag</code></td>
+<td>integer</td>
+<td><code>50</code></td>
+<td>Max videos per hashtag in <code>posts</code>, <code>topPosts</code> and <code>auto</code> (0–500); ignored in <code>metadata</code> mode; <code>0</code> returns no videos</td>
+</tr>
+<tr>
+<td><code>includeHashtagMetadata</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td>Also emit the hashtag stats record before the video records; <code>metadata</code> mode emits it regardless</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="readme-example-lightweight-stats-check">Example: lightweight stats check</h3>
+<pre><code class="language-json">{
+    &quot;hashtags&quot;: [&quot;fyp&quot;, &quot;trending&quot;, &quot;viral&quot;],
+    &quot;mode&quot;: &quot;metadata&quot;
+}
+</code></pre>
+<h3 id="readme-example-campaign-hashtag-deep-dive">Example: campaign hashtag deep dive</h3>
+<pre><code class="language-json">{
+    &quot;hashtags&quot;: [&quot;summerfashion&quot;, &quot;ootd&quot;],
+    &quot;mode&quot;: &quot;auto&quot;,
+    &quot;maxPostsPerHashtag&quot;: 100,
+    &quot;includeHashtagMetadata&quot;: true
+}
+</code></pre>
+<h3 id="readme-example-brand-hashtag-video-pull-only">Example: brand hashtag video pull only</h3>
+<pre><code class="language-json">{
+    &quot;hashtags&quot;: [&quot;nikerunning&quot;],
+    &quot;mode&quot;: &quot;posts&quot;,
+    &quot;maxPostsPerHashtag&quot;: 200,
+    &quot;includeHashtagMetadata&quot;: false
+}
+</code></pre>
+<h2 id="readme-use-cases">Use cases</h2>
+<ul>
+<li><strong>Brand teams</strong> measuring reach of a branded or campaign hashtag via its total view/video counts</li>
+<li><strong>Social media managers</strong> pulling the current top videos under a hashtag for competitive content review</li>
+<li><strong>Trend researchers</strong> collecting video samples from a niche hashtag to analyze creator patterns</li>
+<li><strong>Agencies</strong> comparing hashtag volume across several client or competitor tags in a single run</li>
+<li><strong>Growth marketers</strong> monitoring how fast a hashtag's video count is climbing over successive runs</li>
+</ul>
+<h2 id="readme-faq">FAQ</h2>
+<p><strong>Does this need a TikTok login or cookies?</strong>
+No. Hashtag stats and the video feed are both pulled from TikTok's public pages without any account.</p>
+<p><strong>Why would a run only return the metadata record and no videos?</strong>
+TikTok's hashtag video feed sometimes blocks automated access. In <code>auto</code> mode the actor falls back to keyword search, and if that also comes back empty it still returns the hashtag stats record rather than failing the run. In <code>posts</code> mode there is no search fallback, so a blocked feed leaves only the stats record (or nothing, if <code>includeHashtagMetadata</code> is off). If TikTok won't return even the hashtag's stats after repeated attempts, that hashtag produces no records.</p>
+<p><strong>What's the difference between <code>posts</code> and <code>topPosts</code>?</strong>
+<code>posts</code> reads TikTok's dedicated hashtag video feed page by page. <code>topPosts</code> runs a TikTok keyword search for the hashtag text and takes the videos from the first page of results, so it returns at most 50 videos and some of them may not actually carry the hashtag. <code>auto</code> tries <code>posts</code> first and only falls back to <code>topPosts</code> if the feed comes back empty.</p>
+<p><strong>Why did I get fewer videos than <code>maxPostsPerHashtag</code>?</strong>
+The actor stops when TikTok reports no more pages for the hashtag feed or blocks a page mid-run, and <code>topPosts</code> (including the <code>auto</code> fallback) never goes past one search page of up to 50 videos.</p>
+<p><strong>Does <code>viewCount</code> reflect only the videos I scraped?</strong>
+No — it's TikTok's all-time aggregate view count for every video ever posted under that hashtag, independent of how many videos this run collected.</p>
+<p><strong>Do I need to include the <code>#</code> symbol?</strong>
+No. <code>#fyp</code>, <code>fyp</code> and <code>FYP</code> are treated identically, and duplicates in the list are processed once.</p>
+<p><strong>Is this affiliated with TikTok?</strong>
+No. This is an independent actor that reads TikTok's public hashtag pages and is not operated or endorsed by TikTok.</p>
+</details></section><section id="python-quickstart"><h2>Python quickstart</h2><p>Use a schema-derived input and the Python standard library to start a run. An Apify account and token are required for execution.</p><p><a href="/apify-actor-examples/guides/FSS2ebxYm0XcCsrgp/">Open the step-by-step Python guide →</a></p></section><p class="source-note">Source build <code>JbUW6RcduuzN2roVp</code>. Documentation is regenerated from the default published build; private drafts are not included.</p></article></div></main><footer class="footer"><strong>Nimbryxo Studio</strong><div class="footer-links"><a href="/apify-actor-examples/topics/">Topics</a><a href="/apify-actor-examples/sources/">Documentation sources</a><a href="https://apify.com/nimbryxo-studio">Apify</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></div></footer></body></html>

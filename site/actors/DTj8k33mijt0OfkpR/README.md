@@ -1,0 +1,143 @@
+# Facebook Marketplace Listing & Price Extractor
+
+Pull public Facebook Marketplace listings from a city feed, a category, a keyword search, or a direct item link. Point it at one or more Marketplace URLs — or just give it a keyword and a location — and get back structured rows with price, location, photos, delivery method, and listing status for cars, furniture, electronics, apartments, and everything else people list on Marketplace.
+
+## What this actor does
+
+- Scrapes any mix of Marketplace location feeds, category feeds, keyword-search feeds, and direct item URLs in a single run
+- Builds a search feed automatically from a keyword and location when you don't supply a URL
+- Filters results by price range, item condition, delivery method, and listing age, checked against the data each listing actually returns
+- Can visit each listing's own page for extra detail (description, attributes, additional photos) instead of relying on search-result data alone
+- Tags every row with which input URL produced it, so results from several searches stay attributable
+- Drops duplicate listing IDs seen across different inputs by default
+- Values Facebook doesn't expose are never guessed: core fields stay in every row as empty strings, `null` or `false`, and extra source fields appear only when present
+
+## Output per listing
+
+Every row has the same core set of fields. When Facebook doesn't expose a value, that field is still present as an empty string, `null`, `false` or an empty list rather than being dropped.
+
+**Normalized fields**
+
+- `id` — Facebook's Marketplace listing ID
+- `title` — the listing title (`null` if not found)
+- `price` — object with `amount`, `currency`, `formatted`, and `amountWithOffset` (each `null` when unknown)
+- `city`, `state`, `locationText` — the listing's location (`null` when not exposed)
+- `primaryPhotoUrl` — URL of the main listing photo
+- `listingUrl` — direct link to the listing (`https://www.facebook.com/marketplace/item/<id>`)
+- `creationTime` — when the listing was posted (Unix timestamp), only when Facebook exposes it
+- `listingPhotos`, `listingVideo`, `vehicle` — extra media and vehicle data, only when the source page includes them
+
+**Run and source information**
+
+- `facebookUrl`, `sourceUrl` — the Marketplace page this row was scraped from (the input URL, or the generated search URL)
+- `sourceType` — whether that input was a `search`, `category`, `location`, or `direct-item` URL
+- `inputIndex` — position of the input in `startUrls`, or `-1` for a search generated from `searchQuery` + `location`
+- `searchQuery`, `locationQueried` — the keyword and location behind a generated search; `null` for rows from `startUrls`
+- `dataMode` — `fast` or `deep`, depending on whether listing pages were visited
+- `extractionSource` — internal label for how the row was found (`null` when not recorded)
+- `accessState` — page-access status for the source; always `results` on rows that reach the dataset
+- `qualityStatus` — `complete` when both ID and title were found, `partial` otherwise
+- `missingFields` — which of `title`, `price`, `location` couldn't be read for this row
+- `sellerDataAvailability` — `exposed` when the seller's name or ID was found, `not_exposed` otherwise
+- `scrapedAt` — ISO 8601 UTC time the row was written
+
+**Facebook's own field names (kept for compatibility)**
+
+- `marketplace_listing_title`, `listing_price` (`formatted_amount`, `amount`, `amount_with_offset_in_currency`, sometimes `currency`), `strikethrough_price`, `comparable_price`, `comparable_price_type`, `min_listing_price`, `max_listing_price`
+- `location.reverse_geocode` — `city`, `state`, and `city_page` (`display_name`, `id`)
+- `primary_listing_photo` — `image.uri` and photo `id`
+- `is_sold`, `is_pending`, `is_live`, `is_hidden`, `is_viewer_seller` — status flags (`is_live` is `null` when unknown)
+- `delivery_types` — delivery/pickup methods the seller offers (empty list when not exposed)
+- `marketplace_listing_category_id` — Facebook's category ID for the listing
+- `marketplace_listing_seller` — seller `name` and `id` (empty strings when not exposed)
+- `custom_title`, `custom_sub_titles_with_rendering_flags`, `origin_group`, `listing_video`, `parent_listing`
+
+Any other fields Facebook includes for a listing are passed through under their original names. Examples are `redacted_description` and `attribute_data`, which are more common in `deep` mode.
+
+## Input
+
+| Field | Type | Default | Description |
+|---|---|---|---|
+| `startUrls` | array | – | Marketplace search, category, location, or direct item URLs to scrape |
+| `searchQuery` | string | – | Keyword to search for; only used when `startUrls` has no valid Marketplace URL, and then `location` is required |
+| `location` | string | – | Marketplace location slug or city/state to pair with `searchQuery`, e.g. `nyc` or `Austin, TX` |
+| `latitude` | number | – | Center latitude, added to the generated `searchQuery` search only |
+| `longitude` | number | – | Center longitude, added to the generated `searchQuery` search only |
+| `radiusKm` | integer | – | Search radius in kilometers (1–500), added to the generated `searchQuery` search only |
+| `categoryId` | string | – | Facebook Marketplace category ID, added to the generated `searchQuery` search only |
+| `sortBy` | string | `relevance` | `relevance`, `newest`, `price_asc`, or `price_desc`. Sent to Facebook for a generated search; the actor also re-orders each batch of rows it writes by price or posting time |
+| `minPrice` | number | – | Only return listings priced at or above this amount; listings without a readable price are dropped |
+| `maxPrice` | number | – | Only return listings priced at or below this amount; listings without a readable price are dropped |
+| `condition` | string | `any` | `any`, `new`, `used_like_new`, `used_good`, or `used_fair`; listings whose condition can't be read are dropped |
+| `deliveryMethod` | string | `all` | `all`, `shipping`, or `local`; listings without matching delivery data are dropped |
+| `daysSinceListed` | integer | – | Only include listings created within this many days; listings without a posting time are dropped |
+| `maxItems` | integer | `50` | Maximum listings to return across all inputs combined |
+| `maxItemsPerUrl` | integer | `50` | Maximum listings to return from each individual input URL |
+| `resultsLimit` | integer | – | Older per-source limit kept for existing integrations; `maxItemsPerUrl` takes priority when both are set |
+| `scrapeMode` | string | `fast` | `fast` (search-result data only), `deep` (also visits each listing page for extra fields), or `auto` (behaves like `fast` unless `includeListingDetails` or `includeAllPhotos` is on) |
+| `includeListingDetails` | boolean | `false` | Turns on the same per-listing detail fetch as `scrapeMode: deep` |
+| `includeAllPhotos` | boolean | `false` | Also turns on the per-listing detail fetch (same effect as `deep`); photos are kept as Facebook exposes them |
+| `deduplicateAcrossInputs` | boolean | `true` | Return each listing ID once across all inputs. When turned off, the same listing can appear in several rows, including repeats from a single input in `fast` mode |
+| `proxyConfiguration` | object | `{"useApifyProxy": true, "apifyProxyGroups": ["RESIDENTIAL"], "apifyProxyCountry": "US"}` | Proxy used to reach Marketplace. Whenever Apify Proxy is enabled, the actor uses the US residential group regardless of the group or country you pick |
+
+## Example: keyword search by city
+
+```json
+{
+  "searchQuery": "laptop",
+  "location": "New York, NY",
+  "condition": "used_good",
+  "minPrice": 50,
+  "maxPrice": 500,
+  "maxItems": 100
+}
+```
+
+## Example: scrape a category feed with full listing detail
+
+```json
+{
+  "startUrls": [{ "url": "https://www.facebook.com/marketplace/sanfrancisco/instruments" }],
+  "scrapeMode": "deep",
+  "maxItemsPerUrl": 40
+}
+```
+
+## Example: a single item page
+
+```json
+{
+  "startUrls": [{ "url": "https://www.facebook.com/marketplace/item/772594759027016/" }]
+}
+```
+
+## Use cases
+
+- **Price monitoring** — track asking prices for a specific product category across cities over time
+- **Resale and arbitrage** — scan multiple city feeds for underpriced items in a category you resell
+- **Vehicle shopping** — pull vehicle listings by location and price range instead of scrolling the app
+- **Apartment hunting** — collect rental listings from several neighborhood feeds into one dataset
+- **Market research** — compare listing volume and pricing for a product across regions or time periods
+
+## FAQ
+
+**Why did I get fewer listings than `maxItems`?**
+`maxItems` and `maxItemsPerUrl` are ceilings, not guarantees. A search or feed may simply have fewer matching listings, Facebook may stop loading more as the page is scrolled, or your filters may remove listings that don't expose the data they check. If no listing at all can be returned and Facebook's page wasn't recognised as a genuine empty result, the run is marked as failed with the reason in its status message.
+
+**What's the difference between `fast` and `deep` scrape mode?**
+`fast` reads only what's already on the search/feed results page and writes rows as they are found. `deep` additionally opens each listing's own page to pick up fields like the description, extra photos, and category-specific attributes (e.g. vehicle details) that aren't shown in the feed view, and writes rows once that source is finished.
+
+**Why is the seller empty on some rows?**
+Facebook doesn't expose seller identity on every listing or in every view. When it isn't on the page, `marketplace_listing_seller` keeps empty `name` and `id` values and `sellerDataAvailability` is `not_exposed`.
+
+**Can I combine several searches or cities in one run?**
+Yes. Add multiple entries to `startUrls`, mixing location feeds, category feeds, search feeds, and direct item URLs as needed; each row records which input it came from via `sourceUrl` and `sourceType`. `searchQuery` and `location` are ignored as soon as `startUrls` contains a valid Marketplace URL, so put keyword searches into the URLs themselves when mixing.
+
+**Does this need Facebook login or cookies?**
+No. It reads Marketplace pages that are publicly accessible without signing in.
+
+**Do I need to configure a proxy myself?**
+No. The default US residential proxy is what the actor relies on, and when Apify Proxy is enabled it always uses that group and country. To target another region's Marketplace, use that city's Marketplace URL or `location`.
+
+**Is this affiliated with Facebook or Meta?**
+No. This is an independent, third-party actor that reads publicly accessible Facebook Marketplace pages; it is not affiliated with or endorsed by Meta.

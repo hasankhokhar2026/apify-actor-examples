@@ -1,0 +1,216 @@
+{
+  "description": "Paste Facebook Page, Profile, post, reel, video or share links. Page and Profile links return their timeline posts; every other link returns that one post.",
+  "properties": {
+    "commentsSortOrder": {
+      "default": "mostRelevant",
+      "description": "Order in which allComments are collected. \"Newest first\" is the best choice for monitoring recent discussion.",
+      "editor": "select",
+      "enum": [
+        "mostRelevant",
+        "newest",
+        "all"
+      ],
+      "enumTitles": [
+        "Most relevant (Facebook's default)",
+        "Newest first",
+        "All comments, unfiltered"
+      ],
+      "title": "Comment order",
+      "type": "string"
+    },
+    "contentTypes": {
+      "default": [],
+      "description": "Page and Profile links only: keep only these kinds of posts. Leave empty to keep everything. When matching posts are rare, the timeline scan stops after 20 × the post limit (at least 50) scanned posts and the run status says so.",
+      "editor": "select",
+      "items": {
+        "enum": [
+          "text",
+          "photo",
+          "album",
+          "video",
+          "reel",
+          "link",
+          "share",
+          "live"
+        ],
+        "enumTitles": [
+          "Text only",
+          "Single photo",
+          "Photo album (several photos)",
+          "Video",
+          "Reel",
+          "Link with preview",
+          "Shared post",
+          "Live video"
+        ],
+        "type": "string"
+      },
+      "title": "Content types",
+      "type": "array"
+    },
+    "fetchAllAlbumPhotos": {
+      "default": false,
+      "description": "The timeline shows at most five photos of an album post. Turn this on to list every photo of the album.",
+      "prefill": false,
+      "title": "Fetch every album photo",
+      "type": "boolean"
+    },
+    "fetchAllComments": {
+      "default": false,
+      "description": "Collect the full comment list of every post into allComments, up to the limit below. Adds a few requests per post.",
+      "prefill": false,
+      "title": "Fetch all comments",
+      "type": "boolean"
+    },
+    "fetchReelDetails": {
+      "default": false,
+      "description": "For reels, add the audio track (title, original audio or song, album art) and whether the reel can be remixed. Adds one request per reel.",
+      "prefill": false,
+      "title": "Reel audio and remix details",
+      "type": "boolean"
+    },
+    "fetchSharedPostDetails": {
+      "default": false,
+      "description": "For posts that re-share another post, add the original post's text, type and counters to sharedPost. Adds one request per shared post.",
+      "prefill": false,
+      "title": "Original text of shared posts",
+      "type": "boolean"
+    },
+    "fetchVideoCaptions": {
+      "default": false,
+      "description": "For videos and reels that have captions, download Facebook's own caption file and add it as a transcript (SRT text plus plain text). These are Facebook's captions, not independent speech-to-text.",
+      "prefill": false,
+      "sectionCaption": "Media",
+      "title": "Fetch video transcripts",
+      "type": "boolean"
+    },
+    "includeCommentReactions": {
+      "default": false,
+      "description": "Add each comment's reactions split by type (Like, Love, Haha, …) with exact totals, also for busy comments Facebook shows as \"1.2K\". Adds one request per comment that has reactions.",
+      "prefill": false,
+      "title": "Reactions by type on comments",
+      "type": "boolean"
+    },
+    "includeCommentReplies": {
+      "default": false,
+      "description": "Add each comment's reply thread (including replies to replies) as a replies list inside the comment.",
+      "prefill": false,
+      "title": "Include replies",
+      "type": "boolean"
+    },
+    "includeTopComments": {
+      "default": true,
+      "description": "Attach the comments Facebook shows under each post (about 1-10 per post) at no extra cost.",
+      "prefill": false,
+      "sectionCaption": "Comments",
+      "title": "Include top comments",
+      "type": "boolean"
+    },
+    "maxCommentsPerPost": {
+      "default": 100,
+      "description": "Upper limit for allComments on each post. Replies count toward this limit when replies are included.",
+      "maximum": 5000,
+      "minimum": 1,
+      "title": "Max comments per post",
+      "type": "integer"
+    },
+    "maxItems": {
+      "default": 20,
+      "description": "How many posts to collect from each Page or Profile link, newest first. Posts removed by the filters below don't count. Single post links always return one post.",
+      "maximum": 10000,
+      "minimum": 1,
+      "prefill": 1,
+      "sectionCaption": "Timeline limits and filters",
+      "title": "Max posts per Page or Profile",
+      "type": "integer"
+    },
+    "minComments": {
+      "description": "Page and Profile links only: skip posts with fewer comments than this.",
+      "maximum": 100000000,
+      "minimum": 0,
+      "title": "Minimum comments",
+      "type": "integer"
+    },
+    "minReactions": {
+      "description": "Page and Profile links only: skip posts with fewer reactions than this.",
+      "maximum": 100000000,
+      "minimum": 0,
+      "title": "Minimum reactions",
+      "type": "integer"
+    },
+    "onlyCommentsNewerThan": {
+      "description": "Keep only comments posted after this moment in allComments: a date (2026-01-01), ISO timestamp, or period such as \"1 day\" or \"2 weeks\". Comments are then read newest first.",
+      "editor": "textfield",
+      "title": "Only comments newer than",
+      "type": "string"
+    },
+    "onlyPostsNewerThan": {
+      "description": "Page and Profile links only: keep posts published after this moment. Accepts a date (2026-01-01), a full ISO 8601 timestamp, or a relative period such as \"7 days\", \"2 weeks\", \"3 months\" or \"1 year\".",
+      "editor": "textfield",
+      "title": "Only posts newer than",
+      "type": "string"
+    },
+    "onlyPostsOlderThan": {
+      "description": "Page and Profile links only: keep posts published before this moment. Same formats as \"Only posts newer than\". Combine both for a date window.",
+      "editor": "textfield",
+      "title": "Only posts older than",
+      "type": "string"
+    },
+    "rehostMedia": {
+      "default": "images",
+      "description": "Facebook's media links stop working after a few days. Copies are stored with this run and keep working; the original link stays in the matching …Original field.",
+      "editor": "select",
+      "enum": [
+        "images",
+        "imagesAndVideos",
+        "none"
+      ],
+      "enumTitles": [
+        "Images (photos, thumbnails, link and author pictures)",
+        "Images and videos (larger, slower)",
+        "No copies, keep Facebook's links"
+      ],
+      "prefill": "none",
+      "title": "Keep permanent media copies",
+      "type": "string"
+    },
+    "startUrls": {
+      "description": "Mix any public Facebook links. A Page or Profile link (facebook.com/nike, profile.php?id=…, /people/…/…) returns its timeline posts. A post, reel, video, photo, watch, share (facebook.com/share/…, fb.watch/…), permalink.php, story.php or public group post link returns that single post. Group feeds, events, Marketplace and search pages are not supported.",
+      "editor": "requestListSources",
+      "example": [
+        {
+          "url": "https://www.facebook.com/nike"
+        },
+        {
+          "url": "https://www.facebook.com/reel/2995026330636892/"
+        }
+      ],
+      "items": {
+        "properties": {
+          "url": {
+            "description": "A Facebook Page, Profile, post, reel, video or share link.",
+            "title": "URL",
+            "type": "string"
+          }
+        },
+        "required": [
+          "url"
+        ],
+        "type": "object"
+      },
+      "prefill": [
+        {
+          "url": "https://www.facebook.com/pepsi/posts/1054998311204476"
+        }
+      ],
+      "title": "Facebook links",
+      "type": "array"
+    }
+  },
+  "required": [
+    "startUrls"
+  ],
+  "schemaVersion": 1,
+  "title": "Facebook Timeline Posts & Reel Transcript Extractor Input",
+  "type": "object"
+}

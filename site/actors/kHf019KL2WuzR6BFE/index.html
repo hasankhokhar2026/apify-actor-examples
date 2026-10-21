@@ -1,0 +1,621 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src &#x27;self&#x27;; script-src &#x27;self&#x27; &#x27;sha256-I7izkZ+4PDC1QMXSsr6DVkHNXUmt9oBAKcLM8k21gtc=&#x27;; style-src &#x27;self&#x27;; img-src &#x27;self&#x27; https: data:; base-uri &#x27;self&#x27;; form-action &#x27;self&#x27;; object-src &#x27;none&#x27;"><title>Facebook Business Page Recommendation &amp; Review Scraper | Nimbryxo Studio</title><meta name="description" content="Get Facebook business page reviews by direct URL, business name search, or Page ID, with Recommended/Not Recommended status, owner replies, and filters for date, keyword, and recom"><meta name="robots" content="index,follow"><link rel="canonical" href="https://hasankhokhar2026.github.io/apify-actor-examples/actors/kHf019KL2WuzR6BFE/"><meta property="og:title" content="Facebook Business Page Recommendation &amp; Review Scraper | Nimbryxo Studio"><meta property="og:description" content="Get Facebook business page reviews by direct URL, business name search, or Page ID, with Recommended/Not Recommended status, owner replies, and filters for date, keyword, and recom"><meta property="og:type" content="website"><meta property="og:url" content="https://hasankhokhar2026.github.io/apify-actor-examples/actors/kHf019KL2WuzR6BFE/"><meta property="og:site_name" content="Nimbryxo Studio"><meta name="twitter:card" content="summary"><link rel="icon" href="/apify-actor-examples/assets/mark.svg?v=2d20f9dc334a" type="image/svg+xml"><link rel="stylesheet" href="/apify-actor-examples/assets/site.css?v=39545fd4a399"><link rel="stylesheet" href="/apify-actor-examples/assets/brand.css?v=eb0f935ade25"><link rel="alternate" type="application/rss+xml" title="Nimbryxo Studio guides" href="/apify-actor-examples/feed.xml"><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization","name":"Nimbryxo Studio","url":"https://hasankhokhar2026.github.io/apify-actor-examples/","sameAs":["https://apify.com/nimbryxo-studio"]},{"@type":"WebSite","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#website","name":"Nimbryxo Studio","url":"https://hasankhokhar2026.github.io/apify-actor-examples/","publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"inLanguage":"en"},{"@type":"WebPage","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/kHf019KL2WuzR6BFE/#webpage","name":"Facebook Business Page Recommendation & Review Scraper","description":"Get Facebook business page reviews by direct URL, business name search, or Page ID, with Recommended/Not Recommended status, owner replies, and filters for date, keyword, and recommendation status.","url":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/kHf019KL2WuzR6BFE/","isPartOf":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#website"},"publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"inLanguage":"en","mainEntity":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/kHf019KL2WuzR6BFE/#article"},"breadcrumb":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/kHf019KL2WuzR6BFE/#breadcrumb"}},{"@type":"TechArticle","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/kHf019KL2WuzR6BFE/#article","headline":"Facebook Business Page Recommendation & Review Scraper","name":"Facebook Business Page Recommendation & Review Scraper","description":"Get Facebook business page reviews by direct URL, business name search, or Page ID, with Recommended/Not Recommended status, owner replies, and filters for date, keyword, and recommendation status.","url":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/kHf019KL2WuzR6BFE/","author":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"mainEntityOfPage":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/kHf019KL2WuzR6BFE/#webpage"},"inLanguage":"en"},{"@type":"BreadcrumbList","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/kHf019KL2WuzR6BFE/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Nimbryxo Studio","item":"https://hasankhokhar2026.github.io/apify-actor-examples/"},{"@type":"ListItem","position":2,"name":"Actors","item":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/"},{"@type":"ListItem","position":3,"name":"Facebook Business Page Recommendation & Review Scraper","item":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/kHf019KL2WuzR6BFE/"}]}]}</script><script src="/apify-actor-examples/assets/site.js?v=7cabac48dd31" defer></script></head><body class="theme-studio"><a href="#main" class="skip-link">Skip to content</a><header><div class="inner"><a href="/apify-actor-examples/" class="brand"><img src="/apify-actor-examples/assets/mark.svg?v=2d20f9dc334a" alt="" width="29" height="29">Nimbryxo Studio</a><nav aria-label="Main navigation"><a href="/apify-actor-examples/actors/" aria-current="page">Actors</a><a href="/apify-actor-examples/guides/">Guides</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></nav></div></header><main id="main"><div class="doc-layout"><aside class="contents" aria-label="On this page"><strong>Contents</strong><a href="#overview">Overview</a><a href="#published-readme">Published README</a><a href="#input-schema">Input schema</a><a href="#output-schema">Output schema</a><a href="#dataset-schema">Dataset schema</a><a href="#python-quickstart">Python quickstart</a></aside><article class="prose"><div class="breadcrumb"><a href="/apify-actor-examples/actors/">Actors</a><span>/</span><span>Facebook Business Page Recommendation &amp; Review Scraper</span></div><section id="overview"><h1 class="doc-title">Facebook Business Page Recommendation &amp; Review Scraper</h1><p class="lede">Get Facebook business page reviews by direct URL, business name search, or Page ID, with Recommended/Not Recommended status, owner replies, and filters for date, keyword, and recommendation status.</p><div class="actions"><a class="button" href="https://apify.com/nimbryxo-studio/facebook-business-page-recommendation-and-review">Open on Apify</a><a class="text-link" href="https://github.com/hasankhokhar2026/apify-actor-examples/blob/main/docs/actors/kHf019KL2WuzR6BFE/README.md">GitHub source</a></div></section><section class="schema-section" id="input-schema"><h2>Input schema</h2><p>Input fields, types, required flags, descriptions, defaults, and prefills come from the published definition. Prefill examples are distinct from defaults.</p><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>mode</code></td><td>string</td><td>required</td><td>How to specify which Facebook page to scrape reviews from.</td></tr><tr><td><code>startUrls</code></td><td>array</td><td>optional</td><td>Links to Facebook page review sections (e.g. https://www.facebook.com/mcdonalds/reviews). Used when mode is &#x27;Direct URL&#x27;.</td></tr><tr><td><code>searchQueries</code></td><td>array</td><td>optional</td><td>Business name and location to search for (e.g. &#x27;Starbucks Dallas TX&#x27;). Used when mode is &#x27;Business Name Search&#x27;. Facebook&#x27;s own on-site search requires a login and is not used; results are resolved via an external web search instead, so accuracy depends on how distinctive the name/location is — for a guaranteed exact match, use &#x27;Direct URL&#x27; or &#x27;Facebook Page ID&#x27; mode instead.</td></tr></tbody></table></div><details><summary>Show all input fields</summary><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>mode</code></td><td>string</td><td>required</td><td>How to specify which Facebook page to scrape reviews from.</td></tr><tr><td><code>startUrls</code></td><td>array</td><td>optional</td><td>Links to Facebook page review sections (e.g. https://www.facebook.com/mcdonalds/reviews). Used when mode is &#x27;Direct URL&#x27;.</td></tr><tr><td><code>searchQueries</code></td><td>array</td><td>optional</td><td>Business name and location to search for (e.g. &#x27;Starbucks Dallas TX&#x27;). Used when mode is &#x27;Business Name Search&#x27;. Facebook&#x27;s own on-site search requires a login and is not used; results are resolved via an external web search instead, so accuracy depends on how distinctive the name/location is — for a guaranteed exact match, use &#x27;Direct URL&#x27; or &#x27;Facebook Page ID&#x27; mode instead.</td></tr><tr><td><code>pageIds</code></td><td>array</td><td>optional</td><td>Numeric Facebook Page IDs (e.g. &#x27;123456789&#x27;). Used when mode is &#x27;Facebook Page ID&#x27;.</td></tr><tr><td><code>maxReviews</code></td><td>integer</td><td>optional</td><td>Maximum total reviews to scrape across all input pages (1–500). Collection stops once this global cap is reached.</td></tr><tr><td><code>maxReviewsPerPage</code></td><td>integer</td><td>optional</td><td>Maximum reviews to scrape from each individual Facebook page (1–500). Useful when scraping multiple URLs to get an even spread of reviews per page.</td></tr><tr><td><code>sortBy</code></td><td>string</td><td>optional</td><td>Order in which to load reviews from the page. Note: Facebook&#x27;s current review pages do not consistently expose a visible sort control — &#x27;Most Helpful&#x27; is attempted on a best-effort basis and silently falls back to the page&#x27;s default order when unavailable.</td></tr><tr><td><code>filterByRecommendation</code></td><td>string</td><td>optional</td><td>Only return reviews with the selected recommendation status. Facebook uses binary Recommended/Not Recommended (no star ratings).</td></tr><tr><td><code>filterByDateFrom</code></td><td>string</td><td>optional</td><td>Only return reviews posted on or after this date. Format: YYYY-MM-DD (e.g. 2024-01-01).</td></tr><tr><td><code>filterByDateTo</code></td><td>string</td><td>optional</td><td>Only return reviews posted on or before this date. Format: YYYY-MM-DD (e.g. 2024-12-31).</td></tr><tr><td><code>filterByKeyword</code></td><td>string</td><td>optional</td><td>Only return reviews containing this word or phrase (case-insensitive).</td></tr><tr><td><code>cookies</code></td><td>array</td><td>optional</td><td>Optional Facebook session cookies (from a logged-in browser) to unlock more reviews. Without cookies, Facebook limits results to ~10–15 per page. Use a browser extension like &#x27;EditThisCookie&#x27; to export cookies as JSON. Each entry must have at minimum &#x27;name&#x27;, &#x27;value&#x27;, and &#x27;domain&#x27; fields.</td></tr><tr><td><code>proxyCountry</code></td><td>string</td><td>optional</td><td>Country to route the actor&#x27;s residential proxy through (residential proxy is always used and is not configurable off — Facebook consistently blocks this actor&#x27;s sessions without it). Facebook renders its UI text (including the Recommended/Not Recommended wording) based on the proxy&#x27;s IP location, not just browser settings — a non-English-speaking exit country can break English-text-based extraction even though the review data itself is unaffected. Defaults to United States.</td></tr></tbody></table></div></details><p><a href="input-schema.json">Download the published input schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+  &quot;description&quot;: &quot;Scrape reviews from a public Facebook business page by direct URL, business name search, or numeric Page ID, with optional date/keyword/recommendation filters.&quot;,
+  &quot;properties&quot;: {
+    &quot;cookies&quot;: {
+      &quot;default&quot;: [],
+      &quot;description&quot;: &quot;Optional Facebook session cookies (from a logged-in browser) to unlock more reviews. Without cookies, Facebook limits results to ~10–15 per page. Use a browser extension like &#x27;EditThisCookie&#x27; to export cookies as JSON. Each entry must have at minimum &#x27;name&#x27;, &#x27;value&#x27;, and &#x27;domain&#x27; fields.&quot;,
+      &quot;editor&quot;: &quot;json&quot;,
+      &quot;title&quot;: &quot;Facebook Cookies&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;filterByDateFrom&quot;: {
+      &quot;description&quot;: &quot;Only return reviews posted on or after this date. Format: YYYY-MM-DD (e.g. 2024-01-01).&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;title&quot;: &quot;Date From (YYYY-MM-DD)&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;filterByDateTo&quot;: {
+      &quot;description&quot;: &quot;Only return reviews posted on or before this date. Format: YYYY-MM-DD (e.g. 2024-12-31).&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;title&quot;: &quot;Date To (YYYY-MM-DD)&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;filterByKeyword&quot;: {
+      &quot;description&quot;: &quot;Only return reviews containing this word or phrase (case-insensitive).&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;title&quot;: &quot;Keyword Filter&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;filterByRecommendation&quot;: {
+      &quot;default&quot;: &quot;all&quot;,
+      &quot;description&quot;: &quot;Only return reviews with the selected recommendation status. Facebook uses binary Recommended/Not Recommended (no star ratings).&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;all&quot;,
+        &quot;recommended&quot;,
+        &quot;not_recommended&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;All Reviews&quot;,
+        &quot;Recommended Only&quot;,
+        &quot;Not Recommended Only&quot;
+      ],
+      &quot;prefill&quot;: &quot;all&quot;,
+      &quot;title&quot;: &quot;Recommendation Filter&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;maxReviews&quot;: {
+      &quot;default&quot;: 100,
+      &quot;description&quot;: &quot;Maximum total reviews to scrape across all input pages (1–500). Collection stops once this global cap is reached.&quot;,
+      &quot;editor&quot;: &quot;number&quot;,
+      &quot;maximum&quot;: 500,
+      &quot;minimum&quot;: 1,
+      &quot;prefill&quot;: 5,
+      &quot;title&quot;: &quot;Max Reviews (Global)&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;maxReviewsPerPage&quot;: {
+      &quot;description&quot;: &quot;Maximum reviews to scrape from each individual Facebook page (1–500). Useful when scraping multiple URLs to get an even spread of reviews per page.&quot;,
+      &quot;editor&quot;: &quot;number&quot;,
+      &quot;maximum&quot;: 500,
+      &quot;minimum&quot;: 1,
+      &quot;title&quot;: &quot;Max Reviews Per Page&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;mode&quot;: {
+      &quot;default&quot;: &quot;url&quot;,
+      &quot;description&quot;: &quot;How to specify which Facebook page to scrape reviews from.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;url&quot;,
+        &quot;search&quot;,
+        &quot;pageId&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;Direct URL&quot;,
+        &quot;Business Name Search&quot;,
+        &quot;Facebook Page ID&quot;
+      ],
+      &quot;prefill&quot;: &quot;url&quot;,
+      &quot;title&quot;: &quot;Input Mode&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;pageIds&quot;: {
+      &quot;default&quot;: [],
+      &quot;description&quot;: &quot;Numeric Facebook Page IDs (e.g. &#x27;123456789&#x27;). Used when mode is &#x27;Facebook Page ID&#x27;.&quot;,
+      &quot;editor&quot;: &quot;stringList&quot;,
+      &quot;title&quot;: &quot;Facebook Page IDs&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;proxyCountry&quot;: {
+      &quot;default&quot;: &quot;US&quot;,
+      &quot;description&quot;: &quot;Country to route the actor&#x27;s residential proxy through (residential proxy is always used and is not configurable off — Facebook consistently blocks this actor&#x27;s sessions without it). Facebook renders its UI text (including the Recommended/Not Recommended wording) based on the proxy&#x27;s IP location, not just browser settings — a non-English-speaking exit country can break English-text-based extraction even though the review data itself is unaffected. Defaults to United States.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;US&quot;,
+        &quot;GB&quot;,
+        &quot;CA&quot;,
+        &quot;AU&quot;,
+        &quot;IE&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;United States&quot;,
+        &quot;United Kingdom&quot;,
+        &quot;Canada&quot;,
+        &quot;Australia&quot;,
+        &quot;Ireland&quot;
+      ],
+      &quot;prefill&quot;: &quot;US&quot;,
+      &quot;title&quot;: &quot;Proxy Country&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;searchQueries&quot;: {
+      &quot;default&quot;: [],
+      &quot;description&quot;: &quot;Business name and location to search for (e.g. &#x27;Starbucks Dallas TX&#x27;). Used when mode is &#x27;Business Name Search&#x27;. Facebook&#x27;s own on-site search requires a login and is not used; results are resolved via an external web search instead, so accuracy depends on how distinctive the name/location is — for a guaranteed exact match, use &#x27;Direct URL&#x27; or &#x27;Facebook Page ID&#x27; mode instead.&quot;,
+      &quot;editor&quot;: &quot;stringList&quot;,
+      &quot;title&quot;: &quot;Business Search Queries&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;sortBy&quot;: {
+      &quot;default&quot;: &quot;most_recent&quot;,
+      &quot;description&quot;: &quot;Order in which to load reviews from the page. Note: Facebook&#x27;s current review pages do not consistently expose a visible sort control — &#x27;Most Helpful&#x27; is attempted on a best-effort basis and silently falls back to the page&#x27;s default order when unavailable.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;most_recent&quot;,
+        &quot;most_helpful&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;Most Recent&quot;,
+        &quot;Most Helpful&quot;
+      ],
+      &quot;prefill&quot;: &quot;most_recent&quot;,
+      &quot;title&quot;: &quot;Sort Order&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;startUrls&quot;: {
+      &quot;default&quot;: [],
+      &quot;description&quot;: &quot;Links to Facebook page review sections (e.g. https://www.facebook.com/mcdonalds/reviews). Used when mode is &#x27;Direct URL&#x27;.&quot;,
+      &quot;editor&quot;: &quot;requestListSources&quot;,
+      &quot;prefill&quot;: [
+        {
+          &quot;url&quot;: &quot;https://www.facebook.com/mcdonalds/reviews&quot;
+        }
+      ],
+      &quot;title&quot;: &quot;Facebook Reviews URLs&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    }
+  },
+  &quot;required&quot;: [
+    &quot;mode&quot;
+  ],
+  &quot;schemaVersion&quot;: 1,
+  &quot;title&quot;: &quot;Facebook Reviews Scraper Input&quot;,
+  &quot;type&quot;: &quot;object&quot;
+}
+</code></pre></details></section><section class="schema-section" id="output-schema"><h2>Output schema</h2><p>Published result links and storage locations. This schema is not an exhaustive contract for every field in a dataset record.</p><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>reviews</code></td><td>string</td><td>optional</td><td>Dataset of scraped Facebook reviews with author info, recommendation status, text, reactions, and page metadata.</td></tr></tbody></table></div><p><a href="output-schema.json">Download the published output schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+  &quot;actorOutputSchemaVersion&quot;: 1,
+  &quot;description&quot;: &quot;One record per Facebook review, including author details, recommendation status, photos, reaction counts, and page metadata.&quot;,
+  &quot;properties&quot;: {
+    &quot;reviews&quot;: {
+      &quot;description&quot;: &quot;Dataset of scraped Facebook reviews with author info, recommendation status, text, reactions, and page metadata.&quot;,
+      &quot;template&quot;: &quot;{{links.apiDefaultDatasetUrl}}/items&quot;,
+      &quot;title&quot;: &quot;Facebook Reviews Dataset&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    }
+  },
+  &quot;title&quot;: &quot;Facebook Business Page Recommendation &amp; Review Scraper Output&quot;
+}
+</code></pre></details></section><section class="schema-section" id="dataset-schema"><h2>Dataset schema</h2><p>Published dataset views and any declared field definitions. A view can select only a subset of the returned record fields.</p><p><a href="dataset-schema.json">Download the published dataset schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+  &quot;actorSpecification&quot;: 1,
+  &quot;title&quot;: &quot;Facebook Reviews Data&quot;,
+  &quot;views&quot;: {
+    &quot;detailed&quot;: {
+      &quot;display&quot;: {
+        &quot;component&quot;: &quot;table&quot;,
+        &quot;properties&quot;: {
+          &quot;authorIdType&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Author ID Type&quot;
+          },
+          &quot;authorName&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Author&quot;
+          },
+          &quot;authorProfileUrl&quot;: {
+            &quot;format&quot;: &quot;link&quot;,
+            &quot;label&quot;: &quot;Profile URL&quot;
+          },
+          &quot;commentCount&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Comments&quot;
+          },
+          &quot;createdAt&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Date&quot;
+          },
+          &quot;isRecommended&quot;: {
+            &quot;format&quot;: &quot;boolean&quot;,
+            &quot;label&quot;: &quot;Recommended&quot;
+          },
+          &quot;reactionBreakdown&quot;: {
+            &quot;format&quot;: &quot;array&quot;,
+            &quot;label&quot;: &quot;Reaction Breakdown&quot;
+          },
+          &quot;reactionCount&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Reactions&quot;
+          },
+          &quot;reviewId&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Review ID&quot;
+          },
+          &quot;reviewTags&quot;: {
+            &quot;format&quot;: &quot;array&quot;,
+            &quot;label&quot;: &quot;Recommendation Tags&quot;
+          },
+          &quot;reviewUrl&quot;: {
+            &quot;format&quot;: &quot;link&quot;,
+            &quot;label&quot;: &quot;Review URL&quot;
+          },
+          &quot;scrapedAt&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Scraped At&quot;
+          },
+          &quot;shareCount&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Shares&quot;
+          },
+          &quot;text&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Review Text&quot;
+          },
+          &quot;timestamp&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Timestamp (Unix)&quot;
+          }
+        }
+      },
+      &quot;title&quot;: &quot;Full Review Details&quot;,
+      &quot;transformation&quot;: {
+        &quot;fields&quot;: [
+          &quot;reviewId&quot;,
+          &quot;authorName&quot;,
+          &quot;authorProfileUrl&quot;,
+          &quot;authorIdType&quot;,
+          &quot;isRecommended&quot;,
+          &quot;text&quot;,
+          &quot;reviewTags&quot;,
+          &quot;createdAt&quot;,
+          &quot;timestamp&quot;,
+          &quot;reactionCount&quot;,
+          &quot;reactionBreakdown&quot;,
+          &quot;shareCount&quot;,
+          &quot;commentCount&quot;,
+          &quot;topComments&quot;,
+          &quot;reviewPhotos&quot;,
+          &quot;reviewUrl&quot;,
+          &quot;page&quot;,
+          &quot;scrapedAt&quot;
+        ]
+      }
+    },
+    &quot;overview&quot;: {
+      &quot;display&quot;: {
+        &quot;component&quot;: &quot;table&quot;,
+        &quot;properties&quot;: {
+          &quot;authorName&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Author&quot;
+          },
+          &quot;commentCount&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Comments&quot;
+          },
+          &quot;createdAt&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Date&quot;
+          },
+          &quot;isRecommended&quot;: {
+            &quot;format&quot;: &quot;boolean&quot;,
+            &quot;label&quot;: &quot;Recommended&quot;
+          },
+          &quot;reactionCount&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Reactions&quot;
+          },
+          &quot;reviewUrl&quot;: {
+            &quot;format&quot;: &quot;link&quot;,
+            &quot;label&quot;: &quot;URL&quot;
+          },
+          &quot;text&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Review Text&quot;
+          }
+        }
+      },
+      &quot;title&quot;: &quot;Reviews Overview&quot;,
+      &quot;transformation&quot;: {
+        &quot;fields&quot;: [
+          &quot;authorName&quot;,
+          &quot;isRecommended&quot;,
+          &quot;text&quot;,
+          &quot;createdAt&quot;,
+          &quot;reactionCount&quot;,
+          &quot;commentCount&quot;,
+          &quot;reviewUrl&quot;
+        ]
+      }
+    }
+  }
+}
+</code></pre></details></section><section class="schema-section" id="key-value-schema"><h2>Key-value schema</h2><p>Published key-value store definitions, when provided by this build.</p><p>This definition is not present in the default published build. See the published README for available documentation.</p></section><section id="published-readme"><h2>Published README</h2><details><summary>Read the full published documentation</summary><h2 id="readme-facebook-business-page-recommendation-review-scraper">Facebook Business Page Recommendation &amp; Review Scraper</h2>
+<p>Get <strong>Facebook business page reviews</strong> by direct URL, business name search, or Facebook Page ID — no login or cookies required. Returns review text, Recommended/Not Recommended status, author details, reaction breakdowns, structured recommendation tags, business owner replies, and page-level aggregate stats like follower count and overall recommendation percentage.</p>
+<h2 id="readme-what-this-actor-does">What this actor does</h2>
+<ul>
+<li>Scrapes reviews from any <strong>public Facebook business page</strong> — restaurants, hotels, retailers, airlines, and services</li>
+<li><strong>Three input modes</strong>: paste a page or <code>/reviews</code> URL, search by business name + city, or supply a Facebook Page ID (numeric) or page username</li>
+<li><strong>Filters results</strong> by date range, recommendation status (Recommended / Not Recommended), or keyword in the review text</li>
+<li>Extracts <strong>review photos</strong>, <strong>structured recommendation tags</strong> (e.g. &quot;Outdoor dining&quot;, &quot;Fast delivery&quot;), <strong>reaction breakdowns</strong> (Like/Love/Wow/Haha/Sad/Angry/Care counts), and <strong>top comments including business/owner replies</strong></li>
+<li>Attaches <strong>page details</strong> to each review — page name and ID, plus follower count, total review count and recommendation percentage when Facebook exposes them</li>
+<li>Empty/unavailable fields are omitted from each record rather than returned as <code>null</code></li>
+</ul>
+<h2 id="readme-output">Output</h2>
+<p>One record per review. Fields are only present when Facebook actually has that data — see the FAQ for why some fields (like <code>reviewPhotos</code>) are frequently absent.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>reviewId</code></td>
+<td><code>&quot;UzpfSTEwMDAy...&quot;</code></td>
+</tr>
+<tr>
+<td><code>text</code></td>
+<td><code>&quot;Amazing food and great service!&quot;</code></td>
+</tr>
+<tr>
+<td><code>isRecommended</code></td>
+<td><code>true</code></td>
+</tr>
+<tr>
+<td><code>reviewTags</code></td>
+<td><code>[&quot;Outdoor dining&quot;, &quot;Fast delivery&quot;]</code></td>
+</tr>
+<tr>
+<td><code>createdAt</code></td>
+<td><code>&quot;2024-03-15T10:22:00+00:00&quot;</code></td>
+</tr>
+<tr>
+<td><code>timestamp</code></td>
+<td><code>1710498120</code></td>
+</tr>
+<tr>
+<td><code>authorName</code></td>
+<td><code>&quot;Julia Odan&quot;</code></td>
+</tr>
+<tr>
+<td><code>authorProfileUrl</code></td>
+<td><code>&quot;https://www.facebook.com/julia.odan&quot;</code></td>
+</tr>
+<tr>
+<td><code>authorProfileImageUrl</code></td>
+<td><code>&quot;https://scontent.fbcdn.net/...&quot;</code></td>
+</tr>
+<tr>
+<td><code>authorIdType</code></td>
+<td><code>&quot;pfbid&quot;</code> or <code>&quot;numeric&quot;</code> — see FAQ</td>
+</tr>
+<tr>
+<td><code>authorReviewCount</code></td>
+<td><code>12</code> — only on reviews delivered in Facebook's older review format</td>
+</tr>
+<tr>
+<td><code>reactionCount</code></td>
+<td><code>3</code></td>
+</tr>
+<tr>
+<td><code>reactionBreakdown</code></td>
+<td><code>[{&quot;type&quot;: &quot;Like&quot;, &quot;count&quot;: 4}, {&quot;type&quot;: &quot;Haha&quot;, &quot;count&quot;: 1}]</code></td>
+</tr>
+<tr>
+<td><code>shareCount</code></td>
+<td><code>0</code></td>
+</tr>
+<tr>
+<td><code>commentCount</code></td>
+<td><code>2</code></td>
+</tr>
+<tr>
+<td><code>reviewPhotos</code></td>
+<td><code>[&quot;https://scontent.fbcdn.net/...&quot;]</code></td>
+</tr>
+<tr>
+<td><code>topComments</code></td>
+<td><code>[{&quot;authorName&quot;: &quot;McDonald's&quot;, &quot;text&quot;: &quot;Thanks for the feedback!&quot;, &quot;createdAt&quot;: &quot;2024-03-16T09:00:00+00:00&quot;, &quot;isOwnerReply&quot;: true, &quot;authorIdType&quot;: &quot;numeric&quot;, &quot;commentPermalinkUrl&quot;: &quot;https://facebook.com/...&quot;, &quot;replyCount&quot;: 2}]</code></td>
+</tr>
+<tr>
+<td><code>reviewUrl</code></td>
+<td><code>&quot;https://www.facebook.com/.../posts/...&quot;</code></td>
+</tr>
+<tr>
+<td><code>page.name</code></td>
+<td><code>&quot;McDonald's&quot;</code></td>
+</tr>
+<tr>
+<td><code>page.id</code></td>
+<td><code>&quot;100064458773195&quot;</code></td>
+</tr>
+<tr>
+<td><code>page.url</code></td>
+<td><code>&quot;https://www.facebook.com/McDonalds&quot;</code> — when available</td>
+</tr>
+<tr>
+<td><code>page.category</code></td>
+<td><code>&quot;Fast Food Restaurant&quot;</code> — present only when Facebook's page data exposes it</td>
+</tr>
+<tr>
+<td><code>page.address</code></td>
+<td><code>&quot;110 N Carpenter St, Chicago, IL&quot;</code> — present only when Facebook's page data exposes it</td>
+</tr>
+<tr>
+<td><code>page.phone</code></td>
+<td><code>&quot;+1 630-623-6196&quot;</code> — present only when Facebook's page data exposes it</td>
+</tr>
+<tr>
+<td><code>page.website</code></td>
+<td><code>&quot;https://www.mcdonalds.com&quot;</code> — present only when Facebook's page data exposes it</td>
+</tr>
+<tr>
+<td><code>page.totalReviewCount</code></td>
+<td><code>4821</code> — when available</td>
+</tr>
+<tr>
+<td><code>page.recommendationPercentage</code></td>
+<td><code>87</code> — when available</td>
+</tr>
+<tr>
+<td><code>page.followerCount</code></td>
+<td><code>82000000</code> — read from the follower label Facebook displays (e.g. &quot;82M&quot;), so it is rounded the same way</td>
+</tr>
+<tr>
+<td><code>recordType</code></td>
+<td><code>&quot;review&quot;</code></td>
+</tr>
+<tr>
+<td><code>scrapedAt</code></td>
+<td><code>&quot;2026-09-02T12:00:00+00:00&quot;</code></td>
+</tr>
+</tbody>
+</table></div>
+<p>The dataset can also contain error records with <code>&quot;recordType&quot;: &quot;error&quot;</code>, holding only <code>error</code> (a description) and <code>scrapedAt</code>. One is written when an input item returns no reviews at all or still fails after three attempts, and the run writes a single error record and stops when no input items are given for the chosen mode, the dates are invalid, or the proxy can't be set up. If reviews were fetched but your filters matched none of them, no error record is written.</p>
+<h2 id="readme-input">Input</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>mode</code></td>
+<td>string</td>
+<td><code>url</code></td>
+<td><code>url</code> / <code>search</code> / <code>pageId</code> — how to specify the Facebook page</td>
+</tr>
+<tr>
+<td><code>startUrls</code></td>
+<td>array</td>
+<td><code>[]</code></td>
+<td>Facebook page URLs (mode=<code>url</code>); <code>/reviews</code> is added automatically when missing</td>
+</tr>
+<tr>
+<td><code>searchQueries</code></td>
+<td>array</td>
+<td><code>[]</code></td>
+<td>Business name + location, e.g. <code>&quot;Starbucks Dallas TX&quot;</code> (mode=<code>search</code>)</td>
+</tr>
+<tr>
+<td><code>pageIds</code></td>
+<td>array</td>
+<td><code>[]</code></td>
+<td>Numeric Facebook Page IDs, e.g. <code>&quot;100064458773195&quot;</code>, or page usernames such as <code>&quot;mcdonalds&quot;</code> (mode=<code>pageId</code>)</td>
+</tr>
+<tr>
+<td><code>maxReviews</code></td>
+<td>integer</td>
+<td><code>100</code></td>
+<td>Maximum total reviews across all input pages (1–500)</td>
+</tr>
+<tr>
+<td><code>maxReviewsPerPage</code></td>
+<td>integer</td>
+<td>–</td>
+<td>Cap per individual page, for an even spread across multiple pages (1–500). When empty, only <code>maxReviews</code> applies</td>
+</tr>
+<tr>
+<td><code>sortBy</code></td>
+<td>string</td>
+<td><code>most_recent</code></td>
+<td><code>most_recent</code> keeps the page's default order; <code>most_helpful</code> is attempted but usually has no effect (see FAQ)</td>
+</tr>
+<tr>
+<td><code>filterByRecommendation</code></td>
+<td>string</td>
+<td><code>all</code></td>
+<td><code>all</code> / <code>recommended</code> / <code>not_recommended</code></td>
+</tr>
+<tr>
+<td><code>filterByDateFrom</code></td>
+<td>string</td>
+<td>–</td>
+<td>Only reviews on or after this date (<code>YYYY-MM-DD</code>). Reviews without a date are kept</td>
+</tr>
+<tr>
+<td><code>filterByDateTo</code></td>
+<td>string</td>
+<td>–</td>
+<td>Only reviews on or before this date (<code>YYYY-MM-DD</code>)</td>
+</tr>
+<tr>
+<td><code>filterByKeyword</code></td>
+<td>string</td>
+<td>–</td>
+<td>Only reviews containing this word or phrase (case-insensitive)</td>
+</tr>
+<tr>
+<td><code>cookies</code></td>
+<td>array</td>
+<td><code>[]</code></td>
+<td>Optional logged-in session cookies to unlock more than ~10-15 reviews per page</td>
+</tr>
+<tr>
+<td><code>proxyCountry</code></td>
+<td>string</td>
+<td><code>US</code></td>
+<td>Exit country of the built-in residential proxy: <code>US</code> / <code>GB</code> / <code>CA</code> / <code>AU</code> / <code>IE</code></td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="readme-example-scrape-reviews-from-a-direct-url">Example: scrape reviews from a direct URL</h3>
+<pre><code class="language-json">{
+  &quot;mode&quot;: &quot;url&quot;,
+  &quot;startUrls&quot;: [{ &quot;url&quot;: &quot;https://www.facebook.com/mcdonalds/reviews&quot; }],
+  &quot;maxReviews&quot;: 100
+}
+</code></pre>
+<h3 id="readme-example-find-a-business-by-name-and-city">Example: find a business by name and city</h3>
+<pre><code class="language-json">{
+  &quot;mode&quot;: &quot;search&quot;,
+  &quot;searchQueries&quot;: [&quot;Starbucks Seattle WA&quot;],
+  &quot;maxReviews&quot;: 50
+}
+</code></pre>
+<h3 id="readme-example-only-negative-reviews-from-the-last-90-days">Example: only negative reviews from the last 90 days</h3>
+<pre><code class="language-json">{
+  &quot;mode&quot;: &quot;url&quot;,
+  &quot;startUrls&quot;: [{ &quot;url&quot;: &quot;https://www.facebook.com/IHOP/reviews&quot; }],
+  &quot;filterByRecommendation&quot;: &quot;not_recommended&quot;,
+  &quot;filterByDateFrom&quot;: &quot;2026-06-01&quot;,
+  &quot;maxReviews&quot;: 100
+}
+</code></pre>
+<h3 id="readme-example-multiple-pages-by-numeric-page-id-capped-per-page">Example: multiple pages by numeric Page ID, capped per page</h3>
+<pre><code class="language-json">{
+  &quot;mode&quot;: &quot;pageId&quot;,
+  &quot;pageIds&quot;: [&quot;100064458773195&quot;, &quot;100044057870366&quot;],
+  &quot;maxReviewsPerPage&quot;: 25,
+  &quot;maxReviews&quot;: 50
+}
+</code></pre>
+<h2 id="readme-use-cases">Use Cases</h2>
+<ul>
+<li><strong>Reputation monitoring</strong> — track new Recommended/Not Recommended reviews and business owner replies for a brand or franchise location</li>
+<li><strong>Competitor analysis</strong> — compare recommendation percentages, review volume, and recurring complaint keywords across competing businesses</li>
+<li><strong>Local business research</strong> — pull reviews for restaurants, hotels, or service providers before choosing where to eat, stay, or book</li>
+<li><strong>Customer feedback analysis</strong> — export review text and recommendation tags (e.g. &quot;Fast delivery&quot;, &quot;Disappointing food&quot;) for sentiment or NLP pipelines</li>
+<li><strong>Franchise/multi-location tracking</strong> — scrape reviews across many location-specific Page IDs in a single run to compare performance</li>
+<li><strong>Market research</strong> — measure follower counts and recommendation trends across an industry vertical</li>
+</ul>
+<h2 id="readme-faq">FAQ</h2>
+<p><strong>Does this require a Facebook account or cookies?</strong>
+No. The actor scrapes publicly visible reviews on public business pages without logging in. Cookies are an optional input for unlocking more than the ~10-15 reviews per page that Facebook shows to logged-out visitors.</p>
+<p><strong>Is this an official Facebook or Meta product?</strong>
+No. This is an independent, third-party actor that reads publicly available Facebook business page data. It is not affiliated with, endorsed by, or connected to Meta Platforms, Inc.</p>
+<p><strong>Why does Facebook use Recommended/Not Recommended instead of star ratings?</strong>
+Facebook business pages now use a binary Recommended/Not Recommended system, so there is no per-review star rating. The page-level <code>page.recommendationPercentage</code> is Facebook's own figure and is not recalculated from the reviews returned here, so it may not match a simple count of them. Use <code>isRecommended</code> for per-review analysis.</p>
+<p><strong>Can I get the business's replies to reviews?</strong>
+Yes. When a business reply is among the comments Facebook shows on a review, it appears inside <code>topComments</code> with <code>isOwnerReply: true</code>. The flag is set when the commenter's account ID matches the page's own ID, not by comparing display names.</p>
+<p><strong>How many reviews can I get per page?</strong>
+<code>maxReviews</code> and <code>maxReviewsPerPage</code> each go up to 500. Without cookies, Facebook usually stops serving new reviews to a logged-out visitor well before that (commonly around 5-15 per page) — this is a Facebook-side limit, not a scraper failure; the run's status message notes it when it happens. Supply <code>cookies</code> for a logged-in session to raise this ceiling.</p>
+<p><strong>Do I need to configure a proxy?</strong>
+No separate setup is needed — a residential proxy is always used for access to Facebook. <code>proxyCountry</code> just lets you pick which country that proxy exits from.</p>
+<p><strong>Will search mode always find the right business?</strong>
+Facebook's own on-site search requires a login, so <code>search</code> mode looks your query up through a public web search; if that finds nothing, it tries a page address built from the first two words of the query. For distinctive business names this generally finds the correct page, but ambiguous queries (a common name with no location) can return the wrong page or no match. For a guaranteed exact match, use <code>url</code> or <code>pageId</code> mode instead.</p>
+<p><strong>Does &quot;Most Helpful&quot; sort actually work?</strong>
+Rarely. The actor looks for a sort control on the reviews page, but Facebook's current review pages generally don't show one, so in practice reviews come back in the page's default order for both <code>sortBy</code> values. The run continues normally either way.</p>
+<p><strong>What is <code>authorIdType</code>?</strong>
+Facebook identifies most regular reviewers with a rotating <code>pfbid</code> token rather than a permanent numeric ID, meaning the same person isn't always reliably trackable as &quot;the same reviewer&quot; across separate runs. Business/Page accounts (e.g. a company replying to its own reviews) do get a stable numeric ID. <code>authorIdType</code> tells you which kind of identifier you got (<code>&quot;pfbid&quot;</code> or <code>&quot;numeric&quot;</code>).</p>
+<p><strong>What happens if a page has no reviews or can't be reached?</strong>
+A record with <code>&quot;recordType&quot;: &quot;error&quot;</code> and a description is pushed instead of the run failing or crashing.</p>
+<p><strong>Are review photo URLs permanent?</strong>
+Facebook CDN URLs can expire after some time — use the <code>scrapedAt</code> timestamp to track freshness. In practice most reviews are text-only or carry a recommendation tag rather than a photo, so <code>reviewPhotos</code> is frequently absent — that reflects real review behavior, not a gap in the scraper.</p>
+<p><strong>Can this scrape a business's About info (address, phone, hours, category)?</strong>
+Only partly. The actor doesn't open the About tab, so it never returns opening hours. <code>page.category</code>, <code>page.address</code>, <code>page.phone</code> and <code>page.website</code> are filled in only when Facebook happens to include them with the reviews data, which is often not the case.</p>
+<h2 id="readme-limitations">Limitations</h2>
+<ul>
+<li><strong>500 review cap</strong> — <code>maxReviews</code> and <code>maxReviewsPerPage</code> can't exceed 500, and without cookies far fewer reviews per page are usually available</li>
+<li><strong>Public pages only</strong> — private groups, personal profiles, and Marketplace listings are not supported</li>
+<li><strong>Sort control is usually missing</strong> — <code>most_helpful</code> falls back to the page's default order when Facebook doesn't show the control</li>
+<li><strong>Search mode resolves via external web search, not Facebook's own search</strong> — most reliable for distinctive business names</li>
+<li><strong>Reviewer identity isn't always a stable ID</strong> — see <code>authorIdType</code> in the FAQ</li>
+<li><strong>Business &quot;About&quot; details are partial at best</strong> — see the FAQ</li>
+<li><strong>Some pages are blocked more often than others</strong> — a page that still returns nothing after three attempts produces an error record</li>
+</ul>
+</details></section><section id="python-quickstart"><h2>Python quickstart</h2><p>Use a schema-derived input and the Python standard library to start a run. An Apify account and token are required for execution.</p><p><a href="/apify-actor-examples/guides/kHf019KL2WuzR6BFE/">Open the step-by-step Python guide →</a></p></section><p class="source-note">Source build <code>n0rhegjsBoM5YxVHu</code>. Documentation is regenerated from the default published build; private drafts are not included.</p></article></div></main><footer class="footer"><strong>Nimbryxo Studio</strong><div class="footer-links"><a href="/apify-actor-examples/topics/">Topics</a><a href="/apify-actor-examples/sources/">Documentation sources</a><a href="https://apify.com/nimbryxo-studio">Apify</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></div></footer></body></html>

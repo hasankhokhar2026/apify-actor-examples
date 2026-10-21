@@ -1,0 +1,262 @@
+{
+  "properties": {
+    "contributorUrls": {
+      "description": "Google Maps reviewer profile links (for example https://www.google.com/maps/contrib/108763873723673205857, or a shared maps.app.goo.gl profile link) or numeric reviewer IDs. Used when collecting everything specific reviewers have written.",
+      "editor": "stringList",
+      "title": "Reviewers",
+      "type": "array"
+    },
+    "enrichReviewerProfiles": {
+      "default": false,
+      "description": "For place reviews, also open each reviewer's public profile to add likes, first-published and edited dates, view counts, owner-reply dates and the reviewer's Local Guide level. Adds one request per reviewer. Reviews by private profiles, or older than a reviewer's 200 most recent contributions, keep the standard fields.",
+      "title": "Add likes, edit dates and Local Guide levels (slower)",
+      "type": "boolean"
+    },
+    "includeContributorSummary": {
+      "default": false,
+      "description": "Adds one record per reviewer with their Local Guide level, points and lifetime contribution counts. These records have recordType \"contributor\".",
+      "title": "Add a reviewer summary record",
+      "type": "boolean"
+    },
+    "includePartnerReviews": {
+      "default": false,
+      "description": "Hotels on Google Maps also show reviews from partner sites such as Tripadvisor, Trip.com or Priceline. Turn on to add those reviews as separate records (recordType partnerReview), up to Max reviews per partner site, newest first. Places without partner reviews are not affected.",
+      "title": "Add hotel reviews from partner sites (Tripadvisor, Trip.com, …)",
+      "type": "boolean"
+    },
+    "includePhotoDetails": {
+      "default": false,
+      "description": "For place reviews with photos or videos, add the width, height and upload date of each one. Adds one request per photo.",
+      "title": "Add photo details (size and upload date, slower)",
+      "type": "boolean"
+    },
+    "includePlaceSummary": {
+      "default": false,
+      "description": "Adds one record per place with its rating breakdown by stars, review topics, location, contact details and how many reviews were collected. These records have recordType \"place\".",
+      "title": "Add a place summary record",
+      "type": "boolean"
+    },
+    "includeReviewerDetails": {
+      "default": true,
+      "description": "Turn off to leave out reviewer names, profile pictures, profile links and reviewer IDs from place reviews.",
+      "title": "Include reviewer names and profiles",
+      "type": "boolean"
+    },
+    "keyword": {
+      "description": "Words a review must mention, for example \"parking\" or \"long wait\". For places this uses Google's own review search, which also matches close word forms.",
+      "editor": "textfield",
+      "title": "Only reviews mentioning",
+      "type": "string"
+    },
+    "language": {
+      "default": "en",
+      "description": "Language of Google Maps labels such as \"2 weeks ago\". Reviews written in another language also come with Google's translation into this language.",
+      "editor": "select",
+      "enum": [
+        "en",
+        "es",
+        "fr",
+        "de",
+        "it",
+        "pt",
+        "pt-BR",
+        "ja",
+        "ko",
+        "zh",
+        "zh-TW",
+        "ar",
+        "ru",
+        "hi",
+        "tr",
+        "nl",
+        "pl",
+        "id",
+        "th",
+        "vi",
+        "he",
+        "sv",
+        "uk"
+      ],
+      "enumTitles": [
+        "English",
+        "Spanish",
+        "French",
+        "German",
+        "Italian",
+        "Portuguese",
+        "Portuguese (Brazil)",
+        "Japanese",
+        "Korean",
+        "Chinese (Simplified)",
+        "Chinese (Traditional)",
+        "Arabic",
+        "Russian",
+        "Hindi",
+        "Turkish",
+        "Dutch",
+        "Polish",
+        "Indonesian",
+        "Thai",
+        "Vietnamese",
+        "Hebrew",
+        "Swedish",
+        "Ukrainian"
+      ],
+      "title": "Language",
+      "type": "string"
+    },
+    "maxPlacesPerQuery": {
+      "default": 20,
+      "description": "How many places to take from each search. One Google search lists about 120 to 360 places; when you ask for more, the actor also searches sub-areas of the same region to reach them.",
+      "maximum": 2000,
+      "minimum": 1,
+      "title": "Places per search",
+      "type": "integer"
+    },
+    "maxReviews": {
+      "default": 50,
+      "description": "Upper limit of reviews collected for each place, or for each reviewer. Google publishes up to 200 contributions per reviewer.",
+      "maximum": 200000,
+      "minimum": 1,
+      "prefill": 5,
+      "title": "Maximum reviews per place or reviewer",
+      "type": "integer"
+    },
+    "mode": {
+      "default": "place",
+      "description": "Reviews of places you list, reviews of places found by a search, or everything specific Google reviewers have published.",
+      "editor": "select",
+      "enum": [
+        "place",
+        "search",
+        "author"
+      ],
+      "enumTitles": [
+        "Reviews of specific places (links or IDs)",
+        "Find places by search, then collect their reviews",
+        "Everything specific reviewers have written"
+      ],
+      "prefill": "place",
+      "title": "What do you want to collect?",
+      "type": "string"
+    },
+    "monitoringKey": {
+      "description": "Give scheduled runs the same name, for example my-restaurants. Each run then returns only reviews added or edited since the previous run with that name.",
+      "editor": "textfield",
+      "sectionCaption": "Output options",
+      "title": "Only new reviews since the last run (monitoring name)",
+      "type": "string"
+    },
+    "onlyWithPhotos": {
+      "default": false,
+      "description": "Keep only reviews that include photos or videos.",
+      "title": "Only reviews with photos or videos",
+      "type": "boolean"
+    },
+    "onlyWithText": {
+      "default": false,
+      "description": "Skip star-only reviews that have no written text.",
+      "title": "Only reviews with written text",
+      "type": "boolean"
+    },
+    "ownerReplyFilter": {
+      "default": "any",
+      "description": "Keep all reviews, only reviews the business replied to, or only reviews still without a reply.",
+      "editor": "select",
+      "enum": [
+        "any",
+        "withReply",
+        "withoutReply"
+      ],
+      "enumTitles": [
+        "Any",
+        "Only reviews with an owner reply",
+        "Only reviews without an owner reply"
+      ],
+      "title": "Owner reply",
+      "type": "string"
+    },
+    "placeUrls": {
+      "description": "Google Maps place links or IDs, one per line. Accepted: place links (also shared maps.app.goo.gl, goo.gl, g.page and share.google links, ?cid= links and review links), Place IDs starting with ChIJ, feature IDs like 0x89c259ab3c1ef289:0x3b67a41175949f55 and numeric CIDs. Used when collecting reviews of specific places.",
+      "editor": "stringList",
+      "prefill": [
+        "https://www.google.com/maps/place/Eiffel+Tower/@48.8583701,2.2944813,17z/data=!3m1!4b1!4m6!3m5!1s0x47e66e2964e34e2d:0x8ddca9ee380ef7e0!8m2!3d48.8583701!4d2.2944813!16zL20vMDJqODE"
+      ],
+      "title": "Places",
+      "type": "array"
+    },
+    "reviewLanguages": {
+      "description": "Keep only reviews written in these languages, as two-letter codes such as en, es, ko. Leave empty for all languages.",
+      "editor": "stringList",
+      "title": "Review languages",
+      "type": "array"
+    },
+    "reviewsNewerThan": {
+      "dateType": "absoluteOrRelative",
+      "description": "Keep reviews dated on or after this day, for example 2026-01-01, or a period such as 30 days. Reviews are then read newest first.",
+      "editor": "datepicker",
+      "sectionCaption": "Filters",
+      "title": "Only reviews from",
+      "type": "string"
+    },
+    "reviewsOlderThan": {
+      "dateType": "absoluteOrRelative",
+      "description": "Keep reviews dated on or before this day. Combine with \"Only reviews from\" for a date range.",
+      "editor": "datepicker",
+      "title": "Only reviews until",
+      "type": "string"
+    },
+    "searchQueries": {
+      "description": "Google Maps searches such as \"dentists in Austin, TX\" or \"ramen Shibuya Tokyo\". Include a city or area in each search. Used when finding places by search.",
+      "editor": "stringList",
+      "title": "Searches",
+      "type": "array"
+    },
+    "sortBy": {
+      "default": "newest",
+      "description": "Order of a place's reviews. Newest first and most relevant reach a place's complete review history; Google lists at most 188 reviews per star level in rating order.",
+      "editor": "select",
+      "enum": [
+        "newest",
+        "relevant",
+        "highest_rating",
+        "lowest_rating"
+      ],
+      "enumTitles": [
+        "Newest first",
+        "Most relevant",
+        "Highest rating first",
+        "Lowest rating first"
+      ],
+      "title": "Sort reviews by",
+      "type": "string"
+    },
+    "starRatings": {
+      "description": "Keep only reviews with these star ratings. Leave empty for all ratings.",
+      "editor": "select",
+      "items": {
+        "enum": [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5"
+        ],
+        "enumTitles": [
+          "1 star",
+          "2 stars",
+          "3 stars",
+          "4 stars",
+          "5 stars"
+        ],
+        "type": "string"
+      },
+      "title": "Star ratings",
+      "type": "array"
+    }
+  },
+  "required": [],
+  "schemaVersion": 1,
+  "title": "Google Maps Review & Contributor Activity Scraper",
+  "type": "object"
+}

@@ -1,0 +1,419 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src &#x27;self&#x27;; script-src &#x27;self&#x27; &#x27;sha256-SAyDiy9KEGcxTRE2aTkbis420ixGrsGjUyYYP1dm23c=&#x27;; style-src &#x27;self&#x27;; img-src &#x27;self&#x27; https: data:; base-uri &#x27;self&#x27;; form-action &#x27;self&#x27;; object-src &#x27;none&#x27;"><title>LinkedIn Post Comment &amp; Reply Thread Extractor | Nimbryxo Studio</title><meta name="description" content="Pull top-level comments from LinkedIn posts, with optional nested reply threads, author identity, reaction counts, and linked profiles found in the comment text."><meta name="robots" content="index,follow"><link rel="canonical" href="https://hasankhokhar2026.github.io/apify-actor-examples/actors/9IrDMYd0zWDgF1HtA/"><meta property="og:title" content="LinkedIn Post Comment &amp; Reply Thread Extractor | Nimbryxo Studio"><meta property="og:description" content="Pull top-level comments from LinkedIn posts, with optional nested reply threads, author identity, reaction counts, and linked profiles found in the comment text."><meta property="og:type" content="website"><meta property="og:url" content="https://hasankhokhar2026.github.io/apify-actor-examples/actors/9IrDMYd0zWDgF1HtA/"><meta property="og:site_name" content="Nimbryxo Studio"><meta name="twitter:card" content="summary"><link rel="icon" href="/apify-actor-examples/assets/mark.svg?v=2d20f9dc334a" type="image/svg+xml"><link rel="stylesheet" href="/apify-actor-examples/assets/site.css?v=39545fd4a399"><link rel="stylesheet" href="/apify-actor-examples/assets/brand.css?v=eb0f935ade25"><link rel="alternate" type="application/rss+xml" title="Nimbryxo Studio guides" href="/apify-actor-examples/feed.xml"><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization","name":"Nimbryxo Studio","url":"https://hasankhokhar2026.github.io/apify-actor-examples/","sameAs":["https://apify.com/nimbryxo-studio"]},{"@type":"WebSite","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#website","name":"Nimbryxo Studio","url":"https://hasankhokhar2026.github.io/apify-actor-examples/","publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"inLanguage":"en"},{"@type":"WebPage","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/9IrDMYd0zWDgF1HtA/#webpage","name":"LinkedIn Post Comment & Reply Thread Extractor","description":"Pull top-level comments from LinkedIn posts, with optional nested reply threads, author identity, reaction counts, and linked profiles found in the comment text.","url":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/9IrDMYd0zWDgF1HtA/","isPartOf":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#website"},"publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"inLanguage":"en","mainEntity":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/9IrDMYd0zWDgF1HtA/#article"},"breadcrumb":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/9IrDMYd0zWDgF1HtA/#breadcrumb"}},{"@type":"TechArticle","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/9IrDMYd0zWDgF1HtA/#article","headline":"LinkedIn Post Comment & Reply Thread Extractor","name":"LinkedIn Post Comment & Reply Thread Extractor","description":"Pull top-level comments from LinkedIn posts, with optional nested reply threads, author identity, reaction counts, and linked profiles found in the comment text.","url":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/9IrDMYd0zWDgF1HtA/","author":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"mainEntityOfPage":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/9IrDMYd0zWDgF1HtA/#webpage"},"inLanguage":"en"},{"@type":"BreadcrumbList","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/9IrDMYd0zWDgF1HtA/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Nimbryxo Studio","item":"https://hasankhokhar2026.github.io/apify-actor-examples/"},{"@type":"ListItem","position":2,"name":"Actors","item":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/"},{"@type":"ListItem","position":3,"name":"LinkedIn Post Comment & Reply Thread Extractor","item":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/9IrDMYd0zWDgF1HtA/"}]}]}</script><script src="/apify-actor-examples/assets/site.js?v=7cabac48dd31" defer></script></head><body class="theme-studio"><a href="#main" class="skip-link">Skip to content</a><header><div class="inner"><a href="/apify-actor-examples/" class="brand"><img src="/apify-actor-examples/assets/mark.svg?v=2d20f9dc334a" alt="" width="29" height="29">Nimbryxo Studio</a><nav aria-label="Main navigation"><a href="/apify-actor-examples/actors/" aria-current="page">Actors</a><a href="/apify-actor-examples/guides/">Guides</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></nav></div></header><main id="main"><div class="doc-layout"><aside class="contents" aria-label="On this page"><strong>Contents</strong><a href="#overview">Overview</a><a href="#published-readme">Published README</a><a href="#input-schema">Input schema</a><a href="#output-schema">Output schema</a><a href="#dataset-schema">Dataset schema</a><a href="#python-quickstart">Python quickstart</a></aside><article class="prose"><div class="breadcrumb"><a href="/apify-actor-examples/actors/">Actors</a><span>/</span><span>LinkedIn Post Comment &amp; Reply Thread Extractor</span></div><section id="overview"><h1 class="doc-title">LinkedIn Post Comment &amp; Reply Thread Extractor</h1><p class="lede">Pull top-level comments from LinkedIn posts, with optional nested reply threads, author identity, reaction counts, and linked profiles found in the comment text.</p><div class="actions"><a class="button" href="https://apify.com/nimbryxo-studio/linkedin-post-comment-and-reply-thread-extractor">Open on Apify</a><a class="text-link" href="https://github.com/hasankhokhar2026/apify-actor-examples/blob/main/docs/actors/9IrDMYd0zWDgF1HtA/README.md">GitHub source</a></div></section><section class="schema-section" id="input-schema"><h2>Input schema</h2><p>Input fields, types, required flags, descriptions, defaults, and prefills come from the published definition. Prefill examples are distinct from defaults.</p><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>postUrls</code></td><td>array</td><td>required</td><td>LinkedIn post URLs to scrape comments from. Accepts formats like: https://www.linkedin.com/feed/update/urn:li:activity:7329761432933134337/ or https://www.linkedin.com/posts/username_some-slug-7329761432933134337/. Use a public, high-engagement post URL for best results. The prefill example uses a Bill Gates post from early 2025.</td></tr><tr><td><code>cookie</code></td><td>string</td><td>required</td><td>Your LinkedIn session cookie. Accepts either: (1) the li_at value from browser DevTools → Application → Cookies, or (2) full cookies JSON array exported from an extension like EditThisCookie.</td></tr><tr><td><code>maxCommentsPerPost</code></td><td>integer</td><td>optional</td><td>Maximum number of top-level comments to scrape per post.</td></tr></tbody></table></div><details><summary>Show all input fields</summary><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>postUrls</code></td><td>array</td><td>required</td><td>LinkedIn post URLs to scrape comments from. Accepts formats like: https://www.linkedin.com/feed/update/urn:li:activity:7329761432933134337/ or https://www.linkedin.com/posts/username_some-slug-7329761432933134337/. Use a public, high-engagement post URL for best results. The prefill example uses a Bill Gates post from early 2025.</td></tr><tr><td><code>cookie</code></td><td>string</td><td>required</td><td>Your LinkedIn session cookie. Accepts either: (1) the li_at value from browser DevTools → Application → Cookies, or (2) full cookies JSON array exported from an extension like EditThisCookie.</td></tr><tr><td><code>maxCommentsPerPost</code></td><td>integer</td><td>optional</td><td>Maximum number of top-level comments to scrape per post.</td></tr><tr><td><code>includeReplies</code></td><td>boolean</td><td>optional</td><td>Whether to fetch replies to top-level comments. Each reply is output as a separate dataset row with isReply=true and parentCommentId linking to the parent.</td></tr><tr><td><code>replyDepth</code></td><td>integer</td><td>optional</td><td>How many levels deep to recurse when fetching replies. Only honored when Include Replies is enabled. 1 = direct replies only, 2 = replies of replies, 3 = three levels.</td></tr><tr><td><code>sortBy</code></td><td>string</td><td>optional</td><td>Sort order for comments. RELEVANCE uses LinkedIn&#x27;s default &#x27;Most relevant&#x27;. RECENT shows newest first.</td></tr><tr><td><code>minReactions</code></td><td>integer</td><td>optional</td><td>Skip comments with fewer than this many reactions (likes + other reaction types). 0 disables the filter and emits every comment.</td></tr><tr><td><code>language</code></td><td>string</td><td>optional</td><td>Preferred LinkedIn UI language. Sets the Accept-Language header and x-li-lang for Voyager API calls; influences which translations LinkedIn returns for comment text.</td></tr><tr><td><code>excludeAuthorTypes</code></td><td>array</td><td>optional</td><td>Drop comments authored by the selected actor types. PERSON = individual member profiles, COMPANY = company / organization pages.</td></tr><tr><td><code>proxyConfiguration</code></td><td>object</td><td>optional</td><td>Optional Apify proxy configuration. Residential proxy recommended for best results.</td></tr></tbody></table></div></details><p><a href="input-schema.json">Download the published input schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+  &quot;properties&quot;: {
+    &quot;cookie&quot;: {
+      &quot;description&quot;: &quot;Your LinkedIn session cookie. Accepts either: (1) the li_at value from browser DevTools → Application → Cookies, or (2) full cookies JSON array exported from an extension like EditThisCookie.&quot;,
+      &quot;editor&quot;: &quot;textarea&quot;,
+      &quot;isSecret&quot;: true,
+      &quot;title&quot;: &quot;LinkedIn Cookie&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;excludeAuthorTypes&quot;: {
+      &quot;default&quot;: [],
+      &quot;description&quot;: &quot;Drop comments authored by the selected actor types. PERSON = individual member profiles, COMPANY = company / organization pages.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;items&quot;: {
+        &quot;enum&quot;: [
+          &quot;PERSON&quot;,
+          &quot;COMPANY&quot;
+        ],
+        &quot;enumTitles&quot;: [
+          &quot;Person&quot;,
+          &quot;Company&quot;
+        ],
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;prefill&quot;: [],
+      &quot;title&quot;: &quot;Exclude Author Types&quot;,
+      &quot;type&quot;: &quot;array&quot;,
+      &quot;uniqueItems&quot;: true
+    },
+    &quot;includeReplies&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;Whether to fetch replies to top-level comments. Each reply is output as a separate dataset row with isReply=true and parentCommentId linking to the parent.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Include Replies&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;language&quot;: {
+      &quot;default&quot;: &quot;en&quot;,
+      &quot;description&quot;: &quot;Preferred LinkedIn UI language. Sets the Accept-Language header and x-li-lang for Voyager API calls; influences which translations LinkedIn returns for comment text.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;en&quot;,
+        &quot;es&quot;,
+        &quot;fr&quot;,
+        &quot;de&quot;,
+        &quot;pt&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;English&quot;,
+        &quot;Spanish&quot;,
+        &quot;French&quot;,
+        &quot;German&quot;,
+        &quot;Portuguese&quot;
+      ],
+      &quot;prefill&quot;: &quot;en&quot;,
+      &quot;title&quot;: &quot;Language&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;maxCommentsPerPost&quot;: {
+      &quot;default&quot;: 50,
+      &quot;description&quot;: &quot;Maximum number of top-level comments to scrape per post.&quot;,
+      &quot;editor&quot;: &quot;number&quot;,
+      &quot;maximum&quot;: 500,
+      &quot;minimum&quot;: 1,
+      &quot;prefill&quot;: 50,
+      &quot;title&quot;: &quot;Max Comments Per Post&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;minReactions&quot;: {
+      &quot;default&quot;: 0,
+      &quot;description&quot;: &quot;Skip comments with fewer than this many reactions (likes + other reaction types). 0 disables the filter and emits every comment.&quot;,
+      &quot;editor&quot;: &quot;number&quot;,
+      &quot;maximum&quot;: 100000,
+      &quot;minimum&quot;: 0,
+      &quot;prefill&quot;: 0,
+      &quot;title&quot;: &quot;Minimum Reactions&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;postUrls&quot;: {
+      &quot;description&quot;: &quot;LinkedIn post URLs to scrape comments from. Accepts formats like: https://www.linkedin.com/feed/update/urn:li:activity:7329761432933134337/ or https://www.linkedin.com/posts/username_some-slug-7329761432933134337/. Use a public, high-engagement post URL for best results. The prefill example uses a Bill Gates post from early 2025.&quot;,
+      &quot;editor&quot;: &quot;stringList&quot;,
+      &quot;prefill&quot;: [
+        &quot;https://www.linkedin.com/feed/update/urn:li:activity:7329761432933134337/&quot;
+      ],
+      &quot;title&quot;: &quot;Post URLs&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;proxyConfiguration&quot;: {
+      &quot;description&quot;: &quot;Optional Apify proxy configuration. Residential proxy recommended for best results.&quot;,
+      &quot;editor&quot;: &quot;proxy&quot;,
+      &quot;title&quot;: &quot;Proxy Configuration&quot;,
+      &quot;type&quot;: &quot;object&quot;
+    },
+    &quot;replyDepth&quot;: {
+      &quot;default&quot;: 1,
+      &quot;description&quot;: &quot;How many levels deep to recurse when fetching replies. Only honored when Include Replies is enabled. 1 = direct replies only, 2 = replies of replies, 3 = three levels.&quot;,
+      &quot;editor&quot;: &quot;number&quot;,
+      &quot;maximum&quot;: 3,
+      &quot;minimum&quot;: 1,
+      &quot;prefill&quot;: 1,
+      &quot;title&quot;: &quot;Reply Depth&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;sortBy&quot;: {
+      &quot;default&quot;: &quot;RELEVANCE&quot;,
+      &quot;description&quot;: &quot;Sort order for comments. RELEVANCE uses LinkedIn&#x27;s default &#x27;Most relevant&#x27;. RECENT shows newest first.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;RELEVANCE&quot;,
+        &quot;RECENT&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;Most relevant&quot;,
+        &quot;Most recent&quot;
+      ],
+      &quot;prefill&quot;: &quot;RELEVANCE&quot;,
+      &quot;title&quot;: &quot;Sort Comments By&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    }
+  },
+  &quot;required&quot;: [
+    &quot;postUrls&quot;,
+    &quot;cookie&quot;
+  ],
+  &quot;schemaVersion&quot;: 1,
+  &quot;title&quot;: &quot;LinkedIn Comments Scraper Input&quot;,
+  &quot;type&quot;: &quot;object&quot;
+}
+</code></pre></details></section><section class="schema-section" id="output-schema"><h2>Output schema</h2><p>Published result links and storage locations. This schema is not an exhaustive contract for every field in a dataset record.</p><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>comments</code></td><td>string</td><td>optional</td><td>Dataset containing all scraped LinkedIn post comments and replies.</td></tr></tbody></table></div><p><a href="output-schema.json">Download the published output schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+  &quot;actorOutputSchemaVersion&quot;: 1,
+  &quot;description&quot;: &quot;LinkedIn post comments and reply threads with author identity, reaction counts, and linked profiles.&quot;,
+  &quot;properties&quot;: {
+    &quot;comments&quot;: {
+      &quot;description&quot;: &quot;Dataset containing all scraped LinkedIn post comments and replies.&quot;,
+      &quot;template&quot;: &quot;{{links.apiDefaultDatasetUrl}}/items&quot;,
+      &quot;title&quot;: &quot;Post Comments&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    }
+  },
+  &quot;title&quot;: &quot;LinkedIn Post Comment &amp; Reply Thread Extractor Output&quot;
+}
+</code></pre></details></section><section class="schema-section" id="dataset-schema"><h2>Dataset schema</h2><p>Published dataset views and any declared field definitions. A view can select only a subset of the returned record fields.</p><p><a href="dataset-schema.json">Download the published dataset schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+  &quot;actorSpecification&quot;: 1,
+  &quot;views&quot;: {
+    &quot;overview&quot;: {
+      &quot;display&quot;: {
+        &quot;component&quot;: &quot;table&quot;,
+        &quot;properties&quot;: {
+          &quot;authorName&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Author&quot;
+          },
+          &quot;commentText&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Comment&quot;
+          },
+          &quot;commentedAt&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Commented At&quot;
+          },
+          &quot;isReply&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Is Reply&quot;
+          },
+          &quot;postUrl&quot;: {
+            &quot;format&quot;: &quot;link&quot;,
+            &quot;label&quot;: &quot;Post URL&quot;
+          },
+          &quot;reactionsCount&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Reactions&quot;
+          },
+          &quot;scrapedAt&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Scraped At&quot;
+          }
+        }
+      },
+      &quot;title&quot;: &quot;Overview&quot;,
+      &quot;transformation&quot;: {
+        &quot;fields&quot;: [
+          &quot;authorName&quot;,
+          &quot;commentText&quot;,
+          &quot;commentedAt&quot;,
+          &quot;reactionsCount&quot;,
+          &quot;isReply&quot;,
+          &quot;postUrl&quot;,
+          &quot;scrapedAt&quot;
+        ]
+      }
+    }
+  }
+}
+</code></pre></details></section><section class="schema-section" id="key-value-schema"><h2>Key-value schema</h2><p>Published key-value store definitions, when provided by this build.</p><p>This definition is not present in the default published build. See the published README for available documentation.</p></section><section id="published-readme"><h2>Published README</h2><details><summary>Read the full published documentation</summary><h2 id="readme-linkedin-post-comment-reply-thread-extractor">LinkedIn Post Comment &amp; Reply Thread Extractor</h2>
+<p>Feed this actor one or more LinkedIn post links and a session cookie, and it returns the top-level comments on each post (up to your per-post limit) — optionally with nested reply threads — as structured rows with author identity, engagement counts, and linked profiles.</p>
+<h2 id="readme-what-this-actor-does">What this actor does</h2>
+<ul>
+<li>Scrapes top-level comments from one or more LinkedIn post URLs, with a relevance or recency sort preference.</li>
+<li>Optionally follows reply threads up to 3 levels deep, emitting each reply as its own row linked to its parent via <code>parentCommentId</code>.</li>
+<li>Classifies each commenter as a person or company page, and pulls any LinkedIn profile or company links out of the comment text.</li>
+<li>Filters out comments below a minimum reaction count, and can exclude comments from person or company authors entirely.</li>
+<li>Omits text and URL fields it couldn't populate for a given comment; the counts (<code>reactionsCount</code>, <code>repliesCount</code>, <code>authorFollowersCount</code>), <code>isReply</code> and <code>authorType</code> are always present.</li>
+</ul>
+<h2 id="readme-output-per-comment">Output per comment</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>commentId</code></td>
+<td>Unique numeric ID for the comment.</td>
+</tr>
+<tr>
+<td><code>postUrl</code></td>
+<td>Canonical URL of the source post.</td>
+</tr>
+<tr>
+<td><code>postId</code></td>
+<td>Numeric activity ID of the source post.</td>
+</tr>
+<tr>
+<td><code>authorName</code></td>
+<td>Commenter's full name.</td>
+</tr>
+<tr>
+<td><code>authorProfileUrl</code></td>
+<td>URL to the commenter's LinkedIn profile or company page.</td>
+</tr>
+<tr>
+<td><code>authorHeadline</code></td>
+<td>Commenter's headline/title.</td>
+</tr>
+<tr>
+<td><code>authorAvatar</code></td>
+<td>CDN URL of the commenter's profile photo.</td>
+</tr>
+<tr>
+<td><code>authorType</code></td>
+<td><code>PERSON</code>, <code>COMPANY</code>, or <code>UNKNOWN</code> when it can't be determined.</td>
+</tr>
+<tr>
+<td><code>authorFollowersCount</code></td>
+<td>Commenter's follower count, when LinkedIn exposes one (0 otherwise).</td>
+</tr>
+<tr>
+<td><code>commentText</code></td>
+<td>Full text of the comment.</td>
+</tr>
+<tr>
+<td><code>commentedAt</code></td>
+<td>ISO 8601 UTC timestamp of when the comment was posted.</td>
+</tr>
+<tr>
+<td><code>commentEditedAt</code></td>
+<td>ISO 8601 UTC timestamp of the last edit, when the comment was edited.</td>
+</tr>
+<tr>
+<td><code>reactionsCount</code></td>
+<td>Total reactions on the comment (<code>0</code> when none or unknown).</td>
+</tr>
+<tr>
+<td><code>reactionBreakdown</code></td>
+<td>Reaction counts by type (e.g. <code>like</code>, <code>praise</code>), when more than one type is present.</td>
+</tr>
+<tr>
+<td><code>repliesCount</code></td>
+<td>Number of replies to this comment (<code>0</code> when none or unknown).</td>
+</tr>
+<tr>
+<td><code>isReply</code></td>
+<td><code>true</code> if this row is a reply, <code>false</code> if top-level.</td>
+</tr>
+<tr>
+<td><code>parentCommentId</code></td>
+<td>ID of the parent comment (replies only).</td>
+</tr>
+<tr>
+<td><code>mentionedUsers</code></td>
+<td>LinkedIn profile URLs (<code>linkedin.com/in/...</code>) that appear in the comment text, when any are present.</td>
+</tr>
+<tr>
+<td><code>mentionedCompanies</code></td>
+<td>Company slugs from <code>linkedin.com/company/...</code> links in the comment text, when any are present.</td>
+</tr>
+<tr>
+<td><code>attachmentImageUrl</code></td>
+<td>URL of an attached image, when the comment includes one.</td>
+</tr>
+<tr>
+<td><code>attachmentVideoUrl</code></td>
+<td>URL of an attached video, when the comment includes one.</td>
+</tr>
+<tr>
+<td><code>scrapedAt</code></td>
+<td>ISO 8601 UTC timestamp of when the row was scraped.</td>
+</tr>
+</tbody>
+</table></div>
+<p>If no cookie is supplied, or the supplied cookie is or becomes invalid, the run writes a record with <code>_status: &quot;no_data&quot;</code>, <code>_reason</code>, <code>_message</code>, <code>_help</code> and <code>scrapedAt</code> fields explaining what to fix, and stops. Comments already saved before the cookie stopped working stay in the dataset.</p>
+<h2 id="readme-input">Input</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>postUrls</code></td>
+<td>List of strings</td>
+<td>–</td>
+<td>LinkedIn post URLs to scrape comments from. Accepts <code>/feed/update/urn:li:activity:ID/</code> or <code>/posts/username_slug-ID/</code> formats. Required.</td>
+</tr>
+<tr>
+<td><code>cookie</code></td>
+<td>String</td>
+<td>–</td>
+<td>A LinkedIn session cookie: either the <code>li_at</code> value, or the full cookies JSON array exported from a browser extension. Required.</td>
+</tr>
+<tr>
+<td><code>maxCommentsPerPost</code></td>
+<td>Integer</td>
+<td><code>50</code></td>
+<td>Maximum top-level comments to scrape per post (1–500). Replies don't count toward it.</td>
+</tr>
+<tr>
+<td><code>includeReplies</code></td>
+<td>Boolean</td>
+<td><code>false</code></td>
+<td>Also fetch replies to top-level comments, each output as its own row.</td>
+</tr>
+<tr>
+<td><code>replyDepth</code></td>
+<td>Integer</td>
+<td><code>1</code></td>
+<td>How many reply levels to recurse when <code>includeReplies</code> is on: <code>1</code> = direct replies, up to <code>3</code>. Up to 10 replies are read per comment.</td>
+</tr>
+<tr>
+<td><code>sortBy</code></td>
+<td>String (select)</td>
+<td><code>RELEVANCE</code></td>
+<td><code>RELEVANCE</code> (LinkedIn's &quot;Most relevant&quot;) or <code>RECENT</code> (newest first). A preference only: depending on how LinkedIn serves a post's comments, they may come back in LinkedIn's default order.</td>
+</tr>
+<tr>
+<td><code>minReactions</code></td>
+<td>Integer</td>
+<td><code>0</code></td>
+<td>Skip comments and replies with fewer than this many reactions. <code>0</code> disables the filter.</td>
+</tr>
+<tr>
+<td><code>language</code></td>
+<td>String (select)</td>
+<td><code>en</code></td>
+<td>Preferred LinkedIn UI language; influences which translation of comment text is returned.</td>
+</tr>
+<tr>
+<td><code>excludeAuthorTypes</code></td>
+<td>List of strings</td>
+<td><code>[]</code></td>
+<td>Drop comments and replies from the selected author types: <code>PERSON</code>, <code>COMPANY</code>. Comments whose author type is <code>UNKNOWN</code> are always kept.</td>
+</tr>
+<tr>
+<td><code>proxyConfiguration</code></td>
+<td>Object</td>
+<td>–</td>
+<td>Optional Apify proxy settings.</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="readme-example-default-run">Example: default run</h3>
+<pre><code class="language-json">{
+  &quot;postUrls&quot;: [&quot;https://www.linkedin.com/feed/update/urn:li:activity:7329761432933134337/&quot;],
+  &quot;cookie&quot;: &quot;YOUR_LI_AT_VALUE&quot;,
+  &quot;maxCommentsPerPost&quot;: 50
+}
+</code></pre>
+<h3 id="readme-example-with-nested-replies-newest-first">Example: with nested replies, newest first</h3>
+<pre><code class="language-json">{
+  &quot;postUrls&quot;: [&quot;https://www.linkedin.com/posts/williamhgates_climate-7329761432933134337/&quot;],
+  &quot;cookie&quot;: &quot;YOUR_LI_AT_VALUE&quot;,
+  &quot;includeReplies&quot;: true,
+  &quot;replyDepth&quot;: 2,
+  &quot;sortBy&quot;: &quot;RECENT&quot;
+}
+</code></pre>
+<h3 id="readme-example-high-engagement-comments-from-people-only">Example: high-engagement comments from people only</h3>
+<pre><code class="language-json">{
+  &quot;postUrls&quot;: [&quot;https://www.linkedin.com/feed/update/urn:li:activity:7329761432933134337/&quot;],
+  &quot;cookie&quot;: &quot;YOUR_LI_AT_VALUE&quot;,
+  &quot;minReactions&quot;: 10,
+  &quot;excludeAuthorTypes&quot;: [&quot;COMPANY&quot;]
+}
+</code></pre>
+<h2 id="readme-use-cases">Use cases</h2>
+<ul>
+<li><strong>Audience sentiment</strong> — read how people are reacting to a company announcement or thought-leadership post.</li>
+<li><strong>Lead discovery</strong> — surface engaged commenters as warm prospects, filtered to real people by <code>excludeAuthorTypes</code>.</li>
+<li><strong>Influencer research</strong> — see who's actively replying to a creator's posts and how deep the conversation threads go.</li>
+<li><strong>Brand monitoring</strong> — track mentions of your company or product inside comment threads on relevant posts.</li>
+<li><strong>Community moderation review</strong> — pull full reply chains to review how a sensitive post's discussion unfolded.</li>
+</ul>
+<h2 id="readme-faq">FAQ</h2>
+<p><strong>Does this need a LinkedIn account?</strong> Yes. A valid session cookie (<code>li_at</code> or an exported cookies JSON array) from a logged-in account is required to read comment data.</p>
+<p><strong>Why would <code>authorName</code> be missing from a comment?</strong> Deleted accounts or heavily restricted profiles can leave author fields empty. If a comment has no extractable ID at all, it's skipped entirely.</p>
+<p><strong>Does the actor see deleted comments?</strong> No. Deleted comments are removed from LinkedIn's own response, so the actor only sees whatever is still live at scrape time.</p>
+<p><strong>How deep do reply threads go?</strong> Up to 3 levels via <code>replyDepth</code>, only when <code>includeReplies</code> is enabled. At each level the actor reads up to 10 replies per comment, and replies beyond the chosen depth aren't fetched.</p>
+<p><strong>Why did I get fewer comments than <code>maxCommentsPerPost</code>?</strong> The post may simply have fewer comments, <code>minReactions</code>/<code>excludeAuthorTypes</code> may have dropped some, or LinkedIn may serve that post's comments in a way that only exposes its first batch. Comments are not de-duplicated across different input URLs pointing to the same post.</p>
+<p><strong>Can I scrape comments on a post I don't have access to?</strong> No. Only posts visible to the account behind your cookie can be scraped — private or connection-restricted posts outside your network will fail.</p>
+<p><strong>Why is a cookie required for public-looking posts?</strong> LinkedIn's comment data isn't available through any unauthenticated public endpoint, even for posts that appear public in a browser without logging in.</p>
+<p><strong>What happens if my cookie expires mid-run?</strong> The run stops and adds a record with <code>_status: &quot;no_data&quot;</code> plus a <code>_reason</code>/<code>_message</code>/<code>_help</code> explanation; any comment rows saved before that point remain. Log into LinkedIn, copy a fresh <code>li_at</code> value, and start a new run.</p>
+<p><strong>Is this affiliated with LinkedIn?</strong> No. This is an independent tool and is not affiliated with, endorsed by, or sponsored by LinkedIn Corporation.</p>
+</details></section><section id="python-quickstart"><h2>Python quickstart</h2><p>Use a schema-derived input and the Python standard library to start a run. An Apify account and token are required for execution.</p><p><a href="/apify-actor-examples/guides/9IrDMYd0zWDgF1HtA/">Open the step-by-step Python guide →</a></p></section><p class="source-note">Source build <code>CBKbM1dBIO5OKW2ZN</code>. Documentation is regenerated from the default published build; private drafts are not included.</p></article></div></main><footer class="footer"><strong>Nimbryxo Studio</strong><div class="footer-links"><a href="/apify-actor-examples/topics/">Topics</a><a href="/apify-actor-examples/sources/">Documentation sources</a><a href="https://apify.com/nimbryxo-studio">Apify</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></div></footer></body></html>
