@@ -1,113 +1,160 @@
 # LinkedIn Activity Feed Scraper with Engagement Filters
 
-Pull posts, articles, and reposts from one or more LinkedIn profiles' activity feeds (newest first, up to your per-profile limit), with filters for media type, post age, and minimum engagement, so you can go straight to the content that matters instead of sifting through a raw feed dump.
+Scrape **LinkedIn profile posts, company posts, and individual public post URLs** without cookies, logins, or an API key. Get the full post text, author name and profile URL, exact publish date, reaction and comment totals, the visible comments, media, and clear original/quote/repost flags.
 
 ## What this actor does
 
-- Scrapes the activity feed of any number of LinkedIn profiles in one run
-- Labels each post with its format: text, image, video, article, document, carousel, poll, event, or repost
-- Reports reaction, comment, and repost totals, plus a breakdown by reaction type (like, celebrate, love, insightful, support, funny, curious) when LinkedIn provides one
-- Filters results by media type, post type, how recently it was posted, minimum reactions, and minimum comments — so you only get posts worth keeping
-- Fields a post doesn't have (e.g. no article preview, no poll options) are left out of that record
+- **Three modes:** `postUrls` for specific public posts, `profiles` for a profile's recent posts, and `companies` for a company's recent posts.
+- **Cookieless by design:** reads public LinkedIn pages only, so there is no session cookie to export, expire, or leak.
+- **Exact post data:** full text, author identity, ISO publish date, reaction total, comment total, media URLs, and the comments visible on the public page.
+- **Correct reshare semantics:** `postType` separates `original`, `quote`, and `repost`; `repostOf` names the original author and text when LinkedIn exposes them.
+- **Filters:** media type, post type, relative date window, minimum reactions, minimum comments, and a global record cap. Empty fields are omitted.
 
 ## Output per post
 
-- `postId`, `postUrl`, `postedAt`
-- `authorName`, `authorProfileUrl`, `authorHeadline`, `authorAvatar`
+- `postId`, `postUrl`, `postedAt` — numeric activity ID, canonical post URL, exact ISO publish date
+- `authorName`, `authorProfileUrl`, `authorType`, `authorAvatar`, `authorFollowers` — author identity; `authorType` is `Person` or `Organization`
 - `content` — full post text
-- `mediaType` — `text`, `image`, `video`, `article`, `document`, `carousel`, `repost`, `poll`, or `event`
-- `mediaUrls`, `mediaItems` — media attached to the post
-- `articleTitle`, `articleUrl` — when the post shares an article
-- `linkPreview` — link preview card, when the post shares a plain URL
-- `documentUrl` — attached document link, for document posts
-- `pollOptions` — poll choices, for poll posts
-- `hashtags`, `mentionedPeople`, `mentionedCompanies`
-- `repostOf` — details of the original post, when this post is a repost
-- `reactionsCount`, `commentsCount`, `repostsCount`, `viewsCount`
-- `reactionBreakdown` — counts per reaction type, when available
-- `inputProfileUrl` — the profile URL this post came from
-- `scrapedAt` — ISO 8601 timestamp
+- `hashtags` — hashtags found in the post text
+- `mediaType` — `text`, `image`, `video`, `article`, `repost`; legacy values `document`, `carousel`, `poll`, and `event` are accepted by the filter but are not exposed on public pages
+- `mediaUrls`, `mediaItems` — image URLs, or a video URL with thumbnail, duration, and embed URL
+- `articleTitle` — live article/link title when the post is an article-style or image/link share
+- `comments` — up to 10 visible comments, each with `authorName`, `text`, `postedAt`, and `reactionsCount`
+- `commentsCount` — total comment count on the post
+- `reactionsCount` — total reaction count (likes plus other reactions)
+- `postType` — `original`, `quote`, or `repost`
+- `isRepost`, `isQuotePost` — flags for reshared and quote posts
+- `repostOf` — original `authorName`, `authorProfileUrl`, `authorType`, `content`, and `postUrl` when available
+- `inputUrl` — the post or target URL that produced this record
+- `inputProfileUrl` — profile URL (mode=`profiles`)
+- `inputCompanyUrl` — company URL (mode=`companies`)
+- `dataSource` — `public-post`, `public-profile`, or `public-company`
+- `partial` — present and `true` when only the discovery stub could be read (for example, the post page was blocked)
+- `recordType` — `post` for post records, `error` for diagnostic rows
+- `scrapedAt` — ISO 8601 run timestamp
 
-If the cookie is missing or LinkedIn rejects it before any profile is read, the dataset instead gets a single status row rather than post records: `_status: "no_data"`, `_reason` (`cookie-missing` or `cookie-invalid`), `_message`, `_help` (how to export a fresh cookie) and `scrapedAt`. If the session expires part-way through a run, the run stops and keeps the posts already saved. Profiles whose username can't be read or resolved are skipped without a row.
+Legacy compatibility fields remain part of the output contract but are omitted when the public page does not expose them: `authorHeadline`, `articleUrl`, `linkPreview`, `documentUrl`, `pollOptions`, `mentionedPeople`, `mentionedCompanies`, `reactionBreakdown`, `repostsCount`, and `viewsCount`. See **Limitations**.
+
+Diagnostic rows have `recordType: "error"`, `targetType`, `inputUrl`, `status` (`invalid`, `not_found`, `blocked`, `empty`, or `fetch_failed`), `error`, optional `httpStatus`, and `scrapedAt`. They are not counted toward `maxItems`.
 
 ## Input
 
 | Field | Type | Default | Description |
 |---|---|---|---|
-| `profileUrls` | array | – | LinkedIn profile URLs or bare usernames to scrape. Required. |
-| `cookie` | string | – | Your LinkedIn session cookie (`li_at` value or full cookies JSON array). Required. |
-| `maxPostsPerProfile` | integer | `50` | Maximum posts to collect per profile (1–500) |
-| `mediaType` | array | – | Only keep posts of these media types: `text`, `image`, `video`, `article`, `document`, `carousel`, `repost`, `poll`, `event`. Empty keeps all |
-| `postTypes` | array | `["text","image","video","article","document","repost"]` | Another type list. Left at its default (all six), it doesn't filter anything; any other selection is added to `mediaType` and posts matching either list are kept |
-| `datePosted` | string | `""` (any time) | `r86400` (past 24h), `r604800` (past week), or `r2592000` (past month), measured from the moment of the run |
-| `minReactions` | integer | `0` | Skip posts with fewer reactions than this |
-| `minComments` | integer | `0` | Skip posts with fewer comments than this |
-| `language` | string | `en_US` | Accepted locale values: `en_US`, `en_GB`, `es_ES`, `fr_FR`, `de_DE`, `pt_BR`, `it_IT`, `nl_NL`, `ja_JP`, `zh_CN`. Currently not used, so it doesn't change the output |
-| `includeReposts` | boolean | `true` | Include posts that are reposts/reshares of other content |
-| `proxyConfiguration` | object | – | Optional Apify proxy configuration; a residential proxy is recommended |
+| `mode` | string | `postUrls` | `postUrls`, `profiles`, or `companies` |
+| `postUrls` | array | – | Public post URLs, feed-update URLs, activity URNs, or numeric activity IDs (mode=`postUrls`) |
+| `profileUrls` | array | – | Profile URLs or public identifiers, e.g. `https://www.linkedin.com/in/williamhgates/` or `williamhgates` (mode=`profiles`) |
+| `companyUrls` | array | – | Company URLs or slugs, e.g. `https://www.linkedin.com/company/google/` or `google` (mode=`companies`) |
+| `maxPostsPerProfile` | integer | `50` | Maximum posts kept per profile or company (1–500); public pages expose about 6–8 profile posts and 2–10 company posts |
+| `mediaType` | array | – | Keep only `text`, `image`, `video`, `article`, or `repost`; empty keeps all |
+| `postTypes` | array | `["text","image","video","article","document","repost"]` | Legacy type filter; left at its default it changes nothing, otherwise it is merged with `mediaType` |
+| `datePosted` | string | Any time | `""` (any time), `r86400` (24 hours), `r604800` (week), or `r2592000` (month) |
+| `minReactions` | integer | `0` | Minimum reaction count |
+| `minComments` | integer | `0` | Minimum comment count |
+| `includeReposts` | boolean | `true` | Keep quote posts and reposts; set to `false` to drop them |
+| `maxItems` | integer | `1000` | Global cap on post records (1–10000); error rows do not count |
+| `proxyConfiguration` | object | – | Optional. The actor works without a proxy |
+
+### Example: one public post URL
+
+```json
+{
+  "mode": "postUrls",
+  "postUrls": [
+    "https://www.linkedin.com/posts/williamhgates_how-better-data-helped-us-cut-child-mortality-activity-7329207003942125568-_gfJ"
+  ]
+}
+```
 
 ### Example: recent posts from several profiles
 
 ```json
 {
-  "profileUrls": ["https://www.linkedin.com/in/williamhgates/", "adam-grant"],
-  "cookie": "YOUR_LI_AT_COOKIE",
-  "maxPostsPerProfile": 50
+  "mode": "profiles",
+  "profileUrls": [
+    "https://www.linkedin.com/in/satyanadella/",
+    "https://www.linkedin.com/in/adam-grant/"
+  ],
+  "maxPostsPerProfile": 8
 }
 ```
 
-### Example: only high-engagement posts from the past month
+### Example: company posts with engagement filters
 
 ```json
 {
-  "profileUrls": ["https://www.linkedin.com/in/williamhgates/"],
-  "cookie": "YOUR_LI_AT_COOKIE",
+  "mode": "companies",
+  "companyUrls": ["https://www.linkedin.com/company/google/"],
   "datePosted": "r2592000",
-  "minReactions": 500,
+  "minReactions": 100,
   "includeReposts": false
 }
 ```
 
-### Example: only video and article posts
+### Example: a mixed list of posts, with comments and media
 
 ```json
 {
-  "profileUrls": ["williamhgates"],
-  "cookie": "YOUR_LI_AT_COOKIE",
-  "mediaType": ["video", "article"]
+  "mode": "postUrls",
+  "postUrls": [
+    "https://www.linkedin.com/feed/update/urn:li:activity:7518622101692436482/",
+    "https://www.linkedin.com/posts/nvidia_ai-is-technology-activity-7518633624649252864-9XSo",
+    "https://www.linkedin.com/feed/update/urn:li:activity:7518239029990023168/"
+  ],
+  "mediaType": ["image", "video", "article"],
+  "minComments": 5,
+  "maxItems": 50
 }
 ```
 
 ## Use cases
 
-- **Thought-leadership research** — see what topics a profile's audience actually engages with
-- **Competitor content tracking** — monitor what competitors or key industry accounts are posting
-- **Lead generation** — spot active, high-engagement prospects worth reaching out to
-- **Influencer vetting** — check real engagement rates before a sponsorship or partnership
-- **Brand monitoring** — track how often and how a profile mentions your brand or product
+- **Content research** — collect full posts and visible comments from experts, creators, and companies you track.
+- **Competitive intelligence** — monitor the latest company posts and compare engagement across peers.
+- **Lead generation** — find active, high-engagement authors and the posts that sparked discussion.
+- **Influencer vetting** — check real reaction and comment counts before a sponsorship or partnership.
+- **Campaign reporting** — export exact dates, post URLs, and engagement totals for a reporting window.
+- **Dataset building** — assemble a clean post corpus for topic modelling, sentiment analysis, or LLM training.
+
+## Limitations
+
+- **Public surfaces only.** Private profiles, member-only posts, and pages that return a login wall or HTTP 999 are reported as diagnostic error rows instead of being bypassed.
+- **Profile depth is about 6–8 posts.** A public profile page shows only its latest posts and has no "load more" for logged-out visitors. `maxPostsPerProfile` cannot unlock older history.
+- **Company depth is about 2–10 posts.** It comes from the company home page, not the `/posts/` tab, which is login-gated. Older company posts are not available.
+- **Comments are the visible subset.** The public page exposes up to 10 comments, with text, author name, date, and likes. It does not expose replies, comment permalinks, or commenter profile URLs.
+- **These fields are not public:** shares/reposts counts, views/impressions, per-reaction-type breakdown, reactor or liker identities, and author headlines. They are omitted rather than estimated.
+- **Some media labels are not public:** document, carousel, poll, and event posts are not distinguishable on the public post page, so they are reported as `text`, `image`, `video`, or `article` based on what the page exposes.
+- **Date filters apply to what was discovered.** In profile and company modes, only the latest page of posts is filtered; the filter does not make older posts appear.
+- **A failed hydration can produce a `partial` record.** When a profile or company page lists a post but its public post page is blocked, the record keeps the listing text, date, author, and reaction count and is marked `partial: true`.
 
 ## FAQ
 
-**Why does this need a cookie?**
-LinkedIn's activity feed is only available through an authenticated session, so a valid `li_at` session cookie is required to read it.
+**Do I need a LinkedIn cookie or login?**
+No. This actor reads public LinkedIn pages only. There is no cookie field to fill and no account risk.
 
-**How many posts can I pull per profile?**
-Up to 500 via `maxPostsPerProfile`, though less active profiles may simply not have that many posts in their feed. The limit counts posts that pass your filters; with strict filters the actor keeps paging through the feed until it reaches the limit or the feed runs out.
+**How many posts can I get per profile?**
+About 6–8 recent posts per profile. That is the public page's own limit; setting `maxPostsPerProfile` higher does not add pagination.
 
-**How does `datePosted` work?**
-It compares each post's `postedAt` with the run time and drops older posts; posts without a readable date are kept.
+**How many posts can I get per company?**
+About 2–10 recent posts from the company home page. Older company posts are behind a login wall.
 
-**What's the difference between `mediaType` and `postTypes`?**
-Both check the same per-post `mediaType` value. `mediaType` is the main filter and offers all nine formats. `postTypes` only matters when you change it from its default of six types: your selection is then merged with `mediaType`, so a post is kept if it matches either list. To narrow results, use `mediaType` alone and leave `postTypes` at its default.
+**Why are shares, views, or the reaction breakdown missing?**
+LinkedIn does not publish those values on public post pages. The actor deliberately omits them instead of returning zeros or guesses.
 
-**Why is `reactionBreakdown` sometimes missing?**
-LinkedIn doesn't always expose a per-type reaction breakdown for a post. When it isn't available, the field is left off that record instead of being filled with zeros.
+**What is the difference between `quote` and `repost`?**
+A `quote` adds the sharer's own commentary above the original content. A `repost` shares the original without new commentary. `repostOf` carries the original author and text when LinkedIn exposes them.
 
-**Will reposts clutter my results?**
-Only if you want them to — set `includeReposts` to `false` to drop reshared content and keep only original posts.
+**Are the comments the full thread?**
+No. They are the up-to-10 comments LinkedIn renders on the public page, in the order LinkedIn shows them. Replies and commenter profile URLs are not included.
 
-**Can I scrape a profile I'm not connected to?**
-Yes, as long as the profile's activity is visible to the account behind your cookie — the same visibility rules that apply when you browse LinkedIn normally apply here.
+**Why did I get an error row instead of a post?**
+The post, profile, or company was private, deleted, rate-limited, or returned a login wall. The row's `status` and `error` fields say which case occurred; other targets in the same run still return data.
+
+**Can I scrape a specific old post?**
+Yes, if it is public. Put its URL, feed-update URL, activity URN, or numeric ID in `postUrls`.
+
+**Can I run this on a schedule?**
+Yes. A daily run with one public post URL is enough to return data and keep a dataset fresh.
 
 **Is this affiliated with LinkedIn?**
-No. This is an independent, third-party actor; it isn't operated by or affiliated with LinkedIn.
+No. This is an independent, third-party actor; it is not operated by or affiliated with LinkedIn.

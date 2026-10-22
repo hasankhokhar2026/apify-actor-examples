@@ -1,0 +1,155 @@
+{
+  "description": "Scrape Google Maps Popular Times (hourly busy hours for every day), live busyness vs the usual level, and open/closed status for places given by Google Maps URL or Google Place ID. No API key or login needed.",
+  "properties": {
+    "includeFailedPlaces": {
+      "default": false,
+      "description": "Also output one record per place that could not be retrieved, with the reason and number of attempts. Recommended for monitoring lists so every input appears in the results.",
+      "prefill": false,
+      "title": "Include unavailable places in the output",
+      "type": "boolean"
+    },
+    "includeLatestReviews": {
+      "default": false,
+      "description": "Also return each place's newest Google reviews (exact date, rating, text) and flag reviews that mention the place closing, such as \"final weekend\", \"it was closed\" or \"permanently closed\". Diners often report a closure in reviews before Google updates the listing.",
+      "prefill": false,
+      "sectionCaption": "Closure monitoring",
+      "sectionDescription": "Extra signals for tracking places that may have closed or are losing customers. Run the actor on a schedule with the same monitoring key to compare every reading with earlier ones.",
+      "title": "Include newest reviews and closure mentions",
+      "type": "boolean"
+    },
+    "language": {
+      "default": "en",
+      "description": "Language of the Google Maps pages; text fields such as the live label and open status are returned in this language.",
+      "editor": "select",
+      "enum": [
+        "en",
+        "es",
+        "fr",
+        "de",
+        "it",
+        "pt",
+        "ja",
+        "ko",
+        "zh",
+        "ar",
+        "ru"
+      ],
+      "enumTitles": [
+        "English",
+        "Spanish",
+        "French",
+        "German",
+        "Italian",
+        "Portuguese",
+        "Japanese",
+        "Korean",
+        "Chinese",
+        "Arabic",
+        "Russian"
+      ],
+      "prefill": "en",
+      "title": "Google Maps language",
+      "type": "string"
+    },
+    "latestReviewsCount": {
+      "default": 10,
+      "description": "How many of the newest reviews to return and check for closure mentions (used when newest reviews are included).",
+      "maximum": 60,
+      "minimum": 1,
+      "prefill": 10,
+      "title": "Newest reviews per place",
+      "type": "integer"
+    },
+    "lowActivityRatio": {
+      "default": 0.25,
+      "description": "A live reading counts as low when it is at most this share of the usual level (0.25 = a quarter of usual). Used for the low-activity streak in the monitoring summary.",
+      "maximum": 1,
+      "minimum": 0.05,
+      "prefill": 0.25,
+      "title": "Low activity threshold (live / usual)",
+      "type": "number"
+    },
+    "maxAttemptsPerPlace": {
+      "default": 8,
+      "description": "Maximum number of fresh attempts for one place before it is reported as unavailable. Lower values cap time and cost for hard-to-reach places; higher values maximise coverage.",
+      "maximum": 12,
+      "minimum": 1,
+      "prefill": 8,
+      "title": "Max attempts per place",
+      "type": "integer"
+    },
+    "maxConcurrency": {
+      "default": 3,
+      "description": "How many places are scraped at the same time. Higher values finish large lists faster and need more run memory (about 1 GB per parallel place; the actor lowers this automatically if the run has less memory).",
+      "maximum": 8,
+      "minimum": 1,
+      "prefill": 3,
+      "sectionCaption": "Speed, retries and failures",
+      "sectionDescription": "Control throughput and how much effort is spent on places Google does not return on the first try.",
+      "title": "Places scraped in parallel",
+      "type": "integer"
+    },
+    "minUsualBusyness": {
+      "default": 30,
+      "description": "Readings count toward the monitoring streaks and medians only when Google's usual level for that hour is at least this value, so quiet hours (where a low reading means little) are ignored.",
+      "maximum": 100,
+      "minimum": 5,
+      "prefill": 30,
+      "title": "Busy-hour threshold (usual busyness %)",
+      "type": "integer"
+    },
+    "monitoringKey": {
+      "description": "Name for a monitoring list, for example \"vancouver-restaurants\". When set, each place's readings are kept in your account between runs and every record gets a monitoring summary: readings so far, low-activity and open-without-live-data streaks, recent vs earlier live/usual ratio, listing status changes, Popular Times removed or changed, new closure mentions. Use the same key on every scheduled run.",
+      "editor": "textfield",
+      "title": "Monitoring key",
+      "type": "string"
+    },
+    "placeIds": {
+      "description": "Google Place IDs beginning with ChIJ (for example ChIJaXQRs6lZwokRY6EFpJnhNNE). Recommended for monitoring fixed lists: each ID always points to the same place. IDs that do not match a place are reported as unavailable, never guessed.",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 100000,
+      "minItems": 1,
+      "title": "Google Place IDs",
+      "type": "array"
+    },
+    "placeTimeoutSecs": {
+      "default": 240,
+      "description": "Hard time limit for one place across all of its attempts.",
+      "maximum": 600,
+      "minimum": 30,
+      "prefill": 240,
+      "title": "Time limit per place",
+      "type": "integer",
+      "unit": "seconds"
+    },
+    "placeUrls": {
+      "description": "Google Maps place URLs — copy the full URL from the address bar while viewing a place (short maps.app.goo.gl links also work). Full place URLs are the most reliable; for places with the same name nearby, prefer Place IDs.",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 100000,
+      "minItems": 1,
+      "prefill": [
+        "https://www.google.com/maps/place/McDonald%27s/@40.7577297,-73.9853627,17z/data=!3m1!4b1!4m6!3m5!1s0x89c2597777397641:0x4387a82ee10d3e3b!8m2!3d40.7577297!4d-73.9853627!16s%2Fg%2F11fld77pvs"
+      ],
+      "title": "Place URLs",
+      "type": "array"
+    },
+    "proxyConfiguration": {
+      "description": "Places are fetched directly first. If omitted, the last two attempts for a hard-to-reach place use Apify residential proxies (United States, then Canada). Set 'No proxy' to never use a proxy, or choose your own proxy to use it for those fallback attempts.",
+      "editor": "proxy",
+      "sectionCaption": "Proxy fallback",
+      "sectionDescription": "Proxies are only used as a last resort for places that direct access could not retrieve.",
+      "title": "Proxy configuration",
+      "type": "object"
+    }
+  },
+  "required": [],
+  "schemaVersion": 1,
+  "title": "Google Maps Popular Times & Live Busyness Scraper",
+  "type": "object"
+}

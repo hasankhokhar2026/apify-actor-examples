@@ -1,15 +1,14 @@
 {
   "properties": {
-    "cookie": {
-      "description": "Your LinkedIn session cookie. Accepts: (1) the li_at value from browser DevTools, or (2) full cookies JSON array from an extension like EditThisCookie.",
-      "editor": "textarea",
-      "isSecret": true,
-      "title": "LinkedIn Cookie",
-      "type": "string"
+    "companyUrls": {
+      "description": "LinkedIn company URLs or slugs, e.g. https://www.linkedin.com/company/google/ or google. (mode=companies)",
+      "editor": "stringList",
+      "title": "Company URLs",
+      "type": "array"
     },
     "datePosted": {
       "default": "",
-      "description": "Filter to recent posts: past 24h, past week, past month.",
+      "description": "Keep posts published within this window, measured from the run time.",
       "editor": "select",
       "enum": [
         "",
@@ -28,53 +27,32 @@
     },
     "includeReposts": {
       "default": true,
-      "description": "Include posts that are reposts/reshares of other content.",
+      "description": "When enabled, reposts and quote posts are kept with their postType and repostOf fields. When disabled, they are dropped.",
       "editor": "checkbox",
-      "title": "Include Reposts",
+      "prefill": true,
+      "title": "Include Reposts & Quotes",
       "type": "boolean"
     },
-    "language": {
-      "default": "en_US",
-      "description": "Preferred LinkedIn locale.",
-      "editor": "select",
-      "enum": [
-        "en_US",
-        "en_GB",
-        "es_ES",
-        "fr_FR",
-        "de_DE",
-        "pt_BR",
-        "it_IT",
-        "nl_NL",
-        "ja_JP",
-        "zh_CN"
-      ],
-      "enumTitles": [
-        "English (US)",
-        "English (UK)",
-        "Spanish",
-        "French",
-        "German",
-        "Portuguese (BR)",
-        "Italian",
-        "Dutch",
-        "Japanese",
-        "Chinese (Simplified)"
-      ],
-      "title": "Language",
-      "type": "string"
+    "maxItems": {
+      "default": 1000,
+      "description": "Global cap on post records in the dataset. Diagnostic error rows are not counted toward this cap.",
+      "editor": "number",
+      "maximum": 10000,
+      "minimum": 1,
+      "title": "Max Posts",
+      "type": "integer"
     },
     "maxPostsPerProfile": {
       "default": 50,
-      "description": "Maximum number of posts to scrape per profile.",
+      "description": "Maximum posts to keep per profile or company. Public profile pages expose about 6-8 recent posts and company home pages 2-10, so larger values do not unlock more history.",
       "editor": "number",
       "maximum": 500,
       "minimum": 1,
-      "title": "Max Posts Per Profile",
+      "title": "Max Posts Per Target",
       "type": "integer"
     },
     "mediaType": {
-      "description": "Only include posts of these media types. Leave empty to include all.",
+      "description": "Only keep posts of these media types. Public pages reliably expose text, image, video and article; repost is a pure reshare. Leave empty to keep all.",
       "editor": "select",
       "items": {
         "enum": [
@@ -106,19 +84,39 @@
     },
     "minComments": {
       "default": 0,
-      "description": "Only include posts with at least this many comments.",
+      "description": "Only keep posts with at least this many comments. Posts without a readable comment count are treated as zero.",
       "editor": "number",
+      "maximum": 10000000,
       "minimum": 0,
       "title": "Minimum Comments",
       "type": "integer"
     },
     "minReactions": {
       "default": 0,
-      "description": "Only include posts with at least this many reactions.",
+      "description": "Only keep posts with at least this many reactions. Posts without a readable reaction count are treated as zero.",
       "editor": "number",
+      "maximum": 10000000,
       "minimum": 0,
       "title": "Minimum Reactions",
       "type": "integer"
+    },
+    "mode": {
+      "default": "postUrls",
+      "description": "Choose what to scrape: specific public post URLs, a profile's recent posts, or a company's recent posts.",
+      "editor": "select",
+      "enum": [
+        "postUrls",
+        "profiles",
+        "companies"
+      ],
+      "enumTitles": [
+        "Public post URLs",
+        "Profile recent posts",
+        "Company recent posts"
+      ],
+      "prefill": "postUrls",
+      "title": "Mode",
+      "type": "string"
     },
     "postTypes": {
       "default": [
@@ -129,7 +127,7 @@
         "document",
         "repost"
       ],
-      "description": "Only include posts of these types. Leave empty to include all.",
+      "description": "Legacy type filter. Left at its default of six types it changes nothing; any other selection is merged with mediaType.",
       "editor": "select",
       "items": {
         "enum": [
@@ -150,29 +148,31 @@
         ],
         "type": "string"
       },
-      "title": "Post Types",
+      "title": "Post Types (legacy)",
+      "type": "array"
+    },
+    "postUrls": {
+      "description": "Public LinkedIn post URLs, feed-update URLs, activity URNs or numeric activity IDs. (mode=postUrls)",
+      "editor": "stringList",
+      "prefill": [
+        "https://www.linkedin.com/posts/williamhgates_how-better-data-helped-us-cut-child-mortality-activity-7329207003942125568-_gfJ"
+      ],
+      "title": "Post URLs",
       "type": "array"
     },
     "profileUrls": {
-      "description": "LinkedIn profile URLs or usernames. Accepts: https://www.linkedin.com/in/williamhgates/, https://uk.linkedin.com/in/williamhgates, or just the username: williamhgates",
+      "description": "LinkedIn profile URLs or public identifiers, e.g. https://www.linkedin.com/in/williamhgates/ or williamhgates. (mode=profiles)",
       "editor": "stringList",
-      "prefill": [
-        "https://www.linkedin.com/in/adam-grant/"
-      ],
       "title": "Profile URLs",
       "type": "array"
     },
     "proxyConfiguration": {
-      "description": "Optional Apify proxy configuration. Residential proxy recommended for best results.",
+      "description": "Optional. The actor works without a proxy. Supply one only if your runs are consistently blocked.",
       "editor": "proxy",
       "title": "Proxy Configuration",
       "type": "object"
     }
   },
-  "required": [
-    "profileUrls",
-    "cookie"
-  ],
   "schemaVersion": 1,
   "title": "LinkedIn Profile Posts Scraper Input",
   "type": "object"

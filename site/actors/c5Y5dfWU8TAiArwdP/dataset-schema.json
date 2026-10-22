@@ -1,41 +1,17 @@
 {
   "actorSpecification": 1,
   "views": {
-    "detailed": {
+    "company": {
       "display": {
         "component": "table",
         "properties": {
-          "currentTitle": {
-            "format": "text",
-            "label": "Current Title"
-          },
-          "followersCount": {
-            "format": "number",
-            "label": "Followers"
-          },
-          "headline": {
-            "format": "text",
-            "label": "Headline"
-          },
-          "inputUrl": {
-            "format": "text",
-            "label": "Input URL"
-          },
-          "location": {
-            "format": "text",
-            "label": "Location"
+          "currentCompany": {
+            "format": "object",
+            "label": "Company Data"
           },
           "name": {
             "format": "text",
             "label": "Name"
-          },
-          "order": {
-            "format": "number",
-            "label": "Order"
-          },
-          "profilePicture": {
-            "format": "link",
-            "label": "Photo"
           },
           "profileUrl": {
             "format": "link",
@@ -44,26 +20,15 @@
           "scrapedAt": {
             "format": "text",
             "label": "Scraped At"
-          },
-          "summary": {
-            "format": "text",
-            "label": "Summary"
           }
         }
       },
-      "title": "Detailed",
+      "title": "Current company",
       "transformation": {
         "fields": [
           "name",
-          "headline",
-          "location",
-          "summary",
+          "currentCompany",
           "profileUrl",
-          "profilePicture",
-          "currentTitle",
-          "followersCount",
-          "inputUrl",
-          "order",
           "scrapedAt"
         ]
       }
@@ -72,6 +37,22 @@
       "display": {
         "component": "table",
         "properties": {
+          "connectionsCount": {
+            "format": "text",
+            "label": "Connections"
+          },
+          "currentCompany": {
+            "format": "object",
+            "label": "Current Company"
+          },
+          "currentTitle": {
+            "format": "text",
+            "label": "Current Title"
+          },
+          "dataQuality": {
+            "format": "text",
+            "label": "Data Quality"
+          },
           "followersCount": {
             "format": "number",
             "label": "Followers"
@@ -104,8 +85,196 @@
           "name",
           "headline",
           "location",
-          "profileUrl",
+          "currentTitle",
+          "currentCompany",
           "followersCount",
+          "connectionsCount",
+          "dataQuality",
+          "profileUrl",
+          "scrapedAt"
+        ]
+      }
+    },
+    "profile": {
+      "display": {
+        "component": "table",
+        "properties": {
+          "allTitles": {
+            "format": "array",
+            "label": "All Titles"
+          },
+          "certifications": {
+            "format": "array",
+            "label": "Certifications"
+          },
+          "courses": {
+            "format": "array",
+            "label": "Courses"
+          },
+          "currentCompany": {
+            "format": "object",
+            "label": "Current Company"
+          },
+          "currentTitle": {
+            "format": "text",
+            "label": "Current Title"
+          },
+          "headline": {
+            "format": "text",
+            "label": "Headline"
+          },
+          "inputUrl": {
+            "format": "text",
+            "label": "Input URL"
+          },
+          "languages": {
+            "format": "array",
+            "label": "Languages"
+          },
+          "location": {
+            "format": "text",
+            "label": "Location"
+          },
+          "missingFields": {
+            "format": "array",
+            "label": "Missing Fields"
+          },
+          "name": {
+            "format": "text",
+            "label": "Name"
+          },
+          "order": {
+            "format": "number",
+            "label": "Order"
+          },
+          "profilePicture": {
+            "format": "link",
+            "label": "Photo"
+          },
+          "profileUrl": {
+            "format": "link",
+            "label": "Profile URL"
+          },
+          "profileUrn": {
+            "format": "text",
+            "label": "Member URN"
+          },
+          "publicIdentifier": {
+            "format": "text",
+            "label": "Public Identifier"
+          },
+          "publications": {
+            "format": "array",
+            "label": "Publications"
+          },
+          "recentArticles": {
+            "format": "array",
+            "label": "Recent Articles"
+          },
+          "recentPosts": {
+            "format": "array",
+            "label": "Recent Posts"
+          },
+          "recommendations": {
+            "format": "array",
+            "label": "Recommendations"
+          },
+          "scrapedAt": {
+            "format": "text",
+            "label": "Scraped At"
+          },
+          "skills": {
+            "format": "array",
+            "label": "Skills"
+          },
+          "summary": {
+            "format": "text",
+            "label": "Summary"
+          }
+        }
+      },
+      "title": "Profile detail",
+      "transformation": {
+        "fields": [
+          "name",
+          "headline",
+          "location",
+          "summary",
+          "profileUrl",
+          "profilePicture",
+          "profileUrn",
+          "publicIdentifier",
+          "currentTitle",
+          "currentCompany",
+          "allTitles",
+          "skills",
+          "languages",
+          "certifications",
+          "publications",
+          "recommendations",
+          "courses",
+          "recentPosts",
+          "recentArticles",
+          "missingFields",
+          "inputUrl",
+          "order",
+          "scrapedAt"
+        ]
+      }
+    },
+    "quality": {
+      "display": {
+        "component": "table",
+        "properties": {
+          "dataQuality": {
+            "format": "text",
+            "label": "Data Quality"
+          },
+          "inputUrl": {
+            "format": "text",
+            "label": "Input URL"
+          },
+          "missingFields": {
+            "format": "array",
+            "label": "Missing Fields"
+          },
+          "name": {
+            "format": "text",
+            "label": "Name"
+          },
+          "order": {
+            "format": "number",
+            "label": "Order"
+          },
+          "pageVariant": {
+            "format": "text",
+            "label": "Page Variant"
+          },
+          "profileUrn": {
+            "format": "text",
+            "label": "Member URN"
+          },
+          "publicIdentifier": {
+            "format": "text",
+            "label": "Public Identifier"
+          },
+          "scrapedAt": {
+            "format": "text",
+            "label": "Scraped At"
+          }
+        }
+      },
+      "title": "Data quality",
+      "transformation": {
+        "fields": [
+          "name",
+          "profileUrn",
+          "publicIdentifier",
+          "pageVariant",
+          "dataQuality",
+          "missingFields",
+          "inputUrl",
+          "order",
           "scrapedAt"
         ]
       }

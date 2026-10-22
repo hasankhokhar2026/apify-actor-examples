@@ -1,31 +1,69 @@
 {
+  "description": "Look up public LinkedIn profiles by URL or username.",
   "properties": {
     "enrichCompany": {
       "default": true,
-      "description": "Fetch the current employer's own LinkedIn company page for extra detail (size, industry, website, headquarters, logo). Adds one extra request per profile (~30-90s) but is cached per company within a run. Disable for faster runs.",
+      "description": "Fetch the current employer's public LinkedIn company page for extra detail (followers, offices, affiliated pages, similar pages, updates, founded, tagline, size, industry, website, headquarters, logo). Adds one request per unique company and is cached within the run.",
       "editor": "checkbox",
+      "prefill": false,
       "title": "Enrich Current Company",
       "type": "boolean"
     },
+    "maxPosts": {
+      "default": 10,
+      "description": "Maximum number of recent public posts to include per profile. Set 0 to skip posts.",
+      "editor": "number",
+      "maximum": 50,
+      "minimum": 0,
+      "prefill": 3,
+      "title": "Recent Posts per Profile",
+      "type": "integer"
+    },
+    "pacing": {
+      "default": "balanced",
+      "description": "How long to wait between profiles. Use a slower pacing for large runs if LinkedIn starts refusing requests.",
+      "editor": "select",
+      "enum": [
+        "fast",
+        "balanced",
+        "cautious"
+      ],
+      "enumTitles": [
+        "Fast (0.5–1.5s)",
+        "Balanced (3–7s)",
+        "Cautious (8–15s)"
+      ],
+      "prefill": "balanced",
+      "title": "Request Pacing",
+      "type": "string"
+    },
     "profileUrls": {
-      "description": "LinkedIn profile URLs (https://linkedin.com/in/username) or usernames.",
+      "description": "LinkedIn profile URLs (https://www.linkedin.com/in/username) or bare usernames. Public profiles work best; normal profiles may require the anti-bot fallback.",
       "editor": "stringList",
       "items": {
         "type": "string"
       },
+      "maxItems": 1000,
       "minItems": 1,
       "prefill": [
-        "https://www.linkedin.com/in/williamhgates",
-        "https://www.linkedin.com/in/satyanadella"
+        "https://www.linkedin.com/in/williamhgates"
       ],
       "title": "Profile URLs",
       "type": "array"
     },
     "proxyConfiguration": {
-      "description": "Optional Apify proxy.",
+      "description": "Optional Apify proxy used as a middle rung before the anti-bot fallback. Leave empty to go straight from a direct request to the fallback only when blocked.",
       "editor": "proxy",
       "title": "Proxy Configuration",
       "type": "object"
+    },
+    "useUnblocker": {
+      "default": true,
+      "description": "Allow the final anti-bot fallback after LinkedIn returns a real block (999/403 or a sign-up wall). Profiles that load directly never use it.",
+      "editor": "checkbox",
+      "prefill": true,
+      "title": "Anti-Bot Fallback",
+      "type": "boolean"
     }
   },
   "required": [

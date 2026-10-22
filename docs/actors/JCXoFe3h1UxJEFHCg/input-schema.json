@@ -1,6 +1,12 @@
 {
-  "description": "Search Indeed jobs by keywords and location in 62 countries, or paste Indeed search, company and job URLs. Every job comes with its full description, salary, job types, benefits, coordinates, contacts and the employer's ratings and salaries.",
+  "description": "Search Indeed jobs by keywords, location and company in 62 countries, or paste Indeed search, company and job URLs. Every job comes with its full description, salary, job types, benefits, coordinates, contacts and the employer's ratings and salary report.",
   "properties": {
+    "company": {
+      "description": "Only jobs from one employer, e.g. `Amazon`, `Visa`, `DocuSign`. The name is resolved to Indeed's employer key so the company filter is applied by Indeed itself, then verified per job.",
+      "editor": "textfield",
+      "title": "Company",
+      "type": "string"
+    },
     "country": {
       "default": "US",
       "description": "Indeed country site to search. Results come in the site's language and salaries in its currency.",
@@ -215,10 +221,10 @@
     },
     "includeCompanyRatings": {
       "default": true,
-      "description": "Add each employer's Indeed rating, review count, category ratings (work-life balance, pay & benefits, job security, management, culture), CEO approval, founding year, work wellbeing score and average salaries by job title. Each company is looked up once per run; turn off for the fastest runs with the least proxy traffic.",
-      "prefill": true,
+      "description": "Add the employer's HTML company report: CEO approval, founding year, work wellbeing scores and average salaries by job title, plus an industry fallback. Ratings, review count and the five category ratings are always included from Indeed's app API at no extra request; this toggle adds the fields that require one company-page fetch per employer. Turn off for the fastest, cheapest runs.",
+      "prefill": false,
       "sectionCaption": "Output",
-      "title": "Include company ratings and salaries",
+      "title": "Include full company report",
       "type": "boolean"
     },
     "includeDescriptionHtml": {
@@ -226,6 +232,13 @@
       "description": "Also save the job description as HTML (`descriptionHtml`) with its formatting. The plain-text `description` is always included.",
       "prefill": false,
       "title": "Include description HTML",
+      "type": "boolean"
+    },
+    "includeSponsored": {
+      "default": true,
+      "description": "Add `isSponsored` from Indeed's mobile search page for jobs that also appear there. This costs one extra lightweight page per search and is best effort: jobs outside the first mobile result page keep the field omitted rather than guessed.",
+      "prefill": false,
+      "title": "Include sponsored flag",
       "type": "boolean"
     },
     "jobType": {
@@ -272,12 +285,26 @@
       "title": "Location",
       "type": "string"
     },
-    "maxItemsPerSearch": {
-      "default": 100,
-      "description": "Maximum number of jobs to save for each search (the keyword search and each search URL). Indeed shows up to about 1,000 jobs for one search; split large searches by location or filters to collect more.",
+    "locationShards": {
+      "description": "Optional list of extra locations to search separately with the same keywords and filters, e.g. `New York, NY`, `Chicago, IL`, `Remote`. Deduplication removes jobs found by more than one shard. This is the reliable way past the roughly 1,000-row cursor ceiling.",
+      "editor": "stringList",
+      "title": "City or region shards",
+      "type": "array"
+    },
+    "maxItems": {
+      "description": "Optional hard cap across every search and pasted job URL. The run stops as soon as this many jobs are saved. Leave empty for no global cap.",
       "maximum": 10000,
       "minimum": 1,
-      "prefill": 5,
+      "prefill": 3,
+      "title": "Max jobs for the whole run",
+      "type": "integer"
+    },
+    "maxItemsPerSearch": {
+      "default": 100,
+      "description": "Maximum number of jobs to save for each search (the keyword search and each search URL). Indeed's cursor stops at roughly 1,000 fetched rows, including duplicates; use `locationShards` or more search URLs to collect more.",
+      "maximum": 10000,
+      "minimum": 1,
+      "prefill": 3,
       "title": "Max jobs per search",
       "type": "integer"
     },
@@ -322,6 +349,13 @@
       "description": "Save each job once even when several searches find it. Jobs are always unique within one search.",
       "prefill": true,
       "title": "Remove duplicates across searches",
+      "type": "boolean"
+    },
+    "shardByDate": {
+      "default": false,
+      "description": "Run each keyword search five times, for the last 1, 3, 7, 14 and 30 days, and remove duplicates. Useful for freshness coverage when you need more than one cursor walk per search.",
+      "prefill": false,
+      "title": "Split by date window",
       "type": "boolean"
     },
     "sort": {
