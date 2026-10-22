@@ -1,51 +1,61 @@
 {
   "actorSpecification": 1,
-  "title": "LinkedIn Employee Profiles",
+  "title": "Company headcount and employee records",
   "views": {
     "overview": {
       "display": {
         "component": "table",
         "properties": {
-          "connectionDegree": {
-            "format": "text",
-            "label": "Connection"
-          },
-          "currentCompany": {
+          "companyName": {
             "format": "text",
             "label": "Company"
           },
-          "headline": {
+          "companySizeRange": {
             "format": "text",
-            "label": "Headline"
+            "label": "Size band"
           },
-          "location": {
+          "currentTitle": {
             "format": "text",
-            "label": "Location"
+            "label": "Title"
+          },
+          "followerCount": {
+            "format": "number",
+            "label": "Followers"
+          },
+          "industry": {
+            "format": "text",
+            "label": "Industry"
+          },
+          "linkedinEmployeeCount": {
+            "format": "number",
+            "label": "Employees (LinkedIn)"
           },
           "name": {
             "format": "text",
-            "label": "Name"
+            "label": "Employee"
           },
           "profileUrl": {
             "format": "link",
             "label": "Profile URL"
           },
-          "scrapedAt": {
-            "format": "datetime",
-            "label": "Scraped At"
+          "recordType": {
+            "format": "text",
+            "label": "Type"
           }
         }
       },
-      "title": "Employee Profiles",
+      "title": "Company headcount and employee records",
       "transformation": {
         "fields": [
+          "recordType",
+          "companyName",
+          "linkedinEmployeeCount",
+          "companySizeRange",
+          "followerCount",
+          "industry",
           "name",
-          "headline",
-          "location",
-          "profileUrl",
-          "currentCompany",
-          "connectionDegree",
-          "scrapedAt"
+          "currentTitle",
+          "profileUrl"
         ]
       }
     }

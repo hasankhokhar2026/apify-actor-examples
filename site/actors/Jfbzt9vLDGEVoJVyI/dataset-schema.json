@@ -3,21 +3,56 @@
   "fields": {
     "properties": {
       "applyCount": {
-        "description": "How many applied",
+        "description": "Applicant count; omitted when 0",
         "nullable": true,
         "type": "integer"
+      },
+      "applyRedirectUrl": {
+        "description": "External apply URL when Naukri exposes one; may be ad-wrapped",
+        "nullable": true,
+        "type": "string"
+      },
+      "applyUrl": {
+        "description": "Best available apply link: company gateway, external redirect, or Naukri listing",
+        "nullable": true,
+        "type": "string"
+      },
+      "companyAddress": {
+        "description": "Company address",
+        "nullable": true,
+        "type": "string"
+      },
+      "companyApplyUrl": {
+        "description": "Naukri company-apply gateway URL when present",
+        "nullable": true,
+        "type": "string"
+      },
+      "companyDescription": {
+        "description": "Company profile description as plain text",
+        "nullable": true,
+        "type": "string"
       },
       "companyId": {
         "description": "Naukri company ID",
         "nullable": true,
         "type": "string"
       },
+      "companyLogoUrl": {
+        "description": "Company logo URL",
+        "nullable": true,
+        "type": "string"
+      },
       "companyName": {
-        "description": "Company name",
+        "description": "Hiring company name",
+        "type": "string"
+      },
+      "companyProfileUrl": {
+        "description": "Naukri company profile URL",
+        "nullable": true,
         "type": "string"
       },
       "companyRating": {
-        "description": "AmbitionBox aggregate rating (out of 5)",
+        "description": "AmbitionBox aggregate rating out of 5",
         "nullable": true,
         "type": "number"
       },
@@ -26,13 +61,102 @@
         "nullable": true,
         "type": "integer"
       },
+      "companyReviews": {
+        "description": "Up to three AmbitionBox review snippets when includeCompanyReviews is on",
+        "items": {
+          "properties": {
+            "author": {
+              "nullable": true,
+              "type": "string"
+            },
+            "date": {
+              "nullable": true,
+              "type": "string"
+            },
+            "dislikes": {
+              "nullable": true,
+              "type": "string"
+            },
+            "likes": {
+              "nullable": true,
+              "type": "string"
+            },
+            "rating": {
+              "nullable": true,
+              "type": "number"
+            },
+            "title": {
+              "nullable": true,
+              "type": "string"
+            },
+            "url": {
+              "nullable": true,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "nullable": true,
+        "type": "array"
+      },
+      "companyWebsite": {
+        "description": "Company website when Naukri publishes one (sparse)",
+        "nullable": true,
+        "type": "string"
+      },
       "description": {
-        "description": "Short job description snippet",
+        "description": "Full job description as plain text (includeDescription)",
+        "nullable": true,
+        "type": "string"
+      },
+      "descriptionHtml": {
+        "description": "Raw HTML description (includeDescriptionHtml)",
+        "nullable": true,
+        "type": "string"
+      },
+      "educationPG": {
+        "description": "Postgraduate education requirements",
+        "items": {
+          "type": "string"
+        },
+        "type": "array"
+      },
+      "educationPPG": {
+        "description": "Post-postgraduate education requirements",
+        "items": {
+          "type": "string"
+        },
+        "type": "array"
+      },
+      "educationUG": {
+        "description": "Undergraduate education requirements",
+        "items": {
+          "type": "string"
+        },
+        "type": "array"
+      },
+      "employmentType": {
+        "description": "Employment type, e.g. Full Time, Permanent",
         "nullable": true,
         "type": "string"
       },
       "experience": {
-        "description": "Required experience range",
+        "description": "Raw experience range, e.g. 5-7 Yrs",
+        "nullable": true,
+        "type": "string"
+      },
+      "experienceMaxYears": {
+        "description": "Parsed maximum years",
+        "nullable": true,
+        "type": "integer"
+      },
+      "experienceMinYears": {
+        "description": "Parsed minimum years",
+        "nullable": true,
+        "type": "integer"
+      },
+      "functionalArea": {
+        "description": "Functional area",
         "nullable": true,
         "type": "string"
       },
@@ -45,53 +169,114 @@
         "nullable": true,
         "type": "string"
       },
-      "jobTypeFlags": {
-        "description": "Job type flags (premium, easy_apply, walk_in)",
-        "nullable": true,
-        "type": "array"
-      },
-      "location": {
-        "description": "Job location (city, possibly multiple)",
+      "jobType": {
+        "description": "Naukri job type, e.g. fulltime or internship",
         "nullable": true,
         "type": "string"
       },
+      "jobTypeFlags": {
+        "description": "Badges such as premium, easy_apply and walk_in (legacy field)",
+        "items": {
+          "type": "string"
+        },
+        "type": "array"
+      },
+      "location": {
+        "description": "Job locations joined as one string (legacy field)",
+        "nullable": true,
+        "type": "string"
+      },
+      "locations": {
+        "description": "Structured job locations",
+        "items": {
+          "type": "string"
+        },
+        "type": "array"
+      },
       "logoUrl": {
-        "description": "Company logo image URL",
+        "description": "Company logo URL (legacy field, same as companyLogoUrl)",
         "nullable": true,
         "type": "string"
       },
       "postedAt": {
-        "description": "When the job was posted (UTC ISO timestamp)",
+        "description": "Posting time in ISO 8601 with +05:30 offset",
         "nullable": true,
         "type": "string"
       },
       "postedDate": {
-        "description": "When the job was posted (as displayed, e.g. '2 days ago')",
-        "nullable": true,
-        "type": "string"
-      },
-      "recruiterName": {
-        "description": "Recruiter name",
+        "description": "Relative posting label from search, e.g. 2 Days Ago",
         "nullable": true,
         "type": "string"
       },
       "role": {
-        "description": "Job role category",
+        "description": "Job role",
+        "nullable": true,
+        "type": "string"
+      },
+      "roleCategory": {
+        "description": "Role category",
         "nullable": true,
         "type": "string"
       },
       "salary": {
-        "description": "Salary range as displayed",
+        "description": "Raw salary string as displayed, including Not Disclosed",
+        "type": "string"
+      },
+      "salaryCurrency": {
+        "description": "ISO currency code, normally INR",
+        "type": "string"
+      },
+      "salaryDisclosed": {
+        "description": "False when Naukri hides the salary",
+        "type": "boolean"
+      },
+      "salaryMax": {
+        "description": "Parsed maximum salary in INR for salaryPeriod; omitted when not disclosed",
+        "nullable": true,
+        "type": "number"
+      },
+      "salaryMin": {
+        "description": "Parsed minimum salary in INR for salaryPeriod; omitted when not disclosed",
+        "nullable": true,
+        "type": "number"
+      },
+      "salaryPeriod": {
+        "description": "Salary period; month for internship stipends",
+        "enum": [
+          "year",
+          "month"
+        ],
         "nullable": true,
         "type": "string"
       },
+      "salaryVariablePct": {
+        "description": "Variable pay percentage when supplied by Naukri",
+        "nullable": true,
+        "type": "number"
+      },
       "scrapedAt": {
-        "description": "UTC timestamp when scraped",
+        "description": "UTC timestamp when the record was scraped",
         "type": "string"
       },
       "skills": {
-        "description": "Skill tags",
-        "nullable": true,
+        "description": "Skill tags, preferred skills first",
+        "items": {
+          "type": "string"
+        },
+        "type": "array"
+      },
+      "skillsOther": {
+        "description": "Other skill tags",
+        "items": {
+          "type": "string"
+        },
+        "type": "array"
+      },
+      "skillsPreferred": {
+        "description": "Preferred skill tags",
+        "items": {
+          "type": "string"
+        },
         "type": "array"
       },
       "title": {
@@ -99,13 +284,79 @@
         "type": "string"
       },
       "url": {
-        "description": "Full Naukri job listing URL",
+        "description": "Naukri job listing URL",
         "type": "string"
       },
       "vacancies": {
-        "description": "Number of vacancies",
+        "description": "Openings; omitted when Naukri reports 0",
         "nullable": true,
         "type": "integer"
+      },
+      "viewCount": {
+        "description": "View count; omitted when 0",
+        "nullable": true,
+        "type": "integer"
+      },
+      "walkIn": {
+        "description": "Walk-in interview flag",
+        "type": "boolean"
+      },
+      "walkInDetails": {
+        "description": "Walk-in venue, dates, timing and contact when Naukri publishes them",
+        "nullable": true,
+        "properties": {
+          "contactName": {
+            "nullable": true,
+            "type": "string"
+          },
+          "contactPhone": {
+            "nullable": true,
+            "type": "string"
+          },
+          "dailyTiming": {
+            "nullable": true,
+            "type": "string"
+          },
+          "embedMapUrl": {
+            "nullable": true,
+            "type": "string"
+          },
+          "endDate": {
+            "nullable": true,
+            "type": "string"
+          },
+          "mapUrl": {
+            "nullable": true,
+            "type": "string"
+          },
+          "saturdayWorking": {
+            "nullable": true,
+            "type": "boolean"
+          },
+          "startDate": {
+            "nullable": true,
+            "type": "string"
+          },
+          "sundayWorking": {
+            "nullable": true,
+            "type": "boolean"
+          },
+          "venueAddress": {
+            "nullable": true,
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "workMode": {
+        "description": "Work mode derived from Naukri's wfhType",
+        "enum": [
+          "office",
+          "remote",
+          "hybrid"
+        ],
+        "nullable": true,
+        "type": "string"
       }
     },
     "type": "object"
@@ -132,6 +383,10 @@
             "format": "text",
             "label": "Description"
           },
+          "employmentType": {
+            "format": "text",
+            "label": "Employment Type"
+          },
           "experience": {
             "format": "text",
             "label": "Experience"
@@ -156,6 +411,10 @@
             "format": "text",
             "label": "Salary"
           },
+          "salaryDisclosed": {
+            "format": "text",
+            "label": "Salary Disclosed"
+          },
           "skills": {
             "format": "array",
             "label": "Skills"
@@ -167,6 +426,10 @@
           "url": {
             "format": "link",
             "label": "Listing"
+          },
+          "workMode": {
+            "format": "text",
+            "label": "Work Mode"
           }
         }
       },
@@ -180,6 +443,9 @@
           "location",
           "experience",
           "salary",
+          "salaryDisclosed",
+          "workMode",
+          "employmentType",
           "skills",
           "industry",
           "role",
@@ -220,6 +486,10 @@
           "url": {
             "format": "link",
             "label": "Listing"
+          },
+          "workMode": {
+            "format": "text",
+            "label": "Work Mode"
           }
         }
       },
@@ -231,6 +501,7 @@
           "location",
           "experience",
           "salary",
+          "workMode",
           "postedDate",
           "url"
         ]

@@ -1,0 +1,73 @@
+{
+  "properties": {
+    "country": {
+      "default": "US",
+      "description": "Target Etsy market. Sets the proxy exit country, browser locale, and search URL prefix so results match the selected region (currency, ranking, availability).",
+      "editor": "select",
+      "enum": [
+        "US",
+        "DE",
+        "GB",
+        "FR",
+        "AU",
+        "CA",
+        "IT",
+        "ES",
+        "NL",
+        "JP"
+      ],
+      "enumTitles": [
+        "United States (default)",
+        "Germany (Etsy.de — EUR)",
+        "United Kingdom (Etsy.co.uk — GBP)",
+        "France (fr — EUR)",
+        "Australia (au — AUD)",
+        "Canada (ca — CAD)",
+        "Italy (it — EUR)",
+        "Spain (es — EUR)",
+        "Netherlands (nl — EUR)",
+        "Japan (jp — JPY)"
+      ],
+      "prefill": "US",
+      "title": "Country / Market",
+      "type": "string"
+    },
+    "includeDetails": {
+      "default": false,
+      "description": "When enabled, attempts to visit each product page for additional details. Note: Etsy's anti-bot may block product page access in some sessions.",
+      "title": "Include Product Details",
+      "type": "boolean"
+    },
+    "maxItems": {
+      "default": 100,
+      "description": "Maximum number of items to extract per URL or search query.",
+      "editor": "number",
+      "maximum": 1000,
+      "minimum": 1,
+      "prefill": 10,
+      "title": "Max Items",
+      "type": "integer"
+    },
+    "searchQueries": {
+      "description": "Keywords to search on Etsy. Each query generates a separate search.",
+      "editor": "stringList",
+      "title": "Search Queries",
+      "type": "array"
+    },
+    "startUrls": {
+      "description": "Etsy URLs to scrape. Supports search results, shop pages, and category pages.",
+      "editor": "requestListSources",
+      "prefill": [
+        {
+          "url": "https://www.etsy.com/search?q=handmade+jewelry"
+        }
+      ],
+      "title": "Etsy URLs",
+      "type": "array"
+    }
+  },
+  "required": [],
+  "schemaVersion": 1,
+  "title": "Etsy Scraper Input",
+  "type": "object"
+}

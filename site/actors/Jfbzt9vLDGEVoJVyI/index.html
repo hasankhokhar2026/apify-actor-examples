@@ -1,152 +1,276 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src &#x27;self&#x27;; script-src &#x27;self&#x27; &#x27;sha256-W7nCtckL/h5H31xh96cITtEiP7qss326HQoJj4qbaz4=&#x27;; style-src &#x27;self&#x27;; img-src &#x27;self&#x27; https: data:; base-uri &#x27;self&#x27;; form-action &#x27;self&#x27;; object-src &#x27;none&#x27;"><title>Naukri.com Job Listings Extractor with Salary &amp; Skills | Nimbryxo Studio</title><meta name="description" content="Pull job listings from Naukri.com by search URL or by keyword, location, experience, salary, job age and work-mode filters, with company rating, skills and recruiter detail per pos"><meta name="robots" content="index,follow"><link rel="canonical" href="https://hasankhokhar2026.github.io/apify-actor-examples/actors/Jfbzt9vLDGEVoJVyI/"><meta property="og:title" content="Naukri.com Job Listings Extractor with Salary &amp; Skills | Nimbryxo Studio"><meta property="og:description" content="Pull job listings from Naukri.com by search URL or by keyword, location, experience, salary, job age and work-mode filters, with company rating, skills and recruiter detail per pos"><meta property="og:type" content="website"><meta property="og:url" content="https://hasankhokhar2026.github.io/apify-actor-examples/actors/Jfbzt9vLDGEVoJVyI/"><meta property="og:site_name" content="Nimbryxo Studio"><meta name="twitter:card" content="summary"><link rel="icon" href="/apify-actor-examples/assets/mark.svg?v=2d20f9dc334a" type="image/svg+xml"><link rel="stylesheet" href="/apify-actor-examples/assets/site.css?v=39545fd4a399"><link rel="stylesheet" href="/apify-actor-examples/assets/brand.css?v=eb0f935ade25"><link rel="alternate" type="application/rss+xml" title="Nimbryxo Studio guides" href="/apify-actor-examples/feed.xml"><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization","name":"Nimbryxo Studio","url":"https://hasankhokhar2026.github.io/apify-actor-examples/","sameAs":["https://apify.com/nimbryxo-studio"]},{"@type":"WebSite","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#website","name":"Nimbryxo Studio","url":"https://hasankhokhar2026.github.io/apify-actor-examples/","publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"inLanguage":"en"},{"@type":"WebPage","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/Jfbzt9vLDGEVoJVyI/#webpage","name":"Naukri.com Job Listings Extractor with Salary & Skills","description":"Pull job listings from Naukri.com by search URL or by keyword, location, experience, salary, job age and work-mode filters, with company rating, skills and recruiter detail per posting.","url":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/Jfbzt9vLDGEVoJVyI/","isPartOf":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#website"},"publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"inLanguage":"en","mainEntity":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/Jfbzt9vLDGEVoJVyI/#article"},"breadcrumb":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/Jfbzt9vLDGEVoJVyI/#breadcrumb"}},{"@type":"TechArticle","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/Jfbzt9vLDGEVoJVyI/#article","headline":"Naukri.com Job Listings Extractor with Salary & Skills","name":"Naukri.com Job Listings Extractor with Salary & Skills","description":"Pull job listings from Naukri.com by search URL or by keyword, location, experience, salary, job age and work-mode filters, with company rating, skills and recruiter detail per posting.","url":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/Jfbzt9vLDGEVoJVyI/","author":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"mainEntityOfPage":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/Jfbzt9vLDGEVoJVyI/#webpage"},"inLanguage":"en"},{"@type":"BreadcrumbList","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/Jfbzt9vLDGEVoJVyI/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Nimbryxo Studio","item":"https://hasankhokhar2026.github.io/apify-actor-examples/"},{"@type":"ListItem","position":2,"name":"Actors","item":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/"},{"@type":"ListItem","position":3,"name":"Naukri.com Job Listings Extractor with Salary & Skills","item":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/Jfbzt9vLDGEVoJVyI/"}]}]}</script><script src="/apify-actor-examples/assets/site.js?v=7cabac48dd31" defer></script></head><body class="theme-studio"><a href="#main" class="skip-link">Skip to content</a><header><div class="inner"><a href="/apify-actor-examples/" class="brand"><img src="/apify-actor-examples/assets/mark.svg?v=2d20f9dc334a" alt="" width="29" height="29">Nimbryxo Studio</a><nav aria-label="Main navigation"><a href="/apify-actor-examples/actors/" aria-current="page">Actors</a><a href="/apify-actor-examples/guides/">Guides</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></nav></div></header><main id="main"><div class="doc-layout"><aside class="contents" aria-label="On this page"><strong>Contents</strong><a href="#overview">Overview</a><a href="#published-readme">Published README</a><a href="#input-schema">Input schema</a><a href="#output-schema">Output schema</a><a href="#dataset-schema">Dataset schema</a><a href="#python-quickstart">Python quickstart</a></aside><article class="prose"><div class="breadcrumb"><a href="/apify-actor-examples/actors/">Actors</a><span>/</span><span>Naukri.com Job Listings Extractor with Salary &amp; Skills</span></div><section id="overview"><h1 class="doc-title">Naukri.com Job Listings Extractor with Salary &amp; Skills</h1><p class="lede">Pull job listings from Naukri.com by search URL or by keyword, location, experience, salary, job age and work-mode filters, with company rating, skills and recruiter detail per posting.</p><div class="actions"><a class="button" href="https://apify.com/nimbryxo-studio/naukri-com-job-listings-extractor-with-salary">Open on Apify</a><a class="text-link" href="https://github.com/hasankhokhar2026/apify-actor-examples/blob/main/docs/actors/Jfbzt9vLDGEVoJVyI/README.md">GitHub source</a></div></section><section class="schema-section" id="input-schema"><h2>Input schema</h2><p>Input fields, types, required flags, descriptions, defaults, and prefills come from the published definition. Prefill examples are distinct from defaults.</p><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>searchUrl</code></td><td>string</td><td>optional</td><td>A Naukri.com search URL to scrape. Paste any URL from https://www.naukri.com — the scraper parses the slug and filters automatically. If empty, the structured filter fields below are used instead.</td></tr><tr><td><code>maxItems</code></td><td>integer</td><td>optional</td><td>Maximum number of job listings to return. Each Naukri API page returns up to 20 jobs.</td></tr><tr><td><code>keyword</code></td><td>string</td><td>optional</td><td>Job title or keyword (e.g., &quot;python developer&quot;, &quot;data scientist&quot;). Used only when Search URL is empty.</td></tr></tbody></table></div><details><summary>Show all input fields</summary><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>searchUrl</code></td><td>string</td><td>optional</td><td>A Naukri.com search URL to scrape. Paste any URL from https://www.naukri.com — the scraper parses the slug and filters automatically. If empty, the structured filter fields below are used instead.</td></tr><tr><td><code>maxItems</code></td><td>integer</td><td>optional</td><td>Maximum number of job listings to return. Each Naukri API page returns up to 20 jobs.</td></tr><tr><td><code>keyword</code></td><td>string</td><td>optional</td><td>Job title or keyword (e.g., &quot;python developer&quot;, &quot;data scientist&quot;). Used only when Search URL is empty.</td></tr><tr><td><code>location</code></td><td>string</td><td>optional</td><td>City name (e.g., &quot;bangalore&quot;, &quot;delhi-ncr&quot;, &quot;mumbai&quot;, &quot;hyderabad&quot;). Used only when Search URL is empty.</td></tr><tr><td><code>experienceYears</code></td><td>integer</td><td>optional</td><td>Years of experience required.</td></tr><tr><td><code>salaryLakhs</code></td><td>string</td><td>optional</td><td>Annual salary range in lakhs.</td></tr><tr><td><code>jobAge</code></td><td>string</td><td>optional</td><td>Only include jobs posted within the last N days.</td></tr><tr><td><code>jobType</code></td><td>string</td><td>optional</td><td>Employment type filter.</td></tr><tr><td><code>workMode</code></td><td>string</td><td>optional</td><td>Filter by remote or hybrid work. Naukri does not have an explicit &#x27;office&#x27; filter — office is the default state of every listing, so leave this empty for office jobs.</td></tr><tr><td><code>sortBy</code></td><td>string</td><td>optional</td><td>How results are ordered.</td></tr></tbody></table></div></details><p><a href="input-schema.json">Download the published input schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src &#x27;self&#x27;; script-src &#x27;self&#x27; &#x27;sha256-W7nCtckL/h5H31xh96cITtEiP7qss326HQoJj4qbaz4=&#x27;; style-src &#x27;self&#x27;; img-src &#x27;self&#x27; https: data:; base-uri &#x27;self&#x27;; form-action &#x27;self&#x27;; object-src &#x27;none&#x27;"><title>Naukri.com Job Listings Extractor with Salary &amp; Skills | Nimbryxo Studio</title><meta name="description" content="Pull job listings from Naukri.com by search URL or by keyword, location, experience, salary, job age and work-mode filters, with company rating, skills and recruiter detail per pos"><meta name="robots" content="index,follow"><link rel="canonical" href="https://hasankhokhar2026.github.io/apify-actor-examples/actors/Jfbzt9vLDGEVoJVyI/"><meta property="og:title" content="Naukri.com Job Listings Extractor with Salary &amp; Skills | Nimbryxo Studio"><meta property="og:description" content="Pull job listings from Naukri.com by search URL or by keyword, location, experience, salary, job age and work-mode filters, with company rating, skills and recruiter detail per pos"><meta property="og:type" content="website"><meta property="og:url" content="https://hasankhokhar2026.github.io/apify-actor-examples/actors/Jfbzt9vLDGEVoJVyI/"><meta property="og:site_name" content="Nimbryxo Studio"><meta name="twitter:card" content="summary"><link rel="icon" href="/apify-actor-examples/assets/mark.svg?v=2d20f9dc334a" type="image/svg+xml"><link rel="stylesheet" href="/apify-actor-examples/assets/site.css?v=39545fd4a399"><link rel="stylesheet" href="/apify-actor-examples/assets/brand.css?v=eb0f935ade25"><link rel="alternate" type="application/rss+xml" title="Nimbryxo Studio guides" href="/apify-actor-examples/feed.xml"><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization","name":"Nimbryxo Studio","url":"https://hasankhokhar2026.github.io/apify-actor-examples/","sameAs":["https://apify.com/nimbryxo-studio"]},{"@type":"WebSite","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#website","name":"Nimbryxo Studio","url":"https://hasankhokhar2026.github.io/apify-actor-examples/","publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"inLanguage":"en"},{"@type":"WebPage","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/Jfbzt9vLDGEVoJVyI/#webpage","name":"Naukri.com Job Listings Extractor with Salary & Skills","description":"Pull job listings from Naukri.com by search URL or by keyword, location, experience, salary, job age and work-mode filters, with company rating, skills and recruiter detail per posting.","url":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/Jfbzt9vLDGEVoJVyI/","isPartOf":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#website"},"publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"inLanguage":"en","mainEntity":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/Jfbzt9vLDGEVoJVyI/#article"},"breadcrumb":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/Jfbzt9vLDGEVoJVyI/#breadcrumb"}},{"@type":"TechArticle","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/Jfbzt9vLDGEVoJVyI/#article","headline":"Naukri.com Job Listings Extractor with Salary & Skills","name":"Naukri.com Job Listings Extractor with Salary & Skills","description":"Pull job listings from Naukri.com by search URL or by keyword, location, experience, salary, job age and work-mode filters, with company rating, skills and recruiter detail per posting.","url":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/Jfbzt9vLDGEVoJVyI/","author":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"mainEntityOfPage":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/Jfbzt9vLDGEVoJVyI/#webpage"},"inLanguage":"en"},{"@type":"BreadcrumbList","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/Jfbzt9vLDGEVoJVyI/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Nimbryxo Studio","item":"https://hasankhokhar2026.github.io/apify-actor-examples/"},{"@type":"ListItem","position":2,"name":"Actors","item":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/"},{"@type":"ListItem","position":3,"name":"Naukri.com Job Listings Extractor with Salary & Skills","item":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/Jfbzt9vLDGEVoJVyI/"}]}]}</script><script src="/apify-actor-examples/assets/site.js?v=7cabac48dd31" defer></script></head><body class="theme-studio"><a href="#main" class="skip-link">Skip to content</a><header><div class="inner"><a href="/apify-actor-examples/" class="brand"><img src="/apify-actor-examples/assets/mark.svg?v=2d20f9dc334a" alt="" width="29" height="29">Nimbryxo Studio</a><nav aria-label="Main navigation"><a href="/apify-actor-examples/actors/" aria-current="page">Actors</a><a href="/apify-actor-examples/guides/">Guides</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></nav></div></header><main id="main"><div class="doc-layout"><aside class="contents" aria-label="On this page"><strong>Contents</strong><a href="#overview">Overview</a><a href="#published-readme">Published README</a><a href="#input-schema">Input schema</a><a href="#output-schema">Output schema</a><a href="#dataset-schema">Dataset schema</a><a href="#python-quickstart">Python quickstart</a></aside><article class="prose"><div class="breadcrumb"><a href="/apify-actor-examples/actors/">Actors</a><span>/</span><span>Naukri.com Job Listings Extractor with Salary &amp; Skills</span></div><section id="overview"><h1 class="doc-title">Naukri.com Job Listings Extractor with Salary &amp; Skills</h1><p class="lede">Pull job listings from Naukri.com by search URL or by keyword, location, experience, salary, job age and work-mode filters, with company rating, skills and recruiter detail per posting.</p><div class="actions"><a class="button" href="https://apify.com/nimbryxo-studio/naukri-com-job-listings-extractor-with-salary">Open on Apify</a><a class="text-link" href="https://github.com/hasankhokhar2026/apify-actor-examples/blob/main/docs/actors/Jfbzt9vLDGEVoJVyI/README.md">GitHub source</a></div></section><section class="schema-section" id="input-schema"><h2>Input schema</h2><p>Input fields, types, required flags, descriptions, defaults, and prefills come from the published definition. Prefill examples are distinct from defaults.</p><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>searches</code></td><td>array</td><td>optional</td><td>One or more search configurations. Each entry can hold several keywords and several locations; every keyword is combined with every location. Leave keywords empty to browse a location or company.</td></tr><tr><td><code>jobIds</code></td><td>array</td><td>optional</td><td>Fetch these Naukri job IDs directly. Accepts bare IDs or Naukri job URLs. Job IDs are processed before searches.</td></tr><tr><td><code>companyIds</code></td><td>array</td><td>optional</td><td>Naukri company IDs to search across. When searches are also supplied, each company is combined with every search.</td></tr></tbody></table></div><details><summary>Show all input fields</summary><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>searches</code></td><td>array</td><td>optional</td><td>One or more search configurations. Each entry can hold several keywords and several locations; every keyword is combined with every location. Leave keywords empty to browse a location or company.</td></tr><tr><td><code>jobIds</code></td><td>array</td><td>optional</td><td>Fetch these Naukri job IDs directly. Accepts bare IDs or Naukri job URLs. Job IDs are processed before searches.</td></tr><tr><td><code>companyIds</code></td><td>array</td><td>optional</td><td>Naukri company IDs to search across. When searches are also supplied, each company is combined with every search.</td></tr><tr><td><code>maxItems</code></td><td>integer</td><td>optional</td><td>Total records to return across all queries. Naukri allows at most 3,000 jobs per query (150 pages of 20).</td></tr><tr><td><code>onlyNew</code></td><td>boolean</td><td>optional</td><td>Emit only jobs that were not emitted by an earlier run with the same state key.</td></tr><tr><td><code>resetState</code></td><td>boolean</td><td>optional</td><td>Clear the saved job IDs before this run.</td></tr><tr><td><code>stateKey</code></td><td>string</td><td>optional</td><td>Optional name for the incremental state. Defaults to a hash of the search configuration.</td></tr><tr><td><code>includeDescription</code></td><td>boolean</td><td>optional</td><td>Include the full job description text. Turn off to keep records smaller.</td></tr><tr><td><code>includeDescriptionHtml</code></td><td>boolean</td><td>optional</td><td>Include the raw HTML job description in addition to plain text.</td></tr><tr><td><code>includeCompanyReviews</code></td><td>boolean</td><td>optional</td><td>Include up to three AmbitionBox review snippets per job. Off by default to keep records small.</td></tr><tr><td><code>strictJobAge</code></td><td>boolean</td><td>optional</td><td>Drop promoted jobs older than the selected job age using Naukri&#x27;s posting date.</td></tr><tr><td><code>timeBudgetSecs</code></td><td>integer</td><td>optional</td><td>Stop gracefully after this many seconds. 0 means no time limit.</td></tr><tr><td><code>failOnEmpty</code></td><td>boolean</td><td>optional</td><td>Mark the run as failed when no jobs are returned.</td></tr><tr><td><code>browserFallback</code></td><td>boolean</td><td>optional</td><td>If the normal connection is blocked, retry through a browser session. Slower and uses more memory; leave off unless needed.</td></tr><tr><td><code>proxyConfiguration</code></td><td>object</td><td>optional</td><td>Optional connection override. By default the actor uses an India-based Apify connection automatically.</td></tr></tbody></table></div></details><p><a href="input-schema.json">Download the published input schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+  &quot;description&quot;: &quot;Find Naukri.com jobs by keyword, location, company or job ID and return full job details, salary information, skills and company profiles.&quot;,
   &quot;properties&quot;: {
-    &quot;experienceYears&quot;: {
-      &quot;description&quot;: &quot;Years of experience required.&quot;,
-      &quot;editor&quot;: &quot;number&quot;,
-      &quot;maximum&quot;: 30,
-      &quot;minimum&quot;: 0,
-      &quot;nullable&quot;: true,
-      &quot;title&quot;: &quot;Experience (years)&quot;,
-      &quot;type&quot;: &quot;integer&quot;
+    &quot;browserFallback&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;If the normal connection is blocked, retry through a browser session. Slower and uses more memory; leave off unless needed.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Browser Fallback&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
     },
-    &quot;jobAge&quot;: {
-      &quot;description&quot;: &quot;Only include jobs posted within the last N days.&quot;,
-      &quot;editor&quot;: &quot;select&quot;,
-      &quot;enum&quot;: [
-        &quot;1&quot;,
-        &quot;3&quot;,
-        &quot;7&quot;,
-        &quot;15&quot;,
-        &quot;30&quot;
-      ],
-      &quot;enumTitles&quot;: [
-        &quot;Last 1 day&quot;,
-        &quot;Last 3 days&quot;,
-        &quot;Last 7 days&quot;,
-        &quot;Last 15 days&quot;,
-        &quot;Last 30 days&quot;
-      ],
-      &quot;nullable&quot;: true,
-      &quot;title&quot;: &quot;Job Age (days)&quot;,
-      &quot;type&quot;: &quot;string&quot;
+    &quot;companyIds&quot;: {
+      &quot;default&quot;: [],
+      &quot;description&quot;: &quot;Naukri company IDs to search across. When searches are also supplied, each company is combined with every search.&quot;,
+      &quot;editor&quot;: &quot;stringList&quot;,
+      &quot;prefill&quot;: [],
+      &quot;title&quot;: &quot;Company IDs&quot;,
+      &quot;type&quot;: &quot;array&quot;
     },
-    &quot;jobType&quot;: {
-      &quot;description&quot;: &quot;Employment type filter.&quot;,
-      &quot;editor&quot;: &quot;select&quot;,
-      &quot;enum&quot;: [
-        &quot;full-time&quot;,
-        &quot;part-time&quot;,
-        &quot;internship&quot;,
-        &quot;contractual&quot;
-      ],
-      &quot;enumTitles&quot;: [
-        &quot;Full-time&quot;,
-        &quot;Part-time&quot;,
-        &quot;Internship&quot;,
-        &quot;Contractual&quot;
-      ],
-      &quot;nullable&quot;: true,
-      &quot;title&quot;: &quot;Job Type&quot;,
-      &quot;type&quot;: &quot;string&quot;
+    &quot;failOnEmpty&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;Mark the run as failed when no jobs are returned.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Fail When No Jobs Found&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
     },
-    &quot;keyword&quot;: {
-      &quot;description&quot;: &quot;Job title or keyword (e.g., \&quot;python developer\&quot;, \&quot;data scientist\&quot;). Used only when Search URL is empty.&quot;,
-      &quot;editor&quot;: &quot;textfield&quot;,
-      &quot;nullable&quot;: true,
-      &quot;title&quot;: &quot;Keyword&quot;,
-      &quot;type&quot;: &quot;string&quot;
+    &quot;includeCompanyReviews&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;Include up to three AmbitionBox review snippets per job. Off by default to keep records small.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Include Company Reviews&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
     },
-    &quot;location&quot;: {
-      &quot;description&quot;: &quot;City name (e.g., \&quot;bangalore\&quot;, \&quot;delhi-ncr\&quot;, \&quot;mumbai\&quot;, \&quot;hyderabad\&quot;). Used only when Search URL is empty.&quot;,
-      &quot;editor&quot;: &quot;textfield&quot;,
-      &quot;nullable&quot;: true,
-      &quot;title&quot;: &quot;Location&quot;,
-      &quot;type&quot;: &quot;string&quot;
+    &quot;includeDescription&quot;: {
+      &quot;default&quot;: true,
+      &quot;description&quot;: &quot;Include the full job description text. Turn off to keep records smaller.&quot;,
+      &quot;prefill&quot;: true,
+      &quot;title&quot;: &quot;Include Full Description&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;includeDescriptionHtml&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;Include the raw HTML job description in addition to plain text.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Include Description HTML&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;jobIds&quot;: {
+      &quot;default&quot;: [],
+      &quot;description&quot;: &quot;Fetch these Naukri job IDs directly. Accepts bare IDs or Naukri job URLs. Job IDs are processed before searches.&quot;,
+      &quot;editor&quot;: &quot;stringList&quot;,
+      &quot;prefill&quot;: [
+        &quot;221026015762&quot;
+      ],
+      &quot;title&quot;: &quot;Job IDs&quot;,
+      &quot;type&quot;: &quot;array&quot;
     },
     &quot;maxItems&quot;: {
-      &quot;default&quot;: 50,
-      &quot;description&quot;: &quot;Maximum number of job listings to return. Each Naukri API page returns up to 20 jobs.&quot;,
+      &quot;default&quot;: 100,
+      &quot;description&quot;: &quot;Total records to return across all queries. Naukri allows at most 3,000 jobs per query (150 pages of 20).&quot;,
       &quot;editor&quot;: &quot;number&quot;,
-      &quot;maximum&quot;: 800,
+      &quot;maximum&quot;: 10000,
       &quot;minimum&quot;: 1,
-      &quot;prefill&quot;: 5,
+      &quot;prefill&quot;: 3,
       &quot;title&quot;: &quot;Max Items&quot;,
       &quot;type&quot;: &quot;integer&quot;
     },
-    &quot;salaryLakhs&quot;: {
-      &quot;description&quot;: &quot;Annual salary range in lakhs.&quot;,
-      &quot;editor&quot;: &quot;select&quot;,
-      &quot;enum&quot;: [
-        &quot;0-3&quot;,
-        &quot;3-6&quot;,
-        &quot;6-10&quot;,
-        &quot;10-15&quot;,
-        &quot;15-25&quot;,
-        &quot;25+&quot;
-      ],
-      &quot;enumTitles&quot;: [
-        &quot;0 - 3 Lakhs&quot;,
-        &quot;3 - 6 Lakhs&quot;,
-        &quot;6 - 10 Lakhs&quot;,
-        &quot;10 - 15 Lakhs&quot;,
-        &quot;15 - 25 Lakhs&quot;,
-        &quot;25+ Lakhs&quot;
-      ],
-      &quot;nullable&quot;: true,
-      &quot;title&quot;: &quot;Salary Range (Lakhs INR/yr)&quot;,
-      &quot;type&quot;: &quot;string&quot;
+    &quot;onlyNew&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;Emit only jobs that were not emitted by an earlier run with the same state key.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Only New Jobs&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
     },
-    &quot;searchUrl&quot;: {
-      &quot;description&quot;: &quot;A Naukri.com search URL to scrape. Paste any URL from https://www.naukri.com — the scraper parses the slug and filters automatically. If empty, the structured filter fields below are used instead.&quot;,
+    &quot;proxyConfiguration&quot;: {
+      &quot;default&quot;: {
+        &quot;apifyProxyCountry&quot;: &quot;IN&quot;,
+        &quot;useApifyProxy&quot;: true
+      },
+      &quot;description&quot;: &quot;Optional connection override. By default the actor uses an India-based Apify connection automatically.&quot;,
+      &quot;editor&quot;: &quot;proxy&quot;,
+      &quot;prefill&quot;: {
+        &quot;apifyProxyCountry&quot;: &quot;IN&quot;,
+        &quot;useApifyProxy&quot;: true
+      },
+      &quot;title&quot;: &quot;Proxy Configuration&quot;,
+      &quot;type&quot;: &quot;object&quot;
+    },
+    &quot;resetState&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;Clear the saved job IDs before this run.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Reset Incremental State&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;searches&quot;: {
+      &quot;default&quot;: [],
+      &quot;description&quot;: &quot;One or more search configurations. Each entry can hold several keywords and several locations; every keyword is combined with every location. Leave keywords empty to browse a location or company.&quot;,
+      &quot;editor&quot;: &quot;json&quot;,
+      &quot;items&quot;: {
+        &quot;properties&quot;: {
+          &quot;companyId&quot;: {
+            &quot;description&quot;: &quot;Optional Naukri company ID (numeric, e.g. \&quot;10111\&quot;). Free-text company names are not supported by Naukri.&quot;,
+            &quot;editor&quot;: &quot;textfield&quot;,
+            &quot;nullable&quot;: true,
+            &quot;title&quot;: &quot;Company ID&quot;,
+            &quot;type&quot;: &quot;string&quot;
+          },
+          &quot;experienceYears&quot;: {
+            &quot;description&quot;: &quot;Return jobs whose experience range includes this many years (0-30).&quot;,
+            &quot;maximum&quot;: 30,
+            &quot;minimum&quot;: 0,
+            &quot;nullable&quot;: true,
+            &quot;title&quot;: &quot;Experience (years)&quot;,
+            &quot;type&quot;: &quot;integer&quot;
+          },
+          &quot;internship&quot;: {
+            &quot;default&quot;: false,
+            &quot;description&quot;: &quot;Return internships.&quot;,
+            &quot;prefill&quot;: false,
+            &quot;title&quot;: &quot;Internships Only&quot;,
+            &quot;type&quot;: &quot;boolean&quot;
+          },
+          &quot;jobAge&quot;: {
+            &quot;description&quot;: &quot;Only jobs posted within the last N days. Promoted jobs can bypass the server filter; strictJobAge removes them.&quot;,
+            &quot;editor&quot;: &quot;select&quot;,
+            &quot;enum&quot;: [
+              &quot;1&quot;,
+              &quot;3&quot;,
+              &quot;7&quot;,
+              &quot;15&quot;,
+              &quot;30&quot;
+            ],
+            &quot;enumTitles&quot;: [
+              &quot;Last 1 day&quot;,
+              &quot;Last 3 days&quot;,
+              &quot;Last 7 days&quot;,
+              &quot;Last 15 days&quot;,
+              &quot;Last 30 days&quot;
+            ],
+            &quot;nullable&quot;: true,
+            &quot;title&quot;: &quot;Job Age&quot;,
+            &quot;type&quot;: &quot;string&quot;
+          },
+          &quot;keywords&quot;: {
+            &quot;default&quot;: [],
+            &quot;description&quot;: &quot;Job titles or search terms (e.g. \&quot;software engineer\&quot;, \&quot;data scientist\&quot;).&quot;,
+            &quot;editor&quot;: &quot;stringList&quot;,
+            &quot;title&quot;: &quot;Keywords&quot;,
+            &quot;type&quot;: &quot;array&quot;
+          },
+          &quot;locations&quot;: {
+            &quot;default&quot;: [],
+            &quot;description&quot;: &quot;Indian cities or regions (e.g. \&quot;bangalore\&quot;, \&quot;mumbai\&quot;, \&quot;delhi ncr\&quot;, \&quot;hyderabad\&quot;).&quot;,
+            &quot;editor&quot;: &quot;stringList&quot;,
+            &quot;title&quot;: &quot;Locations&quot;,
+            &quot;type&quot;: &quot;array&quot;
+          },
+          &quot;salaryBucket&quot;: {
+            &quot;description&quot;: &quot;Annual salary band in Indian lakhs. Naukri can include jobs with hidden salary in a band; use salaryDisclosed to separate them.&quot;,
+            &quot;editor&quot;: &quot;select&quot;,
+            &quot;enum&quot;: [
+              &quot;0-3&quot;,
+              &quot;3-6&quot;,
+              &quot;6-10&quot;,
+              &quot;10-15&quot;,
+              &quot;15-25&quot;,
+              &quot;25+&quot;
+            ],
+            &quot;enumTitles&quot;: [
+              &quot;0 - 3 Lakhs&quot;,
+              &quot;3 - 6 Lakhs&quot;,
+              &quot;6 - 10 Lakhs&quot;,
+              &quot;10 - 15 Lakhs&quot;,
+              &quot;15 - 25 Lakhs&quot;,
+              &quot;25+ Lakhs&quot;
+            ],
+            &quot;nullable&quot;: true,
+            &quot;title&quot;: &quot;Salary Bucket&quot;,
+            &quot;type&quot;: &quot;string&quot;
+          },
+          &quot;sort&quot;: {
+            &quot;default&quot;: &quot;relevance&quot;,
+            &quot;description&quot;: &quot;Result ordering.&quot;,
+            &quot;editor&quot;: &quot;select&quot;,
+            &quot;enum&quot;: [
+              &quot;relevance&quot;,
+              &quot;date&quot;,
+              &quot;salary&quot;
+            ],
+            &quot;enumTitles&quot;: [
+              &quot;Relevance&quot;,
+              &quot;Date (newest first)&quot;,
+              &quot;Salary (highest first)&quot;
+            ],
+            &quot;title&quot;: &quot;Sort By&quot;,
+            &quot;type&quot;: &quot;string&quot;
+          },
+          &quot;walkIn&quot;: {
+            &quot;default&quot;: false,
+            &quot;description&quot;: &quot;Return walk-in interview jobs.&quot;,
+            &quot;prefill&quot;: false,
+            &quot;title&quot;: &quot;Walk-in Jobs Only&quot;,
+            &quot;type&quot;: &quot;boolean&quot;
+          },
+          &quot;workMode&quot;: {
+            &quot;default&quot;: &quot;any&quot;,
+            &quot;description&quot;: &quot;Remote or hybrid filter. Naukri does not expose an office-only filter; \&quot;any\&quot; returns every mode.&quot;,
+            &quot;editor&quot;: &quot;select&quot;,
+            &quot;enum&quot;: [
+              &quot;any&quot;,
+              &quot;remote&quot;,
+              &quot;hybrid&quot;
+            ],
+            &quot;enumTitles&quot;: [
+              &quot;Any&quot;,
+              &quot;Remote&quot;,
+              &quot;Hybrid&quot;
+            ],
+            &quot;title&quot;: &quot;Work Mode&quot;,
+            &quot;type&quot;: &quot;string&quot;
+          }
+        },
+        &quot;type&quot;: &quot;object&quot;
+      },
+      &quot;prefill&quot;: [
+        {
+          &quot;keywords&quot;: [
+            &quot;software engineer&quot;
+          ],
+          &quot;locations&quot;: [
+            &quot;bangalore&quot;
+          ]
+        }
+      ],
+      &quot;title&quot;: &quot;Search Queries&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;stateKey&quot;: {
+      &quot;description&quot;: &quot;Optional name for the incremental state. Defaults to a hash of the search configuration.&quot;,
       &quot;editor&quot;: &quot;textfield&quot;,
-      &quot;prefill&quot;: &quot;https://www.naukri.com/python-developer-jobs-in-bangalore&quot;,
-      &quot;title&quot;: &quot;Naukri Search URL&quot;,
-      &quot;type&quot;: &quot;string&quot;
-    },
-    &quot;sortBy&quot;: {
-      &quot;default&quot;: &quot;relevance&quot;,
-      &quot;description&quot;: &quot;How results are ordered.&quot;,
-      &quot;editor&quot;: &quot;select&quot;,
-      &quot;enum&quot;: [
-        &quot;relevance&quot;,
-        &quot;date&quot;,
-        &quot;salary&quot;
-      ],
-      &quot;enumTitles&quot;: [
-        &quot;Relevance&quot;,
-        &quot;Date (newest first)&quot;,
-        &quot;Salary (highest first)&quot;
-      ],
-      &quot;title&quot;: &quot;Sort By&quot;,
-      &quot;type&quot;: &quot;string&quot;
-    },
-    &quot;workMode&quot;: {
-      &quot;description&quot;: &quot;Filter by remote or hybrid work. Naukri does not have an explicit &#x27;office&#x27; filter — office is the default state of every listing, so leave this empty for office jobs.&quot;,
-      &quot;editor&quot;: &quot;select&quot;,
-      &quot;enum&quot;: [
-        &quot;remote&quot;,
-        &quot;hybrid&quot;
-      ],
-      &quot;enumTitles&quot;: [
-        &quot;Remote (work from home)&quot;,
-        &quot;Hybrid&quot;
-      ],
       &quot;nullable&quot;: true,
-      &quot;title&quot;: &quot;Work Mode&quot;,
+      &quot;title&quot;: &quot;Incremental State Key&quot;,
       &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;strictJobAge&quot;: {
+      &quot;default&quot;: true,
+      &quot;description&quot;: &quot;Drop promoted jobs older than the selected job age using Naukri&#x27;s posting date.&quot;,
+      &quot;prefill&quot;: true,
+      &quot;title&quot;: &quot;Strict Job Age&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;timeBudgetSecs&quot;: {
+      &quot;default&quot;: 0,
+      &quot;description&quot;: &quot;Stop gracefully after this many seconds. 0 means no time limit.&quot;,
+      &quot;editor&quot;: &quot;number&quot;,
+      &quot;maximum&quot;: 7200,
+      &quot;minimum&quot;: 0,
+      &quot;prefill&quot;: 0,
+      &quot;title&quot;: &quot;Time Budget (seconds)&quot;,
+      &quot;type&quot;: &quot;integer&quot;
     }
   },
   &quot;required&quot;: [],
   &quot;schemaVersion&quot;: 1,
-  &quot;title&quot;: &quot;Naukri Scraper Input&quot;,
+  &quot;title&quot;: &quot;Naukri Job Scraper Input&quot;,
   &quot;type&quot;: &quot;object&quot;
 }
-</code></pre></details></section><section class="schema-section" id="output-schema"><h2>Output schema</h2><p>Published result links and storage locations. This schema is not an exhaustive contract for every field in a dataset record.</p><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>jobs</code></td><td>string</td><td>optional</td><td>Dataset of scraped Naukri job listings</td></tr></tbody></table></div><p><a href="output-schema.json">Download the published output schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+</code></pre></details></section><section class="schema-section" id="output-schema"><h2>Output schema</h2><p>Published result links and storage locations. This schema is not an exhaustive contract for every field in a dataset record.</p><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>jobs</code></td><td>string</td><td>optional</td><td>Dataset of scraped Naukri job listings.</td></tr></tbody></table></div><p><a href="output-schema.json">Download the published output schema</a></p><details><summary>View complete JSON</summary><pre><code>{
   &quot;actorOutputSchemaVersion&quot;: 1,
-  &quot;description&quot;: &quot;Naukri.com job listings with title, company, location, experience, salary, skills, and description.&quot;,
+  &quot;description&quot;: &quot;Naukri.com job listings with full descriptions, parsed salary and experience, skills, locations, work mode, education, role taxonomy and company profiles.&quot;,
   &quot;properties&quot;: {
     &quot;jobs&quot;: {
-      &quot;description&quot;: &quot;Dataset of scraped Naukri job listings&quot;,
+      &quot;description&quot;: &quot;Dataset of scraped Naukri job listings.&quot;,
       &quot;template&quot;: &quot;{{links.apiDefaultDatasetUrl}}/items&quot;,
       &quot;title&quot;: &quot;Naukri Jobs&quot;,
       &quot;type&quot;: &quot;string&quot;
@@ -159,21 +283,56 @@
   &quot;fields&quot;: {
     &quot;properties&quot;: {
       &quot;applyCount&quot;: {
-        &quot;description&quot;: &quot;How many applied&quot;,
+        &quot;description&quot;: &quot;Applicant count; omitted when 0&quot;,
         &quot;nullable&quot;: true,
         &quot;type&quot;: &quot;integer&quot;
+      },
+      &quot;applyRedirectUrl&quot;: {
+        &quot;description&quot;: &quot;External apply URL when Naukri exposes one; may be ad-wrapped&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;applyUrl&quot;: {
+        &quot;description&quot;: &quot;Best available apply link: company gateway, external redirect, or Naukri listing&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;companyAddress&quot;: {
+        &quot;description&quot;: &quot;Company address&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;companyApplyUrl&quot;: {
+        &quot;description&quot;: &quot;Naukri company-apply gateway URL when present&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;companyDescription&quot;: {
+        &quot;description&quot;: &quot;Company profile description as plain text&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;string&quot;
       },
       &quot;companyId&quot;: {
         &quot;description&quot;: &quot;Naukri company ID&quot;,
         &quot;nullable&quot;: true,
         &quot;type&quot;: &quot;string&quot;
       },
+      &quot;companyLogoUrl&quot;: {
+        &quot;description&quot;: &quot;Company logo URL&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;string&quot;
+      },
       &quot;companyName&quot;: {
-        &quot;description&quot;: &quot;Company name&quot;,
+        &quot;description&quot;: &quot;Hiring company name&quot;,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;companyProfileUrl&quot;: {
+        &quot;description&quot;: &quot;Naukri company profile URL&quot;,
+        &quot;nullable&quot;: true,
         &quot;type&quot;: &quot;string&quot;
       },
       &quot;companyRating&quot;: {
-        &quot;description&quot;: &quot;AmbitionBox aggregate rating (out of 5)&quot;,
+        &quot;description&quot;: &quot;AmbitionBox aggregate rating out of 5&quot;,
         &quot;nullable&quot;: true,
         &quot;type&quot;: &quot;number&quot;
       },
@@ -182,13 +341,102 @@
         &quot;nullable&quot;: true,
         &quot;type&quot;: &quot;integer&quot;
       },
+      &quot;companyReviews&quot;: {
+        &quot;description&quot;: &quot;Up to three AmbitionBox review snippets when includeCompanyReviews is on&quot;,
+        &quot;items&quot;: {
+          &quot;properties&quot;: {
+            &quot;author&quot;: {
+              &quot;nullable&quot;: true,
+              &quot;type&quot;: &quot;string&quot;
+            },
+            &quot;date&quot;: {
+              &quot;nullable&quot;: true,
+              &quot;type&quot;: &quot;string&quot;
+            },
+            &quot;dislikes&quot;: {
+              &quot;nullable&quot;: true,
+              &quot;type&quot;: &quot;string&quot;
+            },
+            &quot;likes&quot;: {
+              &quot;nullable&quot;: true,
+              &quot;type&quot;: &quot;string&quot;
+            },
+            &quot;rating&quot;: {
+              &quot;nullable&quot;: true,
+              &quot;type&quot;: &quot;number&quot;
+            },
+            &quot;title&quot;: {
+              &quot;nullable&quot;: true,
+              &quot;type&quot;: &quot;string&quot;
+            },
+            &quot;url&quot;: {
+              &quot;nullable&quot;: true,
+              &quot;type&quot;: &quot;string&quot;
+            }
+          },
+          &quot;type&quot;: &quot;object&quot;
+        },
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;array&quot;
+      },
+      &quot;companyWebsite&quot;: {
+        &quot;description&quot;: &quot;Company website when Naukri publishes one (sparse)&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;string&quot;
+      },
       &quot;description&quot;: {
-        &quot;description&quot;: &quot;Short job description snippet&quot;,
+        &quot;description&quot;: &quot;Full job description as plain text (includeDescription)&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;descriptionHtml&quot;: {
+        &quot;description&quot;: &quot;Raw HTML description (includeDescriptionHtml)&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;educationPG&quot;: {
+        &quot;description&quot;: &quot;Postgraduate education requirements&quot;,
+        &quot;items&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        },
+        &quot;type&quot;: &quot;array&quot;
+      },
+      &quot;educationPPG&quot;: {
+        &quot;description&quot;: &quot;Post-postgraduate education requirements&quot;,
+        &quot;items&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        },
+        &quot;type&quot;: &quot;array&quot;
+      },
+      &quot;educationUG&quot;: {
+        &quot;description&quot;: &quot;Undergraduate education requirements&quot;,
+        &quot;items&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        },
+        &quot;type&quot;: &quot;array&quot;
+      },
+      &quot;employmentType&quot;: {
+        &quot;description&quot;: &quot;Employment type, e.g. Full Time, Permanent&quot;,
         &quot;nullable&quot;: true,
         &quot;type&quot;: &quot;string&quot;
       },
       &quot;experience&quot;: {
-        &quot;description&quot;: &quot;Required experience range&quot;,
+        &quot;description&quot;: &quot;Raw experience range, e.g. 5-7 Yrs&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;experienceMaxYears&quot;: {
+        &quot;description&quot;: &quot;Parsed maximum years&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;integer&quot;
+      },
+      &quot;experienceMinYears&quot;: {
+        &quot;description&quot;: &quot;Parsed minimum years&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;integer&quot;
+      },
+      &quot;functionalArea&quot;: {
+        &quot;description&quot;: &quot;Functional area&quot;,
         &quot;nullable&quot;: true,
         &quot;type&quot;: &quot;string&quot;
       },
@@ -201,53 +449,114 @@
         &quot;nullable&quot;: true,
         &quot;type&quot;: &quot;string&quot;
       },
-      &quot;jobTypeFlags&quot;: {
-        &quot;description&quot;: &quot;Job type flags (premium, easy_apply, walk_in)&quot;,
-        &quot;nullable&quot;: true,
-        &quot;type&quot;: &quot;array&quot;
-      },
-      &quot;location&quot;: {
-        &quot;description&quot;: &quot;Job location (city, possibly multiple)&quot;,
+      &quot;jobType&quot;: {
+        &quot;description&quot;: &quot;Naukri job type, e.g. fulltime or internship&quot;,
         &quot;nullable&quot;: true,
         &quot;type&quot;: &quot;string&quot;
       },
+      &quot;jobTypeFlags&quot;: {
+        &quot;description&quot;: &quot;Badges such as premium, easy_apply and walk_in (legacy field)&quot;,
+        &quot;items&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        },
+        &quot;type&quot;: &quot;array&quot;
+      },
+      &quot;location&quot;: {
+        &quot;description&quot;: &quot;Job locations joined as one string (legacy field)&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;locations&quot;: {
+        &quot;description&quot;: &quot;Structured job locations&quot;,
+        &quot;items&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        },
+        &quot;type&quot;: &quot;array&quot;
+      },
       &quot;logoUrl&quot;: {
-        &quot;description&quot;: &quot;Company logo image URL&quot;,
+        &quot;description&quot;: &quot;Company logo URL (legacy field, same as companyLogoUrl)&quot;,
         &quot;nullable&quot;: true,
         &quot;type&quot;: &quot;string&quot;
       },
       &quot;postedAt&quot;: {
-        &quot;description&quot;: &quot;When the job was posted (UTC ISO timestamp)&quot;,
+        &quot;description&quot;: &quot;Posting time in ISO 8601 with +05:30 offset&quot;,
         &quot;nullable&quot;: true,
         &quot;type&quot;: &quot;string&quot;
       },
       &quot;postedDate&quot;: {
-        &quot;description&quot;: &quot;When the job was posted (as displayed, e.g. &#x27;2 days ago&#x27;)&quot;,
-        &quot;nullable&quot;: true,
-        &quot;type&quot;: &quot;string&quot;
-      },
-      &quot;recruiterName&quot;: {
-        &quot;description&quot;: &quot;Recruiter name&quot;,
+        &quot;description&quot;: &quot;Relative posting label from search, e.g. 2 Days Ago&quot;,
         &quot;nullable&quot;: true,
         &quot;type&quot;: &quot;string&quot;
       },
       &quot;role&quot;: {
-        &quot;description&quot;: &quot;Job role category&quot;,
+        &quot;description&quot;: &quot;Job role&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;roleCategory&quot;: {
+        &quot;description&quot;: &quot;Role category&quot;,
         &quot;nullable&quot;: true,
         &quot;type&quot;: &quot;string&quot;
       },
       &quot;salary&quot;: {
-        &quot;description&quot;: &quot;Salary range as displayed&quot;,
+        &quot;description&quot;: &quot;Raw salary string as displayed, including Not Disclosed&quot;,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;salaryCurrency&quot;: {
+        &quot;description&quot;: &quot;ISO currency code, normally INR&quot;,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;salaryDisclosed&quot;: {
+        &quot;description&quot;: &quot;False when Naukri hides the salary&quot;,
+        &quot;type&quot;: &quot;boolean&quot;
+      },
+      &quot;salaryMax&quot;: {
+        &quot;description&quot;: &quot;Parsed maximum salary in INR for salaryPeriod; omitted when not disclosed&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;number&quot;
+      },
+      &quot;salaryMin&quot;: {
+        &quot;description&quot;: &quot;Parsed minimum salary in INR for salaryPeriod; omitted when not disclosed&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;number&quot;
+      },
+      &quot;salaryPeriod&quot;: {
+        &quot;description&quot;: &quot;Salary period; month for internship stipends&quot;,
+        &quot;enum&quot;: [
+          &quot;year&quot;,
+          &quot;month&quot;
+        ],
         &quot;nullable&quot;: true,
         &quot;type&quot;: &quot;string&quot;
       },
+      &quot;salaryVariablePct&quot;: {
+        &quot;description&quot;: &quot;Variable pay percentage when supplied by Naukri&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;number&quot;
+      },
       &quot;scrapedAt&quot;: {
-        &quot;description&quot;: &quot;UTC timestamp when scraped&quot;,
+        &quot;description&quot;: &quot;UTC timestamp when the record was scraped&quot;,
         &quot;type&quot;: &quot;string&quot;
       },
       &quot;skills&quot;: {
-        &quot;description&quot;: &quot;Skill tags&quot;,
-        &quot;nullable&quot;: true,
+        &quot;description&quot;: &quot;Skill tags, preferred skills first&quot;,
+        &quot;items&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        },
+        &quot;type&quot;: &quot;array&quot;
+      },
+      &quot;skillsOther&quot;: {
+        &quot;description&quot;: &quot;Other skill tags&quot;,
+        &quot;items&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        },
+        &quot;type&quot;: &quot;array&quot;
+      },
+      &quot;skillsPreferred&quot;: {
+        &quot;description&quot;: &quot;Preferred skill tags&quot;,
+        &quot;items&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        },
         &quot;type&quot;: &quot;array&quot;
       },
       &quot;title&quot;: {
@@ -255,13 +564,79 @@
         &quot;type&quot;: &quot;string&quot;
       },
       &quot;url&quot;: {
-        &quot;description&quot;: &quot;Full Naukri job listing URL&quot;,
+        &quot;description&quot;: &quot;Naukri job listing URL&quot;,
         &quot;type&quot;: &quot;string&quot;
       },
       &quot;vacancies&quot;: {
-        &quot;description&quot;: &quot;Number of vacancies&quot;,
+        &quot;description&quot;: &quot;Openings; omitted when Naukri reports 0&quot;,
         &quot;nullable&quot;: true,
         &quot;type&quot;: &quot;integer&quot;
+      },
+      &quot;viewCount&quot;: {
+        &quot;description&quot;: &quot;View count; omitted when 0&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;integer&quot;
+      },
+      &quot;walkIn&quot;: {
+        &quot;description&quot;: &quot;Walk-in interview flag&quot;,
+        &quot;type&quot;: &quot;boolean&quot;
+      },
+      &quot;walkInDetails&quot;: {
+        &quot;description&quot;: &quot;Walk-in venue, dates, timing and contact when Naukri publishes them&quot;,
+        &quot;nullable&quot;: true,
+        &quot;properties&quot;: {
+          &quot;contactName&quot;: {
+            &quot;nullable&quot;: true,
+            &quot;type&quot;: &quot;string&quot;
+          },
+          &quot;contactPhone&quot;: {
+            &quot;nullable&quot;: true,
+            &quot;type&quot;: &quot;string&quot;
+          },
+          &quot;dailyTiming&quot;: {
+            &quot;nullable&quot;: true,
+            &quot;type&quot;: &quot;string&quot;
+          },
+          &quot;embedMapUrl&quot;: {
+            &quot;nullable&quot;: true,
+            &quot;type&quot;: &quot;string&quot;
+          },
+          &quot;endDate&quot;: {
+            &quot;nullable&quot;: true,
+            &quot;type&quot;: &quot;string&quot;
+          },
+          &quot;mapUrl&quot;: {
+            &quot;nullable&quot;: true,
+            &quot;type&quot;: &quot;string&quot;
+          },
+          &quot;saturdayWorking&quot;: {
+            &quot;nullable&quot;: true,
+            &quot;type&quot;: &quot;boolean&quot;
+          },
+          &quot;startDate&quot;: {
+            &quot;nullable&quot;: true,
+            &quot;type&quot;: &quot;string&quot;
+          },
+          &quot;sundayWorking&quot;: {
+            &quot;nullable&quot;: true,
+            &quot;type&quot;: &quot;boolean&quot;
+          },
+          &quot;venueAddress&quot;: {
+            &quot;nullable&quot;: true,
+            &quot;type&quot;: &quot;string&quot;
+          }
+        },
+        &quot;type&quot;: &quot;object&quot;
+      },
+      &quot;workMode&quot;: {
+        &quot;description&quot;: &quot;Work mode derived from Naukri&#x27;s wfhType&quot;,
+        &quot;enum&quot;: [
+          &quot;office&quot;,
+          &quot;remote&quot;,
+          &quot;hybrid&quot;
+        ],
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;string&quot;
       }
     },
     &quot;type&quot;: &quot;object&quot;
@@ -288,6 +663,10 @@
             &quot;format&quot;: &quot;text&quot;,
             &quot;label&quot;: &quot;Description&quot;
           },
+          &quot;employmentType&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Employment Type&quot;
+          },
           &quot;experience&quot;: {
             &quot;format&quot;: &quot;text&quot;,
             &quot;label&quot;: &quot;Experience&quot;
@@ -312,6 +691,10 @@
             &quot;format&quot;: &quot;text&quot;,
             &quot;label&quot;: &quot;Salary&quot;
           },
+          &quot;salaryDisclosed&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Salary Disclosed&quot;
+          },
           &quot;skills&quot;: {
             &quot;format&quot;: &quot;array&quot;,
             &quot;label&quot;: &quot;Skills&quot;
@@ -323,6 +706,10 @@
           &quot;url&quot;: {
             &quot;format&quot;: &quot;link&quot;,
             &quot;label&quot;: &quot;Listing&quot;
+          },
+          &quot;workMode&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Work Mode&quot;
           }
         }
       },
@@ -336,6 +723,9 @@
           &quot;location&quot;,
           &quot;experience&quot;,
           &quot;salary&quot;,
+          &quot;salaryDisclosed&quot;,
+          &quot;workMode&quot;,
+          &quot;employmentType&quot;,
           &quot;skills&quot;,
           &quot;industry&quot;,
           &quot;role&quot;,
@@ -376,6 +766,10 @@
           &quot;url&quot;: {
             &quot;format&quot;: &quot;link&quot;,
             &quot;label&quot;: &quot;Listing&quot;
+          },
+          &quot;workMode&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Work Mode&quot;
           }
         }
       },
@@ -387,6 +781,7 @@
           &quot;location&quot;,
           &quot;experience&quot;,
           &quot;salary&quot;,
+          &quot;workMode&quot;,
           &quot;postedDate&quot;,
           &quot;url&quot;
         ]
@@ -395,14 +790,16 @@
   }
 }
 </code></pre></details></section><section class="schema-section" id="key-value-schema"><h2>Key-value schema</h2><p>Published key-value store definitions, when provided by this build.</p><p>This definition is not present in the default published build. See the published README for available documentation.</p></section><section id="published-readme"><h2>Published README</h2><details><summary>Read the full published documentation</summary><h2 id="readme-naukri-com-job-listings-extractor-with-salary-skills">Naukri.com Job Listings Extractor with Salary &amp; Skills</h2>
-<p>Naukri.com is one of India's best-known job boards, and this actor turns any search on it into structured data. Paste a search URL or fill in keyword/location/salary filters, and get back one record per job posting with company, pay, skills and recruiter detail.</p>
+<p>Extract <strong>Naukri.com</strong> job listings as structured data. Search by keyword and Indian city, pull jobs by ID, or monitor a company — then get the full job description, raw and parsed salary, experience bounds, skills, work mode, education requirements, role taxonomy, company ratings and walk-in details. No Naukri login, cookies or API key required.</p>
 <h2 id="readme-what-this-actor-does">What this actor does</h2>
 <ul>
-<li>Scrapes job listings either from a pasted Naukri search URL or from structured filter fields (keyword, location, experience, salary, job age, job type, work mode).</li>
-<li>Returns company detail alongside each job, including AmbitionBox rating and review count when Naukri publishes one for that employer.</li>
-<li>Pulls the skill tags Naukri attaches to each posting, along with industry and role category.</li>
-<li>Captures posting freshness (Naukri's relative label plus an absolute creation timestamp when Naukri provides one), vacancy count, and application count.</li>
-<li>Omits any field Naukri didn't supply for a given listing, so records never carry empty placeholders.</li>
+<li><strong>Three ways to find jobs:</strong> keyword and city searches, direct job IDs, or company IDs.</li>
+<li><strong>Up to 10,000 records per run</strong>, with a 3,000-job ceiling per individual query (Naukri returns 20 jobs per page and allows 150 pages).</li>
+<li><strong>Full detail per job:</strong> not just the search card — the actor fetches each posting to return the complete description, salary fields, education, role taxonomy, company profile and walk-in information.</li>
+<li><strong>Filters:</strong> experience in years, salary band, remote or hybrid mode, job age, date or salary sort, internships and walk-in drives.</li>
+<li><strong>Incremental runs:</strong> <code>onlyNew</code> stores emitted job IDs in actor state, so scheduled runs can return only postings you have not seen before.</li>
+<li><strong>Honest salary data:</strong> every record carries the raw salary string and a <code>salaryDisclosed</code> flag. Numeric <code>salaryMin</code> and <code>salaryMax</code> appear only when Naukri discloses a figure.</li>
+<li><strong>Empty fields are omitted</strong> — records never contain <code>null</code>, blank strings or empty arrays.</li>
 </ul>
 <h2 id="readme-output-per-job">Output per job</h2>
 <div class="table-wrap"><table>
@@ -415,7 +812,7 @@
 <tbody>
 <tr>
 <td><code>id</code></td>
-<td>Naukri's internal job ID.</td>
+<td>Naukri job ID.</td>
 </tr>
 <tr>
 <td><code>title</code></td>
@@ -423,83 +820,207 @@
 </tr>
 <tr>
 <td><code>url</code></td>
-<td>Full URL of the job listing on Naukri.</td>
+<td>Naukri job listing URL.</td>
 </tr>
 <tr>
 <td><code>companyName</code></td>
-<td>Hiring company's name.</td>
+<td>Hiring company name.</td>
 </tr>
 <tr>
 <td><code>companyId</code></td>
-<td>Naukri's internal company ID.</td>
+<td>Naukri company ID.</td>
 </tr>
 <tr>
-<td><code>companyRating</code></td>
-<td>AmbitionBox rating out of 5, when available for the company.</td>
-</tr>
-<tr>
-<td><code>companyReviewCount</code></td>
-<td>Number of AmbitionBox reviews behind that rating.</td>
-</tr>
-<tr>
-<td><code>location</code></td>
-<td>Job location(s); may list several cities.</td>
-</tr>
-<tr>
-<td><code>experience</code></td>
-<td>Required experience range, as shown on Naukri.</td>
-</tr>
-<tr>
-<td><code>salary</code></td>
-<td>Salary range as displayed on the listing.</td>
-</tr>
-<tr>
-<td><code>description</code></td>
-<td>Job description snippet.</td>
-</tr>
-<tr>
-<td><code>skills</code></td>
-<td>Skill tags attached to the posting.</td>
-</tr>
-<tr>
-<td><code>industry</code></td>
-<td>Industry category.</td>
-</tr>
-<tr>
-<td><code>role</code></td>
-<td>Job role category/sub-function.</td>
-</tr>
-<tr>
-<td><code>jobTypeFlags</code></td>
-<td>Badges such as <code>premium</code>, <code>easy_apply</code>, or <code>walk_in</code>.</td>
-</tr>
-<tr>
-<td><code>postedDate</code></td>
-<td>Relative posting age as shown on Naukri (e.g. &quot;2 days ago&quot;).</td>
-</tr>
-<tr>
-<td><code>postedAt</code></td>
-<td>Absolute posting timestamp (UTC), taken from Naukri's own creation time for the job when it is provided.</td>
-</tr>
-<tr>
-<td><code>logoUrl</code></td>
+<td><code>companyLogoUrl</code></td>
 <td>Company logo image URL.</td>
 </tr>
 <tr>
+<td><code>logoUrl</code></td>
+<td>Company logo URL (legacy field, same value as <code>companyLogoUrl</code>).</td>
+</tr>
+<tr>
+<td><code>companyProfileUrl</code></td>
+<td>Naukri company profile URL.</td>
+</tr>
+<tr>
+<td><code>companyWebsite</code></td>
+<td>Company website when Naukri publishes one (sparse).</td>
+</tr>
+<tr>
+<td><code>companyDescription</code></td>
+<td>Company profile description as plain text.</td>
+</tr>
+<tr>
+<td><code>companyAddress</code></td>
+<td>Company address.</td>
+</tr>
+<tr>
+<td><code>companyRating</code></td>
+<td>AmbitionBox rating out of 5.</td>
+</tr>
+<tr>
+<td><code>companyReviewCount</code></td>
+<td>Number of AmbitionBox reviews behind the rating.</td>
+</tr>
+<tr>
+<td><code>companyReviews</code></td>
+<td>Up to three review snippets when <code>includeCompanyReviews</code> is on.</td>
+</tr>
+<tr>
+<td><code>companyApplyUrl</code></td>
+<td>Naukri company-apply gateway URL when present.</td>
+</tr>
+<tr>
+<td><code>applyRedirectUrl</code></td>
+<td>External apply URL when Naukri exposes one; may be ad-wrapped.</td>
+</tr>
+<tr>
+<td><code>applyUrl</code></td>
+<td>Best available apply link: company gateway, external redirect, or the Naukri listing.</td>
+</tr>
+<tr>
+<td><code>salary</code></td>
+<td>Raw salary string exactly as displayed, including <code>Not Disclosed</code>.</td>
+</tr>
+<tr>
+<td><code>salaryMin</code></td>
+<td>Parsed minimum salary in INR for <code>salaryPeriod</code>; omitted when not disclosed.</td>
+</tr>
+<tr>
+<td><code>salaryMax</code></td>
+<td>Parsed maximum salary in INR for <code>salaryPeriod</code>; omitted when not disclosed.</td>
+</tr>
+<tr>
+<td><code>salaryCurrency</code></td>
+<td>ISO currency code, normally <code>INR</code>.</td>
+</tr>
+<tr>
+<td><code>salaryPeriod</code></td>
+<td><code>year</code> or <code>month</code>; internship stipends are reported per month.</td>
+</tr>
+<tr>
+<td><code>salaryDisclosed</code></td>
+<td><code>false</code> when Naukri hides the salary.</td>
+</tr>
+<tr>
+<td><code>salaryVariablePct</code></td>
+<td>Variable pay percentage when Naukri supplies one.</td>
+</tr>
+<tr>
+<td><code>experience</code></td>
+<td>Raw experience range, e.g. <code>5-7 Yrs</code>.</td>
+</tr>
+<tr>
+<td><code>experienceMinYears</code></td>
+<td>Parsed minimum years.</td>
+</tr>
+<tr>
+<td><code>experienceMaxYears</code></td>
+<td>Parsed maximum years.</td>
+</tr>
+<tr>
+<td><code>skills</code></td>
+<td>Skill tags, preferred skills first.</td>
+</tr>
+<tr>
+<td><code>skillsPreferred</code></td>
+<td>Preferred skill tags.</td>
+</tr>
+<tr>
+<td><code>skillsOther</code></td>
+<td>Other skill tags.</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td>Full job description as plain text (<code>includeDescription</code>).</td>
+</tr>
+<tr>
+<td><code>descriptionHtml</code></td>
+<td>Raw HTML description (<code>includeDescriptionHtml</code>).</td>
+</tr>
+<tr>
+<td><code>locations</code></td>
+<td>Structured list of job locations.</td>
+</tr>
+<tr>
+<td><code>location</code></td>
+<td>Job locations joined into one string (legacy field).</td>
+</tr>
+<tr>
+<td><code>workMode</code></td>
+<td><code>office</code>, <code>remote</code> or <code>hybrid</code>.</td>
+</tr>
+<tr>
+<td><code>employmentType</code></td>
+<td>Employment type, e.g. <code>Full Time, Permanent</code>.</td>
+</tr>
+<tr>
+<td><code>jobType</code></td>
+<td>Naukri job type, e.g. <code>fulltime</code> or <code>internship</code>.</td>
+</tr>
+<tr>
+<td><code>educationUG</code></td>
+<td>Undergraduate education requirements.</td>
+</tr>
+<tr>
+<td><code>educationPG</code></td>
+<td>Postgraduate education requirements.</td>
+</tr>
+<tr>
+<td><code>educationPPG</code></td>
+<td>Post-postgraduate education requirements.</td>
+</tr>
+<tr>
+<td><code>industry</code></td>
+<td>Industry.</td>
+</tr>
+<tr>
+<td><code>functionalArea</code></td>
+<td>Functional area.</td>
+</tr>
+<tr>
+<td><code>roleCategory</code></td>
+<td>Role category.</td>
+</tr>
+<tr>
+<td><code>role</code></td>
+<td>Job role.</td>
+</tr>
+<tr>
+<td><code>postedAt</code></td>
+<td>Posting time in ISO 8601 with a <code>+05:30</code> offset.</td>
+</tr>
+<tr>
+<td><code>postedDate</code></td>
+<td>Relative posting label from search, e.g. <code>2 Days Ago</code>.</td>
+</tr>
+<tr>
 <td><code>vacancies</code></td>
-<td>Number of open vacancies on the posting.</td>
+<td>Number of openings; omitted when Naukri reports 0.</td>
 </tr>
 <tr>
 <td><code>applyCount</code></td>
-<td>Number of applicants shown on the posting.</td>
+<td>Applicant count; omitted when 0.</td>
 </tr>
 <tr>
-<td><code>recruiterName</code></td>
-<td>Recruiter's name, when Naukri lists one.</td>
+<td><code>viewCount</code></td>
+<td>View count; omitted when 0.</td>
+</tr>
+<tr>
+<td><code>walkIn</code></td>
+<td>Walk-in interview flag.</td>
+</tr>
+<tr>
+<td><code>walkInDetails</code></td>
+<td>Venue and contact block when Naukri publishes it. Contains <code>venueAddress</code>, <code>startDate</code>, <code>endDate</code>, <code>dailyTiming</code>, <code>contactName</code>, <code>contactPhone</code>, <code>mapUrl</code>, <code>embedMapUrl</code>, <code>saturdayWorking</code> and <code>sundayWorking</code>.</td>
+</tr>
+<tr>
+<td><code>jobTypeFlags</code></td>
+<td>Badges such as <code>premium</code>, <code>easy_apply</code> and <code>walk_in</code> (legacy field).</td>
 </tr>
 <tr>
 <td><code>scrapedAt</code></td>
-<td>UTC timestamp of when the record was scraped (always present).</td>
+<td>UTC timestamp when the record was scraped.</td>
 </tr>
 </tbody>
 </table></div>
@@ -515,107 +1036,182 @@
 </thead>
 <tbody>
 <tr>
-<td><code>searchUrl</code></td>
-<td>String</td>
-<td>–</td>
-<td>A Naukri.com search URL to scrape; its job-title/location slug and <code>k</code>/<code>l</code>/<code>experience</code>/<code>jobAge</code> query parameters are parsed automatically. Salary, job type, work mode and sort are not read from the URL — set those via their own fields below.</td>
+<td><code>searches</code></td>
+<td>array</td>
+<td>one keyword search</td>
+<td>Search configurations. Each entry has <code>keywords[]</code>, <code>locations[]</code>, <code>experienceYears</code>, <code>salaryBucket</code>, <code>workMode</code>, <code>jobAge</code>, <code>sort</code>, <code>companyId</code>, <code>internship</code> and <code>walkIn</code>. Every keyword is combined with every location.</td>
+</tr>
+<tr>
+<td><code>jobIds</code></td>
+<td>array</td>
+<td>one example ID</td>
+<td>Naukri job IDs or job URLs to fetch directly. Processed before searches.</td>
+</tr>
+<tr>
+<td><code>companyIds</code></td>
+<td>array</td>
+<td><code>[]</code></td>
+<td>Naukri company IDs. When searches are also supplied, each company is combined with every search.</td>
 </tr>
 <tr>
 <td><code>maxItems</code></td>
-<td>Integer</td>
-<td><code>50</code></td>
-<td>Maximum number of job listings to return.</td>
+<td>integer</td>
+<td><code>100</code></td>
+<td>Total records to return, 1–10,000.</td>
 </tr>
 <tr>
-<td><code>keyword</code></td>
-<td>String</td>
-<td>–</td>
-<td>Job title or keyword. If <code>searchUrl</code> is also set, this overrides the keyword parsed from the URL.</td>
+<td><code>onlyNew</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Emit only jobs not emitted by an earlier run with the same state key.</td>
 </tr>
 <tr>
-<td><code>location</code></td>
-<td>String</td>
-<td>–</td>
-<td>City name (e.g. <code>bangalore</code>, <code>delhi-ncr</code>). If <code>searchUrl</code> is also set, this overrides the location parsed from the URL.</td>
+<td><code>resetState</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Clear saved incremental state before this run.</td>
 </tr>
 <tr>
-<td><code>experienceYears</code></td>
-<td>Integer</td>
-<td>–</td>
-<td>Years of experience required (0–30).</td>
+<td><code>stateKey</code></td>
+<td>string</td>
+<td>auto</td>
+<td>Optional state name. Defaults to a hash of the search configuration.</td>
 </tr>
 <tr>
-<td><code>salaryLakhs</code></td>
-<td>String (select)</td>
-<td>–</td>
-<td>Annual salary band in lakhs INR: <code>0-3</code>, <code>3-6</code>, <code>6-10</code>, <code>10-15</code>, <code>15-25</code>, <code>25+</code>.</td>
+<td><code>includeDescription</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td>Include the full job description text.</td>
 </tr>
 <tr>
-<td><code>jobAge</code></td>
-<td>String (select)</td>
-<td>–</td>
-<td>Only jobs posted within the last N days: <code>1</code>, <code>3</code>, <code>7</code>, <code>15</code>, <code>30</code>.</td>
+<td><code>includeDescriptionHtml</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Include the raw HTML description too.</td>
 </tr>
 <tr>
-<td><code>jobType</code></td>
-<td>String (select)</td>
-<td>–</td>
-<td><code>full-time</code>, <code>part-time</code>, <code>internship</code>, or <code>contractual</code>.</td>
+<td><code>includeCompanyReviews</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Include up to three AmbitionBox review snippets.</td>
 </tr>
 <tr>
-<td><code>workMode</code></td>
-<td>String (select)</td>
-<td>–</td>
-<td><code>remote</code> or <code>hybrid</code>. There is no office-only option: leaving it empty returns jobs of every work mode.</td>
+<td><code>strictJobAge</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td>Drop promoted jobs older than the selected job age.</td>
 </tr>
 <tr>
-<td><code>sortBy</code></td>
-<td>String (select)</td>
-<td><code>relevance</code></td>
-<td><code>relevance</code>, <code>date</code> (newest first), or <code>salary</code> (highest first).</td>
+<td><code>timeBudgetSecs</code></td>
+<td>integer</td>
+<td><code>0</code></td>
+<td>Stop gracefully after this many seconds; <code>0</code> means no limit.</td>
+</tr>
+<tr>
+<td><code>failOnEmpty</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Mark the run as failed when no jobs are returned.</td>
+</tr>
+<tr>
+<td><code>browserFallback</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Retry through a browser session if the normal connection is blocked. Slower and uses more memory.</td>
+</tr>
+<tr>
+<td><code>proxyConfiguration</code></td>
+<td>object</td>
+<td>India Apify proxy</td>
+<td>Optional connection override. The actor selects an India-based connection automatically.</td>
 </tr>
 </tbody>
 </table></div>
-<h3 id="readme-example-search-url">Example: search URL</h3>
+<p>Salary bands are <code>0-3</code>, <code>3-6</code>, <code>6-10</code>, <code>10-15</code>, <code>15-25</code> and <code>25+</code> lakhs per year. Job-age values are <code>1</code>, <code>3</code>, <code>7</code>, <code>15</code> and <code>30</code> days. Work modes are <code>any</code>, <code>remote</code> and <code>hybrid</code>; Naukri does not expose an office-only filter.</p>
+<h3 id="readme-example-software-engineer-jobs-in-bangalore">Example: software engineer jobs in Bangalore</h3>
 <pre><code class="language-json">{
-  &quot;searchUrl&quot;: &quot;https://www.naukri.com/python-developer-jobs-in-bangalore&quot;,
-  &quot;maxItems&quot;: 50
-}
-</code></pre>
-<h3 id="readme-example-structured-filters">Example: structured filters</h3>
-<pre><code class="language-json">{
-  &quot;keyword&quot;: &quot;data scientist&quot;,
-  &quot;location&quot;: &quot;hyderabad&quot;,
-  &quot;experienceYears&quot;: 3,
-  &quot;salaryLakhs&quot;: &quot;10-15&quot;,
-  &quot;jobAge&quot;: &quot;7&quot;,
-  &quot;sortBy&quot;: &quot;date&quot;,
+  &quot;searches&quot;: [
+    {
+      &quot;keywords&quot;: [&quot;software engineer&quot;],
+      &quot;locations&quot;: [&quot;bangalore&quot;],
+      &quot;experienceYears&quot;: 3,
+      &quot;jobAge&quot;: &quot;7&quot;,
+      &quot;sort&quot;: &quot;date&quot;
+    }
+  ],
   &quot;maxItems&quot;: 100
 }
 </code></pre>
-<h3 id="readme-example-remote-internships">Example: remote internships</h3>
+<h3 id="readme-example-fetch-specific-jobs">Example: fetch specific jobs</h3>
 <pre><code class="language-json">{
-  &quot;keyword&quot;: &quot;machine learning intern&quot;,
-  &quot;workMode&quot;: &quot;remote&quot;,
-  &quot;jobType&quot;: &quot;internship&quot;,
-  &quot;maxItems&quot;: 30
+  &quot;jobIds&quot;: [&quot;221026015762&quot;, &quot;191026012479&quot;],
+  &quot;includeDescription&quot;: true,
+  &quot;maxItems&quot;: 2
+}
+</code></pre>
+<h3 id="readme-example-monitor-a-company-for-new-postings">Example: monitor a company for new postings</h3>
+<pre><code class="language-json">{
+  &quot;companyIds&quot;: [&quot;10111&quot;],
+  &quot;searches&quot;: [
+    {
+      &quot;keywords&quot;: [&quot;python developer&quot;],
+      &quot;locations&quot;: [&quot;hyderabad&quot;, &quot;pune&quot;],
+      &quot;sort&quot;: &quot;date&quot;
+    }
+  ],
+  &quot;onlyNew&quot;: true,
+  &quot;stateKey&quot;: &quot;infosys-python&quot;,
+  &quot;maxItems&quot;: 200
+}
+</code></pre>
+<h3 id="readme-example-remote-internships-and-walk-in-drives">Example: remote internships and walk-in drives</h3>
+<pre><code class="language-json">{
+  &quot;searches&quot;: [
+    {
+      &quot;keywords&quot;: [&quot;machine learning intern&quot;],
+      &quot;workMode&quot;: &quot;remote&quot;,
+      &quot;internship&quot;: true
+    },
+    {
+      &quot;locations&quot;: [&quot;mumbai&quot;],
+      &quot;walkIn&quot;: true
+    }
+  ],
+  &quot;maxItems&quot;: 50
 }
 </code></pre>
 <h2 id="readme-use-cases">Use cases</h2>
 <ul>
-<li><strong>Recruitment agencies</strong> building talent pipelines or tracking which roles competitors are hiring for.</li>
-<li><strong>Job seekers</strong> automating discovery of new postings that match a skill set or city.</li>
-<li><strong>HR and compensation teams</strong> benchmarking salary ranges for a role across companies and cities.</li>
-<li><strong>Market researchers</strong> tracking hiring volume by industry or location over time.</li>
-<li><strong>Data teams</strong> building a dataset of India's job market for analysis or model training.</li>
+<li><strong>Recruitment agencies</strong> — build talent pipelines and track which employers are hiring for a role or city.</li>
+<li><strong>Job seekers</strong> — schedule a daily monitor that returns only newly posted jobs matching a skill set.</li>
+<li><strong>Compensation teams</strong> — collect salary bands and disclosure rates for a role across companies and cities.</li>
+<li><strong>Market researchers</strong> — measure hiring volume by location, industry, role or work mode over time.</li>
+<li><strong>Sales teams</strong> — detect companies ramping up hiring as a buying signal.</li>
+<li><strong>Data teams</strong> — build an India job-market dataset with full descriptions, skills and company profiles.</li>
 </ul>
 <h2 id="readme-faq">FAQ</h2>
-<p><strong>Do I need a Naukri account to use this?</strong> No. It reads Naukri's public job search results; no login or cookies are required.</p>
-<p><strong>What's the difference between pasting a URL and using the filter fields?</strong> Pasting a <code>searchUrl</code> lets you reuse a search you already built on Naukri's site — its keyword, location, experience and job-age are read back out of the URL. The filter fields build an equivalent search from scratch when you'd rather not construct the URL yourself. If both are given, the filter fields (<code>keyword</code>, <code>location</code>, <code>experienceYears</code>, <code>jobAge</code>) override the matching value parsed from the URL; <code>salaryLakhs</code>, <code>jobType</code>, <code>workMode</code> and <code>sortBy</code> are never read from the URL, so set those directly regardless of whether <code>searchUrl</code> is used.</p>
-<p><strong>How many jobs can I get in one run?</strong> Up to the <code>maxItems</code> cap you set (maximum 800). For broader coverage than that, split your search by city, keyword, or salary band and run multiple inputs.</p>
-<p><strong>Why is <code>companyRating</code> missing for some jobs?</strong> Only companies with an AmbitionBox rating on Naukri carry this field; smaller or newer employers often don't have one yet.</p>
-<p><strong>Why is <code>postedAt</code> missing when <code>postedDate</code> is present?</strong> The two come from different values in Naukri's listing data: <code>postedDate</code> is the relative label shown on the card (&quot;2 days ago&quot;), while <code>postedAt</code> is Naukri's creation timestamp for the job. When Naukri omits that timestamp, only the relative label is returned.</p>
-<p><strong>Can I combine multiple filters, like experience and salary and job type?</strong> Yes — all the filter fields apply together, whether or not <code>searchUrl</code> is also set.</p>
-<p><strong>How fresh is the data?</strong> Each run queries Naukri live, so results reflect whatever is currently listed on the site at run time.</p>
-<p><strong>Is this affiliated with Naukri.com?</strong> No. This is an independent tool and is not affiliated with, endorsed by, or sponsored by Naukri.com or its owner.</p>
-</details></section><section id="python-quickstart"><h2>Python quickstart</h2><p>Use a schema-derived input and the Python standard library to start a run. An Apify account and token are required for execution.</p><p><a href="/apify-actor-examples/guides/Jfbzt9vLDGEVoJVyI/">Open the step-by-step Python guide →</a></p></section><p class="source-note">Source build <code>Ni7LYah1xMt322T5c</code>. Documentation is regenerated from the default published build; private drafts are not included.</p></article></div></main><footer class="footer"><strong>Nimbryxo Studio</strong><div class="footer-links"><a href="/apify-actor-examples/topics/">Topics</a><a href="/apify-actor-examples/sources/">Documentation sources</a><a href="https://apify.com/nimbryxo-studio">Apify</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></div></footer></body></html>
+<p><strong>Do I need a Naukri account, cookies or an API key?</strong> No. The actor reads publicly available Naukri job data without a login.</p>
+<p><strong>Why is <code>salaryMin</code> missing for most jobs?</strong> Naukri hides salary on most postings. In a 24-job sample, only 16.7% disclosed a numeric range. Every record still includes the raw <code>salary</code> string and <code>salaryDisclosed</code> so you can separate disclosed jobs from hidden ones.</p>
+<p><strong>Why do some records lack <code>description</code>?</strong> <code>description</code> is on by default. If Naukri does not return a detail page for a posting, the record falls back to the shorter description from the search result rather than dropping the job.</p>
+<p><strong>How many jobs can one run return?</strong> <code>maxItems</code> supports up to 10,000. Each individual query is capped by Naukri at 3,000 jobs, so a single keyword-and-city combination tops out there. Add more keywords, cities or companies to reach higher totals.</p>
+<p><strong>Does the work-mode filter include office jobs?</strong> Naukri only exposes remote and hybrid filters. Use <code>any</code> to return every mode; the output <code>workMode</code> tells you which one each job has.</p>
+<p><strong>Can I filter full-time, part-time or contractual jobs?</strong> No. Naukri does not honour those filters reliably. The supported job-type filters are internships and walk-in drives. The output <code>jobType</code> and <code>employmentType</code> still describe each posting.</p>
+<p><strong>Are benefits, localities or recruiter details included?</strong> No. Naukri does not expose benefits, locality lists or recruiter names on these postings, so they are not fabricated or promised.</p>
+<p><strong>Why are <code>companyRating</code> and <code>companyAddress</code> missing on some jobs?</strong> These come from the employer's AmbitionBox profile and company page. Smaller or newer employers often do not have them.</p>
+<p><strong>Why is <code>applyRedirectUrl</code> missing on most records?</strong> Naukri only exposes an external apply link for some postings, and those links can be ad-wrapped. <code>applyUrl</code> always gives you a usable link: the company gateway or external redirect when present, otherwise the Naukri listing.</p>
+<p><strong>Can I get walk-in venue and contact details?</strong> Yes, when Naukri publishes them. They are returned in <code>walkInDetails</code>; not every walk-in posting includes a venue or phone number.</p>
+<p><strong>How fresh is the data?</strong> Every run queries Naukri live, so results reflect the listings available at run time.</p>
+<p><strong>Do I need to set up a proxy?</strong> No. The actor chooses a working connection to Naukri automatically.</p>
+<p><strong>Is this affiliated with Naukri.com?</strong> No. This is an independent third-party tool and is not affiliated with, endorsed by or sponsored by Naukri.com.</p>
+<h2 id="readme-limitations">Limitations</h2>
+<ul>
+<li>Salary is disclosed on a minority of postings. Numeric salary fields are therefore conditional, not guaranteed.</li>
+<li>Benefits, locality lists and recruiter names are not available from Naukri's public job data.</li>
+<li>External apply links are partial and can be ad-wrapped; <code>applyUrl</code> always provides a fallback.</li>
+<li>Walk-in venue and contact details are present only when the employer publishes them.</li>
+<li>The actor covers Naukri's India job market. Gulf listings on other domains are out of scope.</li>
+<li>A single query returns at most 3,000 jobs (150 pages of 20). Split broad searches by city, keyword or company to collect more.</li>
+</ul>
+<h2 id="readme-notes-on-coverage">Notes on coverage</h2>
+<p>Naukri exposes different amounts of detail per posting. The actor returns what the public job record contains and omits fields that are not published; it does not infer salary, benefits, or recruiter details.</p>
+</details></section><section id="python-quickstart"><h2>Python quickstart</h2><p>Use a schema-derived input and the Python standard library to start a run. An Apify account and token are required for execution.</p><p><a href="/apify-actor-examples/guides/Jfbzt9vLDGEVoJVyI/">Open the step-by-step Python guide →</a></p></section><p class="source-note">Source build <code>jIK44RJNboEaGNtv6</code>. Documentation is regenerated from the default published build; private drafts are not included.</p></article></div></main><footer class="footer"><strong>Nimbryxo Studio</strong><div class="footer-links"><a href="/apify-actor-examples/topics/">Topics</a><a href="/apify-actor-examples/sources/">Documentation sources</a><a href="https://apify.com/nimbryxo-studio">Apify</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></div></footer></body></html>

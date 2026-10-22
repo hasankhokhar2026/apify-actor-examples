@@ -1,62 +1,146 @@
 {
-  "description": "Extract structured data from Facebook pages — either provide direct page URLs, or discover pages by keyword and location. Provide session cookies for the most reliable discovery and full contact/business details.",
+  "description": "Find Facebook business pages by keyword and city, or enrich page URLs and IDs with public contact details. Keyword search uses Facebook's own page search and needs a Facebook session; page enrichment runs without cookies.",
   "properties": {
+    "categoryFilter": {
+      "default": [],
+      "description": "Keep pages whose enriched category contains any of these terms (case-insensitive). Filtering happens after enrichment.",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "prefill": [],
+      "title": "Category Filter",
+      "type": "array"
+    },
+    "contactFilter": {
+      "default": "any",
+      "description": "Keep only lead-ready pages that expose the selected contact field.",
+      "editor": "select",
+      "enum": [
+        "any",
+        "email",
+        "phone",
+        "website"
+      ],
+      "enumTitles": [
+        "Any page",
+        "Has email",
+        "Has phone",
+        "Has website"
+      ],
+      "prefill": "any",
+      "title": "Contact Filter",
+      "type": "string"
+    },
     "cookies": {
-      "description": "Facebook session cookies. STRONGLY RECOMMENDED — without valid cookies, Facebook blocks ~94% of discovered pages with a login wall, most contact/business fields (phone, email, address, hours) will be empty, and page discovery itself is far less reliable. Accepts EITHER (1) a JSON array of Playwright-style cookie objects, OR (2) a raw `name=value; name2=value2` Cookie header string. Required cookies: c_user, xs, datr, fr, sb. Export them from your logged-in Facebook session via browser DevTools (Application > Cookies > facebook.com). Example: [{\"name\":\"c_user\",\"value\":\"1000...\",\"domain\":\".facebook.com\",\"path\":\"/\"}]",
+      "description": "Optional. Needed only for keyword discovery. c_user and xs are enough. Accepts a JSON array of cookie objects or a raw name=value; name2=value2 Cookie header. Page enrichment works without cookies.",
       "editor": "textfield",
+      "isSecret": true,
       "prefill": "",
-      "sectionCaption": "Authentication",
-      "sectionDescription": "Facebook session cookies are strongly recommended. Without them, most pages return a login wall and contact/business fields will be missing. The scraper always uses residential IPs — providing cookies from any browser session will work.",
+      "sectionCaption": "Discovery authentication",
+      "sectionDescription": "Cookies are used only for Facebook page search. They are never sent when enriching public page URLs.",
       "title": "Facebook Session Cookies",
       "type": "string"
     },
+    "failOnEmpty": {
+      "default": false,
+      "description": "Fail the run when zero page rows are produced. Leave off to finish successfully with diagnostic rows explaining why nothing was found.",
+      "prefill": false,
+      "title": "Fail When Empty",
+      "type": "boolean"
+    },
+    "includeFailedPages": {
+      "default": true,
+      "description": "Emit diagnostic rows with errorCode, detailsError, and fieldsFound for pages that cannot be enriched. This prevents silent empty runs.",
+      "prefill": true,
+      "title": "Include Failed Pages",
+      "type": "boolean"
+    },
     "includeReviews": {
       "default": true,
-      "description": "Fetch and include real reviews (reviewer name, recommend/don't-recommend verdict, review text, date) for each page, when available. Adds one extra request per page. Disable for faster/cheaper runs if you don't need reviews.",
+      "description": "Fetch the public reviews tab and include reviews when Facebook exposes them. Adds one request per page. Review coverage is partial.",
+      "prefill": false,
       "title": "Include Reviews",
       "type": "boolean"
     },
     "locations": {
-      "description": "Optional locations to combine with each search term for location-aware discovery. For example, adding 'London' will search for 'Coffee Shop London'.",
+      "default": [],
+      "description": "City or region names added to the search query as a soft hint. Facebook does not expose a reliable city filter, so always verify the enriched address. Use strictLocation to drop rows whose address does not contain the location.",
       "editor": "stringList",
       "items": {
         "type": "string"
       },
-      "prefill": [
-        "London"
-      ],
+      "prefill": [],
       "title": "Locations",
       "type": "array"
     },
     "maxItems": {
-      "default": 60,
-      "description": "Maximum number of page rows to output. For 500–1000+ results, provide Facebook session cookies and use multiple search terms or locations to maximize discovery. Also scales SERP pagination depth automatically.",
+      "default": 100,
+      "description": "Maximum number of successful page rows. Failed rows do not consume this limit.",
       "maximum": 5000,
       "minimum": 1,
-      "prefill": 10,
-      "title": "Maximum Items",
+      "prefill": 1,
+      "title": "Maximum Pages",
       "type": "integer"
     },
-    "searchTerms": {
-      "description": "Search terms for page discovery. Each term is combined with each location (if provided) to find matching Facebook pages. Either searchTerms or startUrls is required.",
+    "minFollowers": {
+      "default": 0,
+      "description": "Keep pages with at least this many followers. Pages with no follower count are dropped when this is above 0.",
+      "maximum": 100000000,
+      "minimum": 0,
+      "prefill": 0,
+      "title": "Minimum Followers",
+      "type": "integer"
+    },
+    "pageIds": {
+      "default": [],
+      "description": "Facebook numeric Page IDs, usernames, or page URLs. Numeric IDs are fetched through https://www.facebook.com/<id>.",
       "editor": "stringList",
       "items": {
         "type": "string"
       },
-      "prefill": [
-        "Coffee Shop"
-      ],
+      "prefill": [],
+      "title": "Page IDs or Usernames",
+      "type": "array"
+    },
+    "proxyConfiguration": {
+      "default": {
+        "apifyProxyGroups": [
+          "RESIDENTIAL"
+        ],
+        "useApifyProxy": true
+      },
+      "description": "Used only for keyword discovery. Defaults to Apify residential proxy because Facebook search blocks datacenter IPs. Public page enrichment does not use it.",
+      "editor": "proxy",
+      "prefill": {
+        "apifyProxyGroups": [
+          "RESIDENTIAL"
+        ],
+        "useApifyProxy": true
+      },
+      "title": "Proxy Configuration",
+      "type": "object"
+    },
+    "searchTerms": {
+      "default": [],
+      "description": "Keywords for Facebook page discovery, for example Coffee Shop or Dentist. Each term is combined with each location as a text query. Facebook keyword search requires a cookie containing both c_user and xs.",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "prefill": [],
       "title": "Search Terms",
       "type": "array"
     },
     "startUrls": {
-      "description": "Direct list of Facebook page URLs to scrape (skips keyword/location discovery entirely for these). Accepts full page URLs, e.g. https://www.facebook.com/McDonalds. Can be combined with searchTerms — results from both are merged. Either startUrls or searchTerms is required.",
+      "default": [],
+      "description": "Direct Facebook page URLs to enrich, for example https://www.facebook.com/ozonecoffeeuk. Can be combined with pageIds and searchTerms.",
       "editor": "requestListSources",
       "items": {
         "properties": {
           "url": {
-            "description": "URL of a Facebook page to scrape, e.g. https://www.facebook.com/McDonalds",
-            "title": "URL of a Facebook page",
+            "description": "A Facebook Page URL.",
+            "title": "Page URL",
             "type": "string"
           }
         },
@@ -65,11 +149,30 @@
         ],
         "type": "object"
       },
+      "prefill": [
+        {
+          "url": "https://www.facebook.com/nike"
+        }
+      ],
       "title": "Facebook Page URLs",
       "type": "array"
+    },
+    "strictLocation": {
+      "default": false,
+      "description": "Drop pages whose enriched address does not contain the search location. This is a best-effort post-filter, not an exact city boundary.",
+      "prefill": false,
+      "title": "Strict Location Post-Filter",
+      "type": "boolean"
+    },
+    "verifiedOnly": {
+      "default": false,
+      "description": "Keep only pages whose public payload explicitly marks them as verified.",
+      "prefill": false,
+      "title": "Verified Pages Only",
+      "type": "boolean"
     }
   },
   "schemaVersion": 1,
-  "title": "Facebook Pages Scraper Input",
+  "title": "Facebook Business Page Finder Input",
   "type": "object"
 }

@@ -1,9 +1,9 @@
 {
   "actorOutputSchemaVersion": 1,
-  "description": "Reddit records from the mode you picked — posts, comment threads, communities, or user profiles, distinguished by a dataType field.",
+  "description": "Reddit posts, comments, profiles and community records with engagement metrics, derived activity and per-record source provenance.",
   "properties": {
     "redditRecords": {
-      "description": "Dataset containing the records for the selected mode (post, comment, community, or user_profile records — distinguished by the `dataType` field). Shape depends on the `mode` input.",
+      "description": "Dataset containing post, comment, profile or community records (see `recordType`). Every record carries `source` (live/archive), `fetchedAt` and, for archive data, `snapshotFreshness` plus a warning.",
       "template": "{{links.apiDefaultDatasetUrl}}/items",
       "title": "Reddit records",
       "type": "string"

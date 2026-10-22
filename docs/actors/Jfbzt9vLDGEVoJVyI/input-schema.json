@@ -1,143 +1,267 @@
 {
+  "description": "Find Naukri.com jobs by keyword, location, company or job ID and return full job details, salary information, skills and company profiles.",
   "properties": {
-    "experienceYears": {
-      "description": "Years of experience required.",
-      "editor": "number",
-      "maximum": 30,
-      "minimum": 0,
-      "nullable": true,
-      "title": "Experience (years)",
-      "type": "integer"
+    "browserFallback": {
+      "default": false,
+      "description": "If the normal connection is blocked, retry through a browser session. Slower and uses more memory; leave off unless needed.",
+      "prefill": false,
+      "title": "Browser Fallback",
+      "type": "boolean"
     },
-    "jobAge": {
-      "description": "Only include jobs posted within the last N days.",
-      "editor": "select",
-      "enum": [
-        "1",
-        "3",
-        "7",
-        "15",
-        "30"
-      ],
-      "enumTitles": [
-        "Last 1 day",
-        "Last 3 days",
-        "Last 7 days",
-        "Last 15 days",
-        "Last 30 days"
-      ],
-      "nullable": true,
-      "title": "Job Age (days)",
-      "type": "string"
+    "companyIds": {
+      "default": [],
+      "description": "Naukri company IDs to search across. When searches are also supplied, each company is combined with every search.",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Company IDs",
+      "type": "array"
     },
-    "jobType": {
-      "description": "Employment type filter.",
-      "editor": "select",
-      "enum": [
-        "full-time",
-        "part-time",
-        "internship",
-        "contractual"
-      ],
-      "enumTitles": [
-        "Full-time",
-        "Part-time",
-        "Internship",
-        "Contractual"
-      ],
-      "nullable": true,
-      "title": "Job Type",
-      "type": "string"
+    "failOnEmpty": {
+      "default": false,
+      "description": "Mark the run as failed when no jobs are returned.",
+      "prefill": false,
+      "title": "Fail When No Jobs Found",
+      "type": "boolean"
     },
-    "keyword": {
-      "description": "Job title or keyword (e.g., \"python developer\", \"data scientist\"). Used only when Search URL is empty.",
-      "editor": "textfield",
-      "nullable": true,
-      "title": "Keyword",
-      "type": "string"
+    "includeCompanyReviews": {
+      "default": false,
+      "description": "Include up to three AmbitionBox review snippets per job. Off by default to keep records small.",
+      "prefill": false,
+      "title": "Include Company Reviews",
+      "type": "boolean"
     },
-    "location": {
-      "description": "City name (e.g., \"bangalore\", \"delhi-ncr\", \"mumbai\", \"hyderabad\"). Used only when Search URL is empty.",
-      "editor": "textfield",
-      "nullable": true,
-      "title": "Location",
-      "type": "string"
+    "includeDescription": {
+      "default": true,
+      "description": "Include the full job description text. Turn off to keep records smaller.",
+      "prefill": true,
+      "title": "Include Full Description",
+      "type": "boolean"
+    },
+    "includeDescriptionHtml": {
+      "default": false,
+      "description": "Include the raw HTML job description in addition to plain text.",
+      "prefill": false,
+      "title": "Include Description HTML",
+      "type": "boolean"
+    },
+    "jobIds": {
+      "default": [],
+      "description": "Fetch these Naukri job IDs directly. Accepts bare IDs or Naukri job URLs. Job IDs are processed before searches.",
+      "editor": "stringList",
+      "prefill": [
+        "221026015762"
+      ],
+      "title": "Job IDs",
+      "type": "array"
     },
     "maxItems": {
-      "default": 50,
-      "description": "Maximum number of job listings to return. Each Naukri API page returns up to 20 jobs.",
+      "default": 100,
+      "description": "Total records to return across all queries. Naukri allows at most 3,000 jobs per query (150 pages of 20).",
       "editor": "number",
-      "maximum": 800,
+      "maximum": 10000,
       "minimum": 1,
-      "prefill": 5,
+      "prefill": 3,
       "title": "Max Items",
       "type": "integer"
     },
-    "salaryLakhs": {
-      "description": "Annual salary range in lakhs.",
-      "editor": "select",
-      "enum": [
-        "0-3",
-        "3-6",
-        "6-10",
-        "10-15",
-        "15-25",
-        "25+"
-      ],
-      "enumTitles": [
-        "0 - 3 Lakhs",
-        "3 - 6 Lakhs",
-        "6 - 10 Lakhs",
-        "10 - 15 Lakhs",
-        "15 - 25 Lakhs",
-        "25+ Lakhs"
-      ],
-      "nullable": true,
-      "title": "Salary Range (Lakhs INR/yr)",
-      "type": "string"
+    "onlyNew": {
+      "default": false,
+      "description": "Emit only jobs that were not emitted by an earlier run with the same state key.",
+      "prefill": false,
+      "title": "Only New Jobs",
+      "type": "boolean"
     },
-    "searchUrl": {
-      "description": "A Naukri.com search URL to scrape. Paste any URL from https://www.naukri.com — the scraper parses the slug and filters automatically. If empty, the structured filter fields below are used instead.",
+    "proxyConfiguration": {
+      "default": {
+        "apifyProxyCountry": "IN",
+        "useApifyProxy": true
+      },
+      "description": "Optional connection override. By default the actor uses an India-based Apify connection automatically.",
+      "editor": "proxy",
+      "prefill": {
+        "apifyProxyCountry": "IN",
+        "useApifyProxy": true
+      },
+      "title": "Proxy Configuration",
+      "type": "object"
+    },
+    "resetState": {
+      "default": false,
+      "description": "Clear the saved job IDs before this run.",
+      "prefill": false,
+      "title": "Reset Incremental State",
+      "type": "boolean"
+    },
+    "searches": {
+      "default": [],
+      "description": "One or more search configurations. Each entry can hold several keywords and several locations; every keyword is combined with every location. Leave keywords empty to browse a location or company.",
+      "editor": "json",
+      "items": {
+        "properties": {
+          "companyId": {
+            "description": "Optional Naukri company ID (numeric, e.g. \"10111\"). Free-text company names are not supported by Naukri.",
+            "editor": "textfield",
+            "nullable": true,
+            "title": "Company ID",
+            "type": "string"
+          },
+          "experienceYears": {
+            "description": "Return jobs whose experience range includes this many years (0-30).",
+            "maximum": 30,
+            "minimum": 0,
+            "nullable": true,
+            "title": "Experience (years)",
+            "type": "integer"
+          },
+          "internship": {
+            "default": false,
+            "description": "Return internships.",
+            "prefill": false,
+            "title": "Internships Only",
+            "type": "boolean"
+          },
+          "jobAge": {
+            "description": "Only jobs posted within the last N days. Promoted jobs can bypass the server filter; strictJobAge removes them.",
+            "editor": "select",
+            "enum": [
+              "1",
+              "3",
+              "7",
+              "15",
+              "30"
+            ],
+            "enumTitles": [
+              "Last 1 day",
+              "Last 3 days",
+              "Last 7 days",
+              "Last 15 days",
+              "Last 30 days"
+            ],
+            "nullable": true,
+            "title": "Job Age",
+            "type": "string"
+          },
+          "keywords": {
+            "default": [],
+            "description": "Job titles or search terms (e.g. \"software engineer\", \"data scientist\").",
+            "editor": "stringList",
+            "title": "Keywords",
+            "type": "array"
+          },
+          "locations": {
+            "default": [],
+            "description": "Indian cities or regions (e.g. \"bangalore\", \"mumbai\", \"delhi ncr\", \"hyderabad\").",
+            "editor": "stringList",
+            "title": "Locations",
+            "type": "array"
+          },
+          "salaryBucket": {
+            "description": "Annual salary band in Indian lakhs. Naukri can include jobs with hidden salary in a band; use salaryDisclosed to separate them.",
+            "editor": "select",
+            "enum": [
+              "0-3",
+              "3-6",
+              "6-10",
+              "10-15",
+              "15-25",
+              "25+"
+            ],
+            "enumTitles": [
+              "0 - 3 Lakhs",
+              "3 - 6 Lakhs",
+              "6 - 10 Lakhs",
+              "10 - 15 Lakhs",
+              "15 - 25 Lakhs",
+              "25+ Lakhs"
+            ],
+            "nullable": true,
+            "title": "Salary Bucket",
+            "type": "string"
+          },
+          "sort": {
+            "default": "relevance",
+            "description": "Result ordering.",
+            "editor": "select",
+            "enum": [
+              "relevance",
+              "date",
+              "salary"
+            ],
+            "enumTitles": [
+              "Relevance",
+              "Date (newest first)",
+              "Salary (highest first)"
+            ],
+            "title": "Sort By",
+            "type": "string"
+          },
+          "walkIn": {
+            "default": false,
+            "description": "Return walk-in interview jobs.",
+            "prefill": false,
+            "title": "Walk-in Jobs Only",
+            "type": "boolean"
+          },
+          "workMode": {
+            "default": "any",
+            "description": "Remote or hybrid filter. Naukri does not expose an office-only filter; \"any\" returns every mode.",
+            "editor": "select",
+            "enum": [
+              "any",
+              "remote",
+              "hybrid"
+            ],
+            "enumTitles": [
+              "Any",
+              "Remote",
+              "Hybrid"
+            ],
+            "title": "Work Mode",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "prefill": [
+        {
+          "keywords": [
+            "software engineer"
+          ],
+          "locations": [
+            "bangalore"
+          ]
+        }
+      ],
+      "title": "Search Queries",
+      "type": "array"
+    },
+    "stateKey": {
+      "description": "Optional name for the incremental state. Defaults to a hash of the search configuration.",
       "editor": "textfield",
-      "prefill": "https://www.naukri.com/python-developer-jobs-in-bangalore",
-      "title": "Naukri Search URL",
-      "type": "string"
-    },
-    "sortBy": {
-      "default": "relevance",
-      "description": "How results are ordered.",
-      "editor": "select",
-      "enum": [
-        "relevance",
-        "date",
-        "salary"
-      ],
-      "enumTitles": [
-        "Relevance",
-        "Date (newest first)",
-        "Salary (highest first)"
-      ],
-      "title": "Sort By",
-      "type": "string"
-    },
-    "workMode": {
-      "description": "Filter by remote or hybrid work. Naukri does not have an explicit 'office' filter — office is the default state of every listing, so leave this empty for office jobs.",
-      "editor": "select",
-      "enum": [
-        "remote",
-        "hybrid"
-      ],
-      "enumTitles": [
-        "Remote (work from home)",
-        "Hybrid"
-      ],
       "nullable": true,
-      "title": "Work Mode",
+      "title": "Incremental State Key",
       "type": "string"
+    },
+    "strictJobAge": {
+      "default": true,
+      "description": "Drop promoted jobs older than the selected job age using Naukri's posting date.",
+      "prefill": true,
+      "title": "Strict Job Age",
+      "type": "boolean"
+    },
+    "timeBudgetSecs": {
+      "default": 0,
+      "description": "Stop gracefully after this many seconds. 0 means no time limit.",
+      "editor": "number",
+      "maximum": 7200,
+      "minimum": 0,
+      "prefill": 0,
+      "title": "Time Budget (seconds)",
+      "type": "integer"
     }
   },
   "required": [],
   "schemaVersion": 1,
-  "title": "Naukri Scraper Input",
+  "title": "Naukri Job Scraper Input",
   "type": "object"
 }

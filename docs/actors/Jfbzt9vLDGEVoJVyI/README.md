@@ -4,114 +4,208 @@
 
 # Naukri.com Job Listings Extractor with Salary & Skills
 
-Naukri.com is one of India's best-known job boards, and this actor turns any search on it into structured data. Paste a search URL or fill in keyword/location/salary filters, and get back one record per job posting with company, pay, skills and recruiter detail.
+Extract **Naukri.com** job listings as structured data. Search by keyword and Indian city, pull jobs by ID, or monitor a company — then get the full job description, raw and parsed salary, experience bounds, skills, work mode, education requirements, role taxonomy, company ratings and walk-in details. No Naukri login, cookies or API key required.
 
 ## What this actor does
 
-- Scrapes job listings either from a pasted Naukri search URL or from structured filter fields (keyword, location, experience, salary, job age, job type, work mode).
-- Returns company detail alongside each job, including AmbitionBox rating and review count when Naukri publishes one for that employer.
-- Pulls the skill tags Naukri attaches to each posting, along with industry and role category.
-- Captures posting freshness (Naukri's relative label plus an absolute creation timestamp when Naukri provides one), vacancy count, and application count.
-- Omits any field Naukri didn't supply for a given listing, so records never carry empty placeholders.
+- **Three ways to find jobs:** keyword and city searches, direct job IDs, or company IDs.
+- **Up to 10,000 records per run**, with a 3,000-job ceiling per individual query (Naukri returns 20 jobs per page and allows 150 pages).
+- **Full detail per job:** not just the search card — the actor fetches each posting to return the complete description, salary fields, education, role taxonomy, company profile and walk-in information.
+- **Filters:** experience in years, salary band, remote or hybrid mode, job age, date or salary sort, internships and walk-in drives.
+- **Incremental runs:** `onlyNew` stores emitted job IDs in actor state, so scheduled runs can return only postings you have not seen before.
+- **Honest salary data:** every record carries the raw salary string and a `salaryDisclosed` flag. Numeric `salaryMin` and `salaryMax` appear only when Naukri discloses a figure.
+- **Empty fields are omitted** — records never contain `null`, blank strings or empty arrays.
 
 ## Output per job
 
 | Field | Description |
 |---|---|
-| `id` | Naukri's internal job ID. |
+| `id` | Naukri job ID. |
 | `title` | Job title as posted. |
-| `url` | Full URL of the job listing on Naukri. |
-| `companyName` | Hiring company's name. |
-| `companyId` | Naukri's internal company ID. |
-| `companyRating` | AmbitionBox rating out of 5, when available for the company. |
-| `companyReviewCount` | Number of AmbitionBox reviews behind that rating. |
-| `location` | Job location(s); may list several cities. |
-| `experience` | Required experience range, as shown on Naukri. |
-| `salary` | Salary range as displayed on the listing. |
-| `description` | Job description snippet. |
-| `skills` | Skill tags attached to the posting. |
-| `industry` | Industry category. |
-| `role` | Job role category/sub-function. |
-| `jobTypeFlags` | Badges such as `premium`, `easy_apply`, or `walk_in`. |
-| `postedDate` | Relative posting age as shown on Naukri (e.g. "2 days ago"). |
-| `postedAt` | Absolute posting timestamp (UTC), taken from Naukri's own creation time for the job when it is provided. |
-| `logoUrl` | Company logo image URL. |
-| `vacancies` | Number of open vacancies on the posting. |
-| `applyCount` | Number of applicants shown on the posting. |
-| `recruiterName` | Recruiter's name, when Naukri lists one. |
-| `scrapedAt` | UTC timestamp of when the record was scraped (always present). |
+| `url` | Naukri job listing URL. |
+| `companyName` | Hiring company name. |
+| `companyId` | Naukri company ID. |
+| `companyLogoUrl` | Company logo image URL. |
+| `logoUrl` | Company logo URL (legacy field, same value as `companyLogoUrl`). |
+| `companyProfileUrl` | Naukri company profile URL. |
+| `companyWebsite` | Company website when Naukri publishes one (sparse). |
+| `companyDescription` | Company profile description as plain text. |
+| `companyAddress` | Company address. |
+| `companyRating` | AmbitionBox rating out of 5. |
+| `companyReviewCount` | Number of AmbitionBox reviews behind the rating. |
+| `companyReviews` | Up to three review snippets when `includeCompanyReviews` is on. |
+| `companyApplyUrl` | Naukri company-apply gateway URL when present. |
+| `applyRedirectUrl` | External apply URL when Naukri exposes one; may be ad-wrapped. |
+| `applyUrl` | Best available apply link: company gateway, external redirect, or the Naukri listing. |
+| `salary` | Raw salary string exactly as displayed, including `Not Disclosed`. |
+| `salaryMin` | Parsed minimum salary in INR for `salaryPeriod`; omitted when not disclosed. |
+| `salaryMax` | Parsed maximum salary in INR for `salaryPeriod`; omitted when not disclosed. |
+| `salaryCurrency` | ISO currency code, normally `INR`. |
+| `salaryPeriod` | `year` or `month`; internship stipends are reported per month. |
+| `salaryDisclosed` | `false` when Naukri hides the salary. |
+| `salaryVariablePct` | Variable pay percentage when Naukri supplies one. |
+| `experience` | Raw experience range, e.g. `5-7 Yrs`. |
+| `experienceMinYears` | Parsed minimum years. |
+| `experienceMaxYears` | Parsed maximum years. |
+| `skills` | Skill tags, preferred skills first. |
+| `skillsPreferred` | Preferred skill tags. |
+| `skillsOther` | Other skill tags. |
+| `description` | Full job description as plain text (`includeDescription`). |
+| `descriptionHtml` | Raw HTML description (`includeDescriptionHtml`). |
+| `locations` | Structured list of job locations. |
+| `location` | Job locations joined into one string (legacy field). |
+| `workMode` | `office`, `remote` or `hybrid`. |
+| `employmentType` | Employment type, e.g. `Full Time, Permanent`. |
+| `jobType` | Naukri job type, e.g. `fulltime` or `internship`. |
+| `educationUG` | Undergraduate education requirements. |
+| `educationPG` | Postgraduate education requirements. |
+| `educationPPG` | Post-postgraduate education requirements. |
+| `industry` | Industry. |
+| `functionalArea` | Functional area. |
+| `roleCategory` | Role category. |
+| `role` | Job role. |
+| `postedAt` | Posting time in ISO 8601 with a `+05:30` offset. |
+| `postedDate` | Relative posting label from search, e.g. `2 Days Ago`. |
+| `vacancies` | Number of openings; omitted when Naukri reports 0. |
+| `applyCount` | Applicant count; omitted when 0. |
+| `viewCount` | View count; omitted when 0. |
+| `walkIn` | Walk-in interview flag. |
+| `walkInDetails` | Venue and contact block when Naukri publishes it. Contains `venueAddress`, `startDate`, `endDate`, `dailyTiming`, `contactName`, `contactPhone`, `mapUrl`, `embedMapUrl`, `saturdayWorking` and `sundayWorking`. |
+| `jobTypeFlags` | Badges such as `premium`, `easy_apply` and `walk_in` (legacy field). |
+| `scrapedAt` | UTC timestamp when the record was scraped. |
 
 ## Input
 
 | Field | Type | Default | Description |
 |---|---|---|---|
-| `searchUrl` | String | – | A Naukri.com search URL to scrape; its job-title/location slug and `k`/`l`/`experience`/`jobAge` query parameters are parsed automatically. Salary, job type, work mode and sort are not read from the URL — set those via their own fields below. |
-| `maxItems` | Integer | `50` | Maximum number of job listings to return. |
-| `keyword` | String | – | Job title or keyword. If `searchUrl` is also set, this overrides the keyword parsed from the URL. |
-| `location` | String | – | City name (e.g. `bangalore`, `delhi-ncr`). If `searchUrl` is also set, this overrides the location parsed from the URL. |
-| `experienceYears` | Integer | – | Years of experience required (0–30). |
-| `salaryLakhs` | String (select) | – | Annual salary band in lakhs INR: `0-3`, `3-6`, `6-10`, `10-15`, `15-25`, `25+`. |
-| `jobAge` | String (select) | – | Only jobs posted within the last N days: `1`, `3`, `7`, `15`, `30`. |
-| `jobType` | String (select) | – | `full-time`, `part-time`, `internship`, or `contractual`. |
-| `workMode` | String (select) | – | `remote` or `hybrid`. There is no office-only option: leaving it empty returns jobs of every work mode. |
-| `sortBy` | String (select) | `relevance` | `relevance`, `date` (newest first), or `salary` (highest first). |
+| `searches` | array | one keyword search | Search configurations. Each entry has `keywords[]`, `locations[]`, `experienceYears`, `salaryBucket`, `workMode`, `jobAge`, `sort`, `companyId`, `internship` and `walkIn`. Every keyword is combined with every location. |
+| `jobIds` | array | one example ID | Naukri job IDs or job URLs to fetch directly. Processed before searches. |
+| `companyIds` | array | `[]` | Naukri company IDs. When searches are also supplied, each company is combined with every search. |
+| `maxItems` | integer | `100` | Total records to return, 1–10,000. |
+| `onlyNew` | boolean | `false` | Emit only jobs not emitted by an earlier run with the same state key. |
+| `resetState` | boolean | `false` | Clear saved incremental state before this run. |
+| `stateKey` | string | auto | Optional state name. Defaults to a hash of the search configuration. |
+| `includeDescription` | boolean | `true` | Include the full job description text. |
+| `includeDescriptionHtml` | boolean | `false` | Include the raw HTML description too. |
+| `includeCompanyReviews` | boolean | `false` | Include up to three AmbitionBox review snippets. |
+| `strictJobAge` | boolean | `true` | Drop promoted jobs older than the selected job age. |
+| `timeBudgetSecs` | integer | `0` | Stop gracefully after this many seconds; `0` means no limit. |
+| `failOnEmpty` | boolean | `false` | Mark the run as failed when no jobs are returned. |
+| `browserFallback` | boolean | `false` | Retry through a browser session if the normal connection is blocked. Slower and uses more memory. |
+| `proxyConfiguration` | object | India Apify proxy | Optional connection override. The actor selects an India-based connection automatically. |
 
-### Example: search URL
+Salary bands are `0-3`, `3-6`, `6-10`, `10-15`, `15-25` and `25+` lakhs per year. Job-age values are `1`, `3`, `7`, `15` and `30` days. Work modes are `any`, `remote` and `hybrid`; Naukri does not expose an office-only filter.
 
-```json
-{
-  "searchUrl": "https://www.naukri.com/python-developer-jobs-in-bangalore",
-  "maxItems": 50
-}
-```
-
-### Example: structured filters
+### Example: software engineer jobs in Bangalore
 
 ```json
 {
-  "keyword": "data scientist",
-  "location": "hyderabad",
-  "experienceYears": 3,
-  "salaryLakhs": "10-15",
-  "jobAge": "7",
-  "sortBy": "date",
+  "searches": [
+    {
+      "keywords": ["software engineer"],
+      "locations": ["bangalore"],
+      "experienceYears": 3,
+      "jobAge": "7",
+      "sort": "date"
+    }
+  ],
   "maxItems": 100
 }
 ```
 
-### Example: remote internships
+### Example: fetch specific jobs
 
 ```json
 {
-  "keyword": "machine learning intern",
-  "workMode": "remote",
-  "jobType": "internship",
-  "maxItems": 30
+  "jobIds": ["221026015762", "191026012479"],
+  "includeDescription": true,
+  "maxItems": 2
+}
+```
+
+### Example: monitor a company for new postings
+
+```json
+{
+  "companyIds": ["10111"],
+  "searches": [
+    {
+      "keywords": ["python developer"],
+      "locations": ["hyderabad", "pune"],
+      "sort": "date"
+    }
+  ],
+  "onlyNew": true,
+  "stateKey": "infosys-python",
+  "maxItems": 200
+}
+```
+
+### Example: remote internships and walk-in drives
+
+```json
+{
+  "searches": [
+    {
+      "keywords": ["machine learning intern"],
+      "workMode": "remote",
+      "internship": true
+    },
+    {
+      "locations": ["mumbai"],
+      "walkIn": true
+    }
+  ],
+  "maxItems": 50
 }
 ```
 
 ## Use cases
 
-- **Recruitment agencies** building talent pipelines or tracking which roles competitors are hiring for.
-- **Job seekers** automating discovery of new postings that match a skill set or city.
-- **HR and compensation teams** benchmarking salary ranges for a role across companies and cities.
-- **Market researchers** tracking hiring volume by industry or location over time.
-- **Data teams** building a dataset of India's job market for analysis or model training.
+- **Recruitment agencies** — build talent pipelines and track which employers are hiring for a role or city.
+- **Job seekers** — schedule a daily monitor that returns only newly posted jobs matching a skill set.
+- **Compensation teams** — collect salary bands and disclosure rates for a role across companies and cities.
+- **Market researchers** — measure hiring volume by location, industry, role or work mode over time.
+- **Sales teams** — detect companies ramping up hiring as a buying signal.
+- **Data teams** — build an India job-market dataset with full descriptions, skills and company profiles.
 
 ## FAQ
 
-**Do I need a Naukri account to use this?** No. It reads Naukri's public job search results; no login or cookies are required.
+**Do I need a Naukri account, cookies or an API key?** No. The actor reads publicly available Naukri job data without a login.
 
-**What's the difference between pasting a URL and using the filter fields?** Pasting a `searchUrl` lets you reuse a search you already built on Naukri's site — its keyword, location, experience and job-age are read back out of the URL. The filter fields build an equivalent search from scratch when you'd rather not construct the URL yourself. If both are given, the filter fields (`keyword`, `location`, `experienceYears`, `jobAge`) override the matching value parsed from the URL; `salaryLakhs`, `jobType`, `workMode` and `sortBy` are never read from the URL, so set those directly regardless of whether `searchUrl` is used.
+**Why is `salaryMin` missing for most jobs?** Naukri hides salary on most postings. In a 24-job sample, only 16.7% disclosed a numeric range. Every record still includes the raw `salary` string and `salaryDisclosed` so you can separate disclosed jobs from hidden ones.
 
-**How many jobs can I get in one run?** Up to the `maxItems` cap you set (maximum 800). For broader coverage than that, split your search by city, keyword, or salary band and run multiple inputs.
+**Why do some records lack `description`?** `description` is on by default. If Naukri does not return a detail page for a posting, the record falls back to the shorter description from the search result rather than dropping the job.
 
-**Why is `companyRating` missing for some jobs?** Only companies with an AmbitionBox rating on Naukri carry this field; smaller or newer employers often don't have one yet.
+**How many jobs can one run return?** `maxItems` supports up to 10,000. Each individual query is capped by Naukri at 3,000 jobs, so a single keyword-and-city combination tops out there. Add more keywords, cities or companies to reach higher totals.
 
-**Why is `postedAt` missing when `postedDate` is present?** The two come from different values in Naukri's listing data: `postedDate` is the relative label shown on the card ("2 days ago"), while `postedAt` is Naukri's creation timestamp for the job. When Naukri omits that timestamp, only the relative label is returned.
+**Does the work-mode filter include office jobs?** Naukri only exposes remote and hybrid filters. Use `any` to return every mode; the output `workMode` tells you which one each job has.
 
-**Can I combine multiple filters, like experience and salary and job type?** Yes — all the filter fields apply together, whether or not `searchUrl` is also set.
+**Can I filter full-time, part-time or contractual jobs?** No. Naukri does not honour those filters reliably. The supported job-type filters are internships and walk-in drives. The output `jobType` and `employmentType` still describe each posting.
 
-**How fresh is the data?** Each run queries Naukri live, so results reflect whatever is currently listed on the site at run time.
+**Are benefits, localities or recruiter details included?** No. Naukri does not expose benefits, locality lists or recruiter names on these postings, so they are not fabricated or promised.
 
-**Is this affiliated with Naukri.com?** No. This is an independent tool and is not affiliated with, endorsed by, or sponsored by Naukri.com or its owner.
+**Why are `companyRating` and `companyAddress` missing on some jobs?** These come from the employer's AmbitionBox profile and company page. Smaller or newer employers often do not have them.
+
+**Why is `applyRedirectUrl` missing on most records?** Naukri only exposes an external apply link for some postings, and those links can be ad-wrapped. `applyUrl` always gives you a usable link: the company gateway or external redirect when present, otherwise the Naukri listing.
+
+**Can I get walk-in venue and contact details?** Yes, when Naukri publishes them. They are returned in `walkInDetails`; not every walk-in posting includes a venue or phone number.
+
+**How fresh is the data?** Every run queries Naukri live, so results reflect the listings available at run time.
+
+**Do I need to set up a proxy?** No. The actor chooses a working connection to Naukri automatically.
+
+**Is this affiliated with Naukri.com?** No. This is an independent third-party tool and is not affiliated with, endorsed by or sponsored by Naukri.com.
+
+## Limitations
+
+- Salary is disclosed on a minority of postings. Numeric salary fields are therefore conditional, not guaranteed.
+- Benefits, locality lists and recruiter names are not available from Naukri's public job data.
+- External apply links are partial and can be ad-wrapped; `applyUrl` always provides a fallback.
+- Walk-in venue and contact details are present only when the employer publishes them.
+- The actor covers Naukri's India job market. Gulf listings on other domains are out of scope.
+- A single query returns at most 3,000 jobs (150 pages of 20). Split broad searches by city, keyword or company to collect more.
+
+## Notes on coverage
+
+Naukri exposes different amounts of detail per posting. The actor returns what the public job record contains and omits fields that are not published; it does not infer salary, benefits, or recruiter details.

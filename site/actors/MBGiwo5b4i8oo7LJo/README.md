@@ -1,247 +1,205 @@
 # Facebook Business Page Finder by Keyword & City
 
-Find Facebook business pages either by pasting direct page URLs or by discovering them through a keyword and city, then get back page identity, engagement metrics, contact details, business hours, ratings, and reviews for each one.
+Find Facebook business Pages by keyword and location, or enrich a list of Page URLs, and get back the identity, contact details, social links, follower count, recommendation percentage, open status, price range, services, Page Transparency date, ad status, images, and real review objects that Facebook exposes publicly.
+
+The actor is built for local lead generation and page research. It discovers Pages through Facebook's own page search, then reads each Page's public root and About tabs without cookies. No Facebook login is needed to enrich URLs; a `c_user` + `xs` session cookie is required only for keyword discovery.
 
 ## What this actor does
 
-- Scrapes direct Facebook page URLs, or discovers pages by combining search terms with locations (e.g. "Coffee Shop" + "London")
-- Returns page identity (name, ID, URL, categories), engagement (followers, likes, check-ins), and contact details (phone, email, address, website, Messenger link) when the page owner has listed them
-- Pulls business hours, star/recommend rating, and an ad library reference for each page
-- Optionally fetches real reviews per page (reviewer name, recommend verdict, review text, date) via `includeReviews`
-- Scales to large result sets by combining multiple search terms with multiple locations and raising `maxItems`
-- Pages that turn out to be deleted, unavailable, or shown only as a login wall are skipped entirely rather than appearing as empty rows
+- **Two ways in:** paste Facebook Page URLs, `pageIds` (numeric IDs or usernames), or run keyword + location discovery with `searchTerms` + `locations`.
+- **Cookie-aware discovery:** Facebook's `/search/pages/` endpoint returns results only to a logged-in session. The actor validates that the supplied cookie contains `c_user` and `xs`, replays the page's own search cursor for up to 10 results per request, and stops at `maxItems`.
+- **Cookieless enrichment:** Page root and About tabs are fetched with browser-compatible requests, and cookies are never sent to Page or About URLs.
+- **Efficient About reads:** the actor stops reading each About tab after the useful public data (about 560–650 KB) instead of downloading the full ~20 MB response.
+- **Lead-ready output:** identity, category, address and coordinates, phone, email, website, Messenger link, Instagram/social links, followers (raw and parsed), recommendation percentage, review count, open status, price range, services, verified flag, creation date, ad status, Ad Library link, profile/cover images, and reviews.
+- **Post-fetch filters:** `strictLocation`, `categoryFilter`, `minFollowers`, `verifiedOnly`, and `contactFilter`.
+- **Explicit failure rows:** `includeFailedPages` emits diagnostic rows with a stable `errorCode` and `detailsError` instead of silently dropping pages. `failOnEmpty` turns a zero-page run into a failed run.
+- **Omit-empty output:** fields Facebook does not expose for a Page are left out of that record, never emitted as `null`, `""`, or `[]`.
+
+## Output per page
+
+- `pageId` — Facebook Page ID, when exposed by the public payload
+- `pageName`, `username`, `title` — Page identity
+- `facebookUrl`, `pageUrl`, `resolvedUrl` — requested canonical URL and final resolved URL
+- `pageType` — always `page`
+- `isVerified` — `true` / `false` when Facebook exposes the flag; omitted when unknown
+- `category` — primary Page category
+- `address`, `city`, `region`, `postalCode`, `country` — parsed from the public address
+- `latitude`, `longitude`, `addressUrl` — coordinates and a Google Maps link
+- `phone`, `email`, `website`, `messenger` — public contact details and `https://m.me/<pageId>`
+- `socialLinks` — Instagram and other linked accounts exposed on the Page
+- `followers`, `followersText` — parsed follower count and the raw label (`9.1K followers`)
+- `recommendPercentage`, `reviewCount`, `ratingText` — the real Facebook recommendation metrics; no synthetic star rating
+- `openStatus` — `Open now`, `Closed now`, `Always open`, `Opening soon`, and similar
+- `priceRange`, `services`, `about` — business details and the About text
+- `creationDate`, `adStatus` — Page Transparency values
+- `pageAdLibraryUrl` — constructed Meta Ad Library URL for the Page
+- `profilePictureUrl`, `coverPhotoUrl` — Page images
+- `reviews[]` — review objects with `reviewerName`, `recommends`, `reviewText`, `reviewDate`, plus optional `reviewId`, `authorProfileUrl`, `reactions`, `commentCount`
+- `searchTerm`, `searchLocation` — the discovery query that produced the row
+- `inputUrl` — the URL or ID supplied or discovered
+- `dataSource` — `facebook_search+public_page` or `facebook_public_page`
+- `fieldsFound` — number of populated data fields
+- `detailsError` — why optional detail tabs were skipped, when partial
+- `reviewsError` — why the optional reviews tab was empty or skipped
+- `scrapedAt` — ISO 8601 UTC timestamp
+
+Empty fields are omitted at every depth. A record with no reviews has no `reviews` key; a Page with no public email has no `email` key.
+
+### Error rows
+
+When `includeFailedPages` is on, a failed target or discovery query produces a diagnostic row instead of disappearing:
+
+```json
+{
+  "url": "https://www.facebook.com/this-page-does-not-exist-zz9x7",
+  "errorCode": "not_found",
+  "detailsError": "This Facebook page is unavailable or was removed.",
+  "httpStatus": 200,
+  "fieldsFound": 0,
+  "dataSource": "facebook_public_page",
+  "scrapedAt": "2026-10-22T09:30:00+00:00"
+}
+```
+
+Stable `errorCode` values: `search_login_required`, `search_empty`, `blocked`, `timeout`, `not_found`, `login_wall`, `brand_redirect`, `not_a_page`, `http_error`, `no_data`, `parse_empty`.
 
 ## Input
 
-| Field         | Type             | Default      | Description                                                                                       |
-| ------------- | ---------------- | ------------ | ------------------------------------------------------------------------------------------------- |
-| `startUrls`   | Array of `{url}` | –            | Direct list of Facebook page URLs to scrape — skips discovery for these. Either this or `searchTerms` is required |
-| `searchTerms` | Array of strings | –            | Plain search terms for page discovery (e.g. `["Coffee Shop", "Bakery"]`). Either this or `startUrls` is required |
-| `locations`   | Array of strings | –            | Optional locations combined with each search term (e.g. `["London", "Manchester"]`)               |
-| `maxItems`    | Integer          | `60`         | Maximum number of page rows to output (1–5000)                                                    |
-| `includeReviews` | Boolean       | `true`       | Fetch and include up to 10 reviews per page (adds one extra request per page)                      |
-| `cookies`     | String           | –            | Facebook session cookies — **strongly recommended**. See [Cookies](#cookies-authentication) below |
+| Field | Type | Default | Description |
+| --- | --- | --- | --- |
+| `startUrls` | array of `{url}` | `[]` | Direct Facebook Page URLs to enrich. |
+| `pageIds` | array of strings | `[]` | Numeric Page IDs, usernames, or Page URLs. Numeric IDs are fetched through `facebook.com/<id>`. |
+| `searchTerms` | array of strings | `[]` | Keywords for page discovery, e.g. `Coffee Shop` or `Dentist`. Requires a `c_user` + `xs` cookie. |
+| `locations` | array of strings | `[]` | City or region names added to each search query as a **soft hint**. Facebook does not expose a reliable city filter; verify the enriched address. |
+| `strictLocation` | boolean | `false` | Drop pages whose enriched address does not contain the location. Best-effort post-filter, not a city boundary. |
+| `categoryFilter` | array of strings | `[]` | Keep pages whose enriched category contains any of these terms (case-insensitive). Applied after enrichment. |
+| `minFollowers` | integer | `0` | Keep pages with at least this many followers. Pages with no follower count are dropped when this is above 0. |
+| `verifiedOnly` | boolean | `false` | Keep only pages whose public payload explicitly marks them as verified. |
+| `contactFilter` | select | `any` | Keep pages with `email`, `phone`, or `website`. Options: `any`, `email`, `phone`, `website`. |
+| `includeReviews` | boolean | `true` | Fetch the public reviews tab. Adds one request per page. Coverage is partial (Facebook exposes reviews for some pages only). |
+| `includeFailedPages` | boolean | `true` | Emit diagnostic rows for pages that cannot be enriched. Failed rows do not consume `maxItems`. |
+| `failOnEmpty` | boolean | `false` | Fail the run when zero page rows are produced. Useful for scheduled jobs that must not silently succeed with an empty dataset. |
+| `maxItems` | integer | `100` | Maximum successful page rows (1–5,000). Discovery over-collects candidates to absorb failures. |
+| `cookies` | string | empty | Optional. Only used for keyword discovery. Needs both `c_user` and `xs`. Accepts a JSON cookie array or a raw `name=value; ...` header. |
+| `proxyConfiguration` | proxy | Apify residential | Used only for keyword discovery. Facebook blocks search from datacenter IPs, so the default is Apify residential proxy. Set `useApifyProxy: false` to try a direct connection. |
 
-### Example Input — direct URLs
+### Example: enrich known pages (cookieless)
 
 ```json
 {
   "startUrls": [
-    { "url": "https://www.facebook.com/McDonalds" },
-    { "url": "https://www.facebook.com/BBCNews" }
+    { "url": "https://www.facebook.com/ozonecoffeeuk" },
+    { "url": "https://www.facebook.com/curatorscoffee" }
   ],
-  "cookies": "..."
+  "maxItems": 2,
+  "includeReviews": true
 }
 ```
 
-### Example Input — keyword + location discovery
+### Example: find coffee shops in London
 
 ```json
 {
-  "searchTerms": ["Coffee Shop", "Cafe", "Bakery"],
-  "locations": ["London", "Manchester", "Birmingham"],
-  "maxItems": 300,
-  "cookies": "..."
+  "searchTerms": ["Coffee Shop"],
+  "locations": ["London"],
+  "strictLocation": true,
+  "categoryFilter": ["Coffee"],
+  "maxItems": 100,
+  "cookies": "c_user=1000...; xs=...",
+  "includeReviews": false
 }
 ```
 
-That single input produces 9 search combinations (3 terms × 3 cities), each yielding up to ~40 discovered URLs — giving a pool of up to ~360 candidates to fill 300 results from. `startUrls` and `searchTerms` can also be combined in the same run — results from both are merged into the same output dataset.
-
-### Cookies (Authentication)
-
-**Strongly recommended for any run.**
-
-Without session cookies, Facebook serves a compact login-wall stub for many discovered pages — you'll get some data but contact fields (phone, address, website) are gated. Providing cookies dramatically increases both field coverage and the number of pages you can successfully retrieve.
-
-**How to export cookies from your browser:**
-
-1. Log in to Facebook in Chrome or Firefox
-2. Open DevTools → Application → Cookies → `facebook.com`
-3. Export the cookies for `.facebook.com` using a browser extension like [EditThisCookie](https://chrome.google.com/webstore/detail/editthiscookie/fngmhnnpilhplaeedifhccceomclgfbg) (export as JSON) or [Cookie Quick Manager](https://addons.mozilla.org/en-US/firefox/addon/cookie-quick-manager/) on Firefox
-4. Paste the exported JSON array into the `cookies` field
-
-**Minimum cookies needed:** `c_user`, `xs`, `datr`, `fr`, `sb`.
-
-**Accepted formats:**
-
-1. **JSON array** (recommended — export directly from your browser extension):
-
-   ```json
-   [
-     { "name": "c_user", "value": "100074...", "domain": ".facebook.com", "path": "/", "expires": 1815212390, "httpOnly": false, "secure": true },
-     { "name": "xs", "value": "8%3A2vaT...", "domain": ".facebook.com", "path": "/", "httpOnly": true, "secure": true },
-     { "name": "datr", "value": "7JhPar...", "domain": ".facebook.com", "path": "/", "httpOnly": true, "secure": true }
-   ]
-   ```
-
-2. **Cookie header string:** `"c_user=100074...; xs=8%3A...; datr=7JhP..."`
-
-Cookies expire after a while, or when you log out of that browser session. If you see high skip rates, refresh your cookies.
-
-## Scaling to 1K+ Results
-
-The actor is designed to scale — here is the fastest path to large datasets:
-
-1. **Use multiple search terms and locations.** Each `(term, location)` pair runs its own discovery pass. Example: 5 terms × 10 cities = 50 combinations × up to ~40 pages each = up to ~2,000 candidates in the pool.
-
-2. **Set `maxItems` to your target.** The actor over-discovers ~2× `maxItems` URLs to absorb login-walls and fetch failures without leaving you short.
-
-3. **Provide session cookies.** This is essential at scale — cookies enable Facebook's own search as the primary discovery source, which is far more reliable than discovering pages through other search engines, and unlock contact fields on login-gated pages.
-
-4. **Vary your search terms.** Generic terms (e.g. `"Restaurant"`) produce many duplicate pages across locations. More specific terms (e.g. `"Italian Restaurant"`, `"Sushi Bar"`) yield more unique pages.
-
-**Example for 1K results:**
+### Example: lead-ready pages only
 
 ```json
 {
-  "searchTerms": ["Restaurant", "Cafe", "Bar", "Pub", "Bistro"],
-  "locations": ["London", "Manchester", "Birmingham", "Glasgow", "Leeds", "Bristol", "Edinburgh", "Liverpool", "Sheffield", "Cardiff"],
-  "maxItems": 1000,
-  "cookies": "..."
+  "searchTerms": ["Dentist", "Hair Salon"],
+  "locations": ["Manchester", "Leeds"],
+  "contactFilter": "email",
+  "minFollowers": 100,
+  "maxItems": 250,
+  "cookies": "c_user=1000...; xs=..."
 }
 ```
 
-50 search combinations, each yielding up to ~40 unique URLs — a pool of up to ~2,000 candidates. How many become rows depends on how many of them Facebook actually serves; cookies make the biggest difference.
+`searchTerms` examples always include a `cookies` value because Facebook keyword
+search requires a `c_user` + `xs` session; without it the run fails with a clear
+message (or, when direct targets are also supplied, emits a
+`search_login_required` diagnostic row and enriches the direct targets).
 
-## Output
+## Cookies and Facebook search
 
-### Page Identity
+Facebook's own page search (`/search/pages/?q=...`) returns HTTP 404 with an empty body to anonymous requests, even after warming a `datr`/`sb` session. A session containing `c_user` and `xs` returns the search page and its results. Other cookies add nothing for this endpoint.
 
-| Field        | Type           | Description                              |
-| ------------ | -------------- | ---------------------------------------- |
-| `facebookUrl` | String        | Facebook page URL                        |
-| `pageUrl`    | String         | Normalized page URL                      |
-| `pageName`   | String         | Page name or slug                        |
-| `pageId`     | String | Facebook page identifier                 |
-| `facebookId` | String | Facebook ID (usually matches `pageId`)   |
-| `title`      | String | Full page title with context             |
+- Cookies are used **only** for discovery.
+- Keyword discovery uses the `proxyConfiguration` input (Apify residential by default) because Facebook returns the login wall for datacenter IPs. You can set `useApifyProxy: false` to try a direct connection.
+- Page and About enrichment works better without cookies; the actor never sends them to Page URLs or through the discovery proxy.
+- If `searchTerms` are supplied without `c_user` + `xs`:
+  - with direct `startUrls`/`pageIds`, the run continues with cookieless enrichment and emits a `search_login_required` diagnostic row when `includeFailedPages` is on;
+  - without direct targets, the run fails with a clear message.
+- A cookie never becomes part of the output.
 
-### Classification
+## Honest limits
 
-| Field      | Type          | Description                              |
-| ---------- | ------------- | ---------------------------------------- |
-| `categories` | Array | Page categories                        |
-| `category` | String | Primary category                         |
-| `info`     | Array  | Short info lines from the page           |
-| `intro`    | String | Page introduction or description         |
+- **City is a query hint, not a filter.** Facebook's internal place filter exists in some UI paths, but every public place UID tested returned zero results. The actor therefore appends the location to the keyword and offers `strictLocation` as a post-filter. A London query can return pages from The Hague, Amsterdam, Mexico, or Azerbaijan; `strictLocation` removes rows whose enriched address does not contain the location.
+- **No likes count.** Facebook does not expose a like count on public Page payloads. The actor returns followers and recommendation metrics only.
+- **No structured weekly hours.** Public payloads expose only a status string (`Open now`, `Closed now`, `Always open`), not a day-by-day grid.
+- **No 5-star rating.** Facebook retired Page star ratings. `recommendPercentage` and `reviewCount` are the real metrics; no rating is synthesized.
+- **Reviews are partial.** Facebook exposes reviews for some pages only. Treat `reviews` as "reviews when public", not a guarantee.
+- **Email is the scarcest field.** Across the discovery sample, phone was present on roughly 84% of pages, address on 79%, website on 84%, and email on 68%. Missing fields mean the Page owner did not publish them.
+- **Some pages are not pages.** Search can return personal profiles, groups, and other surfaces. The actor filters known non-page categories and classifies the rest in error rows (`not_a_page`, `no_data`, `brand_redirect`).
 
-### Contact & Business
+## Scaling
 
-| Field        | Type           | Description                              |
-| ------------ | -------------- | ---------------------------------------- |
-| `phone`      | String | Public phone number                      |
-| `email`      | String | Public contact email                     |
-| `messenger`  | String | Messenger link                           |
-| `address`    | String | Address or coordinates                   |
-| `addressUrl` | String | Google Maps link for the address         |
-| `website`    | String | Primary linked website                   |
-| `websites`   | Array  | All detected website links               |
-| `priceRange` | String | Price range (e.g. `"££"`)               |
+- `maxItems` defaults to 100 and supports up to 5,000.
+- Discovery over-collects about 2× the requested count, because some candidates turn out to be unavailable, login-walled, or filtered out.
+- Multiple `searchTerms` × `locations` multiply the candidate pool. For 1,000+ rows, use several specific terms and cities rather than one generic query.
+- Page enrichment runs two requests at a time with polite jitter. About tabs are read only up to the useful public data, keeping bandwidth low.
 
-### Engagement
+## Use cases
 
-| Field             | Type           | Description                     |
-| ----------------- | -------------- | ------------------------------- |
-| `followers`       | Number | Follower count                  |
-| `likes`           | Number | Like count                      |
-| `followings`      | Number | Following count                 |
-| `checkins`        | Number | Check-in count ("were here")    |
-| `talkingAboutCount` | Number | Talking-about count           |
-
-### Media
-
-| Field               | Type           | Description               |
-| ------------------- | -------------- | ------------------------- |
-| `profilePictureUrl` | String | Profile picture URL       |
-| `coverPhotoUrl`     | String | Cover photo URL           |
-
-### Business Details
-
-| Field            | Type            | Description                                                      |
-| ---------------- | --------------- | ---------------------------------------------------------------- |
-| `business_hours` | String  | Business hours info                                              |
-| `ratingOverall`  | Number  | Overall rating score, synthesized to a 0-5 scale for compatibility (Facebook Pages actually use a recommend %, not 1-5 stars — see `recommendPercentage`) |
-| `ratingCount`    | Number  | Review/rating count                                              |
-| `ratingText`     | String  | Human-readable rating text                                       |
-| `recommendPercentage` | Number | Raw recommend percentage (0-100) as shown on the page — the authentic Facebook Pages rating metric |
-| `ownerOrganization` | String | Confirmed owning organization/business ("X is responsible for this Page"), when Facebook discloses it |
-| `pageAdLibrary`  | Object or string  | Ad library metadata when found on the page, otherwise a constructed Ad Library search URL for the page |
-| `reviews`        | Array   | Up to 10 reviews that Facebook shows first on the page's reviews tab: `[{reviewerName, recommends, reviewText, reviewDate}]` (`reviewDate` as `YYYY-MM-DD`). Inside a review, `reviewText` or `reviewDate` can be `null` when Facebook didn't include them. Controlled by the `includeReviews` input (default on) |
-
-A top-level field that Facebook didn't expose for a page is left out of that record entirely rather than included as `null` (the review objects described above are the one exception).
-
-### Sample Output
-
-```json
-{
-  "facebookUrl": "https://www.facebook.com/ozonecoffeeuk",
-  "pageUrl": "https://www.facebook.com/ozonecoffeeuk",
-  "pageName": "ozonecoffeeuk",
-  "pageId": "191234567",
-  "facebookId": "191234567",
-  "title": "Ozone Coffee Roasters | Facebook",
-  "categories": ["Coffee Shop"],
-  "category": "Coffee Shop",
-  "intro": "Specialty coffee roaster and cafe in London.",
-  "messenger": "https://m.me/191234567",
-  "followers": 9100,
-  "followings": 12,
-  "profilePictureUrl": "https://scontent.xx.fbcdn.net/v/...",
-  "coverPhotoUrl": "https://scontent.xx.fbcdn.net/v/...",
-  "pageAdLibrary": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=ALL&view_all_page_id=191234567&search_type=page",
-  "reviews": [
-    {
-      "reviewerName": "Jane Smith",
-      "recommends": true,
-      "reviewText": "Great coffee and friendly staff!",
-      "reviewDate": "2025-11-02"
-    }
-  ]
-}
-```
-
-### Unavailable Pages
-
-When a discovered or provided URL turns out to be unavailable or deleted, it is detected and **skipped entirely** — it does not appear in the output dataset and does not consume your `maxItems` budget. This keeps the dataset free of junk rows; check the run log if you need to know which URLs were skipped and why.
-
-## Use Cases
-
-- **Local business discovery**: find businesses in specific cities or regions
-- **Competitive intelligence**: build datasets of competitor pages in your industry
-- **Lead generation**: collect pages with contact info for outreach
-- **Market research**: survey the Facebook page landscape for a category
-- **Monitoring**: run repeatedly to track new pages for a search term
+- **Local lead generation** — collect dentists, cafés, salons, or contractors by keyword and city with public phone/email/website contacts.
+- **CRM enrichment** — append category, address, followers, and social links to a list of known Facebook Pages.
+- **Franchise and multi-location mapping** — compare follower counts and recommendation percentages across locations.
+- **Market research** — size a category in a region and inspect price ranges, services, and Page creation dates.
+- **Trust and ad checks** — use `isVerified`, `creationDate`, `adStatus`, and `pageAdLibraryUrl` to qualify a Page.
+- **Review monitoring** — pull public review text and recommendation verdicts for pages that expose them.
 
 ## FAQ
 
-### Do I need a Facebook account to use this?
+### Do I need a Facebook account or cookies?
 
-No, but it's strongly recommended. Without cookies, page discovery relies on other search engines and extracts only public HTML. Providing session cookies from a logged-in Facebook account enables the most reliable discovery method (Facebook's own search) and gives access to contact fields that aren't present in the public HTML.
+Only for keyword discovery. Page URL and Page ID enrichment is cookieless. To use `searchTerms`, add a cookie header containing both `c_user` and `xs` from a logged-in browser session. Cookies are never required for `startUrls` or `pageIds`.
 
-### Why are some fields missing from a record?
+### Why did a search return zero results?
 
-A missing field means Facebook did not expose that information in the page's public HTML, the page owner did not fill it in, or the field layout for that page type doesn't include it — it's left out of the record rather than included as an empty value. Fields like `phone`, `address`, and `website` are only populated when the page owner has listed them on their Facebook page. Adding cookies increases the chance of extracting these for login-gated pages.
+Facebook search needs a valid logged-in session. Check that the cookie contains `c_user` and `xs` and has not expired. If you also supplied direct URLs, the run continues with them and emits a `search_login_required` diagnostic row when `includeFailedPages` is on.
 
-### Why did I get fewer results than `maxItems`?
+### Why is the city not exact?
 
-The most common reasons:
+Facebook's public page search is keyword-ranked, not location-filtered. The location is appended to the query as a hint. Use `strictLocation: true` to drop rows whose enriched address does not contain the location, and expect lower result counts.
 
-- **Login walls**: Facebook gates some pages behind a login session, and pages that come back as a login wall are skipped. Provide session cookies to reach more of them.
-- **No cookies provided**: without session cookies, discovery relies solely on DuckDuckGo/Google, which are less reliable than Facebook's own search — add cookies for the best results.
-- **Narrow search terms**: each `(term, location)` pair yields a limited pool. Add more search terms or locations.
+### Why are email or phone missing from some records?
 
-### Can I get 1,000+ results?
+Facebook only exposes contact fields that the Page owner made public. Across typical business pages, email is the least available field. A missing field is omitted from the record rather than returned as `null`.
 
-Yes — see [Scaling to 1K+ Results](#scaling-to-1k-results) above. The short version: combine multiple search terms × multiple locations and set `maxItems` to your target. The actor handles all pagination and over-discovers URLs automatically.
+### Why are there no likes or weekly opening hours?
 
-### How often do I need to refresh my cookies?
+Facebook's public payload does not include a likes count or a structured day-by-day hours grid. The actor returns followers, `recommendPercentage`, `reviewCount`, and the current `openStatus` instead of inventing values.
 
-Whenever they stop working: logging out of that browser session or Facebook expiring the session invalidates them. If you notice a sudden drop in results or many login-wall skips in the logs, export fresh cookies from your browser.
+### Why do some Pages have no reviews?
 
-### Does this work for Facebook Groups or personal profiles?
+Facebook exposes reviews only for pages that have them and make them public. `includeReviews` adds one request per page; coverage is partial.
 
-No. The scraper targets public Facebook Pages (business pages, community pages, public figures). Facebook Groups and personal profiles have different URL structures and content restrictions.
+### What does `fieldsFound` mean?
+
+It is the number of populated data fields in the row. Combined with `detailsError`, it distinguishes "Facebook did not publish this field" from "the actor failed to read it".
+
+### What happens when a Page is unavailable or redirects?
+
+With `includeFailedPages` (default), the actor emits a row with an `errorCode` such as `not_found`, `brand_redirect`, `not_a_page`, or `no_data`. Set `failOnEmpty: true` if a scheduled run should fail when no page rows are produced.
 
 ### Is this affiliated with Facebook or Meta?
 
-No. This is an independent, third-party actor that reads Facebook's publicly accessible pages; it is not affiliated with, endorsed by, or operated by Meta Platforms, Inc.
+No. This is an independent third-party actor that reads publicly accessible Facebook Pages. It is not affiliated with, endorsed by, or operated by Meta Platforms, Inc.

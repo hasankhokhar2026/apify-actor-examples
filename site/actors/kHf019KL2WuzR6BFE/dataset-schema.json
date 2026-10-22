@@ -6,10 +6,6 @@
       "display": {
         "component": "table",
         "properties": {
-          "authorIdType": {
-            "format": "text",
-            "label": "Author ID Type"
-          },
           "authorName": {
             "format": "text",
             "label": "Author"
@@ -26,9 +22,29 @@
             "format": "text",
             "label": "Date"
           },
+          "errorType": {
+            "format": "text",
+            "label": "Error Type"
+          },
+          "followerCount": {
+            "format": "number",
+            "label": "Followers"
+          },
           "isRecommended": {
             "format": "boolean",
             "label": "Recommended"
+          },
+          "ownerReplies": {
+            "format": "array",
+            "label": "Owner Replies"
+          },
+          "pageId": {
+            "format": "text",
+            "label": "Page ID"
+          },
+          "pageName": {
+            "format": "text",
+            "label": "Page"
           },
           "reactionBreakdown": {
             "format": "array",
@@ -37,6 +53,18 @@
           "reactionCount": {
             "format": "number",
             "label": "Reactions"
+          },
+          "recommendPercent": {
+            "format": "number",
+            "label": "Recommend %"
+          },
+          "recordType": {
+            "format": "text",
+            "label": "Record Type"
+          },
+          "reviewCount": {
+            "format": "number",
+            "label": "Page Review Count"
           },
           "reviewId": {
             "format": "text",
@@ -54,9 +82,9 @@
             "format": "text",
             "label": "Scraped At"
           },
-          "shareCount": {
+          "talkingAboutCount": {
             "format": "number",
-            "label": "Shares"
+            "label": "Talking About"
           },
           "text": {
             "format": "text",
@@ -65,15 +93,24 @@
           "timestamp": {
             "format": "number",
             "label": "Timestamp (Unix)"
+          },
+          "topComments": {
+            "format": "array",
+            "label": "Top Comments"
           }
         }
       },
-      "title": "Full Review Details",
+      "title": "Full Record Details",
       "transformation": {
         "fields": [
+          "recordType",
           "reviewId",
+          "pageId",
+          "pageName",
+          "pageUrl",
           "authorName",
           "authorProfileUrl",
+          "authorProfileImageUrl",
           "authorIdType",
           "isRecommended",
           "text",
@@ -85,9 +122,16 @@
           "shareCount",
           "commentCount",
           "topComments",
+          "ownerReplies",
           "reviewPhotos",
           "reviewUrl",
+          "recommendPercent",
+          "reviewCount",
+          "followerCount",
+          "talkingAboutCount",
           "page",
+          "errorType",
+          "error",
           "scrapedAt"
         ]
       }
@@ -112,9 +156,17 @@
             "format": "boolean",
             "label": "Recommended"
           },
+          "pageName": {
+            "format": "text",
+            "label": "Page"
+          },
           "reactionCount": {
             "format": "number",
             "label": "Reactions"
+          },
+          "recordType": {
+            "format": "text",
+            "label": "Record Type"
           },
           "reviewUrl": {
             "format": "link",
@@ -129,6 +181,8 @@
       "title": "Reviews Overview",
       "transformation": {
         "fields": [
+          "recordType",
+          "pageName",
           "authorName",
           "isRecommended",
           "text",

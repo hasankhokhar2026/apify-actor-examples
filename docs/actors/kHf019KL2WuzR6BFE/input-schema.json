@@ -1,39 +1,109 @@
 {
-  "description": "Scrape reviews from a public Facebook business page by direct URL, business name search, or numeric Page ID, with optional date/keyword/recommendation filters.",
+  "description": "Scrape public Facebook business page recommendations and reviews by page URL, numeric Page ID, or username. Returns review rows plus one page-summary row per page.",
   "properties": {
     "cookies": {
       "default": [],
-      "description": "Optional Facebook session cookies (from a logged-in browser) to unlock more reviews. Without cookies, Facebook limits results to ~10–15 per page. Use a browser extension like 'EditThisCookie' to export cookies as JSON. Each entry must have at minimum 'name', 'value', and 'domain' fields.",
+      "description": "Optional Facebook cookies exported from a logged-in browser. They are not required and do not increase how many reviews Facebook serves per request; the actor returns real reviews without them.",
       "editor": "json",
-      "title": "Facebook Cookies",
+      "title": "Optional Facebook Cookies",
       "type": "array"
     },
-    "filterByDateFrom": {
-      "description": "Only return reviews posted on or after this date. Format: YYYY-MM-DD (e.g. 2024-01-01).",
+    "dateFrom": {
+      "description": "Only return reviews posted on or after this date. Reviews are newest-first, so collection stops when it passes this date.",
       "editor": "textfield",
       "title": "Date From (YYYY-MM-DD)",
       "type": "string"
     },
-    "filterByDateTo": {
-      "description": "Only return reviews posted on or before this date. Format: YYYY-MM-DD (e.g. 2024-12-31).",
+    "dateTo": {
+      "description": "Only return reviews posted on or before this date.",
       "editor": "textfield",
       "title": "Date To (YYYY-MM-DD)",
       "type": "string"
     },
-    "filterByKeyword": {
-      "description": "Only return reviews containing this word or phrase (case-insensitive).",
+    "failOnEmpty": {
+      "default": false,
+      "description": "Mark the run as failed when no review rows are returned. Monitor-mode runs that legitimately have no new reviews never fail.",
+      "prefill": false,
+      "title": "Fail When Nothing Is Found",
+      "type": "boolean"
+    },
+    "includePageSummary": {
+      "default": true,
+      "description": "Emit one recordType=page row per page with the recommendation percentage, total review count, followers, and talking-about count. This adds no extra requests.",
+      "prefill": true,
+      "title": "Include Page Summary Row",
+      "type": "boolean"
+    },
+    "includeReplies": {
+      "default": true,
+      "description": "Include the visible top comments and business owner replies inside each review row. When disabled, commentCount is still returned.",
+      "prefill": false,
+      "title": "Include Comments and Owner Replies",
+      "type": "boolean"
+    },
+    "keyword": {
+      "description": "Only return reviews whose text contains this word or phrase (case-insensitive).",
       "editor": "textfield",
       "title": "Keyword Filter",
       "type": "string"
     },
-    "filterByRecommendation": {
+    "maxItems": {
+      "default": 100,
+      "description": "Maximum number of review rows to return across all pages (1-2000). Facebook returns roughly 2-3 reviews per request (about 2.7 on average) even when a larger count is requested, so 100 reviews needs about 35-40 requests.",
+      "editor": "number",
+      "maximum": 2000,
+      "minimum": 1,
+      "prefill": 5,
+      "title": "Max Reviews",
+      "type": "integer"
+    },
+    "maxPerPage": {
+      "description": "Optional cap per Facebook page for multi-page runs. Leave empty to share the global Max Reviews cap across pages.",
+      "editor": "number",
+      "maximum": 2000,
+      "minimum": 1,
+      "title": "Max Reviews Per Page",
+      "type": "integer"
+    },
+    "maxRuntimeSecs": {
+      "default": 1800,
+      "description": "Stop collecting after this many seconds and return what has been collected so far.",
+      "editor": "number",
+      "maximum": 7200,
+      "minimum": 30,
+      "prefill": 1800,
+      "title": "Run Time Budget (seconds)",
+      "type": "integer"
+    },
+    "onlyNew": {
+      "default": false,
+      "description": "Return only reviews not seen in the saved state for this page. The state is stored in a named key-value store that persists across runs, so scheduled runs can monitor for new reviews.",
+      "prefill": false,
+      "title": "Only New Reviews (Monitor Mode)",
+      "type": "boolean"
+    },
+    "pageIds": {
+      "default": [],
+      "description": "Numeric Facebook Page IDs (e.g. 100064458773195) or page usernames (e.g. mcdonalds). Use this when you do not have a full URL.",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Facebook Page IDs or Usernames",
+      "type": "array"
+    },
+    "proxyConfiguration": {
+      "description": "Optional. Leave empty to let the actor choose automatically: it tries a direct connection first and only escalates through Apify Proxy if Facebook blocks the request. Change this only if you need a specific proxy setup.",
+      "editor": "proxy",
+      "title": "Proxy Configuration",
+      "type": "object"
+    },
+    "recommendation": {
       "default": "all",
-      "description": "Only return reviews with the selected recommendation status. Facebook uses binary Recommended/Not Recommended (no star ratings).",
+      "description": "Only return reviews with the selected recommendation status. Facebook uses binary Recommended / Not Recommended, not star ratings.",
       "editor": "select",
       "enum": [
         "all",
         "recommended",
-        "not_recommended"
+        "not"
       ],
       "enumTitles": [
         "All Reviews",
@@ -44,111 +114,49 @@
       "title": "Recommendation Filter",
       "type": "string"
     },
-    "maxReviews": {
-      "default": 100,
-      "description": "Maximum total reviews to scrape across all input pages (1–500). Collection stops once this global cap is reached.",
+    "requestDelayMs": {
+      "default": 600,
+      "description": "Pause between review requests. 500-800 ms is a polite pace and keeps long runs stable.",
       "editor": "number",
-      "maximum": 500,
-      "minimum": 1,
-      "prefill": 5,
-      "title": "Max Reviews (Global)",
+      "maximum": 5000,
+      "minimum": 0,
+      "prefill": 600,
+      "title": "Delay Between Requests (ms)",
       "type": "integer"
-    },
-    "maxReviewsPerPage": {
-      "description": "Maximum reviews to scrape from each individual Facebook page (1–500). Useful when scraping multiple URLs to get an even spread of reviews per page.",
-      "editor": "number",
-      "maximum": 500,
-      "minimum": 1,
-      "title": "Max Reviews Per Page",
-      "type": "integer"
-    },
-    "mode": {
-      "default": "url",
-      "description": "How to specify which Facebook page to scrape reviews from.",
-      "editor": "select",
-      "enum": [
-        "url",
-        "search",
-        "pageId"
-      ],
-      "enumTitles": [
-        "Direct URL",
-        "Business Name Search",
-        "Facebook Page ID"
-      ],
-      "prefill": "url",
-      "title": "Input Mode",
-      "type": "string"
-    },
-    "pageIds": {
-      "default": [],
-      "description": "Numeric Facebook Page IDs (e.g. '123456789'). Used when mode is 'Facebook Page ID'.",
-      "editor": "stringList",
-      "title": "Facebook Page IDs",
-      "type": "array"
-    },
-    "proxyCountry": {
-      "default": "US",
-      "description": "Country to route the actor's residential proxy through (residential proxy is always used and is not configurable off — Facebook consistently blocks this actor's sessions without it). Facebook renders its UI text (including the Recommended/Not Recommended wording) based on the proxy's IP location, not just browser settings — a non-English-speaking exit country can break English-text-based extraction even though the review data itself is unaffected. Defaults to United States.",
-      "editor": "select",
-      "enum": [
-        "US",
-        "GB",
-        "CA",
-        "AU",
-        "IE"
-      ],
-      "enumTitles": [
-        "United States",
-        "United Kingdom",
-        "Canada",
-        "Australia",
-        "Ireland"
-      ],
-      "prefill": "US",
-      "title": "Proxy Country",
-      "type": "string"
-    },
-    "searchQueries": {
-      "default": [],
-      "description": "Business name and location to search for (e.g. 'Starbucks Dallas TX'). Used when mode is 'Business Name Search'. Facebook's own on-site search requires a login and is not used; results are resolved via an external web search instead, so accuracy depends on how distinctive the name/location is — for a guaranteed exact match, use 'Direct URL' or 'Facebook Page ID' mode instead.",
-      "editor": "stringList",
-      "title": "Business Search Queries",
-      "type": "array"
-    },
-    "sortBy": {
-      "default": "most_recent",
-      "description": "Order in which to load reviews from the page. Note: Facebook's current review pages do not consistently expose a visible sort control — 'Most Helpful' is attempted on a best-effort basis and silently falls back to the page's default order when unavailable.",
-      "editor": "select",
-      "enum": [
-        "most_recent",
-        "most_helpful"
-      ],
-      "enumTitles": [
-        "Most Recent",
-        "Most Helpful"
-      ],
-      "prefill": "most_recent",
-      "title": "Sort Order",
-      "type": "string"
     },
     "startUrls": {
       "default": [],
-      "description": "Links to Facebook page review sections (e.g. https://www.facebook.com/mcdonalds/reviews). Used when mode is 'Direct URL'.",
+      "description": "Facebook business page URLs or /reviews URLs (e.g. https://www.facebook.com/mcdonalds/reviews). /reviews is added automatically when missing. Invalid or dead page URLs fail fast instead of being guessed.",
       "editor": "requestListSources",
+      "items": {
+        "properties": {
+          "url": {
+            "description": "Facebook business Page URL or /reviews URL.",
+            "title": "Page URL",
+            "type": "string"
+          }
+        },
+        "required": [
+          "url"
+        ],
+        "type": "object"
+      },
       "prefill": [
         {
           "url": "https://www.facebook.com/mcdonalds/reviews"
         }
       ],
-      "title": "Facebook Reviews URLs",
+      "title": "Facebook Page URLs",
       "type": "array"
+    },
+    "stateKey": {
+      "description": "Optional prefix for the key-value store key used by monitor mode. Each page's state is stored separately. Leave empty to use the page ID.",
+      "editor": "textfield",
+      "title": "Monitor State Key",
+      "type": "string"
     }
   },
-  "required": [
-    "mode"
-  ],
   "schemaVersion": 1,
-  "title": "Facebook Reviews Scraper Input",
+  "title": "Facebook Business Page Review Scraper Input",
   "type": "object"
 }

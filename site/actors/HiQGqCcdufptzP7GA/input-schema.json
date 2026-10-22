@@ -1,18 +1,35 @@
 {
+  "description": "Provide at least one company URL, domain, or name. Headcount and firmographics work without a cookie; employee rows are optional and require your own LinkedIn session cookie.",
   "properties": {
-    "companyUrls": {
-      "description": "LinkedIn company page URLs or slugs. Accepts: https://www.linkedin.com/company/microsoft/, https://www.linkedin.com/company/microsoft/about/, or just the slug: microsoft",
+    "companyDomains": {
+      "default": [],
+      "description": "Company website domains, e.g. stripe.com or notion.so. The resolver follows LinkedIn's page website to pick the correct same-name company.",
       "editor": "stringList",
       "prefill": [
-        "https://www.linkedin.com/company/hubspot/"
+        "stripe.com"
       ],
-      "title": "Company URLs",
+      "title": "Company domains",
+      "type": "array"
+    },
+    "companyNames": {
+      "default": [],
+      "description": "Company display names, e.g. Stripe or Microsoft. Name-only input is validated; ambiguous bare names (Notion, Linear, Cal) return an error row asking for a URL or domain.",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Company names",
+      "type": "array"
+    },
+    "companyUrls": {
+      "default": [],
+      "description": "LinkedIn company page URLs. Accepts https://www.linkedin.com/company/stripe/, linkedin.com/company/stripe, or company/stripe.",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Company LinkedIn URLs",
       "type": "array"
     },
     "connectionDegree": {
       "default": "",
-      "description": "Filter by LinkedIn connection degree: F = 1st, S = 2nd, O = 3rd+",
-      "editor": "select",
+      "description": "Roster filter: restrict to 1st, 2nd, or 3rd+ degree connections. Cookie roster only.",
       "enum": [
         "",
         "F",
@@ -25,70 +42,38 @@
         "2nd degree only",
         "3rd degree+"
       ],
-      "title": "Connection Degree",
+      "prefill": "",
+      "title": "Connection degree",
       "type": "string"
     },
-    "cookie": {
-      "description": "Your LinkedIn session cookie. Accepts: (1) the li_at value from browser DevTools, or (2) full cookies JSON array from an extension like EditThisCookie.",
+    "cookies": {
+      "description": "Optional LinkedIn session cookie for the employee roster. Accepts the li_at value or a full cookies JSON array. Never required for headcount/firmographics.",
       "editor": "textarea",
       "isSecret": true,
-      "title": "LinkedIn Cookie",
+      "title": "LinkedIn cookie (optional)",
       "type": "string"
     },
-    "currentCompany": {
-      "default": true,
-      "description": "When true, restrict results to people currently working at the company. When false, include past employees as well.",
-      "editor": "checkbox",
-      "title": "Restrict to Current Employees",
+    "functions": {
+      "default": [],
+      "description": "Roster filter: one or more LinkedIn job functions. Empty means all functions. Cookie roster only. Allowed values: Engineering, Sales, Marketing, Operations, Finance, Human Resources, Design, Product, Customer Service, Information Technology, Legal, Other.",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "prefill": [],
+      "title": "Job functions",
+      "type": "array"
+    },
+    "includeEmployees": {
+      "default": false,
+      "description": "When true, also request the employee roster. Requires a valid LinkedIn session cookie and is capped by LinkedIn at 2,500 visible results per query.",
+      "prefill": false,
+      "title": "Include employee roster",
       "type": "boolean"
-    },
-    "function": {
-      "default": "",
-      "description": "Filter employees by job function (e.g., Engineering, Sales).",
-      "editor": "select",
-      "enum": [
-        "",
-        "Engineering",
-        "Sales",
-        "Marketing",
-        "Operations",
-        "Finance",
-        "Human Resources",
-        "Design",
-        "Product",
-        "Customer Service",
-        "Information Technology",
-        "Legal",
-        "Other"
-      ],
-      "enumTitles": [
-        "All functions",
-        "Engineering",
-        "Sales",
-        "Marketing",
-        "Operations",
-        "Finance",
-        "Human Resources",
-        "Design",
-        "Product",
-        "Customer Service",
-        "Information Technology",
-        "Legal",
-        "Other"
-      ],
-      "title": "Job Function",
-      "type": "string"
-    },
-    "keywords": {
-      "description": "Optional keyword to narrow results (e.g., 'Software Engineer', 'VP Sales'). Leave blank to return all visible employees.",
-      "editor": "textfield",
-      "title": "Keyword Filter",
-      "type": "string"
     },
     "language": {
       "default": "",
-      "description": "Filter by primary profile language.",
-      "editor": "select",
+      "description": "Roster filter: primary profile language. Cookie roster only.",
       "enum": [
         "",
         "en",
@@ -113,59 +98,70 @@
         "Chinese",
         "Japanese"
       ],
-      "title": "Profile Language",
+      "prefill": "",
+      "title": "Profile language",
       "type": "string"
     },
     "location": {
-      "description": "Filter employees by location (e.g., 'New York', 'London', 'Remote').",
+      "description": "Roster filter: best-effort location match on the employee's LinkedIn location, e.g. London. Cookie roster only.",
       "editor": "textfield",
-      "title": "Location Filter",
+      "prefill": "",
+      "title": "Location",
       "type": "string"
     },
     "maxEmployees": {
-      "default": 50,
-      "description": "Maximum number of employee profiles to scrape per company. LinkedIn typically surfaces 200-1000 employees for large companies.",
-      "editor": "number",
-      "maximum": 1000,
+      "default": 100,
+      "description": "Roster cap per company (1-2500). Ignored when includeEmployees is false. Large companies are sampled.",
+      "maximum": 2500,
       "minimum": 1,
-      "title": "Max Employees Per Company",
+      "prefill": 100,
+      "title": "Max employees per company",
+      "type": "integer"
+    },
+    "maxItemsTotal": {
+      "default": 500,
+      "description": "Hard cap across company summaries, employee rows, and error rows (1-10000).",
+      "maximum": 10000,
+      "minimum": 1,
+      "prefill": 1,
+      "title": "Max dataset items",
       "type": "integer"
     },
     "proxyConfiguration": {
-      "description": "Optional Apify proxy configuration. Residential proxy recommended for best results.",
+      "description": "Optional advanced override. The actor works without a proxy and chooses a working connection automatically.",
       "editor": "proxy",
-      "title": "Proxy Configuration",
+      "title": "Proxy configuration",
       "type": "object"
     },
-    "seniorityLevel": {
-      "default": "",
-      "description": "Filter by seniority level.",
-      "editor": "select",
-      "enum": [
-        "",
-        "Entry",
-        "Associate",
-        "Mid-Senior",
-        "Director",
-        "Executive"
-      ],
-      "enumTitles": [
-        "All levels",
-        "Entry",
-        "Associate",
-        "Mid-Senior",
-        "Director",
-        "Executive"
-      ],
-      "title": "Seniority Level",
+    "seniorityLevels": {
+      "default": [],
+      "description": "Roster filter: one or more LinkedIn seniority levels. Empty means all levels. Cookie roster only. Allowed values: Entry, Associate, Mid-Senior, Director, Executive.",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "prefill": [],
+      "title": "Seniority levels",
+      "type": "array"
+    },
+    "startPage": {
+      "default": 1,
+      "description": "Resume the roster from this page (1-250, 10 employees per page). Use it to continue a capped run.",
+      "maximum": 250,
+      "minimum": 1,
+      "prefill": 1,
+      "title": "Roster start page",
+      "type": "integer"
+    },
+    "titleKeywords": {
+      "description": "Roster filter: free-text role or headline match, e.g. Software Engineer or VP Sales. Cookie roster only.",
+      "editor": "textfield",
+      "prefill": "",
+      "title": "Title / headline keywords",
       "type": "string"
     }
   },
-  "required": [
-    "companyUrls",
-    "cookie"
-  ],
   "schemaVersion": 1,
-  "title": "LinkedIn Company Employees Scraper Input",
+  "title": "LinkedIn Company Headcount & Team Directory Scraper Input",
   "type": "object"
 }
