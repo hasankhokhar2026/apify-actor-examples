@@ -1,0 +1,255 @@
+{
+  "actorSpecification": 1,
+  "fields": {
+    "properties": {
+      "address": {
+        "description": "Street address",
+        "nullable": true,
+        "type": "string"
+      },
+      "agentName": {
+        "description": "Listing agent name",
+        "nullable": true,
+        "type": "string"
+      },
+      "agentPhone": {
+        "description": "Listing agent phone",
+        "nullable": true,
+        "type": "string"
+      },
+      "baths": {
+        "description": "Number of bathrooms",
+        "nullable": true,
+        "type": "number"
+      },
+      "beds": {
+        "description": "Number of bedrooms",
+        "nullable": true,
+        "type": "number"
+      },
+      "brokerName": {
+        "description": "Brokerage name",
+        "nullable": true,
+        "type": "string"
+      },
+      "city": {
+        "description": "City",
+        "nullable": true,
+        "type": "string"
+      },
+      "daysOnZillow": {
+        "description": "Days on Zillow",
+        "nullable": true,
+        "type": "integer"
+      },
+      "description": {
+        "description": "Property description",
+        "nullable": true,
+        "type": "string"
+      },
+      "hoaFee": {
+        "description": "Monthly HOA fee ($)",
+        "nullable": true,
+        "type": "number"
+      },
+      "latitude": {
+        "description": "Latitude",
+        "nullable": true,
+        "type": "number"
+      },
+      "longitude": {
+        "description": "Longitude",
+        "nullable": true,
+        "type": "number"
+      },
+      "lotSize": {
+        "description": "Lot size",
+        "nullable": true,
+        "type": "string"
+      },
+      "nextOpenHouse": {
+        "description": "Soonest upcoming open house event",
+        "nullable": true,
+        "properties": {
+          "endDateTime": {
+            "nullable": true,
+            "type": "string"
+          },
+          "openHouseType": {
+            "type": "string"
+          },
+          "startDateTime": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "openHouses": {
+        "description": "All upcoming open house events for this property",
+        "items": {
+          "properties": {
+            "endDateTime": {
+              "description": "End date/time (ISO 8601)",
+              "nullable": true,
+              "type": "string"
+            },
+            "openHouseType": {
+              "description": "INPERSON or VIRTUAL",
+              "type": "string"
+            },
+            "startDateTime": {
+              "description": "Start date/time (ISO 8601)",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "type": "array"
+      },
+      "photos": {
+        "description": "Photo URLs",
+        "nullable": true,
+        "type": "array"
+      },
+      "price": {
+        "description": "Listing price ($)",
+        "nullable": true,
+        "type": "number"
+      },
+      "pricePerSqft": {
+        "description": "Price per sq ft ($)",
+        "nullable": true,
+        "type": "number"
+      },
+      "propertyType": {
+        "description": "Property type (e.g. SINGLE_FAMILY)",
+        "nullable": true,
+        "type": "string"
+      },
+      "scrapedAt": {
+        "description": "ISO 8601 scrape timestamp",
+        "type": "string"
+      },
+      "sqft": {
+        "description": "Living area (sq ft)",
+        "nullable": true,
+        "type": "number"
+      },
+      "state": {
+        "description": "State abbreviation",
+        "nullable": true,
+        "type": "string"
+      },
+      "status": {
+        "description": "Listing status (e.g. FOR_SALE)",
+        "nullable": true,
+        "type": "string"
+      },
+      "stories": {
+        "description": "Number of stories",
+        "nullable": true,
+        "type": "number"
+      },
+      "url": {
+        "description": "Zillow property detail page URL",
+        "type": "string"
+      },
+      "yearBuilt": {
+        "description": "Year built",
+        "nullable": true,
+        "type": "integer"
+      },
+      "zestimate": {
+        "description": "Zillow estimate ($)",
+        "nullable": true,
+        "type": "number"
+      },
+      "zipCode": {
+        "description": "ZIP code",
+        "nullable": true,
+        "type": "string"
+      },
+      "zpid": {
+        "description": "Zillow property ID",
+        "nullable": true,
+        "type": "integer"
+      }
+    },
+    "type": "object"
+  },
+  "title": "Zillow Open Houses",
+  "views": {
+    "overview": {
+      "display": {
+        "component": "table",
+        "properties": {
+          "address": {
+            "format": "text",
+            "label": "Address"
+          },
+          "baths": {
+            "format": "number",
+            "label": "Baths"
+          },
+          "beds": {
+            "format": "number",
+            "label": "Beds"
+          },
+          "city": {
+            "format": "text",
+            "label": "City"
+          },
+          "daysOnZillow": {
+            "format": "number",
+            "label": "DOZ"
+          },
+          "nextOpenHouse": {
+            "format": "text",
+            "label": "Next Open House"
+          },
+          "price": {
+            "format": "number",
+            "label": "Price $"
+          },
+          "propertyType": {
+            "format": "text",
+            "label": "Type"
+          },
+          "scrapedAt": {
+            "format": "text",
+            "label": "Scraped At"
+          },
+          "sqft": {
+            "format": "number",
+            "label": "Sq Ft"
+          },
+          "state": {
+            "format": "text",
+            "label": "State"
+          },
+          "url": {
+            "format": "link",
+            "label": "URL"
+          }
+        }
+      },
+      "title": "Open Houses Overview",
+      "transformation": {
+        "fields": [
+          "url",
+          "address",
+          "city",
+          "state",
+          "price",
+          "beds",
+          "baths",
+          "sqft",
+          "propertyType",
+          "daysOnZillow",
+          "nextOpenHouse",
+          "scrapedAt"
+        ]
+      }
+    }
+  }
+}

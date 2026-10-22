@@ -1,0 +1,53 @@
+{
+  "properties": {
+    "dateFrom": {
+      "description": "Include only open houses on or after this date (e.g. '2026-05-01'). Leave blank for no lower bound.",
+      "editor": "textfield",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+      "title": "Date From (YYYY-MM-DD)",
+      "type": "string"
+    },
+    "dateTo": {
+      "description": "Include only open houses on or before this date (e.g. '2026-05-31'). Leave blank for no upper bound.",
+      "editor": "textfield",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+      "title": "Date To (YYYY-MM-DD)",
+      "type": "string"
+    },
+    "maxItems": {
+      "default": 100,
+      "description": "Maximum number of open house listings to return (1–500).",
+      "editor": "number",
+      "maximum": 500,
+      "minimum": 1,
+      "prefill": 10,
+      "title": "Max Items",
+      "type": "integer"
+    },
+    "scrapeDetails": {
+      "default": false,
+      "description": "Also visit each property's own Zillow page for lot size, stories, HOA fee, price per square foot, listing agent/broker name and phone, description and photos. Slower; turn off for a quick listing.",
+      "editor": "checkbox",
+      "prefill": false,
+      "title": "Scrape listing detail pages",
+      "type": "boolean"
+    },
+    "search": {
+      "description": "Free-text location to search for open houses: city name, ZIP code, neighborhood, or address (e.g. 'Austin, TX', '90210', 'Brooklyn, NY').",
+      "editor": "textfield",
+      "prefill": "Austin, TX",
+      "title": "Location Search",
+      "type": "string"
+    },
+    "startUrls": {
+      "description": "Zillow search or open-house URLs to scrape. The open house filter is injected automatically if not present.",
+      "editor": "requestListSources",
+      "title": "Start URLs",
+      "type": "array"
+    }
+  },
+  "required": [],
+  "schemaVersion": 1,
+  "title": "Zillow Open Houses Scraper Input",
+  "type": "object"
+}
