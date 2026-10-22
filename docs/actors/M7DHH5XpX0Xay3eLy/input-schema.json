@@ -1,0 +1,349 @@
+{
+  "properties": {
+    "companyHeadcount": {
+      "description": "Filter by employer company size. A=Self-employed, B=1-10, C=11-50, D=51-200, E=201-500, F=501-1,000, G=1,001-5,000, H=5,001-10,000, I=10,001+.",
+      "editor": "select",
+      "items": {
+        "enum": [
+          "A",
+          "B",
+          "C",
+          "D",
+          "E",
+          "F",
+          "G",
+          "H",
+          "I"
+        ],
+        "enumTitles": [
+          "Self-employed",
+          "1-10 employees",
+          "11-50 employees",
+          "51-200 employees",
+          "201-500 employees",
+          "501-1,000 employees",
+          "1,001-5,000 employees",
+          "5,001-10,000 employees",
+          "10,001+ employees"
+        ],
+        "type": "string"
+      },
+      "title": "Company Headcount",
+      "type": "array"
+    },
+    "connectionDegree": {
+      "default": "",
+      "description": "Filter by connection degree to your account.",
+      "editor": "select",
+      "enum": [
+        "",
+        "F",
+        "S",
+        "O"
+      ],
+      "enumTitles": [
+        "Any",
+        "1st degree",
+        "2nd degree",
+        "3rd+ degree"
+      ],
+      "title": "Connection Degree",
+      "type": "string"
+    },
+    "contactOf": {
+      "description": "Filter to show people who are connections of the specified LinkedIn member. Provide the member's URN (e.g. 'urn:li:member:123456') or numeric profile ID.",
+      "editor": "textfield",
+      "title": "Contact Of (Member URN or Profile ID)",
+      "type": "string"
+    },
+    "cookie": {
+      "description": "Your LinkedIn session cookie. Accepts either: (1) the li_at value from browser DevTools → Application → Cookies, or (2) full cookies JSON array exported from an extension like EditThisCookie.",
+      "editor": "textarea",
+      "isSecret": true,
+      "title": "LinkedIn Cookie",
+      "type": "string"
+    },
+    "currentCompany": {
+      "description": "Filter by current company. Accepts a company name (e.g. 'Google') or a LinkedIn fsd_company URN/numeric ID. URN format produces the strict structured currentCompany filter; plain names are added to keywords.",
+      "editor": "textfield",
+      "title": "Current Company Filter",
+      "type": "string"
+    },
+    "firstNameKeyword": {
+      "description": "Filter by first name token. Adds a strict firstName filter to the search.",
+      "editor": "textfield",
+      "title": "First Name",
+      "type": "string"
+    },
+    "followerOf": {
+      "description": "Filter to people who follow a specific company. Accepts an fsd_company URN or numeric company ID.",
+      "editor": "textfield",
+      "title": "Followers of Company",
+      "type": "string"
+    },
+    "geoUrn": {
+      "description": "Precise location filter using a LinkedIn geo URN or numeric geo ID (e.g. '103644278' for the United States). Use this for strict geographic filtering instead of the free-text Location field.",
+      "editor": "textfield",
+      "title": "Location URN",
+      "type": "string"
+    },
+    "industry": {
+      "default": "",
+      "description": "Filter results by industry. Applied to both Voyager filters and the HTML search URL.",
+      "editor": "select",
+      "enum": [
+        "",
+        "Software Development",
+        "Financial Services",
+        "Healthcare",
+        "Education",
+        "Marketing and Advertising",
+        "Consulting",
+        "Hospitality",
+        "Real Estate",
+        "Manufacturing",
+        "Retail",
+        "Media",
+        "Government Administration",
+        "Non-profit Organization Management"
+      ],
+      "enumTitles": [
+        "Any",
+        "Software Development",
+        "Financial Services",
+        "Healthcare",
+        "Education",
+        "Marketing and Advertising",
+        "Consulting",
+        "Hospitality",
+        "Real Estate",
+        "Manufacturing",
+        "Retail",
+        "Media",
+        "Government Administration",
+        "Non-profit Organization Management"
+      ],
+      "title": "Industry",
+      "type": "string"
+    },
+    "jobFunction": {
+      "default": "",
+      "description": "Filter results by job function / department.",
+      "editor": "select",
+      "enum": [
+        "",
+        "ARTS_AND_DESIGN",
+        "BUSINESS_DEVELOPMENT",
+        "COMMUNITY_AND_SOCIAL_SERVICES",
+        "CONSULTING",
+        "EDUCATION",
+        "ENGINEERING",
+        "ENTREPRENEURSHIP",
+        "FINANCE",
+        "HEALTHCARE_SERVICES",
+        "HUMAN_RESOURCES",
+        "INFORMATION_TECHNOLOGY",
+        "LEGAL",
+        "MANAGEMENT",
+        "MARKETING",
+        "MEDIA_AND_COMMUNICATION",
+        "MILITARY_AND_PROTECTIVE_SERVICES",
+        "OPERATIONS",
+        "PRODUCT_MANAGEMENT",
+        "PROGRAM_AND_PROJECT_MANAGEMENT",
+        "PURCHASING",
+        "QUALITY_ASSURANCE",
+        "REAL_ESTATE",
+        "RESEARCH",
+        "SALES",
+        "SUPPORT"
+      ],
+      "enumTitles": [
+        "Any",
+        "Arts and Design",
+        "Business Development",
+        "Community and Social Services",
+        "Consulting",
+        "Education",
+        "Engineering",
+        "Entrepreneurship",
+        "Finance",
+        "Healthcare Services",
+        "Human Resources",
+        "Information Technology",
+        "Legal",
+        "Management",
+        "Marketing",
+        "Media and Communication",
+        "Military and Protective Services",
+        "Operations",
+        "Product Management",
+        "Program and Project Management",
+        "Purchasing",
+        "Quality Assurance",
+        "Real Estate",
+        "Research",
+        "Sales",
+        "Support"
+      ],
+      "title": "Job Function",
+      "type": "string"
+    },
+    "keywords": {
+      "description": "Optional companion to Search Query. When both are set, they are combined with a space. Use this to keep a primary role in Search Query and add modifiers (industry buzzwords, tools) here.",
+      "editor": "textfield",
+      "title": "Extra Keywords",
+      "type": "string"
+    },
+    "lastNameKeyword": {
+      "description": "Filter by last name token. Adds a strict lastName filter to the search.",
+      "editor": "textfield",
+      "title": "Last Name",
+      "type": "string"
+    },
+    "location": {
+      "description": "Filter results by location (city, state, or country). Example: 'San Francisco Bay Area', 'New York', 'United Kingdom'",
+      "editor": "textfield",
+      "title": "Location Filter",
+      "type": "string"
+    },
+    "maxResults": {
+      "default": 25,
+      "description": "Maximum number of profiles to return.",
+      "editor": "number",
+      "maximum": 100,
+      "minimum": 1,
+      "prefill": 25,
+      "title": "Max Results",
+      "type": "integer"
+    },
+    "openTo": {
+      "description": "Filter people by what they are open to. Select one or more options. HIRING = open to hiring, GETTING_HIRED = open to new jobs, PROVIDING_SERVICES = open to providing freelance/consulting services, JOINING_A_NONPROFIT = open to joining a nonprofit.",
+      "editor": "select",
+      "items": {
+        "enum": [
+          "HIRING",
+          "GETTING_HIRED",
+          "PROVIDING_SERVICES",
+          "JOINING_A_NONPROFIT"
+        ],
+        "enumTitles": [
+          "Open to Hiring",
+          "Open to New Jobs",
+          "Open to Providing Services",
+          "Open to Joining a Nonprofit"
+        ],
+        "type": "string"
+      },
+      "title": "Open To",
+      "type": "array"
+    },
+    "pastCompany": {
+      "description": "Filter by past company. Accepts a company name or a LinkedIn fsd_company URN/numeric ID.",
+      "editor": "textfield",
+      "title": "Past Company Filter",
+      "type": "string"
+    },
+    "profileLanguages": {
+      "description": "Filter by the language(s) the person's LinkedIn profile is written in. Use ISO 639-1 codes, e.g. [\"en\", \"es\", \"fr\", \"de\", \"zh\", \"ar\", \"pt\"].",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "title": "Profile Languages",
+      "type": "array"
+    },
+    "proxyConfiguration": {
+      "description": "Optional Apify proxy configuration.",
+      "editor": "proxy",
+      "title": "Proxy Configuration",
+      "type": "object"
+    },
+    "school": {
+      "description": "Filter by school or university attended. Accepts a school name or a LinkedIn fsd_school URN/numeric ID. Example: 'Stanford University', 'MIT', or '12345'.",
+      "editor": "textfield",
+      "title": "School Filter",
+      "type": "string"
+    },
+    "searchQuery": {
+      "description": "Search keywords for finding people on LinkedIn. Examples: 'software engineer', 'John Smith', 'product manager Google'",
+      "editor": "textfield",
+      "prefill": "software engineer",
+      "title": "Search Query",
+      "type": "string"
+    },
+    "seniorityLevel": {
+      "default": "",
+      "description": "Filter results by seniority level.",
+      "editor": "select",
+      "enum": [
+        "",
+        "Entry level",
+        "Associate",
+        "Mid-Senior level",
+        "Director",
+        "Executive"
+      ],
+      "enumTitles": [
+        "Any",
+        "Entry level",
+        "Associate",
+        "Mid-Senior level",
+        "Director",
+        "Executive"
+      ],
+      "title": "Seniority Level",
+      "type": "string"
+    },
+    "serviceCategory": {
+      "description": "Filter by LinkedIn Services Marketplace category (e.g. 'Web Development', 'Marketing Strategy').",
+      "editor": "textfield",
+      "title": "Service Category",
+      "type": "string"
+    },
+    "talksAbout": {
+      "description": "Filter to people who talk about the specified keyword or topic in their profile. This is appended to the search keywords.",
+      "editor": "textfield",
+      "title": "Talks About (Keyword / Topic)",
+      "type": "string"
+    },
+    "titleKeyword": {
+      "description": "Filter by current job title keyword (e.g. 'Director of Engineering', 'CTO'). Different from Industry / Job Function — this is the free-text title.",
+      "editor": "textfield",
+      "title": "Job Title",
+      "type": "string"
+    },
+    "yearsOfExperience": {
+      "default": "",
+      "description": "Filter results by years of total professional experience. 1=Less than 1 year, 2=1-2 years, 3=3-5 years, 4=6-10 years, 5=11-15 years, 6=16+ years.",
+      "editor": "select",
+      "enum": [
+        "",
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6"
+      ],
+      "enumTitles": [
+        "Any",
+        "Less than 1 year",
+        "1-2 years",
+        "3-5 years",
+        "6-10 years",
+        "11-15 years",
+        "16+ years"
+      ],
+      "title": "Years of Experience",
+      "type": "string"
+    }
+  },
+  "required": [
+    "searchQuery",
+    "cookie"
+  ],
+  "schemaVersion": 1,
+  "title": "LinkedIn People Search Scraper Input",
+  "type": "object"
+}

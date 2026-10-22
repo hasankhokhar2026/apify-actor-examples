@@ -1,0 +1,658 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src &#x27;self&#x27;; script-src &#x27;self&#x27; &#x27;sha256-H7Skz4Pag6LGfcry5XvjfER6aueZWR/6+lzcThvDvgE=&#x27;; style-src &#x27;self&#x27;; img-src &#x27;self&#x27; https: data:; base-uri &#x27;self&#x27;; form-action &#x27;self&#x27;; object-src &#x27;none&#x27;"><title>LinkedIn People Finder by Role, Seniority &amp; Network | Nimbryxo Studio</title><meta name="description" content="Search LinkedIn people with structured filters for company, school, seniority, job function, years of experience, industry, and connection degree, using your own LinkedIn session."><meta name="robots" content="index,follow"><link rel="canonical" href="https://hasankhokhar2026.github.io/apify-actor-examples/actors/M7DHH5XpX0Xay3eLy/"><meta property="og:title" content="LinkedIn People Finder by Role, Seniority &amp; Network | Nimbryxo Studio"><meta property="og:description" content="Search LinkedIn people with structured filters for company, school, seniority, job function, years of experience, industry, and connection degree, using your own LinkedIn session."><meta property="og:type" content="website"><meta property="og:url" content="https://hasankhokhar2026.github.io/apify-actor-examples/actors/M7DHH5XpX0Xay3eLy/"><meta property="og:site_name" content="Nimbryxo Studio"><meta name="twitter:card" content="summary"><link rel="icon" href="/apify-actor-examples/assets/mark.svg?v=2d20f9dc334a" type="image/svg+xml"><link rel="stylesheet" href="/apify-actor-examples/assets/site.css?v=39545fd4a399"><link rel="stylesheet" href="/apify-actor-examples/assets/brand.css?v=eb0f935ade25"><link rel="alternate" type="application/rss+xml" title="Nimbryxo Studio guides" href="/apify-actor-examples/feed.xml"><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization","name":"Nimbryxo Studio","url":"https://hasankhokhar2026.github.io/apify-actor-examples/","sameAs":["https://apify.com/nimbryxo-studio"]},{"@type":"WebSite","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#website","name":"Nimbryxo Studio","url":"https://hasankhokhar2026.github.io/apify-actor-examples/","publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"inLanguage":"en"},{"@type":"WebPage","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/M7DHH5XpX0Xay3eLy/#webpage","name":"LinkedIn People Finder by Role, Seniority & Network","description":"Search LinkedIn people with structured filters for company, school, seniority, job function, years of experience, industry, and connection degree, using your own LinkedIn session.","url":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/M7DHH5XpX0Xay3eLy/","isPartOf":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#website"},"publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"inLanguage":"en","mainEntity":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/M7DHH5XpX0Xay3eLy/#article"},"breadcrumb":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/M7DHH5XpX0Xay3eLy/#breadcrumb"}},{"@type":"TechArticle","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/M7DHH5XpX0Xay3eLy/#article","headline":"LinkedIn People Finder by Role, Seniority & Network","name":"LinkedIn People Finder by Role, Seniority & Network","description":"Search LinkedIn people with structured filters for company, school, seniority, job function, years of experience, industry, and connection degree, using your own LinkedIn session.","url":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/M7DHH5XpX0Xay3eLy/","author":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"mainEntityOfPage":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/M7DHH5XpX0Xay3eLy/#webpage"},"inLanguage":"en"},{"@type":"BreadcrumbList","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/M7DHH5XpX0Xay3eLy/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Nimbryxo Studio","item":"https://hasankhokhar2026.github.io/apify-actor-examples/"},{"@type":"ListItem","position":2,"name":"Actors","item":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/"},{"@type":"ListItem","position":3,"name":"LinkedIn People Finder by Role, Seniority & Network","item":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/M7DHH5XpX0Xay3eLy/"}]}]}</script><script src="/apify-actor-examples/assets/site.js?v=7cabac48dd31" defer></script></head><body class="theme-studio"><a href="#main" class="skip-link">Skip to content</a><header><div class="inner"><a href="/apify-actor-examples/" class="brand"><img src="/apify-actor-examples/assets/mark.svg?v=2d20f9dc334a" alt="" width="29" height="29">Nimbryxo Studio</a><nav aria-label="Main navigation"><a href="/apify-actor-examples/actors/" aria-current="page">Actors</a><a href="/apify-actor-examples/guides/">Guides</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></nav></div></header><main id="main"><div class="doc-layout"><aside class="contents" aria-label="On this page"><strong>Contents</strong><a href="#overview">Overview</a><a href="#published-readme">Published README</a><a href="#input-schema">Input schema</a><a href="#output-schema">Output schema</a><a href="#dataset-schema">Dataset schema</a><a href="#python-quickstart">Python quickstart</a></aside><article class="prose"><div class="breadcrumb"><a href="/apify-actor-examples/actors/">Actors</a><span>/</span><span>LinkedIn People Finder by Role, Seniority &amp; Network</span></div><section id="overview"><h1 class="doc-title">LinkedIn People Finder by Role, Seniority &amp; Network</h1><p class="lede">Search LinkedIn people with structured filters for company, school, seniority, job function, years of experience, industry, and connection degree, using your own LinkedIn session.</p><div class="actions"><a class="button" href="https://apify.com/nimbryxo-studio/linkedin-people-finder-by-role-seniority">Open on Apify</a><a class="text-link" href="https://github.com/hasankhokhar2026/apify-actor-examples/blob/main/docs/actors/M7DHH5XpX0Xay3eLy/README.md">GitHub source</a></div></section><section class="schema-section" id="input-schema"><h2>Input schema</h2><p>Input fields, types, required flags, descriptions, defaults, and prefills come from the published definition. Prefill examples are distinct from defaults.</p><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>searchQuery</code></td><td>string</td><td>required</td><td>Search keywords for finding people on LinkedIn. Examples: &#x27;software engineer&#x27;, &#x27;John Smith&#x27;, &#x27;product manager Google&#x27;</td></tr><tr><td><code>keywords</code></td><td>string</td><td>optional</td><td>Optional companion to Search Query. When both are set, they are combined with a space. Use this to keep a primary role in Search Query and add modifiers (industry buzzwords, tools) here.</td></tr><tr><td><code>cookie</code></td><td>string</td><td>required</td><td>Your LinkedIn session cookie. Accepts either: (1) the li_at value from browser DevTools → Application → Cookies, or (2) full cookies JSON array exported from an extension like EditThisCookie.</td></tr></tbody></table></div><details><summary>Show all input fields</summary><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>searchQuery</code></td><td>string</td><td>required</td><td>Search keywords for finding people on LinkedIn. Examples: &#x27;software engineer&#x27;, &#x27;John Smith&#x27;, &#x27;product manager Google&#x27;</td></tr><tr><td><code>keywords</code></td><td>string</td><td>optional</td><td>Optional companion to Search Query. When both are set, they are combined with a space. Use this to keep a primary role in Search Query and add modifiers (industry buzzwords, tools) here.</td></tr><tr><td><code>cookie</code></td><td>string</td><td>required</td><td>Your LinkedIn session cookie. Accepts either: (1) the li_at value from browser DevTools → Application → Cookies, or (2) full cookies JSON array exported from an extension like EditThisCookie.</td></tr><tr><td><code>location</code></td><td>string</td><td>optional</td><td>Filter results by location (city, state, or country). Example: &#x27;San Francisco Bay Area&#x27;, &#x27;New York&#x27;, &#x27;United Kingdom&#x27;</td></tr><tr><td><code>currentCompany</code></td><td>string</td><td>optional</td><td>Filter by current company. Accepts a company name (e.g. &#x27;Google&#x27;) or a LinkedIn fsd_company URN/numeric ID. URN format produces the strict structured currentCompany filter; plain names are added to keywords.</td></tr><tr><td><code>pastCompany</code></td><td>string</td><td>optional</td><td>Filter by past company. Accepts a company name or a LinkedIn fsd_company URN/numeric ID.</td></tr><tr><td><code>school</code></td><td>string</td><td>optional</td><td>Filter by school or university attended. Accepts a school name or a LinkedIn fsd_school URN/numeric ID. Example: &#x27;Stanford University&#x27;, &#x27;MIT&#x27;, or &#x27;12345&#x27;.</td></tr><tr><td><code>firstNameKeyword</code></td><td>string</td><td>optional</td><td>Filter by first name token. Adds a strict firstName filter to the search.</td></tr><tr><td><code>lastNameKeyword</code></td><td>string</td><td>optional</td><td>Filter by last name token. Adds a strict lastName filter to the search.</td></tr><tr><td><code>titleKeyword</code></td><td>string</td><td>optional</td><td>Filter by current job title keyword (e.g. &#x27;Director of Engineering&#x27;, &#x27;CTO&#x27;). Different from Industry / Job Function — this is the free-text title.</td></tr><tr><td><code>serviceCategory</code></td><td>string</td><td>optional</td><td>Filter by LinkedIn Services Marketplace category (e.g. &#x27;Web Development&#x27;, &#x27;Marketing Strategy&#x27;).</td></tr><tr><td><code>companyHeadcount</code></td><td>array</td><td>optional</td><td>Filter by employer company size. A=Self-employed, B=1-10, C=11-50, D=51-200, E=201-500, F=501-1,000, G=1,001-5,000, H=5,001-10,000, I=10,001+.</td></tr><tr><td><code>followerOf</code></td><td>string</td><td>optional</td><td>Filter to people who follow a specific company. Accepts an fsd_company URN or numeric company ID.</td></tr><tr><td><code>geoUrn</code></td><td>string</td><td>optional</td><td>Precise location filter using a LinkedIn geo URN or numeric geo ID (e.g. &#x27;103644278&#x27; for the United States). Use this for strict geographic filtering instead of the free-text Location field.</td></tr><tr><td><code>connectionDegree</code></td><td>string</td><td>optional</td><td>Filter by connection degree to your account.</td></tr><tr><td><code>industry</code></td><td>string</td><td>optional</td><td>Filter results by industry. Applied to both Voyager filters and the HTML search URL.</td></tr><tr><td><code>seniorityLevel</code></td><td>string</td><td>optional</td><td>Filter results by seniority level.</td></tr><tr><td><code>yearsOfExperience</code></td><td>string</td><td>optional</td><td>Filter results by years of total professional experience. 1=Less than 1 year, 2=1-2 years, 3=3-5 years, 4=6-10 years, 5=11-15 years, 6=16+ years.</td></tr><tr><td><code>jobFunction</code></td><td>string</td><td>optional</td><td>Filter results by job function / department.</td></tr><tr><td><code>openTo</code></td><td>array</td><td>optional</td><td>Filter people by what they are open to. Select one or more options. HIRING = open to hiring, GETTING_HIRED = open to new jobs, PROVIDING_SERVICES = open to providing freelance/consulting services, JOINING_A_NONPROFIT = open to joining a nonprofit.</td></tr><tr><td><code>profileLanguages</code></td><td>array</td><td>optional</td><td>Filter by the language(s) the person&#x27;s LinkedIn profile is written in. Use ISO 639-1 codes, e.g. [&quot;en&quot;, &quot;es&quot;, &quot;fr&quot;, &quot;de&quot;, &quot;zh&quot;, &quot;ar&quot;, &quot;pt&quot;].</td></tr><tr><td><code>contactOf</code></td><td>string</td><td>optional</td><td>Filter to show people who are connections of the specified LinkedIn member. Provide the member&#x27;s URN (e.g. &#x27;urn:li:member:123456&#x27;) or numeric profile ID.</td></tr><tr><td><code>talksAbout</code></td><td>string</td><td>optional</td><td>Filter to people who talk about the specified keyword or topic in their profile. This is appended to the search keywords.</td></tr><tr><td><code>maxResults</code></td><td>integer</td><td>optional</td><td>Maximum number of profiles to return.</td></tr><tr><td><code>proxyConfiguration</code></td><td>object</td><td>optional</td><td>Optional Apify proxy configuration.</td></tr></tbody></table></div></details><p><a href="input-schema.json">Download the published input schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+  &quot;properties&quot;: {
+    &quot;companyHeadcount&quot;: {
+      &quot;description&quot;: &quot;Filter by employer company size. A=Self-employed, B=1-10, C=11-50, D=51-200, E=201-500, F=501-1,000, G=1,001-5,000, H=5,001-10,000, I=10,001+.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;items&quot;: {
+        &quot;enum&quot;: [
+          &quot;A&quot;,
+          &quot;B&quot;,
+          &quot;C&quot;,
+          &quot;D&quot;,
+          &quot;E&quot;,
+          &quot;F&quot;,
+          &quot;G&quot;,
+          &quot;H&quot;,
+          &quot;I&quot;
+        ],
+        &quot;enumTitles&quot;: [
+          &quot;Self-employed&quot;,
+          &quot;1-10 employees&quot;,
+          &quot;11-50 employees&quot;,
+          &quot;51-200 employees&quot;,
+          &quot;201-500 employees&quot;,
+          &quot;501-1,000 employees&quot;,
+          &quot;1,001-5,000 employees&quot;,
+          &quot;5,001-10,000 employees&quot;,
+          &quot;10,001+ employees&quot;
+        ],
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;title&quot;: &quot;Company Headcount&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;connectionDegree&quot;: {
+      &quot;default&quot;: &quot;&quot;,
+      &quot;description&quot;: &quot;Filter by connection degree to your account.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;&quot;,
+        &quot;F&quot;,
+        &quot;S&quot;,
+        &quot;O&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;Any&quot;,
+        &quot;1st degree&quot;,
+        &quot;2nd degree&quot;,
+        &quot;3rd+ degree&quot;
+      ],
+      &quot;title&quot;: &quot;Connection Degree&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;contactOf&quot;: {
+      &quot;description&quot;: &quot;Filter to show people who are connections of the specified LinkedIn member. Provide the member&#x27;s URN (e.g. &#x27;urn:li:member:123456&#x27;) or numeric profile ID.&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;title&quot;: &quot;Contact Of (Member URN or Profile ID)&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;cookie&quot;: {
+      &quot;description&quot;: &quot;Your LinkedIn session cookie. Accepts either: (1) the li_at value from browser DevTools → Application → Cookies, or (2) full cookies JSON array exported from an extension like EditThisCookie.&quot;,
+      &quot;editor&quot;: &quot;textarea&quot;,
+      &quot;isSecret&quot;: true,
+      &quot;title&quot;: &quot;LinkedIn Cookie&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;currentCompany&quot;: {
+      &quot;description&quot;: &quot;Filter by current company. Accepts a company name (e.g. &#x27;Google&#x27;) or a LinkedIn fsd_company URN/numeric ID. URN format produces the strict structured currentCompany filter; plain names are added to keywords.&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;title&quot;: &quot;Current Company Filter&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;firstNameKeyword&quot;: {
+      &quot;description&quot;: &quot;Filter by first name token. Adds a strict firstName filter to the search.&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;title&quot;: &quot;First Name&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;followerOf&quot;: {
+      &quot;description&quot;: &quot;Filter to people who follow a specific company. Accepts an fsd_company URN or numeric company ID.&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;title&quot;: &quot;Followers of Company&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;geoUrn&quot;: {
+      &quot;description&quot;: &quot;Precise location filter using a LinkedIn geo URN or numeric geo ID (e.g. &#x27;103644278&#x27; for the United States). Use this for strict geographic filtering instead of the free-text Location field.&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;title&quot;: &quot;Location URN&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;industry&quot;: {
+      &quot;default&quot;: &quot;&quot;,
+      &quot;description&quot;: &quot;Filter results by industry. Applied to both Voyager filters and the HTML search URL.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;&quot;,
+        &quot;Software Development&quot;,
+        &quot;Financial Services&quot;,
+        &quot;Healthcare&quot;,
+        &quot;Education&quot;,
+        &quot;Marketing and Advertising&quot;,
+        &quot;Consulting&quot;,
+        &quot;Hospitality&quot;,
+        &quot;Real Estate&quot;,
+        &quot;Manufacturing&quot;,
+        &quot;Retail&quot;,
+        &quot;Media&quot;,
+        &quot;Government Administration&quot;,
+        &quot;Non-profit Organization Management&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;Any&quot;,
+        &quot;Software Development&quot;,
+        &quot;Financial Services&quot;,
+        &quot;Healthcare&quot;,
+        &quot;Education&quot;,
+        &quot;Marketing and Advertising&quot;,
+        &quot;Consulting&quot;,
+        &quot;Hospitality&quot;,
+        &quot;Real Estate&quot;,
+        &quot;Manufacturing&quot;,
+        &quot;Retail&quot;,
+        &quot;Media&quot;,
+        &quot;Government Administration&quot;,
+        &quot;Non-profit Organization Management&quot;
+      ],
+      &quot;title&quot;: &quot;Industry&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;jobFunction&quot;: {
+      &quot;default&quot;: &quot;&quot;,
+      &quot;description&quot;: &quot;Filter results by job function / department.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;&quot;,
+        &quot;ARTS_AND_DESIGN&quot;,
+        &quot;BUSINESS_DEVELOPMENT&quot;,
+        &quot;COMMUNITY_AND_SOCIAL_SERVICES&quot;,
+        &quot;CONSULTING&quot;,
+        &quot;EDUCATION&quot;,
+        &quot;ENGINEERING&quot;,
+        &quot;ENTREPRENEURSHIP&quot;,
+        &quot;FINANCE&quot;,
+        &quot;HEALTHCARE_SERVICES&quot;,
+        &quot;HUMAN_RESOURCES&quot;,
+        &quot;INFORMATION_TECHNOLOGY&quot;,
+        &quot;LEGAL&quot;,
+        &quot;MANAGEMENT&quot;,
+        &quot;MARKETING&quot;,
+        &quot;MEDIA_AND_COMMUNICATION&quot;,
+        &quot;MILITARY_AND_PROTECTIVE_SERVICES&quot;,
+        &quot;OPERATIONS&quot;,
+        &quot;PRODUCT_MANAGEMENT&quot;,
+        &quot;PROGRAM_AND_PROJECT_MANAGEMENT&quot;,
+        &quot;PURCHASING&quot;,
+        &quot;QUALITY_ASSURANCE&quot;,
+        &quot;REAL_ESTATE&quot;,
+        &quot;RESEARCH&quot;,
+        &quot;SALES&quot;,
+        &quot;SUPPORT&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;Any&quot;,
+        &quot;Arts and Design&quot;,
+        &quot;Business Development&quot;,
+        &quot;Community and Social Services&quot;,
+        &quot;Consulting&quot;,
+        &quot;Education&quot;,
+        &quot;Engineering&quot;,
+        &quot;Entrepreneurship&quot;,
+        &quot;Finance&quot;,
+        &quot;Healthcare Services&quot;,
+        &quot;Human Resources&quot;,
+        &quot;Information Technology&quot;,
+        &quot;Legal&quot;,
+        &quot;Management&quot;,
+        &quot;Marketing&quot;,
+        &quot;Media and Communication&quot;,
+        &quot;Military and Protective Services&quot;,
+        &quot;Operations&quot;,
+        &quot;Product Management&quot;,
+        &quot;Program and Project Management&quot;,
+        &quot;Purchasing&quot;,
+        &quot;Quality Assurance&quot;,
+        &quot;Real Estate&quot;,
+        &quot;Research&quot;,
+        &quot;Sales&quot;,
+        &quot;Support&quot;
+      ],
+      &quot;title&quot;: &quot;Job Function&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;keywords&quot;: {
+      &quot;description&quot;: &quot;Optional companion to Search Query. When both are set, they are combined with a space. Use this to keep a primary role in Search Query and add modifiers (industry buzzwords, tools) here.&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;title&quot;: &quot;Extra Keywords&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;lastNameKeyword&quot;: {
+      &quot;description&quot;: &quot;Filter by last name token. Adds a strict lastName filter to the search.&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;title&quot;: &quot;Last Name&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;location&quot;: {
+      &quot;description&quot;: &quot;Filter results by location (city, state, or country). Example: &#x27;San Francisco Bay Area&#x27;, &#x27;New York&#x27;, &#x27;United Kingdom&#x27;&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;title&quot;: &quot;Location Filter&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;maxResults&quot;: {
+      &quot;default&quot;: 25,
+      &quot;description&quot;: &quot;Maximum number of profiles to return.&quot;,
+      &quot;editor&quot;: &quot;number&quot;,
+      &quot;maximum&quot;: 100,
+      &quot;minimum&quot;: 1,
+      &quot;prefill&quot;: 25,
+      &quot;title&quot;: &quot;Max Results&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;openTo&quot;: {
+      &quot;description&quot;: &quot;Filter people by what they are open to. Select one or more options. HIRING = open to hiring, GETTING_HIRED = open to new jobs, PROVIDING_SERVICES = open to providing freelance/consulting services, JOINING_A_NONPROFIT = open to joining a nonprofit.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;items&quot;: {
+        &quot;enum&quot;: [
+          &quot;HIRING&quot;,
+          &quot;GETTING_HIRED&quot;,
+          &quot;PROVIDING_SERVICES&quot;,
+          &quot;JOINING_A_NONPROFIT&quot;
+        ],
+        &quot;enumTitles&quot;: [
+          &quot;Open to Hiring&quot;,
+          &quot;Open to New Jobs&quot;,
+          &quot;Open to Providing Services&quot;,
+          &quot;Open to Joining a Nonprofit&quot;
+        ],
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;title&quot;: &quot;Open To&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;pastCompany&quot;: {
+      &quot;description&quot;: &quot;Filter by past company. Accepts a company name or a LinkedIn fsd_company URN/numeric ID.&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;title&quot;: &quot;Past Company Filter&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;profileLanguages&quot;: {
+      &quot;description&quot;: &quot;Filter by the language(s) the person&#x27;s LinkedIn profile is written in. Use ISO 639-1 codes, e.g. [\&quot;en\&quot;, \&quot;es\&quot;, \&quot;fr\&quot;, \&quot;de\&quot;, \&quot;zh\&quot;, \&quot;ar\&quot;, \&quot;pt\&quot;].&quot;,
+      &quot;editor&quot;: &quot;stringList&quot;,
+      &quot;items&quot;: {
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;title&quot;: &quot;Profile Languages&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;proxyConfiguration&quot;: {
+      &quot;description&quot;: &quot;Optional Apify proxy configuration.&quot;,
+      &quot;editor&quot;: &quot;proxy&quot;,
+      &quot;title&quot;: &quot;Proxy Configuration&quot;,
+      &quot;type&quot;: &quot;object&quot;
+    },
+    &quot;school&quot;: {
+      &quot;description&quot;: &quot;Filter by school or university attended. Accepts a school name or a LinkedIn fsd_school URN/numeric ID. Example: &#x27;Stanford University&#x27;, &#x27;MIT&#x27;, or &#x27;12345&#x27;.&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;title&quot;: &quot;School Filter&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;searchQuery&quot;: {
+      &quot;description&quot;: &quot;Search keywords for finding people on LinkedIn. Examples: &#x27;software engineer&#x27;, &#x27;John Smith&#x27;, &#x27;product manager Google&#x27;&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;prefill&quot;: &quot;software engineer&quot;,
+      &quot;title&quot;: &quot;Search Query&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;seniorityLevel&quot;: {
+      &quot;default&quot;: &quot;&quot;,
+      &quot;description&quot;: &quot;Filter results by seniority level.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;&quot;,
+        &quot;Entry level&quot;,
+        &quot;Associate&quot;,
+        &quot;Mid-Senior level&quot;,
+        &quot;Director&quot;,
+        &quot;Executive&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;Any&quot;,
+        &quot;Entry level&quot;,
+        &quot;Associate&quot;,
+        &quot;Mid-Senior level&quot;,
+        &quot;Director&quot;,
+        &quot;Executive&quot;
+      ],
+      &quot;title&quot;: &quot;Seniority Level&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;serviceCategory&quot;: {
+      &quot;description&quot;: &quot;Filter by LinkedIn Services Marketplace category (e.g. &#x27;Web Development&#x27;, &#x27;Marketing Strategy&#x27;).&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;title&quot;: &quot;Service Category&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;talksAbout&quot;: {
+      &quot;description&quot;: &quot;Filter to people who talk about the specified keyword or topic in their profile. This is appended to the search keywords.&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;title&quot;: &quot;Talks About (Keyword / Topic)&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;titleKeyword&quot;: {
+      &quot;description&quot;: &quot;Filter by current job title keyword (e.g. &#x27;Director of Engineering&#x27;, &#x27;CTO&#x27;). Different from Industry / Job Function — this is the free-text title.&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;title&quot;: &quot;Job Title&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;yearsOfExperience&quot;: {
+      &quot;default&quot;: &quot;&quot;,
+      &quot;description&quot;: &quot;Filter results by years of total professional experience. 1=Less than 1 year, 2=1-2 years, 3=3-5 years, 4=6-10 years, 5=11-15 years, 6=16+ years.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;&quot;,
+        &quot;1&quot;,
+        &quot;2&quot;,
+        &quot;3&quot;,
+        &quot;4&quot;,
+        &quot;5&quot;,
+        &quot;6&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;Any&quot;,
+        &quot;Less than 1 year&quot;,
+        &quot;1-2 years&quot;,
+        &quot;3-5 years&quot;,
+        &quot;6-10 years&quot;,
+        &quot;11-15 years&quot;,
+        &quot;16+ years&quot;
+      ],
+      &quot;title&quot;: &quot;Years of Experience&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    }
+  },
+  &quot;required&quot;: [
+    &quot;searchQuery&quot;,
+    &quot;cookie&quot;
+  ],
+  &quot;schemaVersion&quot;: 1,
+  &quot;title&quot;: &quot;LinkedIn People Search Scraper Input&quot;,
+  &quot;type&quot;: &quot;object&quot;
+}
+</code></pre></details></section><section class="schema-section" id="output-schema"><h2>Output schema</h2><p>Published result links and storage locations. This schema is not an exhaustive contract for every field in a dataset record.</p><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>profiles</code></td><td>string</td><td>optional</td><td>Dataset containing all scraped LinkedIn profiles from the search.</td></tr></tbody></table></div><p><a href="output-schema.json">Download the published output schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+  &quot;actorOutputSchemaVersion&quot;: 1,
+  &quot;description&quot;: &quot;LinkedIn profiles matching a structured people search, with name, headline, current company, seniority-related badges, and profile URL.&quot;,
+  &quot;properties&quot;: {
+    &quot;profiles&quot;: {
+      &quot;description&quot;: &quot;Dataset containing all scraped LinkedIn profiles from the search.&quot;,
+      &quot;template&quot;: &quot;{{links.apiDefaultDatasetUrl}}/items&quot;,
+      &quot;title&quot;: &quot;LinkedIn Profiles&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    }
+  },
+  &quot;title&quot;: &quot;LinkedIn People Finder by Role, Seniority &amp; Network Output&quot;
+}
+</code></pre></details></section><section class="schema-section" id="dataset-schema"><h2>Dataset schema</h2><p>Published dataset views and any declared field definitions. A view can select only a subset of the returned record fields.</p><p><a href="dataset-schema.json">Download the published dataset schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+  &quot;actorSpecification&quot;: 1,
+  &quot;views&quot;: {
+    &quot;overview&quot;: {
+      &quot;display&quot;: {
+        &quot;component&quot;: &quot;table&quot;,
+        &quot;properties&quot;: {
+          &quot;connectionDegree&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Connection&quot;
+          },
+          &quot;headline&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Headline&quot;
+          },
+          &quot;location&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Location&quot;
+          },
+          &quot;name&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Name&quot;
+          },
+          &quot;profileUrl&quot;: {
+            &quot;format&quot;: &quot;link&quot;,
+            &quot;label&quot;: &quot;Profile URL&quot;
+          },
+          &quot;scrapedAt&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Scraped At&quot;
+          }
+        }
+      },
+      &quot;title&quot;: &quot;Overview&quot;,
+      &quot;transformation&quot;: {
+        &quot;fields&quot;: [
+          &quot;name&quot;,
+          &quot;headline&quot;,
+          &quot;location&quot;,
+          &quot;connectionDegree&quot;,
+          &quot;profileUrl&quot;,
+          &quot;scrapedAt&quot;
+        ]
+      }
+    }
+  }
+}
+</code></pre></details></section><section class="schema-section" id="key-value-schema"><h2>Key-value schema</h2><p>Published key-value store definitions, when provided by this build.</p><p>This definition is not present in the default published build. See the published README for available documentation.</p></section><section id="published-readme"><h2>Published README</h2><details><summary>Read the full published documentation</summary><h2 id="readme-linkedin-people-finder-by-role-seniority-network">LinkedIn People Finder by Role, Seniority &amp; Network</h2>
+<p>Search LinkedIn people search with your own session — well beyond a plain keyword box. Combine free-text search with structured filters for company, school, seniority, job function, years of experience, company size, industry, and more, and get back one row per matching profile.</p>
+<h2 id="readme-what-this-actor-does">What this actor does</h2>
+<ul>
+<li>Runs a LinkedIn people search using your own session cookie, combining a free-text query with any number of structured filters</li>
+<li>Passes structured filters to LinkedIn: company, school and location IDs, industry, job function, seniority level, years of experience, employer headcount, connection degree, profile language and &quot;open to&quot; status</li>
+<li>Adds free-text values (a location name, company or school names, a topic, first/last name and job title) to the search keywords, so they narrow results the way typing them into LinkedIn's search box would</li>
+<li>Can narrow to people who follow a given company or are connections of a specific member, using their numeric IDs or URNs</li>
+<li>Flags when a result card shows an &quot;Open to Work&quot; or Premium marker or a verified indicator</li>
+<li>Fields LinkedIn doesn't expose for a given profile (for example a profile picture or mutual-connections count) are left off that record</li>
+</ul>
+<h2 id="readme-output-per-profile">Output per profile</h2>
+<ul>
+<li><code>name</code> — the person's full name</li>
+<li><code>profileUrl</code> — their canonical LinkedIn profile URL</li>
+<li><code>headline</code> — their LinkedIn headline, as written</li>
+<li><code>location</code> — the location shown on their profile</li>
+<li><code>connectionDegree</code> — their connection degree to your account (<code>1st</code>, <code>2nd</code>, <code>3rd+</code>), when LinkedIn shows one</li>
+<li><code>currentCompany</code> — their current employer as <code>{name}</code>, plus <code>slug</code> and <code>url</code> when LinkedIn supplies a structured company link; usually derived from a headline such as &quot;Engineer at Acme&quot;</li>
+<li><code>currentTitle</code> — their current job title, usually the part of the headline before &quot;at …&quot;</li>
+<li><code>industryName</code> — the industry LinkedIn associates with the profile, when available</li>
+<li><code>educationCount</code> — how many education entries appear on their profile, when greater than zero</li>
+<li><code>openToWork</code> — true when the result shows an &quot;Open to Work&quot; marker (omitted otherwise)</li>
+<li><code>premium</code>, <code>premiumStatus</code> — true when the result shows a Premium marker (omitted otherwise)</li>
+<li><code>verifiedStatus</code> — true when the result card carries a verified indicator (omitted otherwise)</li>
+<li><code>profilePicture</code>, <code>profileImageUrl</code> — the profile photo URL, when visible to your account</li>
+<li><code>mutualConnections</code> — the mutual-connections text LinkedIn shows for that profile, when available</li>
+<li><code>scrapedAt</code> — when the actor fetched the record</li>
+</ul>
+<p><code>industryName</code> and <code>educationCount</code> only come through on some result layouts, so many rows won't have them.</p>
+<h3 id="readme-cookie-notice-row">Cookie notice row</h3>
+<p>If the <code>cookie</code> input is empty, or LinkedIn reports the session as expired or invalid, the run doesn't fail. Instead the dataset gets a single notice row with <code>_status: &quot;no_data&quot;</code>, <code>_reason</code> (<code>cookie-missing</code> or <code>cookie-invalid</code>), <code>_message</code>, <code>_help</code> (how to export a fresh cookie) and <code>scrapedAt</code>, and no profiles. A cookie value that can't be parsed at all fails the run.</p>
+<h2 id="readme-input">Input</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>searchQuery</code></td>
+<td>string</td>
+<td>–</td>
+<td>Free-text search keywords. Required.</td>
+</tr>
+<tr>
+<td><code>keywords</code></td>
+<td>string</td>
+<td>–</td>
+<td>Extra keywords combined with <code>searchQuery</code> with a space; handy for adding modifiers without editing your main query.</td>
+</tr>
+<tr>
+<td><code>cookie</code></td>
+<td>string</td>
+<td>–</td>
+<td>Your LinkedIn session cookie — either the <code>li_at</code> value or a full cookie JSON export. Required.</td>
+</tr>
+<tr>
+<td><code>location</code></td>
+<td>string</td>
+<td>–</td>
+<td>Free-text location, e.g. <code>San Francisco Bay Area</code>; added to the search keywords. Use <code>geoUrn</code> for a strict location filter.</td>
+</tr>
+<tr>
+<td><code>geoUrn</code></td>
+<td>string</td>
+<td>–</td>
+<td>A LinkedIn geo URN or numeric geo ID (e.g. <code>103644278</code> for the United States) for a strict location filter.</td>
+</tr>
+<tr>
+<td><code>currentCompany</code></td>
+<td>string</td>
+<td>–</td>
+<td>Current employer, by name or LinkedIn company URN/ID. A URN applies a strict structured filter; a plain name is added to the search keywords.</td>
+</tr>
+<tr>
+<td><code>pastCompany</code></td>
+<td>string</td>
+<td>–</td>
+<td>Past employer, by name or LinkedIn company URN/ID. Works like <code>currentCompany</code>: an ID applies the filter, a name is added to the keywords.</td>
+</tr>
+<tr>
+<td><code>school</code></td>
+<td>string</td>
+<td>–</td>
+<td>School or university attended. A school URN/ID applies the school filter; a name is added to the keywords.</td>
+</tr>
+<tr>
+<td><code>firstNameKeyword</code></td>
+<td>string</td>
+<td>–</td>
+<td>First name; sent as a first-name filter and added to the keywords.</td>
+</tr>
+<tr>
+<td><code>lastNameKeyword</code></td>
+<td>string</td>
+<td>–</td>
+<td>Last name; sent as a last-name filter and added to the keywords.</td>
+</tr>
+<tr>
+<td><code>titleKeyword</code></td>
+<td>string</td>
+<td>–</td>
+<td>Job title text, e.g. <code>Director of Engineering</code>; sent as a title filter and added to the keywords.</td>
+</tr>
+<tr>
+<td><code>serviceCategory</code></td>
+<td>string</td>
+<td>–</td>
+<td>LinkedIn Services Marketplace category, e.g. <code>Web Development</code>; sent as a filter and added to the keywords.</td>
+</tr>
+<tr>
+<td><code>companyHeadcount</code></td>
+<td>array</td>
+<td>–</td>
+<td>Employer size bucket(s), from self-employed up to 10,001+ employees.</td>
+</tr>
+<tr>
+<td><code>followerOf</code></td>
+<td>string</td>
+<td>–</td>
+<td>Restrict to people who follow a given company. Needs a company URN or numeric ID; a plain name is ignored.</td>
+</tr>
+<tr>
+<td><code>connectionDegree</code></td>
+<td>string</td>
+<td><code>&quot;&quot;</code> (any)</td>
+<td><code>F</code> (1st degree), <code>S</code> (2nd degree), or <code>O</code> (3rd+ degree).</td>
+</tr>
+<tr>
+<td><code>industry</code></td>
+<td>string</td>
+<td><code>&quot;&quot;</code> (any)</td>
+<td>One of 13 industries, e.g. <code>Software Development</code>, <code>Healthcare</code>.</td>
+</tr>
+<tr>
+<td><code>seniorityLevel</code></td>
+<td>string</td>
+<td><code>&quot;&quot;</code> (any)</td>
+<td><code>Entry level</code>, <code>Associate</code>, <code>Mid-Senior level</code>, <code>Director</code>, or <code>Executive</code>.</td>
+</tr>
+<tr>
+<td><code>yearsOfExperience</code></td>
+<td>string</td>
+<td><code>&quot;&quot;</code> (any)</td>
+<td>Total professional experience bucket, from less than 1 year up to 16+ years.</td>
+</tr>
+<tr>
+<td><code>jobFunction</code></td>
+<td>string</td>
+<td><code>&quot;&quot;</code> (any)</td>
+<td>Department/function, e.g. <code>ENGINEERING</code>, <code>SALES</code>, <code>MARKETING</code>.</td>
+</tr>
+<tr>
+<td><code>openTo</code></td>
+<td>array</td>
+<td>–</td>
+<td>What the person has flagged as open to: <code>HIRING</code>, <code>GETTING_HIRED</code>, <code>PROVIDING_SERVICES</code>, <code>JOINING_A_NONPROFIT</code>.</td>
+</tr>
+<tr>
+<td><code>profileLanguages</code></td>
+<td>array</td>
+<td>–</td>
+<td>ISO 639-1 language code(s) the profile is written in, e.g. <code>[&quot;en&quot;, &quot;es&quot;]</code>.</td>
+</tr>
+<tr>
+<td><code>contactOf</code></td>
+<td>string</td>
+<td>–</td>
+<td>Restrict to connections of a specific LinkedIn member (member URN or numeric profile ID).</td>
+</tr>
+<tr>
+<td><code>talksAbout</code></td>
+<td>string</td>
+<td>–</td>
+<td>A keyword/topic to look for on the person's profile; appended to the search keywords.</td>
+</tr>
+<tr>
+<td><code>maxResults</code></td>
+<td>integer</td>
+<td><code>25</code></td>
+<td>Maximum profiles to return (1–100).</td>
+</tr>
+<tr>
+<td><code>proxyConfiguration</code></td>
+<td>object</td>
+<td>–</td>
+<td>Optional Apify proxy configuration.</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="readme-example-role-company-connection-degree">Example: role + company + connection degree</h2>
+<pre><code class="language-json">{
+  &quot;searchQuery&quot;: &quot;product manager&quot;,
+  &quot;cookie&quot;: &quot;YOUR_LI_AT_COOKIE&quot;,
+  &quot;currentCompany&quot;: &quot;Airbnb&quot;,
+  &quot;connectionDegree&quot;: &quot;F&quot;,
+  &quot;maxResults&quot;: 25
+}
+</code></pre>
+<h2 id="readme-example-senior-engineers-by-function-seniority-and-company-size">Example: senior engineers by function, seniority, and company size</h2>
+<pre><code class="language-json">{
+  &quot;searchQuery&quot;: &quot;engineering&quot;,
+  &quot;cookie&quot;: &quot;YOUR_LI_AT_COOKIE&quot;,
+  &quot;jobFunction&quot;: &quot;ENGINEERING&quot;,
+  &quot;seniorityLevel&quot;: &quot;Director&quot;,
+  &quot;companyHeadcount&quot;: [&quot;G&quot;, &quot;H&quot;, &quot;I&quot;],
+  &quot;maxResults&quot;: 50
+}
+</code></pre>
+<h2 id="readme-example-people-open-to-freelance-work-in-a-given-industry">Example: people open to freelance work in a given industry</h2>
+<pre><code class="language-json">{
+  &quot;searchQuery&quot;: &quot;brand designer&quot;,
+  &quot;cookie&quot;: &quot;YOUR_LI_AT_COOKIE&quot;,
+  &quot;industry&quot;: &quot;Marketing and Advertising&quot;,
+  &quot;openTo&quot;: [&quot;PROVIDING_SERVICES&quot;],
+  &quot;maxResults&quot;: 30
+}
+</code></pre>
+<h2 id="readme-use-cases">Use cases</h2>
+<ul>
+<li><strong>Recruiting and sourcing</strong> — build a candidate shortlist filtered by seniority, function, and years of experience</li>
+<li><strong>Sales prospecting</strong> — find decision-makers at companies of a specific size and industry</li>
+<li><strong>Talent mapping</strong> — see how many people with a given title work at a target company or came from a specific school</li>
+<li><strong>Freelance/agency hiring</strong> — search for people who've flagged themselves as <code>PROVIDING_SERVICES</code> in a niche</li>
+<li><strong>Alumni and network outreach</strong> — find people from a specific school or who follow your company page</li>
+</ul>
+<h2 id="readme-faq">FAQ</h2>
+<p><strong>Why does this actor need a LinkedIn cookie?</strong>
+People search is only available to logged-in LinkedIn users, so a valid session cookie (<code>li_at</code> or a full cookie export) is required. Without one, or with an expired one, the run returns only the cookie notice row described above.</p>
+<p><strong>Will my results match what I'd see searching manually?</strong>
+Closely, but not identically — LinkedIn personalizes search results based on your account's own network, location, and plan, so the same query can return different people from different accounts.</p>
+<p><strong>What's the difference between <code>currentCompany</code> as a name versus a URN?</strong>
+A company URN or numeric ID applies LinkedIn's strict structured company filter. A plain company name is instead folded into the free-text search keywords, which is usually accurate for well-known company names but less exact than a URN.</p>
+<p><strong>Why is <code>connectionDegree</code> sometimes missing from a result?</strong>
+LinkedIn only shows a connection-degree badge for profiles it places in your visible network graph; some results simply don't carry one.</p>
+<p><strong>Why don't all profiles have a <code>profilePicture</code>?</strong>
+Some LinkedIn users restrict their photo to connections only; the actor returns the picture URL only when the search response actually includes one.</p>
+<p><strong>Can I combine many filters at once?</strong>
+Yes — every filter is sent with the same search, and the more you combine, the narrower (and often smaller) the result set. LinkedIn decides how strictly each filter is honoured for your account, so spot-check results when you stack many of them.</p>
+<p><strong>How many profiles can I get per run?</strong>
+Up to <code>maxResults</code>, capped at 100 per run.</p>
+<p><strong>Is this affiliated with LinkedIn?</strong>
+No. This is an independent, third-party actor that uses your own LinkedIn session to run a people search; it is not affiliated with or endorsed by LinkedIn.</p>
+</details></section><section id="python-quickstart"><h2>Python quickstart</h2><p>Use a schema-derived input and the Python standard library to start a run. An Apify account and token are required for execution.</p><p><a href="/apify-actor-examples/guides/M7DHH5XpX0Xay3eLy/">Open the step-by-step Python guide →</a></p></section><p class="source-note">Source build <code>CrEkFHlcagPwfg7e7</code>. Documentation is regenerated from the default published build; private drafts are not included.</p></article></div></main><footer class="footer"><strong>Nimbryxo Studio</strong><div class="footer-links"><a href="/apify-actor-examples/topics/">Topics</a><a href="/apify-actor-examples/sources/">Documentation sources</a><a href="https://apify.com/nimbryxo-studio">Apify</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></div></footer></body></html>
