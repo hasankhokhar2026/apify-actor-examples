@@ -1,0 +1,122 @@
+{
+  "description": "Scrape Google News by keyword with optional full-text and image extraction.",
+  "properties": {
+    "country": {
+      "default": "US",
+      "description": "ISO 3166-1 alpha-2 country code for regional news (e.g. 'US', 'GB', 'DE', 'IN').",
+      "editor": "textfield",
+      "title": "Country",
+      "type": "string"
+    },
+    "dateFrom": {
+      "description": "Filter articles published on or after this date (YYYY-MM-DD). Overrides dateRange.",
+      "editor": "textfield",
+      "nullable": true,
+      "title": "Date From",
+      "type": "string"
+    },
+    "dateRange": {
+      "default": "any",
+      "description": "Filter articles by recency. Ignored if dateFrom/dateTo are set.",
+      "editor": "select",
+      "enum": [
+        "1h",
+        "6h",
+        "1d",
+        "7d",
+        "1m",
+        "1y",
+        "any"
+      ],
+      "enumTitles": [
+        "Past hour",
+        "Past 6 hours",
+        "Past day",
+        "Past week",
+        "Past month",
+        "Past year",
+        "Any time"
+      ],
+      "title": "Date Range",
+      "type": "string"
+    },
+    "dateTo": {
+      "description": "Filter articles published on or before this date (YYYY-MM-DD). Use with dateFrom.",
+      "editor": "textfield",
+      "nullable": true,
+      "title": "Date To",
+      "type": "string"
+    },
+    "excludeWords": {
+      "description": "Words or phrases to exclude from results.",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "title": "Exclude Words",
+      "type": "array"
+    },
+    "extractFullText": {
+      "default": false,
+      "description": "Fetch each article and extract the full body text using trafilatura. Uses Playwright to render the article page.",
+      "title": "Extract Full Article Text",
+      "type": "boolean"
+    },
+    "includeImages": {
+      "default": false,
+      "description": "Extract the main og:image URL from each article page. Uses Playwright to render the article page.",
+      "title": "Include Article Images",
+      "type": "boolean"
+    },
+    "language": {
+      "default": "en",
+      "description": "2-letter BCP-47 language code for Google News results (e.g. 'en', 'de', 'fr', 'es').",
+      "editor": "textfield",
+      "title": "Language",
+      "type": "string"
+    },
+    "maxConcurrency": {
+      "default": 5,
+      "description": "Number of parallel browser pages (for full text/images). Higher = faster but more memory.",
+      "maximum": 20,
+      "minimum": 1,
+      "title": "Max Concurrency",
+      "type": "integer"
+    },
+    "maxResultsPerQuery": {
+      "default": 20,
+      "description": "Maximum number of articles to return per query.",
+      "maximum": 100,
+      "minimum": 1,
+      "title": "Max Results Per Query",
+      "type": "integer"
+    },
+    "queries": {
+      "description": "One or more search keywords. Each query is processed separately. Results are deduplicated across queries.",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "prefill": [
+        "artificial intelligence",
+        "climate change"
+      ],
+      "title": "Search Queries",
+      "type": "array"
+    },
+    "siteFilter": {
+      "description": "Restrict results to a specific domain (e.g. 'reuters.com', 'bbc.com').",
+      "editor": "textfield",
+      "nullable": true,
+      "title": "Site Filter",
+      "type": "string"
+    }
+  },
+  "required": [
+    "queries"
+  ],
+  "schemaVersion": 1,
+  "title": "Google News Scraper Input",
+  "type": "object"
+}

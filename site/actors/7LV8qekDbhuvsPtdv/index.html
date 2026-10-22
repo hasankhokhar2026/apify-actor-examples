@@ -1,0 +1,434 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src &#x27;self&#x27;; script-src &#x27;self&#x27; &#x27;sha256-PQ9q+kjVLtYT5tsAFc1JddLE4SyxwpQdZLVgbnoRl9M=&#x27;; style-src &#x27;self&#x27;; img-src &#x27;self&#x27; https: data:; base-uri &#x27;self&#x27;; form-action &#x27;self&#x27;; object-src &#x27;none&#x27;"><title>Google News Keyword &amp; Full-Text Article Scraper | Nimbryxo Studio</title><meta name="description" content="Search Google News by keyword with real resolved article links, headlines, sources, and dates, plus optional full article text and image extraction, filterable by date, language, a"><meta name="robots" content="index,follow"><link rel="canonical" href="https://hasankhokhar2026.github.io/apify-actor-examples/actors/7LV8qekDbhuvsPtdv/"><meta property="og:title" content="Google News Keyword &amp; Full-Text Article Scraper | Nimbryxo Studio"><meta property="og:description" content="Search Google News by keyword with real resolved article links, headlines, sources, and dates, plus optional full article text and image extraction, filterable by date, language, a"><meta property="og:type" content="website"><meta property="og:url" content="https://hasankhokhar2026.github.io/apify-actor-examples/actors/7LV8qekDbhuvsPtdv/"><meta property="og:site_name" content="Nimbryxo Studio"><meta name="twitter:card" content="summary"><link rel="icon" href="/apify-actor-examples/assets/mark.svg?v=2d20f9dc334a" type="image/svg+xml"><link rel="stylesheet" href="/apify-actor-examples/assets/site.css?v=39545fd4a399"><link rel="stylesheet" href="/apify-actor-examples/assets/brand.css?v=eb0f935ade25"><link rel="alternate" type="application/rss+xml" title="Nimbryxo Studio guides" href="/apify-actor-examples/feed.xml"><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization","name":"Nimbryxo Studio","url":"https://hasankhokhar2026.github.io/apify-actor-examples/","sameAs":["https://apify.com/nimbryxo-studio"]},{"@type":"WebSite","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#website","name":"Nimbryxo Studio","url":"https://hasankhokhar2026.github.io/apify-actor-examples/","publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"inLanguage":"en"},{"@type":"WebPage","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/7LV8qekDbhuvsPtdv/#webpage","name":"Google News Keyword & Full-Text Article Scraper","description":"Search Google News by keyword with real resolved article links, headlines, sources, and dates, plus optional full article text and image extraction, filterable by date, language, and publisher.","url":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/7LV8qekDbhuvsPtdv/","isPartOf":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#website"},"publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"inLanguage":"en","mainEntity":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/7LV8qekDbhuvsPtdv/#article"},"breadcrumb":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/7LV8qekDbhuvsPtdv/#breadcrumb"}},{"@type":"TechArticle","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/7LV8qekDbhuvsPtdv/#article","headline":"Google News Keyword & Full-Text Article Scraper","name":"Google News Keyword & Full-Text Article Scraper","description":"Search Google News by keyword with real resolved article links, headlines, sources, and dates, plus optional full article text and image extraction, filterable by date, language, and publisher.","url":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/7LV8qekDbhuvsPtdv/","author":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"mainEntityOfPage":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/7LV8qekDbhuvsPtdv/#webpage"},"inLanguage":"en"},{"@type":"BreadcrumbList","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/7LV8qekDbhuvsPtdv/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Nimbryxo Studio","item":"https://hasankhokhar2026.github.io/apify-actor-examples/"},{"@type":"ListItem","position":2,"name":"Actors","item":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/"},{"@type":"ListItem","position":3,"name":"Google News Keyword & Full-Text Article Scraper","item":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/7LV8qekDbhuvsPtdv/"}]}]}</script><script src="/apify-actor-examples/assets/site.js?v=7cabac48dd31" defer></script></head><body class="theme-studio"><a href="#main" class="skip-link">Skip to content</a><header><div class="inner"><a href="/apify-actor-examples/" class="brand"><img src="/apify-actor-examples/assets/mark.svg?v=2d20f9dc334a" alt="" width="29" height="29">Nimbryxo Studio</a><nav aria-label="Main navigation"><a href="/apify-actor-examples/actors/" aria-current="page">Actors</a><a href="/apify-actor-examples/guides/">Guides</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></nav></div></header><main id="main"><div class="doc-layout"><aside class="contents" aria-label="On this page"><strong>Contents</strong><a href="#overview">Overview</a><a href="#published-readme">Published README</a><a href="#input-schema">Input schema</a><a href="#output-schema">Output schema</a><a href="#dataset-schema">Dataset schema</a><a href="#python-quickstart">Python quickstart</a></aside><article class="prose"><div class="breadcrumb"><a href="/apify-actor-examples/actors/">Actors</a><span>/</span><span>Google News Keyword &amp; Full-Text Article Scraper</span></div><section id="overview"><h1 class="doc-title">Google News Keyword &amp; Full-Text Article Scraper</h1><p class="lede">Search Google News by keyword with real resolved article links, headlines, sources, and dates, plus optional full article text and image extraction, filterable by date, language, and publisher.</p><div class="actions"><a class="button" href="https://apify.com/nimbryxo-studio/google-news-keyword-and-full-text-article-scraper">Open on Apify</a><a class="text-link" href="https://github.com/hasankhokhar2026/apify-actor-examples/blob/main/docs/actors/7LV8qekDbhuvsPtdv/README.md">GitHub source</a></div></section><section class="schema-section" id="input-schema"><h2>Input schema</h2><p>Input fields, types, required flags, descriptions, defaults, and prefills come from the published definition. Prefill examples are distinct from defaults.</p><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>queries</code></td><td>array</td><td>required</td><td>One or more search keywords. Each query is processed separately. Results are deduplicated across queries.</td></tr><tr><td><code>maxResultsPerQuery</code></td><td>integer</td><td>optional</td><td>Maximum number of articles to return per query.</td></tr><tr><td><code>language</code></td><td>string</td><td>optional</td><td>2-letter BCP-47 language code for Google News results (e.g. &#x27;en&#x27;, &#x27;de&#x27;, &#x27;fr&#x27;, &#x27;es&#x27;).</td></tr></tbody></table></div><details><summary>Show all input fields</summary><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>queries</code></td><td>array</td><td>required</td><td>One or more search keywords. Each query is processed separately. Results are deduplicated across queries.</td></tr><tr><td><code>maxResultsPerQuery</code></td><td>integer</td><td>optional</td><td>Maximum number of articles to return per query.</td></tr><tr><td><code>language</code></td><td>string</td><td>optional</td><td>2-letter BCP-47 language code for Google News results (e.g. &#x27;en&#x27;, &#x27;de&#x27;, &#x27;fr&#x27;, &#x27;es&#x27;).</td></tr><tr><td><code>country</code></td><td>string</td><td>optional</td><td>ISO 3166-1 alpha-2 country code for regional news (e.g. &#x27;US&#x27;, &#x27;GB&#x27;, &#x27;DE&#x27;, &#x27;IN&#x27;).</td></tr><tr><td><code>dateRange</code></td><td>string</td><td>optional</td><td>Filter articles by recency. Ignored if dateFrom/dateTo are set.</td></tr><tr><td><code>dateFrom</code></td><td>string</td><td>optional</td><td>Filter articles published on or after this date (YYYY-MM-DD). Overrides dateRange.</td></tr><tr><td><code>dateTo</code></td><td>string</td><td>optional</td><td>Filter articles published on or before this date (YYYY-MM-DD). Use with dateFrom.</td></tr><tr><td><code>siteFilter</code></td><td>string</td><td>optional</td><td>Restrict results to a specific domain (e.g. &#x27;reuters.com&#x27;, &#x27;bbc.com&#x27;).</td></tr><tr><td><code>excludeWords</code></td><td>array</td><td>optional</td><td>Words or phrases to exclude from results.</td></tr><tr><td><code>extractFullText</code></td><td>boolean</td><td>optional</td><td>Fetch each article and extract the full body text using trafilatura. Uses Playwright to render the article page.</td></tr><tr><td><code>includeImages</code></td><td>boolean</td><td>optional</td><td>Extract the main og:image URL from each article page. Uses Playwright to render the article page.</td></tr><tr><td><code>maxConcurrency</code></td><td>integer</td><td>optional</td><td>Number of parallel browser pages (for full text/images). Higher = faster but more memory.</td></tr></tbody></table></div></details><p><a href="input-schema.json">Download the published input schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+  &quot;description&quot;: &quot;Scrape Google News by keyword with optional full-text and image extraction.&quot;,
+  &quot;properties&quot;: {
+    &quot;country&quot;: {
+      &quot;default&quot;: &quot;US&quot;,
+      &quot;description&quot;: &quot;ISO 3166-1 alpha-2 country code for regional news (e.g. &#x27;US&#x27;, &#x27;GB&#x27;, &#x27;DE&#x27;, &#x27;IN&#x27;).&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;title&quot;: &quot;Country&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;dateFrom&quot;: {
+      &quot;description&quot;: &quot;Filter articles published on or after this date (YYYY-MM-DD). Overrides dateRange.&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;nullable&quot;: true,
+      &quot;title&quot;: &quot;Date From&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;dateRange&quot;: {
+      &quot;default&quot;: &quot;any&quot;,
+      &quot;description&quot;: &quot;Filter articles by recency. Ignored if dateFrom/dateTo are set.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;1h&quot;,
+        &quot;6h&quot;,
+        &quot;1d&quot;,
+        &quot;7d&quot;,
+        &quot;1m&quot;,
+        &quot;1y&quot;,
+        &quot;any&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;Past hour&quot;,
+        &quot;Past 6 hours&quot;,
+        &quot;Past day&quot;,
+        &quot;Past week&quot;,
+        &quot;Past month&quot;,
+        &quot;Past year&quot;,
+        &quot;Any time&quot;
+      ],
+      &quot;title&quot;: &quot;Date Range&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;dateTo&quot;: {
+      &quot;description&quot;: &quot;Filter articles published on or before this date (YYYY-MM-DD). Use with dateFrom.&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;nullable&quot;: true,
+      &quot;title&quot;: &quot;Date To&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;excludeWords&quot;: {
+      &quot;description&quot;: &quot;Words or phrases to exclude from results.&quot;,
+      &quot;editor&quot;: &quot;stringList&quot;,
+      &quot;items&quot;: {
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;title&quot;: &quot;Exclude Words&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;extractFullText&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;Fetch each article and extract the full body text using trafilatura. Uses Playwright to render the article page.&quot;,
+      &quot;title&quot;: &quot;Extract Full Article Text&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;includeImages&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;Extract the main og:image URL from each article page. Uses Playwright to render the article page.&quot;,
+      &quot;title&quot;: &quot;Include Article Images&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;language&quot;: {
+      &quot;default&quot;: &quot;en&quot;,
+      &quot;description&quot;: &quot;2-letter BCP-47 language code for Google News results (e.g. &#x27;en&#x27;, &#x27;de&#x27;, &#x27;fr&#x27;, &#x27;es&#x27;).&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;title&quot;: &quot;Language&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;maxConcurrency&quot;: {
+      &quot;default&quot;: 5,
+      &quot;description&quot;: &quot;Number of parallel browser pages (for full text/images). Higher = faster but more memory.&quot;,
+      &quot;maximum&quot;: 20,
+      &quot;minimum&quot;: 1,
+      &quot;title&quot;: &quot;Max Concurrency&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;maxResultsPerQuery&quot;: {
+      &quot;default&quot;: 20,
+      &quot;description&quot;: &quot;Maximum number of articles to return per query.&quot;,
+      &quot;maximum&quot;: 100,
+      &quot;minimum&quot;: 1,
+      &quot;title&quot;: &quot;Max Results Per Query&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;queries&quot;: {
+      &quot;description&quot;: &quot;One or more search keywords. Each query is processed separately. Results are deduplicated across queries.&quot;,
+      &quot;editor&quot;: &quot;stringList&quot;,
+      &quot;items&quot;: {
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;minItems&quot;: 1,
+      &quot;prefill&quot;: [
+        &quot;artificial intelligence&quot;,
+        &quot;climate change&quot;
+      ],
+      &quot;title&quot;: &quot;Search Queries&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;siteFilter&quot;: {
+      &quot;description&quot;: &quot;Restrict results to a specific domain (e.g. &#x27;reuters.com&#x27;, &#x27;bbc.com&#x27;).&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;nullable&quot;: true,
+      &quot;title&quot;: &quot;Site Filter&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    }
+  },
+  &quot;required&quot;: [
+    &quot;queries&quot;
+  ],
+  &quot;schemaVersion&quot;: 1,
+  &quot;title&quot;: &quot;Google News Scraper Input&quot;,
+  &quot;type&quot;: &quot;object&quot;
+}
+</code></pre></details></section><section class="schema-section" id="output-schema"><h2>Output schema</h2><p>Published result links and storage locations. This schema is not an exhaustive contract for every field in a dataset record.</p><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>results</code></td><td>string</td><td>optional</td><td>Dataset with scraped articles</td></tr></tbody></table></div><p><a href="output-schema.json">Download the published output schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+  &quot;actorOutputSchemaVersion&quot;: 1,
+  &quot;description&quot;: &quot;Google News articles with headline, resolved article URL, source, publish date, and optional full text and image.&quot;,
+  &quot;properties&quot;: {
+    &quot;results&quot;: {
+      &quot;description&quot;: &quot;Dataset with scraped articles&quot;,
+      &quot;template&quot;: &quot;{{links.apiDefaultDatasetUrl}}/items&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    }
+  },
+  &quot;title&quot;: &quot;Google News Keyword &amp; Full-Text Article Scraper Output&quot;
+}
+</code></pre></details></section><section class="schema-section" id="dataset-schema"><h2>Dataset schema</h2><p>Published dataset views and any declared field definitions. A view can select only a subset of the returned record fields.</p><p><a href="dataset-schema.json">Download the published dataset schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+  &quot;actorSpecification&quot;: 1,
+  &quot;title&quot;: &quot;News Articles&quot;,
+  &quot;views&quot;: {
+    &quot;detailed&quot;: {
+      &quot;display&quot;: {
+        &quot;component&quot;: &quot;table&quot;,
+        &quot;properties&quot;: {
+          &quot;author&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Author&quot;
+          },
+          &quot;domain&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Domain&quot;
+          },
+          &quot;fullText&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Full Text&quot;
+          },
+          &quot;imageUrl&quot;: {
+            &quot;format&quot;: &quot;link&quot;,
+            &quot;label&quot;: &quot;Image&quot;
+          },
+          &quot;language&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Language&quot;
+          },
+          &quot;publishedAt&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Published&quot;
+          },
+          &quot;query&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Query&quot;
+          },
+          &quot;scrapedAt&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Scraped At&quot;
+          },
+          &quot;snippet&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Snippet&quot;
+          },
+          &quot;source&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Source&quot;
+          },
+          &quot;title&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Title&quot;
+          },
+          &quot;url&quot;: {
+            &quot;format&quot;: &quot;link&quot;,
+            &quot;label&quot;: &quot;URL&quot;
+          }
+        }
+      },
+      &quot;title&quot;: &quot;Detailed View&quot;,
+      &quot;transformation&quot;: {
+        &quot;fields&quot;: [
+          &quot;query&quot;,
+          &quot;title&quot;,
+          &quot;url&quot;,
+          &quot;source&quot;,
+          &quot;domain&quot;,
+          &quot;publishedAt&quot;,
+          &quot;snippet&quot;,
+          &quot;fullText&quot;,
+          &quot;imageUrl&quot;,
+          &quot;author&quot;,
+          &quot;language&quot;,
+          &quot;scrapedAt&quot;
+        ]
+      }
+    },
+    &quot;overview&quot;: {
+      &quot;display&quot;: {
+        &quot;component&quot;: &quot;table&quot;,
+        &quot;properties&quot;: {
+          &quot;domain&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Domain&quot;
+          },
+          &quot;publishedAt&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Published&quot;
+          },
+          &quot;query&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Query&quot;
+          },
+          &quot;scrapedAt&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Scraped At&quot;
+          },
+          &quot;snippet&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Snippet&quot;
+          },
+          &quot;source&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Source&quot;
+          },
+          &quot;title&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Title&quot;
+          },
+          &quot;url&quot;: {
+            &quot;format&quot;: &quot;link&quot;,
+            &quot;label&quot;: &quot;URL&quot;
+          }
+        }
+      },
+      &quot;title&quot;: &quot;Articles Overview&quot;,
+      &quot;transformation&quot;: {
+        &quot;fields&quot;: [
+          &quot;query&quot;,
+          &quot;title&quot;,
+          &quot;source&quot;,
+          &quot;domain&quot;,
+          &quot;publishedAt&quot;,
+          &quot;url&quot;,
+          &quot;snippet&quot;,
+          &quot;scrapedAt&quot;
+        ]
+      }
+    }
+  }
+}
+</code></pre></details></section><section class="schema-section" id="key-value-schema"><h2>Key-value schema</h2><p>Published key-value store definitions, when provided by this build.</p><p>This definition is not present in the default published build. See the published README for available documentation.</p></section><section id="published-readme"><h2>Published README</h2><details><summary>Read the full published documentation</summary><h2 id="readme-google-news-keyword-full-text-article-scraper">Google News Keyword &amp; Full-Text Article Scraper</h2>
+<p>Search Google News for any keyword and get back real, resolved article links — not Google's redirect URLs — along with headline, source, and publish date. Turn on full-text and image extraction when a snippet isn't enough and you need the actual article body.</p>
+<h2 id="readme-what-this-actor-does">What this actor does</h2>
+<ul>
+<li>Searches Google News for one or more keywords in a single run and deduplicates articles that match more than one query</li>
+<li>Resolves each result to the publisher's real article URL instead of a Google redirect link whenever it can</li>
+<li>Filters results by recency, a custom date range, language, country, a specific publisher domain, or excluded words</li>
+<li>Can optionally fetch each article's page to pull the full body text and the main article image</li>
+<li><code>fullText</code>, <code>imageUrl</code>, and <code>author</code> are always present on every record but come back <code>null</code> when the corresponding option is off or nothing was found; <code>publishedAt</code>, <code>snippet</code>, <code>source</code> and <code>domain</code> are empty strings when Google News doesn't supply them</li>
+</ul>
+<h2 id="readme-output-per-article">Output per article</h2>
+<ul>
+<li><code>query</code> — the search keyword that returned this article</li>
+<li><code>title</code> — the article headline</li>
+<li><code>url</code> — the publisher's actual article URL, resolved from Google News (if resolution fails, the Google News link is kept)</li>
+<li><code>source</code> — the publisher name, e.g. <code>BBC</code>, <code>Reuters</code></li>
+<li><code>domain</code> — the publisher's domain, e.g. <code>bbc.com</code> (from the resolved URL, or from Google News' source link when unresolved)</li>
+<li><code>publishedAt</code> — the article's publication date and time in ISO 8601, as listed by Google News</li>
+<li><code>snippet</code> — the short summary Google News shows for the article</li>
+<li><code>fullText</code> — the full article body text; <code>null</code> unless <code>extractFullText</code> is enabled</li>
+<li><code>imageUrl</code> — the article's main image URL; <code>null</code> unless <code>includeImages</code> is enabled</li>
+<li><code>author</code> — the article's byline; <code>null</code> unless <code>extractFullText</code> or <code>includeImages</code> is enabled (either one opens the article page) and the page publishes one</li>
+<li><code>language</code> — the language code used for the search</li>
+<li><code>scrapedAt</code> — when the actor started on that query</li>
+</ul>
+<h2 id="readme-input">Input</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>queries</code></td>
+<td>array of strings</td>
+<td>–</td>
+<td>Search keywords; each is searched separately and results are deduplicated across all of them. Required.</td>
+</tr>
+<tr>
+<td><code>maxResultsPerQuery</code></td>
+<td>integer</td>
+<td><code>20</code></td>
+<td>Maximum articles to return per query (1–100).</td>
+</tr>
+<tr>
+<td><code>language</code></td>
+<td>string</td>
+<td><code>en</code></td>
+<td>Language code for the search, e.g. <code>en</code>, <code>de</code>, <code>fr</code>, <code>es</code>.</td>
+</tr>
+<tr>
+<td><code>country</code></td>
+<td>string</td>
+<td><code>US</code></td>
+<td>Country code for regional news, e.g. <code>US</code>, <code>GB</code>, <code>DE</code>, <code>IN</code>.</td>
+</tr>
+<tr>
+<td><code>dateRange</code></td>
+<td>string</td>
+<td><code>any</code></td>
+<td>Recency filter: <code>1h</code>, <code>6h</code>, <code>1d</code>, <code>7d</code>, <code>1m</code>, <code>1y</code>, or <code>any</code>. Ignored when <code>dateFrom</code>/<code>dateTo</code> are set.</td>
+</tr>
+<tr>
+<td><code>dateFrom</code></td>
+<td>string</td>
+<td>–</td>
+<td>Only articles published on or after this date (<code>YYYY-MM-DD</code>); overrides <code>dateRange</code>.</td>
+</tr>
+<tr>
+<td><code>dateTo</code></td>
+<td>string</td>
+<td>–</td>
+<td>Only articles published on or before this date (<code>YYYY-MM-DD</code>); use together with <code>dateFrom</code>.</td>
+</tr>
+<tr>
+<td><code>siteFilter</code></td>
+<td>string</td>
+<td>–</td>
+<td>Restrict results to one publisher domain, e.g. <code>reuters.com</code>.</td>
+</tr>
+<tr>
+<td><code>excludeWords</code></td>
+<td>array of strings</td>
+<td>–</td>
+<td>Words or phrases added to the search as exclusions, so Google News leaves out matching articles.</td>
+</tr>
+<tr>
+<td><code>extractFullText</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Fetch each article's page and extract the full body text and author byline.</td>
+</tr>
+<tr>
+<td><code>includeImages</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Fetch each article's page and extract its main image URL (the author byline is picked up too when present).</td>
+</tr>
+<tr>
+<td><code>maxConcurrency</code></td>
+<td>integer</td>
+<td><code>5</code></td>
+<td>How many articles to process in parallel when <code>extractFullText</code>/<code>includeImages</code> is on (1–20).</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="readme-example-quick-scan-of-today-s-headlines">Example: quick scan of today's headlines</h2>
+<pre><code class="language-json">{
+  &quot;queries&quot;: [&quot;artificial intelligence&quot;, &quot;climate change&quot;],
+  &quot;maxResultsPerQuery&quot;: 20,
+  &quot;dateRange&quot;: &quot;1d&quot;
+}
+</code></pre>
+<h2 id="readme-example-full-article-text-and-images">Example: full article text and images</h2>
+<pre><code class="language-json">{
+  &quot;queries&quot;: [&quot;renewable energy&quot;],
+  &quot;maxResultsPerQuery&quot;: 10,
+  &quot;extractFullText&quot;: true,
+  &quot;includeImages&quot;: true
+}
+</code></pre>
+<h2 id="readme-example-one-publisher-custom-date-range-with-exclusions">Example: one publisher, custom date range, with exclusions</h2>
+<pre><code class="language-json">{
+  &quot;queries&quot;: [&quot;elections&quot;],
+  &quot;siteFilter&quot;: &quot;bbc.com&quot;,
+  &quot;dateFrom&quot;: &quot;2026-01-01&quot;,
+  &quot;dateTo&quot;: &quot;2026-02-28&quot;,
+  &quot;excludeWords&quot;: [&quot;opinion&quot;, &quot;editorial&quot;],
+  &quot;maxResultsPerQuery&quot;: 50
+}
+</code></pre>
+<h2 id="readme-example-non-english-regional-news">Example: non-English regional news</h2>
+<pre><code class="language-json">{
+  &quot;queries&quot;: [&quot;Nachrichten&quot;],
+  &quot;language&quot;: &quot;de&quot;,
+  &quot;country&quot;: &quot;DE&quot;,
+  &quot;maxResultsPerQuery&quot;: 10
+}
+</code></pre>
+<h2 id="readme-use-cases">Use cases</h2>
+<ul>
+<li><strong>Media monitoring</strong> — track coverage of your brand, competitors, or industry across the publishers Google News indexes</li>
+<li><strong>Market research</strong> — pull news mentioning a company, product, or market trend for analysis</li>
+<li><strong>Newsletter curation</strong> — build a themed news digest from one or more topics</li>
+<li><strong>Sentiment analysis</strong> — feed full article text into an NLP pipeline to gauge coverage tone on a topic</li>
+<li><strong>Academic or policy research</strong> — gather a dated, filtered news dataset for a study</li>
+<li><strong>Dataset building</strong> — collect full article text at scale for downstream text-analysis work</li>
+</ul>
+<h2 id="readme-faq">FAQ</h2>
+<p><strong>Does this return the real article link or a Google redirect?</strong>
+The real, resolved publisher URL, not the <code>news.google.com</code> redirect link Google News shows in its own results. In the rare case a link can't be resolved, the Google News link is returned in <code>url</code> instead.</p>
+<p><strong>Why are <code>fullText</code>, <code>imageUrl</code>, or <code>author</code> null in my results?</strong>
+All three fields are always present on the record, but they only get a real value when you turn on <code>extractFullText</code> and/or <code>includeImages</code> and the article page actually has that data; otherwise they come back as <code>null</code>. Pages that fail to load also leave them <code>null</code>. By default (both options off) the actor returns headlines and snippets only, which is faster.</p>
+<p><strong>Can full-text extraction read paywalled articles?</strong>
+No — sites behind a paywall (e.g. subscription-only news sites) won't return usable full text, since the actor only reads what's publicly visible on the page.</p>
+<p><strong>Can I search multiple keywords at once?</strong>
+Yes, add as many entries as you like to <code>queries</code>; results across all of them are deduplicated by their Google News link, so an article found by an earlier query is not repeated for a later one.</p>
+<p><strong>What's the difference between <code>dateRange</code> and <code>dateFrom</code>/<code>dateTo</code>?</strong>
+<code>dateRange</code> is a quick recency filter (e.g. &quot;past week&quot;). Setting <code>dateFrom</code> and/or <code>dateTo</code> gives you a custom date window instead and makes the actor ignore <code>dateRange</code>. Both are passed to Google News as search conditions, so the dates Google applies are what count.</p>
+<p><strong>Can I restrict results to one news source?</strong>
+Yes, set <code>siteFilter</code> to that publisher's domain, e.g. <code>reuters.com</code>.</p>
+<p><strong>How many articles can I get per query?</strong>
+Up to <code>maxResultsPerQuery</code>, capped at 100, limited by how many matching articles Google News returns for that query and filter combination in a single result list (there is no paging beyond it).</p>
+<p><strong>Is this affiliated with Google?</strong>
+No. This is an independent, third-party actor that reads Google News' publicly available search results; it is not affiliated with or endorsed by Google.</p>
+</details></section><section id="python-quickstart"><h2>Python quickstart</h2><p>Use a schema-derived input and the Python standard library to start a run. An Apify account and token are required for execution.</p><p><a href="/apify-actor-examples/guides/7LV8qekDbhuvsPtdv/">Open the step-by-step Python guide →</a></p></section><p class="source-note">Source build <code>nb5nBoeTHtEgc79u6</code>. Documentation is regenerated from the default published build; private drafts are not included.</p></article></div></main><footer class="footer"><strong>Nimbryxo Studio</strong><div class="footer-links"><a href="/apify-actor-examples/topics/">Topics</a><a href="/apify-actor-examples/sources/">Documentation sources</a><a href="https://apify.com/nimbryxo-studio">Apify</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></div></footer></body></html>
