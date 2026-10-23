@@ -1,0 +1,95 @@
+{
+  "description": "Configure search terms, locations, direct URLs, and limits for scraping Yelp business data and reviews.",
+  "properties": {
+    "directUrls": {
+      "description": "List of direct Yelp business page URLs to scrape. Use this to scrape specific businesses without searching.",
+      "editor": "requestListSources",
+      "example": [
+        {
+          "url": "https://www.yelp.com/biz/prince-street-pizza-new-york-2"
+        }
+      ],
+      "title": "Direct URLs",
+      "type": "array"
+    },
+    "locations": {
+      "description": "List of locations to search in (e.g., 'New York, NY', 'Los Angeles, CA'). Each search term is combined with each location.",
+      "editor": "stringList",
+      "example": [
+        "New York, NY",
+        "San Francisco, CA"
+      ],
+      "prefill": [
+        "New York, NY"
+      ],
+      "title": "Locations",
+      "type": "array"
+    },
+    "proxy": {
+      "default": {
+        "apifyProxyGroups": [
+          "RESIDENTIAL"
+        ],
+        "useApifyProxy": true
+      },
+      "description": "REQUIRED. Yelp uses Cloudflare protection. Residential proxy is mandatory; datacenter IPs are reliably blocked.",
+      "editor": "proxy",
+      "prefill": {
+        "apifyProxyGroups": [
+          "RESIDENTIAL"
+        ],
+        "useApifyProxy": true
+      },
+      "title": "Proxy Configuration",
+      "type": "object"
+    },
+    "reviewLimit": {
+      "default": 5,
+      "description": "Maximum number of reviews to collect per business. Set to 0 to skip review extraction.",
+      "maximum": 50,
+      "minimum": 0,
+      "prefill": 1,
+      "title": "Reviews per Business",
+      "type": "integer"
+    },
+    "runTimeoutSecs": {
+      "default": 1800,
+      "description": "Maximum wall-clock time for the run before stopping new fetches. Default 1800s (30 min) suits most production runs; the prefill 240s exists so Apify's 5-min daily quality test passes. Increase for large searchLimit or many locations.",
+      "editor": "number",
+      "maximum": 7200,
+      "minimum": 60,
+      "prefill": 240,
+      "title": "Run Timeout (seconds)",
+      "type": "integer"
+    },
+    "searchLimit": {
+      "default": 10,
+      "description": "Maximum number of business results to collect per search query. The scraper automatically paginates Yelp search (10 results per page) until this limit is reached, the result set is exhausted, or the run timeout is hit. Higher values mean longer runs.",
+      "maximum": 100,
+      "minimum": 1,
+      "prefill": 1,
+      "title": "Search Results Limit",
+      "type": "integer"
+    },
+    "searchTerms": {
+      "description": "List of search queries (e.g., 'pizza', 'plumber', 'hair salon'). Used together with Locations to find businesses on Yelp.",
+      "editor": "stringList",
+      "example": [
+        "pizza",
+        "sushi",
+        "coffee"
+      ],
+      "prefill": [
+        "pizza"
+      ],
+      "title": "Search Terms",
+      "type": "array"
+    }
+  },
+  "required": [
+    "proxy"
+  ],
+  "schemaVersion": 1,
+  "title": "Yelp Scraper Input",
+  "type": "object"
+}

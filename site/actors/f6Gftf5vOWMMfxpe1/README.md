@@ -1,136 +1,189 @@
 # Bilibili Video Search, Ranking & Metadata Scraper
 
-Bilibili is one of China's largest video platforms, and this actor reads its public video data four ways: keyword search, direct lookup by video URL/BV ID/AV ID, the site-wide popular feed, or a partition's ranking chart.
+Collect public video metadata from Bilibili without an account. Search a keyword with Bilibili's own sort and filter options, resolve video links or IDs, walk the popular feed, or pull all-time, origin, rookie, and weekly ranking charts. Each row carries the identifiers, uploader, engagement counters, duration, publish time, cover, and optional detail fields such as tags, coin/share counts, parts, resolution, and uploader followers.
 
 ## What this actor does
 
-- Switches between four modes via `mode`: `search`, `byVideoUrl`, `popular`, and `ranking`.
-- Searches by keyword with sort order (total rank, most viewed, newest, most danmaku, rating score), a partition filter, and a duration-range filter.
-- Fetches specific videos directly by full URL, bare BV ID, or numeric AV ID.
-- Pulls the site's popular feed or one of 15 ranking charts (site-wide plus 14 partitions such as anime, music, game and food).
-- Filters results in every mode by minimum view count or a title/description/author keyword.
-- Omits any field a given video doesn't have, so which fields appear depends on the mode (see the notes under the table).
+- **Four modes:** `search`, `byVideoUrl`, `popular`, and `ranking` (weekly charts are a ranking type).
+- **Search filters:** sort by relevance, views, newest, danmaku, favorites, or comments; publication date range; duration bucket; and partition.
+- **Ranking coverage:** 15 partitions across all-time, originals-only, rookie, and the weekly series (one issue per run, or a specific issue number).
+- **Detail enrichment:** optional per-video enrichment adds tags, coin and share counts, cid, every part, resolution, uploader followers, and the full stat block. Video lookups are always enriched.
+- **Duplicate-safe:** repeated videos across pages or queries are emitted once, and course-ad rows without a video ID are skipped.
+- **Stable field names:** every mode uses the same names, and a field is omitted only when Bilibili has no real value for that video, never replaced with a placeholder.
+- **Empty fields are omitted:** missing values are left out instead of being returned as `null`.
 
 ## Output per video
 
-| Field | Description |
-|---|---|
-| `bvid` | Bilibili's BV-format video ID. |
-| `aid` | Bilibili's numeric video ID (AV ID). |
-| `title` | Video title, with search-highlight markup stripped. |
-| `description` | Video description. |
-| `author` | Uploader's display name. |
-| `authorMid` | Uploader's numeric member ID. |
-| `viewCount` | Total play count. |
-| `danmaku` | Danmaku (bullet comment) count. |
-| `replyCount` | Comment count. |
-| `favorites` | Favorite/collection count. |
-| `likeCount` | Like count. |
-| `coinCount` | Coin count (Bilibili's tipping currency). |
-| `shareCount` | Share count. |
-| `duration` | Video length in seconds. |
-| `durationText` | Video length formatted as `H:MM:SS`. |
-| `coverUrl` | Cover image URL. |
-| `publishTime` | Publish timestamp, UTC ISO format. |
-| `publishDate` | Publish date (`YYYY-MM-DD`), only on reduced search records (see below). |
-| `typeName` | Partition/category label. |
-| `uploadRegion` | Uploader's declared location, when published. |
-| `pageCount` | Number of parts, on multi-part uploads only (not in `search` mode). |
-| `resolution` | Video resolution (e.g. `1920x1080`), when available (not in `search` mode). |
-| `tags` | Up to 15 tags attached to the video (search mode only). |
-| `videoUrl` | Canonical URL of the video on bilibili.com. |
-| `sourceUrl` | The page or chart the record was read from (the video page in `search` mode, the popular/ranking chart or lookup request in other modes). |
-| `recordType` | `"video"` for a normal record, `"error"` for an error record (see below). |
-| `scrapedAt` | UTC timestamp of when the record was scraped. |
+- `recordType` — `"video"` for normal rows, `"error"` for error rows.
+- `bvid` — BV-format video ID.
+- `aid` — numeric AV video ID.
+- `cid` — main part content ID (detail, popular, ranking, weekly, and enriched rows).
+- `title` — video title, with search highlighting and HTML entities cleaned.
+- `description` — video description.
+- `tags[]` — video tags (search rows and enriched rows).
+- `typeName` — partition or category label.
+- `partitionId` — Bilibili category ID for the video (often a subcategory of the selected partition).
+- `author` — uploader display name.
+- `authorMid` — uploader numeric member ID.
+- `authorAvatar` — uploader avatar URL.
+- `authorFollowers` — uploader follower count (enriched rows).
+- `viewCount` — total views.
+- `likeCount` — likes.
+- `coinCount` — coins (enriched, popular, ranking, and weekly rows; absent on raw search rows).
+- `favorites` — favorites/collections.
+- `shareCount` — shares (enriched, popular, ranking, and weekly rows; absent on raw search rows).
+- `danmaku` — aggregate danmaku count.
+- `replyCount` — comment count.
+- `duration` — length in seconds.
+- `durationText` — length formatted as `H:MM:SS` or `M:SS`.
+- `publishTime` — publish time in UTC ISO format.
+- `publishDate` — publish date in `YYYY-MM-DD` (UTC).
+- `coverUrl` — cover image URL.
+- `pageCount` — number of parts in a multi-part upload.
+- `pages[]` — per-part objects with `page`, `cid`, `title`, `duration`, `width`, and `height` (enriched rows).
+- `resolution` — main part resolution, for example `1920x1080`.
+- `dynamic` — the uploader's video dynamic text, when present.
+- `copyright` — Bilibili copyright flag.
+- `uploadRegion` — uploader's declared location, when published.
+- `rankIndex` — 1-based chart position (ranking and weekly rows).
+- `recReason` — recommendation reason shown by Bilibili (popular and weekly rows, when present).
+- `engagementRate` — `(likes + coins + favorites + shares + replies) / views`, rounded to four decimals. Raw search rows have no coin/share counters, so their rate uses the counters Bilibili returns there.
+- `coinLikeRatio` — `coins / likes`, rounded to four decimals, when likes are non-zero. Absent on raw search rows because Bilibili does not return coins in search results.
+- `videoUrl` — canonical Bilibili video page.
+- `sourceUrl` — the search page, chart, or video page the row came from.
+- `sourceQuery` — original search keyword (search rows only).
+- `dataSource` — `search`, `video`, `popular`, `ranking`, or `weekly`.
+- `enriched` — `true` when per-video detail data was merged.
+- `scrapedAt` — UTC timestamp of collection.
 
-If Bilibili's regular search results can't be loaded for a page, the actor reads the public search page instead. Those reduced search records carry only `bvid`, `videoUrl`, `title`, `author`, `publishDate`, `coverUrl`, `viewCount`, `danmaku`, `duration` and `durationText`, and the `order`, `tids` and `duration` filters are not applied to them.
+## Output per error record
 
-## Error records
-
-The dataset can also contain records with `recordType: "error"`, written at the end of the run and not counted toward `maxItems`. They have `errorType` (`invalid_input`, `not_found` or `fetch_error`), `message`, `sourceUrl` (the input or request that failed) and `scrapedAt`. They appear for an unresolvable video URL or BV ID, a video that can't be found, an empty search query, missing lookup inputs, or a search/popular/ranking request that fails.
+Error rows carry `recordType: "error"`, an `errorType` (`invalid_input`, `not_found`, `blocked`, `rate_limited`, `upstream_error`, `parse_error`, or `empty_response`), a `message`, the `sourceUrl` that failed, optional `statusCode` and `biliCode` values, a `retryable` flag, and `scrapedAt`. Error rows never count toward `maxItems`.
 
 ## Input
 
 | Field | Type | Default | Description |
 |---|---|---|---|
 | `mode` | String (select) | `search` | `search`, `byVideoUrl`, `popular`, or `ranking`. |
-| `searchQuery` | String | `python` | Keyword to search. Used in `search` mode; an empty query produces an `invalid_input` error record. |
-| `videoUrls` | List of strings | `[]` | Bilibili video URLs (`https://www.bilibili.com/video/BV...`). Used in `byVideoUrl` mode. The URL must contain a BV ID; `b23.tv` short links and `av`-style URLs come back as error records. |
-| `bvids` | List of strings | `[]` | Bare BV IDs. Used in `byVideoUrl` mode. |
-| `aids` | List of strings | `[]` | Numeric video IDs (AV IDs). Used in `byVideoUrl` mode; non-numeric entries are skipped. |
-| `rid` | String (select) | `0` | Ranking partition (15 options, e.g. anime, music, game). Used in `ranking` mode. |
-| `order` | String (select) | `totalrank` | Search sort: `totalrank`, `click`, `pubdate`, `danmaku`, or `scores`. Used in `search` mode. |
-| `tids` | String (select) | `0` | Restrict search results to one partition. Used in `search` mode. |
-| `duration` | String (select) | `0` | Restrict search results by length: all, under 10 min, 10-30 min, 30-60 min, over 60 min. Used in `search` mode. |
-| `minViewCount` | Integer | – | Drop videos with fewer views than this (videos without a view count are dropped too). Applies to every mode. |
-| `containsKeyword` | String | – | Only keep videos whose title, description, or author contains this substring (case-insensitive). Applies to every mode. |
-| `maxItems` | Integer | `20` | Maximum video records to return (1–500). `search` and `popular` read at most 10 result pages and `ranking` reads one chart, so the real ceiling can be lower. |
+| `searchQueries` | List of strings | `[]` (prefill `["python"]`) | Keywords to search. Use one entry per alias; Bilibili does not translate Chinese and English keywords. Used in `search` mode. |
+| `videoUrls` | List of strings | `[]` | Video pages, `b23.tv` short links, bare BV IDs, `av` IDs, or numeric AV IDs. Used in `byVideoUrl` mode. |
+| `maxItems` | Integer | `20` | Maximum video rows (1-1000). Error rows do not count. |
+| `sort` | String (select) | `totalrank` | Search order: `totalrank`, `click`, `pubdate`, `dm` (most danmaku), `stow` (most favorites), or `scores` (most comments). Used in `search` mode. |
+| `publishedAfter` | Date | – | Keep videos published on or after this UTC date (`YYYY-MM-DD`). Used in `search` mode. |
+| `publishedBefore` | Date | – | Keep videos published on or before this UTC date (`YYYY-MM-DD`). Used in `search` mode. |
+| `duration` | String (select) | `all` | `all`, `short` (under 10 min), `medium` (10-30 min), `long` (30-60 min), or `verylong` (over 60 min). Used in `search` mode. |
+| `partition` | String (select) | `0` | Partition for search filtering or the ranking chart (all plus 14 named partitions). Ignored for weekly charts. |
+| `rankingType` | String (select) | `all` | `all`, `origin`, `rookie`, or `weekly`. Used in `ranking` mode. |
+| `weekNumber` | Integer | – | A specific weekly issue number (1-10000). Omit for the latest issue. |
+| `enrichDetails` | Boolean | `false` | Add a detail request per unique video to fill tags, coin/share counts, cid, parts, resolution, and uploader followers. Usually adds 3-10 seconds per video, depending on Bilibili latency. |
+| `proxyConfiguration` | Object | – | Optional. The actor starts direct and retries through fresh and anonymous browser sessions; a proxy you provide is used only as the final escalation stage. |
 
-### Example: most-viewed Python tutorials
+Either date bound can be used alone; the scraper fills in the missing bound because Bilibili applies a publish-date filter only when both bounds are supplied.
 
-```json
-{
-  "mode": "search",
-  "searchQuery": "python",
-  "order": "click",
-  "minViewCount": 100000,
-  "maxItems": 15
-}
-```
-
-### Example: 30-60 minute food videos from the food partition
+### Example: newest short Python videos from the knowledge partition
 
 ```json
 {
   "mode": "search",
-  "searchQuery": "美食",
-  "tids": "211",
-  "duration": "3",
-  "maxItems": 10
+  "searchQueries": ["python"],
+  "sort": "pubdate",
+  "partition": "36",
+  "duration": "short",
+  "publishedAfter": "2026-01-01",
+  "maxItems": 40
 }
 ```
 
-### Example: a specific video by URL
+### Example: enrich a batch of mixed video links
 
 ```json
 {
   "mode": "byVideoUrl",
-  "videoUrls": ["https://www.bilibili.com/video/BV1wD4y1o7AS/"]
+  "videoUrls": [
+    "https://www.bilibili.com/video/BV1wD4y1o7AS/",
+    "BV1Jgf6YvE8e",
+    "av170001",
+    "https://b23.tv/abc123"
+  ]
 }
 ```
 
-### Example: music partition ranking chart
+### Example: top popular videos with full detail
+
+```json
+{
+  "mode": "popular",
+  "maxItems": 100,
+  "enrichDetails": true
+}
+```
+
+### Example: latest weekly chart in the food partition
 
 ```json
 {
   "mode": "ranking",
-  "rid": "3",
-  "maxItems": 20
+  "rankingType": "weekly",
+  "partition": "211",
+  "maxItems": 50
 }
 ```
 
 ## Use cases
 
-- **Creator discovery** — search a niche keyword to find active uploaders and their typical view counts.
-- **Trend tracking** — pull a partition's ranking chart on a schedule to see which content is climbing.
-- **Content research** — compare titles, durations and engagement across the videos a keyword surfaces.
-- **Catalog lookups** — resolve a known list of BV IDs or video links into full metadata in one run.
-- **Category benchmarking** — compare average view/like/danmaku counts across different partitions via `ranking`.
+- **Creator and niche research** — search Chinese and English keywords with date and duration filters to see who is active in a topic.
+- **Trend tracking** — schedule daily pulls of a partition's all-time, origin, rookie, or weekly chart and compare rank movement.
+- **Content benchmarking** — compare views, likes, coins, favorites, and comments across videos and partitions.
+- **Dataset building** — export stable video metadata for recommendation models, topic analysis, or media monitoring.
+- **Catalog resolution** — turn a list of saved links or BV IDs into complete metadata with one run.
+- **Engagement analysis** — use the derived engagement rate and coin-to-like ratio to screen videos for authentic interaction.
 
 ## FAQ
 
-**Do I need a Bilibili account?** No. Every mode reads public video data only.
+### Do I need a Bilibili account or cookies?
 
-**What's the difference between `tids` in search mode and `rid` in ranking mode?** They use the same partition ID list, but `tids` narrows a keyword search to one partition while `rid` selects which partition's ranking chart to fetch — `ranking` mode has no keyword at all.
+No. Search, video lookups, the popular feed, and every ranking chart are read from public pages without a login.
 
-**Why is `tags` only present on search-mode records?** Bilibili's search results API returns tags directly on each result; the popular, ranking and direct-video lookups don't expose that field on the same payload.
+### Does this actor collect comments, danmaku text, subtitles, creator video lists, or video files?
 
-**Why do I get fewer videos than `maxItems`?** Search and the popular feed stop after 10 result pages, a ranking chart is a single fixed list, and `minViewCount`/`containsKeyword` drop records after they are fetched. Any of these can leave you below the cap.
+No. The actor returns public video metadata and aggregate counters only. Comment text, individual danmaku messages, subtitles, creator video lists, and media downloads are outside its scope. Uploader details and follower counts come from the videos themselves.
 
-**What happens if I pass an invalid BV ID or URL?** That entry produces a record with `recordType: "error"` instead of being silently dropped, so you can see exactly which inputs failed. Non-numeric `aids` entries are the exception: they are skipped without an error record.
+### Why are `coinCount` and `shareCount` missing on some search rows?
 
-**Why do some search records have `publishDate` instead of `publishTime`?** Those are the reduced search records read from Bilibili's public search page when the regular results can't be loaded; that page only shows a calendar date. Every other video record carries the full `publishTime` timestamp when Bilibili provides one.
+Bilibili's search results do not include coin or share counts. Set `enrichDetails` to `true` (or use `byVideoUrl`) to fill them from the video detail data.
 
-**Can I fetch a specific uploader's full video list?** No, not in this version — only search, direct video lookup, popular feed, and partition rankings are supported.
+### How much slower is detail enrichment?
 
-**Is this affiliated with Bilibili?** No. This is an independent tool and is not affiliated with, endorsed by, or sponsored by Bilibili or its operators.
+Each enriched video usually adds 3-10 seconds, depending on Bilibili latency. A 1,000-row search with enrichment can take an hour or more; the default run is intentionally small.
+
+### Why do I get fewer videos than `maxItems`?
+
+Search returns at most 1,000 rows across 20 pages, the popular feed currently holds about 643 videos, a ranking chart has roughly 87-100 entries, and a weekly issue has about 48-49. Filters applied after collection can reduce the count further.
+
+### What do `dm` and `scores` mean in the sort list?
+
+`dm` sorts by danmaku count and `scores` sorts by comment count. Older actors labelled `scores` as a rating; that is not what Bilibili returns.
+
+### Are course ads included in search results?
+
+No. Search pages can contain course-promotion rows without a video ID; those are skipped, so a page of 50 results can yield fewer than 50 videos.
+
+### What timezone are the date filters in?
+
+Both `publishedAfter` and `publishedBefore` are interpreted in UTC, and `publishTime` is emitted in UTC ISO format.
+
+### Can I fetch a specific weekly issue?
+
+Yes. Set `rankingType` to `weekly` and pass the issue number in `weekNumber`. Leave `weekNumber` empty to get the latest issue.
+
+### What happens with an invalid link or ID?
+
+That input produces an error row with `recordType: "error"` and an `errorType`, so you can see exactly which entry failed. Valid entries in the same run still produce video rows.
+
+### Do I need to configure a proxy?
+
+No. The actor starts with a direct connection and retries through a fresh session and an anonymous browser session. If you provide a proxy, it is used only after those stages; without one, a persistent block ends in a typed error record.
+
+### Is this actor affiliated with Bilibili?
+
+No. It is an independent third-party tool and is not affiliated with, endorsed by, or sponsored by Bilibili or its operators.

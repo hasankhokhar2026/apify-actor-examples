@@ -1,38 +1,16 @@
 {
-  "description": "Search Bilibili videos, fetch single videos by bvid/aid/URL, popular feed, or partition rankings — via public api.bilibili.com endpoints. No login required.",
+  "description": "Search Bilibili videos by keyword, resolve video URLs or IDs, read the popular feed, or pull partition, rookie, origin, and weekly ranking charts. Public metadata only; no login or cookies required.",
   "properties": {
-    "aids": {
-      "default": [],
-      "description": "Bilibili numeric video IDs (aid), e.g. 170001",
-      "editor": "stringList",
-      "prefill": [],
-      "title": "Aids (mode=byVideoUrl)",
-      "type": "array"
-    },
-    "bvids": {
-      "default": [],
-      "description": "Bilibili BV IDs, e.g. BV1xx411c7mD",
-      "editor": "stringList",
-      "prefill": [],
-      "title": "BVids (mode=byVideoUrl)",
-      "type": "array"
-    },
-    "containsKeyword": {
-      "description": "Only keep videos whose title, description or author contains this substring (case-insensitive).",
-      "editor": "textfield",
-      "title": "Title/author keyword",
-      "type": "string"
-    },
     "duration": {
-      "default": "0",
-      "description": "Keep only videos within this length range (mode=search).",
+      "default": "all",
+      "description": "Keep only videos in this length range.",
       "editor": "select",
       "enum": [
-        "0",
-        "1",
-        "2",
-        "3",
-        "4"
+        "all",
+        "short",
+        "medium",
+        "long",
+        "verylong"
       ],
       "enumTitles": [
         "All lengths",
@@ -41,29 +19,29 @@
         "30-60 minutes",
         "Over 60 minutes"
       ],
-      "prefill": "0",
-      "title": "Search duration filter (mode=search)",
+      "prefill": "all",
+      "title": "Duration filter (mode=search)",
       "type": "string"
+    },
+    "enrichDetails": {
+      "default": false,
+      "description": "Add one detail request per unique video in search, popular, and ranking modes to fill tags, coin/share counts, cid, parts, resolution, and uploader followers. Usually adds 3-10 seconds per video, depending on Bilibili latency. byVideoUrl lookups are always enriched.",
+      "prefill": false,
+      "title": "Enrich with video details",
+      "type": "boolean"
     },
     "maxItems": {
       "default": 20,
-      "description": "Hard cap on emitted records.",
-      "maximum": 500,
+      "description": "Hard cap on emitted video records. Error records do not count toward it.",
+      "maximum": 1000,
       "minimum": 1,
-      "prefill": 20,
-      "title": "Max items",
-      "type": "integer"
-    },
-    "minViewCount": {
-      "description": "Drop videos with fewer views.",
-      "maximum": 1000000000,
-      "minimum": 0,
-      "title": "Min view count",
+      "prefill": 3,
+      "title": "Max videos",
       "type": "integer"
     },
     "mode": {
       "default": "search",
-      "description": "What to fetch.",
+      "description": "What to collect.",
       "editor": "select",
       "enum": [
         "search",
@@ -73,39 +51,17 @@
       ],
       "enumTitles": [
         "Search videos by keyword",
-        "Fetch videos by bvid / aid / URL",
+        "Fetch videos by URL / BV / AV / b23.tv",
         "Popular feed",
-        "Partition ranking"
+        "Ranking chart"
       ],
       "prefill": "search",
       "title": "Mode",
       "type": "string"
     },
-    "order": {
-      "default": "totalrank",
-      "description": "Search result ordering (mode=search).",
-      "editor": "select",
-      "enum": [
-        "totalrank",
-        "click",
-        "pubdate",
-        "danmaku",
-        "scores"
-      ],
-      "enumTitles": [
-        "Total rank (default)",
-        "Most viewed",
-        "Newest",
-        "Most danmaku",
-        "Rating score"
-      ],
-      "prefill": "totalrank",
-      "title": "Search sort (mode=search)",
-      "type": "string"
-    },
-    "rid": {
+    "partition": {
       "default": "0",
-      "description": "Bilibili partition id (mode=ranking).",
+      "description": "Search partition filter (mode=search) or ranking chart (mode=ranking). Ignored for weekly charts.",
       "editor": "select",
       "enum": [
         "0",
@@ -142,72 +98,103 @@
         "Car (汽车)"
       ],
       "prefill": "0",
-      "title": "Ranking partition (mode=ranking)",
+      "title": "Partition",
       "type": "string"
     },
-    "searchQuery": {
-      "default": "python",
-      "description": "Keyword, e.g. `python` or `美食`.",
-      "editor": "textfield",
-      "prefill": "python",
-      "title": "Search query (mode=search)",
+    "proxyConfiguration": {
+      "description": "Optional. The actor starts direct and retries through fresh and anonymous browser sessions; this proxy is used only as the final escalation stage.",
+      "editor": "proxy",
+      "title": "Proxy configuration (optional)",
+      "type": "object"
+    },
+    "publishedAfter": {
+      "description": "Only videos published on or after this date, `YYYY-MM-DD` (mode=search). Can be used alone.",
+      "editor": "datepicker",
+      "title": "Published after (UTC)",
       "type": "string"
     },
-    "tids": {
-      "default": "0",
-      "description": "Narrow search results to one Bilibili partition, same ids as ranking (mode=search).",
+    "publishedBefore": {
+      "description": "Only videos published on or before this date, `YYYY-MM-DD` (mode=search). Can be used alone.",
+      "editor": "datepicker",
+      "title": "Published before (UTC)",
+      "type": "string"
+    },
+    "rankingType": {
+      "default": "all",
+      "description": "All-time, originals-only, rookie, or the weekly series.",
       "editor": "select",
       "enum": [
-        "0",
-        "1",
-        "3",
-        "4",
-        "5",
-        "36",
-        "119",
-        "129",
-        "155",
-        "160",
-        "181",
-        "188",
-        "211",
-        "217",
-        "223"
+        "all",
+        "origin",
+        "rookie",
+        "weekly"
       ],
       "enumTitles": [
-        "All partitions",
-        "Anime (动画)",
-        "Music (音乐)",
-        "Game (游戏)",
-        "Entertainment (娱乐)",
-        "Knowledge (知识)",
-        "Guichu (鬼畜)",
-        "Dance (舞蹈)",
-        "Fashion (时尚)",
-        "Life (生活)",
-        "Movie (影视)",
-        "Digital (数码)",
-        "Food (美食)",
-        "Animal (动物圈)",
-        "Car (汽车)"
+        "All-time chart",
+        "Originals only",
+        "Rookie chart",
+        "Weekly series"
       ],
-      "prefill": "0",
-      "title": "Search partition filter (mode=search)",
+      "prefill": "all",
+      "title": "Ranking type (mode=ranking)",
+      "type": "string"
+    },
+    "searchQueries": {
+      "default": [],
+      "description": "One keyword per entry, e.g. `python`, `原神`, `Genshin`. Provide Chinese and English aliases explicitly; Bilibili does not translate them.",
+      "editor": "stringList",
+      "maxItems": 10,
+      "prefill": [
+        "python"
+      ],
+      "title": "Search queries / aliases (mode=search)",
+      "type": "array"
+    },
+    "sort": {
+      "default": "totalrank",
+      "description": "Result ordering. `dm` is most danmaku and `scores` is most comments.",
+      "editor": "select",
+      "enum": [
+        "totalrank",
+        "click",
+        "pubdate",
+        "dm",
+        "stow",
+        "scores"
+      ],
+      "enumTitles": [
+        "Relevance (default)",
+        "Most viewed",
+        "Newest",
+        "Most danmaku",
+        "Most favorites",
+        "Most comments"
+      ],
+      "prefill": "totalrank",
+      "title": "Search sort (mode=search)",
       "type": "string"
     },
     "videoUrls": {
       "default": [],
-      "description": "Bilibili video URLs, e.g. https://www.bilibili.com/video/BV1xx411c7mD/",
+      "description": "Accepts https://www.bilibili.com/video/BV..., https://b23.tv/... short links, bare BV IDs, av123... IDs, or numeric aids.",
       "editor": "stringList",
+      "maxItems": 1000,
       "prefill": [],
-      "title": "Video URLs (mode=byVideoUrl)",
+      "title": "Video URLs or IDs (mode=byVideoUrl)",
       "type": "array"
+    },
+    "weekNumber": {
+      "description": "Specific weekly issue. Omit to use the latest issue.",
+      "maximum": 10000,
+      "minimum": 1,
+      "title": "Weekly issue number (mode=ranking)",
+      "type": "integer"
     }
   },
   "required": [
     "mode"
   ],
   "schemaVersion": 1,
-  "title": "Bilibili Video Scraper Input",
+  "title": "Bilibili Video Search, Ranking & Metadata Scraper Input",
   "type": "object"
 }

@@ -1,163 +1,6 @@
 {
   "actorSpecification": 1,
   "views": {
-    "detailed": {
-      "display": {
-        "component": "table",
-        "properties": {
-          "authorChannelId": {
-            "format": "text",
-            "label": "Author Channel ID"
-          },
-          "authorChannelUrl": {
-            "format": "link",
-            "label": "Author Channel URL"
-          },
-          "authorIsChannelOwner": {
-            "format": "boolean",
-            "label": "Channel Owner"
-          },
-          "authorName": {
-            "format": "text",
-            "label": "Author"
-          },
-          "authorProfileImageUrl": {
-            "format": "link",
-            "label": "Avatar"
-          },
-          "commentId": {
-            "format": "text",
-            "label": "Comment ID"
-          },
-          "commentUrl": {
-            "format": "link",
-            "label": "Comment URL"
-          },
-          "isArtist": {
-            "format": "boolean",
-            "label": "Is Artist"
-          },
-          "isCreator": {
-            "format": "boolean",
-            "label": "Is Creator"
-          },
-          "isHearted": {
-            "format": "boolean",
-            "label": "Hearted"
-          },
-          "isPinned": {
-            "format": "boolean",
-            "label": "Pinned"
-          },
-          "isReply": {
-            "format": "boolean",
-            "label": "Is Reply"
-          },
-          "isVerifiedAuthor": {
-            "format": "boolean",
-            "label": "Verified Author"
-          },
-          "likeCount": {
-            "format": "number",
-            "label": "Likes"
-          },
-          "parentCommentId": {
-            "format": "text",
-            "label": "Parent Comment ID"
-          },
-          "publishedTimeText": {
-            "format": "text",
-            "label": "Published"
-          },
-          "replyCount": {
-            "format": "number",
-            "label": "Replies"
-          },
-          "replyCountText": {
-            "format": "text",
-            "label": "Reply Count Text"
-          },
-          "replyDepth": {
-            "format": "number",
-            "label": "Reply Depth"
-          },
-          "scrapedAt": {
-            "format": "text",
-            "label": "Scraped At"
-          },
-          "text": {
-            "format": "text",
-            "label": "Text"
-          },
-          "videoChannelId": {
-            "format": "text",
-            "label": "Video Channel ID"
-          },
-          "videoChannelName": {
-            "format": "text",
-            "label": "Video Channel"
-          },
-          "videoDescription": {
-            "format": "text",
-            "label": "Video Description"
-          },
-          "videoId": {
-            "format": "text",
-            "label": "Video ID"
-          },
-          "videoPublishedDate": {
-            "format": "text",
-            "label": "Video Published"
-          },
-          "videoTitle": {
-            "format": "text",
-            "label": "Video Title"
-          },
-          "videoUrl": {
-            "format": "link",
-            "label": "Video URL"
-          },
-          "videoViewCount": {
-            "format": "number",
-            "label": "Video Views"
-          }
-        }
-      },
-      "title": "Detailed",
-      "transformation": {
-        "fields": [
-          "commentId",
-          "text",
-          "authorName",
-          "authorChannelId",
-          "authorChannelUrl",
-          "authorProfileImageUrl",
-          "authorIsChannelOwner",
-          "likeCount",
-          "replyCount",
-          "replyCountText",
-          "publishedTimeText",
-          "isHearted",
-          "isPinned",
-          "isReply",
-          "parentCommentId",
-          "replyDepth",
-          "commentUrl",
-          "isVerifiedAuthor",
-          "isCreator",
-          "isArtist",
-          "videoId",
-          "videoUrl",
-          "videoTitle",
-          "videoChannelName",
-          "videoChannelId",
-          "videoViewCount",
-          "videoPublishedDate",
-          "videoDescription",
-          "scrapedAt"
-        ]
-      }
-    },
     "overview": {
       "display": {
         "component": "table",
@@ -170,17 +13,17 @@
             "format": "text",
             "label": "Comment ID"
           },
-          "isReply": {
+          "isHearted": {
             "format": "boolean",
-            "label": "Is Reply"
+            "label": "Hearted"
           },
           "likeCount": {
             "format": "number",
             "label": "Likes"
           },
-          "publishedTimeText": {
+          "recordType": {
             "format": "text",
-            "label": "Published"
+            "label": "Type"
           },
           "replyCount": {
             "format": "number",
@@ -196,17 +39,119 @@
           }
         }
       },
-      "title": "Overview",
+      "title": "Comments and replies",
       "transformation": {
         "fields": [
+          "recordType",
           "commentId",
-          "text",
           "authorName",
+          "text",
           "likeCount",
           "replyCount",
-          "publishedTimeText",
-          "isReply",
+          "isHearted",
           "videoTitle"
+        ]
+      }
+    },
+    "thread": {
+      "display": {
+        "component": "table",
+        "properties": {
+          "authorHandle": {
+            "format": "text",
+            "label": "Handle"
+          },
+          "commentId": {
+            "format": "text",
+            "label": "Comment ID"
+          },
+          "creatorReplied": {
+            "format": "boolean",
+            "label": "Creator replied"
+          },
+          "heartedBy": {
+            "format": "text",
+            "label": "Hearted by"
+          },
+          "isPinned": {
+            "format": "boolean",
+            "label": "Pinned"
+          },
+          "likeCountText": {
+            "format": "text",
+            "label": "Likes (text)"
+          },
+          "parentCommentId": {
+            "format": "text",
+            "label": "Parent ID"
+          },
+          "publishedAtApprox": {
+            "format": "text",
+            "label": "Approx. published"
+          },
+          "publishedAtPrecision": {
+            "format": "text",
+            "label": "Date precision"
+          },
+          "publishedTimeText": {
+            "format": "text",
+            "label": "Published"
+          },
+          "recordType": {
+            "format": "text",
+            "label": "Type"
+          },
+          "replyCountText": {
+            "format": "text",
+            "label": "Replies (text)"
+          },
+          "replyLevel": {
+            "format": "number",
+            "label": "Level"
+          },
+          "rootCommentId": {
+            "format": "text",
+            "label": "Root ID"
+          },
+          "sourceInput": {
+            "format": "text",
+            "label": "Source input"
+          },
+          "sourceScope": {
+            "format": "text",
+            "label": "Source scope"
+          },
+          "threadPosition": {
+            "format": "number",
+            "label": "Position"
+          },
+          "videoId": {
+            "format": "text",
+            "label": "Video ID"
+          }
+        }
+      },
+      "title": "Thread fields",
+      "transformation": {
+        "fields": [
+          "recordType",
+          "commentId",
+          "parentCommentId",
+          "rootCommentId",
+          "replyLevel",
+          "threadPosition",
+          "authorHandle",
+          "likeCountText",
+          "replyCountText",
+          "isPinned",
+          "heartedBy",
+          "creatorReplied",
+          "publishedTimeText",
+          "publishedAtApprox",
+          "publishedAtPrecision",
+          "videoId",
+          "sourceInput",
+          "sourceScope"
         ]
       }
     }

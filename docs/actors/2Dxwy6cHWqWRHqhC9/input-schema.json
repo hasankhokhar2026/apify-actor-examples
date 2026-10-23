@@ -1,143 +1,271 @@
 {
+  "description": "Download metadata, video, audio, or captions for YouTube content you own or are authorized to download.",
   "properties": {
+    "allow4K": {
+      "default": false,
+      "description": "Enable 1440p/2160p SDR downloads. These are capped at 10 minutes and 1000 MB and may use MKV with VP9/AV1 because YouTube rarely serves H.264 above 1080p.",
+      "prefill": false,
+      "title": "Allow 4K",
+      "type": "boolean"
+    },
+    "audioFormat": {
+      "default": "m4a",
+      "description": "Source audio passthrough format used when audioOnly is enabled.",
+      "editor": "select",
+      "enum": [
+        "m4a",
+        "opus"
+      ],
+      "enumTitles": [
+        "M4A (AAC passthrough)",
+        "Opus (passthrough)"
+      ],
+      "prefill": "m4a",
+      "title": "Audio Format",
+      "type": "string"
+    },
+    "audioOnly": {
+      "default": false,
+      "description": "Download the source audio track without video and without re-encoding.",
+      "prefill": false,
+      "title": "Audio Only",
+      "type": "boolean"
+    },
     "channelUrls": {
-      "description": "YouTube channel URLs (e.g. https://www.youtube.com/@ChannelName).",
+      "default": [],
+      "description": "YouTube channel URLs, @handles, or UC channel IDs. The Videos tab is used.",
       "editor": "stringList",
       "items": {
         "type": "string"
       },
+      "prefill": [],
       "title": "Channel URLs",
       "type": "array"
     },
+    "container": {
+      "default": "auto",
+      "description": "Auto uses MP4 H.264/AAC when available and MKV for VP9/AV1. Explicit MP4 never relabels AV1/Opus content as MP4; if no compatible stream exists the video gets a failure row.",
+      "editor": "select",
+      "enum": [
+        "auto",
+        "mp4",
+        "webm",
+        "mkv"
+      ],
+      "enumTitles": [
+        "Auto (compatible first)",
+        "MP4 (H.264/AAC)",
+        "WebM (VP9/AV1 + Opus)",
+        "MKV (any codec)"
+      ],
+      "prefill": "auto",
+      "title": "Container",
+      "type": "string"
+    },
     "cookies": {
-      "description": "Optional Netscape-format cookies.txt content for accessing age-restricted or members-only videos. Export from your browser using a cookies extension.",
+      "description": "Optional cookies.txt content for age-restricted or members-only videos. Public videos work without cookies.",
       "editor": "textarea",
+      "isSecret": true,
       "title": "Cookies (Netscape format)",
       "type": "string"
     },
     "downloadSubtitles": {
       "default": false,
-      "description": "Download subtitle / caption files (English) alongside the video.",
+      "description": "Fetch available manual or automatic captions for the requested languages.",
       "prefill": false,
       "title": "Download Subtitles",
       "type": "boolean"
     },
-    "extractMetadataOnly": {
+    "includeTranscript": {
       "default": false,
-      "description": "When enabled, extracts video metadata (title, description, view count, etc.) without downloading the actual video file. Much faster and uses no storage.",
-      "prefill": true,
-      "title": "Metadata Only (No Download)",
+      "description": "Add a plain-text transcript from the first requested caption track.",
+      "prefill": false,
+      "title": "Include Transcript Text",
       "type": "boolean"
     },
-    "maxVideosPerInput": {
-      "default": 10,
-      "description": "Maximum number of videos to download per playlist, channel, or search query. Does not affect direct video URLs.",
-      "maximum": 500,
+    "kvsName": {
+      "default": "",
+      "description": "Named key-value store name when storage=named_kvs. Defaults to youtube-downloader.",
+      "editor": "textfield",
+      "prefill": "",
+      "title": "KVS Name",
+      "type": "string"
+    },
+    "maxMB": {
+      "default": 500,
+      "description": "Reject oversized downloads. Values above 500 are only used for 4K opt-in downloads, which are capped at 1000 MB.",
+      "maximum": 1000,
       "minimum": 1,
-      "prefill": 1,
-      "title": "Max Videos Per Playlist / Channel",
+      "prefill": 100,
+      "title": "Max MB Per Video",
       "type": "integer"
     },
+    "maxMinutes": {
+      "default": 30,
+      "description": "Reject a video before download when its duration exceeds this cap. 4K opt-in downloads are additionally capped at 10 minutes.",
+      "maximum": 30,
+      "minimum": 1,
+      "prefill": 30,
+      "title": "Max Minutes Per Video",
+      "type": "integer"
+    },
+    "maxVideos": {
+      "default": 10,
+      "description": "Total videos processed across all inputs.",
+      "maximum": 50,
+      "minimum": 1,
+      "prefill": 1,
+      "title": "Max Videos",
+      "type": "integer"
+    },
+    "mode": {
+      "default": "metadata",
+      "description": "What to return: metadata only, media files, or caption files without media.",
+      "editor": "select",
+      "enum": [
+        "metadata",
+        "download",
+        "subtitles"
+      ],
+      "enumTitles": [
+        "Metadata only",
+        "Download media",
+        "Subtitles only"
+      ],
+      "prefill": "metadata",
+      "title": "Mode",
+      "type": "string"
+    },
     "playlistUrls": {
-      "description": "YouTube playlist URLs - all videos in each playlist will be downloaded.",
+      "default": [],
+      "description": "YouTube playlist URLs. Videos are expanded up to maxVideos in total.",
       "editor": "stringList",
       "items": {
         "type": "string"
       },
-      "sectionCaption": "More Sources",
+      "prefill": [],
       "title": "Playlist URLs",
       "type": "array"
     },
-    "proxyCountry": {
-      "default": "US",
-      "description": "Country for the residential proxy IP. Change this if a video is geo-blocked in the default country.",
-      "enum": [
-        "US",
-        "GB",
-        "CA",
-        "AU",
-        "DE",
-        "FR",
-        "JP",
-        "KR",
-        "BR",
-        "IN",
-        "MX",
-        "IT",
-        "ES",
-        "NL",
-        "PL",
-        "RU",
-        "SE",
-        "NO",
-        "DK",
-        "FI",
-        "ZA",
-        "SG",
-        "HK",
-        "TW",
-        "ID",
-        "MY",
-        "TH",
-        "PH",
-        "AR",
-        "CO",
-        "CL"
-      ],
-      "enumTitles": [
-        "United States",
-        "United Kingdom",
-        "Canada",
-        "Australia",
-        "Germany",
-        "France",
-        "Japan",
-        "South Korea",
-        "Brazil",
-        "India",
-        "Mexico",
-        "Italy",
-        "Spain",
-        "Netherlands",
-        "Poland",
-        "Russia",
-        "Sweden",
-        "Norway",
-        "Denmark",
-        "Finland",
-        "South Africa",
-        "Singapore",
-        "Hong Kong",
-        "Taiwan",
-        "Indonesia",
-        "Malaysia",
-        "Thailand",
-        "Philippines",
-        "Argentina",
-        "Colombia",
-        "Chile"
-      ],
-      "sectionCaption": "Advanced",
-      "title": "Proxy Country",
+    "proxyConfiguration": {
+      "default": {
+        "useApifyProxy": true
+      },
+      "description": "Optional. Metadata and player extraction use this connection; media bytes are downloaded directly.",
+      "editor": "proxy",
+      "prefill": {
+        "useApifyProxy": true
+      },
+      "title": "Proxy Configuration",
+      "type": "object"
+    },
+    "s3AccessKeyId": {
+      "description": "Optional access key ID when storage=s3.",
+      "editor": "textfield",
+      "isSecret": true,
+      "title": "S3 Access Key ID",
+      "type": "string"
+    },
+    "s3Bucket": {
+      "description": "Bucket name when storage=s3.",
+      "editor": "textfield",
+      "title": "S3 Bucket",
+      "type": "string"
+    },
+    "s3Endpoint": {
+      "description": "Custom endpoint for S3-compatible storage such as Cloudflare R2.",
+      "editor": "textfield",
+      "title": "S3 Endpoint",
+      "type": "string"
+    },
+    "s3Prefix": {
+      "default": "youtube-downloader",
+      "description": "Object key prefix when storage=s3.",
+      "editor": "textfield",
+      "prefill": "youtube-downloader",
+      "title": "S3 Prefix",
+      "type": "string"
+    },
+    "s3PublicBaseUrl": {
+      "description": "Optional public bucket URL. When set, files use public URLs instead of expiring presigned URLs.",
+      "editor": "textfield",
+      "title": "S3 Public Base URL",
+      "type": "string"
+    },
+    "s3Region": {
+      "default": "auto",
+      "description": "Region for S3 or S3-compatible storage.",
+      "editor": "textfield",
+      "prefill": "auto",
+      "title": "S3 Region",
+      "type": "string"
+    },
+    "s3SecretAccessKey": {
+      "description": "Optional secret access key when storage=s3.",
+      "editor": "textfield",
+      "isSecret": true,
+      "title": "S3 Secret Access Key",
       "type": "string"
     },
     "searchQueries": {
-      "description": "Optional YouTube searches. The actor resolves up to maxVideosPerInput public video results per query.",
+      "default": [],
+      "description": "YouTube search phrases. Each query resolves public results up to maxVideos in total.",
       "editor": "stringList",
       "items": {
         "type": "string"
       },
-      "prefill": [
-        "python tutorial for beginners"
-      ],
-      "title": "YouTube Search Queries",
+      "prefill": [],
+      "title": "Search Queries",
       "type": "array"
+    },
+    "storage": {
+      "default": "ephemeral_kvs",
+      "description": "Where downloaded files are written. Named KVS persists while the store exists; ephemeral KVS follows your Apify account retention.",
+      "editor": "select",
+      "enum": [
+        "ephemeral_kvs",
+        "named_kvs",
+        "s3"
+      ],
+      "enumTitles": [
+        "Ephemeral Apify KVS",
+        "Named Apify KVS",
+        "S3 or S3-compatible (R2)"
+      ],
+      "prefill": "ephemeral_kvs",
+      "title": "Storage",
+      "type": "string"
+    },
+    "storageRetentionDays": {
+      "default": 7,
+      "description": "Signed-link lifetime for S3/R2 storage (1-7 days). KVS retention is controlled by your Apify account.",
+      "maximum": 7,
+      "minimum": 1,
+      "prefill": 7,
+      "title": "Storage Retention Days",
+      "type": "integer"
+    },
+    "subtitleFormat": {
+      "default": "vtt",
+      "description": "File format for downloaded captions.",
+      "editor": "select",
+      "enum": [
+        "vtt",
+        "srt"
+      ],
+      "enumTitles": [
+        "WebVTT (.vtt)",
+        "SubRip (.srt)"
+      ],
+      "prefill": "vtt",
+      "title": "Subtitle Format",
+      "type": "string"
     },
     "subtitleLanguages": {
       "default": [
         "en"
       ],
-      "description": "Subtitle language codes to download when Download Subtitles is enabled.",
+      "description": "Caption language codes to request. Only tracks that already exist on the video are used; translations are not promised.",
       "editor": "select",
       "items": {
         "enum": [
@@ -302,47 +430,55 @@
         ],
         "type": "string"
       },
+      "prefill": [
+        "en"
+      ],
       "title": "Subtitle Languages",
       "type": "array"
     },
     "videoQuality": {
       "default": "720p",
-      "description": "Preferred quality. Automatically falls back to the best available quality if the chosen resolution is unavailable. We highly recommend choosing 1080p or less for resolution for keeping the cost low. Higher the quality, higher the cost.",
+      "description": "SDR target quality. 360p-1080p prefer H.264/AAC MP4. 1440p and 2160p require allow4K and are delivered with their real codec and container.",
+      "editor": "select",
       "enum": [
-        "best",
-        "1080p",
-        "720p",
-        "480p",
         "360p",
-        "audio_only",
-        "worst"
+        "480p",
+        "720p",
+        "1080p",
+        "1440p",
+        "2160p",
+        "best"
       ],
       "enumTitles": [
-        "Best Available",
-        "1080p",
-        "720p",
-        "480p",
         "360p",
-        "Audio Only (MP3)",
-        "Lowest (Fastest)"
+        "480p",
+        "720p (default)",
+        "1080p",
+        "1440p (requires allow4K)",
+        "2160p / 4K (requires allow4K)",
+        "Best available (capped at 1080p unless allow4K)"
       ],
-      "prefill": "1080p",
+      "prefill": "360p",
       "title": "Video Quality",
       "type": "string"
     },
     "videoUrls": {
-      "description": "YouTube video URLs to download.",
+      "default": [],
+      "description": "Direct YouTube video, Shorts, live-replay, or youtu.be URLs, or 11-character video IDs.",
       "editor": "stringList",
       "items": {
         "type": "string"
       },
       "prefill": [
-        "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+        "https://www.youtube.com/watch?v=jNQXAC9IVRw"
       ],
       "title": "Video URLs",
       "type": "array"
     }
   },
+  "required": [
+    "mode"
+  ],
   "schemaVersion": 1,
   "title": "YouTube Video Downloader Input",
   "type": "object"

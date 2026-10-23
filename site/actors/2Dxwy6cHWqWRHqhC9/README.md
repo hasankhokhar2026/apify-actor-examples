@@ -1,225 +1,195 @@
 # YouTube Video, Playlist & Channel Downloader with Metadata
 
-Give this actor a video link, a playlist, a channel, or even a search phrase, and it resolves every video behind it, downloads each at your chosen quality, and hands back a public link to the file alongside the video's title, stats and description.
+Inspect or download YouTube videos from a direct link, a playlist, a channel, or a search phrase in one run. Every row carries the video's metadata, and download rows add a readable file link, the real container and codec, the requested and delivered quality, captions, and an optional transcript.
+
+Use this actor only for content you own or are authorized to download. YouTube's Terms of Service may prohibit downloading content without permission, and you are responsible for complying with them. This actor is not affiliated with YouTube or Google, and it does not bypass DRM, private-video access, or geographic restrictions.
 
 ## What this actor does
 
-- **Download videos** from direct URLs, playlists, channels, or search results
-- **Quality options:** best available, 1080p, 720p, 480p, 360p, audio-only, or lowest
-- **Subtitles:** download caption files in one or more languages
-- **Metadata-only mode:** get full metadata without downloading the file
-- **Empty fields are omitted** — records only contain values that are actually populated (empty lists such as `subtitle_files` are left out too).
+- **Four input paths:** direct video URLs, playlists, channels, and keyword search
+- **Metadata, download, or subtitles:** choose what each run returns
+- **Compatible video:** SDR 360p-1080p H.264/AAC MP4 when YouTube provides it
+- **Opt-in 4K:** 1440p/2160p SDR with a 10-minute and 1000 MB cap
+- **Audio passthrough:** M4A (AAC) or Opus, without a fake bitrate uplift
+- **Captions and transcript:** WebVTT, SubRip, or plain text
+- **Honest failures:** rows explain private, live, DRM, geo-blocked, oversized, and unavailable videos
+- **Empty fields are omitted** — records only contain values that are actually populated
 
-## Output
+## Output per video
 
-
-Each video produces one record in the output dataset. Here is an example of a single output record:
-
-```json
-{
-    "video_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-    "video_id": "dQw4w9WgXcQ",
-    "title": "Rick Astley - Never Gonna Give You Up (Official Music Video)",
-    "description": "The official video for Never Gonna Give You Up by Rick Astley...",
-    "uploader": "Rick Astley",
-    "uploader_id": "@RickAstleyYT",
-    "uploader_url": "https://www.youtube.com/@RickAstleyYT",
-    "upload_date": "2009-10-25",
-    "duration_seconds": 212.0,
-    "view_count": 1400000000,
-    "like_count": 16000000,
-    "comment_count": 2200000,
-    "thumbnail": "https://api.apify.com/v2/key-value-stores/.../records/yt_dQw4w9WgXcQ_thumb.jpg",
-    "tags": ["rick astley", "never gonna give you up", "80s"],
-    "categories": ["Music"],
-    "resolution": "1280x720",
-    "filesize_bytes": 28491776,
-    "download_status": "success",
-    "download_url": "https://api.apify.com/v2/key-value-stores/.../records/yt_dQw4w9WgXcQ.mp4",
-    "storage_key": "yt_dQw4w9WgXcQ.mp4",
-    "source_label": "direct",
-    "record_type": "result",
-    "downloaded_at": "2026-02-23T10:00:00Z"
-}
-```
-
-### Output fields
-
-| Field | Description |
-| --- | --- |
-| `video_url` | URL of the YouTube video |
-| `video_id` | YouTube video ID |
-| `title` | Title of the video |
-| `description` | Video description (up to 2000 characters) |
-| `uploader` | Channel or uploader name |
-| `uploader_id` | Channel or uploader ID |
-| `uploader_url` | URL of the uploader's channel |
-| `upload_date` | Upload date (YYYY-MM-DD) |
-| `duration_seconds` | Duration of the video in seconds |
-| `view_count` | Number of views |
-| `like_count` | Number of likes |
-| `comment_count` | Number of comments |
-| `thumbnail` | URL of the video thumbnail (a stored copy after a successful download, YouTube's own image URL otherwise) |
-| `tags` | Tags associated with the video |
-| `categories` | Categories associated with the video |
-| `resolution` | Resolution of the downloaded video (e.g. 1920x1080) |
-| `filesize_bytes` | File size of the downloaded video in bytes |
-| `is_live` | Whether the video is a live or upcoming broadcast |
-| `video_meta` | Technical detail about the downloaded file: `width`, `height`, `fps`, `vcodec`, `acodec`, `ext`, `filesize_bytes`, `total_bitrate_kbps`, `aspect_ratio` (audio-only downloads omit the video-specific keys) |
-| `download_status` | Status: `success`, `failed`, `no_video` (the download finished without a usable video file), `upload_failed` (downloaded but the file couldn't be stored), or `metadata_only` |
-| `download_url` | Public URL to download the video file |
-| `storage_key` | Key of the video file in storage |
-| `subtitle_files` | List of subtitle file keys |
-| `subtitle_urls` | List of public URLs for subtitle files |
-| `source_label` | Input source label (`direct`, `playlist:…`, `channel:…`, or `search:…`) |
-| `record_type` | Always `result` for dataset rows |
-| `search_query` | Search phrase on a failure row for a search that returned no videos |
-| `error` | Error message if the download, metadata read or input resolution failed |
-| `downloaded_at` | Timestamp of when the download was processed |
-
-Besides one row per video, the dataset can contain failure rows (`download_status: "failed"` with an `error`): one for each playlist or channel that resolves to no videos (its URL is in `video_url`), one for each search phrase with no results (in `search_query`), and a single row when no input was given at all. Videos that are private, removed, unavailable or blocked for copyright are skipped without a row when downloading.
+- `record_type` — `video`, `failure`, or `input_error`
+- `video_url`, `video_id`, `title`, `description`
+- `uploader`, `uploader_id`, `uploader_url`, `channel_id`
+- `upload_date`, `duration_seconds`
+- `view_count`, `like_count`, `comment_count`
+- `thumbnail`, `tags[]`, `categories[]`, `is_live`
+- `playlist_index` — position inside a playlist, channel listing, or search result
+- `source_label` — `direct`, `playlist:...`, `channel:...`, or `search:...`
+- `download_status` — `success`, `metadata_only`, `subtitles_only`, `failed`, `skipped_unsupported`, or `upload_failed`
+- `failure_code` — e.g. `private`, `removed`, `live_unsupported`, `drm_unsupported`, `geo_blocked`, `bot_check`, `too_long`, `too_large`, `no_formats`, `upload_failed`, `no_captions`, `captions_unavailable`
+- `error`, `retryable`
+- `requested_quality`, `delivered_quality`, `quality_match`
+- `container`, `vcodec`, `acodec`, `dynamic_range`, `is_hdr`
+- `width`, `height`, `resolution`, `fps`, `aspect_ratio`, `audio_only`
+- `filesize_bytes`, `total_bitrate_kbps`, `checksum_sha256`
+- `download_url`, `storage_key`, `storage_mode`, `expires_at`
+- `four_k_cap_applied` — present when the 4K duration/size cap governed the row
+- `subtitle_files[]`, `subtitle_urls[]`, `subtitle_languages[]`, `caption_kind`
+- `caption_status` — `no_captions`, `captions_unavailable`, or `upload_failed` when no caption file was produced
+- `transcript` — when transcript output is requested
+- `video_meta` — nested technical details for the downloaded file
+- `downloaded_at`
+- `search_query` — on an input-error row for an empty search result
 
 ## Input
 
 | Field | Type | Default | Description |
-|-------|------|---------|-------------|
-| `videoUrls` | array | — | Direct YouTube video URLs to download. |
-| `playlistUrls` | array | — | YouTube playlist URLs — videos in the playlist are processed up to `maxVideosPerInput`. |
-| `channelUrls` | array | — | YouTube channel URLs, handles, or IDs. |
-| `searchQueries` | array | — | Search phrases; up to `maxVideosPerInput` public matches per phrase are resolved, never more than 50. |
-| `videoQuality` | string | `720p` | `best`, `1080p`, `720p`, `480p`, `360p`, `audio_only`, or `worst`. Falls back to the best available quality when the chosen one doesn't exist, and to the lowest quality if the file would not fit in the run's disk space. |
-| `maxVideosPerInput` | integer | `10` | Maximum videos processed per playlist, channel, or search input (1–500; searches stop at 50). Direct video URLs are not limited. |
-| `downloadSubtitles` | boolean | `false` | Download subtitle files alongside the video. |
-| `subtitleLanguages` | array | `["en"]` | Subtitle language codes to fetch when `downloadSubtitles` is on. |
-| `extractMetadataOnly` | boolean | `false` | Return metadata without downloading the video file. |
-| `proxyCountry` | string | `US` | Country of the built-in residential proxy (31 options) — change if a video is geo-blocked. |
-| `cookies` | string | — | Optional Netscape-format `cookies.txt` content for age-restricted or members-only videos (not needed for public videos). |
-
-### Example input
-
-```json
-{
-    "videoUrls": ["https://www.youtube.com/watch?v=dQw4w9WgXcQ"],
-    "videoQuality": "720p",
-    "downloadSubtitles": false,
-    "maxVideosPerInput": 10,
-    "proxyCountry": "US"
-}
-```
-
-Search example:
-
-```json
-{
-    "searchQueries": ["python tutorial for beginners"],
-    "maxVideosPerInput": 3,
-    "videoQuality": "480p",
-    "extractMetadataOnly": true
-}
-```
-
-### How to use
-
-
-1. **Add your YouTube URLs** — paste video URLs, playlist URLs, or channel URLs into the corresponding input fields.
-2. **Choose video quality** — select your preferred resolution from the dropdown (defaults to 720p).
-3. **Configure options** — optionally enable subtitle downloads, set a max video limit for playlists/channels, or change the proxy country.
-4. **Run the actor** — click Start and the actor will process each video, downloading and storing the files.
-5. **Access your results** — find all downloaded videos and metadata in the dataset. Each successfully downloaded video includes a public download link.
+|---|---|---|---|
+| `mode` | string | `metadata` | `metadata`, `download`, or `subtitles` |
+| `videoUrls` | array | — | Direct video, Shorts, replay, `youtu.be` URLs, or 11-character IDs |
+| `playlistUrls` | array | — | Playlist URLs |
+| `channelUrls` | array | — | Channel URLs, `@handles`, or `UC...` IDs |
+| `searchQueries` | array | — | Search phrases |
+| `videoQuality` | string | `720p` | `360p`, `480p`, `720p`, `1080p`, `1440p`, `2160p`, or `best` |
+| `container` | string | `auto` | `auto`, `mp4`, `webm`, or `mkv` |
+| `audioOnly` | boolean | `false` | Download source audio only |
+| `audioFormat` | string | `m4a` | `m4a` (AAC) or `opus` |
+| `downloadSubtitles` | boolean | `false` | Fetch existing caption tracks |
+| `subtitleLanguages` | array | `["en"]` | Language codes to request |
+| `subtitleFormat` | string | `vtt` | `vtt` or `srt` |
+| `includeTranscript` | boolean | `false` | Add a plain-text transcript |
+| `maxVideos` | integer | `10` | Total videos per run (1–50) |
+| `maxMinutes` | integer | `30` | Per-video duration cap (1–30) |
+| `maxMB` | integer | `500` | Per-video size cap; 4K opt-in allows up to 1000 |
+| `allow4K` | boolean | `false` | Enable 1440p/2160p SDR |
+| `storage` | string | `ephemeral_kvs` | `ephemeral_kvs`, `named_kvs`, or `s3` |
+| `kvsName` | string | — | Named KVS name |
+| `storageRetentionDays` | integer | `7` | Presigned S3/R2 link lifetime (1–7 days) |
+| `s3Bucket`, `s3Prefix`, `s3Endpoint`, `s3Region` | string | — | S3 or R2 destination |
+| `s3AccessKeyId`, `s3SecretAccessKey` | secret | — | Optional S3/R2 credentials |
+| `s3PublicBaseUrl` | string | — | Use public bucket URLs instead of presigned links |
+| `cookies` | secret | — | Optional Netscape cookies for authorized age-restricted or members-only access |
+| `proxyConfiguration` | object | automatic | Optional connection override |
 
 ## Examples
 
-### Example: single video
+### Metadata for one video
 
 ```json
 {
+  "mode": "metadata",
+  "videoUrls": ["https://www.youtube.com/watch?v=jNQXAC9IVRw"]
+}
+```
+
+### Download a 720p MP4
+
+```json
+{
+  "mode": "download",
   "videoUrls": ["https://www.youtube.com/watch?v=dQw4w9WgXcQ"],
-  "videoQuality": "720p"
+  "videoQuality": "720p",
+  "container": "mp4",
+  "maxVideos": 1
 }
 ```
 
-### Example: playlist with subtitles
+### Playlist with captions and transcript
 
 ```json
 {
-  "playlistUrls": ["https://www.youtube.com/playlist?list=PL-osiE80TeTt2d9bfVyTiXJA-UTHn6WwU"],
-  "maxVideosPerInput": 5,
+  "mode": "download",
+  "playlistUrls": ["https://www.youtube.com/playlist?list=PLFgquLnL59alCl_2TQvOiD5Vgm1hCaGSI"],
+  "videoQuality": "480p",
+  "maxVideos": 5,
   "downloadSubtitles": true,
-  "subtitleLanguages": ["en", "es"]
+  "subtitleLanguages": ["en"],
+  "subtitleFormat": "srt",
+  "includeTranscript": true
 }
 ```
 
-### Example: metadata only
+### Search to audio
 
 ```json
 {
-  "searchQueries": ["lofi beats"],
-  "maxVideosPerInput": 10,
-  "extractMetadataOnly": true
+  "mode": "download",
+  "searchQueries": ["public domain jazz"],
+  "audioOnly": true,
+  "audioFormat": "m4a",
+  "maxVideos": 3
+}
+```
+
+### Opt-in 4K SDR
+
+```json
+{
+  "mode": "download",
+  "videoUrls": ["https://www.youtube.com/watch?v=LXb3EKWsInQ"],
+  "videoQuality": "2160p",
+  "container": "auto",
+  "allow4K": true,
+  "maxMinutes": 10,
+  "maxMB": 1000
 }
 ```
 
 ## Use cases
 
-
-- **Content archival** — back up your favorite YouTube videos or entire channels before they disappear.
-- **Research and analysis** — collect video metadata (titles, descriptions, view counts, tags) at scale for content research, trend analysis, or competitive intelligence.
-- **Media production** — download source material for editing, compilation, or repurposing (always respect copyright).
-- **Subtitle extraction** — grab caption files for translation, accessibility, or content repurposing workflows.
-- **Audio extraction** — download podcast episodes, music, or audio content from YouTube without the video.
-- **Dataset building** — build structured datasets of YouTube video metadata for machine learning or analytics projects.
+- **Own-channel archiving** — export metadata, captions, and small compatible files for channels you manage
+- **Authorized media research** — collect titles, descriptions, dates, and public statistics for analysis
+- **Caption workflows** — pull existing VTT or SRT tracks and transcript text for translation or accessibility
+- **Audio libraries** — save authorized M4A or Opus audio without re-encoding
+- **Content audits** — compare requested and delivered quality, codecs, and file sizes
+- **Pipeline integrations** — one row per video with stable status and failure fields
 
 ## FAQ
 
+### What can I download with this actor?
 
-### How do I download a single YouTube video?
+Content you own or are authorized to download. The actor does not grant rights to third-party media and does not bypass DRM, private access, or geographic restrictions.
 
-Paste the video URL into the **Video URLs** field and click Start. The actor will download the video and provide a public link to the file along with all available metadata.
+### Does it support live streams?
 
-### Can I download an entire YouTube playlist?
+No. Live and upcoming broadcasts have no finite file and are returned as `live_unsupported` failure rows.
 
-Yes. Paste the playlist URL into the **Playlist URLs** field. The actor will automatically expand the playlist and download each video. Use **Max Videos Per Playlist / Channel** to limit the number of videos.
+### Can I download age-restricted or members-only videos?
 
-### Can I download videos from a YouTube channel?
+Sometimes, when you have authorized access and supply your own cookies. Public videos work without cookies.
 
-Yes. Paste the channel URL (e.g. `https://www.youtube.com/@ChannelName`) into the **Channel URLs** field. The actor will fetch the latest videos from that channel.
+### Does it bypass geo-blocks or DRM?
 
-### Can I download videos from a YouTube search?
+No. Geo-restricted and DRM-protected videos are reported as failure rows. Changing proxy settings is not a guaranteed workaround.
 
-Yes. Add search phrases to **Search Queries**. Each phrase is resolved through
-YouTube's public search results, capped at `maxVideosPerInput` and never more than 50 results per phrase, and
-processed the same way as direct URLs.
+### Where is the MP3 option?
 
-### What video qualities are available?
+There is no MP3 option because YouTube does not serve 320 kbps MP3. The actor passes through the source M4A (AAC) or Opus audio track and reports the real codec. Claiming a higher bitrate would only mean re-encoding and inflating the file.
 
-You can choose from: Best Available, 1080p, 720p, 480p, 360p, Audio Only (no video), or Lowest (fastest download). If the selected quality is not available for a particular video, the actor automatically falls back to the best available option. If a very large file would not fit in the run's disk space, it downloads the lowest quality instead.
+### Why did I get 480p when I asked for 720p?
 
-### Can I download just the audio from a YouTube video?
+Not every video has every resolution. The actor delivers the closest available quality at or below your request and sets `quality_match` to `false` when it had to step down.
 
-Yes. Set the **Video Quality** to "Audio Only" and the actor will download only the audio track.
+### Why is my 4K file MKV or WebM instead of MP4?
 
-### Can I download subtitles?
+YouTube usually serves 1440p and 2160p as VP9 or AV1 video, often with Opus audio. Those streams are not H.264/AAC MP4. The actor keeps the real codec and container instead of mislabelling a file. Choose `container: "auto"` or `mkv` for 4K.
 
-Yes. Enable the **Download Subtitles** option and the actor will download available caption files alongside the video. Subtitle files are stored separately with their own public URLs.
+### What are the download caps?
 
-### What if a video is geo-blocked in my region?
+Each video is capped at 30 minutes and 500 MB by default, with at most 50 videos per run. Opt-in 4K is capped at 10 minutes and 1000 MB. A video outside the caps gets a `too_long` or `too_large` failure row instead of a partial file.
 
-Change the **Proxy Country** setting to a country where the video is available. There are 31 options, including the United States, United Kingdom, Germany, France, Canada, Australia, Japan, India, Brazil, and Singapore.
+### How long do download links last?
 
-### Where are the downloaded files stored?
+Ephemeral KVS links follow your Apify account's key-value store retention. Named KVS persists while the store exists. S3/R2 links are presigned for the configured retention period, or permanent when a public bucket URL is configured. KVS file URLs do not support HTTP Range requests, so use S3/R2 when a downstream system needs resumable or partial downloads.
 
-Downloaded video files are uploaded to the Apify Key-Value Store. Each successfully downloaded video includes a `download_url` field in the output — this is a public link you can use to access the file directly.
+### Do I need to set up a proxy?
 
-### What happens if a download fails?
+No. The actor chooses a working connection automatically for metadata and player access. Media bytes are fetched directly whenever possible.
 
-The output record for that video will have a `download_status` of `failed` along with an `error` field explaining what went wrong, and the actor continues with the remaining videos. The exception is a video that is private, removed, unavailable or blocked for copyright: it is skipped without a dataset row.
+### What happens when a video fails?
 
-### Can I get video metadata without downloading the actual file?
-
-Yes. Download rows include the video's metadata (title, description, view counts, likes, tags, upload date, etc.) whenever it could be read, and a failed row may carry only the URL and the error.
-
-Enable the **Metadata Only (No Download)** option to skip the download entirely and get metadata in seconds — no storage is consumed.
+The run continues and writes a failure row with `failure_code`, `error`, and `retryable`. A failed row never claims a download link.
 
 ### Is this affiliated with YouTube?
 
-No. This is an independent tool and is not affiliated with, endorsed by, or sponsored by YouTube or Google.
+No. This is an independent third-party tool and is not affiliated with, endorsed by, or sponsored by YouTube or Google.

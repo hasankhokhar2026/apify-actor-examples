@@ -1,11 +1,11 @@
 {
   "actorOutputSchemaVersion": 1,
-  "description": "Comprehensive product information scraped from Amazon /dp/ pages — title, ASIN, price, list price, stars, reviews count, in-stock flag, brand, breadcrumb categories, bestseller ranks, seller, delivery info, variants, images, features, and description. One record per scraped product. Empty / null fields are dropped at push time, so any field documented below may be absent if the source did not populate it.",
+  "description": "One record per product, search result, or bestseller entry, plus explicit error rows. Fields include ASIN/parent ASIN, price/list price/coupon/deal, rating/review count, BSR, seller/buybox, offers, availability, variants, images/videos/specs/A+ text, top review snippets, marketplace, URL, and scrapedAt. Empty fields are omitted.",
   "properties": {
     "products": {
-      "description": "Dataset containing all scraped Amazon product records.",
+      "description": "Dataset containing product, searchResult, bestseller, and error records.",
       "template": "{{links.apiDefaultDatasetUrl}}/items",
-      "title": "Amazon products",
+      "title": "Amazon products and discovery results",
       "type": "string"
     }
   },

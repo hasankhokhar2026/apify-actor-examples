@@ -1,50 +1,157 @@
 {
-  "description": "Scrape YouTube video comments with full metadata including author info, likes, timestamps, and reply threads.",
+  "description": "Scrape public YouTube comments and reply threads without login, user cookies, or an API key. Provide one or more videos, channels, playlists, or search queries.",
   "properties": {
-    "commentKeywordFilter": {
-      "description": "Only return comments (and their replies) whose text contains this word or phrase (case-insensitive). Leave empty to return all comments. A top-level comment that doesn't match is skipped entirely, so its replies are not checked or fetched.",
+    "channelUrls": {
+      "default": [],
+      "description": "Channel /videos sources: /@handle, /channel/UC..., /c/name, /user/name, a bare @handle, or a UC... channel ID. Scrapes up to Max videos per source.",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "prefill": [],
+      "title": "Channel URLs or handles",
+      "type": "array"
+    },
+    "commentsSince": {
+      "description": "Optional cutoff as an ISO date/datetime (2026-10-16) or relative duration (7d, 24h, 30m). Forces newest sort. Pinned comments are always kept; pagination stops at the first non-pinned comment older than the cutoff.",
       "editor": "textfield",
-      "title": "Comment Keyword Filter",
+      "title": "Comments since",
       "type": "string"
+    },
+    "emitStatusRows": {
+      "default": true,
+      "description": "Write one recordType=status row for blocked, private, unavailable, comments-off, empty-token, invalid-input, partial and budget-stop cases. Status rows are never counted toward Max total rows; disable this to keep the dataset data-only.",
+      "prefill": true,
+      "title": "Emit status rows",
+      "type": "boolean"
     },
     "includeReplies": {
       "default": true,
-      "description": "Whether to fetch reply threads for each comment.",
-      "prefill": false,
-      "title": "Include Replies",
+      "description": "Fetch reply threads. Emitted as flat rows by default; use Output mode tree to embed them instead.",
+      "prefill": true,
+      "title": "Include replies",
       "type": "boolean"
+    },
+    "keywords": {
+      "default": [],
+      "description": "Case-insensitive OR filter on comment and reply text. Empty = no keyword filter. A parent comment that does not match is skipped, so its replies are not fetched.",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "prefill": [],
+      "title": "Keywords (ANY match)",
+      "type": "array"
     },
     "maxComments": {
       "default": 100,
-      "description": "Maximum number of top-level comments to scrape per video. Replies are fetched separately and do not count toward this limit.",
+      "description": "Top-level comments to examine per video. 0 = all. Comments rejected by filters still count toward this scan cap (so restrictive filters cannot paginate forever); replies do not. Both emitted comments and replies count toward Max total rows.",
       "editor": "number",
       "maximum": 50000,
-      "minimum": 1,
-      "prefill": 5,
-      "title": "Max Comments Per Video",
+      "minimum": 0,
+      "prefill": 3,
+      "title": "Max top-level comments per video",
       "type": "integer"
     },
     "maxRepliesPerComment": {
-      "default": 5,
-      "description": "Maximum number of replies to fetch per top-level comment. Set to 0 to skip replies even if Include Replies is enabled.",
+      "default": 50,
+      "description": "Per-thread reply cap. 0 = all replies, stopping when the continuation token is exhausted. YouTube serves roughly 9-10 on the first reply page and 44-49 afterwards.",
       "editor": "number",
-      "maximum": 100,
+      "maximum": 10000,
       "minimum": 0,
-      "title": "Max Replies Per Comment",
+      "prefill": 3,
+      "title": "Max replies per comment",
       "type": "integer"
     },
-    "minLikeCount": {
+    "maxReplyDepth": {
+      "default": 1,
+      "description": "0 = top-level comments only, 1 = direct replies (the shape observed publicly). Values above 1 are reserved for nested sub-threads, which YouTube has not exposed in the samples used to build this actor.",
+      "editor": "number",
+      "maximum": 6,
+      "minimum": 0,
+      "prefill": 1,
+      "title": "Max reply depth",
+      "type": "integer"
+    },
+    "maxTotalRows": {
+      "default": 5000,
+      "description": "Global budget for emitted comment + reply rows. 0 = unlimited. Status rows are never counted and are not billable data rows.",
+      "editor": "number",
+      "maximum": 1000000,
+      "minimum": 0,
+      "prefill": 20,
+      "title": "Max total rows",
+      "type": "integer"
+    },
+    "maxVideosPerSource": {
+      "default": 20,
+      "description": "Discovery cap for channel, playlist and search sources. 0 = every video the source exposes.",
+      "editor": "number",
+      "maximum": 5000,
+      "minimum": 0,
+      "title": "Max videos per channel/playlist/search",
+      "type": "integer"
+    },
+    "minLikes": {
       "default": 0,
-      "description": "Only return comments and replies with at least this many likes. Set to 0 to disable.",
+      "description": "Drop comments and replies below this like count. Applied after fetching. YouTube only exposes rounded counts (K/M), so the comparison uses the rounded value.",
       "editor": "number",
       "maximum": 1000000000,
       "minimum": 0,
-      "title": "Minimum Like Count",
+      "prefill": 0,
+      "title": "Minimum likes",
       "type": "integer"
+    },
+    "onlyCreatorHearted": {
+      "default": false,
+      "description": "Keep only comments/replies that the video creator hearted. HeartedBy identifies the creator where YouTube exposes the tooltip.",
+      "prefill": false,
+      "title": "Only creator-hearted comments",
+      "type": "boolean"
+    },
+    "outputMode": {
+      "default": "flat",
+      "description": "flat = one row per comment and reply (recommended for CSV/Excel/SQL); tree = parent rows with embedded replies[] (backward compatible); both = flat rows plus parent rows carrying replies[].",
+      "editor": "select",
+      "enum": [
+        "flat",
+        "tree",
+        "both"
+      ],
+      "enumTitles": [
+        "Flat rows",
+        "Tree with embedded replies",
+        "Both"
+      ],
+      "prefill": "flat",
+      "title": "Output mode",
+      "type": "string"
+    },
+    "playlistUrls": {
+      "default": [],
+      "description": "Playlist sources: youtube.com/playlist?list=... or a bare playlist ID. Scrapes up to Max videos per source.",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "prefill": [],
+      "title": "Playlist URLs or IDs",
+      "type": "array"
+    },
+    "searchQueries": {
+      "default": [],
+      "description": "YouTube search terms or search-result URLs. Only video results are used, deduplicated, up to Max videos per source.",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "prefill": [],
+      "title": "Search queries",
+      "type": "array"
     },
     "sortBy": {
       "default": "top",
-      "description": "How to sort comments. 'Top comments' shows most relevant/liked first. 'Newest first' shows chronologically newest.",
+      "description": "top = YouTube relevance order; newest = chronological, recommended for date cutoffs and complete windows. A date cutoff forces newest automatically.",
       "editor": "select",
       "enum": [
         "top",
@@ -54,27 +161,25 @@
         "Top comments",
         "Newest first"
       ],
-      "title": "Sort Comments By",
+      "prefill": "top",
+      "title": "Sort comments by",
       "type": "string"
     },
     "videoUrls": {
-      "description": "YouTube video URLs, short links (youtu.be), shorts URLs, or plain video IDs.",
+      "default": [],
+      "description": "Watch, youtu.be, Shorts, embed, live, v/ links, or bare 11-character IDs. Every video is normalized to a watch URL internally.",
       "editor": "stringList",
       "items": {
         "type": "string"
       },
-      "minItems": 1,
       "prefill": [
         "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
       ],
-      "title": "Video URLs",
+      "title": "Video URLs or IDs",
       "type": "array"
     }
   },
-  "required": [
-    "videoUrls"
-  ],
   "schemaVersion": 1,
-  "title": "YouTube Comment Scraper Input",
+  "title": "YouTube Comments & Reply Thread Scraper Input",
   "type": "object"
 }

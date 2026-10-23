@@ -3,15 +3,15 @@
   "properties": {
     "brands": {
       "default": [],
-      "description": "Only return products from these brands, server-side (AND with `category`). Use the brand's mvideo.ru filter slug — for Latin-script brands this is just the lowercase name (e.g. `samsung`, `lg`, `sony`, `xiaomi`, `general-electronics`); look up the exact slug by opening the category on mvideo.ru and checking the brand filter checkboxes if unsure. Multiple values are OR'd together.",
+      "description": "Only return products from these brands. Accepts brand names or mvideo.ru slugs (e.g. `Samsung`, `samsung`, `LG`). The matching facet is resolved from the live response, so no hardcoded IDs are needed. Multiple values are OR'd together.",
       "editor": "stringList",
       "prefill": [],
-      "title": "Brands (mode=byCategory)",
+      "title": "Brands (mode=search / byCategory)",
       "type": "array"
     },
     "category": {
       "default": "",
-      "description": "Top-level mvideo.ru category to browse.",
+      "description": "Top-level mvideo.ru category to browse. Use `categoryUrl` for any sub-category not listed here.",
       "editor": "select",
       "enum": [
         "",
@@ -207,47 +207,108 @@
       "title": "Custom category URL or ID (mode=byCategory)",
       "type": "string"
     },
-    "inStockOnly": {
+    "city": {
+      "default": "Москва",
+      "description": "Russian city name or mvideo city ID (e.g. Москва, Санкт-Петербург, CityCZ_975). City changes stock availability, pickup stores and delivery dates.",
+      "editor": "textfield",
+      "prefill": "Москва",
+      "title": "City",
+      "type": "string"
+    },
+    "condition": {
+      "default": "any",
+      "description": "Filter by item condition. The matching facet is resolved from the live response; if it is unavailable for a query/category, the run stops with a clear message instead of returning unfiltered results.",
+      "editor": "select",
+      "enum": [
+        "any",
+        "new",
+        "refurbished",
+        "used",
+        "markdown",
+        "showcase"
+      ],
+      "enumTitles": [
+        "Any condition",
+        "New",
+        "Refurbished",
+        "Used",
+        "Markdown / clearance",
+        "Showcase / display unit"
+      ],
+      "prefill": "any",
+      "title": "Condition (mode=search / byCategory)",
+      "type": "string"
+    },
+    "failOnEmpty": {
       "default": false,
-      "description": "Only emit products that are currently available (not sold out).",
+      "description": "Mark the run as failed when zero records are emitted (for example a blocked connection or an empty query).",
       "prefill": false,
-      "title": "In stock only",
+      "title": "Fail when nothing is found",
+      "type": "boolean"
+    },
+    "fromAbroad": {
+      "default": false,
+      "description": "Only return parallel-import listings. Applies to search mode only; ignored in category mode.",
+      "prefill": false,
+      "title": "Parallel import only (mode=search)",
+      "type": "boolean"
+    },
+    "includeOtherOffers": {
+      "default": true,
+      "description": "Fetch the seller/buybox block and attach `otherOffers[]` with prices and seller details when available.",
+      "prefill": false,
+      "title": "Include other seller offers (mode=productDetails)",
+      "type": "boolean"
+    },
+    "includeStoreStock": {
+      "default": false,
+      "description": "Fetch per-store pickup availability for the selected city and attach a `stores[]` list.",
+      "prefill": false,
+      "title": "Include store stock (mode=productDetails)",
       "type": "boolean"
     },
     "maxItems": {
-      "default": 10,
-      "description": "Hard cap on emitted records. Note: mode=search is limited to ~10 results (mvideo.ru's own search-suggestion API caps at 10 matches); use mode=byCategory for larger result sets.",
-      "maximum": 2000,
-      "minimum": 1,
-      "prefill": 10,
+      "default": 100,
+      "description": "Hard cap on emitted records (products, or review rows in mode=reviews). Search covers the full result set across all pages, de-duplicated by product ID. Use 0 for all (up to the 10,000 cap).",
+      "maximum": 10000,
+      "minimum": 0,
+      "prefill": 3,
       "title": "Max items",
       "type": "integer"
     },
     "maxPrice": {
-      "description": "Drop products more expensive than this (sale price, in Russian rubles). In mode=byCategory this is applied server-side (fewer wasted fetches); other modes filter client-side after fetching.",
+      "description": "Drop products more expensive than this (sale price, in Russian rubles). Applied server-side in search/category mode and client-side for detail records.",
       "maximum": 10000000,
       "minimum": 0,
       "title": "Max price (RUB)",
       "type": "integer"
     },
     "maxReviews": {
-      "default": 5,
-      "description": "How many of the most helpful customer reviews to fetch and attach to each product's `reviews[]` field (also populates `ratingBreakdown` and `recommendPercent`). Only applies to mode=search and mode=productDetails, since those are the modes that fetch full product details. Set to 0 to skip fetching reviews.",
-      "maximum": 20,
+      "default": 20,
+      "description": "Reviews to fetch per product in mode=productDetails (attached as `reviews[]`) and mode=reviews (one row per review). Paginated 20 at a time; 0 skips review fetching.",
+      "maximum": 200,
       "minimum": 0,
-      "prefill": 5,
-      "title": "Max customer reviews per product (search / productDetails)",
+      "prefill": 0,
+      "title": "Max customer reviews per product",
+      "type": "integer"
+    },
+    "minDiscount": {
+      "description": "Drop products with a smaller discount than this (0-99 percent). Applied after catalog fetches (the API has no discount facet). Products without a discount are excluded when this filter is set.",
+      "editor": "number",
+      "maximum": 99,
+      "minimum": 0,
+      "title": "Min discount (%)",
       "type": "integer"
     },
     "minPrice": {
-      "description": "Drop products cheaper than this (sale price, in Russian rubles). In mode=byCategory this is applied server-side (fewer wasted fetches); other modes filter client-side after fetching.",
+      "description": "Drop products cheaper than this (sale price, in Russian rubles). Applied server-side in search/category mode and client-side for detail records.",
       "maximum": 10000000,
       "minimum": 0,
       "title": "Min price (RUB)",
       "type": "integer"
     },
     "minRating": {
-      "description": "Drop products with a customer rating below this (0-5 stars). Products with no rating are excluded when this filter is set.",
+      "description": "Drop products with a customer rating below this (0-5 stars). Applied after catalog fetches (the API has no rating facet). Products with no rating are excluded when this filter is set.",
       "editor": "number",
       "maximum": 5,
       "minimum": 0,
@@ -261,12 +322,14 @@
       "enum": [
         "search",
         "byCategory",
-        "productDetails"
+        "productDetails",
+        "reviews"
       ],
       "enumTitles": [
         "Search products by keyword",
         "Browse a category",
-        "Fetch product details by URL/ID"
+        "Fetch product details by URL/ID",
+        "Fetch customer reviews by product URL/ID"
       ],
       "prefill": "search",
       "title": "Mode",
@@ -274,19 +337,19 @@
     },
     "productUrls": {
       "default": [],
-      "description": "mvideo.ru product URLs (e.g. https://www.mvideo.ru/products/televizor-...-401211841) or bare numeric product IDs.",
+      "description": "mvideo.ru product URLs (e.g. https://www.mvideo.ru/products/televizor-...-401211841) or bare numeric product IDs. Used by productDetails and reviews modes.",
       "editor": "stringList",
       "prefill": [
         "https://www.mvideo.ru/products/televizor-general-electronics-ge55lqs2-401211841"
       ],
-      "title": "Product URLs or IDs (mode=productDetails)",
+      "title": "Product URLs or IDs (mode=productDetails / reviews)",
       "type": "array"
     },
     "proxyConfiguration": {
       "default": {
         "useApifyProxy": true
       },
-      "description": "Apify Proxy to use. The actor tries the free datacenter (AUTO) pool first (Tier 3: Playwright); if mvideo.ru's anti-bot blocks every attempt, it automatically escalates to a residential proxy session (Tier 4: Camoufox) regardless of this setting.",
+      "description": "Optional. The actor connects directly first and only escalates to Apify Proxy if mvideo.ru blocks a request. Change this only if you need a specific proxy setup.",
       "editor": "proxy",
       "prefill": {
         "useApifyProxy": true
@@ -296,7 +359,7 @@
     },
     "searchQuery": {
       "default": "телевизор",
-      "description": "Free-text product search, e.g. телевизор, ноутбук, холодильник.",
+      "description": "Free-text product search, e.g. телевизор, ноутбук, холодильник. The full result set is paginated automatically.",
       "editor": "textfield",
       "prefill": "телевизор",
       "title": "Search query (mode=search)",
@@ -304,7 +367,7 @@
     },
     "sellers": {
       "default": [],
-      "description": "Only return products from these marketplace sellers, server-side (AND with `category`). Use the seller's mvideo.ru filter slug (e.g. `mvideo` for M.Video itself, `mediamarkt` for MediaMarkt); look up the exact slug from the category's own seller filter if unsure. Multiple values are OR'd together.",
+      "description": "Only return products from these marketplace sellers. Accepts seller names or mvideo.ru seller slugs (e.g. `BQ.ru`, `bqru`). The seller facet exists in category browsing only; the search response has no seller facet, so a search run with sellers set stops with a clear message. Multiple values are OR'd together.",
       "editor": "stringList",
       "prefill": [],
       "title": "Sellers (mode=byCategory)",
@@ -312,7 +375,7 @@
     },
     "sortOrder": {
       "default": "popularity",
-      "description": "Result ordering for category browsing.",
+      "description": "Result ordering. Only popularity and price ordering are supported by the source; other orderings are not promised.",
       "editor": "select",
       "enum": [
         "popularity",
@@ -325,8 +388,17 @@
         "Price: high to low"
       ],
       "prefill": "popularity",
-      "title": "Sort order (mode=byCategory)",
+      "title": "Sort order (mode=search / byCategory)",
       "type": "string"
+    },
+    "storeLimit": {
+      "default": 20,
+      "description": "Cap on `stores[]` entries per product when store stock is included.",
+      "maximum": 200,
+      "minimum": 1,
+      "prefill": 20,
+      "title": "Max stores per product",
+      "type": "integer"
     }
   },
   "required": [
