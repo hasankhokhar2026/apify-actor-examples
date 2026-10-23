@@ -1,0 +1,125 @@
+# Google Play App Search, Lookup & Reviews Scraper
+
+Search Google Play by keyword, or look up specific apps directly by package ID, and get back detailed app records — ratings, install counts, pricing, developer contact details, screenshots, and more — for 50 Google Play countries and 30 languages. Optionally add each app's newest user reviews.
+
+## What this actor does
+
+- Searches Google Play by keyword to discover matching apps, or looks up exact apps by package ID (e.g. `com.whatsapp`)
+- Returns over 30 fields per app: ratings, installs, pricing, content rating, release/update dates, and developer contact info
+- Optionally fetches the newest user reviews per app, including the developer's reply when one exists
+- Targets one of 50 Google Play countries and 30 languages, affecting pricing, availability, and review language
+- Combines both search and direct lookup in the same run
+- Every field below is always present on each app record; fields Google Play doesn't publish for that app come back as an empty string, `0`, or empty array rather than being left out
+
+## Output per app
+
+- `appId` — package ID (e.g. `com.whatsapp`)
+- `title` — app name
+- `url` — Google Play Store URL
+- `developer`, `developerId` — developer name and Google Play developer ID
+- `developerEmail`, `developerWebsite`, `developerAddress` — developer contact details
+- `score`, `ratings`, `reviewCount` — average rating, total ratings, and total reviews
+- `histogram` — rating distribution as a five-number list, 1-star through 5-star counts
+- `installs`, `minInstalls`, `realInstalls` — install count display text, minimum threshold, and estimated real installs
+- `price`, `free`, `currency` — numeric price, whether the app is free, and price currency
+- `genre`, `genreId`, `categories` — primary genre name and ID, and the category list (`{name, id}` objects)
+- `icon`, `headerImage`, `screenshots`, `video` — icon, header image, screenshot URLs, and promo video URL
+- `contentRating` — content rating (e.g. `"Everyone"`, `"Teen"`)
+- `adSupported`, `containsAds` — advertising flags
+- `released`, `lastUpdated`, `version` — release date, latest update date, and current version
+- `description`, `recentChanges` — full description and latest changelog
+- `privacyPolicy` — privacy policy URL
+- `reviews` — array of review objects, newest first (empty unless `includeReviews` is enabled)
+- `scrapedAt` — ISO 8601 collection timestamp
+
+### Review object fields
+
+- `reviewId` — unique review identifier
+- `userName`, `userImage` — reviewer's display name and profile image
+- `score` — rating given (1–5)
+- `content` — review text
+- `thumbsUpCount` — number of helpful votes
+- `date` — date the review was posted
+- `replyContent`, `repliedAt` — developer's reply text and date, when one exists
+- `appVersion` — app version the review was written for
+
+## Input
+
+| Field | Type | Default | Description |
+|---|---|---|---|
+| `searchTerms` | array of strings | – | Keywords to find apps on Google Play |
+| `appIds` | array of strings | – | Package IDs for direct lookup (e.g. `com.whatsapp`) |
+| `country` | string | `us` | One of 50 two-letter country codes — affects pricing, availability, and localized results |
+| `language` | string | `en` | One of 30 two-letter language codes — affects descriptions and reviews |
+| `maxResults` | integer | `50` | Maximum apps for the whole run, search results and direct lookups combined (1–250). Search terms fill it first |
+| `includeReviews` | boolean | `false` | Fetch user reviews for each app |
+| `reviewCount` | integer | `20` | Reviews to fetch per app when `includeReviews` is on (1–200) |
+
+At least one of `searchTerms` or `appIds` must be provided.
+
+### Example: keyword search with reviews
+
+```json
+{
+  "searchTerms": ["photo editor", "calculator"],
+  "country": "us",
+  "language": "en",
+  "maxResults": 10,
+  "includeReviews": true,
+  "reviewCount": 5
+}
+```
+
+### Example: direct app lookup
+
+```json
+{
+  "appIds": ["com.whatsapp", "com.google.android.calculator"],
+  "country": "us",
+  "language": "en"
+}
+```
+
+### Example: regional availability check
+
+```json
+{
+  "appIds": ["com.whatsapp"],
+  "country": "jp",
+  "language": "ja"
+}
+```
+
+## Use cases
+
+- **Competitor monitoring** — track rivals' ratings, pricing, and update frequency over time
+- **ASO research** — see which apps rank for a given keyword search
+- **Market analysis** — survey a category's pricing and install-count distribution
+- **Reputation tracking** — pull recent reviews with developer replies to spot trends
+- **Localization research** — compare an app's pricing and availability across countries
+
+## FAQ
+
+**Can I scrape any app on Google Play?**
+Yes, any app publicly listed on Google Play can be scraped. Region-restricted apps only appear when you set the matching `country`.
+
+**Do I need a Google account or API key?**
+No. The actor works without any authentication, API keys, or cookies.
+
+**How many apps can I scrape in one run?**
+Up to 250 apps per run (`maxResults`), shared between search terms and direct `appIds`. Each search term contributes at most 50 apps, so use several terms (or add `appIds`) to go beyond 50. Duplicates are skipped. If nothing is found at all, the run ends as failed.
+
+**Can I get reviews for every app?**
+Yes — enable `includeReviews` and set `reviewCount` (up to 200) to fetch that many reviews per app.
+
+**What countries and languages are supported?**
+50 countries and 30 languages, selectable from the `country` and `language` dropdowns using standard two-letter codes (e.g. `us`, `gb`, `de` for countries; `en`, `es`, `fr` for languages). If a keyword search fails for an unusual country/language pair, that search is retried in the US English store, so its results then reflect US listings.
+
+**How fresh is the data?**
+Every run fetches live data directly from Google Play, so results reflect the store's current state at scrape time.
+
+**Why are some fields empty for certain apps?**
+Not every app has every field populated on Google Play — for example, not all apps have a promo video or a published developer address. Those fields come back as an empty value for that app rather than being left out of the record. If an app's detail page can't be loaded during a search, the record keeps only what the search result showed, so more fields are empty.
+
+**Is this affiliated with Google?**
+No. This is an independent, third-party actor that reads Google Play's public app pages; it isn't affiliated with or endorsed by Google.
