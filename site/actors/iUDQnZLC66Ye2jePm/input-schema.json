@@ -1,0 +1,41 @@
+{
+  "properties": {
+    "autoProxyFallback": {
+      "default": true,
+      "description": "Transparently retry a fetch via Apify residential proxy when the direct request looks like a block page (empty body or unusually small response). Saves credits by only using the proxy when needed.",
+      "prefill": true,
+      "title": "Auto proxy fallback",
+      "type": "boolean"
+    },
+    "channelUrls": {
+      "description": "List of YouTube channel URLs to scan for contact emails. Supports @handle, /channel/UC..., /c/name, /user/name formats, and plain @handle shortcuts.",
+      "editor": "stringList",
+      "prefill": [
+        "https://www.youtube.com/@apify"
+      ],
+      "title": "YouTube channel URLs",
+      "type": "array"
+    },
+    "followExternalProfiles": {
+      "default": true,
+      "description": "When true, the scraper also opens external profile links advertised on the channel (Instagram, TikTok, Linktree) to discover emails hidden in their bios.",
+      "prefill": true,
+      "title": "Follow external profiles (Instagram / TikTok / Linktree)",
+      "type": "boolean"
+    },
+    "maxExternalPerChannel": {
+      "default": 5,
+      "description": "Upper bound on how many external profile URLs are fetched per channel (keeps runs cheap and predictable).",
+      "maximum": 50,
+      "minimum": 1,
+      "title": "Max external profiles followed per channel",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "channelUrls"
+  ],
+  "schemaVersion": 1,
+  "title": "YouTube Email Scraper Input",
+  "type": "object"
+}

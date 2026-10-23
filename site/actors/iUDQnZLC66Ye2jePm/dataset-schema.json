@@ -1,0 +1,60 @@
+{
+  "actorSpecification": 1,
+  "views": {
+    "overview": {
+      "description": "Emails extracted per YouTube channel.",
+      "display": {
+        "component": "table",
+        "properties": {
+          "channelHandle": {
+            "label": "Handle"
+          },
+          "channelId": {
+            "label": "Channel ID"
+          },
+          "channelName": {
+            "label": "Channel name"
+          },
+          "channelUrl": {
+            "format": "link",
+            "label": "Channel URL"
+          },
+          "emails": {
+            "format": "array",
+            "label": "Emails"
+          },
+          "externalLinks": {
+            "format": "array",
+            "label": "External links"
+          },
+          "scrapedAt": {
+            "format": "date",
+            "label": "Scraped at"
+          },
+          "sources": {
+            "format": "array",
+            "label": "Sources"
+          },
+          "subscriberCount": {
+            "format": "number",
+            "label": "Subscribers"
+          }
+        }
+      },
+      "title": "Overview",
+      "transformation": {
+        "fields": [
+          "channelUrl",
+          "channelName",
+          "channelHandle",
+          "channelId",
+          "subscriberCount",
+          "emails",
+          "externalLinks",
+          "sources",
+          "scrapedAt"
+        ]
+      }
+    }
+  }
+}

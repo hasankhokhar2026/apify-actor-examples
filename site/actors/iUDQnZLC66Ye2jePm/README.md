@@ -1,0 +1,154 @@
+# YouTube Channel Contact Email Finder
+
+Extract publicly listed contact emails from YouTube channels — including the ones creators only put in their linked Instagram, TikTok, or Linktree bios.
+
+## What this actor does
+
+- **Creator emails:** found in the channel's About description and links, and on linked profiles
+- **External sources:** Instagram, TikTok, and Linktree links from the channel
+- **Bulk channels:** multiple channels per run
+- **Optional network fallback:** automatic route switching when a page looks blocked
+- **Empty fields are omitted** — records only contain values that are actually populated.
+
+## Output
+
+
+One record per channel. Fields with no value are omitted.
+
+```json
+{
+  "channelUrl": "https://www.youtube.com/@Apify/about",
+  "channelId": "UCx...",
+  "channelHandle": "@Apify",
+  "channelName": "Apify",
+  "channelDescription": "We help businesses extract data from the web...",
+  "subscriberCount": 12500,
+  "emails": ["hello@apify.com", "press@apify.com"],
+  "sources": [
+    {"email": "hello@apify.com", "sourceUrl": "https://www.youtube.com/@Apify/about", "sourceType": "channel_description"},
+    {"email": "press@apify.com", "sourceUrl": "https://www.instagram.com/apify/", "sourceType": "instagram_bio"}
+  ],
+  "externalLinks": [
+    "https://apify.com",
+    "https://www.instagram.com/apify/",
+    "https://twitter.com/apify"
+  ],
+  "scrapedAt": "2026-04-24T12:00:00+00:00"
+}
+```
+
+**Field descriptions**
+
+- **`channelUrl`** — canonical URL of the scraped About page
+- **`channelId`** — YouTube's stable channel identifier (`UC...`)
+- **`channelHandle`** — the `@handle` form of the channel
+- **`channelName`** — human-readable channel title
+- **`channelDescription`** — full About description text
+- **`subscriberCount`** — subscriber count expanded from YouTube's displayed label (so `1.2M` becomes `1200000`; approximate for large channels)
+- **`emails`** — deduplicated, lower-cased, alphabetically sorted list of every email discovered for the channel
+- **`sources`** — one entry per email with the exact URL and source type
+- **`externalLinks`** — advertised links from the About page (not all are crawled)
+- **`scrapedAt`** — ISO-8601 timestamp of when the channel was processed
+
+**Source types**
+
+| `sourceType` | Where the email came from |
+| --- | --- |
+| `channel_description` | The channel's About description. |
+| `channel_external_link` | An email embedded directly in an advertised link. |
+| `instagram_bio` | Creator's Instagram profile (bio text or metadata). |
+| `tiktok_bio` | Creator's TikTok profile. |
+| `linktree` | A Linktree hub linked from the channel. |
+
+**Error record** — emitted instead of a channel record when something goes wrong, so the run never fails entirely:
+
+```json
+{
+  "type": "youtube_email_scraper_error",
+  "reason": "fetch_failed",
+  "message": "Could not fetch About page (blocked / offline / not found).",
+  "channelUrl": "https://www.youtube.com/@SomeClosedChannel/about",
+  "scrapedAt": "2026-04-24T12:00:00+00:00"
+}
+```
+
+`reason` is one of: `invalid_url` (the entry isn't a recognizable YouTube channel link), `fetch_failed` (the About page couldn't be fetched), `parse_failed` (the page loaded but its data couldn't be located), `scrape_error` (an unexpected error while scraping that channel), or `invalid_input` (no `channelUrls` were provided at all — this one has no `channelUrl` field since there's no URL to report).
+
+## Input
+
+
+| Field | Type | Default | Description |
+| --- | --- | --- | --- |
+| `channelUrls` | array of strings | — | **Required.** YouTube channel URLs in any supported shape. |
+| `followExternalProfiles` | boolean | `true` | Follow Instagram / TikTok / Linktree links discovered on the channel. |
+| `maxExternalPerChannel` | integer | `5` | Cap on external profiles fetched per channel. The scraper enforces an internal cap of 20 regardless of a higher value. |
+| `autoProxyFallback` | boolean | `true` | Automatically retry through Apify residential proxy when a page looks blocked. |
+
+### Example: multiple channels with external profiles
+
+```json
+{
+  "channelUrls": [
+    "https://www.youtube.com/@Apify",
+    "https://www.youtube.com/@MrBeast",
+    "@MKBHD"
+  ],
+  "followExternalProfiles": true,
+  "maxExternalPerChannel": 5,
+  "autoProxyFallback": true
+}
+```
+
+### Example: single channel, About page only
+
+```json
+{
+  "channelUrls": ["@MrBeast"],
+  "followExternalProfiles": false
+}
+```
+
+## Use cases
+
+
+- **Influencer outreach** — build a ranked contact list for a shortlist of creators in a niche
+- **Brand partnership research** — harvest business emails from your competitor's sponsored-creator roster
+- **Agency sourcing** — quickly see which creators publish a reachable inbox vs. hide behind management
+- **PR and press** — find the right email for an interview, quote, or product-review request
+- **CRM enrichment** — keep your creator-contacts database synced with the emails currently advertised publicly
+
+## FAQ
+
+
+**Does this scraper bypass CAPTCHAs?**
+No. The actor uses only the public About page and the public profile pages of Instagram, TikTok, and Linktree. When a page is fully blocked, the scraper emits an error record for that channel and moves on.
+
+**Do I need cookies, a login, or a YouTube API key?**
+No. The scraper is unauthenticated and reads only publicly available data.
+
+**Will it find every email on a channel?**
+It finds every email advertised in plain text, as a `mailto:` link, with common obfuscation (`[at]` / `[dot]`), and on linked Instagram / TikTok / Linktree bios. It cannot extract emails hidden behind YouTube's "View email address" click-to-reveal button — that gate requires a logged-in account and is not supported.
+
+**Does it follow every external link on a channel?**
+No — only Instagram, TikTok, and Linktree, because those are where creators most often advertise a contact address. All external links are still listed in `externalLinks` so you can follow them downstream if you wish.
+
+**What if a channel has no public emails?**
+The channel record is still emitted, just without the `emails` and `sources` fields. You can filter on the presence of `emails` in post-processing.
+
+**How does the proxy fallback work?**
+If a page looks blocked, the scraper retries it once more through an Apify residential proxy (US). Set `autoProxyFallback: false` to never use the proxy; blocked pages then simply yield no emails (or a `fetch_failed` record for the About page).
+
+**How many linked profiles are opened per channel?**
+Up to `maxExternalPerChannel` successfully loaded Instagram, TikTok or Linktree pages, never more than 20 even if you set a higher number. Other links (websites, X, Facebook) are listed in `externalLinks` but not opened.
+
+**Is this affiliated with YouTube?**
+No. This is an independent, third-party actor that reads publicly available channel pages; it isn't affiliated with or endorsed by YouTube or Google.
+
+## Known limitations
+
+
+- **Click-to-reveal emails on YouTube are not supported.** YouTube's "View email address" button requires a logged-in session; this actor is login-free by design.
+- **Instagram login walls** occasionally show for certain regions or IP ranges. When this happens the scraper skips that bio and keeps the emails it already found elsewhere.
+- **TikTok region restrictions** can replace a profile with an interstitial page; the scraper still extracts whatever metadata the interstitial exposes.
+- **Channels without a public About page** (some custom-branding and music-artist channels) return a `parse_failed` error record.
+- **Subscriber counts** reflect YouTube's publicly displayed rounded value (e.g. `12K` → `12000`). Exact counts below YouTube's display threshold are not available.
