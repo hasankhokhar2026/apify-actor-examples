@@ -1,0 +1,63 @@
+{
+  "description": "Scrape Apple App Store apps and reviews. Search by keyword, look up by app ID, or paste App Store URLs directly.",
+  "properties": {
+    "appIds": {
+      "description": "Specific Apple App Store app IDs to look up (e.g., '544007664' for YouTube).",
+      "editor": "stringList",
+      "title": "App IDs",
+      "type": "array"
+    },
+    "country": {
+      "default": "us",
+      "description": "Two-letter ISO country code for the App Store region (e.g., 'us', 'gb', 'de', 'jp'). Affects pricing, availability, and reviews language.",
+      "editor": "textfield",
+      "title": "Country Code",
+      "type": "string"
+    },
+    "includeReviews": {
+      "default": false,
+      "description": "Fetch customer reviews for each app. Up to 50 reviews per page, controlled by Review Pages setting.",
+      "sectionCaption": "Reviews",
+      "title": "Include Reviews",
+      "type": "boolean"
+    },
+    "maxResults": {
+      "default": 50,
+      "description": "Maximum number of apps to return per search term (up to 200).",
+      "editor": "number",
+      "maximum": 200,
+      "minimum": 1,
+      "prefill": 5,
+      "title": "Max Results",
+      "type": "integer"
+    },
+    "reviewPages": {
+      "default": 1,
+      "description": "Number of review pages to fetch per app (50 reviews per page, max 10 pages = 500 reviews). Only used when Include Reviews is enabled.",
+      "maximum": 10,
+      "minimum": 1,
+      "title": "Review Pages per App",
+      "type": "integer"
+    },
+    "searchTerms": {
+      "description": "List of keywords to search for on the App Store. Each term will return matching apps.",
+      "editor": "stringList",
+      "prefill": [
+        "calculator"
+      ],
+      "sectionCaption": "Search Settings",
+      "sectionDescription": "Provide search terms, app IDs, or App Store URLs.",
+      "title": "Search Terms",
+      "type": "array"
+    },
+    "startUrls": {
+      "description": "Direct App Store URLs (e.g., https://apps.apple.com/us/app/youtube/id544007664). The app ID is extracted automatically.",
+      "editor": "requestListSources",
+      "title": "App Store URLs",
+      "type": "array"
+    }
+  },
+  "schemaVersion": 1,
+  "title": "App Store Scraper Input",
+  "type": "object"
+}
