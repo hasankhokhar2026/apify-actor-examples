@@ -1,0 +1,137 @@
+{
+  "description": "Collect any public X profile and its posts without login or cookies.",
+  "properties": {
+    "dateFrom": {
+      "description": "Optional. Only keep posts published on or after this date.",
+      "editor": "datepicker",
+      "title": "Posted after",
+      "type": "string"
+    },
+    "dateTo": {
+      "description": "Optional. Only keep posts published on or before this date.",
+      "editor": "datepicker",
+      "title": "Posted before",
+      "type": "string"
+    },
+    "include": {
+      "default": [
+        "profileInfo",
+        "latestPosts"
+      ],
+      "description": "Pick one or more data groups. Everything works without cookies; X's login-only About panel is reported as unavailable.",
+      "editor": "select",
+      "items": {
+        "enum": [
+          "profileInfo",
+          "latestPosts",
+          "topPosts",
+          "media",
+          "about"
+        ],
+        "enumTitles": [
+          "Profile info (bio, followers, verification)",
+          "Latest posts (newest first)",
+          "Top posts (most popular highlights)",
+          "Media posts only (photos and videos)",
+          "About this account (login-only, unavailable)"
+        ],
+        "type": "string"
+      },
+      "prefill": [
+        "profileInfo",
+        "latestPosts"
+      ],
+      "title": "What to collect",
+      "type": "array",
+      "uniqueItems": true
+    },
+    "includeReplies": {
+      "default": false,
+      "description": "Also collect replies the account sent. Uses the guest UserTweetsAndReplies burst plus profile-scoped `filter:replies` search windows (may be empty when X refuses logged-out callers).",
+      "prefill": false,
+      "title": "Include replies",
+      "type": "boolean"
+    },
+    "includeRetweets": {
+      "default": false,
+      "description": "Keep retweets in the results. Turn off to get only posts the account wrote itself.",
+      "prefill": false,
+      "title": "Include retweets",
+      "type": "boolean"
+    },
+    "language": {
+      "description": "Optional. Keep only posts detected in this language, e.g. `en`, `es`, `ja`. Leave empty for all languages.",
+      "editor": "textfield",
+      "title": "Post language",
+      "type": "string"
+    },
+    "maxPostsPerProfile": {
+      "default": 50,
+      "description": "Target number of posts per account (1-1000). The actor merges the profile timeline, top posts, the replies timeline and profile-scoped search windows, then de-duplicates by post id before applying this cap. High values are filled with older posts when X search serves logged-out callers.",
+      "maximum": 1000,
+      "minimum": 1,
+      "title": "Maximum posts per profile",
+      "type": "integer"
+    },
+    "minimumLikes": {
+      "description": "Optional. Drop posts with fewer likes than this.",
+      "minimum": 0,
+      "title": "Minimum likes",
+      "type": "integer"
+    },
+    "minimumReplies": {
+      "description": "Optional. Drop posts with fewer replies than this.",
+      "minimum": 0,
+      "title": "Minimum replies",
+      "type": "integer"
+    },
+    "minimumRetweets": {
+      "description": "Optional. Drop posts with fewer retweets than this.",
+      "minimum": 0,
+      "title": "Minimum retweets",
+      "type": "integer"
+    },
+    "onlyVerified": {
+      "default": false,
+      "description": "Skip accounts that do not carry a verified badge.",
+      "prefill": false,
+      "title": "Only verified accounts",
+      "type": "boolean"
+    },
+    "onlyWithMedia": {
+      "default": false,
+      "description": "Keep only posts that contain photos, videos or GIFs.",
+      "prefill": false,
+      "title": "Only posts with images or videos",
+      "type": "boolean"
+    },
+    "proxyConfiguration": {
+      "description": "Optional. Use a proxy if you plan large runs or see frequent rate limits.",
+      "editor": "proxy",
+      "sectionCaption": "Advanced",
+      "sectionDescription": "Optional extras. The actor works fully without these.",
+      "title": "Proxy configuration",
+      "type": "object"
+    },
+    "usernames": {
+      "description": "Accounts to collect. Paste handles like `elonmusk`, `@apify`, or full links like `https://x.com/elonmusk`. Handles and links can be mixed.",
+      "editor": "stringList",
+      "example": [
+        "elonmusk",
+        "https://x.com/apify"
+      ],
+      "minItems": 1,
+      "prefill": [
+        "elonmusk"
+      ],
+      "title": "Twitter usernames or profile links",
+      "type": "array"
+    }
+  },
+  "required": [
+    "usernames"
+  ],
+  "schemaVersion": 1,
+  "title": "Twitter (X) Profile Scraper",
+  "type": "object"
+}

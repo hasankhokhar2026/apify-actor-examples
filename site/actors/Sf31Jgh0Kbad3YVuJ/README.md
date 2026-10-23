@@ -1,0 +1,190 @@
+# X (Twitter) Profile & Post Engagement Extractor
+
+Get any public X profile and its posts without login. Returns the profile header (bio, followers, verification, avatar, banner, pinned post) plus the latest posts, top posts, media posts and optional replies, each with full engagement metrics (likes, retweets, replies, quotes, bookmarks, views).
+
+## What this actor does
+
+- **Profile lookup by handle or link:** collects bio, links, followers, following, post count, verification, avatar, banner, pinned post and public join date
+- **Post groups:** `latestPosts`, `topPosts` and optional `includeReplies` replies, merged and de-duplicated by post ID; selecting `media` limits every collected post to ones with photos, videos or GIFs
+- **History windows:** up to 1,000 posts per profile when X serves older posts publicly; `maxPostsPerProfile` is a target, not just a cap
+- **Filters:** date range, language, minimum likes/retweets/replies, media-only, verified-only
+- **Honest rows:** every row carries a `type` (`profile`, `post`, `status`); protected accounts report a `protected` status row and login-only panels are reported as unavailable instead of being guessed at
+- **Empty fields are omitted** — the dataset never contains `null`, `""`, `[]` or `{}`
+
+## Output per profile row
+
+One `profile` row per account, written only when `include` contains `profileInfo` or `about`:
+
+- `id`, `username`, `name`, `bio`, `bioLinks`, `bioEmails` (addresses written in the bio)
+- `location`, `website` (first link in the bio)
+- `joinedAt`, `birthDate` — when public
+- `followers`, `following`, `postCount`, `mediaCount`, `listedCount`, `likesGiven`
+- `isBlueVerified`, `verified`, `verifiedType`, `label`
+- `isProtected`
+- `avatarUrl`, `bannerUrl`
+- `pinnedPostId` (mirrored as `pinnedTweetId`), `pinnedTweet` — the full pinned post when X serves it
+- `mediaTweets` — summary list (`id`, `url`, `mediaTypes`) when `media` is selected
+- `withReplies` — `true` when reply collection was requested (omitted otherwise)
+- `type: "profile"`, `collectedAt`
+
+## Output per post row
+
+- `id`, `url`, `text`, `createdAt`, `language`
+- `replyCount`, `retweetCount`, `likeCount`, `quoteCount`, `bookmarkCount`, `viewCount`
+- `engagementRate` — derived `(likes + retweets + replies + quotes) / followers`; present only when the author's follower count is known and greater than zero
+- `isReply`, `isRetweet`, `isQuote`, `isNoteTweet`, `isPinned`
+- `conversationId`, `threadRootId`, `threadPosition`
+- `inReplyToTweetId`, `inReplyToUserId`, `inReplyToUsername`
+- `hashtags`, `mentions`, `urls`, `cashtags`
+- `media` — photo/video/GIF objects
+- `quotedTweet`, `quotedTweetId`, `poll`, `card`
+- `possiblySensitive`, `place`, `postedFrom`
+- `author` — author snapshot; `username` — canonical author handle on the row
+- `type: "post"`, `collectedAt`
+
+Depending on which public X view a post was read from, it may also carry `withheldInCountries`, `isEdited`, `editControl`, `newsActionType` and `parentTweet` (the post it replies to).
+
+The pinned post is collected separately: when it passes your filters but wasn't already among the collected posts, it is added as an extra row, so a profile can return one more post than `maxPostsPerProfile`.
+
+**Media item:** `type` (`photo` / `video` / `gif`), `url`, `previewImageUrl`, `width`, `height`, `durationSeconds`, `viewCount`, `altText`, `variants`, and where X provides them `mediaKey`, `contentType`, `bitrate`, `allowDownload`, `mediaAvailability`, `focusRects`.
+
+### Sample profile record
+
+```json
+{
+  "type": "profile",
+  "id": "44196397",
+  "username": "elonmusk",
+  "name": "Elon Musk",
+  "bio": "https://t.co/ZdBx5WABYx",
+  "bioLinks": ["http://terafab.ai"],
+  "website": "http://terafab.ai",
+  "joinedAt": "2009-06-02T20:12:29+00:00",
+  "followers": 241717759,
+  "following": 1413,
+  "postCount": 109515,
+  "isBlueVerified": true,
+  "avatarUrl": "https://pbs.twimg.com/profile_images/...jpg",
+  "pinnedPostId": "2106665276758491194",
+  "pinnedTweetId": "2106665276758491194",
+  "collectedAt": "2026-10-06T00:00:00+00:00"
+}
+```
+
+### Sample post record
+
+```json
+{
+  "type": "post",
+  "id": "2107495983328464979",
+  "url": "https://x.com/i/status/2107495983328464979",
+  "text": "Hello world",
+  "createdAt": "2026-10-04T08:38:36+00:00",
+  "language": "en",
+  "replyCount": 4070,
+  "retweetCount": 4161,
+  "likeCount": 91635,
+  "quoteCount": 762,
+  "bookmarkCount": 7462,
+  "viewCount": 62683289,
+  "isReply": false,
+  "isRetweet": false,
+  "isPinned": false,
+  "conversationId": "2107495983328464979",
+  "threadRootId": "2107495983328464979",
+  "threadPosition": 0,
+  "engagementRate": 0.000413,
+  "username": "elonmusk",
+  "collectedAt": "2026-10-06T00:00:00+00:00"
+}
+```
+
+## Output per status row
+
+A `status` row explains a skipped or failed account. It always has a `message`:
+
+- `type: "status"`
+- `status` — `noInput`, `invalidUsername`, `notFound`, `rateLimited`, `skipped`, `protected`, `repliesLimited`, `aboutUnavailable`, `noMediaPosts`, `noPosts`, `timelineUnavailable` or `error`
+- `username`, `url`, `collectedAt`
+
+## Input
+
+| Field | Type | Default | Description |
+|---|---|---|---|
+| `usernames` | array | – | **Required.** Handles (`elonmusk`, `@apify`) or profile links (`https://x.com/elonmusk`). Mixed input is fine. |
+| `include` | array | `["profileInfo", "latestPosts"]` | What to collect: `profileInfo`, `latestPosts`, `topPosts`, `media`, `about`. Any of the three post groups turns on post collection (topped up with older posts up to the target); `media` also keeps only posts with media. With only `profileInfo`, no posts are collected. |
+| `maxPostsPerProfile` | integer | `50` | Post target per account (1–1000). All collected posts are merged, de-duplicated, filtered and capped at this number (plus the pinned post, see above). |
+| `includeReplies` | boolean | `false` | Also collect replies the account sent; when off, replies are dropped from every post group. May be empty when X does not serve a reply timeline publicly. |
+| `includeRetweets` | boolean | `false` | Keep retweets in the results. |
+| `dateFrom` | string | – | Only keep posts published on or after this date. |
+| `dateTo` | string | – | Only keep posts published on or before this date. |
+| `language` | string | – | Keep only posts X tagged with this language code, e.g. `en`, `es`, `ja` (exact match). |
+| `minimumLikes` | integer | – | Drop posts with fewer likes. |
+| `minimumRetweets` | integer | – | Drop posts with fewer retweets. |
+| `minimumReplies` | integer | – | Drop posts with fewer replies. |
+| `onlyWithMedia` | boolean | `false` | Keep only posts with photos, videos or GIFs. |
+| `onlyVerified` | boolean | `false` | Skip accounts without a verified badge (a `skipped` status row is written instead). |
+| `proxyConfiguration` | object | – | Optional. Helps on large runs or repeated runs from the same IP. |
+
+### Example: profile info plus latest and top posts
+
+```json
+{
+  "usernames": ["elonmusk", "https://x.com/apify"],
+  "include": ["profileInfo", "latestPosts", "topPosts"],
+  "maxPostsPerProfile": 100
+}
+```
+
+### Example: high-engagement media posts only
+
+```json
+{
+  "usernames": ["NASA"],
+  "include": ["profileInfo", "latestPosts", "media"],
+  "onlyWithMedia": true,
+  "minimumLikes": 500,
+  "dateFrom": "2026-01-01"
+}
+```
+
+### Example: replies and retweets included
+
+```json
+{
+  "usernames": ["apify"],
+  "include": ["profileInfo", "latestPosts"],
+  "includeReplies": true,
+  "includeRetweets": true,
+  "maxPostsPerProfile": 300
+}
+```
+
+## Use cases
+
+- **Influencer and competitor research** — compare followers, engagement and posting cadence across accounts
+- **Brand monitoring** — track an account's latest posts and high-engagement highlights over time
+- **Audience intelligence** — profile bios, locations and links for market segmentation
+- **Media analysis** — export posts with media and metrics into dashboards
+- **Recruiting and sourcing** — build structured records from lists of handles
+- **Academic research** — archive public profiles and posts with timestamps
+
+## FAQ
+
+**Do I need an X account, login or developer key?**  No. The actor reads the same public profile pages any visitor sees without signing in, and there is no credential input at all.
+
+**Why do I get fewer posts than `maxPostsPerProfile`?**  X serves a limited number of posts to logged-out visitors (roughly 5–22 latest posts and about 100 top posts per account). The actor fills the target with older posts when X exposes them and reports the achieved count; rows are never invented.
+
+**Why are replies sometimes missing?**  X only serves a profile's reply timeline publicly on some attempts. The actor retries and reports `repliesLimited` when X refuses; everything else on the profile is still collected.
+
+**Can I collect private or protected profiles?**  No. Protected accounts return their public header plus a `protected` status row.
+
+**What is the `about` option?**  X's account analytics panel is login-only. Selecting `about` adds an `aboutUnavailable` status row explaining that; location and bio are still collected from the public profile.
+
+**Will the account being scraped get banned?**  No. The actor never signs in and only makes public requests, so the profile owner is not affected.
+
+**How fresh is the data?**  Live — every run reads X at request time. Schedule the actor for hourly, daily or weekly refreshes.
+
+**How do I integrate the results?**  Use the dataset from the run page, the Apify API, webhooks, or a no-code connection such as Zapier, Make or Google Sheets.
+
+**Is this affiliated with X?**  No. This is a third-party actor using publicly available profile pages.
