@@ -1,0 +1,123 @@
+{
+  "description": "Configure the LinkedIn Ad Library search. Provide keywords, advertiser names, or pre-built Ad Library URLs.",
+  "properties": {
+    "advertisers": {
+      "default": [],
+      "description": "Advertiser / company names to search (e.g., 'Microsoft', 'Salesforce'). LinkedIn matches the advertiser display name.",
+      "editor": "stringList",
+      "example": [
+        "Microsoft",
+        "Anthropic"
+      ],
+      "items": {
+        "type": "string"
+      },
+      "title": "Advertisers",
+      "type": "array"
+    },
+    "countries": {
+      "default": [],
+      "description": "ISO-3166-1 alpha-2 country codes (e.g., 'US', 'GB', 'IN'). Filters ads to those served in the selected countries.",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "title": "Countries",
+      "type": "array"
+    },
+    "dateFrom": {
+      "description": "Start date for custom range (YYYY-MM-DD). Only used when dateOption=custom.",
+      "editor": "textfield",
+      "nullable": true,
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+      "title": "Date From",
+      "type": "string"
+    },
+    "dateOption": {
+      "default": "last-30-days",
+      "description": "Pre-defined date window. Use 'custom' to specify exact dateFrom/dateTo.",
+      "editor": "select",
+      "enum": [
+        "last-30-days",
+        "last-90-days",
+        "last-year",
+        "custom"
+      ],
+      "enumTitles": [
+        "Last 30 days",
+        "Last 90 days",
+        "Last 365 days",
+        "Custom range (use dateFrom / dateTo)"
+      ],
+      "title": "Date Range",
+      "type": "string"
+    },
+    "dateTo": {
+      "description": "End date for custom range (YYYY-MM-DD). Only used when dateOption=custom.",
+      "editor": "textfield",
+      "nullable": true,
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+      "title": "Date To",
+      "type": "string"
+    },
+    "directUrls": {
+      "default": [],
+      "description": "Pre-built LinkedIn Ad Library URLs. Use this if you've already configured filters on linkedin.com/ad-library and just want to paste the URL.",
+      "editor": "requestListSources",
+      "example": [
+        {
+          "url": "https://www.linkedin.com/ad-library/search?keyword=AI"
+        }
+      ],
+      "title": "Direct URLs",
+      "type": "array"
+    },
+    "enrichWithDetailPage": {
+      "default": false,
+      "description": "When true, fetches each ad's detail page (/ad-library/detail/{id}) to enrich records with `paid_for_by` (DSA disclosure), canonical `advertiser_url`, and any longer body copy. Adds ~0.5-1 s per ad. Note: impressions and targeting facets are loaded via XHR after render and are NOT extractable without a full browser session, so they remain unavailable.",
+      "editor": "checkbox",
+      "title": "Enrich With Detail Page",
+      "type": "boolean"
+    },
+    "maxResults": {
+      "default": 50,
+      "description": "Maximum number of ads to return across all queries.",
+      "editor": "number",
+      "maximum": 1000,
+      "minimum": 1,
+      "prefill": 3,
+      "title": "Maximum Results",
+      "type": "integer"
+    },
+    "proxy": {
+      "default": {
+        "useApifyProxy": true
+      },
+      "description": "Optional proxy. The LinkedIn Ad Library is fully public and works from datacenter IPs, so the default Apify Proxy is enabled but no residential group is required.",
+      "editor": "proxy",
+      "prefill": {
+        "useApifyProxy": true
+      },
+      "title": "Proxy Configuration",
+      "type": "object"
+    },
+    "searchTerms": {
+      "default": [],
+      "description": "Keyword search queries (e.g., 'AI', 'cloud computing'). The Ad Library matches ads whose copy or advertiser contains any of these terms.",
+      "editor": "stringList",
+      "example": [
+        "AI",
+        "remote work"
+      ],
+      "items": {
+        "type": "string"
+      },
+      "title": "Search Terms",
+      "type": "array"
+    }
+  },
+  "required": [],
+  "schemaVersion": 1,
+  "title": "LinkedIn Ads Scraper Input",
+  "type": "object"
+}
