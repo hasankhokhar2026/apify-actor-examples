@@ -1,0 +1,146 @@
+{
+  "actorSpecification": 1,
+  "fields": {
+    "properties": {
+      "address": {
+        "description": "District and city",
+        "type": "string"
+      },
+      "amenities": {
+        "description": "Detected amenities (WiFi, Parking, Pool, etc.)",
+        "type": "array"
+      },
+      "breakfastIncluded": {
+        "description": "Whether breakfast is included",
+        "nullable": true,
+        "type": "boolean"
+      },
+      "checkin": {
+        "description": "Check-in date",
+        "type": "string"
+      },
+      "checkout": {
+        "description": "Check-out date",
+        "type": "string"
+      },
+      "city": {
+        "description": "City name",
+        "type": "string"
+      },
+      "currency": {
+        "description": "Currency symbol",
+        "type": "string"
+      },
+      "distance": {
+        "description": "Distance from downtown",
+        "type": "string"
+      },
+      "name": {
+        "description": "Hotel name",
+        "type": "string"
+      },
+      "originalPrice": {
+        "description": "Original price before discount (0 if no discount)",
+        "nullable": true,
+        "type": "number"
+      },
+      "photoUrl": {
+        "description": "Main hotel photo URL",
+        "type": "string"
+      },
+      "price": {
+        "description": "Total price for the stay",
+        "type": "number"
+      },
+      "rating": {
+        "description": "Guest rating (0-10)",
+        "nullable": true,
+        "type": "number"
+      },
+      "reviewCount": {
+        "description": "Number of guest reviews",
+        "nullable": true,
+        "type": "integer"
+      },
+      "reviewWord": {
+        "description": "Rating label (Excellent, Very Good, etc.)",
+        "nullable": true,
+        "type": "string"
+      },
+      "scrapedAt": {
+        "description": "Scrape timestamp (ISO 8601)",
+        "type": "string"
+      },
+      "url": {
+        "description": "Direct Booking.com URL",
+        "type": "string"
+      }
+    },
+    "type": "object"
+  },
+  "title": "Booking.com Hotels (Detailed)",
+  "views": {
+    "overview": {
+      "display": {
+        "component": "table",
+        "properties": {
+          "address": {
+            "format": "text",
+            "label": "Location"
+          },
+          "amenities": {
+            "format": "text",
+            "label": "Amenities"
+          },
+          "currency": {
+            "format": "text",
+            "label": "Currency"
+          },
+          "distance": {
+            "format": "text",
+            "label": "Distance"
+          },
+          "name": {
+            "format": "text",
+            "label": "Hotel"
+          },
+          "price": {
+            "format": "number",
+            "label": "Price"
+          },
+          "rating": {
+            "format": "number",
+            "label": "Rating"
+          },
+          "reviewCount": {
+            "format": "number",
+            "label": "Reviews"
+          },
+          "reviewWord": {
+            "format": "text",
+            "label": "Score"
+          },
+          "url": {
+            "format": "link",
+            "label": "URL"
+          }
+        }
+      },
+      "title": "Hotels",
+      "transformation": {
+        "fields": [
+          "name",
+          "price",
+          "currency",
+          "rating",
+          "reviewCount",
+          "reviewWord",
+          "address",
+          "distance",
+          "amenities",
+          "url"
+        ]
+      }
+    }
+  }
+}
