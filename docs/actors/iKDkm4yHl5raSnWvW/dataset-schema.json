@@ -1,0 +1,163 @@
+{
+  "actorSpecification": 1,
+  "fields": {
+    "properties": {
+      "contentUrl": {
+        "description": "URL of the web page containing the image",
+        "nullable": true,
+        "type": "string"
+      },
+      "imageHeight": {
+        "description": "Height of the full-resolution image in pixels",
+        "nullable": true,
+        "type": "integer"
+      },
+      "imageUrl": {
+        "description": "Direct URL to the full-resolution image",
+        "type": "string"
+      },
+      "imageWidth": {
+        "description": "Width of the full-resolution image in pixels",
+        "nullable": true,
+        "type": "integer"
+      },
+      "origin": {
+        "description": "The domain of the website where the image originates",
+        "nullable": true,
+        "type": "string"
+      },
+      "query": {
+        "description": "The search query used",
+        "type": "string"
+      },
+      "thumbnailHeight": {
+        "description": "Height of the thumbnail in pixels",
+        "nullable": true,
+        "type": "integer"
+      },
+      "thumbnailUrl": {
+        "description": "URL of the Google-cached thumbnail image",
+        "nullable": true,
+        "type": "string"
+      },
+      "thumbnailWidth": {
+        "description": "Width of the thumbnail in pixels",
+        "nullable": true,
+        "type": "integer"
+      },
+      "title": {
+        "description": "The page title of the website containing the image",
+        "nullable": true,
+        "type": "string"
+      }
+    },
+    "type": "object"
+  },
+  "title": "Google Images",
+  "views": {
+    "detailed": {
+      "display": {
+        "component": "table",
+        "properties": {
+          "contentUrl": {
+            "format": "text",
+            "label": "Content URL"
+          },
+          "imageHeight": {
+            "format": "number",
+            "label": "Height"
+          },
+          "imageUrl": {
+            "format": "text",
+            "label": "Image URL"
+          },
+          "imageWidth": {
+            "format": "number",
+            "label": "Width"
+          },
+          "origin": {
+            "format": "text",
+            "label": "Origin"
+          },
+          "query": {
+            "format": "text",
+            "label": "Query"
+          },
+          "thumbnailHeight": {
+            "format": "number",
+            "label": "Thumb Height"
+          },
+          "thumbnailUrl": {
+            "format": "text",
+            "label": "Thumbnail URL"
+          },
+          "thumbnailWidth": {
+            "format": "number",
+            "label": "Thumb Width"
+          },
+          "title": {
+            "format": "text",
+            "label": "Page Title"
+          }
+        }
+      },
+      "title": "Detailed Results",
+      "transformation": {
+        "fields": [
+          "query",
+          "title",
+          "origin",
+          "imageUrl",
+          "imageWidth",
+          "imageHeight",
+          "thumbnailUrl",
+          "thumbnailWidth",
+          "thumbnailHeight",
+          "contentUrl"
+        ]
+      }
+    },
+    "overview": {
+      "display": {
+        "component": "table",
+        "properties": {
+          "imageHeight": {
+            "format": "number",
+            "label": "Height"
+          },
+          "imageUrl": {
+            "format": "text",
+            "label": "Image URL"
+          },
+          "imageWidth": {
+            "format": "number",
+            "label": "Width"
+          },
+          "origin": {
+            "format": "text",
+            "label": "Origin"
+          },
+          "query": {
+            "format": "text",
+            "label": "Query"
+          },
+          "title": {
+            "format": "text",
+            "label": "Page Title"
+          }
+        }
+      },
+      "title": "Images",
+      "transformation": {
+        "fields": [
+          "query",
+          "title",
+          "origin",
+          "imageUrl",
+          "imageWidth",
+          "imageHeight"
+        ]
+      }
+    }
+  }
+}

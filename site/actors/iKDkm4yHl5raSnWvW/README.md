@@ -1,0 +1,90 @@
+# Google Image Search Results & Metadata Scraper
+
+Run a Google Images search for any query and get back structured results: the full-resolution image URL and dimensions, a thumbnail with its own dimensions, the source page's title, and the web page the image came from. Useful for building image datasets, tracking brand visuals, or researching what images rank for a keyword.
+
+## What this actor does
+
+- Searches Google Images for a single query and collects matching image results
+- Returns both the full-resolution image URL and the Google-cached thumbnail, each with width/height
+- Captures the source page's title and domain alongside the content page URL
+- Scrolls Google's results to collect up to 500 images for a single query, stopping early when Google stops loading new ones
+- If Google can't be loaded after several attempts, the same query is run on DuckDuckGo Images and then Bing Images instead, returning the same fields (records don't say which engine they came from)
+
+## Output per image result
+
+Every record has the same keys. When a value isn't available it comes back as `0` (dimensions) or an empty string rather than being dropped.
+
+- `query` — the search query used
+- `imageUrl` — direct URL to the full-resolution image
+- `imageWidth`, `imageHeight` — full-resolution image dimensions in pixels
+- `thumbnailUrl` — URL of the search engine's cached thumbnail
+- `thumbnailWidth`, `thumbnailHeight` — thumbnail dimensions in pixels
+- `title` — page title of the website containing the image
+- `origin` — domain of the website hosting the image
+- `contentUrl` — URL of the web page containing the image
+
+## Input
+
+| Field | Type | Default | Description |
+|---|---|---|---|
+| `query` | string | – | **Required.** Image search query, e.g. `"sunset landscape"`, `"product packaging design"` |
+| `maxResults` | integer | `100` | Maximum number of image results to extract (1–500) |
+| `proxyConfiguration` | object | – | Proxy configuration. Not enforced, but a residential proxy (the prefilled setting) is strongly recommended because Google blocks image searches from data-center IPs; without one, results are more likely to come from the fallback engines |
+
+### Example: default query
+
+```json
+{
+  "query": "Alfons Mucha",
+  "maxResults": 50
+}
+```
+
+### Example: larger result set for a product search
+
+```json
+{
+  "query": "modern architecture",
+  "maxResults": 300
+}
+```
+
+### Example: non-Latin script query
+
+```json
+{
+  "query": "桜 日本庭園",
+  "maxResults": 100
+}
+```
+
+## Use cases
+
+- **Image dataset building** — collect images for research, analysis, or model training
+- **Brand monitoring** — track how a brand's visuals appear across the web
+- **Competitor research** — survey competitor product photography and marketing imagery
+- **Content curation** — source images for blogs, presentations, or social posts
+- **Visual SEO research** — see which pages and domains rank images for a keyword
+
+## FAQ
+
+**How many images can I scrape per query?**
+Up to 500. The default is 100. Google keeps loading images as the page scrolls, so raising `maxResults` usually gets more, until Google runs out for that query. If the run had to fall back to DuckDuckGo, only its first batch of results is collected, so expect fewer.
+
+**Does it support non-English queries?**
+Yes. Use any language, including non-Latin scripts like Japanese, Chinese, Korean, or Arabic.
+
+**Can I run multiple queries?**
+Each run searches one `query`. Run the actor again with a different query to cover additional searches, or trigger multiple runs in parallel from your own workflow.
+
+**Why should I use a residential proxy?**
+Google blocks image searches from data-center IP ranges. With the prefilled residential proxy, Google results are much more likely; without it the run may end up on the DuckDuckGo or Bing fallback, or return nothing.
+
+**Why are `imageWidth`/`imageHeight` sometimes 0?**
+The search engine doesn't expose full-resolution dimensions for every result; when a dimension isn't available, the actor reports `0` rather than guessing. Likewise `title` or `origin` can be an empty string.
+
+**What if every engine fails?**
+The dataset stays empty and the run finishes with a "Scraped 0 images" status.
+
+**Is this affiliated with Google?**
+No. This is an independent, third-party actor that reads Google's public image search results; it isn't affiliated with or endorsed by Google.

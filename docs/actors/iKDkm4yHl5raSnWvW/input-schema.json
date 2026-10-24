@@ -1,0 +1,38 @@
+{
+  "properties": {
+    "maxResults": {
+      "default": 100,
+      "description": "Maximum number of image results to extract",
+      "maximum": 500,
+      "minimum": 1,
+      "prefill": 10,
+      "title": "Max Results",
+      "type": "integer"
+    },
+    "proxyConfiguration": {
+      "description": "Residential proxy is required — Google blocks image scraping from datacenter IPs.",
+      "editor": "proxy",
+      "prefill": {
+        "apifyProxyGroups": [
+          "RESIDENTIAL"
+        ],
+        "useApifyProxy": true
+      },
+      "title": "Proxy Configuration",
+      "type": "object"
+    },
+    "query": {
+      "description": "Image search query (e.g., \"Alfons Mucha\", \"sunset landscape\", \"cats\")",
+      "editor": "textfield",
+      "prefill": "Alfons Mucha",
+      "title": "Search Query",
+      "type": "string"
+    }
+  },
+  "required": [
+    "query"
+  ],
+  "schemaVersion": 1,
+  "title": "Google Images Scraper Input",
+  "type": "object"
+}
