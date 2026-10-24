@@ -1,0 +1,161 @@
+{
+  "description": "Search for places, get business details, or scrape reviews from Yandex Maps.",
+  "properties": {
+    "businessUrls": {
+      "description": "Yandex Maps business page URLs (mode=getDetails or getReviews). Format: https://yandex.com/maps/org/{name}/{id}/",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "prefill": [],
+      "title": "Business URLs",
+      "type": "array"
+    },
+    "language": {
+      "default": "en",
+      "description": "UI and results language.",
+      "editor": "select",
+      "enum": [
+        "en",
+        "ru",
+        "tr",
+        "de",
+        "fr",
+        "uk",
+        "kk",
+        "uz"
+      ],
+      "enumTitles": [
+        "English",
+        "Russian",
+        "Turkish",
+        "German",
+        "French",
+        "Ukrainian",
+        "Kazakh",
+        "Uzbek"
+      ],
+      "title": "Language",
+      "type": "string"
+    },
+    "maxItems": {
+      "default": 20,
+      "description": "Maximum number of records to return (places or reviews).",
+      "maximum": 500,
+      "minimum": 1,
+      "prefill": 20,
+      "title": "Max Items",
+      "type": "integer"
+    },
+    "minRating": {
+      "default": "any",
+      "description": "Filter out places below this rating. Only applies in searchPlaces mode.",
+      "editor": "select",
+      "enum": [
+        "any",
+        "3",
+        "3.5",
+        "4",
+        "4.5"
+      ],
+      "enumTitles": [
+        "Any rating",
+        "3+ stars",
+        "3.5+ stars",
+        "4+ stars",
+        "4.5+ stars"
+      ],
+      "title": "Minimum Rating (searchPlaces only)",
+      "type": "string"
+    },
+    "mode": {
+      "default": "searchPlaces",
+      "description": "What to scrape. searchPlaces: search for businesses by keyword. getDetails: fetch full details of specific business URLs. getReviews: scrape reviews from specific business URLs.",
+      "editor": "select",
+      "enum": [
+        "searchPlaces",
+        "getDetails",
+        "getReviews"
+      ],
+      "enumTitles": [
+        "Search places by keyword",
+        "Get details for specific business URLs",
+        "Get reviews for specific business URLs"
+      ],
+      "prefill": "searchPlaces",
+      "title": "Mode",
+      "type": "string"
+    },
+    "proxyConfiguration": {
+      "description": "Recommended. Yandex may trigger captcha on datacenter IPs. Residential proxies give best results.",
+      "editor": "proxy",
+      "prefill": {
+        "apifyProxyGroups": [
+          "RESIDENTIAL"
+        ],
+        "useApifyProxy": true
+      },
+      "title": "Proxy Configuration",
+      "type": "object"
+    },
+    "reviewsSortOrder": {
+      "default": "by_date_desc",
+      "description": "How to sort reviews. Only applies in getReviews mode.",
+      "editor": "select",
+      "enum": [
+        "by_date_desc",
+        "by_rating_desc",
+        "by_relevance"
+      ],
+      "enumTitles": [
+        "Newest first",
+        "Highest rated first",
+        "Most relevant"
+      ],
+      "title": "Reviews Sort Order (getReviews only)",
+      "type": "string"
+    },
+    "searchQueries": {
+      "description": "One or more search queries (mode=searchPlaces). Combine business type and location, e.g. 'coffee shops Moscow', 'sushi restaurant Istanbul'.",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "prefill": [
+        "coffee shops Moscow"
+      ],
+      "title": "Search Queries",
+      "type": "array"
+    },
+    "yandexDomain": {
+      "default": "yandex.ru",
+      "description": "Yandex Maps regional domain to use.",
+      "editor": "select",
+      "enum": [
+        "yandex.com",
+        "yandex.ru",
+        "yandex.com.tr",
+        "yandex.kz",
+        "yandex.uz",
+        "yandex.by"
+      ],
+      "enumTitles": [
+        "International (yandex.com)",
+        "Russia (yandex.ru)",
+        "Turkey (yandex.com.tr)",
+        "Kazakhstan (yandex.kz)",
+        "Uzbekistan (yandex.uz)",
+        "Belarus (yandex.by)"
+      ],
+      "prefill": "yandex.ru",
+      "title": "Yandex Domain",
+      "type": "string"
+    }
+  },
+  "required": [
+    "mode"
+  ],
+  "schemaVersion": 1,
+  "title": "Yandex Maps Scraper Input",
+  "type": "object"
+}
