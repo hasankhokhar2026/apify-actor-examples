@@ -1,0 +1,2656 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src &#x27;self&#x27;; script-src &#x27;self&#x27; &#x27;sha256-f1tXELMcqcECdLaToZqx3NwqShf+5HJwarIrckYddIE=&#x27;; style-src &#x27;self&#x27;; img-src &#x27;self&#x27; https: data:; base-uri &#x27;self&#x27;; form-action &#x27;self&#x27;; object-src &#x27;none&#x27;"><title>Quora Question, Answer &amp; Relationship Dataset Builder | Nimbryxo Studio</title><meta name="description" content="Build a structured Quora dataset from question, answer, profile, Topic, Space, and Post URLs or search terms, with the question-answer-comment chain and relationship links kept int"><meta name="robots" content="index,follow"><link rel="canonical" href="https://hasankhokhar2026.github.io/apify-actor-examples/actors/uAivkcIOWnHGsAnKT/"><meta property="og:title" content="Quora Question, Answer &amp; Relationship Dataset Builder | Nimbryxo Studio"><meta property="og:description" content="Build a structured Quora dataset from question, answer, profile, Topic, Space, and Post URLs or search terms, with the question-answer-comment chain and relationship links kept int"><meta property="og:type" content="website"><meta property="og:url" content="https://hasankhokhar2026.github.io/apify-actor-examples/actors/uAivkcIOWnHGsAnKT/"><meta property="og:site_name" content="Nimbryxo Studio"><meta name="twitter:card" content="summary"><link rel="icon" href="/apify-actor-examples/assets/mark.svg?v=2d20f9dc334a" type="image/svg+xml"><link rel="stylesheet" href="/apify-actor-examples/assets/site.css?v=39545fd4a399"><link rel="stylesheet" href="/apify-actor-examples/assets/brand.css?v=eb0f935ade25"><link rel="alternate" type="application/rss+xml" title="Nimbryxo Studio guides" href="/apify-actor-examples/feed.xml"><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization","name":"Nimbryxo Studio","url":"https://hasankhokhar2026.github.io/apify-actor-examples/","sameAs":["https://apify.com/nimbryxo-studio"]},{"@type":"WebSite","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#website","name":"Nimbryxo Studio","url":"https://hasankhokhar2026.github.io/apify-actor-examples/","publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"inLanguage":"en"},{"@type":"WebPage","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/uAivkcIOWnHGsAnKT/#webpage","name":"Quora Question, Answer & Relationship Dataset Builder","description":"Build a structured Quora dataset from question, answer, profile, Topic, Space, and Post URLs or search terms, with the question-answer-comment chain and relationship links kept intact.","url":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/uAivkcIOWnHGsAnKT/","isPartOf":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#website"},"publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"inLanguage":"en","mainEntity":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/uAivkcIOWnHGsAnKT/#article"},"breadcrumb":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/uAivkcIOWnHGsAnKT/#breadcrumb"}},{"@type":"TechArticle","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/uAivkcIOWnHGsAnKT/#article","headline":"Quora Question, Answer & Relationship Dataset Builder","name":"Quora Question, Answer & Relationship Dataset Builder","description":"Build a structured Quora dataset from question, answer, profile, Topic, Space, and Post URLs or search terms, with the question-answer-comment chain and relationship links kept intact.","url":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/uAivkcIOWnHGsAnKT/","author":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"mainEntityOfPage":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/uAivkcIOWnHGsAnKT/#webpage"},"inLanguage":"en"},{"@type":"BreadcrumbList","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/uAivkcIOWnHGsAnKT/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Nimbryxo Studio","item":"https://hasankhokhar2026.github.io/apify-actor-examples/"},{"@type":"ListItem","position":2,"name":"Actors","item":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/"},{"@type":"ListItem","position":3,"name":"Quora Question, Answer & Relationship Dataset Builder","item":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/uAivkcIOWnHGsAnKT/"}]}]}</script><script src="/apify-actor-examples/assets/site.js?v=7cabac48dd31" defer></script></head><body class="theme-studio"><a href="#main" class="skip-link">Skip to content</a><header><div class="inner"><a href="/apify-actor-examples/" class="brand"><img src="/apify-actor-examples/assets/mark.svg?v=2d20f9dc334a" alt="" width="29" height="29">Nimbryxo Studio</a><nav aria-label="Main navigation"><a href="/apify-actor-examples/actors/" aria-current="page">Actors</a><a href="/apify-actor-examples/guides/">Guides</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></nav></div></header><main id="main"><div class="doc-layout"><aside class="contents" aria-label="On this page"><strong>Contents</strong><a href="#overview">Overview</a><a href="#published-readme">Published README</a><a href="#input-schema">Input schema</a><a href="#output-schema">Output schema</a><a href="#dataset-schema">Dataset schema</a><a href="#python-quickstart">Python quickstart</a></aside><article class="prose"><div class="breadcrumb"><a href="/apify-actor-examples/actors/">Actors</a><span>/</span><span>Quora Question, Answer &amp; Relationship Dataset Builder</span></div><section id="overview"><h1 class="doc-title">Quora Question, Answer &amp; Relationship Dataset Builder</h1><p class="lede">Build a structured Quora dataset from question, answer, profile, Topic, Space, and Post URLs or search terms, with the question-answer-comment chain and relationship links kept intact.</p><div class="actions"><a class="button" href="https://apify.com/nimbryxo-studio/quora-question-answer-and-relationship-dataset">Open on Apify</a><a class="text-link" href="https://github.com/hasankhokhar2026/apify-actor-examples/blob/main/docs/actors/uAivkcIOWnHGsAnKT/README.md">GitHub source</a></div></section><section class="schema-section" id="input-schema"><h2>Input schema</h2><p>Input fields, types, required flags, descriptions, defaults, and prefills come from the published definition. Prefill examples are distinct from defaults.</p><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>scrapeDepth</code></td><td>string</td><td>optional</td><td>Overview emits page-level summaries without answer/comment/activity/feed expansion; detail preserves the current bounded traversal.</td></tr><tr><td><code>startUrls</code></td><td>array</td><td>optional</td><td>Question, answer, profile, topic, Space, or native search URLs.</td></tr><tr><td><code>searchQueries</code></td><td>array</td><td>optional</td><td>Native Quora search seeds. Search cards are followed only when their visible URLs are supported.</td></tr></tbody></table></div><details><summary>Show all input fields</summary><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>scrapeDepth</code></td><td>string</td><td>optional</td><td>Overview emits page-level summaries without answer/comment/activity/feed expansion; detail preserves the current bounded traversal.</td></tr><tr><td><code>startUrls</code></td><td>array</td><td>optional</td><td>Question, answer, profile, topic, Space, or native search URLs.</td></tr><tr><td><code>searchQueries</code></td><td>array</td><td>optional</td><td>Native Quora search seeds. Search cards are followed only when their visible URLs are supported.</td></tr><tr><td><code>questionUrls</code></td><td>array</td><td>optional</td><td>Explicit question-page seeds. Only question routes are accepted.</td></tr><tr><td><code>answerUrls</code></td><td>array</td><td>optional</td><td>Explicit answer-page seeds. Parent question joins are emitted only from observed evidence.</td></tr><tr><td><code>topicUrls</code></td><td>array</td><td>optional</td><td>Explicit Topic-page seeds for bounded visible question discovery.</td></tr><tr><td><code>spaceUrls</code></td><td>array</td><td>optional</td><td>Explicit Space-page seeds for bounded visible feed discovery.</td></tr><tr><td><code>profileUrls</code></td><td>array</td><td>optional</td><td>Explicit profile-page seeds. Only profile routes are accepted; emitted as normalized profile rows exactly like a profile route discovered from startUrls.</td></tr><tr><td><code>postUrls</code></td><td>array</td><td>optional</td><td>Explicit standalone Post-page seeds. Only post routes are accepted; emitted with the same topic_post field family topic-discovered posts use (post_title, post_body, post_author_*).</td></tr><tr><td><code>resultTypes</code></td><td>array</td><td>optional</td><td>Select normalized entities, explicit graph relationships, relationship-collection counts, status rows, and the final run manifest.</td></tr><tr><td><code>outputFormat</code></td><td>string</td><td>optional</td><td>Projection after one canonical extraction path. Nested groups emitted answers and comments under explicit question/answer parents; flat keeps entity rows with parent context; edges emits explicit edge rows plus status rows.</td></tr><tr><td><code>dedupeMode</code></td><td>string</td><td>optional</td><td>canonical suppresses overlapping entity rows by stable ID or canonical URL (default); none preserves every observed non-status row. The run manifest reports duplicate_records_suppressed.</td></tr><tr><td><code>onlyNewItems</code></td><td>boolean</td><td>optional</td><td>Annotate canonical entity rows with new/changed/unchanged/scope_mismatch state and suppress only unchanged semantic rows when includeUnchanged is false. Requires stateStoreId; status, graph, and manifest rows remain visible.</td></tr><tr><td><code>includeUnchanged</code></td><td>boolean</td><td>optional</td><td>Retain unchanged semantic entities when incremental state is enabled; output projection does not alter comparison hashes.</td></tr><tr><td><code>stateStoreId</code></td><td>string</td><td>optional</td><td>Apify key-value store for canonical entity snapshots. Required when onlyNewItems is enabled; never store cookies or credentials here.</td></tr><tr><td><code>outputFields</code></td><td>array</td><td>optional</td><td>Optional allowlist for compact rows, including bounded dotted paths through nested collections (for example answers.answer_text, comments.comment_text, feed.feed_text, or contributors.contributor_name where applicable). Child identity/URL fields and the actor identity, access/status, source, traversal, graph, filter, and parser-envelope fields remain protected.</td></tr><tr><td><code>includeFieldEvidence</code></td><td>boolean</td><td>optional</td><td>Include field_sources and fields_present maps. Disable only when a smaller payload is required; semantic values and protected access fields remain unchanged.</td></tr><tr><td><code>includeUnresolvedEdges</code></td><td>boolean</td><td>optional</td><td>Retain relationship rows whose endpoint URL was not explicitly observed, with unresolved_reason. Disabling this suppresses only those edge rows and does not imply complete relationships.</td></tr><tr><td><code>relationshipTypes</code></td><td>array</td><td>optional</td><td>Explicit relationship-type allowlist for the newly ported follower/following/want-answers/upvoter/space-role relationship collections. Empty leaves the existing always-on content-membership/authorship edges untouched (question_has_topic, answer_authored_by, comment_belongs_to_answer, profile_has_activity, space_has_feed_item, etc.); this allowlist only gates the additional collections below. Sensitive follower/want-answer/upvoter types also require includeSensitiveRelationshipData and their matching collection opt-in.</td></tr><tr><td><code>includeProfileEdges</code></td><td>boolean</td><td>optional</td><td>Enable explicitly labeled profile follower/following/followed-question/Space/Topic relationship collections. This does not prove a complete list.</td></tr><tr><td><code>includeQuestionFollowerEdges</code></td><td>boolean</td><td>optional</td><td>Enable explicitly labeled question follower or want-answer collections. Sensitive identity rows also require the privacy gate.</td></tr><tr><td><code>includeAnswerUpvoterEdges</code></td><td>boolean</td><td>optional</td><td>High-sensitivity opt-in for explicitly labeled answer upvoter identities; requires includeSensitiveRelationshipData=true.</td></tr><tr><td><code>includeSensitiveRelationshipData</code></td><td>boolean</td><td>optional</td><td>Explicit privacy gate required for follower, want-answer, and upvoter identity edges.</td></tr><tr><td><code>includeTargetMetadata</code></td><td>boolean</td><td>optional</td><td>Retain explicitly visible target link text and image (to_name, to_image_url) on relationship edges. URLs remain evidence; no target navigation or recursive target scraping is performed.</td></tr><tr><td><code>includeRelationshipCounts</code></td><td>boolean</td><td>optional</td><td>Emit privacy-preserving relationship_collection rows with the real observed total (collection_total_text/collection_total_value) but no target identities. Requires relationship_collection in resultTypes. Observed totals are not always a server-confirmed count.</td></tr><tr><td><code>includeSpaceRoleEdges</code></td><td>boolean</td><td>optional</td><td>Enable explicitly labeled Space contributor, moderator, and admin collections.</td></tr><tr><td><code>includeSpaceContentEdges</code></td><td>boolean</td><td>optional</td><td>Retain bounded explicit Space post/question membership edges; this never claims a complete Space inventory.</td></tr><tr><td><code>maxRelationshipItemsPerCollection</code></td><td>integer</td><td>optional</td><td>Bound explicit links emitted from each labeled relationship collection. Zero emits no relationship-collection edges and never means an empty collection.</td></tr><tr><td><code>maxQuestions</code></td><td>integer</td><td>optional</td><td>Maximum question seeds or discovered question pages to process.</td></tr><tr><td><code>maxAnswersPerQuestion</code></td><td>integer</td><td>optional</td><td>Maximum visible answer rows retained from each question page.</td></tr><tr><td><code>maxAnswers</code></td><td>integer</td><td>optional</td><td>Global answer-row cap applied after per-question caps. Zero means no configured global answer cap.</td></tr><tr><td><code>includeQuestion</code></td><td>boolean</td><td>optional</td><td>Retain normalized question parent rows when selected in resultTypes.</td></tr><tr><td><code>includeAuthor</code></td><td>boolean</td><td>optional</td><td>Retain visible author fields and profile/profile-activity rows. When false, author fields and author rows are removed from the emitted shape; no contact enrichment is performed.</td></tr><tr><td><code>includeAuthorSnapshot</code></td><td>boolean</td><td>optional</td><td>Opt into bounded public profile snapshots for visible author profile links; profile access/status is separate from answer/comment success and never includes contact enrichment.</td></tr><tr><td><code>includeTopics</code></td><td>boolean</td><td>optional</td><td>Retain explicit topic links and topic relationships where observed.</td></tr><tr><td><code>includeSpaces</code></td><td>boolean</td><td>optional</td><td>Retain Space rows and feed items where the source route exposes them.</td></tr><tr><td><code>includeComments</code></td><td>boolean</td><td>optional</td><td>Enable bounded visible comment output when the per-answer cap is positive.</td></tr><tr><td><code>includeEngagementBreakdown</code></td><td>boolean</td><td>optional</td><td>Retain explicitly labeled per-comment reaction breakdowns alongside aggregate reaction labels. Raw labels are preserved and typed companions are added only when the localized number is unambiguous.</td></tr><tr><td><code>includeRelatedContent</code></td><td>boolean</td><td>optional</td><td>Retain links inside an explicitly labeled related/attached region scoped to answer cards; unlabeled navigation and neighboring regions are excluded.</td></tr><tr><td><code>maxRelatedContent</code></td><td>integer</td><td>optional</td><td>Bound eligible related-content links per answer when enabled; zero emits no related-content items.</td></tr><tr><td><code>topCommentsOnly</code></td><td>boolean</td><td>optional</td><td>Retain only comments with an explicit visible Top/Most helpful/Popular comments label. Unknown comments are excluded and counted; votes and position are not used as top evidence.</td></tr><tr><td><code>commentSortOrder</code></td><td>string</td><td>optional</td><td>Order builder comment rows by observed order or an explicitly typed metric/timestamp. Unknown selected metrics remain in stable fallback order and are counted.</td></tr><tr><td><code>includeReplyGraph</code></td><td>boolean</td><td>optional</td><td>Enable bounded visible nested comment replies and explicit parent paths; this also enables comment rows. Hidden or unexpanded replies are not inferred.</td></tr><tr><td><code>includeMedia</code></td><td>boolean</td><td>optional</td><td>Request explicitly rendered media URL fields scoped to question roots, answer/comment nodes, and Topic post cards where the page exposes them.</td></tr><tr><td><code>includeFeedText</code></td><td>boolean</td><td>optional</td><td>Request bounded visible text from explicitly linked Space feed cards; page-level text and complete feed history are excluded.</td></tr><tr><td><code>includeOutboundLinks</code></td><td>boolean</td><td>optional</td><td>Request visible non-Quora links scoped to question roots, answer/comment nodes, and Topic post cards; Quora links, comment permalinks, and links outside the owning scope are excluded.</td></tr><tr><td><code>includeEntityGraph</code></td><td>boolean</td><td>optional</td><td>Emit explicit relationship rows even when entity_edge is not listed in resultTypes.</td></tr><tr><td><code>maxCommentsPerAnswer</code></td><td>integer</td><td>optional</td><td>Maximum visible comment rows retained per answer when enabled.</td></tr><tr><td><code>maxCommentDepth</code></td><td>integer</td><td>optional</td><td>Maximum visible nested reply depth when includeReplyGraph is enabled; reaching the bound is not complete history.</td></tr><tr><td><code>maxItems</code></td><td>integer</td><td>optional</td><td>Cap for normalized entity/status rows before graph and manifest rows.</td></tr><tr><td><code>maxGraphEdges</code></td><td>integer</td><td>optional</td><td>Independent cap for deterministic entity_edge rows.</td></tr><tr><td><code>maxScrollAttempts</code></td><td>integer</td><td>optional</td><td>Bounded lazy-render scroll budget applied during detail traversal; scroll attempts and termination state are reported.</td></tr><tr><td><code>maxLoadMoreAttempts</code></td><td>integer</td><td>optional</td><td>Bound exact visible continuation-control clicks on direct question, answer, topic, and Space collection pages independently from scrolling. Search seeds fan out through their discovered child URLs and retain their own source accounting.</td></tr><tr><td><code>includeRawEvidence</code></td><td>boolean</td><td>optional</td><td>Add bounded document hash and optional HTML bytes to each page-level entity row.</td></tr><tr><td><code>includeHtml</code></td><td>boolean</td><td>optional</td><td>Include bounded raw-document HTML when raw evidence is enabled and bounded answer-card HTML when answer cards are extracted.</td></tr><tr><td><code>maxHtmlBytes</code></td><td>integer</td><td>optional</td><td>Maximum UTF-8 bytes retained for optional raw HTML evidence.</td></tr><tr><td><code>requestDelay</code></td><td>number</td><td>optional</td><td>Delay between page batches in seconds; this is not an anti-bot bypass guarantee.</td></tr><tr><td><code>maxConcurrency</code></td><td>integer</td><td>optional</td><td>Maximum independent seed pages processed concurrently in deterministic batches. Each seed owns a page; discovered seeds merge in batch order.</td></tr><tr><td><code>maxNavigationRetries</code></td><td>integer</td><td>optional</td><td>Bounded retries after navigation exceptions (e.g. a transient proxy-tunnel handshake failure); exponential backoff is reported in navigation_retry_delays_seconds. Defaults to 2 for reliability.</td></tr><tr><td><code>language</code></td><td>string</td><td>optional</td><td>Browser language hint. Short language codes and supported regional aliases are accepted and normalize to the short code; auto keeps the actor default. This does not translate content or prove access.</td></tr><tr><td><code>cookies</code></td><td>array</td><td>optional</td><td>Optional secret cookies for content the caller is authorized to access.</td></tr><tr><td><code>cookieString</code></td><td>string</td><td>optional</td><td>Optional browser-exported name=value; name2=value2 header. Parsed locally into authorized session cookies; the raw header is never emitted or logged.</td></tr><tr><td><code>proxyConfiguration</code></td><td>object</td><td>optional</td><td>Apify proxy routing. Quora&#x27;s anti-bot layer blocks the free Datacenter/Automatic tier on roughly half of all real requests (cloud-verified), so this actor always routes through RESIDENTIAL proxies for reliable results regardless of what is selected here — leave this on the default Residential selection unless you need to supply your own proxy URLs.</td></tr><tr><td><code>redactSensitiveQueryParams</code></td><td>boolean</td><td>optional</td><td>Redact narrow credential-like query parameter values in emitted URLs, graph endpoints, redirect chains, and raw HTML. The original document hash remains based on the captured document.</td></tr><tr><td><code>rawEvidenceRetentionDays</code></td><td>integer</td><td>optional</td><td>When zero, suppress raw_html snapshots while retaining hash, size, and redaction diagnostics. Positive values permit bounded HTML for the requested run; external Apify dataset/run retention still applies.</td></tr><tr><td><code>maxRawEvidenceBytes</code></td><td>integer</td><td>optional</td><td>Hard upper byte cap for returned raw HTML after the maxHtmlBytes cap.</td></tr><tr><td><code>maxItemsPerSource</code></td><td>integer</td><td>optional</td><td>Maximum semantic records emitted from each direct URL, query, or typed source. Status and run-manifest rows are preserved. Use 0 for no per-source cap.</td></tr></tbody></table></div></details><p><a href="input-schema.json">Download the published input schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+  &quot;properties&quot;: {
+    &quot;answerUrls&quot;: {
+      &quot;default&quot;: [],
+      &quot;description&quot;: &quot;Explicit answer-page seeds. Parent question joins are emitted only from observed evidence.&quot;,
+      &quot;editor&quot;: &quot;requestListSources&quot;,
+      &quot;items&quot;: {
+        &quot;properties&quot;: {
+          &quot;url&quot;: {
+            &quot;description&quot;: &quot;A Quora URL.&quot;,
+            &quot;title&quot;: &quot;URL&quot;,
+            &quot;type&quot;: &quot;string&quot;
+          }
+        },
+        &quot;required&quot;: [
+          &quot;url&quot;
+        ],
+        &quot;type&quot;: &quot;object&quot;
+      },
+      &quot;title&quot;: &quot;Answer URLs&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;commentSortOrder&quot;: {
+      &quot;default&quot;: &quot;observed&quot;,
+      &quot;description&quot;: &quot;Order builder comment rows by observed order or an explicitly typed metric/timestamp. Unknown selected metrics remain in stable fallback order and are counted.&quot;,
+      &quot;enum&quot;: [
+        &quot;observed&quot;,
+        &quot;upvotes_desc&quot;,
+        &quot;reactions_desc&quot;,
+        &quot;replies_desc&quot;,
+        &quot;newest&quot;
+      ],
+      &quot;title&quot;: &quot;Comment Sort Order&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;cookieString&quot;: {
+      &quot;description&quot;: &quot;Optional browser-exported name=value; name2=value2 header. Parsed locally into authorized session cookies; the raw header is never emitted or logged.&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;isSecret&quot;: true,
+      &quot;title&quot;: &quot;Optional Cookie Header String&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;cookies&quot;: {
+      &quot;description&quot;: &quot;Optional secret cookies for content the caller is authorized to access.&quot;,
+      &quot;editor&quot;: &quot;json&quot;,
+      &quot;isSecret&quot;: true,
+      &quot;items&quot;: {
+        &quot;type&quot;: &quot;object&quot;
+      },
+      &quot;prefill&quot;: [],
+      &quot;title&quot;: &quot;Authorized Cookies&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;dedupeMode&quot;: {
+      &quot;default&quot;: &quot;canonical&quot;,
+      &quot;description&quot;: &quot;canonical suppresses overlapping entity rows by stable ID or canonical URL (default); none preserves every observed non-status row. The run manifest reports duplicate_records_suppressed.&quot;,
+      &quot;enum&quot;: [
+        &quot;canonical&quot;,
+        &quot;none&quot;
+      ],
+      &quot;prefill&quot;: &quot;canonical&quot;,
+      &quot;title&quot;: &quot;Deduplication Mode&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;includeAnswerUpvoterEdges&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;High-sensitivity opt-in for explicitly labeled answer upvoter identities; requires includeSensitiveRelationshipData=true.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Include Answer Upvoter Collections&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;includeAuthor&quot;: {
+      &quot;default&quot;: true,
+      &quot;description&quot;: &quot;Retain visible author fields and profile/profile-activity rows. When false, author fields and author rows are removed from the emitted shape; no contact enrichment is performed.&quot;,
+      &quot;prefill&quot;: true,
+      &quot;title&quot;: &quot;Include Author Rows&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;includeAuthorSnapshot&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;Opt into bounded public profile snapshots for visible author profile links; profile access/status is separate from answer/comment success and never includes contact enrichment.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Include Author Snapshot&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;includeComments&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;Enable bounded visible comment output when the per-answer cap is positive.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Include Comment Rows&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;includeEngagementBreakdown&quot;: {
+      &quot;default&quot;: true,
+      &quot;description&quot;: &quot;Retain explicitly labeled per-comment reaction breakdowns alongside aggregate reaction labels. Raw labels are preserved and typed companions are added only when the localized number is unambiguous.&quot;,
+      &quot;prefill&quot;: true,
+      &quot;title&quot;: &quot;Include Engagement Breakdown&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;includeEntityGraph&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;Emit explicit relationship rows even when entity_edge is not listed in resultTypes.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Include Entity Graph&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;includeFeedText&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;Request bounded visible text from explicitly linked Space feed cards; page-level text and complete feed history are excluded.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Include Space Feed Text&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;includeFieldEvidence&quot;: {
+      &quot;default&quot;: true,
+      &quot;description&quot;: &quot;Include field_sources and fields_present maps. Disable only when a smaller payload is required; semantic values and protected access fields remain unchanged.&quot;,
+      &quot;prefill&quot;: true,
+      &quot;title&quot;: &quot;Include Field Evidence&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;includeHtml&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;Include bounded raw-document HTML when raw evidence is enabled and bounded answer-card HTML when answer cards are extracted.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Include HTML&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;includeMedia&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;Request explicitly rendered media URL fields scoped to question roots, answer/comment nodes, and Topic post cards where the page exposes them.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Include Media URLs&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;includeOutboundLinks&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;Request visible non-Quora links scoped to question roots, answer/comment nodes, and Topic post cards; Quora links, comment permalinks, and links outside the owning scope are excluded.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Include Outbound Links&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;includeProfileEdges&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;Enable explicitly labeled profile follower/following/followed-question/Space/Topic relationship collections. This does not prove a complete list.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Include Profile Relationship Collections&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;includeQuestion&quot;: {
+      &quot;default&quot;: true,
+      &quot;description&quot;: &quot;Retain normalized question parent rows when selected in resultTypes.&quot;,
+      &quot;prefill&quot;: true,
+      &quot;title&quot;: &quot;Include Question Rows&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;includeQuestionFollowerEdges&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;Enable explicitly labeled question follower or want-answer collections. Sensitive identity rows also require the privacy gate.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Include Question Follower Collections&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;includeRawEvidence&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;Add bounded document hash and optional HTML bytes to each page-level entity row.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Include Raw Evidence&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;includeRelatedContent&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;Retain links inside an explicitly labeled related/attached region scoped to answer cards; unlabeled navigation and neighboring regions are excluded.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Include Answer Related Content&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;includeRelationshipCounts&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;Emit privacy-preserving relationship_collection rows with the real observed total (collection_total_text/collection_total_value) but no target identities. Requires relationship_collection in resultTypes. Observed totals are not always a server-confirmed count.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Include Relationship Collection Counts&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;includeReplyGraph&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;Enable bounded visible nested comment replies and explicit parent paths; this also enables comment rows. Hidden or unexpanded replies are not inferred.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Include Reply Graph&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;includeSensitiveRelationshipData&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;Explicit privacy gate required for follower, want-answer, and upvoter identity edges.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Sensitive Relationship Data&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;includeSpaceContentEdges&quot;: {
+      &quot;default&quot;: true,
+      &quot;description&quot;: &quot;Retain bounded explicit Space post/question membership edges; this never claims a complete Space inventory.&quot;,
+      &quot;prefill&quot;: true,
+      &quot;title&quot;: &quot;Include Space Content Edges&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;includeSpaceRoleEdges&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;Enable explicitly labeled Space contributor, moderator, and admin collections.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Include Space Role Edges&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;includeSpaces&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;Retain Space rows and feed items where the source route exposes them.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Include Space Rows&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;includeTargetMetadata&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;Retain explicitly visible target link text and image (to_name, to_image_url) on relationship edges. URLs remain evidence; no target navigation or recursive target scraping is performed.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Include Explicit Target Metadata&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;includeTopics&quot;: {
+      &quot;default&quot;: true,
+      &quot;description&quot;: &quot;Retain explicit topic links and topic relationships where observed.&quot;,
+      &quot;prefill&quot;: true,
+      &quot;title&quot;: &quot;Include Topic Links&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;includeUnchanged&quot;: {
+      &quot;default&quot;: true,
+      &quot;description&quot;: &quot;Retain unchanged semantic entities when incremental state is enabled; output projection does not alter comparison hashes.&quot;,
+      &quot;prefill&quot;: true,
+      &quot;title&quot;: &quot;Include Unchanged Items&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;includeUnresolvedEdges&quot;: {
+      &quot;default&quot;: true,
+      &quot;description&quot;: &quot;Retain relationship rows whose endpoint URL was not explicitly observed, with unresolved_reason. Disabling this suppresses only those edge rows and does not imply complete relationships.&quot;,
+      &quot;prefill&quot;: true,
+      &quot;title&quot;: &quot;Include Unresolved Edges&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;language&quot;: {
+      &quot;default&quot;: &quot;auto&quot;,
+      &quot;description&quot;: &quot;Browser language hint. Short language codes and supported regional aliases are accepted and normalize to the short code; auto keeps the actor default. This does not translate content or prove access.&quot;,
+      &quot;enum&quot;: [
+        &quot;auto&quot;,
+        &quot;en&quot;,
+        &quot;es&quot;,
+        &quot;fr&quot;,
+        &quot;de&quot;,
+        &quot;pt&quot;,
+        &quot;it&quot;,
+        &quot;ja&quot;,
+        &quot;ko&quot;,
+        &quot;hi&quot;,
+        &quot;id&quot;,
+        &quot;nl&quot;,
+        &quot;pl&quot;,
+        &quot;tr&quot;,
+        &quot;vi&quot;,
+        &quot;zh&quot;,
+        &quot;ru&quot;,
+        &quot;en-US&quot;,
+        &quot;en-GB&quot;,
+        &quot;de-DE&quot;,
+        &quot;fr-FR&quot;,
+        &quot;es-ES&quot;,
+        &quot;pt-BR&quot;,
+        &quot;it-IT&quot;,
+        &quot;ja-JP&quot;,
+        &quot;ko-KR&quot;,
+        &quot;hi-IN&quot;,
+        &quot;tr-TR&quot;,
+        &quot;zh-CN&quot;,
+        &quot;zh-TW&quot;,
+        &quot;ru-RU&quot;
+      ],
+      &quot;title&quot;: &quot;Language&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;maxAnswers&quot;: {
+      &quot;default&quot;: 0,
+      &quot;description&quot;: &quot;Global answer-row cap applied after per-question caps. Zero means no configured global answer cap.&quot;,
+      &quot;maximum&quot;: 50000,
+      &quot;minimum&quot;: 0,
+      &quot;title&quot;: &quot;Maximum Answers Total&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;maxAnswersPerQuestion&quot;: {
+      &quot;default&quot;: 10,
+      &quot;description&quot;: &quot;Maximum visible answer rows retained from each question page.&quot;,
+      &quot;maximum&quot;: 500,
+      &quot;minimum&quot;: 0,
+      &quot;prefill&quot;: 5,
+      &quot;title&quot;: &quot;Maximum Answers per Question&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;maxCommentDepth&quot;: {
+      &quot;default&quot;: 20,
+      &quot;description&quot;: &quot;Maximum visible nested reply depth when includeReplyGraph is enabled; reaching the bound is not complete history.&quot;,
+      &quot;maximum&quot;: 100,
+      &quot;minimum&quot;: 0,
+      &quot;prefill&quot;: 20,
+      &quot;title&quot;: &quot;Maximum Comment Depth&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;maxCommentsPerAnswer&quot;: {
+      &quot;default&quot;: 0,
+      &quot;description&quot;: &quot;Maximum visible comment rows retained per answer when enabled.&quot;,
+      &quot;maximum&quot;: 500,
+      &quot;minimum&quot;: 0,
+      &quot;prefill&quot;: 0,
+      &quot;title&quot;: &quot;Maximum Comments per Answer&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;maxConcurrency&quot;: {
+      &quot;default&quot;: 1,
+      &quot;description&quot;: &quot;Maximum independent seed pages processed concurrently in deterministic batches. Each seed owns a page; discovered seeds merge in batch order.&quot;,
+      &quot;maximum&quot;: 3,
+      &quot;minimum&quot;: 1,
+      &quot;title&quot;: &quot;Maximum Concurrent Seeds&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;maxGraphEdges&quot;: {
+      &quot;default&quot;: 5000,
+      &quot;description&quot;: &quot;Independent cap for deterministic entity_edge rows.&quot;,
+      &quot;maximum&quot;: 50000,
+      &quot;minimum&quot;: 0,
+      &quot;prefill&quot;: 1000,
+      &quot;title&quot;: &quot;Maximum Graph Edges&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;maxHtmlBytes&quot;: {
+      &quot;default&quot;: 100000,
+      &quot;description&quot;: &quot;Maximum UTF-8 bytes retained for optional raw HTML evidence.&quot;,
+      &quot;maximum&quot;: 2000000,
+      &quot;minimum&quot;: 1000,
+      &quot;title&quot;: &quot;Maximum HTML Bytes&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;maxItems&quot;: {
+      &quot;default&quot;: 0,
+      &quot;description&quot;: &quot;Cap for normalized entity/status rows before graph and manifest rows.&quot;,
+      &quot;maximum&quot;: 5000,
+      &quot;minimum&quot;: 0,
+      &quot;title&quot;: &quot;Maximum Entity Rows&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;maxItemsPerSource&quot;: {
+      &quot;default&quot;: 0,
+      &quot;description&quot;: &quot;Maximum semantic records emitted from each direct URL, query, or typed source. Status and run-manifest rows are preserved. Use 0 for no per-source cap.&quot;,
+      &quot;maximum&quot;: 5000,
+      &quot;minimum&quot;: 0,
+      &quot;prefill&quot;: 0,
+      &quot;title&quot;: &quot;Maximum Items Per Source&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;maxLoadMoreAttempts&quot;: {
+      &quot;default&quot;: 0,
+      &quot;description&quot;: &quot;Bound exact visible continuation-control clicks on direct question, answer, topic, and Space collection pages independently from scrolling. Search seeds fan out through their discovered child URLs and retain their own source accounting.&quot;,
+      &quot;maximum&quot;: 20,
+      &quot;minimum&quot;: 0,
+      &quot;title&quot;: &quot;Maximum Load-more Attempts&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;maxNavigationRetries&quot;: {
+      &quot;default&quot;: 2,
+      &quot;description&quot;: &quot;Bounded retries after navigation exceptions (e.g. a transient proxy-tunnel handshake failure); exponential backoff is reported in navigation_retry_delays_seconds. Defaults to 2 for reliability.&quot;,
+      &quot;maximum&quot;: 3,
+      &quot;minimum&quot;: 0,
+      &quot;title&quot;: &quot;Maximum Navigation Retries&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;maxQuestions&quot;: {
+      &quot;default&quot;: 25,
+      &quot;description&quot;: &quot;Maximum question seeds or discovered question pages to process.&quot;,
+      &quot;maximum&quot;: 1000,
+      &quot;minimum&quot;: 0,
+      &quot;prefill&quot;: 10,
+      &quot;title&quot;: &quot;Maximum Questions&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;maxRawEvidenceBytes&quot;: {
+      &quot;default&quot;: 100000,
+      &quot;description&quot;: &quot;Hard upper byte cap for returned raw HTML after the maxHtmlBytes cap.&quot;,
+      &quot;maximum&quot;: 2000000,
+      &quot;minimum&quot;: 1000,
+      &quot;title&quot;: &quot;Maximum Raw Evidence Bytes&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;maxRelatedContent&quot;: {
+      &quot;default&quot;: 20,
+      &quot;description&quot;: &quot;Bound eligible related-content links per answer when enabled; zero emits no related-content items.&quot;,
+      &quot;maximum&quot;: 100,
+      &quot;minimum&quot;: 0,
+      &quot;title&quot;: &quot;Maximum Answer Related Content&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;maxRelationshipItemsPerCollection&quot;: {
+      &quot;default&quot;: 500,
+      &quot;description&quot;: &quot;Bound explicit links emitted from each labeled relationship collection. Zero emits no relationship-collection edges and never means an empty collection.&quot;,
+      &quot;maximum&quot;: 5000,
+      &quot;minimum&quot;: 0,
+      &quot;title&quot;: &quot;Maximum Relationship Items per Collection&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;maxScrollAttempts&quot;: {
+      &quot;default&quot;: 5,
+      &quot;description&quot;: &quot;Bounded lazy-render scroll budget applied during detail traversal; scroll attempts and termination state are reported.&quot;,
+      &quot;maximum&quot;: 20,
+      &quot;minimum&quot;: 0,
+      &quot;title&quot;: &quot;Maximum Scroll Attempts&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;onlyNewItems&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;Annotate canonical entity rows with new/changed/unchanged/scope_mismatch state and suppress only unchanged semantic rows when includeUnchanged is false. Requires stateStoreId; status, graph, and manifest rows remain visible.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Only New or Changed Items&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;outputFields&quot;: {
+      &quot;default&quot;: [],
+      &quot;description&quot;: &quot;Optional allowlist for compact rows, including bounded dotted paths through nested collections (for example answers.answer_text, comments.comment_text, feed.feed_text, or contributors.contributor_name where applicable). Child identity/URL fields and the actor identity, access/status, source, traversal, graph, filter, and parser-envelope fields remain protected.&quot;,
+      &quot;editor&quot;: &quot;stringList&quot;,
+      &quot;items&quot;: {
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;maxItems&quot;: 3000,
+      &quot;title&quot;: &quot;Output Fields&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;outputFormat&quot;: {
+      &quot;default&quot;: &quot;normalized&quot;,
+      &quot;description&quot;: &quot;Projection after one canonical extraction path. Nested groups emitted answers and comments under explicit question/answer parents; flat keeps entity rows with parent context; edges emits explicit edge rows plus status rows.&quot;,
+      &quot;enum&quot;: [
+        &quot;normalized&quot;,
+        &quot;nested&quot;,
+        &quot;flat&quot;,
+        &quot;edges&quot;
+      ],
+      &quot;prefill&quot;: &quot;normalized&quot;,
+      &quot;title&quot;: &quot;Output Format&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;postUrls&quot;: {
+      &quot;default&quot;: [],
+      &quot;description&quot;: &quot;Explicit standalone Post-page seeds. Only post routes are accepted; emitted with the same topic_post field family topic-discovered posts use (post_title, post_body, post_author_*).&quot;,
+      &quot;editor&quot;: &quot;requestListSources&quot;,
+      &quot;items&quot;: {
+        &quot;properties&quot;: {
+          &quot;url&quot;: {
+            &quot;description&quot;: &quot;A Quora URL.&quot;,
+            &quot;title&quot;: &quot;URL&quot;,
+            &quot;type&quot;: &quot;string&quot;
+          }
+        },
+        &quot;required&quot;: [
+          &quot;url&quot;
+        ],
+        &quot;type&quot;: &quot;object&quot;
+      },
+      &quot;title&quot;: &quot;Post URLs&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;profileUrls&quot;: {
+      &quot;default&quot;: [],
+      &quot;description&quot;: &quot;Explicit profile-page seeds. Only profile routes are accepted; emitted as normalized profile rows exactly like a profile route discovered from startUrls.&quot;,
+      &quot;editor&quot;: &quot;requestListSources&quot;,
+      &quot;items&quot;: {
+        &quot;properties&quot;: {
+          &quot;url&quot;: {
+            &quot;description&quot;: &quot;A Quora URL.&quot;,
+            &quot;title&quot;: &quot;URL&quot;,
+            &quot;type&quot;: &quot;string&quot;
+          }
+        },
+        &quot;required&quot;: [
+          &quot;url&quot;
+        ],
+        &quot;type&quot;: &quot;object&quot;
+      },
+      &quot;title&quot;: &quot;Profile URLs&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;proxyConfiguration&quot;: {
+      &quot;default&quot;: {
+        &quot;apifyProxyGroups&quot;: [
+          &quot;RESIDENTIAL&quot;
+        ],
+        &quot;useApifyProxy&quot;: true
+      },
+      &quot;description&quot;: &quot;Apify proxy routing. Quora&#x27;s anti-bot layer blocks the free Datacenter/Automatic tier on roughly half of all real requests (cloud-verified), so this actor always routes through RESIDENTIAL proxies for reliable results regardless of what is selected here — leave this on the default Residential selection unless you need to supply your own proxy URLs.&quot;,
+      &quot;editor&quot;: &quot;proxy&quot;,
+      &quot;prefill&quot;: {
+        &quot;apifyProxyGroups&quot;: [
+          &quot;RESIDENTIAL&quot;
+        ],
+        &quot;useApifyProxy&quot;: true
+      },
+      &quot;title&quot;: &quot;Proxy Configuration&quot;,
+      &quot;type&quot;: &quot;object&quot;
+    },
+    &quot;questionUrls&quot;: {
+      &quot;default&quot;: [],
+      &quot;description&quot;: &quot;Explicit question-page seeds. Only question routes are accepted.&quot;,
+      &quot;editor&quot;: &quot;requestListSources&quot;,
+      &quot;items&quot;: {
+        &quot;properties&quot;: {
+          &quot;url&quot;: {
+            &quot;description&quot;: &quot;A Quora URL.&quot;,
+            &quot;title&quot;: &quot;URL&quot;,
+            &quot;type&quot;: &quot;string&quot;
+          }
+        },
+        &quot;required&quot;: [
+          &quot;url&quot;
+        ],
+        &quot;type&quot;: &quot;object&quot;
+      },
+      &quot;title&quot;: &quot;Question URLs&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;rawEvidenceRetentionDays&quot;: {
+      &quot;default&quot;: 30,
+      &quot;description&quot;: &quot;When zero, suppress raw_html snapshots while retaining hash, size, and redaction diagnostics. Positive values permit bounded HTML for the requested run; external Apify dataset/run retention still applies.&quot;,
+      &quot;maximum&quot;: 30,
+      &quot;minimum&quot;: 0,
+      &quot;title&quot;: &quot;Raw Evidence Retention Days&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;redactSensitiveQueryParams&quot;: {
+      &quot;default&quot;: true,
+      &quot;description&quot;: &quot;Redact narrow credential-like query parameter values in emitted URLs, graph endpoints, redirect chains, and raw HTML. The original document hash remains based on the captured document.&quot;,
+      &quot;prefill&quot;: true,
+      &quot;title&quot;: &quot;Redact Sensitive URL Query Values&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;relationshipTypes&quot;: {
+      &quot;default&quot;: [],
+      &quot;description&quot;: &quot;Explicit relationship-type allowlist for the newly ported follower/following/want-answers/upvoter/space-role relationship collections. Empty leaves the existing always-on content-membership/authorship edges untouched (question_has_topic, answer_authored_by, comment_belongs_to_answer, profile_has_activity, space_has_feed_item, etc.); this allowlist only gates the additional collections below. Sensitive follower/want-answer/upvoter types also require includeSensitiveRelationshipData and their matching collection opt-in.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;items&quot;: {
+        &quot;enum&quot;: [
+          &quot;profile_follows_profile&quot;,
+          &quot;profile_followed_by_profile&quot;,
+          &quot;profile_follows_question&quot;,
+          &quot;profile_follows_space&quot;,
+          &quot;profile_follows_topic&quot;,
+          &quot;profile_has_expertise&quot;,
+          &quot;question_followed_by_profile&quot;,
+          &quot;question_wants_answers_from_profile&quot;,
+          &quot;answer_upvoted_by_profile&quot;,
+          &quot;space_followed_by_profile&quot;,
+          &quot;space_has_contributor&quot;,
+          &quot;space_has_moderator&quot;,
+          &quot;space_has_admin&quot;,
+          &quot;space_contains_post&quot;,
+          &quot;space_contains_question&quot;,
+          &quot;space_contains_unanswered_question&quot;,
+          &quot;profile_authored_answer&quot;,
+          &quot;profile_authored_question&quot;,
+          &quot;profile_authored_post&quot;,
+          &quot;question_has_topic&quot;,
+          &quot;question_has_answer&quot;,
+          &quot;answer_belongs_to_question&quot;,
+          &quot;answer_authored_by_profile&quot;,
+          &quot;comment_belongs_to_answer&quot;,
+          &quot;comment_reply_to_comment&quot;,
+          &quot;comment_authored_by_profile&quot;,
+          &quot;post_authored_by_profile&quot;,
+          &quot;post_in_space&quot;,
+          &quot;profile_has_activity&quot;,
+          &quot;space_has_feed_item&quot;
+        ],
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;title&quot;: &quot;Relationship Types&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;requestDelay&quot;: {
+      &quot;default&quot;: 1,
+      &quot;description&quot;: &quot;Delay between page batches in seconds; this is not an anti-bot bypass guarantee.&quot;,
+      &quot;maximum&quot;: 30,
+      &quot;minimum&quot;: 0,
+      &quot;title&quot;: &quot;Request Delay&quot;,
+      &quot;type&quot;: &quot;number&quot;
+    },
+    &quot;resultTypes&quot;: {
+      &quot;default&quot;: [
+        &quot;question&quot;,
+        &quot;answer&quot;,
+        &quot;comment&quot;,
+        &quot;profile&quot;,
+        &quot;profile_activity&quot;,
+        &quot;topic&quot;,
+        &quot;topic_post&quot;,
+        &quot;space&quot;,
+        &quot;space_feed_item&quot;,
+        &quot;entity_edge&quot;,
+        &quot;status&quot;,
+        &quot;run_manifest&quot;
+      ],
+      &quot;description&quot;: &quot;Select normalized entities, explicit graph relationships, relationship-collection counts, status rows, and the final run manifest.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;items&quot;: {
+        &quot;enum&quot;: [
+          &quot;question&quot;,
+          &quot;answer&quot;,
+          &quot;comment&quot;,
+          &quot;profile&quot;,
+          &quot;profile_activity&quot;,
+          &quot;topic&quot;,
+          &quot;topic_post&quot;,
+          &quot;space&quot;,
+          &quot;space_feed_item&quot;,
+          &quot;entity_edge&quot;,
+          &quot;relationship_collection&quot;,
+          &quot;status&quot;,
+          &quot;run_manifest&quot;
+        ],
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;title&quot;: &quot;Result Types&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;scrapeDepth&quot;: {
+      &quot;default&quot;: &quot;detail&quot;,
+      &quot;description&quot;: &quot;Overview emits page-level summaries without answer/comment/activity/feed expansion; detail preserves the current bounded traversal.&quot;,
+      &quot;enum&quot;: [
+        &quot;overview&quot;,
+        &quot;detail&quot;
+      ],
+      &quot;prefill&quot;: &quot;detail&quot;,
+      &quot;title&quot;: &quot;Scrape Depth&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;searchQueries&quot;: {
+      &quot;default&quot;: [],
+      &quot;description&quot;: &quot;Native Quora search seeds. Search cards are followed only when their visible URLs are supported.&quot;,
+      &quot;editor&quot;: &quot;stringList&quot;,
+      &quot;items&quot;: {
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;title&quot;: &quot;Search Queries&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;spaceUrls&quot;: {
+      &quot;default&quot;: [],
+      &quot;description&quot;: &quot;Explicit Space-page seeds for bounded visible feed discovery.&quot;,
+      &quot;editor&quot;: &quot;requestListSources&quot;,
+      &quot;items&quot;: {
+        &quot;properties&quot;: {
+          &quot;url&quot;: {
+            &quot;description&quot;: &quot;A Quora URL.&quot;,
+            &quot;title&quot;: &quot;URL&quot;,
+            &quot;type&quot;: &quot;string&quot;
+          }
+        },
+        &quot;required&quot;: [
+          &quot;url&quot;
+        ],
+        &quot;type&quot;: &quot;object&quot;
+      },
+      &quot;title&quot;: &quot;Space URLs&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;startUrls&quot;: {
+      &quot;default&quot;: [],
+      &quot;description&quot;: &quot;Question, answer, profile, topic, Space, or native search URLs.&quot;,
+      &quot;editor&quot;: &quot;requestListSources&quot;,
+      &quot;prefill&quot;: [
+        {
+          &quot;url&quot;: &quot;https://www.quora.com/What-is-the-meaning-of-life&quot;
+        }
+      ],
+      &quot;title&quot;: &quot;Quora URLs&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;stateStoreId&quot;: {
+      &quot;default&quot;: &quot;&quot;,
+      &quot;description&quot;: &quot;Apify key-value store for canonical entity snapshots. Required when onlyNewItems is enabled; never store cookies or credentials here.&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;title&quot;: &quot;Incremental State Store ID&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;topCommentsOnly&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;Retain only comments with an explicit visible Top/Most helpful/Popular comments label. Unknown comments are excluded and counted; votes and position are not used as top evidence.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Top-Labeled Comments Only&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;topicUrls&quot;: {
+      &quot;default&quot;: [],
+      &quot;description&quot;: &quot;Explicit Topic-page seeds for bounded visible question discovery.&quot;,
+      &quot;editor&quot;: &quot;requestListSources&quot;,
+      &quot;items&quot;: {
+        &quot;properties&quot;: {
+          &quot;url&quot;: {
+            &quot;description&quot;: &quot;A Quora URL.&quot;,
+            &quot;title&quot;: &quot;URL&quot;,
+            &quot;type&quot;: &quot;string&quot;
+          }
+        },
+        &quot;required&quot;: [
+          &quot;url&quot;
+        ],
+        &quot;type&quot;: &quot;object&quot;
+      },
+      &quot;title&quot;: &quot;Topic URLs&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    }
+  },
+  &quot;schemaVersion&quot;: 1,
+  &quot;title&quot;: &quot;Quora Dataset Builder Input&quot;,
+  &quot;type&quot;: &quot;object&quot;
+}
+</code></pre></details></section><section class="schema-section" id="output-schema"><h2>Output schema</h2><p>Published result links and storage locations. This schema is not an exhaustive contract for every field in a dataset record.</p><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>results</code></td><td>string</td><td>optional</td><td>All records from the run, in the default dataset.</td></tr></tbody></table></div><p><a href="output-schema.json">Download the published output schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+  &quot;actorOutputSchemaVersion&quot;: 1,
+  &quot;description&quot;: &quot;Normalized Quora questions, answers, comments, profiles, Spaces, relationship edges, status rows, and a run manifest.&quot;,
+  &quot;properties&quot;: {
+    &quot;results&quot;: {
+      &quot;description&quot;: &quot;All records from the run, in the default dataset.&quot;,
+      &quot;template&quot;: &quot;{{links.apiDefaultDatasetUrl}}/items&quot;,
+      &quot;title&quot;: &quot;Results&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    }
+  },
+  &quot;title&quot;: &quot;Quora Question, Answer &amp; Relationship Dataset Builder Output&quot;,
+  &quot;type&quot;: &quot;object&quot;
+}
+</code></pre></details></section><section class="schema-section" id="dataset-schema"><h2>Dataset schema</h2><p>Published dataset views and any declared field definitions. A view can select only a subset of the returned record fields.</p><p><a href="dataset-schema.json">Download the published dataset schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+  &quot;actorSpecification&quot;: 1,
+  &quot;title&quot;: &quot;Quora Dataset Builder Output&quot;,
+  &quot;views&quot;: {
+    &quot;overview&quot;: {
+      &quot;display&quot;: {
+        &quot;component&quot;: &quot;table&quot;,
+        &quot;properties&quot;: {
+          &quot;access_state&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Access&quot;
+          },
+          &quot;access_state_counts&quot;: {
+            &quot;format&quot;: &quot;json&quot;,
+            &quot;label&quot;: &quot;Access state counts&quot;
+          },
+          &quot;activity_url&quot;: {
+            &quot;format&quot;: &quot;link&quot;,
+            &quot;label&quot;: &quot;Activity URL&quot;
+          },
+          &quot;ai_label_source&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;AI label source&quot;
+          },
+          &quot;ai_label_text&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;AI label text&quot;
+          },
+          &quot;answer_age_days&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Answer age (days)&quot;
+          },
+          &quot;answer_age_state&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Answer age evidence&quot;
+          },
+          &quot;answer_author_is_verified&quot;: {
+            &quot;format&quot;: &quot;boolean&quot;,
+            &quot;label&quot;: &quot;Answer author verified&quot;
+          },
+          &quot;answer_comment_count&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Answer comments&quot;
+          },
+          &quot;answer_comment_count_value&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Answer comments (number)&quot;
+          },
+          &quot;answer_count&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Answer count&quot;
+          },
+          &quot;answer_created_at&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Answer created at&quot;
+          },
+          &quot;answer_html&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Answer HTML&quot;
+          },
+          &quot;answer_id&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Answer ID&quot;
+          },
+          &quot;answer_image_urls&quot;: {
+            &quot;format&quot;: &quot;json&quot;,
+            &quot;label&quot;: &quot;Answer image URLs&quot;
+          },
+          &quot;answer_is_anonymous&quot;: {
+            &quot;format&quot;: &quot;boolean&quot;,
+            &quot;label&quot;: &quot;Answer is anonymous&quot;
+          },
+          &quot;answer_is_collapsed&quot;: {
+            &quot;format&quot;: &quot;boolean&quot;,
+            &quot;label&quot;: &quot;Answer is collapsed&quot;
+          },
+          &quot;answer_is_quora_plus&quot;: {
+            &quot;format&quot;: &quot;boolean&quot;,
+            &quot;label&quot;: &quot;Answer is Quora+&quot;
+          },
+          &quot;answer_is_top_labeled&quot;: {
+            &quot;format&quot;: &quot;boolean&quot;,
+            &quot;label&quot;: &quot;Answer has top label&quot;
+          },
+          &quot;answer_jsonld_type&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Answer JSON-LD type&quot;
+          },
+          &quot;answer_limit_reached&quot;: {
+            &quot;format&quot;: &quot;boolean&quot;,
+            &quot;label&quot;: &quot;Answer cap&quot;
+          },
+          &quot;answer_media_urls&quot;: {
+            &quot;format&quot;: &quot;json&quot;,
+            &quot;label&quot;: &quot;Answer media URLs&quot;
+          },
+          &quot;answer_original_url&quot;: {
+            &quot;format&quot;: &quot;link&quot;,
+            &quot;label&quot;: &quot;Answer original URL&quot;
+          },
+          &quot;answer_outbound_links&quot;: {
+            &quot;format&quot;: &quot;json&quot;,
+            &quot;label&quot;: &quot;Answer outbound links&quot;
+          },
+          &quot;answer_rank&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Answer rank&quot;
+          },
+          &quot;answer_rank_source&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Answer rank source&quot;
+          },
+          &quot;answer_share_count&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Answer shares&quot;
+          },
+          &quot;answer_share_count_value&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Answer shares (number)&quot;
+          },
+          &quot;answer_text&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Answer&quot;
+          },
+          &quot;answer_text_completeness&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Answer text completeness&quot;
+          },
+          &quot;answer_translation_label&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Answer translation label&quot;
+          },
+          &quot;answer_translation_state&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Answer translation state&quot;
+          },
+          &quot;answer_updated_at&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Answer updated at&quot;
+          },
+          &quot;answer_upvote_count&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Answer upvotes&quot;
+          },
+          &quot;answer_upvote_count_value&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Answer upvotes (number)&quot;
+          },
+          &quot;answer_url&quot;: {
+            &quot;format&quot;: &quot;link&quot;,
+            &quot;label&quot;: &quot;Answer URL&quot;
+          },
+          &quot;answer_video_urls&quot;: {
+            &quot;format&quot;: &quot;json&quot;,
+            &quot;label&quot;: &quot;Answer video URLs&quot;
+          },
+          &quot;answer_view_count&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Answer views&quot;
+          },
+          &quot;answer_view_count_value&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Answer views (number)&quot;
+          },
+          &quot;answer_visibility&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Answer visibility&quot;
+          },
+          &quot;answers&quot;: {
+            &quot;format&quot;: &quot;json&quot;,
+            &quot;label&quot;: &quot;Nested answers&quot;
+          },
+          &quot;answers_observed_before_global_cap&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Answers observed&quot;
+          },
+          &quot;answers_suppressed_by_global_cap&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Answers suppressed&quot;
+          },
+          &quot;author_credentials&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Author credentials&quot;
+          },
+          &quot;author_id&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Author ID&quot;
+          },
+          &quot;author_image_url&quot;: {
+            &quot;format&quot;: &quot;link&quot;,
+            &quot;label&quot;: &quot;Author image&quot;
+          },
+          &quot;author_name&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Author name&quot;
+          },
+          &quot;author_url&quot;: {
+            &quot;format&quot;: &quot;link&quot;,
+            &quot;label&quot;: &quot;Author URL&quot;
+          },
+          &quot;browser_locale&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Browser locale&quot;
+          },
+          &quot;canonical_url&quot;: {
+            &quot;format&quot;: &quot;link&quot;,
+            &quot;label&quot;: &quot;Canonical URL&quot;
+          },
+          &quot;collection_total_text&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Collection total&quot;
+          },
+          &quot;collection_total_value&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Collection total (value)&quot;
+          },
+          &quot;comment_age_days&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Comment age (days)&quot;
+          },
+          &quot;comment_age_state&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Comment age evidence&quot;
+          },
+          &quot;comment_author_credentials&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Comment author credentials&quot;
+          },
+          &quot;comment_author_id&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Comment author ID&quot;
+          },
+          &quot;comment_author_image_url&quot;: {
+            &quot;format&quot;: &quot;link&quot;,
+            &quot;label&quot;: &quot;Comment author image&quot;
+          },
+          &quot;comment_author_is_verified&quot;: {
+            &quot;format&quot;: &quot;boolean&quot;,
+            &quot;label&quot;: &quot;Comment author verified&quot;
+          },
+          &quot;comment_author_name&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Comment author&quot;
+          },
+          &quot;comment_collection_label&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Comment collection&quot;
+          },
+          &quot;comment_created_at&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Comment created&quot;
+          },
+          &quot;comment_depth&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Comment depth&quot;
+          },
+          &quot;comment_depth_limit_reached&quot;: {
+            &quot;format&quot;: &quot;boolean&quot;,
+            &quot;label&quot;: &quot;Comment depth cap reached&quot;
+          },
+          &quot;comment_filter_emitted&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Comment filter emitted&quot;
+          },
+          &quot;comment_filter_observed&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Comment filter observed&quot;
+          },
+          &quot;comment_filter_top_only&quot;: {
+            &quot;format&quot;: &quot;boolean&quot;,
+            &quot;label&quot;: &quot;Top comments only&quot;
+          },
+          &quot;comment_filter_unknown&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Comment filter unknown&quot;
+          },
+          &quot;comment_id&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Comment ID&quot;
+          },
+          &quot;comment_image_urls&quot;: {
+            &quot;format&quot;: &quot;json&quot;,
+            &quot;label&quot;: &quot;Comment image URLs&quot;
+          },
+          &quot;comment_is_anonymous&quot;: {
+            &quot;format&quot;: &quot;boolean&quot;,
+            &quot;label&quot;: &quot;Anonymous author&quot;
+          },
+          &quot;comment_is_reply&quot;: {
+            &quot;format&quot;: &quot;boolean&quot;,
+            &quot;label&quot;: &quot;Comment is reply&quot;
+          },
+          &quot;comment_is_top_labeled&quot;: {
+            &quot;format&quot;: &quot;boolean&quot;,
+            &quot;label&quot;: &quot;Top-labeled comment&quot;
+          },
+          &quot;comment_items_emitted_count&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Comments emitted&quot;
+          },
+          &quot;comment_items_observed_count&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Comments observed&quot;
+          },
+          &quot;comment_limit_reached&quot;: {
+            &quot;format&quot;: &quot;boolean&quot;,
+            &quot;label&quot;: &quot;Comment cap&quot;
+          },
+          &quot;comment_media_urls&quot;: {
+            &quot;format&quot;: &quot;json&quot;,
+            &quot;label&quot;: &quot;Comment media&quot;
+          },
+          &quot;comment_outbound_links&quot;: {
+            &quot;format&quot;: &quot;json&quot;,
+            &quot;label&quot;: &quot;Comment outbound links&quot;
+          },
+          &quot;comment_rank&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Comment rank&quot;
+          },
+          &quot;comment_rank_source&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Comment rank source&quot;
+          },
+          &quot;comment_reaction_breakdown&quot;: {
+            &quot;format&quot;: &quot;json&quot;,
+            &quot;label&quot;: &quot;Comment reactions&quot;
+          },
+          &quot;comment_reaction_count&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Comment reactions&quot;
+          },
+          &quot;comment_reaction_count_value&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Comment reactions (typed)&quot;
+          },
+          &quot;comment_reply_count&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Comment replies&quot;
+          },
+          &quot;comment_reply_count_value&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Comment replies&quot;
+          },
+          &quot;comment_reply_path&quot;: {
+            &quot;format&quot;: &quot;json&quot;,
+            &quot;label&quot;: &quot;Reply path&quot;
+          },
+          &quot;comment_sort_fallback_count&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Comment sort fallback&quot;
+          },
+          &quot;comment_sort_observed&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Comments observed&quot;
+          },
+          &quot;comment_sort_order&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Comment sort&quot;
+          },
+          &quot;comment_text&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Comment&quot;
+          },
+          &quot;comment_timestamp&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Comment timestamp&quot;
+          },
+          &quot;comment_upvote_count&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Comment upvotes&quot;
+          },
+          &quot;comment_upvote_count_value&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Comment upvotes&quot;
+          },
+          &quot;comment_url&quot;: {
+            &quot;format&quot;: &quot;link&quot;,
+            &quot;label&quot;: &quot;Comment URL&quot;
+          },
+          &quot;comment_video_urls&quot;: {
+            &quot;format&quot;: &quot;json&quot;,
+            &quot;label&quot;: &quot;Comment video URLs&quot;
+          },
+          &quot;comment_visibility&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Comment visibility&quot;
+          },
+          &quot;comments&quot;: {
+            &quot;format&quot;: &quot;json&quot;,
+            &quot;label&quot;: &quot;Nested comments&quot;
+          },
+          &quot;content_type&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Type&quot;
+          },
+          &quot;content_type_counts&quot;: {
+            &quot;format&quot;: &quot;json&quot;,
+            &quot;label&quot;: &quot;Content type counts&quot;
+          },
+          &quot;created_at&quot;: {
+            &quot;format&quot;: &quot;date&quot;,
+            &quot;label&quot;: &quot;Created&quot;
+          },
+          &quot;date_interpretations&quot;: {
+            &quot;format&quot;: &quot;json&quot;,
+            &quot;label&quot;: &quot;Date interpretations&quot;
+          },
+          &quot;dedupe_mode&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Dedupe mode&quot;
+          },
+          &quot;detail_expansion_state&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Detail expansion&quot;
+          },
+          &quot;duplicate_records_suppressed&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Duplicates suppressed&quot;
+          },
+          &quot;edge_evidence_field&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Edge evidence&quot;
+          },
+          &quot;edge_id&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Edge ID&quot;
+          },
+          &quot;edge_state&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Edge state&quot;
+          },
+          &quot;error&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Error&quot;
+          },
+          &quot;event_type&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Incremental event&quot;
+          },
+          &quot;feed_age_days&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Feed age (days)&quot;
+          },
+          &quot;feed_age_state&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Feed age evidence&quot;
+          },
+          &quot;feed_author_credentials&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Feed author credentials&quot;
+          },
+          &quot;feed_author_id&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Feed author ID&quot;
+          },
+          &quot;feed_author_image_url&quot;: {
+            &quot;format&quot;: &quot;link&quot;,
+            &quot;label&quot;: &quot;Feed author image&quot;
+          },
+          &quot;feed_author_is_anonymous&quot;: {
+            &quot;format&quot;: &quot;boolean&quot;,
+            &quot;label&quot;: &quot;Feed author anonymous&quot;
+          },
+          &quot;feed_author_is_verified&quot;: {
+            &quot;format&quot;: &quot;boolean&quot;,
+            &quot;label&quot;: &quot;Feed author verified&quot;
+          },
+          &quot;feed_author_name&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Feed author&quot;
+          },
+          &quot;feed_author_url&quot;: {
+            &quot;format&quot;: &quot;link&quot;,
+            &quot;label&quot;: &quot;Feed author URL&quot;
+          },
+          &quot;feed_created_at&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Feed created at&quot;
+          },
+          &quot;feed_text&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Feed text&quot;
+          },
+          &quot;feed_title&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Feed title&quot;
+          },
+          &quot;feed_type&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Feed type&quot;
+          },
+          &quot;feed_url&quot;: {
+            &quot;format&quot;: &quot;link&quot;,
+            &quot;label&quot;: &quot;Feed URL&quot;
+          },
+          &quot;field_sources&quot;: {
+            &quot;format&quot;: &quot;json&quot;,
+            &quot;label&quot;: &quot;Field sources&quot;
+          },
+          &quot;fields_present&quot;: {
+            &quot;format&quot;: &quot;json&quot;,
+            &quot;label&quot;: &quot;Fields present&quot;
+          },
+          &quot;final_url&quot;: {
+            &quot;format&quot;: &quot;link&quot;,
+            &quot;label&quot;: &quot;Final URL&quot;
+          },
+          &quot;from_content_type&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;From content type&quot;
+          },
+          &quot;from_id&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;From ID&quot;
+          },
+          &quot;from_record_id&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;From record&quot;
+          },
+          &quot;from_url&quot;: {
+            &quot;format&quot;: &quot;link&quot;,
+            &quot;label&quot;: &quot;From URL&quot;
+          },
+          &quot;global_answer_cap_reached&quot;: {
+            &quot;format&quot;: &quot;boolean&quot;,
+            &quot;label&quot;: &quot;Global answer cap&quot;
+          },
+          &quot;http_status&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;HTTP status&quot;
+          },
+          &quot;image_urls&quot;: {
+            &quot;format&quot;: &quot;array&quot;,
+            &quot;label&quot;: &quot;Feed image URLs&quot;
+          },
+          &quot;include_engagement_breakdown&quot;: {
+            &quot;format&quot;: &quot;boolean&quot;,
+            &quot;label&quot;: &quot;Engagement breakdown included&quot;
+          },
+          &quot;include_entity_graph&quot;: {
+            &quot;format&quot;: &quot;boolean&quot;,
+            &quot;label&quot;: &quot;Entity graph included&quot;
+          },
+          &quot;include_field_evidence&quot;: {
+            &quot;format&quot;: &quot;boolean&quot;,
+            &quot;label&quot;: &quot;Field evidence included&quot;
+          },
+          &quot;include_unchanged&quot;: {
+            &quot;format&quot;: &quot;boolean&quot;,
+            &quot;label&quot;: &quot;Include unchanged&quot;
+          },
+          &quot;include_unresolved_edges&quot;: {
+            &quot;format&quot;: &quot;boolean&quot;,
+            &quot;label&quot;: &quot;Unresolved edges included&quot;
+          },
+          &quot;input_accounting&quot;: {
+            &quot;format&quot;: &quot;json&quot;,
+            &quot;label&quot;: &quot;Input accounting&quot;
+          },
+          &quot;is_ai_answer&quot;: {
+            &quot;format&quot;: &quot;boolean&quot;,
+            &quot;label&quot;: &quot;Is AI answer&quot;
+          },
+          &quot;last_answered_at&quot;: {
+            &quot;format&quot;: &quot;date&quot;,
+            &quot;label&quot;: &quot;Last answered (observed)&quot;
+          },
+          &quot;last_answered_at_evidence&quot;: {
+            &quot;format&quot;: &quot;json&quot;,
+            &quot;label&quot;: &quot;Last answered evidence&quot;
+          },
+          &quot;load_more_attempts&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Load-more attempts&quot;
+          },
+          &quot;load_more_clicks&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Load-more clicks&quot;
+          },
+          &quot;load_more_state&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Load-more state&quot;
+          },
+          &quot;manifest_version&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Manifest version&quot;
+          },
+          &quot;matched_input&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Matched input&quot;
+          },
+          &quot;matched_input_kind&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Matched input kind&quot;
+          },
+          &quot;max_answers_per_question&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Max answers per question&quot;
+          },
+          &quot;max_answers_total&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Max answers total&quot;
+          },
+          &quot;max_concurrency&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Max concurrency&quot;
+          },
+          &quot;max_items_per_source&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Configured source cap&quot;
+          },
+          &quot;max_raw_evidence_bytes&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Max raw bytes&quot;
+          },
+          &quot;media_urls&quot;: {
+            &quot;format&quot;: &quot;array&quot;,
+            &quot;label&quot;: &quot;Feed media URLs&quot;
+          },
+          &quot;navigation_attempts&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Navigation attempts&quot;
+          },
+          &quot;navigation_attempts_total&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Navigation attempts total&quot;
+          },
+          &quot;navigation_retries&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Navigation retries&quot;
+          },
+          &quot;navigation_retries_total&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Navigation retries total&quot;
+          },
+          &quot;navigation_retry_delays_seconds&quot;: {
+            &quot;format&quot;: &quot;json&quot;,
+            &quot;label&quot;: &quot;Retry delays&quot;
+          },
+          &quot;nested_answer_count&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Nested answers emitted&quot;
+          },
+          &quot;nested_answer_count_observed&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Nested answers observed&quot;
+          },
+          &quot;nested_child_state&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Nested child state&quot;
+          },
+          &quot;nested_comment_count&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Nested comments emitted&quot;
+          },
+          &quot;nested_comment_count_observed&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Nested comments observed&quot;
+          },
+          &quot;nested_orphan_reason&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Nested orphan reason&quot;
+          },
+          &quot;node_image_url&quot;: {
+            &quot;format&quot;: &quot;link&quot;,
+            &quot;label&quot;: &quot;Node image&quot;
+          },
+          &quot;observed_depth&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Observed depth&quot;
+          },
+          &quot;only_new_items&quot;: {
+            &quot;format&quot;: &quot;boolean&quot;,
+            &quot;label&quot;: &quot;Only new items&quot;
+          },
+          &quot;outbound_links&quot;: {
+            &quot;format&quot;: &quot;array&quot;,
+            &quot;label&quot;: &quot;Feed outbound links&quot;
+          },
+          &quot;output_format&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Output format&quot;
+          },
+          &quot;output_projection&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Projection&quot;
+          },
+          &quot;parent_comment_id&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Parent comment ID&quot;
+          },
+          &quot;parent_comment_url&quot;: {
+            &quot;format&quot;: &quot;link&quot;,
+            &quot;label&quot;: &quot;Parent comment URL&quot;
+          },
+          &quot;parser_strategy&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Parser strategy&quot;
+          },
+          &quot;parser_version&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Parser version&quot;
+          },
+          &quot;post_age_days&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Post age (days)&quot;
+          },
+          &quot;post_age_state&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Post age evidence&quot;
+          },
+          &quot;post_author_credentials&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Post author credentials&quot;
+          },
+          &quot;post_author_id&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Post author ID&quot;
+          },
+          &quot;post_author_image_url&quot;: {
+            &quot;format&quot;: &quot;link&quot;,
+            &quot;label&quot;: &quot;Post author image&quot;
+          },
+          &quot;post_author_is_anonymous&quot;: {
+            &quot;format&quot;: &quot;boolean&quot;,
+            &quot;label&quot;: &quot;Post author anonymous&quot;
+          },
+          &quot;post_author_is_verified&quot;: {
+            &quot;format&quot;: &quot;boolean&quot;,
+            &quot;label&quot;: &quot;Post author verified&quot;
+          },
+          &quot;post_author_name&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Post author&quot;
+          },
+          &quot;post_author_url&quot;: {
+            &quot;format&quot;: &quot;link&quot;,
+            &quot;label&quot;: &quot;Post author URL&quot;
+          },
+          &quot;post_body&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Post body&quot;
+          },
+          &quot;post_created_at&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Post created at&quot;
+          },
+          &quot;post_image_urls&quot;: {
+            &quot;format&quot;: &quot;json&quot;,
+            &quot;label&quot;: &quot;Post image URLs&quot;
+          },
+          &quot;post_media_urls&quot;: {
+            &quot;format&quot;: &quot;json&quot;,
+            &quot;label&quot;: &quot;Post media URLs&quot;
+          },
+          &quot;post_outbound_links&quot;: {
+            &quot;format&quot;: &quot;json&quot;,
+            &quot;label&quot;: &quot;Post outbound links&quot;
+          },
+          &quot;post_title&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Post title&quot;
+          },
+          &quot;post_updated_age_days&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Post updated age (days)&quot;
+          },
+          &quot;post_updated_age_state&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Post updated age evidence&quot;
+          },
+          &quot;post_updated_at&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Post updated at&quot;
+          },
+          &quot;post_url&quot;: {
+            &quot;format&quot;: &quot;link&quot;,
+            &quot;label&quot;: &quot;Post URL&quot;
+          },
+          &quot;post_video_urls&quot;: {
+            &quot;format&quot;: &quot;json&quot;,
+            &quot;label&quot;: &quot;Post video URLs&quot;
+          },
+          &quot;previous_snapshot_hash&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Previous state hash&quot;
+          },
+          &quot;profile_author_id&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Profile author ID&quot;
+          },
+          &quot;profile_bio&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Profile bio&quot;
+          },
+          &quot;profile_image_url&quot;: {
+            &quot;format&quot;: &quot;link&quot;,
+            &quot;label&quot;: &quot;Profile image&quot;
+          },
+          &quot;profile_is_restricted&quot;: {
+            &quot;format&quot;: &quot;boolean&quot;,
+            &quot;label&quot;: &quot;Profile restricted&quot;
+          },
+          &quot;profile_is_verified&quot;: {
+            &quot;format&quot;: &quot;boolean&quot;,
+            &quot;label&quot;: &quot;Profile verified&quot;
+          },
+          &quot;profile_jsonld_type&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Profile JSON-LD type&quot;
+          },
+          &quot;profile_name&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Profile name&quot;
+          },
+          &quot;profile_snapshot_requested&quot;: {
+            &quot;format&quot;: &quot;boolean&quot;,
+            &quot;label&quot;: &quot;Profile snapshot requested&quot;
+          },
+          &quot;profile_snapshot_state&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Profile snapshot&quot;
+          },
+          &quot;profile_url&quot;: {
+            &quot;format&quot;: &quot;link&quot;,
+            &quot;label&quot;: &quot;Profile URL&quot;
+          },
+          &quot;proxy_resolution_state&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Proxy state&quot;
+          },
+          &quot;proxy_used&quot;: {
+            &quot;format&quot;: &quot;boolean&quot;,
+            &quot;label&quot;: &quot;Proxy used&quot;
+          },
+          &quot;question_age_days&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Question age (days)&quot;
+          },
+          &quot;question_age_state&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Question age evidence&quot;
+          },
+          &quot;question_answer_count&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Answers (raw)&quot;
+          },
+          &quot;question_answer_count_scraped&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Answers scraped&quot;
+          },
+          &quot;question_answer_count_value&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Answers&quot;
+          },
+          &quot;question_author_credentials&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Question author credentials&quot;
+          },
+          &quot;question_author_id&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Question author ID&quot;
+          },
+          &quot;question_author_image_url&quot;: {
+            &quot;format&quot;: &quot;link&quot;,
+            &quot;label&quot;: &quot;Question author image&quot;
+          },
+          &quot;question_author_is_anonymous&quot;: {
+            &quot;format&quot;: &quot;boolean&quot;,
+            &quot;label&quot;: &quot;Question author anonymous&quot;
+          },
+          &quot;question_author_is_verified&quot;: {
+            &quot;format&quot;: &quot;boolean&quot;,
+            &quot;label&quot;: &quot;Question author verified&quot;
+          },
+          &quot;question_author_name&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Question author&quot;
+          },
+          &quot;question_author_url&quot;: {
+            &quot;format&quot;: &quot;link&quot;,
+            &quot;label&quot;: &quot;Question author URL&quot;
+          },
+          &quot;question_created_at&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Question created&quot;
+          },
+          &quot;question_image_urls&quot;: {
+            &quot;format&quot;: &quot;json&quot;,
+            &quot;label&quot;: &quot;Question image URLs&quot;
+          },
+          &quot;question_media_urls&quot;: {
+            &quot;format&quot;: &quot;json&quot;,
+            &quot;label&quot;: &quot;Question media URLs&quot;
+          },
+          &quot;question_outbound_links&quot;: {
+            &quot;format&quot;: &quot;json&quot;,
+            &quot;label&quot;: &quot;Question outbound links&quot;
+          },
+          &quot;question_updated_at&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Question updated&quot;
+          },
+          &quot;question_url&quot;: {
+            &quot;format&quot;: &quot;link&quot;,
+            &quot;label&quot;: &quot;Question URL&quot;
+          },
+          &quot;question_video_urls&quot;: {
+            &quot;format&quot;: &quot;json&quot;,
+            &quot;label&quot;: &quot;Question video URLs&quot;
+          },
+          &quot;raw_evidence_retention_days&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Raw retention days&quot;
+          },
+          &quot;raw_evidence_state&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Raw evidence&quot;
+          },
+          &quot;raw_html&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;HTML snapshot&quot;
+          },
+          &quot;raw_html_bytes&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Raw HTML bytes&quot;
+          },
+          &quot;raw_html_redaction_state&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;HTML redaction&quot;
+          },
+          &quot;raw_html_redactions&quot;: {
+            &quot;format&quot;: &quot;json&quot;,
+            &quot;label&quot;: &quot;HTML redactions&quot;
+          },
+          &quot;raw_html_returned_bytes&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Returned HTML bytes&quot;
+          },
+          &quot;raw_html_sha256&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;HTML SHA-256&quot;
+          },
+          &quot;raw_html_truncated&quot;: {
+            &quot;format&quot;: &quot;boolean&quot;,
+            &quot;label&quot;: &quot;Raw HTML truncated&quot;
+          },
+          &quot;reaction_breakdown&quot;: {
+            &quot;format&quot;: &quot;json&quot;,
+            &quot;label&quot;: &quot;Answer reaction breakdown&quot;
+          },
+          &quot;record_id&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Record ID&quot;
+          },
+          &quot;records_emitted&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Records emitted&quot;
+          },
+          &quot;redact_sensitive_query_params&quot;: {
+            &quot;format&quot;: &quot;boolean&quot;,
+            &quot;label&quot;: &quot;Sensitive query redaction&quot;
+          },
+          &quot;redirect_chain&quot;: {
+            &quot;format&quot;: &quot;json&quot;,
+            &quot;label&quot;: &quot;Redirect chain&quot;
+          },
+          &quot;related_content&quot;: {
+            &quot;format&quot;: &quot;json&quot;,
+            &quot;label&quot;: &quot;Related content&quot;
+          },
+          &quot;related_content_count&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Related content count&quot;
+          },
+          &quot;related_content_limit_reached&quot;: {
+            &quot;format&quot;: &quot;boolean&quot;,
+            &quot;label&quot;: &quot;Related content cap&quot;
+          },
+          &quot;related_content_observed_count&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Related content observed&quot;
+          },
+          &quot;relationship&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Relationship&quot;
+          },
+          &quot;relationship_collection_diagnostic&quot;: {
+            &quot;format&quot;: &quot;json&quot;,
+            &quot;label&quot;: &quot;Relationship collection diagnostic&quot;
+          },
+          &quot;relationship_collection_key&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Relationship collection&quot;
+          },
+          &quot;request_delay_seconds&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Request delay (s)&quot;
+          },
+          &quot;requested_depth&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Requested depth&quot;
+          },
+          &quot;requested_language&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Requested language&quot;
+          },
+          &quot;requested_output_fields&quot;: {
+            &quot;format&quot;: &quot;json&quot;,
+            &quot;label&quot;: &quot;Requested output fields&quot;
+          },
+          &quot;requested_result_types&quot;: {
+            &quot;format&quot;: &quot;json&quot;,
+            &quot;label&quot;: &quot;Requested result types&quot;
+          },
+          &quot;run_duration_ms&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Run duration (ms)&quot;
+          },
+          &quot;run_finished_at&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Run finished&quot;
+          },
+          &quot;run_started_at&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Run started&quot;
+          },
+          &quot;scrape_duration_ms&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Duration (ms)&quot;
+          },
+          &quot;scrape_timestamp&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Scrape timestamp&quot;
+          },
+          &quot;scroll_attempts&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Scroll attempts&quot;
+          },
+          &quot;scroll_state&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Scroll state&quot;
+          },
+          &quot;session_cookie_count&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Session cookie count&quot;
+          },
+          &quot;session_cookie_expiry_state&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Cookie expiry&quot;
+          },
+          &quot;session_input_state&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Session input&quot;
+          },
+          &quot;source_cap&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Source cap&quot;
+          },
+          &quot;source_cap_reached&quot;: {
+            &quot;format&quot;: &quot;boolean&quot;,
+            &quot;label&quot;: &quot;Source cap reached&quot;
+          },
+          &quot;source_items_emitted&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Source emitted&quot;
+          },
+          &quot;source_items_observed&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Source observed&quot;
+          },
+          &quot;source_observation_count&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Source observation count&quot;
+          },
+          &quot;source_observations&quot;: {
+            &quot;format&quot;: &quot;json&quot;,
+            &quot;label&quot;: &quot;Source observations&quot;
+          },
+          &quot;source_pages_attempted&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Source pages attempted&quot;
+          },
+          &quot;source_queries&quot;: {
+            &quot;format&quot;: &quot;json&quot;,
+            &quot;label&quot;: &quot;Source queries&quot;
+          },
+          &quot;source_query&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Source query&quot;
+          },
+          &quot;source_url&quot;: {
+            &quot;format&quot;: &quot;link&quot;,
+            &quot;label&quot;: &quot;Source url&quot;
+          },
+          &quot;space_url&quot;: {
+            &quot;format&quot;: &quot;link&quot;,
+            &quot;label&quot;: &quot;Space URL&quot;
+          },
+          &quot;state_scope_fingerprint&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;State scope fingerprint&quot;
+          },
+          &quot;state_snapshot_hash&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Current state hash&quot;
+          },
+          &quot;state_store_error&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;State store error&quot;
+          },
+          &quot;state_store_state&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;State store&quot;
+          },
+          &quot;timestamp&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Timestamp&quot;
+          },
+          &quot;title&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Title&quot;
+          },
+          &quot;to_content_type&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;To content type&quot;
+          },
+          &quot;to_id&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;To ID&quot;
+          },
+          &quot;to_image_url&quot;: {
+            &quot;format&quot;: &quot;link&quot;,
+            &quot;label&quot;: &quot;To image&quot;
+          },
+          &quot;to_name&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;To name&quot;
+          },
+          &quot;to_record_id&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;To record&quot;
+          },
+          &quot;to_url&quot;: {
+            &quot;format&quot;: &quot;link&quot;,
+            &quot;label&quot;: &quot;To URL&quot;
+          },
+          &quot;topic_links&quot;: {
+            &quot;format&quot;: &quot;json&quot;,
+            &quot;label&quot;: &quot;Topic links&quot;
+          },
+          &quot;topic_url&quot;: {
+            &quot;format&quot;: &quot;link&quot;,
+            &quot;label&quot;: &quot;Topic URL&quot;
+          },
+          &quot;topics&quot;: {
+            &quot;format&quot;: &quot;json&quot;,
+            &quot;label&quot;: &quot;Topics&quot;
+          },
+          &quot;unresolved_reason&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Unresolved reason&quot;
+          },
+          &quot;url&quot;: {
+            &quot;format&quot;: &quot;link&quot;,
+            &quot;label&quot;: &quot;URL&quot;
+          },
+          &quot;url_redaction_state&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;URL redaction&quot;
+          },
+          &quot;url_redactions&quot;: {
+            &quot;format&quot;: &quot;json&quot;,
+            &quot;label&quot;: &quot;URL redactions&quot;
+          },
+          &quot;video_urls&quot;: {
+            &quot;format&quot;: &quot;array&quot;,
+            &quot;label&quot;: &quot;Feed video URLs&quot;
+          }
+        }
+      },
+      &quot;title&quot;: &quot;Normalized records&quot;,
+      &quot;transformation&quot;: {
+        &quot;fields&quot;: [
+          &quot;content_type&quot;,
+          &quot;event_type&quot;,
+          &quot;state_snapshot_hash&quot;,
+          &quot;previous_snapshot_hash&quot;,
+          &quot;state_scope_fingerprint&quot;,
+          &quot;state_store_state&quot;,
+          &quot;state_store_error&quot;,
+          &quot;only_new_items&quot;,
+          &quot;include_unchanged&quot;,
+          &quot;parser_strategy&quot;,
+          &quot;parser_version&quot;,
+          &quot;field_sources&quot;,
+          &quot;fields_present&quot;,
+          &quot;final_url&quot;,
+          &quot;http_status&quot;,
+          &quot;error&quot;,
+          &quot;scrape_duration_ms&quot;,
+          &quot;navigation_attempts&quot;,
+          &quot;navigation_retries&quot;,
+          &quot;proxy_resolution_state&quot;,
+          &quot;session_input_state&quot;,
+          &quot;browser_locale&quot;,
+          &quot;navigation_retry_delays_seconds&quot;,
+          &quot;records_emitted&quot;,
+          &quot;input_accounting&quot;,
+          &quot;session_cookie_count&quot;,
+          &quot;session_cookie_expiry_state&quot;,
+          &quot;run_duration_ms&quot;,
+          &quot;proxy_used&quot;,
+          &quot;request_delay_seconds&quot;,
+          &quot;scrape_timestamp&quot;,
+          &quot;requested_result_types&quot;,
+          &quot;run_started_at&quot;,
+          &quot;run_finished_at&quot;,
+          &quot;source_pages_attempted&quot;,
+          &quot;content_type_counts&quot;,
+          &quot;access_state_counts&quot;,
+          &quot;relationship_collection_diagnostic&quot;,
+          &quot;manifest_version&quot;,
+          &quot;requested_output_fields&quot;,
+          &quot;max_concurrency&quot;,
+          &quot;navigation_attempts_total&quot;,
+          &quot;navigation_retries_total&quot;,
+          &quot;raw_evidence_retention_days&quot;,
+          &quot;max_raw_evidence_bytes&quot;,
+          &quot;redact_sensitive_query_params&quot;,
+          &quot;raw_html_redactions&quot;,
+          &quot;url_redactions&quot;,
+          &quot;date_interpretations&quot;,
+          &quot;canonical_url&quot;,
+          &quot;redirect_chain&quot;,
+          &quot;answer_count&quot;,
+          &quot;scroll_attempts&quot;,
+          &quot;scroll_state&quot;,
+          &quot;load_more_attempts&quot;,
+          &quot;load_more_clicks&quot;,
+          &quot;load_more_state&quot;,
+          &quot;raw_html_redaction_state&quot;,
+          &quot;url_redaction_state&quot;,
+          &quot;output_format&quot;,
+          &quot;output_projection&quot;,
+          &quot;answers&quot;,
+          &quot;comments&quot;,
+          &quot;nested_answer_count&quot;,
+          &quot;nested_answer_count_observed&quot;,
+          &quot;nested_comment_count&quot;,
+          &quot;nested_comment_count_observed&quot;,
+          &quot;nested_child_state&quot;,
+          &quot;nested_orphan_reason&quot;,
+          &quot;requested_depth&quot;,
+          &quot;observed_depth&quot;,
+          &quot;detail_expansion_state&quot;,
+          &quot;title&quot;,
+          &quot;url&quot;,
+          &quot;post_url&quot;,
+          &quot;post_title&quot;,
+          &quot;post_author_name&quot;,
+          &quot;post_author_url&quot;,
+          &quot;post_author_image_url&quot;,
+          &quot;post_author_id&quot;,
+          &quot;post_author_credentials&quot;,
+          &quot;post_author_is_verified&quot;,
+          &quot;post_author_is_anonymous&quot;,
+          &quot;post_body&quot;,
+          &quot;post_media_urls&quot;,
+          &quot;post_image_urls&quot;,
+          &quot;post_video_urls&quot;,
+          &quot;post_outbound_links&quot;,
+          &quot;question_media_urls&quot;,
+          &quot;question_author_name&quot;,
+          &quot;question_author_url&quot;,
+          &quot;question_author_image_url&quot;,
+          &quot;question_author_id&quot;,
+          &quot;question_author_is_verified&quot;,
+          &quot;question_author_is_anonymous&quot;,
+          &quot;question_author_credentials&quot;,
+          &quot;question_image_urls&quot;,
+          &quot;question_video_urls&quot;,
+          &quot;question_outbound_links&quot;,
+          &quot;post_created_at&quot;,
+          &quot;post_updated_at&quot;,
+          &quot;post_updated_age_days&quot;,
+          &quot;post_updated_age_state&quot;,
+          &quot;post_age_days&quot;,
+          &quot;post_age_state&quot;,
+          &quot;relationship&quot;,
+          &quot;record_id&quot;,
+          &quot;access_state&quot;,
+          &quot;from_record_id&quot;,
+          &quot;to_record_id&quot;,
+          &quot;from_id&quot;,
+          &quot;to_id&quot;,
+          &quot;to_name&quot;,
+          &quot;to_image_url&quot;,
+          &quot;node_image_url&quot;,
+          &quot;relationship_collection_key&quot;,
+          &quot;collection_total_text&quot;,
+          &quot;collection_total_value&quot;,
+          &quot;edge_evidence_field&quot;,
+          &quot;unresolved_reason&quot;,
+          &quot;source_query&quot;,
+          &quot;source_queries&quot;,
+          &quot;matched_input&quot;,
+          &quot;matched_input_kind&quot;,
+          &quot;source_observations&quot;,
+          &quot;source_observation_count&quot;,
+          &quot;question_url&quot;,
+          &quot;question_answer_count&quot;,
+          &quot;question_answer_count_value&quot;,
+          &quot;question_answer_count_scraped&quot;,
+          &quot;question_created_at&quot;,
+          &quot;question_age_days&quot;,
+          &quot;question_age_state&quot;,
+          &quot;question_updated_at&quot;,
+          &quot;last_answered_at&quot;,
+          &quot;last_answered_at_evidence&quot;,
+          &quot;answer_id&quot;,
+          &quot;answer_url&quot;,
+          &quot;answer_text&quot;,
+          &quot;answer_html&quot;,
+          &quot;answer_media_urls&quot;,
+          &quot;answer_image_urls&quot;,
+          &quot;answer_video_urls&quot;,
+          &quot;answer_outbound_links&quot;,
+          &quot;answer_translation_state&quot;,
+          &quot;answer_translation_label&quot;,
+          &quot;answer_original_url&quot;,
+          &quot;answer_is_anonymous&quot;,
+          &quot;answer_author_is_verified&quot;,
+          &quot;answer_updated_at&quot;,
+          &quot;answer_created_at&quot;,
+          &quot;answer_age_days&quot;,
+          &quot;answer_age_state&quot;,
+          &quot;answer_visibility&quot;,
+          &quot;answer_text_completeness&quot;,
+          &quot;answer_is_collapsed&quot;,
+          &quot;answer_is_quora_plus&quot;,
+          &quot;answer_is_top_labeled&quot;,
+          &quot;answer_rank_source&quot;,
+          &quot;answer_upvote_count&quot;,
+          &quot;answer_upvote_count_value&quot;,
+          &quot;answer_comment_count&quot;,
+          &quot;answer_comment_count_value&quot;,
+          &quot;answer_view_count&quot;,
+          &quot;answer_view_count_value&quot;,
+          &quot;answer_share_count&quot;,
+          &quot;answer_share_count_value&quot;,
+          &quot;reaction_breakdown&quot;,
+          &quot;is_ai_answer&quot;,
+          &quot;ai_label_text&quot;,
+          &quot;ai_label_source&quot;,
+          &quot;related_content&quot;,
+          &quot;related_content_count&quot;,
+          &quot;related_content_observed_count&quot;,
+          &quot;related_content_limit_reached&quot;,
+          &quot;answer_jsonld_type&quot;,
+          &quot;answer_rank&quot;,
+          &quot;answer_limit_reached&quot;,
+          &quot;edge_id&quot;,
+          &quot;from_url&quot;,
+          &quot;to_url&quot;,
+          &quot;comment_id&quot;,
+          &quot;comment_url&quot;,
+          &quot;comment_text&quot;,
+          &quot;comment_author_name&quot;,
+          &quot;comment_author_image_url&quot;,
+          &quot;comment_author_id&quot;,
+          &quot;comment_author_credentials&quot;,
+          &quot;comment_author_is_verified&quot;,
+          &quot;comment_is_anonymous&quot;,
+          &quot;comment_timestamp&quot;,
+          &quot;comment_created_at&quot;,
+          &quot;comment_age_days&quot;,
+          &quot;comment_age_state&quot;,
+          &quot;comment_visibility&quot;,
+          &quot;comment_upvote_count&quot;,
+          &quot;comment_depth&quot;,
+          &quot;comment_depth_limit_reached&quot;,
+          &quot;comment_items_observed_count&quot;,
+          &quot;comment_items_emitted_count&quot;,
+          &quot;comment_limit_reached&quot;,
+          &quot;comment_media_urls&quot;,
+          &quot;comment_image_urls&quot;,
+          &quot;comment_video_urls&quot;,
+          &quot;comment_outbound_links&quot;,
+          &quot;comment_collection_label&quot;,
+          &quot;comment_is_top_labeled&quot;,
+          &quot;comment_filter_top_only&quot;,
+          &quot;comment_filter_observed&quot;,
+          &quot;comment_filter_emitted&quot;,
+          &quot;comment_filter_unknown&quot;,
+          &quot;comment_rank&quot;,
+          &quot;comment_rank_source&quot;,
+          &quot;comment_sort_order&quot;,
+          &quot;comment_sort_observed&quot;,
+          &quot;comment_sort_fallback_count&quot;,
+          &quot;comment_reaction_count&quot;,
+          &quot;comment_reaction_count_value&quot;,
+          &quot;comment_reply_count&quot;,
+          &quot;comment_reply_path&quot;,
+          &quot;parent_comment_id&quot;,
+          &quot;parent_comment_url&quot;,
+          &quot;comment_is_reply&quot;,
+          &quot;comment_reaction_breakdown&quot;,
+          &quot;comment_upvote_count_value&quot;,
+          &quot;comment_reply_count_value&quot;,
+          &quot;profile_url&quot;,
+          &quot;profile_name&quot;,
+          &quot;profile_bio&quot;,
+          &quot;profile_image_url&quot;,
+          &quot;profile_jsonld_type&quot;,
+          &quot;profile_author_id&quot;,
+          &quot;profile_is_verified&quot;,
+          &quot;profile_is_restricted&quot;,
+          &quot;profile_snapshot_requested&quot;,
+          &quot;topic_url&quot;,
+          &quot;space_url&quot;,
+          &quot;feed_url&quot;,
+          &quot;feed_type&quot;,
+          &quot;feed_title&quot;,
+          &quot;feed_text&quot;,
+          &quot;feed_author_name&quot;,
+          &quot;feed_author_url&quot;,
+          &quot;feed_author_image_url&quot;,
+          &quot;feed_author_id&quot;,
+          &quot;feed_author_credentials&quot;,
+          &quot;feed_author_is_verified&quot;,
+          &quot;feed_author_is_anonymous&quot;,
+          &quot;feed_created_at&quot;,
+          &quot;feed_age_days&quot;,
+          &quot;feed_age_state&quot;,
+          &quot;media_urls&quot;,
+          &quot;image_urls&quot;,
+          &quot;video_urls&quot;,
+          &quot;outbound_links&quot;,
+          &quot;activity_url&quot;,
+          &quot;author_name&quot;,
+          &quot;author_url&quot;,
+          &quot;author_image_url&quot;,
+          &quot;author_id&quot;,
+          &quot;author_credentials&quot;,
+          &quot;topics&quot;,
+          &quot;topic_links&quot;,
+          &quot;created_at&quot;,
+          &quot;timestamp&quot;,
+          &quot;include_unresolved_edges&quot;,
+          &quot;include_field_evidence&quot;,
+          &quot;include_engagement_breakdown&quot;,
+          &quot;include_entity_graph&quot;,
+          &quot;profile_snapshot_state&quot;,
+          &quot;global_answer_cap_reached&quot;,
+          &quot;answers_observed_before_global_cap&quot;,
+          &quot;answers_suppressed_by_global_cap&quot;,
+          &quot;dedupe_mode&quot;,
+          &quot;duplicate_records_suppressed&quot;,
+          &quot;raw_html_bytes&quot;,
+          &quot;raw_html_returned_bytes&quot;,
+          &quot;raw_html_truncated&quot;,
+          &quot;raw_evidence_state&quot;,
+          &quot;raw_html&quot;,
+          &quot;raw_html_sha256&quot;,
+          &quot;max_items_per_source&quot;,
+          &quot;source_cap&quot;,
+          &quot;source_items_observed&quot;,
+          &quot;source_items_emitted&quot;,
+          &quot;source_cap_reached&quot;,
+          &quot;source_url&quot;,
+          &quot;from_content_type&quot;,
+          &quot;to_content_type&quot;,
+          &quot;edge_state&quot;,
+          &quot;requested_language&quot;,
+          &quot;max_answers_per_question&quot;,
+          &quot;max_answers_total&quot;
+        ]
+      }
+    }
+  }
+}
+</code></pre></details></section><section class="schema-section" id="key-value-schema"><h2>Key-value schema</h2><p>Published key-value store definitions, when provided by this build.</p><p>This definition is not present in the default published build. See the published README for available documentation.</p></section><section id="published-readme"><h2>Published README</h2><details><summary>Read the full published documentation</summary><h2 id="readme-quora-question-answer-relationship-dataset-builder">Quora Question, Answer &amp; Relationship Dataset Builder</h2>
+<p>Build a structured Quora dataset from direct links or native Quora search terms. Point it at question, answer, profile, Topic, Space, or Post URLs — or a search phrase — and it returns normalized rows for every entity it finds, with the question → answer → comment chain and author/topic links kept intact. Choose how deep to go, how the rows are shaped, and which relationship data (followers, upvoters, Space roles) to include.</p>
+<h2 id="readme-what-this-actor-does">What this actor does</h2>
+<ul>
+<li>Accepts question, answer, profile, Topic, Space, and Post URLs directly, or a plain Quora search phrase</li>
+<li>Walks the question → answer → comment chain and keeps the links between them (<code>entity_edge</code> rows), so you can rebuild the conversation tree</li>
+<li>Offers four output shapes via <code>outputFormat</code>: <code>normalized</code> (separate rows per entity, default), <code>nested</code> (answers grouped under their question, comments under their answer), <code>flat</code>, and <code>edges</code> (relationship rows plus any status rows)</li>
+<li>Optionally expands follower, following, upvoter, and Space-role relationships for a profile, question, answer, or Space, with a privacy gate for identity-revealing collections</li>
+<li>Optionally re-scrapes the same inputs later and flags each row as <code>new</code>, <code>changed</code>, <code>unchanged</code>, or <code>scope_mismatch</code> against a saved state store</li>
+<li>Can restrict the returned fields to a smaller allowlist (<code>outputFields</code>) while still protecting identity and status fields</li>
+<li>Reports a <code>status</code> row (rather than guessing) whenever a page is blocked, login-gated, or otherwise inaccessible, and a <code>run_manifest</code> row summarizing the whole run; both are in the default <code>resultTypes</code>, so removing them from that list removes them from the output</li>
+<li>Leaves empty content fields out of each row rather than filling them with a guess (a few bookkeeping fields, such as <code>url_redactions</code>, may still appear as empty lists)</li>
+</ul>
+<h2 id="readme-output-per-record">Output per record</h2>
+<p>Every row carries <code>content_type</code> (<code>question</code>, <code>answer</code>, <code>comment</code>, <code>profile</code>, <code>profile_activity</code>, <code>topic</code>, <code>topic_post</code>, <code>space</code>, <code>space_feed_item</code>, <code>entity_edge</code>, <code>relationship_collection</code>, <code>status</code>, or <code>run_manifest</code>), plus shared fields: <code>record_id</code>, <code>title</code>, <code>url</code>, <code>canonical_url</code>, <code>source_url</code>, <code>access_state</code>, <code>scrape_timestamp</code>, <code>requested_depth</code>, <code>observed_depth</code>, <code>detail_expansion_state</code>, <code>output_format</code>, <code>matched_input</code>, <code>matched_input_kind</code>, and (when search seeds were used) <code>source_query</code>/<code>source_queries</code>.</p>
+<p>Every row also carries run-context fields describing how it was collected: <code>source_observations</code>/<code>source_observation_count</code>, <code>redirect_chain</code>, <code>url_redaction_state</code>/<code>url_redactions</code>, <code>proxy_used</code>, <code>proxy_resolution_state</code>, <code>session_cookie_count</code>, <code>session_input_state</code>, <code>session_cookie_expiry_state</code>, <code>request_delay_seconds</code>, <code>browser_locale</code>, <code>requested_language</code>, <code>navigation_retries</code>/<code>navigation_retry_delays_seconds</code>, <code>parser_version</code> and <code>parser_strategy</code>. With <code>includeFieldEvidence</code> on (default), rows also get <code>field_sources</code> (where each value came from) and <code>fields_present</code>.</p>
+<p><code>access_state</code> is <code>public</code> for normal pages; other values include <code>login_required</code>, <code>cloudflare_challenge</code>, <code>not_found</code>, <code>removed</code>, <code>unavailable</code>, <code>quora_plus_or_gated</code>, <code>redirected_to_search</code>/<code>_topic</code>/<code>_space</code>, <code>unsupported_url</code> and <code>network_error</code>.</p>
+<p><strong>Question row</strong> — <code>question_url</code>, <code>question_answer_count</code> (label) / <code>question_answer_count_value</code> (parsed number) / <code>question_answer_count_scraped</code> (rows actually collected), <code>question_created_at</code>, <code>question_updated_at</code>, <code>question_age_days</code>/<code>question_age_state</code>, <code>last_answered_at</code> + <code>last_answered_at_evidence</code>, <code>question_author_name</code>/<code>_url</code>/<code>_image_url</code>/<code>_id</code>/<code>_is_verified</code>/<code>_is_anonymous</code>/<code>_credentials</code>, <code>question_image_urls</code>/<code>_video_urls</code>/<code>_outbound_links</code> (opt-in), <code>answer_count</code>, <code>answer_limit_reached</code>, <code>topics</code>, <code>topic_links</code>.</p>
+<p><strong>Answer row</strong> — <code>answer_id</code>, <code>answer_url</code>, <code>answer_text</code>, <code>answer_html</code> (opt-in), <code>answer_media_urls</code>/<code>_image_urls</code>/<code>_video_urls</code>/<code>_outbound_links</code> (opt-in), <code>answer_translation_state</code>/<code>_label</code>, <code>answer_original_url</code>, <code>answer_is_anonymous</code>, <code>answer_author_is_verified</code>, <code>answer_created_at</code>/<code>_updated_at</code>, <code>answer_age_days</code>/<code>_state</code>, <code>answer_visibility</code>, <code>answer_text_completeness</code>, <code>answer_is_collapsed</code>, <code>answer_is_quora_plus</code>, <code>answer_is_top_labeled</code>, <code>answer_rank</code>/<code>_rank_source</code>, <code>answer_upvote_count</code>/<code>_value</code>, <code>answer_comment_count</code>/<code>_value</code>, <code>answer_view_count</code>/<code>_value</code>, <code>answer_share_count</code>/<code>_value</code>, <code>reaction_breakdown</code> (opt-in), <code>is_ai_answer</code>/<code>ai_label_text</code>/<code>ai_label_source</code>, <code>related_content</code>/<code>_count</code>/<code>_observed_count</code>/<code>_limit_reached</code> (opt-in), <code>answer_jsonld_type</code>, <code>author_name</code>/<code>_url</code>/<code>_image_url</code>/<code>_id</code>/<code>_credentials</code>.</p>
+<p><strong>Comment row</strong> — <code>comment_id</code>, <code>comment_url</code>, <code>comment_text</code>, <code>comment_author_name</code>/<code>_image_url</code>/<code>_id</code>/<code>_credentials</code>/<code>_is_verified</code>, <code>comment_is_anonymous</code>, <code>comment_timestamp</code>/<code>_created_at</code>, <code>comment_age_days</code>/<code>_state</code>, <code>comment_visibility</code>, <code>comment_upvote_count</code>/<code>_value</code>, <code>comment_reaction_count</code>/<code>_value</code>, <code>comment_reply_count</code>/<code>_value</code>, <code>comment_reaction_breakdown</code>, <code>comment_media_urls</code>/<code>_image_urls</code>/<code>_video_urls</code>/<code>_outbound_links</code>, <code>comment_is_top_labeled</code>, <code>comment_rank</code>/<code>_rank_source</code>, <code>comment_sort_order</code>, <code>comment_depth</code>, <code>comment_depth_limit_reached</code>, <code>comment_is_reply</code>, <code>parent_comment_id</code>/<code>_url</code>, <code>comment_reply_path</code>.</p>
+<p><strong>Profile row</strong> — <code>profile_url</code>, <code>profile_name</code>, <code>profile_bio</code>, <code>profile_image_url</code>, <code>profile_author_id</code>, <code>profile_is_verified</code>, <code>profile_is_restricted</code>, <code>profile_snapshot_state</code>.</p>
+<p><strong>Profile-activity row</strong> — <code>activity_url</code>, <code>author_name</code>/<code>_url</code>/<code>_image_url</code>/<code>_id</code>/<code>_credentials</code>.</p>
+<p><strong>Topic row</strong> — <code>topic_url</code> plus the shared fields above.</p>
+<p><strong>Topic-Post row</strong> — <code>post_url</code>, <code>post_title</code>, <code>post_body</code>, <code>post_media_urls</code>/<code>_image_urls</code>/<code>_video_urls</code>/<code>_outbound_links</code> (opt-in), <code>post_author_name</code>/<code>_url</code>/<code>_image_url</code>/<code>_id</code>/<code>_credentials</code>/<code>_is_verified</code>/<code>_is_anonymous</code>, <code>post_created_at</code>/<code>_updated_at</code>, <code>post_age_days</code>/<code>_state</code>, <code>post_updated_age_days</code>/<code>_state</code>.</p>
+<p><strong>Space row</strong> — <code>space_url</code> plus the shared fields above.</p>
+<p><strong>Space feed-item row</strong> — <code>feed_url</code>, <code>feed_type</code>, <code>feed_title</code>, <code>feed_text</code> (opt-in), <code>feed_author_name</code>/<code>_url</code>/<code>_image_url</code>/<code>_id</code>/<code>_credentials</code>/<code>_is_verified</code>/<code>_is_anonymous</code>, <code>feed_created_at</code>, <code>feed_age_days</code>/<code>_state</code>, <code>media_urls</code>/<code>image_urls</code>/<code>video_urls</code>/<code>outbound_links</code>.</p>
+<p><strong>Relationship row (<code>entity_edge</code>)</strong> — <code>relationship</code>, <code>edge_id</code>, <code>from_record_id</code>/<code>_content_type</code>/<code>_url</code>/<code>_id</code>, <code>to_record_id</code>/<code>_content_type</code>/<code>_url</code>/<code>_id</code>/<code>_name</code>/<code>_image_url</code>, <code>node_image_url</code>, <code>edge_state</code>, <code>unresolved_reason</code>.</p>
+<p><strong>Relationship-count row (<code>relationship_collection</code>)</strong> — <code>relationship_collection_key</code>, <code>collection_total_text</code>, <code>collection_total_value</code>, <code>edge_evidence_field</code>.</p>
+<p><strong>Status row</strong> — <code>access_state</code>, <code>http_status</code>, <code>error</code>, <code>source_url</code>, and for pages that failed to load <code>final_url</code>, <code>scrape_duration_ms</code>, <code>navigation_attempts</code>, <code>navigation_retries</code>. Run-level status rows (<code>url: run://quora-dataset-builder</code>) report a state store that couldn't be read (<code>state_store_unavailable</code>) or state that wasn't saved because a source didn't finish (<code>state_store_uncommitted</code>).</p>
+<p><strong>Option-dependent fields</strong> — with a <code>stateStoreId</code>, entity rows add <code>event_type</code> (<code>new</code>/<code>changed</code>/<code>unchanged</code>/<code>scope_mismatch</code>), <code>state_snapshot_hash</code>, <code>previous_snapshot_hash</code>, <code>state_scope_fingerprint</code>, <code>state_store_state</code>, <code>only_new_items</code>, <code>include_unchanged</code>. With <code>includeRawEvidence</code>, page-level rows add <code>raw_html_sha256</code>, <code>raw_html_bytes</code>, <code>raw_evidence_state</code> and related size/redaction fields, plus <code>raw_html</code> when <code>includeHtml</code> is also on. In <code>nested</code> format, question rows carry <code>answers</code> arrays (each answer with its <code>comments</code>) and <code>nested_*</code> count fields. With <code>maxItemsPerSource</code> set, rows add <code>max_items_per_source</code> and per-source cap fields.</p>
+<p><strong>Run-manifest row</strong> — one per run, summarizing counts and the settings actually applied: <code>run_started_at</code>/<code>_finished_at</code>/<code>_duration_ms</code>, <code>records_emitted</code>, <code>source_pages_attempted</code>, <code>content_type_counts</code>, <code>access_state_counts</code>, <code>input_accounting</code>, <code>requested_result_types</code>, <code>requested_output_fields</code>, <code>dedupe_mode</code>, <code>duplicate_records_suppressed</code>, <code>relationship_collection_diagnostic</code>, and the per-run values of several of your own input settings (language, concurrency, caps) echoed back for reconciliation.</p>
+<h2 id="readme-trimming-rows-depth-and-sessions">Trimming rows, depth and sessions</h2>
+<ul>
+<li><strong>Field allowlist.</strong> <code>outputFields</code> keeps only the fields you name, applied after extraction; an empty list returns the full row. Nested projection is supported with bounded dotted paths such as <code>answers.answer_text</code> or <code>answers.comments.comment_text</code> in <code>nested</code> output, and child identity/URL fields stay in place. <code>content_type</code>, identity, access/status, depth, timing and parser fields are always protected so a trimmed row can still be traced. <code>output_projection</code> on each row reads <code>full</code> or <code>selected</code>, and the run manifest records the requested fields. <code>includeFieldEvidence</code> toggles the <code>field_sources</code>/<code>fields_present</code> maps.</li>
+<li><strong>Depth.</strong> <code>scrapeDepth: &quot;detail&quot;</code> (default) runs the capped traversal; <code>overview</code> emits page-level summaries without answer, comment, profile-activity or Space-feed expansion. Every row reports <code>requested_depth</code>, <code>observed_depth</code> and <code>detail_expansion_state</code>. <code>bounded</code> means a configured cap was reached, not that Quora's full history was collected, and blocked pages report <code>observed_depth: &quot;status&quot;</code>.</li>
+<li><strong>Author credentials.</strong> <code>question_author_credentials</code>, <code>comment_author_credentials</code>, <code>post_author_credentials</code>, <code>feed_author_credentials</code> and <code>author_credentials</code> are kept only when a credential or tagline is visibly shown in that author's own region of the page. Ambiguous text is dropped, and none of these fields verifies expertise.</li>
+<li><strong>Sessions.</strong> Supply structured <code>cookies</code> or the secret <code>cookieString</code> header (<code>name=value; name2=value2</code>). Structured cookies win on duplicate names, malformed pairs are ignored, and the raw header is never emitted or logged. Cookies only open content your account can already see; they are not a bypass guarantee.</li>
+<li><strong>Exact field names.</strong> Every output field this actor can emit is listed under <a href="#readme-output-per-record">Output per record</a> above.</li>
+</ul>
+<h2 id="readme-fixture-backed-examples-synthetic">Fixture-backed examples (synthetic)</h2>
+<p>Synthetic, trimmed rows showing the output shape; they are not live Quora data. The first is a resolved question-to-topic edge from a run with <code>maxItemsPerSource</code> set, the second is the status row for a page that showed a Cloudflare challenge.</p>
+<pre><code class="language-json">{&quot;content_type&quot;:&quot;entity_edge&quot;,&quot;edge_id&quot;:&quot;fixture-edge-1&quot;,&quot;relationship&quot;:&quot;question_has_topic&quot;,&quot;from_content_type&quot;:&quot;question&quot;,&quot;to_content_type&quot;:&quot;topic&quot;,&quot;edge_state&quot;:&quot;resolved&quot;,&quot;edge_evidence_field&quot;:&quot;topic_links&quot;,&quot;access_state&quot;:&quot;public&quot;,&quot;source_cap&quot;:50,&quot;source_items_observed&quot;:12,&quot;source_items_emitted&quot;:12,&quot;source_cap_reached&quot;:false,&quot;field_sources&quot;:{&quot;relationship&quot;:&quot;derived_relationships&quot;,&quot;edge_state&quot;:&quot;derived_relationships&quot;,&quot;access_state&quot;:&quot;runtime_or_access&quot;}}
+</code></pre>
+<pre><code class="language-json">{&quot;content_type&quot;:&quot;status&quot;,&quot;access_state&quot;:&quot;cloudflare_challenge&quot;,&quot;http_status&quot;:403,&quot;observed_depth&quot;:&quot;status&quot;,&quot;detail_expansion_state&quot;:&quot;blocked&quot;,&quot;field_sources&quot;:{&quot;access_state&quot;:&quot;runtime_or_access&quot;,&quot;http_status&quot;:&quot;runtime_or_access&quot;}}
+</code></pre>
+<h2 id="readme-complete-schema-input-inventory">Complete schema input inventory</h2>
+<p>This actor has a large, modular input schema — most fields are optional toggles that only matter for a specific record type or feature.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>startUrls</code></td>
+<td>array</td>
+<td><code>[]</code></td>
+<td>Question, answer, profile, Topic, Space, or Quora search URLs</td>
+</tr>
+<tr>
+<td><code>searchQueries</code></td>
+<td>array</td>
+<td><code>[]</code></td>
+<td>Plain Quora search terms</td>
+</tr>
+<tr>
+<td><code>questionUrls</code> / <code>answerUrls</code> / <code>topicUrls</code> / <code>spaceUrls</code> / <code>profileUrls</code> / <code>postUrls</code></td>
+<td>array</td>
+<td><code>[]</code></td>
+<td>Typed seed lists — use these instead of <code>startUrls</code> when you want unambiguous per-type accounting</td>
+</tr>
+<tr>
+<td><code>scrapeDepth</code></td>
+<td>string</td>
+<td><code>detail</code></td>
+<td><code>overview</code> (page-level summary only: no answers, comments, scrolling or load-more) or <code>detail</code> (full traversal)</td>
+</tr>
+<tr>
+<td><code>resultTypes</code></td>
+<td>array</td>
+<td><code>[&quot;question&quot;, &quot;answer&quot;, &quot;comment&quot;, &quot;profile&quot;, &quot;profile_activity&quot;, &quot;topic&quot;, &quot;topic_post&quot;, &quot;space&quot;, &quot;space_feed_item&quot;, &quot;entity_edge&quot;, &quot;status&quot;, &quot;run_manifest&quot;]</code></td>
+<td>Which <code>content_type</code> values to include in the output</td>
+</tr>
+<tr>
+<td><code>outputFormat</code></td>
+<td>string</td>
+<td><code>normalized</code></td>
+<td><code>normalized</code> / <code>nested</code> / <code>flat</code> / <code>edges</code></td>
+</tr>
+<tr>
+<td><code>dedupeMode</code></td>
+<td>string</td>
+<td><code>canonical</code></td>
+<td><code>canonical</code> (merge duplicate entities by canonical URL) or <code>none</code></td>
+</tr>
+<tr>
+<td><code>onlyNewItems</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>With <code>stateStoreId</code>, suppress rows unchanged since the last run</td>
+</tr>
+<tr>
+<td><code>includeUnchanged</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td>Keep unchanged rows when <code>onlyNewItems</code> is on</td>
+</tr>
+<tr>
+<td><code>stateStoreId</code></td>
+<td>string</td>
+<td><code>&quot;&quot;</code></td>
+<td>Apify key-value store name for incremental re-scraping; required when <code>onlyNewItems</code> is on</td>
+</tr>
+<tr>
+<td><code>outputFields</code></td>
+<td>array</td>
+<td><code>[]</code></td>
+<td>Optional field allowlist for smaller rows; identity/status fields are always kept</td>
+</tr>
+<tr>
+<td><code>includeFieldEvidence</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td>Include <code>field_sources</code>/<code>fields_present</code> on each row</td>
+</tr>
+<tr>
+<td><code>includeUnresolvedEdges</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td>Keep relationship rows whose target couldn't be matched</td>
+</tr>
+<tr>
+<td><code>relationshipTypes</code></td>
+<td>array</td>
+<td><code>[]</code></td>
+<td>Allowlist of relationship collections to expand (follower, following, want-answers, upvoter, Space role, etc.); identity-revealing types are rejected unless <code>includeSensitiveRelationshipData</code> and the matching per-family opt-in are both on</td>
+</tr>
+<tr>
+<td><code>includeProfileEdges</code> / <code>includeQuestionFollowerEdges</code> / <code>includeAnswerUpvoterEdges</code> / <code>includeSpaceRoleEdges</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Per-family opt-ins for the relationship types above</td>
+</tr>
+<tr>
+<td><code>includeSensitiveRelationshipData</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Required alongside the identity-revealing relationship opt-ins (the run stops with an input error otherwise, e.g. for <code>includeAnswerUpvoterEdges</code>)</td>
+</tr>
+<tr>
+<td><code>includeTargetMetadata</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Keep the visible name/image of each relationship target</td>
+</tr>
+<tr>
+<td><code>includeRelationshipCounts</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Emit privacy-preserving member-count rows without identities; also add <code>relationship_collection</code> to <code>resultTypes</code>, which the default list doesn't include</td>
+</tr>
+<tr>
+<td><code>includeSpaceContentEdges</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td>Keep Space ↔ post/question membership edges</td>
+</tr>
+<tr>
+<td><code>maxRelationshipItemsPerCollection</code></td>
+<td>integer</td>
+<td><code>500</code></td>
+<td>Cap per relationship collection</td>
+</tr>
+<tr>
+<td><code>maxQuestions</code></td>
+<td>integer</td>
+<td><code>25</code></td>
+<td>How many question links discovered from search results, Topics, Spaces or profiles get queued, on top of your own seed URLs (max 1,000)</td>
+</tr>
+<tr>
+<td><code>maxAnswersPerQuestion</code></td>
+<td>integer</td>
+<td><code>10</code></td>
+<td>Maximum answers kept per question (max 500)</td>
+</tr>
+<tr>
+<td><code>maxAnswers</code></td>
+<td>integer</td>
+<td><code>0</code></td>
+<td>Global answer cap across the whole run (<code>0</code> = no cap)</td>
+</tr>
+<tr>
+<td><code>includeQuestion</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td>Keep question entities in the output</td>
+</tr>
+<tr>
+<td><code>includeAuthor</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td>Keep author/profile entities in the output</td>
+</tr>
+<tr>
+<td><code>includeTopics</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td>Keep topic entities in the output</td>
+</tr>
+<tr>
+<td><code>includeSpaces</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Keep Space and Space feed-item rows in the output; switched on automatically when <code>spaceUrls</code> is used</td>
+</tr>
+<tr>
+<td><code>includeComments</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Keep comment entities in the output (also needs <code>maxCommentsPerAnswer</code> above 0; turned on automatically by <code>includeReplyGraph</code>)</td>
+</tr>
+<tr>
+<td><code>includeAuthorSnapshot</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Fetch a bounded profile snapshot for each visible author link</td>
+</tr>
+<tr>
+<td><code>includeEngagementBreakdown</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td>Include per-reaction breakdowns alongside aggregate counts</td>
+</tr>
+<tr>
+<td><code>includeRelatedContent</code> / <code>maxRelatedContent</code></td>
+<td>boolean / integer</td>
+<td><code>false</code> / <code>20</code></td>
+<td>Collect an answer's &quot;related&quot; links, capped per answer</td>
+</tr>
+<tr>
+<td><code>topCommentsOnly</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Keep only comments explicitly labeled Top/Most helpful</td>
+</tr>
+<tr>
+<td><code>commentSortOrder</code></td>
+<td>string</td>
+<td><code>observed</code></td>
+<td><code>observed</code> / <code>upvotes_desc</code> / <code>reactions_desc</code> / <code>replies_desc</code> / <code>newest</code></td>
+</tr>
+<tr>
+<td><code>includeReplyGraph</code> / <code>maxCommentDepth</code></td>
+<td>boolean / integer</td>
+<td><code>false</code> / <code>20</code></td>
+<td>Keep nested comment replies, bounded by depth</td>
+</tr>
+<tr>
+<td><code>includeMedia</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Include image/video URL fields where available</td>
+</tr>
+<tr>
+<td><code>includeFeedText</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Include visible text on Space feed cards</td>
+</tr>
+<tr>
+<td><code>includeOutboundLinks</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Include non-Quora links found on a page</td>
+</tr>
+<tr>
+<td><code>includeEntityGraph</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Emit relationship rows even when <code>entity_edge</code> isn't in <code>resultTypes</code></td>
+</tr>
+<tr>
+<td><code>maxCommentsPerAnswer</code></td>
+<td>integer</td>
+<td><code>0</code></td>
+<td>Comments kept per answer; at <code>0</code> no comments are collected even when <code>includeComments</code> is on</td>
+</tr>
+<tr>
+<td><code>maxItems</code></td>
+<td>integer</td>
+<td><code>0</code></td>
+<td>Cap on entity/status rows before graph/manifest rows (<code>0</code> = no cap, max 5,000)</td>
+</tr>
+<tr>
+<td><code>maxGraphEdges</code></td>
+<td>integer</td>
+<td><code>5000</code></td>
+<td>Cap on relationship rows</td>
+</tr>
+<tr>
+<td><code>maxScrollAttempts</code></td>
+<td>integer</td>
+<td><code>5</code></td>
+<td>Scroll attempts per page while loading more content</td>
+</tr>
+<tr>
+<td><code>maxLoadMoreAttempts</code></td>
+<td>integer</td>
+<td><code>0</code></td>
+<td>&quot;Load more&quot; button clicks per page</td>
+</tr>
+<tr>
+<td><code>includeRawEvidence</code> / <code>includeHtml</code> / <code>maxHtmlBytes</code></td>
+<td>boolean / boolean / integer</td>
+<td><code>false</code> / <code>false</code> / <code>100000</code></td>
+<td>Attach a document hash and optionally bounded raw HTML for auditing</td>
+</tr>
+<tr>
+<td><code>requestDelay</code></td>
+<td>number</td>
+<td><code>1</code></td>
+<td>Delay in seconds between page batches</td>
+</tr>
+<tr>
+<td><code>maxConcurrency</code></td>
+<td>integer</td>
+<td><code>1</code></td>
+<td>Pages processed in parallel (values above 3 are treated as 3)</td>
+</tr>
+<tr>
+<td><code>maxNavigationRetries</code></td>
+<td>integer</td>
+<td><code>2</code></td>
+<td>Retries after a failed page load (max 3)</td>
+</tr>
+<tr>
+<td><code>language</code></td>
+<td>string</td>
+<td><code>auto</code></td>
+<td>Browser language hint (<code>en</code>, <code>es</code>, <code>fr</code>, …)</td>
+</tr>
+<tr>
+<td><code>cookies</code> / <code>cookieString</code></td>
+<td>array / string</td>
+<td>–</td>
+<td>Optional session cookies for content you're authorized to view</td>
+</tr>
+<tr>
+<td><code>proxyConfiguration</code></td>
+<td>object</td>
+<td>residential proxy</td>
+<td>Proxy routing; residential is used by default, and leaving this empty or turning the proxy off still uses residential. Only an explicit proxy group or your own proxy URLs override it</td>
+</tr>
+<tr>
+<td><code>redactSensitiveQueryParams</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td>Strip credential-like query values from emitted URLs</td>
+</tr>
+<tr>
+<td><code>rawEvidenceRetentionDays</code> / <code>maxRawEvidenceBytes</code></td>
+<td>integer</td>
+<td><code>30</code> / <code>100000</code></td>
+<td>Retention label (at most 30 days) and size bound reported for raw HTML evidence, when enabled</td>
+</tr>
+<tr>
+<td><code>maxItemsPerSource</code></td>
+<td>integer</td>
+<td><code>0</code></td>
+<td>Cap on records from each individual source URL/query (<code>0</code> = no cap)</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="readme-example-inputs">Example inputs</h2>
+<h3 id="readme-example-full-detail-for-a-question">Example: full detail for a question</h3>
+<pre><code class="language-json">{
+  &quot;questionUrls&quot;: [{ &quot;url&quot;: &quot;https://www.quora.com/What-is-the-best-way-to-learn-Python&quot; }],
+  &quot;maxAnswersPerQuestion&quot;: 20,
+  &quot;includeComments&quot;: true,
+  &quot;maxCommentsPerAnswer&quot;: 10
+}
+</code></pre>
+<h3 id="readme-example-search-seeds-compact-nested-output">Example: search seeds, compact nested output</h3>
+<pre><code class="language-json">{
+  &quot;searchQueries&quot;: [&quot;machine learning career advice&quot;],
+  &quot;maxQuestions&quot;: 10,
+  &quot;outputFormat&quot;: &quot;nested&quot;,
+  &quot;maxAnswersPerQuestion&quot;: 5
+}
+</code></pre>
+<h3 id="readme-example-a-space-s-content-and-follower-count">Example: a Space's content and follower count</h3>
+<pre><code class="language-json">{
+  &quot;spaceUrls&quot;: [{ &quot;url&quot;: &quot;https://www.quora.com/q/example-space&quot; }],
+  &quot;resultTypes&quot;: [&quot;space&quot;, &quot;space_feed_item&quot;, &quot;relationship_collection&quot;, &quot;run_manifest&quot;],
+  &quot;includeRelationshipCounts&quot;: true,
+  &quot;relationshipTypes&quot;: [&quot;space_has_contributor&quot;]
+}
+</code></pre>
+<h3 id="readme-example-incremental-re-scrape-of-the-same-question">Example: incremental re-scrape of the same question</h3>
+<pre><code class="language-json">{
+  &quot;questionUrls&quot;: [{ &quot;url&quot;: &quot;https://www.quora.com/What-is-the-best-way-to-learn-Python&quot; }],
+  &quot;onlyNewItems&quot;: true,
+  &quot;includeUnchanged&quot;: false,
+  &quot;stateStoreId&quot;: &quot;python-question-watch&quot;
+}
+</code></pre>
+<h2 id="readme-use-cases">Use cases</h2>
+<ul>
+<li><strong>Content research</strong> — pull full question-answer-comment threads on a topic for analysis</li>
+<li><strong>Community monitoring</strong> — re-scrape the same questions on a schedule and keep only rows flagged <code>new</code>/<code>changed</code></li>
+<li><strong>Knowledge graph building</strong> — use <code>outputFormat: &quot;edges&quot;</code> to load the question/answer/topic relationship graph into a graph database</li>
+<li><strong>Influencer and expert tracking</strong> — follow a profile's answers and, with relationship counts enabled, its follower totals</li>
+<li><strong>Space analysis</strong> — collect a Quora Space's feed and contributor structure</li>
+</ul>
+<h2 id="readme-faq">FAQ</h2>
+<p><strong>Do I need a Quora account?</strong>
+No. Public Quora pages are read without login. Supplying <code>cookies</code>/<code>cookieString</code> loads pages as your own logged-in session, so only content your account can already see becomes available.</p>
+<p><strong>Why did I get a <code>status</code> row instead of question/answer data?</strong>
+Quora showed a login wall, Cloudflare challenge, or a removed/redirected page for that URL. The actor reports this honestly as a <code>status</code> row instead of guessing at data that wasn't there.</p>
+<p><strong>Why do I sometimes get fewer answers than <code>maxAnswersPerQuestion</code>?</strong>
+Quora's logged-out view can cap how many answers it renders per question, independent of your settings — especially on very high-traffic questions. This is a real ceiling on the source page, not a bug in the actor.</p>
+<p><strong>What's the difference between the four <code>outputFormat</code> values?</strong>
+<code>normalized</code> keeps every entity as its own row (the default). <code>nested</code> groups each question's answers (and each answer's comments) underneath it; rows without a matching parent stay at the top level. <code>flat</code> is like <code>normalized</code>, except that answer rows also get <code>question_title</code> and comment rows get <code>answer_url</code>. <code>edges</code> returns the relationship rows between entities plus any status rows, so a blocked source still shows up.</p>
+<p><strong>Can I get a Quora account's followers or who they follow?</strong>
+Only the Followers list currently returns identities (via <code>includeProfileEdges</code> + <code>includeSensitiveRelationshipData</code>); other relationship types (Following, Upvoters, Space roles) currently return accurate counts but not individual identities yet.</p>
+<p><strong>What does the incremental re-scrape (<code>onlyNewItems</code>) actually compare?</strong>
+It hashes each entity's content and compares it to the previous run stored under <code>stateStoreId</code>, tagging each row <code>new</code>, <code>changed</code>, <code>unchanged</code>, or <code>scope_mismatch</code> (the previous run used different settings). Rows are only dropped when <code>onlyNewItems</code> is on and <code>includeUnchanged</code> is off. Status and manifest rows are never dropped by this setting. If any requested source didn't finish, the new state isn't saved and a <code>state_store_uncommitted</code> status row tells you so.</p>
+<p><strong>Why are some text/media fields missing even with <code>includeMedia</code>/<code>includeHtml</code> on?</strong>
+Those fields are only populated when Quora's page actually renders that content for the entity in question — the toggles request the data, they don't guarantee every entity has it.</p>
+<p><strong>Is this affiliated with Quora?</strong>
+No. This is an independent, third-party actor that reads Quora's public pages; it isn't affiliated with or endorsed by Quora, Inc.</p>
+</details></section><section id="python-quickstart"><h2>Python quickstart</h2><p>Use a schema-derived input and the Python standard library to start a run. An Apify account and token are required for execution.</p><p><a href="/apify-actor-examples/guides/uAivkcIOWnHGsAnKT/">Open the step-by-step Python guide →</a></p></section><p class="source-note">Source build <code>YTcgD6ei9hJ972wXO</code>. Documentation is regenerated from the default published build; private drafts are not included.</p></article></div></main><footer class="footer"><strong>Nimbryxo Studio</strong><div class="footer-links"><a href="/apify-actor-examples/topics/">Topics</a><a href="/apify-actor-examples/sources/">Documentation sources</a><a href="https://apify.com/nimbryxo-studio">Apify</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></div></footer></body></html>

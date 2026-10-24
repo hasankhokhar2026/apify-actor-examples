@@ -1,9 +1,9 @@
 {
-  "description": "Scrape Google Maps Popular Times (hourly busy hours for every day), live busyness vs the usual level, and open/closed status for places given by Google Maps URL or Google Place ID. No API key or login needed.",
+  "description": "Scrape Google Maps place data (name, address, category, phone, website, rating, open status, coordinates, local time) and, when Google serves it to an anonymous page, Popular Times (hourly busy hours for every day) with live busyness vs the usual level. Google often serves signed-out sessions a limited view without Popular Times; those places are still returned as basic records (dataStatus=limited_view). No API key or login needed.",
   "properties": {
     "includeFailedPlaces": {
       "default": false,
-      "description": "Also output one record per place that could not be retrieved, with the reason and number of attempts. Recommended for monitoring lists so every input appears in the results.",
+      "description": "Also output one record per place for which no place data could be resolved, with the reason and number of attempts. A limited view that still resolves to a place is a normal basic record, not a failure. Recommended for monitoring lists so every input appears in the results.",
       "prefill": false,
       "title": "Include unavailable places in the output",
       "type": "boolean"
@@ -150,6 +150,6 @@
   },
   "required": [],
   "schemaVersion": 1,
-  "title": "Google Maps Popular Times & Live Busyness Scraper",
+  "title": "Google Maps Place Data & Popular Times (When Available)",
   "type": "object"
 }

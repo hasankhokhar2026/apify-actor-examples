@@ -18,7 +18,7 @@ Scrape **Amazon** products and discovery lists across 21 country marketplaces. G
 - `price` (`value`, `currency`, `display`), `listPrice`, `currency`, `discountPercent`, `onSale`, `savingsPercentage`
 - `coupon` (`text`, `percent`, `amount`, `type`), `dealBadge`, `badges[]`
 - `stars`, `reviewsCount`, `starsBreakdown`, `ratingHistogram`, `customersSay`
-- `topReviews[]` - inline public snippets (`author`, `rating`, `title`, `date`, `text`, `verified`)
+- `topReviews[]` - inline public snippets (`author`, `rating`, `title`, `date`, `text`, `verified`, `variant`, `helpful`)
 - `boughtPastMonth` (`text`, `value`)
 - `bestsellerRanks[]` (`rank`, `category`), `category`, `categories[]`
 - `inStock`, `inStockText`, `availability`, `delivery`, `fastestDelivery`, `locationText`

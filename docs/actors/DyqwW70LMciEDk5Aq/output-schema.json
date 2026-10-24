@@ -1,6 +1,6 @@
 {
   "actorOutputSchemaVersion": 1,
-  "description": "One record per Google Maps place: hourly Popular Times for each day, live busyness vs the usual level, Google's live label, open/closed listing status, place identity and listing details, the newest reviews with closure mentions, run-to-run monitoring signals and, when enabled, records for places that could not be retrieved.",
+  "description": "One record per Google Maps place: place identity and listing details, open/closed status, coordinates and local time, hourly Popular Times and live busyness when Google serves them, the newest reviews with closure mentions, run-to-run monitoring signals and, when enabled, records for places that could not be retrieved. Google often serves signed-out sessions a limited view without Popular Times; those places are returned as basic records with dataStatus=limited_view, popularTimesAvailable=false and limitedViewReason=google_signin_required, never with invented busyness.",
   "properties": {
     "closureSignals": {
       "description": "Per place: listing status, live reading status and live/usual ratio, review recency, closure mentions in the newest reviews and run-to-run monitoring signals.",
@@ -15,11 +15,11 @@
       "type": "string"
     },
     "popularTimes": {
-      "description": "All records: hourly busyness per day, live and usual busyness, open status and listing status for every place.",
+      "description": "All records: place identity, listing details, open status, coordinates and local time; hourly busyness per day and live/usual busyness when available; and an explicit dataStatus/limitedViewReason when Google serves its limited view.",
       "template": "{{links.apiDefaultDatasetUrl}}/items",
-      "title": "Popular Times records",
+      "title": "Place data and Popular Times records",
       "type": "string"
     }
   },
-  "title": "Google Maps Popular Times & Live Busyness Scraper Output"
+  "title": "Google Maps Place Data & Popular Times (When Available) Output"
 }

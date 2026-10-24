@@ -1,0 +1,723 @@
+{
+  "properties": {
+    "answerUrls": {
+      "default": [],
+      "description": "Explicit answer-page seeds. Parent question joins are emitted only from observed evidence.",
+      "editor": "requestListSources",
+      "items": {
+        "properties": {
+          "url": {
+            "description": "A Quora URL.",
+            "title": "URL",
+            "type": "string"
+          }
+        },
+        "required": [
+          "url"
+        ],
+        "type": "object"
+      },
+      "title": "Answer URLs",
+      "type": "array"
+    },
+    "commentSortOrder": {
+      "default": "observed",
+      "description": "Order builder comment rows by observed order or an explicitly typed metric/timestamp. Unknown selected metrics remain in stable fallback order and are counted.",
+      "enum": [
+        "observed",
+        "upvotes_desc",
+        "reactions_desc",
+        "replies_desc",
+        "newest"
+      ],
+      "title": "Comment Sort Order",
+      "type": "string"
+    },
+    "cookieString": {
+      "description": "Optional browser-exported name=value; name2=value2 header. Parsed locally into authorized session cookies; the raw header is never emitted or logged.",
+      "editor": "textfield",
+      "isSecret": true,
+      "title": "Optional Cookie Header String",
+      "type": "string"
+    },
+    "cookies": {
+      "description": "Optional secret cookies for content the caller is authorized to access.",
+      "editor": "json",
+      "isSecret": true,
+      "items": {
+        "type": "object"
+      },
+      "prefill": [],
+      "title": "Authorized Cookies",
+      "type": "array"
+    },
+    "dedupeMode": {
+      "default": "canonical",
+      "description": "canonical suppresses overlapping entity rows by stable ID or canonical URL (default); none preserves every observed non-status row. The run manifest reports duplicate_records_suppressed.",
+      "enum": [
+        "canonical",
+        "none"
+      ],
+      "prefill": "canonical",
+      "title": "Deduplication Mode",
+      "type": "string"
+    },
+    "includeAnswerUpvoterEdges": {
+      "default": false,
+      "description": "High-sensitivity opt-in for explicitly labeled answer upvoter identities; requires includeSensitiveRelationshipData=true.",
+      "prefill": false,
+      "title": "Include Answer Upvoter Collections",
+      "type": "boolean"
+    },
+    "includeAuthor": {
+      "default": true,
+      "description": "Retain visible author fields and profile/profile-activity rows. When false, author fields and author rows are removed from the emitted shape; no contact enrichment is performed.",
+      "prefill": true,
+      "title": "Include Author Rows",
+      "type": "boolean"
+    },
+    "includeAuthorSnapshot": {
+      "default": false,
+      "description": "Opt into bounded public profile snapshots for visible author profile links; profile access/status is separate from answer/comment success and never includes contact enrichment.",
+      "prefill": false,
+      "title": "Include Author Snapshot",
+      "type": "boolean"
+    },
+    "includeComments": {
+      "default": false,
+      "description": "Enable bounded visible comment output when the per-answer cap is positive.",
+      "prefill": false,
+      "title": "Include Comment Rows",
+      "type": "boolean"
+    },
+    "includeEngagementBreakdown": {
+      "default": true,
+      "description": "Retain explicitly labeled per-comment reaction breakdowns alongside aggregate reaction labels. Raw labels are preserved and typed companions are added only when the localized number is unambiguous.",
+      "prefill": true,
+      "title": "Include Engagement Breakdown",
+      "type": "boolean"
+    },
+    "includeEntityGraph": {
+      "default": false,
+      "description": "Emit explicit relationship rows even when entity_edge is not listed in resultTypes.",
+      "prefill": false,
+      "title": "Include Entity Graph",
+      "type": "boolean"
+    },
+    "includeFeedText": {
+      "default": false,
+      "description": "Request bounded visible text from explicitly linked Space feed cards; page-level text and complete feed history are excluded.",
+      "prefill": false,
+      "title": "Include Space Feed Text",
+      "type": "boolean"
+    },
+    "includeFieldEvidence": {
+      "default": true,
+      "description": "Include field_sources and fields_present maps. Disable only when a smaller payload is required; semantic values and protected access fields remain unchanged.",
+      "prefill": true,
+      "title": "Include Field Evidence",
+      "type": "boolean"
+    },
+    "includeHtml": {
+      "default": false,
+      "description": "Include bounded raw-document HTML when raw evidence is enabled and bounded answer-card HTML when answer cards are extracted.",
+      "prefill": false,
+      "title": "Include HTML",
+      "type": "boolean"
+    },
+    "includeMedia": {
+      "default": false,
+      "description": "Request explicitly rendered media URL fields scoped to question roots, answer/comment nodes, and Topic post cards where the page exposes them.",
+      "prefill": false,
+      "title": "Include Media URLs",
+      "type": "boolean"
+    },
+    "includeOutboundLinks": {
+      "default": false,
+      "description": "Request visible non-Quora links scoped to question roots, answer/comment nodes, and Topic post cards; Quora links, comment permalinks, and links outside the owning scope are excluded.",
+      "prefill": false,
+      "title": "Include Outbound Links",
+      "type": "boolean"
+    },
+    "includeProfileEdges": {
+      "default": false,
+      "description": "Enable explicitly labeled profile follower/following/followed-question/Space/Topic relationship collections. This does not prove a complete list.",
+      "prefill": false,
+      "title": "Include Profile Relationship Collections",
+      "type": "boolean"
+    },
+    "includeQuestion": {
+      "default": true,
+      "description": "Retain normalized question parent rows when selected in resultTypes.",
+      "prefill": true,
+      "title": "Include Question Rows",
+      "type": "boolean"
+    },
+    "includeQuestionFollowerEdges": {
+      "default": false,
+      "description": "Enable explicitly labeled question follower or want-answer collections. Sensitive identity rows also require the privacy gate.",
+      "prefill": false,
+      "title": "Include Question Follower Collections",
+      "type": "boolean"
+    },
+    "includeRawEvidence": {
+      "default": false,
+      "description": "Add bounded document hash and optional HTML bytes to each page-level entity row.",
+      "prefill": false,
+      "title": "Include Raw Evidence",
+      "type": "boolean"
+    },
+    "includeRelatedContent": {
+      "default": false,
+      "description": "Retain links inside an explicitly labeled related/attached region scoped to answer cards; unlabeled navigation and neighboring regions are excluded.",
+      "prefill": false,
+      "title": "Include Answer Related Content",
+      "type": "boolean"
+    },
+    "includeRelationshipCounts": {
+      "default": false,
+      "description": "Emit privacy-preserving relationship_collection rows with the real observed total (collection_total_text/collection_total_value) but no target identities. Requires relationship_collection in resultTypes. Observed totals are not always a server-confirmed count.",
+      "prefill": false,
+      "title": "Include Relationship Collection Counts",
+      "type": "boolean"
+    },
+    "includeReplyGraph": {
+      "default": false,
+      "description": "Enable bounded visible nested comment replies and explicit parent paths; this also enables comment rows. Hidden or unexpanded replies are not inferred.",
+      "prefill": false,
+      "title": "Include Reply Graph",
+      "type": "boolean"
+    },
+    "includeSensitiveRelationshipData": {
+      "default": false,
+      "description": "Explicit privacy gate required for follower, want-answer, and upvoter identity edges.",
+      "prefill": false,
+      "title": "Sensitive Relationship Data",
+      "type": "boolean"
+    },
+    "includeSpaceContentEdges": {
+      "default": true,
+      "description": "Retain bounded explicit Space post/question membership edges; this never claims a complete Space inventory.",
+      "prefill": true,
+      "title": "Include Space Content Edges",
+      "type": "boolean"
+    },
+    "includeSpaceRoleEdges": {
+      "default": false,
+      "description": "Enable explicitly labeled Space contributor, moderator, and admin collections.",
+      "prefill": false,
+      "title": "Include Space Role Edges",
+      "type": "boolean"
+    },
+    "includeSpaces": {
+      "default": false,
+      "description": "Retain Space rows and feed items where the source route exposes them.",
+      "prefill": false,
+      "title": "Include Space Rows",
+      "type": "boolean"
+    },
+    "includeTargetMetadata": {
+      "default": false,
+      "description": "Retain explicitly visible target link text and image (to_name, to_image_url) on relationship edges. URLs remain evidence; no target navigation or recursive target scraping is performed.",
+      "prefill": false,
+      "title": "Include Explicit Target Metadata",
+      "type": "boolean"
+    },
+    "includeTopics": {
+      "default": true,
+      "description": "Retain explicit topic links and topic relationships where observed.",
+      "prefill": true,
+      "title": "Include Topic Links",
+      "type": "boolean"
+    },
+    "includeUnchanged": {
+      "default": true,
+      "description": "Retain unchanged semantic entities when incremental state is enabled; output projection does not alter comparison hashes.",
+      "prefill": true,
+      "title": "Include Unchanged Items",
+      "type": "boolean"
+    },
+    "includeUnresolvedEdges": {
+      "default": true,
+      "description": "Retain relationship rows whose endpoint URL was not explicitly observed, with unresolved_reason. Disabling this suppresses only those edge rows and does not imply complete relationships.",
+      "prefill": true,
+      "title": "Include Unresolved Edges",
+      "type": "boolean"
+    },
+    "language": {
+      "default": "auto",
+      "description": "Browser language hint. Short language codes and supported regional aliases are accepted and normalize to the short code; auto keeps the actor default. This does not translate content or prove access.",
+      "enum": [
+        "auto",
+        "en",
+        "es",
+        "fr",
+        "de",
+        "pt",
+        "it",
+        "ja",
+        "ko",
+        "hi",
+        "id",
+        "nl",
+        "pl",
+        "tr",
+        "vi",
+        "zh",
+        "ru",
+        "en-US",
+        "en-GB",
+        "de-DE",
+        "fr-FR",
+        "es-ES",
+        "pt-BR",
+        "it-IT",
+        "ja-JP",
+        "ko-KR",
+        "hi-IN",
+        "tr-TR",
+        "zh-CN",
+        "zh-TW",
+        "ru-RU"
+      ],
+      "title": "Language",
+      "type": "string"
+    },
+    "maxAnswers": {
+      "default": 0,
+      "description": "Global answer-row cap applied after per-question caps. Zero means no configured global answer cap.",
+      "maximum": 50000,
+      "minimum": 0,
+      "title": "Maximum Answers Total",
+      "type": "integer"
+    },
+    "maxAnswersPerQuestion": {
+      "default": 10,
+      "description": "Maximum visible answer rows retained from each question page.",
+      "maximum": 500,
+      "minimum": 0,
+      "prefill": 5,
+      "title": "Maximum Answers per Question",
+      "type": "integer"
+    },
+    "maxCommentDepth": {
+      "default": 20,
+      "description": "Maximum visible nested reply depth when includeReplyGraph is enabled; reaching the bound is not complete history.",
+      "maximum": 100,
+      "minimum": 0,
+      "prefill": 20,
+      "title": "Maximum Comment Depth",
+      "type": "integer"
+    },
+    "maxCommentsPerAnswer": {
+      "default": 0,
+      "description": "Maximum visible comment rows retained per answer when enabled.",
+      "maximum": 500,
+      "minimum": 0,
+      "prefill": 0,
+      "title": "Maximum Comments per Answer",
+      "type": "integer"
+    },
+    "maxConcurrency": {
+      "default": 1,
+      "description": "Maximum independent seed pages processed concurrently in deterministic batches. Each seed owns a page; discovered seeds merge in batch order.",
+      "maximum": 3,
+      "minimum": 1,
+      "title": "Maximum Concurrent Seeds",
+      "type": "integer"
+    },
+    "maxGraphEdges": {
+      "default": 5000,
+      "description": "Independent cap for deterministic entity_edge rows.",
+      "maximum": 50000,
+      "minimum": 0,
+      "prefill": 1000,
+      "title": "Maximum Graph Edges",
+      "type": "integer"
+    },
+    "maxHtmlBytes": {
+      "default": 100000,
+      "description": "Maximum UTF-8 bytes retained for optional raw HTML evidence.",
+      "maximum": 2000000,
+      "minimum": 1000,
+      "title": "Maximum HTML Bytes",
+      "type": "integer"
+    },
+    "maxItems": {
+      "default": 0,
+      "description": "Cap for normalized entity/status rows before graph and manifest rows.",
+      "maximum": 5000,
+      "minimum": 0,
+      "title": "Maximum Entity Rows",
+      "type": "integer"
+    },
+    "maxItemsPerSource": {
+      "default": 0,
+      "description": "Maximum semantic records emitted from each direct URL, query, or typed source. Status and run-manifest rows are preserved. Use 0 for no per-source cap.",
+      "maximum": 5000,
+      "minimum": 0,
+      "prefill": 0,
+      "title": "Maximum Items Per Source",
+      "type": "integer"
+    },
+    "maxLoadMoreAttempts": {
+      "default": 0,
+      "description": "Bound exact visible continuation-control clicks on direct question, answer, topic, and Space collection pages independently from scrolling. Search seeds fan out through their discovered child URLs and retain their own source accounting.",
+      "maximum": 20,
+      "minimum": 0,
+      "title": "Maximum Load-more Attempts",
+      "type": "integer"
+    },
+    "maxNavigationRetries": {
+      "default": 2,
+      "description": "Bounded retries after navigation exceptions (e.g. a transient proxy-tunnel handshake failure); exponential backoff is reported in navigation_retry_delays_seconds. Defaults to 2 for reliability.",
+      "maximum": 3,
+      "minimum": 0,
+      "title": "Maximum Navigation Retries",
+      "type": "integer"
+    },
+    "maxQuestions": {
+      "default": 25,
+      "description": "Maximum question seeds or discovered question pages to process.",
+      "maximum": 1000,
+      "minimum": 0,
+      "prefill": 10,
+      "title": "Maximum Questions",
+      "type": "integer"
+    },
+    "maxRawEvidenceBytes": {
+      "default": 100000,
+      "description": "Hard upper byte cap for returned raw HTML after the maxHtmlBytes cap.",
+      "maximum": 2000000,
+      "minimum": 1000,
+      "title": "Maximum Raw Evidence Bytes",
+      "type": "integer"
+    },
+    "maxRelatedContent": {
+      "default": 20,
+      "description": "Bound eligible related-content links per answer when enabled; zero emits no related-content items.",
+      "maximum": 100,
+      "minimum": 0,
+      "title": "Maximum Answer Related Content",
+      "type": "integer"
+    },
+    "maxRelationshipItemsPerCollection": {
+      "default": 500,
+      "description": "Bound explicit links emitted from each labeled relationship collection. Zero emits no relationship-collection edges and never means an empty collection.",
+      "maximum": 5000,
+      "minimum": 0,
+      "title": "Maximum Relationship Items per Collection",
+      "type": "integer"
+    },
+    "maxScrollAttempts": {
+      "default": 5,
+      "description": "Bounded lazy-render scroll budget applied during detail traversal; scroll attempts and termination state are reported.",
+      "maximum": 20,
+      "minimum": 0,
+      "title": "Maximum Scroll Attempts",
+      "type": "integer"
+    },
+    "onlyNewItems": {
+      "default": false,
+      "description": "Annotate canonical entity rows with new/changed/unchanged/scope_mismatch state and suppress only unchanged semantic rows when includeUnchanged is false. Requires stateStoreId; status, graph, and manifest rows remain visible.",
+      "prefill": false,
+      "title": "Only New or Changed Items",
+      "type": "boolean"
+    },
+    "outputFields": {
+      "default": [],
+      "description": "Optional allowlist for compact rows, including bounded dotted paths through nested collections (for example answers.answer_text, comments.comment_text, feed.feed_text, or contributors.contributor_name where applicable). Child identity/URL fields and the actor identity, access/status, source, traversal, graph, filter, and parser-envelope fields remain protected.",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 3000,
+      "title": "Output Fields",
+      "type": "array"
+    },
+    "outputFormat": {
+      "default": "normalized",
+      "description": "Projection after one canonical extraction path. Nested groups emitted answers and comments under explicit question/answer parents; flat keeps entity rows with parent context; edges emits explicit edge rows plus status rows.",
+      "enum": [
+        "normalized",
+        "nested",
+        "flat",
+        "edges"
+      ],
+      "prefill": "normalized",
+      "title": "Output Format",
+      "type": "string"
+    },
+    "postUrls": {
+      "default": [],
+      "description": "Explicit standalone Post-page seeds. Only post routes are accepted; emitted with the same topic_post field family topic-discovered posts use (post_title, post_body, post_author_*).",
+      "editor": "requestListSources",
+      "items": {
+        "properties": {
+          "url": {
+            "description": "A Quora URL.",
+            "title": "URL",
+            "type": "string"
+          }
+        },
+        "required": [
+          "url"
+        ],
+        "type": "object"
+      },
+      "title": "Post URLs",
+      "type": "array"
+    },
+    "profileUrls": {
+      "default": [],
+      "description": "Explicit profile-page seeds. Only profile routes are accepted; emitted as normalized profile rows exactly like a profile route discovered from startUrls.",
+      "editor": "requestListSources",
+      "items": {
+        "properties": {
+          "url": {
+            "description": "A Quora URL.",
+            "title": "URL",
+            "type": "string"
+          }
+        },
+        "required": [
+          "url"
+        ],
+        "type": "object"
+      },
+      "title": "Profile URLs",
+      "type": "array"
+    },
+    "proxyConfiguration": {
+      "default": {
+        "apifyProxyGroups": [
+          "RESIDENTIAL"
+        ],
+        "useApifyProxy": true
+      },
+      "description": "Apify proxy routing. Quora's anti-bot layer blocks the free Datacenter/Automatic tier on roughly half of all real requests (cloud-verified), so this actor always routes through RESIDENTIAL proxies for reliable results regardless of what is selected here — leave this on the default Residential selection unless you need to supply your own proxy URLs.",
+      "editor": "proxy",
+      "prefill": {
+        "apifyProxyGroups": [
+          "RESIDENTIAL"
+        ],
+        "useApifyProxy": true
+      },
+      "title": "Proxy Configuration",
+      "type": "object"
+    },
+    "questionUrls": {
+      "default": [],
+      "description": "Explicit question-page seeds. Only question routes are accepted.",
+      "editor": "requestListSources",
+      "items": {
+        "properties": {
+          "url": {
+            "description": "A Quora URL.",
+            "title": "URL",
+            "type": "string"
+          }
+        },
+        "required": [
+          "url"
+        ],
+        "type": "object"
+      },
+      "title": "Question URLs",
+      "type": "array"
+    },
+    "rawEvidenceRetentionDays": {
+      "default": 30,
+      "description": "When zero, suppress raw_html snapshots while retaining hash, size, and redaction diagnostics. Positive values permit bounded HTML for the requested run; external Apify dataset/run retention still applies.",
+      "maximum": 30,
+      "minimum": 0,
+      "title": "Raw Evidence Retention Days",
+      "type": "integer"
+    },
+    "redactSensitiveQueryParams": {
+      "default": true,
+      "description": "Redact narrow credential-like query parameter values in emitted URLs, graph endpoints, redirect chains, and raw HTML. The original document hash remains based on the captured document.",
+      "prefill": true,
+      "title": "Redact Sensitive URL Query Values",
+      "type": "boolean"
+    },
+    "relationshipTypes": {
+      "default": [],
+      "description": "Explicit relationship-type allowlist for the newly ported follower/following/want-answers/upvoter/space-role relationship collections. Empty leaves the existing always-on content-membership/authorship edges untouched (question_has_topic, answer_authored_by, comment_belongs_to_answer, profile_has_activity, space_has_feed_item, etc.); this allowlist only gates the additional collections below. Sensitive follower/want-answer/upvoter types also require includeSensitiveRelationshipData and their matching collection opt-in.",
+      "editor": "select",
+      "items": {
+        "enum": [
+          "profile_follows_profile",
+          "profile_followed_by_profile",
+          "profile_follows_question",
+          "profile_follows_space",
+          "profile_follows_topic",
+          "profile_has_expertise",
+          "question_followed_by_profile",
+          "question_wants_answers_from_profile",
+          "answer_upvoted_by_profile",
+          "space_followed_by_profile",
+          "space_has_contributor",
+          "space_has_moderator",
+          "space_has_admin",
+          "space_contains_post",
+          "space_contains_question",
+          "space_contains_unanswered_question",
+          "profile_authored_answer",
+          "profile_authored_question",
+          "profile_authored_post",
+          "question_has_topic",
+          "question_has_answer",
+          "answer_belongs_to_question",
+          "answer_authored_by_profile",
+          "comment_belongs_to_answer",
+          "comment_reply_to_comment",
+          "comment_authored_by_profile",
+          "post_authored_by_profile",
+          "post_in_space",
+          "profile_has_activity",
+          "space_has_feed_item"
+        ],
+        "type": "string"
+      },
+      "title": "Relationship Types",
+      "type": "array"
+    },
+    "requestDelay": {
+      "default": 1,
+      "description": "Delay between page batches in seconds; this is not an anti-bot bypass guarantee.",
+      "maximum": 30,
+      "minimum": 0,
+      "title": "Request Delay",
+      "type": "number"
+    },
+    "resultTypes": {
+      "default": [
+        "question",
+        "answer",
+        "comment",
+        "profile",
+        "profile_activity",
+        "topic",
+        "topic_post",
+        "space",
+        "space_feed_item",
+        "entity_edge",
+        "status",
+        "run_manifest"
+      ],
+      "description": "Select normalized entities, explicit graph relationships, relationship-collection counts, status rows, and the final run manifest.",
+      "editor": "select",
+      "items": {
+        "enum": [
+          "question",
+          "answer",
+          "comment",
+          "profile",
+          "profile_activity",
+          "topic",
+          "topic_post",
+          "space",
+          "space_feed_item",
+          "entity_edge",
+          "relationship_collection",
+          "status",
+          "run_manifest"
+        ],
+        "type": "string"
+      },
+      "title": "Result Types",
+      "type": "array"
+    },
+    "scrapeDepth": {
+      "default": "detail",
+      "description": "Overview emits page-level summaries without answer/comment/activity/feed expansion; detail preserves the current bounded traversal.",
+      "enum": [
+        "overview",
+        "detail"
+      ],
+      "prefill": "detail",
+      "title": "Scrape Depth",
+      "type": "string"
+    },
+    "searchQueries": {
+      "default": [],
+      "description": "Native Quora search seeds. Search cards are followed only when their visible URLs are supported.",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "title": "Search Queries",
+      "type": "array"
+    },
+    "spaceUrls": {
+      "default": [],
+      "description": "Explicit Space-page seeds for bounded visible feed discovery.",
+      "editor": "requestListSources",
+      "items": {
+        "properties": {
+          "url": {
+            "description": "A Quora URL.",
+            "title": "URL",
+            "type": "string"
+          }
+        },
+        "required": [
+          "url"
+        ],
+        "type": "object"
+      },
+      "title": "Space URLs",
+      "type": "array"
+    },
+    "startUrls": {
+      "default": [],
+      "description": "Question, answer, profile, topic, Space, or native search URLs.",
+      "editor": "requestListSources",
+      "prefill": [
+        {
+          "url": "https://www.quora.com/What-is-the-meaning-of-life"
+        }
+      ],
+      "title": "Quora URLs",
+      "type": "array"
+    },
+    "stateStoreId": {
+      "default": "",
+      "description": "Apify key-value store for canonical entity snapshots. Required when onlyNewItems is enabled; never store cookies or credentials here.",
+      "editor": "textfield",
+      "title": "Incremental State Store ID",
+      "type": "string"
+    },
+    "topCommentsOnly": {
+      "default": false,
+      "description": "Retain only comments with an explicit visible Top/Most helpful/Popular comments label. Unknown comments are excluded and counted; votes and position are not used as top evidence.",
+      "prefill": false,
+      "title": "Top-Labeled Comments Only",
+      "type": "boolean"
+    },
+    "topicUrls": {
+      "default": [],
+      "description": "Explicit Topic-page seeds for bounded visible question discovery.",
+      "editor": "requestListSources",
+      "items": {
+        "properties": {
+          "url": {
+            "description": "A Quora URL.",
+            "title": "URL",
+            "type": "string"
+          }
+        },
+        "required": [
+          "url"
+        ],
+        "type": "object"
+      },
+      "title": "Topic URLs",
+      "type": "array"
+    }
+  },
+  "schemaVersion": 1,
+  "title": "Quora Dataset Builder Input",
+  "type": "object"
+}

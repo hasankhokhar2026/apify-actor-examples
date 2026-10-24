@@ -40,6 +40,10 @@ Listing modes (`search`, `byCategory`) return the identity, price, stock, rating
 - `likes`, `dislikes`, `isPopular`
 - `recordType`, `scrapedAt`
 
+## Output per error record (`recordType: "error"`)
+
+Invalid or unavailable product IDs in `productDetails` mode produce an error row instead of being dropped. Error rows carry `errorType` (`invalid_input`), `productId`, `message`, `mode`, `sourceUrl`, `retryable`, `cityId`, `cityName`, `regionId` and `scrapedAt`, and never count toward `maxItems`.
+
 ## Input
 
 | Field | Type | Default | Description |

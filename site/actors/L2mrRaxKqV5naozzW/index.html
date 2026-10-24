@@ -408,12 +408,12 @@
   &quot;title&quot;: &quot;M.Video Scraper Input&quot;,
   &quot;type&quot;: &quot;object&quot;
 }
-</code></pre></details></section><section class="schema-section" id="output-schema"><h2>Output schema</h2><p>Published result links and storage locations. This schema is not an exhaustive contract for every field in a dataset record.</p><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>products</code></td><td>string</td><td>optional</td><td>Dataset containing scraped M.Video products (recordType=product) and customer reviews (recordType=review).</td></tr></tbody></table></div><p><a href="output-schema.json">Download the published output schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+</code></pre></details></section><section class="schema-section" id="output-schema"><h2>Output schema</h2><p>Published result links and storage locations. This schema is not an exhaustive contract for every field in a dataset record.</p><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>products</code></td><td>string</td><td>optional</td><td>Dataset containing scraped M.Video products (recordType=product), customer reviews (recordType=review), and invalid-input error rows (recordType=error).</td></tr></tbody></table></div><p><a href="output-schema.json">Download the published output schema</a></p><details><summary>View complete JSON</summary><pre><code>{
   &quot;actorOutputSchemaVersion&quot;: 1,
   &quot;description&quot;: &quot;mvideo.ru product records with price, stock, rating, specifications, images, seller and store availability, plus standalone review records from reviews mode.&quot;,
   &quot;properties&quot;: {
     &quot;products&quot;: {
-      &quot;description&quot;: &quot;Dataset containing scraped M.Video products (recordType=product) and customer reviews (recordType=review).&quot;,
+      &quot;description&quot;: &quot;Dataset containing scraped M.Video products (recordType=product), customer reviews (recordType=review), and invalid-input error rows (recordType=error).&quot;,
       &quot;template&quot;: &quot;{{links.apiDefaultDatasetUrl}}/items&quot;,
       &quot;title&quot;: &quot;M.Video products and reviews&quot;,
       &quot;type&quot;: &quot;string&quot;
@@ -485,6 +485,8 @@
 <li><code>likes</code>, <code>dislikes</code>, <code>isPopular</code></li>
 <li><code>recordType</code>, <code>scrapedAt</code></li>
 </ul>
+<h2 id="readme-output-per-error-record-recordtype-error">Output per error record (<code>recordType: &quot;error&quot;</code>)</h2>
+<p>Invalid or unavailable product IDs in <code>productDetails</code> mode produce an error row instead of being dropped. Error rows carry <code>errorType</code> (<code>invalid_input</code>), <code>productId</code>, <code>message</code>, <code>mode</code>, <code>sourceUrl</code>, <code>retryable</code>, <code>cityId</code>, <code>cityName</code>, <code>regionId</code> and <code>scrapedAt</code>, and never count toward <code>maxItems</code>.</p>
 <h2 id="readme-input">Input</h2>
 <div class="table-wrap"><table>
 <thead>
@@ -691,4 +693,4 @@
 <p><strong>Why did a brand or seller filter stop the run?</strong> Filter facets are resolved from the live response. If a requested brand, seller, condition or parallel-import facet is not present for that query or category, the actor stops with a clear message rather than silently returning unfiltered results. Remove that filter or try a broader query/category.</p>
 <p><strong>How fresh is the data?</strong> Every run reads current catalog, price, stock and review data directly from mvideo.ru.</p>
 <p><strong>Is this actor affiliated with mvideo.ru?</strong> No. It is an independent, third-party actor that reads publicly reachable product data. It is not affiliated with, endorsed by, or operated by M.Video.</p>
-</details></section><section id="python-quickstart"><h2>Python quickstart</h2><p>Use a schema-derived input and the Python standard library to start a run. An Apify account and token are required for execution.</p><p><a href="/apify-actor-examples/guides/L2mrRaxKqV5naozzW/">Open the step-by-step Python guide →</a></p></section><p class="source-note">Source build <code>M6ZvVJdvAdGBu9AFk</code>. Documentation is regenerated from the default published build; private drafts are not included.</p></article></div></main><footer class="footer"><strong>Nimbryxo Studio</strong><div class="footer-links"><a href="/apify-actor-examples/topics/">Topics</a><a href="/apify-actor-examples/sources/">Documentation sources</a><a href="https://apify.com/nimbryxo-studio">Apify</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></div></footer></body></html>
+</details></section><section id="python-quickstart"><h2>Python quickstart</h2><p>Use a schema-derived input and the Python standard library to start a run. An Apify account and token are required for execution.</p><p><a href="/apify-actor-examples/guides/L2mrRaxKqV5naozzW/">Open the step-by-step Python guide →</a></p></section><p class="source-note">Source build <code>PKTIXhzs7ROGYFfPO</code>. Documentation is regenerated from the default published build; private drafts are not included.</p></article></div></main><footer class="footer"><strong>Nimbryxo Studio</strong><div class="footer-links"><a href="/apify-actor-examples/topics/">Topics</a><a href="/apify-actor-examples/sources/">Documentation sources</a><a href="https://apify.com/nimbryxo-studio">Apify</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></div></footer></body></html>
