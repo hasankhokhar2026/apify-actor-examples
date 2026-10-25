@@ -1,0 +1,93 @@
+{
+  "description": "Scrape TikTok posts by URL or ID. Extract video metadata, engagement counts, author info, hashtags, music, and more.",
+  "properties": {
+    "includeAuthorStats": {
+      "default": true,
+      "description": "Include author follower/following/heart/video counts in the author object.",
+      "prefill": true,
+      "title": "Include Author Stats",
+      "type": "boolean"
+    },
+    "includeContents": {
+      "default": false,
+      "description": "Include contents array (segment-level text breakdown) from video-detail.",
+      "prefill": false,
+      "title": "Include Contents",
+      "type": "boolean"
+    },
+    "includeEffectStickers": {
+      "default": false,
+      "description": "Include effectStickers and stickersOnItem arrays from video-detail.",
+      "prefill": false,
+      "title": "Include Effect Stickers",
+      "type": "boolean"
+    },
+    "includeHashtags": {
+      "default": true,
+      "description": "Include hashtags array extracted from textExtra.",
+      "prefill": true,
+      "title": "Include Hashtags",
+      "type": "boolean"
+    },
+    "includeItemControl": {
+      "default": false,
+      "description": "Include item_control object with can_comment, can_repost, can_share flags.",
+      "prefill": false,
+      "title": "Include Item Control",
+      "type": "boolean"
+    },
+    "includeMediaUrls": {
+      "default": true,
+      "description": "Include signed video/cover/music play URLs in output. These URLs expire within ~24 hours.",
+      "prefill": true,
+      "title": "Include Media URLs",
+      "type": "boolean"
+    },
+    "includeMentions": {
+      "default": true,
+      "description": "Include @mentions extracted from textExtra with start/end offsets.",
+      "prefill": true,
+      "title": "Include Mentions",
+      "type": "boolean"
+    },
+    "includeSubtitles": {
+      "default": false,
+      "description": "Include subtitleInfos, bitrateInfo, and volumeInfo arrays (requires video-detail interception).",
+      "prefill": false,
+      "title": "Include Subtitles",
+      "type": "boolean"
+    },
+    "postIds": {
+      "description": "TikTok post IDs as strings (15–20 digit numbers). Alternative to postUrls.",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "title": "Post IDs",
+      "type": "array"
+    },
+    "postUrls": {
+      "description": "List of TikTok post URLs to scrape. Accepts standard /@user/video/ID format.",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "prefill": [
+        "https://www.tiktok.com/@khaby.lame/video/7574844184952081686"
+      ],
+      "title": "Post URLs",
+      "type": "array"
+    },
+    "validateMediaUrls": {
+      "default": false,
+      "description": "Probe each video URL with a HEAD request to verify it is accessible. Adds latency per post.",
+      "prefill": false,
+      "title": "Validate Media URLs",
+      "type": "boolean"
+    }
+  },
+  "required": [],
+  "schemaVersion": 1,
+  "title": "TikTok Post Scraper Input",
+  "type": "object"
+}

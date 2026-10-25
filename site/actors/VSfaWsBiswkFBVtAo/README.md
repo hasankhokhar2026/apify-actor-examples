@@ -1,0 +1,134 @@
+# TikTok Post & Slideshow Detail Scraper
+
+Hand this actor a TikTok video or photo-carousel link — or just the numeric post ID — and it returns the full post record: engagement numbers, the creator's profile snapshot at scrape time, the sound used, every hashtag and @mention, and the signed URLs needed to view or download the media. No TikTok login or cookies required.
+
+## What this actor does
+
+- Accepts standard TikTok post URLs (`/@user/video/ID` or `/@user/photo/ID`), share and embed links that contain the post ID, and/or raw numeric post IDs in the same run; duplicates are scraped once
+- Returns engagement counts at full precision, so viral posts with billions of plays or likes don't overflow into negative numbers
+- Captures a snapshot of the author's profile (handle, display name, bio, verification, follower/following/heart/video counts)
+- Resolves the sound used on the post, including its title, artist, and copyright status
+- Separates hashtags and @mentions out of the caption, each with its own identifiers
+- Empty fields are omitted from each record rather than returned as null or blank
+
+## Output per post
+
+- `postId` — unique TikTok post ID
+- `postUrl` — canonical post URL
+- `postType` — `video` or `slideshow`
+- `caption` — full post caption text
+- `textLanguage` — detected language code of the caption
+- `createTime` — Unix timestamp of publication
+- `createdAt` — ISO 8601 publication date
+- `locationCreated` — creator-set location tag, when present
+- `viewerRegion` — inferred viewer region code
+- `playCount`, `likeCount`, `commentCount`, `shareCount`, `collectCount`, `repostCount` — engagement counts
+- `isAd`, `isAigc`, `isECVideo` — paid-ad, AI-generated-content, and e-commerce flags
+- `stitchEnabled`, `duetEnabled`, `shareEnabled` — creator-controlled interaction permissions
+- `commentStatus` — comment permission level (0=all, 1=friends, 2=none)
+- `privateItem`, `forFriend`, `originalItem` — visibility/origin flags
+- `diversificationLabels`, `channelTags`, `warnInfo` — TikTok's own content category/warning labels, when present
+- `poi` — tagged location (restaurant, landmark, etc.), when present
+- `AIGCDescription`, `adLabelVersion` — AI-content disclosure text and ad-label version, when TikTok sets them
+- `author.id`, `author.secUid` — author's TikTok IDs
+- `author.username`, `author.displayName`, `author.bio` — author profile text
+- `author.verified`, `author.privateAccount` — author account flags
+- `author.roomId` — non-empty when the author is currently livestreaming
+- `author.avatarUrl` — author avatar image URL
+- `author.followerCount`, `author.followingCount`, `author.heartCount`, `author.videoCount` — author stats snapshot
+- `music.id`, `music.title`, `music.authorName`, `music.album`, `music.original`, `music.duration`, `music.shootDuration` — sound details
+- `music.isCopyrighted`, `music.isCommerceMusic`, `music.isUnlimitedMusic`, `music.isPrivate` — sound licensing/visibility flags
+- `music.dspLinks` — links to the song on streaming services, when TikTok provides them
+- `music.playUrl`, `music.coverUrl` — signed audio URLs
+- `video.width`, `video.height`, `video.duration`, `video.ratio`, `video.definition`, `video.bitrate`, `video.codecType`, `video.format`, `video.size`, `video.videoQuality` — video technical metadata
+- `video.playUrl`, `video.downloadAddr`, `video.cover`, `video.originCover`, `video.dynamicCover` — signed video/cover URLs
+- `video.subtitleInfos`, `video.bitrateInfo`, `video.volumeInfo` — subtitle/quality tracks, only when `includeSubtitles` is on
+- `images` — array of slideshow images (for `postType: "slideshow"`), each with `ordinal` (0-based position), `width`, `height` and `urlList`
+- `mediaUrlExpiresAt` — ISO 8601 timestamp when the signed media URLs expire
+- `hashtags` — array of `{id, name, isCommerce}` objects
+- `mentions` — array of `{username, start, end, awemeId}` objects marking caption offsets (`awemeId` when TikTok supplies it)
+- `mediaUrlAccessible` — `true`/`false` result of checking the video play URL, only when `validateMediaUrls` is on
+- `item_control`, `contents`, `effectStickers`, `stickersOnItem` — raw TikTok fields, only when the matching input toggle is on
+
+## Input
+
+| Field | Type | Default | Description |
+|---|---|---|---|
+| `postUrls` | array | – | TikTok post URLs (`/@user/video/ID` or `/@user/photo/ID`). |
+| `postIds` | array | – | Numeric post IDs (15–20 digits) as an alternative to `postUrls`. |
+| `includeMediaUrls` | boolean | `true` | Include signed video, cover, and music URLs (and `mediaUrlExpiresAt`) in the output. Slideshow `images` URLs are always included. |
+| `validateMediaUrls` | boolean | `false` | Check whether the video play URL answers at scrape time and add the result as `mediaUrlAccessible`. |
+| `includeAuthorStats` | boolean | `true` | Include follower/following/heart/video counts in the author object. |
+| `includeSubtitles` | boolean | `false` | Include `subtitleInfos`, `bitrateInfo`, and `volumeInfo` on the video object. |
+| `includeHashtags` | boolean | `true` | Include the `hashtags` array extracted from the caption. |
+| `includeMentions` | boolean | `true` | Include the `mentions` array extracted from the caption. |
+| `includeEffectStickers` | boolean | `false` | Include `effectStickers` and `stickersOnItem` arrays. |
+| `includeItemControl` | boolean | `false` | Include the `item_control` object (`can_comment`, `can_repost`, `can_share` flags). |
+| `includeContents` | boolean | `false` | Include the `contents` array — a segment-level breakdown of the caption text. |
+
+### Example: scrape a single video post
+
+```json
+{
+  "postUrls": ["https://www.tiktok.com/@khaby.lame/video/7574844184952081686"],
+  "includeMediaUrls": true,
+  "includeAuthorStats": true,
+  "includeHashtags": true,
+  "includeMentions": true
+}
+```
+
+### Example: scrape multiple posts by ID, skip media URLs
+
+```json
+{
+  "postIds": ["7574844184952081686", "7640880319159094559"],
+  "includeMediaUrls": false,
+  "includeAuthorStats": true
+}
+```
+
+### Example: scrape a photo carousel (slideshow) post
+
+```json
+{
+  "postUrls": ["https://www.tiktok.com/@natgeo/photo/7650496998889573645"],
+  "includeMediaUrls": true,
+  "includeAuthorStats": true
+}
+```
+
+## Use cases
+
+- **Influencer marketing** — pull post-level metrics, author stats, and sound details for campaign reporting
+- **Trend research** — track engagement velocity on specific posts to spot momentum before it peaks
+- **Competitive benchmarking** — compare your own posts against a competitor's using the same engagement fields
+- **Media archiving** — grab signed video, cover, and slideshow image URLs for a moderation or archival workflow
+- **Partner vetting** — check a creator's post for ad/AIGC flags and interaction settings before a brand deal
+- **Academic datasets** — assemble structured TikTok post metadata for social-media research
+
+## FAQ
+
+**Do I need a TikTok account or cookies?**
+No. The actor reads TikTok's public post pages; no login is required.
+
+**How long do the signed media URLs stay valid?**
+Typically around 24 hours. `mediaUrlExpiresAt` tells you the exact expiry so you know when to re-scrape or download.
+
+**What's the difference between `postUrls` and `postIds`?**
+They identify the same posts two ways — a full URL or the raw numeric ID. You can mix both in one run.
+
+**Does this handle slideshow (photo carousel) posts?**
+Yes. Carousel posts are returned with `postType: "slideshow"` and their images are listed in the `images` array instead of `video`.
+
+**What does `validateMediaUrls` actually check?**
+It requests the post's video play URL once and records whether it answered in `mediaUrlAccessible`. The URL is returned either way; cover, music and slideshow URLs aren't checked. This adds some time per post.
+
+**Are counts on very viral posts accurate?**
+Yes. Some of TikTok's count fields wrap around to negative numbers past roughly 2 billion; the actor reads the full-precision counts instead, so posts with billions of plays come back correctly.
+
+**Can I scrape a private or deleted post?**
+No. Private and removed posts aren't publicly viewable, so those IDs/URLs are skipped and produce no row. Inputs that can't be read as a post URL or a 15–20 digit ID are skipped too.
+
+**Is this affiliated with TikTok?**
+No. This is an independent, third-party actor that reads TikTok's publicly viewable post pages.

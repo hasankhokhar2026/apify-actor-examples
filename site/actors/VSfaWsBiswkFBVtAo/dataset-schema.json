@@ -1,0 +1,520 @@
+{
+  "actorSpecification": 1,
+  "fields": {
+    "AIGCDescription": {
+      "description": "Description for AI-generated content label",
+      "title": "AIGC Description",
+      "type": "string"
+    },
+    "adLabelVersion": {
+      "description": "Ad label version; non-zero when the post is a sponsored ad",
+      "title": "Ad Label Version",
+      "type": "integer"
+    },
+    "author": {
+      "description": "Author/creator information at time of scraping",
+      "properties": {
+        "avatarUrl": {
+          "title": "Avatar URL",
+          "type": "string"
+        },
+        "bio": {
+          "title": "Bio",
+          "type": "string"
+        },
+        "displayName": {
+          "title": "Display Name",
+          "type": "string"
+        },
+        "followerCount": {
+          "title": "Followers",
+          "type": "integer"
+        },
+        "followingCount": {
+          "title": "Following",
+          "type": "integer"
+        },
+        "heartCount": {
+          "title": "Hearts/Likes",
+          "type": "integer"
+        },
+        "id": {
+          "title": "User ID",
+          "type": "string"
+        },
+        "privateAccount": {
+          "title": "Private Account",
+          "type": "boolean"
+        },
+        "roomId": {
+          "title": "Live Room ID (non-empty when live)",
+          "type": "string"
+        },
+        "secUid": {
+          "title": "Secure UID",
+          "type": "string"
+        },
+        "username": {
+          "title": "Username",
+          "type": "string"
+        },
+        "verified": {
+          "title": "Verified",
+          "type": "boolean"
+        },
+        "videoCount": {
+          "title": "Videos",
+          "type": "integer"
+        }
+      },
+      "title": "Author",
+      "type": "object"
+    },
+    "caption": {
+      "description": "Post caption/description text including hashtags and mentions",
+      "title": "Caption",
+      "type": "string"
+    },
+    "channelTags": {
+      "description": "Channel-level tags attached to the post",
+      "items": {
+        "type": "string"
+      },
+      "title": "Channel Tags",
+      "type": "array"
+    },
+    "collectCount": {
+      "description": "Number of times post was bookmarked/collected (from statsV2)",
+      "title": "Collect Count",
+      "type": "integer"
+    },
+    "commentCount": {
+      "description": "Number of comments (from statsV2 string field)",
+      "title": "Comment Count",
+      "type": "integer"
+    },
+    "commentStatus": {
+      "description": "Comment permission setting (0=all, 1=friends, 2=none)",
+      "title": "Comment Status",
+      "type": "integer"
+    },
+    "createTime": {
+      "description": "Unix timestamp (seconds) when the post was created",
+      "title": "Create Time (Unix)",
+      "type": "integer"
+    },
+    "createdAt": {
+      "description": "ISO 8601 UTC datetime when the post was created",
+      "title": "Created At",
+      "type": "string"
+    },
+    "diversificationLabels": {
+      "description": "TikTok content category labels used for feed diversification (e.g. Comedy, Performance)",
+      "items": {
+        "type": "string"
+      },
+      "title": "Diversification Labels",
+      "type": "array"
+    },
+    "duetEnabled": {
+      "description": "Whether the creator allows duets with this video",
+      "title": "Duet Enabled",
+      "type": "boolean"
+    },
+    "forFriend": {
+      "description": "Whether the post is restricted to friends only",
+      "title": "For Friend",
+      "type": "boolean"
+    },
+    "hashtags": {
+      "description": "Hashtags used in the post caption",
+      "items": {
+        "properties": {
+          "id": {
+            "title": "Hashtag ID",
+            "type": "string"
+          },
+          "isCommerce": {
+            "title": "Is Commerce",
+            "type": "boolean"
+          },
+          "name": {
+            "title": "Hashtag Name",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "title": "Hashtags",
+      "type": "array"
+    },
+    "images": {
+      "description": "Images for slideshow posts (postType='slideshow')",
+      "items": {
+        "properties": {
+          "height": {
+            "title": "Height",
+            "type": "integer"
+          },
+          "ordinal": {
+            "title": "Index",
+            "type": "integer"
+          },
+          "urlList": {
+            "title": "Image URLs",
+            "type": "array"
+          },
+          "width": {
+            "title": "Width",
+            "type": "integer"
+          }
+        },
+        "type": "object"
+      },
+      "title": "Slideshow Images",
+      "type": "array"
+    },
+    "isAd": {
+      "description": "Whether this post is a paid advertisement",
+      "title": "Is Ad",
+      "type": "boolean"
+    },
+    "isAigc": {
+      "description": "Whether TikTok labels this as AI-generated content",
+      "title": "Is AI Generated Content",
+      "type": "boolean"
+    },
+    "isECVideo": {
+      "description": "Whether this is a shopping/e-commerce video",
+      "title": "Is E-Commerce Video",
+      "type": "boolean"
+    },
+    "likeCount": {
+      "description": "Number of likes/diggs (from statsV2 string field)",
+      "title": "Like Count",
+      "type": "integer"
+    },
+    "locationCreated": {
+      "description": "ISO country code where the post was created (e.g. 'US', 'IT')",
+      "title": "Location Created",
+      "type": "string"
+    },
+    "mediaUrlAccessible": {
+      "description": "Whether the video play URL was accessible at scrape time (when validateMediaUrls=true)",
+      "title": "Media URL Accessible",
+      "type": "boolean"
+    },
+    "mediaUrlExpiresAt": {
+      "description": "ISO 8601 UTC datetime when signed media URLs (video/cover) expire",
+      "title": "Media URL Expires At",
+      "type": "string"
+    },
+    "mentions": {
+      "description": "@mentions in the post caption with text offsets",
+      "items": {
+        "properties": {
+          "awemeId": {
+            "title": "Mentioned Post ID (if any)",
+            "type": "string"
+          },
+          "end": {
+            "title": "End Offset",
+            "type": "integer"
+          },
+          "start": {
+            "title": "Start Offset",
+            "type": "integer"
+          },
+          "username": {
+            "title": "Username",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "title": "Mentions",
+      "type": "array"
+    },
+    "music": {
+      "description": "Sound/music used in the post",
+      "properties": {
+        "album": {
+          "title": "Album",
+          "type": "string"
+        },
+        "authorName": {
+          "title": "Author",
+          "type": "string"
+        },
+        "coverUrl": {
+          "title": "Cover URL",
+          "type": "string"
+        },
+        "dspLinks": {
+          "title": "DSP Links (Spotify, Apple Music, etc.)",
+          "type": "array"
+        },
+        "duration": {
+          "title": "Duration (s)",
+          "type": "integer"
+        },
+        "id": {
+          "title": "Music ID",
+          "type": "string"
+        },
+        "isCommerceMusic": {
+          "title": "Is Commerce Music",
+          "type": "boolean"
+        },
+        "isCopyrighted": {
+          "title": "Is Copyrighted",
+          "type": "boolean"
+        },
+        "isPrivate": {
+          "title": "Is Private Sound",
+          "type": "boolean"
+        },
+        "isUnlimitedMusic": {
+          "title": "Is Unlimited Music",
+          "type": "boolean"
+        },
+        "original": {
+          "title": "Original Sound",
+          "type": "boolean"
+        },
+        "playUrl": {
+          "title": "Play URL",
+          "type": "string"
+        },
+        "shootDuration": {
+          "title": "Shoot Duration (s)",
+          "type": "number"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        }
+      },
+      "title": "Music",
+      "type": "object"
+    },
+    "originalItem": {
+      "description": "Whether this post is an original (non-duet/stitch) item",
+      "title": "Original Item",
+      "type": "boolean"
+    },
+    "playCount": {
+      "description": "Number of video plays (from statsV2 string field)",
+      "title": "Play Count",
+      "type": "integer"
+    },
+    "poi": {
+      "description": "Location tag attached to the post (restaurant, landmark, etc.)",
+      "properties": {
+        "address": {
+          "type": "string"
+        },
+        "category": {
+          "type": "string"
+        },
+        "city": {
+          "type": "string"
+        },
+        "country": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "title": "Point of Interest",
+      "type": "object"
+    },
+    "postId": {
+      "description": "TikTok's unique post/video ID (string to preserve 64-bit precision)",
+      "title": "Post ID",
+      "type": "string"
+    },
+    "postType": {
+      "description": "Either 'video' or 'slideshow'",
+      "title": "Post Type",
+      "type": "string"
+    },
+    "postUrl": {
+      "description": "Direct URL to the TikTok post",
+      "title": "Post URL",
+      "type": "string"
+    },
+    "privateItem": {
+      "description": "Whether the post is set to private",
+      "title": "Private Item",
+      "type": "boolean"
+    },
+    "repostCount": {
+      "description": "Number of reposts (from statsV2, video-detail only)",
+      "title": "Repost Count",
+      "type": "integer"
+    },
+    "shareCount": {
+      "description": "Number of shares (from statsV2 string field)",
+      "title": "Share Count",
+      "type": "integer"
+    },
+    "shareEnabled": {
+      "description": "Whether sharing is enabled for this post",
+      "title": "Share Enabled",
+      "type": "boolean"
+    },
+    "stitchEnabled": {
+      "description": "Whether the creator allows stitching this video",
+      "title": "Stitch Enabled",
+      "type": "boolean"
+    },
+    "textLanguage": {
+      "description": "Detected language code of the caption text",
+      "title": "Text Language",
+      "type": "string"
+    },
+    "video": {
+      "description": "Video technical metadata and signed play/cover URLs",
+      "properties": {
+        "bitrate": {
+          "title": "Bitrate",
+          "type": "integer"
+        },
+        "codecType": {
+          "title": "Codec",
+          "type": "string"
+        },
+        "cover": {
+          "title": "Cover Image URL",
+          "type": "string"
+        },
+        "definition": {
+          "title": "Definition",
+          "type": "string"
+        },
+        "downloadAddr": {
+          "title": "Download URL",
+          "type": "string"
+        },
+        "duration": {
+          "title": "Duration (s)",
+          "type": "integer"
+        },
+        "dynamicCover": {
+          "title": "Dynamic Cover URL",
+          "type": "string"
+        },
+        "format": {
+          "title": "Format",
+          "type": "string"
+        },
+        "height": {
+          "title": "Height (px)",
+          "type": "integer"
+        },
+        "originCover": {
+          "title": "Original Cover URL",
+          "type": "string"
+        },
+        "playUrl": {
+          "title": "Play URL",
+          "type": "string"
+        },
+        "ratio": {
+          "title": "Aspect Ratio",
+          "type": "string"
+        },
+        "size": {
+          "title": "File Size (bytes)",
+          "type": "integer"
+        },
+        "videoQuality": {
+          "title": "Video Quality Label",
+          "type": "string"
+        },
+        "width": {
+          "title": "Width (px)",
+          "type": "integer"
+        }
+      },
+      "title": "Video",
+      "type": "object"
+    },
+    "viewerRegion": {
+      "description": "ISO country code of the inferred viewer region",
+      "title": "Viewer Region",
+      "type": "string"
+    }
+  },
+  "title": "TikTok Posts",
+  "views": {
+    "overview": {
+      "description": "TikTok posts with engagement metrics and author info.",
+      "display": {
+        "component": "table",
+        "properties": {
+          "caption": {
+            "format": "text",
+            "label": "Caption"
+          },
+          "collectCount": {
+            "format": "number",
+            "label": "Collects"
+          },
+          "commentCount": {
+            "format": "number",
+            "label": "Comments"
+          },
+          "createdAt": {
+            "format": "text",
+            "label": "Created At"
+          },
+          "likeCount": {
+            "format": "number",
+            "label": "Likes"
+          },
+          "playCount": {
+            "format": "number",
+            "label": "Plays"
+          },
+          "postId": {
+            "format": "text",
+            "label": "Post ID"
+          },
+          "postType": {
+            "format": "text",
+            "label": "Type"
+          },
+          "postUrl": {
+            "format": "link",
+            "label": "Post URL"
+          },
+          "shareCount": {
+            "format": "number",
+            "label": "Shares"
+          }
+        }
+      },
+      "title": "Posts Overview",
+      "transformation": {
+        "fields": [
+          "postId",
+          "postUrl",
+          "postType",
+          "caption",
+          "createdAt",
+          "playCount",
+          "likeCount",
+          "commentCount",
+          "shareCount",
+          "collectCount"
+        ]
+      }
+    }
+  }
+}
