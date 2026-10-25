@@ -2,45 +2,21 @@
   "actorSpecification": 1,
   "title": "News Articles",
   "views": {
-    "detailed": {
+    "errors": {
       "display": {
         "component": "table",
         "properties": {
-          "author": {
-            "format": "text",
-            "label": "Author"
-          },
           "domain": {
             "format": "text",
             "label": "Domain"
           },
-          "fullText": {
+          "fullTextStatus": {
             "format": "text",
-            "label": "Full Text"
-          },
-          "imageUrl": {
-            "format": "link",
-            "label": "Image"
-          },
-          "language": {
-            "format": "text",
-            "label": "Language"
+            "label": "Status"
           },
           "publishedAt": {
             "format": "text",
             "label": "Published"
-          },
-          "query": {
-            "format": "text",
-            "label": "Query"
-          },
-          "scrapedAt": {
-            "format": "text",
-            "label": "Scraped At"
-          },
-          "snippet": {
-            "format": "text",
-            "label": "Snippet"
           },
           "source": {
             "format": "text",
@@ -56,21 +32,62 @@
           }
         }
       },
-      "title": "Detailed View",
+      "title": "Extraction Issues",
       "transformation": {
         "fields": [
-          "query",
+          "fullTextStatus",
           "title",
           "url",
           "source",
           "domain",
-          "publishedAt",
-          "snippet",
-          "fullText",
-          "imageUrl",
+          "publishedAt"
+        ]
+      }
+    },
+    "fullText": {
+      "display": {
+        "component": "table",
+        "properties": {
+          "author": {
+            "format": "text",
+            "label": "Author"
+          },
+          "fullText": {
+            "format": "text",
+            "label": "Full text"
+          },
+          "fullTextStatus": {
+            "format": "text",
+            "label": "Status"
+          },
+          "imageUrl": {
+            "format": "link",
+            "label": "Image"
+          },
+          "source": {
+            "format": "text",
+            "label": "Source"
+          },
+          "title": {
+            "format": "text",
+            "label": "Title"
+          },
+          "url": {
+            "format": "link",
+            "label": "URL"
+          }
+        }
+      },
+      "title": "Full Text",
+      "transformation": {
+        "fields": [
+          "title",
+          "url",
+          "source",
           "author",
-          "language",
-          "scrapedAt"
+          "imageUrl",
+          "fullTextStatus",
+          "fullText"
         ]
       }
     },
@@ -82,6 +99,10 @@
             "format": "text",
             "label": "Domain"
           },
+          "fullTextStatus": {
+            "format": "text",
+            "label": "Full text"
+          },
           "publishedAt": {
             "format": "text",
             "label": "Published"
@@ -92,11 +113,7 @@
           },
           "scrapedAt": {
             "format": "text",
-            "label": "Scraped At"
-          },
-          "snippet": {
-            "format": "text",
-            "label": "Snippet"
+            "label": "Scraped at"
           },
           "source": {
             "format": "text",
@@ -121,7 +138,7 @@
           "domain",
           "publishedAt",
           "url",
-          "snippet",
+          "fullTextStatus",
           "scrapedAt"
         ]
       }

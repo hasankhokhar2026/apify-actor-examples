@@ -1,121 +1,156 @@
 # TripAdvisor Hotel, Restaurant & Attraction Finder
 
-Look up hotels, restaurants, and attractions on TripAdvisor by search phrase or by pasting the place's own TripAdvisor URL. Each result comes back as a structured record with rating, ranking, address, contact details, pricing, and category-specific fields like hotel class or cuisine type.
+Read Tripadvisor places and reviews in one actor. Search a destination for ranked hotels, restaurants and attractions, open a specific place by its Tripadvisor URL or numeric ID, or export a review stream with server-side filters. Everything works without a Tripadvisor account, API key or cookie.
 
-## What this actor does
+## Modes
 
-- Turns a search phrase such as `hotels in Paris` into a destination (here, Paris) and collects the places TripAdvisor lists for it
-- Scrapes specific places directly from their TripAdvisor URL instead of searching
-- Mixes search queries and direct URLs in the same run, returning each place only once
-- Uses `placeType` to pick hotels, restaurants, attractions, or a mixed destination overview for searches
-- Pulls category-specific detail when the source has it: hotel star class for hotels, cuisine types for restaurants
-- Fields TripAdvisor has no value for come back as an empty string rather than being dropped, so every record keeps the same set of columns
+| Mode | What it does | Main inputs |
+|---|---|---|
+| `search` | Finds ranked places through Tripadvisor listing pages. If those pages are unavailable, it falls back to the GraphQL type-ahead index. | `query`, optional `location` |
+| `details` | Reads one place per URL or ID through the Location API, then optionally enriches it with amenities and a larger photo. | `startUrls` |
+| `reviews` | Reads reviews for each target place, 20 per request, with offset pagination and filters. Targets can come from URLs, IDs, or a search query. | `startUrls` or `query`, review filters |
 
-## Output per place
+Every record is a flat JSON object. Place rows carry `recordType: "place"`, review rows carry `recordType: "review"`, and both include `sourceUrl` and `scrapedAt`. Empty fields are omitted at every depth, so there are no nulls, empty strings, empty arrays or empty objects in the dataset.
 
-All values are text, including numbers and flags (for example `"4.5"` or `"False"`).
+## Place fields
 
-- `locationId` — TripAdvisor's internal ID for the place
-- `name`, `type`, `subcategory` — place name, TripAdvisor's type key for it (e.g. `hotel`, `restaurant`, `attraction`), and sub-category label
-- `address`, `street`, `city`, `state`, `country`, `postalCode` — address, both as one string and broken out by component
-- `latitude`, `longitude` — geographic coordinates
-- `rating`, `numberOfReviews` — overall rating (0–5) and total review count
-- `rankingPosition`, `rankingString` — numeric rank and the full ranking text, e.g. `#20 of 583 hotels in New York City`
-- `priceLevel`, `priceRange` — price symbols (e.g. `$$$$`) and the price range text
-- `phone`, `email`, `website` — contact details, when published
-- `hotelClass` — star rating, hotels only
-- `cuisine` — cuisine types, restaurants only
-- `hours` — operating hours, when published
-- `description` — the place's description text
-- `neighborhoods` — neighborhood name(s) the place is located in
-- `webUrl` — the TripAdvisor page URL for the place
-- `isClosed` — `"True"` or `"False"`, whether TripAdvisor marks the place as closed
-- `photoUrl` — main photo URL, when available
-- `searchQuery` — the search phrase that returned this place (empty string for places from `startUrls`)
-- `scrapeTimestamp` — when the run started (the same value on every record of a run)
+`id`, `name`, `type`, `url`, `rating`, `reviewCount`, `ranking`, `priceRange`, `cuisine`, `phone`, `email`, `address`, `lat`, `lng`, `amenities`, `photos`, `sourceUrl`, `scrapedAt`, `recordType`.
+
+`type` is `hotel`, `restaurant` or `attraction`. `rating` is a number from 0 to 5, `reviewCount` is an integer, and `amenities` and `photos` are arrays of strings. `ranking` is the full Tripadvisor ranking text when the Location API publishes it.
+
+## Review fields
+
+`id`, `placeId`, `title`, `text`, `rating`, `date`, `tripType`, `language`, `author`, `authorLocation`, `helpfulVotes`, `sourceUrl`, `scrapedAt`, `recordType`.
+
+`date` is the review submission timestamp, `tripType` is the traveler type reported by the reviewer, and `authorLocation` is the reviewer's published hometown.
 
 ## Input
 
 | Field | Type | Default | Description |
 |---|---|---|---|
-| `searchQueries` | array of strings | – | Search phrases naming a destination, e.g. `hotels in Paris`. Words such as "hotels", "best" or "in" are stripped to find the destination; the kind of place returned is set by `placeType`. |
-| `startUrls` | array of strings | – | Direct TripAdvisor place URLs (hotel, restaurant, or attraction review pages). |
-| `maxItems` | integer | `50` | Maximum places to return per search query (1–100). |
-| `placeType` | string | `all` | Which TripAdvisor list to read for each search destination: `hotel`, `restaurant`, `attraction`, or `all` (the destination's overview page, which mixes hotels, restaurants, attractions and sometimes vacation rentals). Has no effect on `startUrls`. |
-| `proxyConfiguration` | object | – | Proxy settings for search queries; if left unset, the actor provisions a residential proxy automatically. Direct URLs don't need one. |
+| `mode` | select | `search` | `search`, `details` or `reviews`. |
+| `query` | string | - | Search phrase, for example `hotels in New York` or `Eiffel Tower`. Also used by `reviews` when no URLs are given. |
+| `location` | string | - | Optional destination for search, for example `New York`. With this set, `query` can be just `hotels`. |
+| `startUrls` | string list | - | Tripadvisor place URLs or numeric location IDs. Used by `details` and `reviews`. |
+| `maxItems` | integer 1-500 | `20` | Maximum places to return in `search`, process in `details`, or use as review targets in `reviews`. |
+| `includeDetails` | boolean | `true` | Fetch extra place data: key amenities, a larger photo, and HTML enrichment when the JSON fields are missing. |
+| `maxReviews` | integer 1-500 | `20` | Reviews per place in `reviews` mode. |
+| `reviewSort` | select | `MOST_RECENT` | `MOST_RECENT`, `MOST_HELPFUL` or `DETAILED`. Attractions automatically use `DETAILED` for `MOST_RECENT` so bookable product reviews do not mix into the attraction's reviews. |
+| `reviewRating` | select | `ANY` | `ANY` or 1-5. |
+| `reviewLanguage` | select | `ANY` | Common Tripadvisor language tags such as `en`, `de`, `fr` or `es`. |
+| `reviewTripType` | select | `ANY` | `FAMILY`, `COUPLES`, `SOLO`, `BUSINESS` or `FRIENDS`. |
+| `reviewMonth` | select | `ANY` | `JANUARY` through `DECEMBER`. |
+| `reviewKeyword` | string | - | Text that must appear in the review. |
+| `proxyConfiguration` | object | - | Optional. Direct access is tried first. |
 
-At least one of `searchQueries` or `startUrls` must be provided.
+At least one search phrase or start URL is required, depending on the mode. Search and details modes need their own target. Reviews mode accepts either start URLs or a query.
 
-## Example: scrape specific places by URL
+## Examples
+
+Open one hotel and include amenities:
 
 ```json
 {
+  "mode": "details",
   "startUrls": [
-    "https://www.tripadvisor.com/Hotel_Review-g60763-d675616-Reviews-The_Plaza_New_York-New_York_City_New_York.html",
-    "https://www.tripadvisor.com/Restaurant_Review-g60763-d457808-Reviews-Daniel-New_York_City_New_York.html"
-  ]
+    "https://www.tripadvisor.com/Hotel_Review-g60763-d675616-Reviews-The_Plaza_New_York_A_Fairmont_Managed_Hotel-New_York_City_New_York.html"
+  ],
+  "maxItems": 1,
+  "includeDetails": true
 }
 ```
 
-## Example: search for hotels in a city
+Search hotels in New York:
 
 ```json
 {
-  "searchQueries": ["hotels in Paris"],
+  "mode": "search",
+  "query": "hotels",
+  "location": "New York",
   "maxItems": 10,
-  "placeType": "hotel",
-  "proxyConfiguration": {
-    "useApifyProxy": true,
-    "apifyProxyGroups": ["RESIDENTIAL"]
-  }
+  "includeDetails": false
 }
 ```
 
-## Example: combine a search with a specific attraction URL
+Export recent five-star English reviews for a place:
 
 ```json
 {
-  "searchQueries": ["best restaurants London"],
-  "startUrls": ["https://www.tripadvisor.com/Attraction_Review-g60763-d104365-Reviews-Empire_State_Building-New_York_City_New_York.html"],
-  "maxItems": 15,
-  "placeType": "restaurant",
-  "proxyConfiguration": {
-    "useApifyProxy": true,
-    "apifyProxyGroups": ["RESIDENTIAL"]
-  }
+  "mode": "reviews",
+  "startUrls": ["675616"],
+  "maxItems": 1,
+  "maxReviews": 100,
+  "reviewSort": "MOST_RECENT",
+  "reviewRating": "5",
+  "reviewLanguage": "en"
 }
 ```
 
-## Use cases
+Search a city and then export its reviews:
 
-- **Travel planning** — pull a shortlist of top-ranked hotels or restaurants for a destination into your own itinerary tool
-- **Competitive benchmarking for hospitality** — compare your property's rating and ranking against nearby competitors
-- **Local business directories** — populate a city guide with contact details and ratings for attractions and restaurants
-- **Market research** — track how many hotels or restaurants a city has at each price level
-- **Lead generation** — collect contact details for restaurants or attractions in a region for outreach
+```json
+{
+  "mode": "reviews",
+  "query": "restaurants in Paris",
+  "maxItems": 5,
+  "maxReviews": 20
+}
+```
+
+## How search works
+
+The actor resolves the destination with the type-ahead GraphQL index, then reads ranked listing pages (`Hotels`, `Restaurants` and `Attractions`) 30 places at a time. When a listing page is unavailable, it runs scoped type-ahead queries for the same destination. Duplicates are removed by place ID, and the order follows the ranking position.
+
+`search` never uses a browser, a cookie or a login. Listing pages use a Safari TLS profile; the JSON APIs are called with plain HTTP.
+
+## How details works
+
+Place IDs are read from URLs such as `/Hotel_Review-g60763-d675616-...` or from numeric IDs. The Location API supplies the core place fields. With `includeDetails: true`, the actor also reads the key-amenities and primary-photo GraphQL queries. In `details` mode it may read the place page to fill hotel amenities or restaurant cuisine that the JSON APIs omit.
+
+Unsupported Tripadvisor entities such as activities, cruises and airlines are skipped with a counter instead of failing the whole run.
+
+## How reviews works
+
+Reviews come from the public reviews GraphQL endpoint. Each request returns at most 20 reviews; the actor pages by offset until `maxReviews`, the place total, or the run cap is reached. Filters are sent to the server, not applied after downloading everything.
+
+Unlike many review tools, the actor filters every row by the target location ID. Attractions are read with the `DETAILED` sort when `MOST_RECENT` is requested, which keeps bookable product reviews out of the attraction's own review stream.
+
+## Limits
+
+- 20 reviews per upstream request.
+- 500 reviews per place per run.
+- 10,000 reviews per run across all targets.
+- 500 places per run.
+- Search pages hold 30 places; at most 10 pages are read per family.
+- Reviews are deduplicated by review ID and places by location ID.
+
+The actor fails the run when it produces zero records or when every request is blocked. If only some targets or pages fail, it pushes the records it has and reports the partial counts in the run status.
+
+## Proxy and anti-bot behaviour
+
+Access is direct first. If Tripadvisor returns a real block, the actor tries the free Apify datacenter proxy (`AUTO`). It only moves to the `RESIDENTIAL` group after `AUTO` is also blocked. A user-supplied `proxyConfiguration` is used after a direct block. You do not need to configure anything for a normal run.
+
+The JSON endpoints (Location API and GraphQL) are the primary path. HTML listing and enrichment pages are secondary and are fetched only when they add data.
 
 ## FAQ
 
-**Do I need a TripAdvisor account or API key?**
-No. The actor reads TripAdvisor's publicly available place data; no login or API key is required.
+**Do I need a Tripadvisor account or API key?**
+No. The actor reads public place and review data. It does not log in, and it does not need user cookies.
 
 **Do I need a proxy?**
-Direct URLs (`startUrls`) work without one. For `searchQueries`, the actor automatically provisions a residential proxy if you don't supply your own, since TripAdvisor's search pages run into anti-bot protection more often than direct place pages.
+No. Direct access is tried first and works for the JSON APIs. The actor escalates automatically only after a block.
 
-**Why are some fields empty strings instead of missing?**
-TripAdvisor doesn't publish every field for every place — a restaurant won't have `hotelClass`, and a hotel won't have `cuisine`. Rather than remove the field, the actor keeps it as an empty string so every record has the same columns.
+**Why is `amenities` missing for some places?**
+Tripadvisor publishes amenities mainly for hotels. Restaurants and attractions often have none, and the field is omitted rather than filled with a placeholder.
 
-**How many results come back per search query?**
-Up to `maxItems` per query (100 at most). The actor reads only the first page of TripAdvisor's list for the destination, so a query usually yields a few dozen places at most, and places already returned for an earlier query or URL are not repeated. Places whose details can't be loaded are skipped.
+**Why are there fewer reviews than the total on the page?**
+The review count on a place page can include reviews in many languages and, for attractions, reviews from bookable products. The actor returns the reviews that match the target place and your filters, up to `maxReviews`.
 
-**Why does `best restaurants London` return hotels too?**
-The search phrase only identifies the destination. With `placeType` left at `all`, the actor reads London's overview page, which mixes place types. Set `placeType` to `restaurant` to get only restaurants.
+**Why does a search return fewer places than `maxItems`?**
+Tripadvisor may not render enough ranked cards for a destination, or a page may be unavailable. The actor falls back to type-ahead results and reports partial runs in the status message.
 
-**What's the difference between `rankingPosition` and `rankingString`?**
-`rankingPosition` is just the number (e.g. `20`); `rankingString` is TripAdvisor's full ranking sentence (e.g. `#20 of 583 hotels in New York City`).
+**Are the records always the same shape?**
+No. Empty fields are removed, so a restaurant row has `cuisine` while a hotel row may have `amenities`. Every record keeps the identity, source and timestamp fields.
 
-**Can I filter search results to only one place type?**
-Yes, set `placeType` to `hotel`, `restaurant`, or `attraction`. It only applies to `searchQueries`, not to places added via `startUrls`. If TripAdvisor's list page for the destination can't be read, the actor falls back to TripAdvisor's search suggestions, which return fewer places.
-
-**Is this affiliated with TripAdvisor?**
-No. This is an independent, third-party actor that reads TripAdvisor's publicly available place data; it is not affiliated with or endorsed by TripAdvisor.
+**Is this affiliated with Tripadvisor?**
+No. This is an independent, third-party actor that reads publicly available Tripadvisor data. It is not affiliated with or endorsed by Tripadvisor.

@@ -1,81 +1,133 @@
 {
-  "description": "Download TikTok videos, slideshow images, covers, and audio to Apify Key-Value Store",
+  "description": "Download TikTok videos (clean or watermarked), audio, covers, slideshow frames, and post metadata. Clean MP4 files are downloaded inside a browser session and re-hosted in Apify Key-Value Store; watermarked/direct assets can be re-hosted or returned as expiring CDN URLs.",
   "properties": {
     "assetTypes": {
       "default": [
-        "video",
-        "cover"
+        "video"
       ],
-      "description": "Which assets to download per post. 'video' = MP4 file, 'images' = slideshow frames, 'audio' = background music MP3, 'cover' = thumbnail JPEG.",
+      "description": "Assets to produce for each post. 'video' = MP4; 'audio' = TikTok sound; 'cover' = cover image; 'slideshow' = ordered photo frames; 'metadata' = post/author/stats/music row.",
       "editor": "select",
       "items": {
         "enum": [
           "video",
-          "images",
           "audio",
-          "cover"
+          "cover",
+          "slideshow",
+          "metadata"
+        ],
+        "enumTitles": [
+          "Video (MP4)",
+          "Audio",
+          "Cover image",
+          "Slideshow frames",
+          "Metadata"
         ],
         "type": "string"
       },
       "prefill": [
-        "cover"
+        "video"
       ],
       "title": "Asset Types",
       "type": "array"
     },
-    "filenameTemplate": {
-      "default": "{postId}_{type}_{ordinal}.{ext}",
-      "description": "KVS key template. Placeholders: {postId}, {type}, {ordinal}, {ext}. Example: {postId}_{type}_{ordinal}.{ext}",
-      "editor": "textfield",
-      "prefill": "{postId}_{type}_{ordinal}.{ext}",
-      "title": "Filename Template",
-      "type": "string"
+    "downloadToKv": {
+      "default": true,
+      "description": "Store watermarked video, audio, cover, and slideshow files in the run's Key-Value Store and return stable kvsUrl links. Clean video is always stored because its source URL is session-bound. Set false to return expiring CDN URLs only.",
+      "prefill": true,
+      "title": "Download Files to Apify Key-Value Store",
+      "type": "boolean"
     },
-    "postIds": {
-      "description": "Numeric TikTok post IDs as strings (alternative to postUrls).",
-      "editor": "stringList",
-      "items": {
-        "type": "string"
-      },
-      "title": "Post IDs",
-      "type": "array"
+    "maxConcurrency": {
+      "default": 3,
+      "description": "Number of posts processed in parallel (1-3). Embed requests are retried with backoff when TikTok rate-limits them.",
+      "maximum": 3,
+      "minimum": 1,
+      "prefill": 1,
+      "title": "Max Concurrency",
+      "type": "integer"
+    },
+    "maxFileSizeMb": {
+      "default": 100,
+      "description": "Per-file size cap. Files above the cap produce a 'too_large' status row instead of a partial download.",
+      "maximum": 100,
+      "minimum": 1,
+      "prefill": 100,
+      "title": "Max File Size (MB)",
+      "type": "integer"
+    },
+    "maxItems": {
+      "default": 1000,
+      "description": "Maximum number of unique posts to process. Inputs beyond the cap receive a 'limit_reached' status row.",
+      "maximum": 1000,
+      "minimum": 1,
+      "prefill": 1,
+      "title": "Max Posts",
+      "type": "integer"
     },
     "postUrls": {
-      "description": "TikTok post URLs to download (e.g. https://www.tiktok.com/@user/video/123). Accepts full URLs, short URLs, and bare numeric IDs.",
+      "description": "TikTok post URLs or IDs. Accepts /@user/video/ID, /@user/photo/ID, /video/ID, /photo/ID, embed URLs (/embed/v2/ID), vm.tiktok.com / vt.tiktok.com / /t/ short links, m.tiktok.com/v/ID.html, and bare numeric post IDs. Duplicates are processed once.",
       "editor": "stringList",
       "items": {
         "type": "string"
       },
       "prefill": [
-        "https://www.tiktok.com/@khaby.lame/video/7574844184952081686"
+        "https://www.tiktok.com/@nba/video/7693329153680035102"
       ],
       "title": "Post URLs",
       "type": "array"
     },
-    "preferredQuality": {
+    "proxyConfiguration": {
+      "description": "Optional. The actor uses a direct connection by default and does not require a proxy. Use this only if you want to route requests through Apify Proxy.",
+      "editor": "proxy",
+      "title": "Proxy Configuration",
+      "type": "object"
+    },
+    "quality": {
       "default": "best",
-      "description": "Target video quality. 'best' = highest bitrate. '720p', '540p', '360p' = closest match from bitrateInfo. 'smallest' = lowest bitrate.",
+      "description": "Target clean-video quality. 'best' sorts by resolution first, then bitrate. Watermarked copies are single-resolution.",
       "editor": "select",
       "enum": [
         "best",
+        "1080p",
         "720p",
         "540p",
         "360p",
         "smallest"
       ],
       "enumTitles": [
-        "Best (highest bitrate)",
+        "Best (highest resolution)",
+        "1080p",
         "720p",
         "540p",
         "360p",
-        "Smallest (lowest bitrate)"
+        "Smallest file"
       ],
-      "prefill": "best",
-      "title": "Preferred Video Quality",
+      "prefill": "540p",
+      "title": "Video Quality",
+      "type": "string"
+    },
+    "videoVariant": {
+      "default": "clean",
+      "description": "'clean' = no-watermark MP4 (requires a same-page browser session and is always re-hosted). 'watermarked' = logo copy, usable as an expiring CDN URL. 'both' = one row per variant.",
+      "editor": "select",
+      "enum": [
+        "clean",
+        "watermarked",
+        "both"
+      ],
+      "enumTitles": [
+        "Clean (no watermark)",
+        "Watermarked",
+        "Both variants"
+      ],
+      "prefill": "clean",
+      "title": "Video Variant",
       "type": "string"
     }
   },
-  "required": [],
+  "required": [
+    "postUrls"
+  ],
   "schemaVersion": 1,
   "title": "TikTok Downloader API Input",
   "type": "object"

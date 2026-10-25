@@ -5,13 +5,45 @@
       "display": {
         "component": "table",
         "properties": {
-          "hostPhoto": {
-            "format": "link",
-            "label": "Host Photo"
+          "amenities": {
+            "format": "array",
+            "label": "Amenities"
+          },
+          "availability": {
+            "format": "text",
+            "label": "Availability"
+          },
+          "badges": {
+            "format": "array",
+            "label": "Badges"
+          },
+          "calendar": {
+            "format": "array",
+            "label": "Calendar"
+          },
+          "currency": {
+            "format": "text",
+            "label": "Currency"
+          },
+          "description": {
+            "format": "text",
+            "label": "Description"
+          },
+          "host": {
+            "format": "text",
+            "label": "Host"
+          },
+          "hostId": {
+            "format": "text",
+            "label": "Host ID"
           },
           "id": {
             "format": "text",
             "label": "Listing ID"
+          },
+          "images": {
+            "format": "array",
+            "label": "Images"
           },
           "isSuperhost": {
             "format": "boolean",
@@ -21,53 +53,73 @@
             "format": "boolean",
             "label": "Verified"
           },
-          "latitude": {
+          "lat": {
             "format": "number",
             "label": "Latitude"
           },
-          "longitude": {
+          "lng": {
             "format": "number",
             "label": "Longitude"
+          },
+          "location": {
+            "format": "text",
+            "label": "Location"
           },
           "name": {
             "format": "text",
             "label": "Name"
           },
-          "originalPrice": {
-            "format": "text",
-            "label": "Original Price"
+          "nightlyPrice": {
+            "format": "number",
+            "label": "Nightly price"
           },
-          "photos": {
-            "format": "array",
-            "label": "Photos"
+          "nights": {
+            "format": "number",
+            "label": "Nights"
           },
-          "price": {
-            "format": "text",
-            "label": "Price"
+          "priceIncludesFees": {
+            "format": "boolean",
+            "label": "Fees included"
           },
           "priceQualifier": {
             "format": "text",
-            "label": "Price Qualifier"
+            "label": "Price qualifier"
+          },
+          "propertyType": {
+            "format": "text",
+            "label": "Property type"
           },
           "rating": {
-            "format": "text",
+            "format": "number",
             "label": "Rating"
+          },
+          "reviewCount": {
+            "format": "number",
+            "label": "Reviews"
+          },
+          "reviews": {
+            "format": "array",
+            "label": "Reviews"
+          },
+          "roomType": {
+            "format": "text",
+            "label": "Room type"
           },
           "scrapedAt": {
             "format": "text",
-            "label": "Scraped At"
+            "label": "Scraped at"
           },
-          "searchUrl": {
+          "sourceUrl": {
             "format": "link",
-            "label": "Search URL"
+            "label": "Source URL"
           },
-          "subtitle": {
-            "format": "text",
-            "label": "Subtitle"
+          "totalPrice": {
+            "format": "number",
+            "label": "Stay total"
           },
           "type": {
             "format": "text",
-            "label": "Property Type"
+            "label": "Type"
           },
           "url": {
             "format": "link",
@@ -82,18 +134,31 @@
           "url",
           "name",
           "type",
-          "subtitle",
-          "price",
-          "originalPrice",
+          "roomType",
+          "propertyType",
+          "location",
+          "lat",
+          "lng",
+          "nightlyPrice",
+          "totalPrice",
+          "currency",
+          "nights",
           "priceQualifier",
+          "priceIncludesFees",
           "rating",
+          "reviewCount",
+          "host",
+          "hostId",
           "isSuperhost",
           "isVerified",
-          "hostPhoto",
-          "latitude",
-          "longitude",
-          "photos",
-          "searchUrl",
+          "badges",
+          "amenities",
+          "description",
+          "images",
+          "availability",
+          "reviews",
+          "calendar",
+          "sourceUrl",
           "scrapedAt"
         ]
       }
@@ -102,29 +167,37 @@
       "display": {
         "component": "table",
         "properties": {
-          "latitude": {
-            "format": "number",
-            "label": "Latitude"
+          "currency": {
+            "format": "text",
+            "label": "Currency"
           },
-          "longitude": {
-            "format": "number",
-            "label": "Longitude"
+          "location": {
+            "format": "text",
+            "label": "Location"
           },
           "name": {
             "format": "text",
             "label": "Name"
           },
-          "price": {
-            "format": "text",
-            "label": "Price"
+          "nightlyPrice": {
+            "format": "number",
+            "label": "Nightly price"
           },
           "rating": {
-            "format": "text",
+            "format": "number",
             "label": "Rating"
           },
-          "type": {
+          "reviewCount": {
+            "format": "number",
+            "label": "Reviews"
+          },
+          "roomType": {
             "format": "text",
-            "label": "Property Type"
+            "label": "Room type"
+          },
+          "totalPrice": {
+            "format": "number",
+            "label": "Stay total"
           },
           "url": {
             "format": "link",
@@ -132,16 +205,18 @@
           }
         }
       },
-      "title": "Overview",
+      "title": "Listings",
       "transformation": {
         "fields": [
           "name",
-          "price",
+          "nightlyPrice",
+          "totalPrice",
+          "currency",
           "rating",
-          "type",
-          "url",
-          "latitude",
-          "longitude"
+          "reviewCount",
+          "location",
+          "roomType",
+          "url"
         ]
       }
     }

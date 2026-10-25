@@ -2,68 +2,148 @@
   "actorSpecification": 1,
   "fields": {
     "assetType": {
-      "description": "Type of asset: video, image, audio, or cover",
+      "description": "video, audio, cover, slideshow, metadata, or post for post-level status rows",
       "title": "Asset Type",
       "type": "string"
     },
-    "bitrate": {
-      "description": "Video bitrate in bps",
-      "title": "Bitrate",
-      "type": "integer"
+    "authorId": {
+      "description": "TikTok user ID (metadata rows)",
+      "title": "Author ID",
+      "type": "string"
+    },
+    "authorNickname": {
+      "description": "Display name (metadata rows)",
+      "title": "Author Nickname",
+      "type": "string"
+    },
+    "authorUsername": {
+      "description": "TikTok username (metadata rows)",
+      "title": "Author Username",
+      "type": "string"
+    },
+    "authorVerified": {
+      "description": "Whether the author is verified (metadata rows)",
+      "title": "Author Verified",
+      "type": "boolean"
     },
     "byteSize": {
       "description": "File size in bytes",
       "title": "Byte Size",
       "type": "integer"
     },
-    "codecType": {
-      "description": "Video codec (e.g. h264, h265)",
-      "title": "Codec",
+    "caption": {
+      "description": "Post caption (metadata rows)",
+      "title": "Caption",
       "type": "string"
     },
-    "definition": {
-      "description": "Video quality label (e.g. 720p, 540p)",
-      "title": "Definition",
-      "type": "string"
+    "collectCount": {
+      "description": "Post collect count (metadata rows)",
+      "title": "Collect Count",
+      "type": "integer"
+    },
+    "commentCount": {
+      "description": "Post comment count (metadata rows)",
+      "title": "Comment Count",
+      "type": "integer"
+    },
+    "createTime": {
+      "description": "Unix timestamp of the post (metadata rows)",
+      "title": "Create Time",
+      "type": "integer"
     },
     "downloadedAt": {
-      "description": "ISO 8601 timestamp when the file was downloaded",
+      "description": "ISO 8601 timestamp when the asset was stored or metadata was captured",
       "title": "Downloaded At",
       "type": "string"
     },
     "duration": {
-      "description": "Video duration in seconds",
+      "description": "Video or audio duration in seconds",
       "title": "Duration (s)",
       "type": "number"
     },
-    "gearName": {
-      "description": "TikTok quality gear name (e.g. adapt_lowest_1, normal_720_0)",
-      "title": "Gear Name",
+    "error": {
+      "description": "Human-readable explanation for non-ok status rows",
+      "title": "Error",
+      "type": "string"
+    },
+    "expiresAt": {
+      "description": "ISO 8601 expiry of the source CDN URL, when signed",
+      "title": "Expires At",
       "type": "string"
     },
     "height": {
-      "description": "Video/image height in pixels",
+      "description": "Media height in pixels",
       "title": "Height",
       "type": "integer"
     },
+    "imageCount": {
+      "description": "Number of slideshow images (metadata rows)",
+      "title": "Image Count",
+      "type": "integer"
+    },
+    "imageHeight": {
+      "description": "Slideshow frame height",
+      "title": "Image Height",
+      "type": "integer"
+    },
+    "imageWidth": {
+      "description": "Slideshow frame width",
+      "title": "Image Width",
+      "type": "integer"
+    },
     "kvsKey": {
-      "description": "Key in Apify Key-Value Store where the file is saved",
+      "description": "Key in Apify Key-Value Store",
       "title": "KVS Key",
       "type": "string"
     },
     "kvsUrl": {
-      "description": "Public Apify storage URL for the downloaded file",
+      "description": "Stable public Apify Key-Value Store URL for the downloaded file",
       "title": "KVS URL",
       "type": "string"
     },
+    "likeCount": {
+      "description": "Post like/digg count (metadata rows)",
+      "title": "Like Count",
+      "type": "integer"
+    },
     "mimeType": {
-      "description": "MIME type of the downloaded file (e.g. video/mp4, image/jpeg)",
+      "description": "MIME type of the stored file",
       "title": "MIME Type",
       "type": "string"
     },
+    "musicAuthor": {
+      "description": "Sound author (metadata rows)",
+      "title": "Music Author",
+      "type": "string"
+    },
+    "musicDuration": {
+      "description": "Sound duration in seconds (metadata rows)",
+      "title": "Music Duration",
+      "type": "integer"
+    },
+    "musicId": {
+      "description": "TikTok sound ID (metadata/audio rows)",
+      "title": "Music ID",
+      "type": "string"
+    },
+    "musicTitle": {
+      "description": "Sound title (metadata/audio rows)",
+      "title": "Music Title",
+      "type": "string"
+    },
     "ordinal": {
-      "description": "0-based index (for slideshow images)",
+      "description": "0-based slideshow frame index",
       "title": "Ordinal",
+      "type": "integer"
+    },
+    "originalUrl": {
+      "description": "Source TikTok CDN URL (expires in about 48 hours)",
+      "title": "Original URL",
+      "type": "string"
+    },
+    "playCount": {
+      "description": "Post play count (metadata rows)",
+      "title": "Play Count",
       "type": "integer"
     },
     "postId": {
@@ -71,34 +151,102 @@
       "title": "Post ID",
       "type": "string"
     },
+    "postType": {
+      "description": "video or slideshow",
+      "title": "Post Type",
+      "type": "string"
+    },
     "postUrl": {
-      "description": "Full URL to the TikTok post",
+      "description": "Canonical URL to the TikTok post",
       "title": "Post URL",
       "type": "string"
     },
+    "quality": {
+      "description": "Selected quality label (e.g. 1080p, 720p, 540p)",
+      "title": "Quality",
+      "type": "string"
+    },
+    "requiresSession": {
+      "description": "True when the source URL only works with the extracting browser session (clean video)",
+      "title": "Requires Session",
+      "type": "boolean"
+    },
+    "shareCount": {
+      "description": "Post share count (metadata rows)",
+      "title": "Share Count",
+      "type": "integer"
+    },
+    "status": {
+      "description": "ok, not_found, private, region_blocked, login_required, blocked, unsupported_url, short_link_dead, no_video, no_slideshow, no_audio, no_cover, no_assets, download_failed, too_large, duplicate, or limit_reached",
+      "title": "Status",
+      "type": "string"
+    },
+    "variant": {
+      "description": "Video variant: clean or watermarked",
+      "title": "Variant",
+      "type": "string"
+    },
     "width": {
-      "description": "Video/image width in pixels",
+      "description": "Media width in pixels",
       "title": "Width",
       "type": "integer"
     }
   },
   "title": "TikTok Downloads",
   "views": {
+    "issues": {
+      "display": {
+        "component": "table",
+        "properties": {
+          "assetType": {
+            "format": "text",
+            "label": "Asset"
+          },
+          "error": {
+            "format": "text",
+            "label": "Error"
+          },
+          "postId": {
+            "format": "text",
+            "label": "Post ID"
+          },
+          "postUrl": {
+            "format": "link",
+            "label": "Post URL"
+          },
+          "status": {
+            "format": "text",
+            "label": "Status"
+          },
+          "variant": {
+            "format": "text",
+            "label": "Variant"
+          }
+        }
+      },
+      "title": "Status Rows",
+      "transformation": {
+        "fields": [
+          "postId",
+          "postUrl",
+          "assetType",
+          "variant",
+          "status",
+          "error"
+        ]
+      }
+    },
     "overview": {
       "display": {
         "component": "table",
         "properties": {
           "assetType": {
             "format": "text",
-            "label": "Asset Type"
+            "label": "Asset"
           },
           "byteSize": {
             "format": "number",
-            "label": "Size (bytes)"
-          },
-          "definition": {
-            "format": "text",
-            "label": "Quality"
+            "label": "Bytes"
           },
           "downloadedAt": {
             "format": "text",
@@ -106,19 +254,35 @@
           },
           "kvsUrl": {
             "format": "link",
-            "label": "Download URL"
+            "label": "Download"
           },
           "mimeType": {
             "format": "text",
-            "label": "MIME Type"
+            "label": "MIME"
           },
-          "ordinal": {
-            "format": "number",
-            "label": "Index"
+          "originalUrl": {
+            "format": "link",
+            "label": "Source"
           },
           "postId": {
             "format": "text",
             "label": "Post ID"
+          },
+          "postUrl": {
+            "format": "link",
+            "label": "Post URL"
+          },
+          "quality": {
+            "format": "text",
+            "label": "Quality"
+          },
+          "status": {
+            "format": "text",
+            "label": "Status"
+          },
+          "variant": {
+            "format": "text",
+            "label": "Variant"
           }
         }
       },
@@ -126,12 +290,15 @@
       "transformation": {
         "fields": [
           "postId",
+          "postUrl",
           "assetType",
-          "ordinal",
+          "variant",
+          "quality",
           "mimeType",
           "byteSize",
+          "status",
           "kvsUrl",
-          "definition",
+          "originalUrl",
           "downloadedAt"
         ]
       }

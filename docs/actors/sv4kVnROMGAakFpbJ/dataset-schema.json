@@ -1,6 +1,6 @@
 {
   "actorSpecification": 1,
-  "title": "TripAdvisor Places",
+  "title": "Tripadvisor places and reviews",
   "views": {
     "overview": {
       "display": {
@@ -10,57 +10,211 @@
             "format": "text",
             "label": "Address"
           },
+          "author": {
+            "format": "text",
+            "label": "Author"
+          },
+          "date": {
+            "format": "text",
+            "label": "Date"
+          },
+          "name": {
+            "format": "text",
+            "label": "Place"
+          },
+          "ranking": {
+            "format": "text",
+            "label": "Ranking"
+          },
+          "rating": {
+            "format": "number",
+            "label": "Rating"
+          },
+          "recordType": {
+            "format": "text",
+            "label": "Record"
+          },
+          "reviewCount": {
+            "format": "number",
+            "label": "Reviews"
+          },
+          "sourceUrl": {
+            "format": "link",
+            "label": "Source"
+          },
+          "title": {
+            "format": "text",
+            "label": "Review title"
+          },
+          "type": {
+            "format": "text",
+            "label": "Type"
+          }
+        }
+      },
+      "title": "All records",
+      "transformation": {
+        "fields": [
+          "recordType",
+          "name",
+          "title",
+          "type",
+          "rating",
+          "reviewCount",
+          "ranking",
+          "address",
+          "author",
+          "date",
+          "sourceUrl"
+        ]
+      }
+    },
+    "places": {
+      "display": {
+        "component": "table",
+        "properties": {
+          "address": {
+            "format": "text",
+            "label": "Address"
+          },
+          "amenities": {
+            "format": "text",
+            "label": "Amenities"
+          },
+          "cuisine": {
+            "format": "text",
+            "label": "Cuisine"
+          },
+          "email": {
+            "format": "text",
+            "label": "Email"
+          },
+          "id": {
+            "format": "text",
+            "label": "Place ID"
+          },
           "name": {
             "format": "text",
             "label": "Name"
-          },
-          "numberOfReviews": {
-            "format": "text",
-            "label": "Reviews"
           },
           "phone": {
             "format": "text",
             "label": "Phone"
           },
+          "photos": {
+            "format": "text",
+            "label": "Photos"
+          },
           "priceRange": {
             "format": "text",
             "label": "Price"
           },
-          "rankingString": {
+          "ranking": {
             "format": "text",
             "label": "Ranking"
           },
           "rating": {
-            "format": "text",
+            "format": "number",
             "label": "Rating"
+          },
+          "reviewCount": {
+            "format": "number",
+            "label": "Reviews"
           },
           "type": {
             "format": "text",
             "label": "Type"
           },
-          "webUrl": {
+          "url": {
             "format": "link",
-            "label": "TripAdvisor URL"
-          },
-          "website": {
-            "format": "link",
-            "label": "Website"
+            "label": "Tripadvisor URL"
           }
         }
       },
       "title": "Places",
       "transformation": {
         "fields": [
+          "id",
           "name",
           "type",
           "rating",
-          "numberOfReviews",
-          "rankingString",
-          "address",
-          "phone",
+          "reviewCount",
+          "ranking",
           "priceRange",
-          "website",
-          "webUrl"
+          "cuisine",
+          "phone",
+          "email",
+          "address",
+          "amenities",
+          "photos",
+          "url"
+        ]
+      }
+    },
+    "reviews": {
+      "display": {
+        "component": "table",
+        "properties": {
+          "author": {
+            "format": "text",
+            "label": "Author"
+          },
+          "authorLocation": {
+            "format": "text",
+            "label": "Author location"
+          },
+          "date": {
+            "format": "text",
+            "label": "Date"
+          },
+          "helpfulVotes": {
+            "format": "number",
+            "label": "Helpful votes"
+          },
+          "id": {
+            "format": "text",
+            "label": "Review ID"
+          },
+          "language": {
+            "format": "text",
+            "label": "Language"
+          },
+          "placeId": {
+            "format": "text",
+            "label": "Place ID"
+          },
+          "rating": {
+            "format": "number",
+            "label": "Rating"
+          },
+          "sourceUrl": {
+            "format": "link",
+            "label": "Source"
+          },
+          "title": {
+            "format": "text",
+            "label": "Title"
+          },
+          "tripType": {
+            "format": "text",
+            "label": "Traveler type"
+          }
+        }
+      },
+      "title": "Reviews",
+      "transformation": {
+        "fields": [
+          "id",
+          "placeId",
+          "title",
+          "rating",
+          "date",
+          "tripType",
+          "language",
+          "author",
+          "authorLocation",
+          "helpfulVotes",
+          "sourceUrl"
         ]
       }
     }

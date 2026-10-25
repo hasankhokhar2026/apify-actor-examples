@@ -1,95 +1,83 @@
 {
   "actorOutputSchemaVersion": 1,
-  "description": "TripAdvisor hotels, restaurants, and attractions with rating, ranking, address, contact details, and pricing per place.",
+  "description": "One row per place in search/details modes and one row per review in reviews mode. Empty fields are omitted at every depth. Every record carries recordType, sourceUrl and scrapedAt.",
   "properties": {
     "address": {
-      "description": "Complete address string",
+      "description": "Full address",
       "template": "{{address}}",
-      "title": "Full Address",
+      "title": "Address",
       "type": "string"
     },
-    "city": {
-      "description": "City name",
-      "template": "{{city}}",
-      "title": "City",
+    "amenities": {
+      "description": "Hotel amenities",
+      "template": "{{amenities}}",
+      "title": "Amenities",
       "type": "string"
     },
-    "country": {
-      "description": "Country name",
-      "template": "{{country}}",
-      "title": "Country",
+    "author": {
+      "description": "Reviewer display name",
+      "template": "{{author}}",
+      "title": "Author",
+      "type": "string"
+    },
+    "authorLocation": {
+      "description": "Reviewer hometown when published",
+      "template": "{{authorLocation}}",
+      "title": "Author location",
       "type": "string"
     },
     "cuisine": {
-      "description": "Cuisine types (restaurants only)",
+      "description": "Restaurant cuisines",
       "template": "{{cuisine}}",
       "title": "Cuisine",
       "type": "string"
     },
-    "description": {
-      "description": "Place description",
-      "template": "{{description}}",
-      "title": "Description",
+    "date": {
+      "description": "Review submission timestamp",
+      "template": "{{date}}",
+      "title": "Review date",
       "type": "string"
     },
     "email": {
-      "description": "Email address",
+      "description": "Published email",
       "template": "{{email}}",
       "title": "Email",
       "type": "string"
     },
-    "hotelClass": {
-      "description": "Hotel star rating (hotels only)",
-      "template": "{{hotelClass}}",
-      "title": "Hotel Class",
+    "helpfulVotes": {
+      "description": "Helpful votes on the review",
+      "template": "{{helpfulVotes}}",
+      "title": "Helpful votes",
       "type": "string"
     },
-    "hours": {
-      "description": "Operating hours",
-      "template": "{{hours}}",
-      "title": "Hours",
+    "id": {
+      "description": "Place ID for place rows, review ID for review rows",
+      "template": "{{id}}",
+      "title": "ID",
       "type": "string"
     },
-    "isClosed": {
-      "description": "Whether the place is permanently closed",
-      "template": "{{isClosed}}",
-      "title": "Is Closed",
+    "language": {
+      "description": "Review language tag",
+      "template": "{{language}}",
+      "title": "Review language",
       "type": "string"
     },
-    "latitude": {
-      "description": "Geographic latitude",
-      "template": "{{latitude}}",
+    "lat": {
+      "description": "Latitude",
+      "template": "{{lat}}",
       "title": "Latitude",
       "type": "string"
     },
-    "locationId": {
-      "description": "TripAdvisor location identifier",
-      "template": "{{locationId}}",
-      "title": "Location ID",
-      "type": "string"
-    },
-    "longitude": {
-      "description": "Geographic longitude",
-      "template": "{{longitude}}",
+    "lng": {
+      "description": "Longitude",
+      "template": "{{lng}}",
       "title": "Longitude",
       "type": "string"
     },
     "name": {
       "description": "Place name",
       "template": "{{name}}",
-      "title": "Name",
-      "type": "string"
-    },
-    "neighborhoods": {
-      "description": "Neighborhood names",
-      "template": "{{neighborhoods}}",
-      "title": "Neighborhoods",
-      "type": "string"
-    },
-    "numberOfReviews": {
-      "description": "Total review count",
-      "template": "{{numberOfReviews}}",
-      "title": "Number of Reviews",
+      "title": "Place name",
       "type": "string"
     },
     "phone": {
@@ -98,102 +86,97 @@
       "title": "Phone",
       "type": "string"
     },
-    "photoUrl": {
-      "description": "Main photo URL",
-      "template": "{{photoUrl}}",
-      "title": "Photo URL",
+    "photos": {
+      "description": "Place photo URLs",
+      "template": "{{photos}}",
+      "title": "Photos",
       "type": "string"
     },
-    "postalCode": {
-      "description": "Postal or ZIP code",
-      "template": "{{postalCode}}",
-      "title": "Postal Code",
-      "type": "string"
-    },
-    "priceLevel": {
-      "description": "Price level symbols (e.g. $$$$)",
-      "template": "{{priceLevel}}",
-      "title": "Price Level",
+    "placeId": {
+      "description": "Place ID for review rows",
+      "template": "{{placeId}}",
+      "title": "Place ID",
       "type": "string"
     },
     "priceRange": {
-      "description": "Price range text",
+      "description": "Price range or price level published by Tripadvisor",
       "template": "{{priceRange}}",
-      "title": "Price Range",
+      "title": "Price range",
       "type": "string"
     },
-    "rankingPosition": {
-      "description": "Numerical rank in location",
-      "template": "{{rankingPosition}}",
-      "title": "Ranking Position",
-      "type": "string"
-    },
-    "rankingString": {
-      "description": "Full ranking text",
-      "template": "{{rankingString}}",
+    "ranking": {
+      "description": "Tripadvisor ranking text, for example #13 of 588 hotels in New York City",
+      "template": "{{ranking}}",
       "title": "Ranking",
       "type": "string"
     },
     "rating": {
-      "description": "Overall rating (0-5)",
+      "description": "Bubble rating, 0-5",
       "template": "{{rating}}",
       "title": "Rating",
       "type": "string"
     },
-    "scrapeTimestamp": {
-      "description": "ISO timestamp of when the data was scraped",
-      "template": "{{scrapeTimestamp}}",
-      "title": "Scrape Timestamp",
+    "recordType": {
+      "description": "place or review",
+      "template": "{{recordType}}",
+      "title": "Record type",
       "type": "string"
     },
-    "searchQuery": {
-      "description": "The search query that found this place",
-      "template": "{{searchQuery}}",
-      "title": "Search Query",
+    "reviewCount": {
+      "description": "Total number of reviews for the place",
+      "template": "{{reviewCount}}",
+      "title": "Review count",
       "type": "string"
     },
-    "state": {
-      "description": "State or province",
-      "template": "{{state}}",
-      "title": "State",
+    "scrapedAt": {
+      "description": "ISO timestamp of the run",
+      "template": "{{scrapedAt}}",
+      "title": "Scraped at",
       "type": "string"
     },
-    "street": {
-      "description": "Street address",
-      "template": "{{street}}",
-      "title": "Street",
+    "sourceUrl": {
+      "description": "Tripadvisor page the record came from",
+      "template": "{{sourceUrl}}",
+      "title": "Source URL",
       "type": "string"
     },
-    "subcategory": {
-      "description": "Specific subcategory label",
-      "template": "{{subcategory}}",
-      "title": "Subcategory",
+    "text": {
+      "description": "Review body",
+      "template": "{{text}}",
+      "title": "Review text",
+      "type": "string"
+    },
+    "title": {
+      "description": "Review title",
+      "template": "{{title}}",
+      "title": "Review title",
+      "type": "string"
+    },
+    "tripType": {
+      "description": "Traveler type reported by the reviewer",
+      "template": "{{tripType}}",
+      "title": "Trip type",
       "type": "string"
     },
     "type": {
-      "description": "Place type (hotel, restaurant, attraction)",
+      "description": "hotel, restaurant or attraction",
       "template": "{{type}}",
-      "title": "Type",
+      "title": "Place type",
       "type": "string"
     },
-    "webUrl": {
-      "description": "TripAdvisor page URL",
-      "template": "{{webUrl}}",
-      "title": "TripAdvisor URL",
-      "type": "string"
-    },
-    "website": {
-      "description": "Official website URL",
-      "template": "{{website}}",
-      "title": "Website",
+    "url": {
+      "description": "Canonical Tripadvisor place page",
+      "template": "{{url}}",
+      "title": "Place URL",
       "type": "string"
     }
   },
   "required": [
-    "name",
-    "locationId",
-    "scrapeTimestamp"
+    "recordType",
+    "sourceUrl",
+    "scrapedAt",
+    "id"
   ],
-  "title": "TripAdvisor Hotel, Restaurant & Attraction Finder Output",
+  "title": "Tripadvisor Place and Review Scraper output",
   "type": "object"
 }

@@ -1,10 +1,29 @@
 {
   "actorOutputSchemaVersion": 1,
-  "description": "Google News articles with headline, resolved article URL, source, publish date, and optional full text and image.",
+  "description": "Unique news articles with clean title, real publisher URL, source, domain, publication time, optional full text, author, image, and a machine-readable fullTextStatus. Empty fields are omitted.",
   "properties": {
+    "errors": {
+      "description": "Dataset view of blocked, paywalled, timed-out, or unresolved article pages.",
+      "template": "{{links.apiDefaultDatasetUrl}}/items?view=errors",
+      "title": "Extraction issues",
+      "type": "string"
+    },
+    "fullText": {
+      "description": "Dataset view focused on extracted article bodies, authors, images, and extraction status.",
+      "template": "{{links.apiDefaultDatasetUrl}}/items?view=fullText",
+      "title": "Full text",
+      "type": "string"
+    },
+    "overview": {
+      "description": "Dataset view with one row per article: query, title, source, domain, publishedAt, url, fullTextStatus.",
+      "template": "{{links.apiDefaultDatasetUrl}}/items?view=overview",
+      "title": "Articles overview",
+      "type": "string"
+    },
     "results": {
-      "description": "Dataset with scraped articles",
+      "description": "All scraped articles in one dataset.",
       "template": "{{links.apiDefaultDatasetUrl}}/items",
+      "title": "All articles",
       "type": "string"
     }
   },

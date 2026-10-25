@@ -4,124 +4,175 @@
 
 # Google News Keyword & Full-Text Article Scraper
 
-Search Google News for any keyword and get back real, resolved article links — not Google's redirect URLs — along with headline, source, and publish date. Turn on full-text and image extraction when a snippet isn't enough and you need the actual article body.
+Scrape **Google News** without a login, API key, or browser. Search by keyword, browse a topic, convert a Google News link, read any RSS/Atom feed, or send publisher article URLs for full-text extraction. Every record carries a clean headline, the real publisher URL instead of a Google redirect, a canonical-URL dedupe key, and an honest extraction status when a publisher refuses the page.
 
 ## What this actor does
 
-- Searches Google News for one or more keywords in a single run and deduplicates articles that match more than one query
-- Resolves each result to the publisher's real article URL instead of a Google redirect link whenever it can
-- Filters results by recency, a custom date range, language, country, a specific publisher domain, or excluded words
-- Can optionally fetch each article's page to pull the full body text and the main article image
-- `fullText`, `imageUrl`, and `author` are always present on every record but come back `null` when the corresponding option is off or nothing was found; `publishedAt`, `snippet`, `source` and `domain` are empty strings when Google News doesn't supply them
+- **Five input modes:** `keyword`, `topic`, `newsUrl`, `rss`, and `articleUrls`.
+- **Real publisher links:** Google News article tokens are resolved in batches, with the Google link kept as a fallback if the token ever changes.
+- **Date-correct results:** every item is filtered against its actual `publishedAt` time, so a "past day" run cannot leak a newer or older article. In keyword mode, multi-day ranges are walked day by day, which also gets past Google's ~100-item feed cap; topic and RSS modes return the feed's available items.
+- **Clean, deduplicated records:** the ` - Publisher` suffix is removed from titles, and the same story is deduplicated by canonical publisher URL across queries and day windows.
+- **Optional, honest full text:** page text, description, author, and image are extracted only when requested (always in `articleUrls` mode). A blocked, paywalled, timed-out, or short page becomes a record with `fullTextStatus` instead of a silent null.
+- **Empty fields are omitted** from every record.
 
 ## Output per article
 
-- `query` — the search keyword that returned this article
-- `title` — the article headline
-- `url` — the publisher's actual article URL, resolved from Google News (if resolution fails, the Google News link is kept)
-- `source` — the publisher name, e.g. `BBC`, `Reuters`
-- `domain` — the publisher's domain, e.g. `bbc.com` (from the resolved URL, or from Google News' source link when unresolved)
-- `publishedAt` — the article's publication date and time in ISO 8601, as listed by Google News
-- `snippet` — the short summary Google News shows for the article
-- `fullText` — the full article body text; `null` unless `extractFullText` is enabled
-- `imageUrl` — the article's main image URL; `null` unless `includeImages` is enabled
-- `author` — the article's byline; `null` unless `extractFullText` or `includeImages` is enabled (either one opens the article page) and the page publishes one
-- `language` — the language code used for the search
-- `scrapedAt` — when the actor started on that query
+- `title` — headline with Google's publisher suffix removed
+- `url` — the publisher's article URL; the Google News link when resolution fails
+- `source` — publisher name from the feed or page
+- `domain` — publisher hostname, e.g. `bbc.com`
+- `publishedAt` — ISO 8601 UTC publication time from the feed
+- `snippet` — publisher description when a page was fetched; omitted for metadata-only runs because Google's RSS "description" only repeats the title
+- `author` — byline from page metadata when available
+- `imageUrl` — article image from the publisher page or feed
+- `language` — edition language used for the run
+- `fullText` — extracted article body when full text was requested and available
+- `fullTextStatus` — `ok`, `short`, `empty`, `blocked`, `paywalled`, `rate_limited`, `not_found`, `timeout`, `error`, `unresolved`, or `skipped_cap`
+- `query` — the keyword, topic, feed URL, or article URL that produced the row
+- `recordType` — always `article`
+- `sourceUrl` — the Google News or feed link the record came from
+- `scrapedAt` — UTC timestamp when the run assembled the record
 
 ## Input
 
 | Field | Type | Default | Description |
 |---|---|---|---|
-| `queries` | array of strings | – | Search keywords; each is searched separately and results are deduplicated across all of them. Required. |
-| `maxResultsPerQuery` | integer | `20` | Maximum articles to return per query (1–100). |
-| `language` | string | `en` | Language code for the search, e.g. `en`, `de`, `fr`, `es`. |
-| `country` | string | `US` | Country code for regional news, e.g. `US`, `GB`, `DE`, `IN`. |
-| `dateRange` | string | `any` | Recency filter: `1h`, `6h`, `1d`, `7d`, `1m`, `1y`, or `any`. Ignored when `dateFrom`/`dateTo` are set. |
-| `dateFrom` | string | – | Only articles published on or after this date (`YYYY-MM-DD`); overrides `dateRange`. |
-| `dateTo` | string | – | Only articles published on or before this date (`YYYY-MM-DD`); use together with `dateFrom`. |
-| `siteFilter` | string | – | Restrict results to one publisher domain, e.g. `reuters.com`. |
-| `excludeWords` | array of strings | – | Words or phrases added to the search as exclusions, so Google News leaves out matching articles. |
-| `extractFullText` | boolean | `false` | Fetch each article's page and extract the full body text and author byline. |
-| `includeImages` | boolean | `false` | Fetch each article's page and extract its main image URL (the author byline is picked up too when present). |
-| `maxConcurrency` | integer | `5` | How many articles to process in parallel when `extractFullText`/`includeImages` is on (1–20). |
+| `mode` | string | `keyword` | `keyword`, `topic`, `newsUrl`, `rss`, or `articleUrls` |
+| `queries` | array | – | Keywords for `keyword` mode; Google operators such as `site:` and `OR` work |
+| `topics` | array | – | Topic names (`WORLD`, `NATION`, `BUSINESS`, `TECHNOLOGY`, `ENTERTAINMENT`, `SPORTS`, `SCIENCE`, `HEALTH`), `TOP`, topic hashes, or Google News topic URLs (`topic` mode) |
+| `newsUrls` | array | – | Google News search/topic URLs or RSS/Atom feeds (`newsUrl` mode) |
+| `rssUrls` | array | – | Any public RSS or Atom feed (`rss` mode) |
+| `articleUrls` | array | – | Publisher or Google News article URLs (`articleUrls` mode); full text is always attempted |
+| `language` | string | `en` | Edition language, e.g. `en`, `de`, `ja`, `hi` |
+| `country` | string | `US` | Edition country, e.g. `US`, `GB`, `DE`, `IN` |
+| `dateRange` | string | `any` | `any`, `1h`, `6h`, `12h`, `1d`, `7d`, `30d`, `1y`, or `custom` |
+| `startDate` | string | – | Custom range start, `YYYY-MM-DD`, inclusive |
+| `endDate` | string | – | Custom range end, `YYYY-MM-DD`, inclusive |
+| `maxResultsPerQuery` | integer | `20` | Records taken from each feed request (1–100, Google's feed cap is about 100) |
+| `maxItems` | integer | `500` | Hard cap on unique records in the run (1–5000) |
+| `extractFullText` | boolean | `false` | Fetch publisher pages for body text, description, author, and image |
+| `maxFullText` | integer | `100` | Maximum pages fetched per run (1–500); later records get `fullTextStatus=skipped_cap` |
+| `proxyConfiguration` | object | off | Optional; no proxy is needed or recommended by default |
 
-## Example: quick scan of today's headlines
+### Dates and caps
+
+- Relative ranges use Google's recency operator and are then post-filtered against the real publication time.
+- A custom `startDate`/`endDate` is inclusive. Items published after the end are always dropped, even if Google's search operator returns them.
+- When a date range spans several days and you ask for more than one feed page, the actor walks day windows (newest first) and collects up to `maxItems`. Full windows are reported with a truncation signal in the run status.
+- A single Google News feed returns roughly 100 items. `maxResultsPerQuery` caps each feed window; `maxItems` caps the whole run.
+- Full text is capped per run so a large metadata pull cannot turn into thousands of publisher requests.
+
+## Examples
+
+### Keyword scan, fastest mode
 
 ```json
 {
-  "queries": ["artificial intelligence", "climate change"],
+  "mode": "keyword",
+  "queries": ["artificial intelligence", "semiconductor policy"],
+  "dateRange": "7d",
   "maxResultsPerQuery": 20,
-  "dateRange": "1d"
+  "maxItems": 100
 }
 ```
 
-## Example: full article text and images
+### Topic feed with full text
 
 ```json
 {
-  "queries": ["renewable energy"],
-  "maxResultsPerQuery": 10,
+  "mode": "topic",
+  "topics": ["TECHNOLOGY", "SCIENCE"],
   "extractFullText": true,
-  "includeImages": true
+  "maxFullText": 50,
+  "maxItems": 50
 }
 ```
 
-## Example: one publisher, custom date range, with exclusions
+### Custom date range and real publisher URLs
 
 ```json
 {
-  "queries": ["elections"],
-  "siteFilter": "bbc.com",
-  "dateFrom": "2026-01-01",
-  "dateTo": "2026-02-28",
-  "excludeWords": ["opinion", "editorial"],
-  "maxResultsPerQuery": 50
+  "mode": "keyword",
+  "queries": ["central bank interest rates"],
+  "dateRange": "custom",
+  "startDate": "2026-10-01",
+  "endDate": "2026-10-20",
+  "maxResultsPerQuery": 100,
+  "maxItems": 500
 }
 ```
 
-## Example: non-English regional news
+### Backfill known article URLs
 
 ```json
 {
-  "queries": ["Nachrichten"],
-  "language": "de",
-  "country": "DE",
-  "maxResultsPerQuery": 10
+  "mode": "articleUrls",
+  "articleUrls": [
+    "https://example.com/news/story-one",
+    "https://example.com/news/story-two"
+  ],
+  "maxFullText": 20
+}
+```
+
+### Read an existing RSS feed
+
+```json
+{
+  "mode": "rss",
+  "rssUrls": ["https://feeds.bbci.co.uk/news/rss.xml"],
+  "maxResultsPerQuery": 30,
+  "maxItems": 30
 }
 ```
 
 ## Use cases
 
-- **Media monitoring** — track coverage of your brand, competitors, or industry across the publishers Google News indexes
-- **Market research** — pull news mentioning a company, product, or market trend for analysis
-- **Newsletter curation** — build a themed news digest from one or more topics
-- **Sentiment analysis** — feed full article text into an NLP pipeline to gauge coverage tone on a topic
-- **Academic or policy research** — gather a dated, filtered news dataset for a study
-- **Dataset building** — collect full article text at scale for downstream text-analysis work
+- **Media monitoring** — track brand, competitor, or industry coverage across thousands of publishers.
+- **Newsletter and digest curation** — pull a dated, deduplicated story list for a daily or weekly issue.
+- **NLP and RAG corpora** — collect headlines now and full article bodies for the subset that matters.
+- **Market and event research** — build a date-bounded dataset around an earnings call, election, or product launch.
+- **PR and communications reporting** — measure coverage volume and collect the underlying links.
+- **Academic and policy research** — export a reproducible, date-correct news sample with publisher URLs.
 
 ## FAQ
 
-**Does this return the real article link or a Google redirect?**
-The real, resolved publisher URL, not the `news.google.com` redirect link Google News shows in its own results. In the rare case a link can't be resolved, the Google News link is returned in `url` instead.
+### Does this return the real article URL or a Google redirect?
 
-**Why are `fullText`, `imageUrl`, or `author` null in my results?**
-All three fields are always present on the record, but they only get a real value when you turn on `extractFullText` and/or `includeImages` and the article page actually has that data; otherwise they come back as `null`. Pages that fail to load also leave them `null`. By default (both options off) the actor returns headlines and snippets only, which is faster.
+The real publisher URL. Google News tokens are resolved through Google's own article endpoint. If Google changes the token format, the actor keeps the Google News link rather than losing the record, and says so in the run status.
 
-**Can full-text extraction read paywalled articles?**
-No — sites behind a paywall (e.g. subscription-only news sites) won't return usable full text, since the actor only reads what's publicly visible on the page.
+### Why is `snippet` missing on a metadata-only run?
 
-**Can I search multiple keywords at once?**
-Yes, add as many entries as you like to `queries`; results across all of them are deduplicated by their Google News link, so an article found by an earlier query is not repeated for a later one.
+Google News RSS does not contain a real summary — its description is just the headline plus the publisher name. Returning that as a snippet would duplicate `title`. A real snippet comes from the publisher page, so it appears only when `extractFullText` is on or in `articleUrls` mode.
 
-**What's the difference between `dateRange` and `dateFrom`/`dateTo`?**
-`dateRange` is a quick recency filter (e.g. "past week"). Setting `dateFrom` and/or `dateTo` gives you a custom date window instead and makes the actor ignore `dateRange`. Both are passed to Google News as search conditions, so the dates Google applies are what count.
+### What do the `fullTextStatus` values mean?
 
-**Can I restrict results to one news source?**
-Yes, set `siteFilter` to that publisher's domain, e.g. `reuters.com`.
+`ok` means a substantial body was extracted; `short` means a small body was found; `empty` means no body; `blocked`, `rate_limited`, `not_found`, `timeout`, and `error` describe publisher responses; `paywalled` means a subscription wall was detected; `unresolved` means the publisher URL could not be resolved; `skipped_cap` means the record was beyond `maxFullText`.
 
-**How many articles can I get per query?**
-Up to `maxResultsPerQuery`, capped at 100, limited by how many matching articles Google News returns for that query and filter combination in a single result list (there is no paging beyond it).
+### Can full text read paywalled articles?
 
-**Is this affiliated with Google?**
-No. This is an independent, third-party actor that reads Google News' publicly available search results; it is not affiliated with or endorsed by Google.
+No. The actor reads only what a publisher serves publicly. It does not bypass paywalls, logins, or consent walls, and it never claims 100% full-text coverage. Premium publishers may return a short preview or a blocked status.
+
+### Why did I get fewer than 100 results for one query?
+
+Google News returns roughly 100 items per feed request and has no working pagination parameter. The actor splits multi-day ranges into day windows to collect more, up to `maxItems`. If a window hits the feed cap, the run reports a truncation signal.
+
+### How does the date filter work?
+
+Google's own date operators are day-granular and timezone-fuzzy. The actor adds the operator to the search, then drops every item whose real `publishedAt` falls outside your window. That is why a "past day" run does not include tomorrow's articles or yesterday's late items.
+
+### Are results deduplicated?
+
+Yes. The same story is deduplicated by canonical publisher URL after resolution, with a Google article ID and a title/source key as fallbacks. Tracking parameters, `www.`, fragments, and trailing slashes do not create duplicate rows.
+
+### Does a blocked publisher stop the run?
+
+No. A 401, 403, 429, timeout, or paywall produces a normal record with the RSS metadata and a `fullTextStatus`. The rest of the run continues. If the whole run produces zero records, the actor fails loudly with the feed errors instead of pretending it succeeded.
+
+### Do I need a proxy or an API key?
+
+No. Google News RSS and publisher pages are reached directly. A proxy is optional and usually unnecessary; residential proxies can actually make Google rate-limit more.
+
+### Is this affiliated with Google?
+
+No. This is an independent, third-party actor that reads publicly available Google News feeds and publisher pages. It is not affiliated with or endorsed by Google. You are responsible for respecting publisher terms when storing or redistributing article text.

@@ -1,49 +1,182 @@
 {
   "properties": {
+    "bathsMin": {
+      "description": "Only include properties with at least this many bathrooms (decimals allowed, e.g. 1.5). Leave blank for no minimum.",
+      "editor": "number",
+      "maximum": 10,
+      "minimum": 0,
+      "title": "Minimum bathrooms",
+      "type": "number"
+    },
+    "bedsMax": {
+      "description": "Only include properties with at most this many bedrooms. Leave blank for no maximum.",
+      "editor": "number",
+      "maximum": 10,
+      "minimum": 0,
+      "title": "Maximum bedrooms",
+      "type": "number"
+    },
+    "bedsMin": {
+      "description": "Only include properties with at least this many bedrooms. Leave blank for no minimum.",
+      "editor": "number",
+      "maximum": 10,
+      "minimum": 0,
+      "title": "Minimum bedrooms",
+      "type": "number"
+    },
+    "dateFilter": {
+      "default": "any",
+      "description": "Show only showings in this window. Choose Custom range to use the date fields below. Zillow has no verified server-side date filter, so this is applied to the exact showing dates after collection.",
+      "editor": "select",
+      "enum": [
+        "any",
+        "today",
+        "this_weekend",
+        "next_weekend",
+        "next_7_days",
+        "next_30_days",
+        "custom"
+      ],
+      "enumTitles": [
+        "Any date",
+        "Today",
+        "This weekend",
+        "Next weekend",
+        "Next 7 days",
+        "Next 30 days",
+        "Custom range"
+      ],
+      "prefill": "any",
+      "title": "Open-house date",
+      "type": "string"
+    },
     "dateFrom": {
-      "description": "Include only open houses on or after this date (e.g. '2026-05-01'). Leave blank for no lower bound.",
+      "description": "Include only showings on or after this date. Used when the date filter is Custom range (or when no preset is selected).",
       "editor": "textfield",
       "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
-      "title": "Date From (YYYY-MM-DD)",
+      "title": "Custom range: from (YYYY-MM-DD)",
       "type": "string"
     },
     "dateTo": {
-      "description": "Include only open houses on or before this date (e.g. '2026-05-31'). Leave blank for no upper bound.",
+      "description": "Include only showings on or before this date. Used when the date filter is Custom range (or when no preset is selected).",
       "editor": "textfield",
       "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
-      "title": "Date To (YYYY-MM-DD)",
+      "title": "Custom range: to (YYYY-MM-DD)",
       "type": "string"
+    },
+    "homeTypes": {
+      "description": "Limit results to specific property types. Leave empty for all types.",
+      "editor": "select",
+      "items": {
+        "enum": [
+          "singleFamily",
+          "condo",
+          "townhouse",
+          "multiFamily",
+          "apartment",
+          "manufactured",
+          "lotLand"
+        ],
+        "enumTitles": [
+          "Houses",
+          "Condos",
+          "Townhouses",
+          "Multi-family",
+          "Apartments",
+          "Manufactured homes",
+          "Lots / land"
+        ],
+        "type": "string"
+      },
+      "title": "Home types",
+      "type": "array"
+    },
+    "includeAgentContact": {
+      "default": false,
+      "description": "Include the listing agent and broker phone numbers and any published agent email found on the detail page. Off by default.",
+      "prefill": false,
+      "title": "Include agent contact details",
+      "type": "boolean"
+    },
+    "includeDetails": {
+      "default": true,
+      "description": "Open each listing's detail page for agent/broker, photos, description, year built, lot, HOA, and MLS. Adds one request per listing; rows still return with search-page fields when a detail page fails.",
+      "prefill": true,
+      "title": "Include full property details",
+      "type": "boolean"
+    },
+    "locations": {
+      "description": "US locations to search, one per line: a city (\"Austin, TX\"), ZIP code (\"78704\"), or neighborhood (\"Hyde Park, Austin, TX\"). Boroughs (\"Brooklyn, NY\") and counties (\"Travis County, TX\") also resolve. Each location is resolved through Zillow's autocomplete.",
+      "editor": "stringList",
+      "prefill": [
+        "Austin, TX"
+      ],
+      "title": "Locations",
+      "type": "array"
     },
     "maxItems": {
       "default": 100,
-      "description": "Maximum number of open house listings to return (1–500).",
+      "description": "Maximum number of open-house showing rows to return across all locations and URLs (1-500). Each row is one showing.",
       "editor": "number",
       "maximum": 500,
       "minimum": 1,
-      "prefill": 10,
-      "title": "Max Items",
+      "prefill": 1,
+      "title": "Max showings",
       "type": "integer"
     },
-    "scrapeDetails": {
-      "default": false,
-      "description": "Also visit each property's own Zillow page for lot size, stories, HOA fee, price per square foot, listing agent/broker name and phone, description and photos. Slower; turn off for a quick listing.",
-      "editor": "checkbox",
-      "prefill": false,
-      "title": "Scrape listing detail pages",
-      "type": "boolean"
+    "maxPrice": {
+      "description": "Upper bound on the listing price. Leave blank for no maximum.",
+      "editor": "number",
+      "maximum": 100000000,
+      "minimum": 0,
+      "title": "Maximum price ($)",
+      "type": "integer"
     },
-    "search": {
-      "description": "Free-text location to search for open houses: city name, ZIP code, neighborhood, or address (e.g. 'Austin, TX', '90210', 'Brooklyn, NY').",
-      "editor": "textfield",
-      "prefill": "Austin, TX",
-      "title": "Location Search",
-      "type": "string"
+    "minPrice": {
+      "description": "Lower bound on the listing price. Leave blank for no minimum.",
+      "editor": "number",
+      "maximum": 100000000,
+      "minimum": 0,
+      "title": "Minimum price ($)",
+      "type": "integer"
+    },
+    "proxyConfiguration": {
+      "description": "Optional Apify Proxy overrides. Leave empty and the actor picks the working route automatically: direct first, then Apify Proxy AUTO, then a paid unblocker/residential group only after Zillow returns a real 403/PerimeterX block.",
+      "editor": "proxy",
+      "title": "Proxy configuration (optional)",
+      "type": "object"
     },
     "startUrls": {
-      "description": "Zillow search or open-house URLs to scrape. The open house filter is injected automatically if not present.",
+      "description": "Zillow search or open-house URLs to scrape instead of, or in addition to, locations. Legacy open-house paths are converted to the filtered 1_open path and the open-house filter is applied automatically.",
       "editor": "requestListSources",
-      "title": "Start URLs",
+      "title": "Zillow search URLs",
       "type": "array"
+    },
+    "timeZone": {
+      "default": "America/New_York",
+      "description": "US time zone used to interpret today/this weekend and to floor open-house dates.",
+      "editor": "select",
+      "enum": [
+        "America/New_York",
+        "America/Chicago",
+        "America/Denver",
+        "America/Phoenix",
+        "America/Los_Angeles",
+        "America/Anchorage",
+        "Pacific/Honolulu"
+      ],
+      "enumTitles": [
+        "Eastern",
+        "Central",
+        "Mountain",
+        "Arizona",
+        "Pacific",
+        "Alaska",
+        "Hawaii"
+      ],
+      "prefill": "America/New_York",
+      "title": "Time zone",
+      "type": "string"
     }
   },
   "required": [],

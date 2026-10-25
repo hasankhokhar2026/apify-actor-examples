@@ -1,71 +1,511 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src &#x27;self&#x27;; script-src &#x27;self&#x27; &#x27;sha256-BOw44nkCIQSg9mNU0Owaq7pj7warrPUS8ulwmV4FbbI=&#x27;; style-src &#x27;self&#x27;; img-src &#x27;self&#x27; https: data:; base-uri &#x27;self&#x27;; form-action &#x27;self&#x27;; object-src &#x27;none&#x27;"><title>Airbnb Listing Price &amp; Location Finder | Nimbryxo Studio</title><meta name="description" content="Search Airbnb by location and stay dates for listing price, rating, Superhost and verification status, GPS coordinates, and photos per property."><meta name="robots" content="index,follow"><link rel="canonical" href="https://hasankhokhar2026.github.io/apify-actor-examples/actors/02gBCbgBRDoLpMoY5/"><meta property="og:title" content="Airbnb Listing Price &amp; Location Finder | Nimbryxo Studio"><meta property="og:description" content="Search Airbnb by location and stay dates for listing price, rating, Superhost and verification status, GPS coordinates, and photos per property."><meta property="og:type" content="website"><meta property="og:url" content="https://hasankhokhar2026.github.io/apify-actor-examples/actors/02gBCbgBRDoLpMoY5/"><meta property="og:site_name" content="Nimbryxo Studio"><meta name="twitter:card" content="summary"><link rel="icon" href="/apify-actor-examples/assets/mark.svg?v=2d20f9dc334a" type="image/svg+xml"><link rel="stylesheet" href="/apify-actor-examples/assets/site.css?v=39545fd4a399"><link rel="stylesheet" href="/apify-actor-examples/assets/brand.css?v=eb0f935ade25"><link rel="alternate" type="application/rss+xml" title="Nimbryxo Studio guides" href="/apify-actor-examples/feed.xml"><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization","name":"Nimbryxo Studio","url":"https://hasankhokhar2026.github.io/apify-actor-examples/","sameAs":["https://apify.com/nimbryxo-studio"]},{"@type":"WebSite","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#website","name":"Nimbryxo Studio","url":"https://hasankhokhar2026.github.io/apify-actor-examples/","publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"inLanguage":"en"},{"@type":"WebPage","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/02gBCbgBRDoLpMoY5/#webpage","name":"Airbnb Listing Price & Location Finder","description":"Search Airbnb by location and stay dates for listing price, rating, Superhost and verification status, GPS coordinates, and photos per property.","url":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/02gBCbgBRDoLpMoY5/","isPartOf":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#website"},"publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"inLanguage":"en","mainEntity":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/02gBCbgBRDoLpMoY5/#article"},"breadcrumb":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/02gBCbgBRDoLpMoY5/#breadcrumb"}},{"@type":"TechArticle","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/02gBCbgBRDoLpMoY5/#article","headline":"Airbnb Listing Price & Location Finder","name":"Airbnb Listing Price & Location Finder","description":"Search Airbnb by location and stay dates for listing price, rating, Superhost and verification status, GPS coordinates, and photos per property.","url":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/02gBCbgBRDoLpMoY5/","author":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"mainEntityOfPage":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/02gBCbgBRDoLpMoY5/#webpage"},"inLanguage":"en"},{"@type":"BreadcrumbList","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/02gBCbgBRDoLpMoY5/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Nimbryxo Studio","item":"https://hasankhokhar2026.github.io/apify-actor-examples/"},{"@type":"ListItem","position":2,"name":"Actors","item":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/"},{"@type":"ListItem","position":3,"name":"Airbnb Listing Price & Location Finder","item":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/02gBCbgBRDoLpMoY5/"}]}]}</script><script src="/apify-actor-examples/assets/site.js?v=7cabac48dd31" defer></script></head><body class="theme-studio"><a href="#main" class="skip-link">Skip to content</a><header><div class="inner"><a href="/apify-actor-examples/" class="brand"><img src="/apify-actor-examples/assets/mark.svg?v=2d20f9dc334a" alt="" width="29" height="29">Nimbryxo Studio</a><nav aria-label="Main navigation"><a href="/apify-actor-examples/actors/" aria-current="page">Actors</a><a href="/apify-actor-examples/guides/">Guides</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></nav></div></header><main id="main"><div class="doc-layout"><aside class="contents" aria-label="On this page"><strong>Contents</strong><a href="#overview">Overview</a><a href="#published-readme">Published README</a><a href="#input-schema">Input schema</a><a href="#output-schema">Output schema</a><a href="#dataset-schema">Dataset schema</a><a href="#python-quickstart">Python quickstart</a></aside><article class="prose"><div class="breadcrumb"><a href="/apify-actor-examples/actors/">Actors</a><span>/</span><span>Airbnb Listing Price &amp; Location Finder</span></div><section id="overview"><h1 class="doc-title">Airbnb Listing Price &amp; Location Finder</h1><p class="lede">Search Airbnb by location and stay dates for listing price, rating, Superhost and verification status, GPS coordinates, and photos per property.</p><div class="actions"><a class="button" href="https://apify.com/nimbryxo-studio/airbnb-listing-price-and-location-finder">Open on Apify</a><a class="text-link" href="https://github.com/hasankhokhar2026/apify-actor-examples/blob/main/docs/actors/02gBCbgBRDoLpMoY5/README.md">GitHub source</a></div></section><section class="schema-section" id="input-schema"><h2>Input schema</h2><p>Input fields, types, required flags, descriptions, defaults, and prefills come from the published definition. Prefill examples are distinct from defaults.</p><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>location</code></td><td>string</td><td>required</td><td>The location to search for Airbnb listings (e.g., &#x27;New York&#x27;, &#x27;Paris, France&#x27;, &#x27;Tokyo&#x27;).</td></tr><tr><td><code>checkIn</code></td><td>string</td><td>optional</td><td>Check-in date in YYYY-MM-DD format (e.g., &#x27;2025-06-01&#x27;). Leave empty for general search without dates.</td></tr><tr><td><code>checkOut</code></td><td>string</td><td>optional</td><td>Check-out date in YYYY-MM-DD format (e.g., &#x27;2025-06-05&#x27;). Leave empty for general search without dates.</td></tr></tbody></table></div><details><summary>Show all input fields</summary><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>location</code></td><td>string</td><td>required</td><td>The location to search for Airbnb listings (e.g., &#x27;New York&#x27;, &#x27;Paris, France&#x27;, &#x27;Tokyo&#x27;).</td></tr><tr><td><code>checkIn</code></td><td>string</td><td>optional</td><td>Check-in date in YYYY-MM-DD format (e.g., &#x27;2025-06-01&#x27;). Leave empty for general search without dates.</td></tr><tr><td><code>checkOut</code></td><td>string</td><td>optional</td><td>Check-out date in YYYY-MM-DD format (e.g., &#x27;2025-06-05&#x27;). Leave empty for general search without dates.</td></tr><tr><td><code>adults</code></td><td>integer</td><td>optional</td><td>Number of adult guests. Affects pricing and availability.</td></tr><tr><td><code>maxItems</code></td><td>integer</td><td>optional</td><td>Maximum number of Airbnb listings to scrape. The scraper returns up to 18 results per search page.</td></tr><tr><td><code>proxy</code></td><td>object</td><td>optional</td><td>Proxy settings for the scraper. Recommended for large-scale scraping to avoid rate limiting.</td></tr></tbody></table></div></details><p><a href="input-schema.json">Download the published input schema</a></p><details><summary>View complete JSON</summary><pre><code>{
-  &quot;description&quot;: &quot;Configure the Airbnb scraper to extract listings, prices, ratings and host information for any location.&quot;,
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src &#x27;self&#x27;; script-src &#x27;self&#x27; &#x27;sha256-BOw44nkCIQSg9mNU0Owaq7pj7warrPUS8ulwmV4FbbI=&#x27;; style-src &#x27;self&#x27;; img-src &#x27;self&#x27; https: data:; base-uri &#x27;self&#x27;; form-action &#x27;self&#x27;; object-src &#x27;none&#x27;"><title>Airbnb Listing Price &amp; Location Finder | Nimbryxo Studio</title><meta name="description" content="Search Airbnb by location and stay dates for listing price, rating, Superhost and verification status, GPS coordinates, and photos per property."><meta name="robots" content="index,follow"><link rel="canonical" href="https://hasankhokhar2026.github.io/apify-actor-examples/actors/02gBCbgBRDoLpMoY5/"><meta property="og:title" content="Airbnb Listing Price &amp; Location Finder | Nimbryxo Studio"><meta property="og:description" content="Search Airbnb by location and stay dates for listing price, rating, Superhost and verification status, GPS coordinates, and photos per property."><meta property="og:type" content="website"><meta property="og:url" content="https://hasankhokhar2026.github.io/apify-actor-examples/actors/02gBCbgBRDoLpMoY5/"><meta property="og:site_name" content="Nimbryxo Studio"><meta name="twitter:card" content="summary"><link rel="icon" href="/apify-actor-examples/assets/mark.svg?v=2d20f9dc334a" type="image/svg+xml"><link rel="stylesheet" href="/apify-actor-examples/assets/site.css?v=39545fd4a399"><link rel="stylesheet" href="/apify-actor-examples/assets/brand.css?v=eb0f935ade25"><link rel="alternate" type="application/rss+xml" title="Nimbryxo Studio guides" href="/apify-actor-examples/feed.xml"><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization","name":"Nimbryxo Studio","url":"https://hasankhokhar2026.github.io/apify-actor-examples/","sameAs":["https://apify.com/nimbryxo-studio"]},{"@type":"WebSite","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#website","name":"Nimbryxo Studio","url":"https://hasankhokhar2026.github.io/apify-actor-examples/","publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"inLanguage":"en"},{"@type":"WebPage","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/02gBCbgBRDoLpMoY5/#webpage","name":"Airbnb Listing Price & Location Finder","description":"Search Airbnb by location and stay dates for listing price, rating, Superhost and verification status, GPS coordinates, and photos per property.","url":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/02gBCbgBRDoLpMoY5/","isPartOf":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#website"},"publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"inLanguage":"en","mainEntity":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/02gBCbgBRDoLpMoY5/#article"},"breadcrumb":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/02gBCbgBRDoLpMoY5/#breadcrumb"}},{"@type":"TechArticle","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/02gBCbgBRDoLpMoY5/#article","headline":"Airbnb Listing Price & Location Finder","name":"Airbnb Listing Price & Location Finder","description":"Search Airbnb by location and stay dates for listing price, rating, Superhost and verification status, GPS coordinates, and photos per property.","url":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/02gBCbgBRDoLpMoY5/","author":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"mainEntityOfPage":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/02gBCbgBRDoLpMoY5/#webpage"},"inLanguage":"en"},{"@type":"BreadcrumbList","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/02gBCbgBRDoLpMoY5/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Nimbryxo Studio","item":"https://hasankhokhar2026.github.io/apify-actor-examples/"},{"@type":"ListItem","position":2,"name":"Actors","item":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/"},{"@type":"ListItem","position":3,"name":"Airbnb Listing Price & Location Finder","item":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/02gBCbgBRDoLpMoY5/"}]}]}</script><script src="/apify-actor-examples/assets/site.js?v=7cabac48dd31" defer></script></head><body class="theme-studio"><a href="#main" class="skip-link">Skip to content</a><header><div class="inner"><a href="/apify-actor-examples/" class="brand"><img src="/apify-actor-examples/assets/mark.svg?v=2d20f9dc334a" alt="" width="29" height="29">Nimbryxo Studio</a><nav aria-label="Main navigation"><a href="/apify-actor-examples/actors/" aria-current="page">Actors</a><a href="/apify-actor-examples/guides/">Guides</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></nav></div></header><main id="main"><div class="doc-layout"><aside class="contents" aria-label="On this page"><strong>Contents</strong><a href="#overview">Overview</a><a href="#published-readme">Published README</a><a href="#input-schema">Input schema</a><a href="#output-schema">Output schema</a><a href="#dataset-schema">Dataset schema</a><a href="#python-quickstart">Python quickstart</a></aside><article class="prose"><div class="breadcrumb"><a href="/apify-actor-examples/actors/">Actors</a><span>/</span><span>Airbnb Listing Price &amp; Location Finder</span></div><section id="overview"><h1 class="doc-title">Airbnb Listing Price &amp; Location Finder</h1><p class="lede">Search Airbnb by location and stay dates for listing price, rating, Superhost and verification status, GPS coordinates, and photos per property.</p><div class="actions"><a class="button" href="https://apify.com/nimbryxo-studio/airbnb-listing-price-and-location-finder">Open on Apify</a><a class="text-link" href="https://github.com/hasankhokhar2026/apify-actor-examples/blob/main/docs/actors/02gBCbgBRDoLpMoY5/README.md">GitHub source</a></div></section><section class="schema-section" id="input-schema"><h2>Input schema</h2><p>Input fields, types, required flags, descriptions, defaults, and prefills come from the published definition. Prefill examples are distinct from defaults.</p><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>mode</code></td><td>string</td><td>optional</td><td>Search discovers listings by location or map area. Details loads the listing URLs or IDs you provide.</td></tr><tr><td><code>location</code></td><td>string</td><td>optional</td><td>City, region, country or neighborhood, e.g. New York, Paris, SoHo. Airbnb&#x27;s own location lookup validates the name before searching (mode=search).</td></tr><tr><td><code>placeId</code></td><td>string</td><td>optional</td><td>Optional Google/Airbnb place ID (e.g. ChIJOwg_06VPwokRYv534QaPC8g). Takes precedence over the resolved location and skips text matching (mode=search).</td></tr></tbody></table></div><details><summary>Show all input fields</summary><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>mode</code></td><td>string</td><td>optional</td><td>Search discovers listings by location or map area. Details loads the listing URLs or IDs you provide.</td></tr><tr><td><code>location</code></td><td>string</td><td>optional</td><td>City, region, country or neighborhood, e.g. New York, Paris, SoHo. Airbnb&#x27;s own location lookup validates the name before searching (mode=search).</td></tr><tr><td><code>placeId</code></td><td>string</td><td>optional</td><td>Optional Google/Airbnb place ID (e.g. ChIJOwg_06VPwokRYv534QaPC8g). Takes precedence over the resolved location and skips text matching (mode=search).</td></tr><tr><td><code>neighborhood</code></td><td>string</td><td>optional</td><td>Optional neighborhood to combine with Location, e.g. SoHo + New York (mode=search).</td></tr><tr><td><code>bbox</code></td><td>object</td><td>optional</td><td>Search inside a map rectangle instead of a named location. Use decimal degrees: swLat, swLng (south-west corner) and neLat, neLng (north-east corner), plus an optional zoom (1-22). Example: {&quot;swLat&quot;: 40.7075, &quot;swLng&quot;: -74.0135, &quot;neLat&quot;: 40.7904, &quot;neLng&quot;: -73.9591, &quot;zoom&quot;: 13} (mode=search).</td></tr><tr><td><code>listingUrls</code></td><td>array</td><td>optional</td><td>Airbnb room URLs, e.g. https://www.airbnb.com/rooms/23222680 (mode=details).</td></tr><tr><td><code>listingIds</code></td><td>array</td><td>optional</td><td>Numeric Airbnb listing IDs, e.g. 23222680. You can mix these with listing URLs (mode=details).</td></tr><tr><td><code>checkIn</code></td><td>string</td><td>optional</td><td>Stay start date in YYYY-MM-DD format. Leave both dates empty to use Airbnb&#x27;s displayed quote (search) or to skip the price quote (details).</td></tr><tr><td><code>checkOut</code></td><td>string</td><td>optional</td><td>Stay end date in YYYY-MM-DD format. Must be after the check-in date.</td></tr><tr><td><code>adults</code></td><td>integer</td><td>optional</td><td>Number of adult guests (1-16).</td></tr><tr><td><code>children</code></td><td>integer</td><td>optional</td><td>Number of children aged 2-12 (0-15).</td></tr><tr><td><code>infants</code></td><td>integer</td><td>optional</td><td>Number of infants under 2 (0-5).</td></tr><tr><td><code>pets</code></td><td>integer</td><td>optional</td><td>Number of pets (0-5).</td></tr><tr><td><code>minPrice</code></td><td>integer</td><td>optional</td><td>Lowest nightly price to include, in the selected currency. 0 means no minimum.</td></tr><tr><td><code>maxPrice</code></td><td>integer</td><td>optional</td><td>Highest nightly price to include, in the selected currency. 0 means no maximum.</td></tr><tr><td><code>roomType</code></td><td>string</td><td>optional</td><td>Restrict results to one Airbnb room type.</td></tr><tr><td><code>propertyType</code></td><td>string</td><td>optional</td><td>Restrict results to one Airbnb property type.</td></tr><tr><td><code>minBedrooms</code></td><td>integer</td><td>optional</td><td>Minimum number of bedrooms. 0 means no minimum.</td></tr><tr><td><code>minBeds</code></td><td>integer</td><td>optional</td><td>Minimum number of beds. 0 means no minimum.</td></tr><tr><td><code>minBathrooms</code></td><td>integer</td><td>optional</td><td>Minimum number of bathrooms. 0 means no minimum.</td></tr><tr><td><code>maxListings</code></td><td>integer</td><td>optional</td><td>Hard cap on records (1-300). Airbnb pages hold 40 results each; duplicate cards are removed automatically.</td></tr><tr><td><code>includeDetails</code></td><td>boolean</td><td>optional</td><td>Adds the listing page and an exact stay quote: host, amenities, photos, description, fees and availability. Costs extra requests per listing.</td></tr><tr><td><code>includeReviews</code></td><td>boolean</td><td>optional</td><td>Fetch recent guest reviews for each listing (up to maxReviews).</td></tr><tr><td><code>maxReviews</code></td><td>integer</td><td>optional</td><td>Reviews returned per listing (1-24).</td></tr><tr><td><code>includeCalendar</code></td><td>boolean</td><td>optional</td><td>Fetch the day-by-day availability calendar for each listing.</td></tr><tr><td><code>calendarMonths</code></td><td>integer</td><td>optional</td><td>Number of months to return, starting with the current month (1-12).</td></tr><tr><td><code>currency</code></td><td>string</td><td>optional</td><td>Currency for prices. Airbnb returns quotes in this currency.</td></tr><tr><td><code>locale</code></td><td>string</td><td>optional</td><td>Language/region used for Airbnb labels, dates and localized text.</td></tr><tr><td><code>proxyConfiguration</code></td><td>object</td><td>optional</td><td>Optional. Leave empty and the actor connects directly, then switches to an automatic Apify proxy only if Airbnb blocks a request.</td></tr></tbody></table></div></details><p><a href="input-schema.json">Download the published input schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+  &quot;description&quot;: &quot;Search Airbnb stays by city, neighborhood, place ID or map area, or load specific listing URLs. Get nightly and stay-total prices, fees, host details, amenities, reviews and a 12-month availability calendar.&quot;,
   &quot;properties&quot;: {
     &quot;adults&quot;: {
       &quot;default&quot;: 1,
-      &quot;description&quot;: &quot;Number of adult guests. Affects pricing and availability.&quot;,
+      &quot;description&quot;: &quot;Number of adult guests (1-16).&quot;,
       &quot;maximum&quot;: 16,
       &quot;minimum&quot;: 1,
-      &quot;title&quot;: &quot;Number of Adults&quot;,
+      &quot;title&quot;: &quot;Adults&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;bbox&quot;: {
+      &quot;description&quot;: &quot;Search inside a map rectangle instead of a named location. Use decimal degrees: swLat, swLng (south-west corner) and neLat, neLng (north-east corner), plus an optional zoom (1-22). Example: {\&quot;swLat\&quot;: 40.7075, \&quot;swLng\&quot;: -74.0135, \&quot;neLat\&quot;: 40.7904, \&quot;neLng\&quot;: -73.9591, \&quot;zoom\&quot;: 13} (mode=search).&quot;,
+      &quot;editor&quot;: &quot;json&quot;,
+      &quot;title&quot;: &quot;Map bounding box&quot;,
+      &quot;type&quot;: &quot;object&quot;
+    },
+    &quot;calendarMonths&quot;: {
+      &quot;default&quot;: 12,
+      &quot;description&quot;: &quot;Number of months to return, starting with the current month (1-12).&quot;,
+      &quot;maximum&quot;: 12,
+      &quot;minimum&quot;: 1,
+      &quot;title&quot;: &quot;Calendar months&quot;,
       &quot;type&quot;: &quot;integer&quot;
     },
     &quot;checkIn&quot;: {
-      &quot;description&quot;: &quot;Check-in date in YYYY-MM-DD format (e.g., &#x27;2025-06-01&#x27;). Leave empty for general search without dates.&quot;,
+      &quot;description&quot;: &quot;Stay start date in YYYY-MM-DD format. Leave both dates empty to use Airbnb&#x27;s displayed quote (search) or to skip the price quote (details).&quot;,
       &quot;editor&quot;: &quot;textfield&quot;,
       &quot;nullable&quot;: true,
-      &quot;title&quot;: &quot;Check-in Date&quot;,
+      &quot;pattern&quot;: &quot;^\\d{4}-\\d{2}-\\d{2}$&quot;,
+      &quot;sectionCaption&quot;: &quot;Stay dates and guests&quot;,
+      &quot;title&quot;: &quot;Check-in date&quot;,
       &quot;type&quot;: &quot;string&quot;
     },
     &quot;checkOut&quot;: {
-      &quot;description&quot;: &quot;Check-out date in YYYY-MM-DD format (e.g., &#x27;2025-06-05&#x27;). Leave empty for general search without dates.&quot;,
+      &quot;description&quot;: &quot;Stay end date in YYYY-MM-DD format. Must be after the check-in date.&quot;,
       &quot;editor&quot;: &quot;textfield&quot;,
       &quot;nullable&quot;: true,
-      &quot;title&quot;: &quot;Check-out Date&quot;,
+      &quot;pattern&quot;: &quot;^\\d{4}-\\d{2}-\\d{2}$&quot;,
+      &quot;title&quot;: &quot;Check-out date&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;children&quot;: {
+      &quot;default&quot;: 0,
+      &quot;description&quot;: &quot;Number of children aged 2-12 (0-15).&quot;,
+      &quot;maximum&quot;: 15,
+      &quot;minimum&quot;: 0,
+      &quot;title&quot;: &quot;Children&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;currency&quot;: {
+      &quot;default&quot;: &quot;USD&quot;,
+      &quot;description&quot;: &quot;Currency for prices. Airbnb returns quotes in this currency.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;USD&quot;,
+        &quot;EUR&quot;,
+        &quot;GBP&quot;,
+        &quot;JPY&quot;,
+        &quot;CAD&quot;,
+        &quot;AUD&quot;,
+        &quot;NZD&quot;,
+        &quot;CHF&quot;,
+        &quot;SEK&quot;,
+        &quot;NOK&quot;,
+        &quot;DKK&quot;,
+        &quot;PLN&quot;,
+        &quot;CZK&quot;,
+        &quot;HUF&quot;,
+        &quot;RON&quot;,
+        &quot;BGN&quot;,
+        &quot;TRY&quot;,
+        &quot;RUB&quot;,
+        &quot;UAH&quot;,
+        &quot;ILS&quot;,
+        &quot;AED&quot;,
+        &quot;SAR&quot;,
+        &quot;QAR&quot;,
+        &quot;KWD&quot;,
+        &quot;BHD&quot;,
+        &quot;OMR&quot;,
+        &quot;EGP&quot;,
+        &quot;ZAR&quot;,
+        &quot;NGN&quot;,
+        &quot;KES&quot;,
+        &quot;GHS&quot;,
+        &quot;MAD&quot;,
+        &quot;INR&quot;,
+        &quot;PKR&quot;,
+        &quot;BDT&quot;,
+        &quot;LKR&quot;,
+        &quot;NPR&quot;,
+        &quot;CNY&quot;,
+        &quot;HKD&quot;,
+        &quot;TWD&quot;,
+        &quot;SGD&quot;,
+        &quot;MYR&quot;,
+        &quot;THB&quot;,
+        &quot;IDR&quot;,
+        &quot;PHP&quot;,
+        &quot;VND&quot;,
+        &quot;KRW&quot;,
+        &quot;MXN&quot;,
+        &quot;BRL&quot;,
+        &quot;ARS&quot;,
+        &quot;CLP&quot;,
+        &quot;COP&quot;,
+        &quot;PEN&quot;,
+        &quot;UYU&quot;,
+        &quot;CRC&quot;,
+        &quot;DOP&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;US dollar&quot;,
+        &quot;Euro&quot;,
+        &quot;British pound&quot;,
+        &quot;Japanese yen&quot;,
+        &quot;Canadian dollar&quot;,
+        &quot;Australian dollar&quot;,
+        &quot;New Zealand dollar&quot;,
+        &quot;Swiss franc&quot;,
+        &quot;Swedish krona&quot;,
+        &quot;Norwegian krone&quot;,
+        &quot;Danish krone&quot;,
+        &quot;Polish zloty&quot;,
+        &quot;Czech koruna&quot;,
+        &quot;Hungarian forint&quot;,
+        &quot;Romanian leu&quot;,
+        &quot;Bulgarian lev&quot;,
+        &quot;Turkish lira&quot;,
+        &quot;Russian ruble&quot;,
+        &quot;Ukrainian hryvnia&quot;,
+        &quot;Israeli shekel&quot;,
+        &quot;UAE dirham&quot;,
+        &quot;Saudi riyal&quot;,
+        &quot;Qatari riyal&quot;,
+        &quot;Kuwaiti dinar&quot;,
+        &quot;Bahraini dinar&quot;,
+        &quot;Omani rial&quot;,
+        &quot;Egyptian pound&quot;,
+        &quot;South African rand&quot;,
+        &quot;Nigerian naira&quot;,
+        &quot;Kenyan shilling&quot;,
+        &quot;Ghanaian cedi&quot;,
+        &quot;Moroccan dirham&quot;,
+        &quot;Indian rupee&quot;,
+        &quot;Pakistani rupee&quot;,
+        &quot;Bangladeshi taka&quot;,
+        &quot;Sri Lankan rupee&quot;,
+        &quot;Nepalese rupee&quot;,
+        &quot;Chinese yuan&quot;,
+        &quot;Hong Kong dollar&quot;,
+        &quot;Taiwan dollar&quot;,
+        &quot;Singapore dollar&quot;,
+        &quot;Malaysian ringgit&quot;,
+        &quot;Thai baht&quot;,
+        &quot;Indonesian rupiah&quot;,
+        &quot;Philippine peso&quot;,
+        &quot;Vietnamese dong&quot;,
+        &quot;South Korean won&quot;,
+        &quot;Mexican peso&quot;,
+        &quot;Brazilian real&quot;,
+        &quot;Argentine peso&quot;,
+        &quot;Chilean peso&quot;,
+        &quot;Colombian peso&quot;,
+        &quot;Peruvian sol&quot;,
+        &quot;Uruguayan peso&quot;,
+        &quot;Costa Rican colon&quot;,
+        &quot;Dominican peso&quot;
+      ],
+      &quot;sectionCaption&quot;: &quot;Language and network&quot;,
+      &quot;title&quot;: &quot;Currency&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;includeCalendar&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;Fetch the day-by-day availability calendar for each listing.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Include availability calendar&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;includeDetails&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;Adds the listing page and an exact stay quote: host, amenities, photos, description, fees and availability. Costs extra requests per listing.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;sectionCaption&quot;: &quot;Detail enrichment&quot;,
+      &quot;title&quot;: &quot;Include full listing details&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;includeReviews&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;Fetch recent guest reviews for each listing (up to maxReviews).&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Include reviews&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;infants&quot;: {
+      &quot;default&quot;: 0,
+      &quot;description&quot;: &quot;Number of infants under 2 (0-5).&quot;,
+      &quot;maximum&quot;: 5,
+      &quot;minimum&quot;: 0,
+      &quot;title&quot;: &quot;Infants&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;listingIds&quot;: {
+      &quot;description&quot;: &quot;Numeric Airbnb listing IDs, e.g. 23222680. You can mix these with listing URLs (mode=details).&quot;,
+      &quot;editor&quot;: &quot;stringList&quot;,
+      &quot;title&quot;: &quot;Listing IDs&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;listingUrls&quot;: {
+      &quot;description&quot;: &quot;Airbnb room URLs, e.g. https://www.airbnb.com/rooms/23222680 (mode=details).&quot;,
+      &quot;editor&quot;: &quot;stringList&quot;,
+      &quot;sectionCaption&quot;: &quot;Specific listings&quot;,
+      &quot;title&quot;: &quot;Listing URLs&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;locale&quot;: {
+      &quot;default&quot;: &quot;en&quot;,
+      &quot;description&quot;: &quot;Language/region used for Airbnb labels, dates and localized text.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;en&quot;,
+        &quot;en-US&quot;,
+        &quot;en-GB&quot;,
+        &quot;en-CA&quot;,
+        &quot;en-AU&quot;,
+        &quot;de-DE&quot;,
+        &quot;fr-FR&quot;,
+        &quot;es-ES&quot;,
+        &quot;es-MX&quot;,
+        &quot;it-IT&quot;,
+        &quot;pt-BR&quot;,
+        &quot;pt-PT&quot;,
+        &quot;nl-NL&quot;,
+        &quot;sv-SE&quot;,
+        &quot;da-DK&quot;,
+        &quot;nb-NO&quot;,
+        &quot;fi-FI&quot;,
+        &quot;pl-PL&quot;,
+        &quot;cs-CZ&quot;,
+        &quot;hu-HU&quot;,
+        &quot;ro-RO&quot;,
+        &quot;el-GR&quot;,
+        &quot;tr-TR&quot;,
+        &quot;ru-RU&quot;,
+        &quot;uk-UA&quot;,
+        &quot;he-IL&quot;,
+        &quot;ar&quot;,
+        &quot;hi-IN&quot;,
+        &quot;id-ID&quot;,
+        &quot;th-TH&quot;,
+        &quot;vi-VN&quot;,
+        &quot;ja-JP&quot;,
+        &quot;ko-KR&quot;,
+        &quot;zh-CN&quot;,
+        &quot;zh-TW&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;English&quot;,
+        &quot;English (United States)&quot;,
+        &quot;English (United Kingdom)&quot;,
+        &quot;English (Canada)&quot;,
+        &quot;English (Australia)&quot;,
+        &quot;German&quot;,
+        &quot;French&quot;,
+        &quot;Spanish (Spain)&quot;,
+        &quot;Spanish (Mexico)&quot;,
+        &quot;Italian&quot;,
+        &quot;Portuguese (Brazil)&quot;,
+        &quot;Portuguese (Portugal)&quot;,
+        &quot;Dutch&quot;,
+        &quot;Swedish&quot;,
+        &quot;Danish&quot;,
+        &quot;Norwegian&quot;,
+        &quot;Finnish&quot;,
+        &quot;Polish&quot;,
+        &quot;Czech&quot;,
+        &quot;Hungarian&quot;,
+        &quot;Romanian&quot;,
+        &quot;Greek&quot;,
+        &quot;Turkish&quot;,
+        &quot;Russian&quot;,
+        &quot;Ukrainian&quot;,
+        &quot;Hebrew&quot;,
+        &quot;Arabic&quot;,
+        &quot;Hindi&quot;,
+        &quot;Indonesian&quot;,
+        &quot;Thai&quot;,
+        &quot;Vietnamese&quot;,
+        &quot;Japanese&quot;,
+        &quot;Korean&quot;,
+        &quot;Chinese (Simplified)&quot;,
+        &quot;Chinese (Traditional)&quot;
+      ],
+      &quot;title&quot;: &quot;Locale&quot;,
       &quot;type&quot;: &quot;string&quot;
     },
     &quot;location&quot;: {
-      &quot;description&quot;: &quot;The location to search for Airbnb listings (e.g., &#x27;New York&#x27;, &#x27;Paris, France&#x27;, &#x27;Tokyo&#x27;).&quot;,
+      &quot;description&quot;: &quot;City, region, country or neighborhood, e.g. New York, Paris, SoHo. Airbnb&#x27;s own location lookup validates the name before searching (mode=search).&quot;,
       &quot;editor&quot;: &quot;textfield&quot;,
       &quot;prefill&quot;: &quot;New York&quot;,
       &quot;title&quot;: &quot;Location&quot;,
       &quot;type&quot;: &quot;string&quot;
     },
-    &quot;maxItems&quot;: {
+    &quot;maxListings&quot;: {
       &quot;default&quot;: 20,
-      &quot;description&quot;: &quot;Maximum number of Airbnb listings to scrape. The scraper returns up to 18 results per search page.&quot;,
-      &quot;maximum&quot;: 100,
+      &quot;description&quot;: &quot;Hard cap on records (1-300). Airbnb pages hold 40 results each; duplicate cards are removed automatically.&quot;,
+      &quot;maximum&quot;: 300,
       &quot;minimum&quot;: 1,
-      &quot;prefill&quot;: 5,
-      &quot;title&quot;: &quot;Maximum Listings&quot;,
+      &quot;prefill&quot;: 3,
+      &quot;sectionCaption&quot;: &quot;Output&quot;,
+      &quot;title&quot;: &quot;Maximum listings&quot;,
       &quot;type&quot;: &quot;integer&quot;
     },
-    &quot;proxy&quot;: {
-      &quot;description&quot;: &quot;Proxy settings for the scraper. Recommended for large-scale scraping to avoid rate limiting.&quot;,
+    &quot;maxPrice&quot;: {
+      &quot;default&quot;: 0,
+      &quot;description&quot;: &quot;Highest nightly price to include, in the selected currency. 0 means no maximum.&quot;,
+      &quot;maximum&quot;: 100000,
+      &quot;minimum&quot;: 0,
+      &quot;title&quot;: &quot;Maximum nightly price&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;maxReviews&quot;: {
+      &quot;default&quot;: 12,
+      &quot;description&quot;: &quot;Reviews returned per listing (1-24).&quot;,
+      &quot;maximum&quot;: 24,
+      &quot;minimum&quot;: 1,
+      &quot;title&quot;: &quot;Maximum reviews per listing&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;minBathrooms&quot;: {
+      &quot;default&quot;: 0,
+      &quot;description&quot;: &quot;Minimum number of bathrooms. 0 means no minimum.&quot;,
+      &quot;maximum&quot;: 20,
+      &quot;minimum&quot;: 0,
+      &quot;title&quot;: &quot;Minimum bathrooms&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;minBedrooms&quot;: {
+      &quot;default&quot;: 0,
+      &quot;description&quot;: &quot;Minimum number of bedrooms. 0 means no minimum.&quot;,
+      &quot;maximum&quot;: 20,
+      &quot;minimum&quot;: 0,
+      &quot;title&quot;: &quot;Minimum bedrooms&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;minBeds&quot;: {
+      &quot;default&quot;: 0,
+      &quot;description&quot;: &quot;Minimum number of beds. 0 means no minimum.&quot;,
+      &quot;maximum&quot;: 30,
+      &quot;minimum&quot;: 0,
+      &quot;title&quot;: &quot;Minimum beds&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;minPrice&quot;: {
+      &quot;default&quot;: 0,
+      &quot;description&quot;: &quot;Lowest nightly price to include, in the selected currency. 0 means no minimum.&quot;,
+      &quot;maximum&quot;: 100000,
+      &quot;minimum&quot;: 0,
+      &quot;sectionCaption&quot;: &quot;Filters&quot;,
+      &quot;title&quot;: &quot;Minimum nightly price&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;mode&quot;: {
+      &quot;default&quot;: &quot;search&quot;,
+      &quot;description&quot;: &quot;Search discovers listings by location or map area. Details loads the listing URLs or IDs you provide.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;search&quot;,
+        &quot;details&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;Search by location or map area&quot;,
+        &quot;Load specific listing URLs or IDs&quot;
+      ],
+      &quot;prefill&quot;: &quot;search&quot;,
+      &quot;sectionCaption&quot;: &quot;Search&quot;,
+      &quot;title&quot;: &quot;Mode&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;neighborhood&quot;: {
+      &quot;description&quot;: &quot;Optional neighborhood to combine with Location, e.g. SoHo + New York (mode=search).&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;title&quot;: &quot;Neighborhood&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;pets&quot;: {
+      &quot;default&quot;: 0,
+      &quot;description&quot;: &quot;Number of pets (0-5).&quot;,
+      &quot;maximum&quot;: 5,
+      &quot;minimum&quot;: 0,
+      &quot;title&quot;: &quot;Pets&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;placeId&quot;: {
+      &quot;description&quot;: &quot;Optional Google/Airbnb place ID (e.g. ChIJOwg_06VPwokRYv534QaPC8g). Takes precedence over the resolved location and skips text matching (mode=search).&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;title&quot;: &quot;Airbnb place ID&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;propertyType&quot;: {
+      &quot;default&quot;: &quot;Any&quot;,
+      &quot;description&quot;: &quot;Restrict results to one Airbnb property type.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;Any&quot;,
+        &quot;Apartment&quot;,
+        &quot;House&quot;,
+        &quot;Villa&quot;,
+        &quot;Condominium&quot;,
+        &quot;Loft&quot;,
+        &quot;Guest suite&quot;,
+        &quot;Guesthouse&quot;,
+        &quot;Hotel&quot;,
+        &quot;Resort&quot;,
+        &quot;Cottage&quot;,
+        &quot;Cabin&quot;,
+        &quot;Bungalow&quot;,
+        &quot;Townhouse&quot;,
+        &quot;Tiny home&quot;,
+        &quot;Boat&quot;,
+        &quot;Barn&quot;,
+        &quot;Camper/RV&quot;,
+        &quot;Farm stay&quot;,
+        &quot;Castle&quot;,
+        &quot;Cave&quot;,
+        &quot;Dome&quot;,
+        &quot;Container&quot;,
+        &quot;Treehouse&quot;,
+        &quot;Yurt&quot;,
+        &quot;Serviced apartment&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;Any property type&quot;,
+        &quot;Apartment&quot;,
+        &quot;House&quot;,
+        &quot;Villa&quot;,
+        &quot;Condominium&quot;,
+        &quot;Loft&quot;,
+        &quot;Guest suite&quot;,
+        &quot;Guesthouse&quot;,
+        &quot;Hotel&quot;,
+        &quot;Resort&quot;,
+        &quot;Cottage&quot;,
+        &quot;Cabin&quot;,
+        &quot;Bungalow&quot;,
+        &quot;Townhouse&quot;,
+        &quot;Tiny home&quot;,
+        &quot;Boat&quot;,
+        &quot;Barn&quot;,
+        &quot;Camper/RV&quot;,
+        &quot;Farm stay&quot;,
+        &quot;Castle&quot;,
+        &quot;Cave&quot;,
+        &quot;Dome&quot;,
+        &quot;Container&quot;,
+        &quot;Treehouse&quot;,
+        &quot;Yurt&quot;,
+        &quot;Serviced apartment&quot;
+      ],
+      &quot;title&quot;: &quot;Property type&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;proxyConfiguration&quot;: {
+      &quot;description&quot;: &quot;Optional. Leave empty and the actor connects directly, then switches to an automatic Apify proxy only if Airbnb blocks a request.&quot;,
       &quot;editor&quot;: &quot;proxy&quot;,
-      &quot;sectionCaption&quot;: &quot;Proxy and Browser Settings&quot;,
-      &quot;title&quot;: &quot;Proxy Configuration&quot;,
+      &quot;title&quot;: &quot;Proxy configuration&quot;,
       &quot;type&quot;: &quot;object&quot;
-    }
-  },
-  &quot;required&quot;: [
-    &quot;location&quot;
-  ],
-  &quot;schemaVersion&quot;: 1,
-  &quot;title&quot;: &quot;Airbnb Scraper Input&quot;,
-  &quot;type&quot;: &quot;object&quot;
-}
-</code></pre></details></section><section class="schema-section" id="output-schema"><h2>Output schema</h2><p>Published result links and storage locations. This schema is not an exhaustive contract for every field in a dataset record.</p><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>listings</code></td><td>string</td><td>optional</td><td>Dataset containing scraped Airbnb listings with property names, nightly prices, ratings, superhost status, GPS coordinates, and photo URLs.</td></tr></tbody></table></div><p><a href="output-schema.json">Download the published output schema</a></p><details><summary>View complete JSON</summary><pre><code>{
-  &quot;actorOutputSchemaVersion&quot;: 1,
-  &quot;description&quot;: &quot;Airbnb property listings with price, rating, Superhost and verification status, GPS coordinates, and photos per property.&quot;,
-  &quot;properties&quot;: {
-    &quot;listings&quot;: {
-      &quot;description&quot;: &quot;Dataset containing scraped Airbnb listings with property names, nightly prices, ratings, superhost status, GPS coordinates, and photo URLs.&quot;,
-      &quot;template&quot;: &quot;{{links.apiDefaultDatasetUrl}}/items&quot;,
-      &quot;title&quot;: &quot;Airbnb Listings&quot;,
+    },
+    &quot;roomType&quot;: {
+      &quot;default&quot;: &quot;Any&quot;,
+      &quot;description&quot;: &quot;Restrict results to one Airbnb room type.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;Any&quot;,
+        &quot;Entire home/apt&quot;,
+        &quot;Private room&quot;,
+        &quot;Shared room&quot;,
+        &quot;Hotel room&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;Any room type&quot;,
+        &quot;Entire home or apartment&quot;,
+        &quot;Private room&quot;,
+        &quot;Shared room&quot;,
+        &quot;Hotel room&quot;
+      ],
+      &quot;title&quot;: &quot;Room type&quot;,
       &quot;type&quot;: &quot;string&quot;
     }
   },
-  &quot;title&quot;: &quot;Airbnb Listing Price &amp; Location Finder Output&quot;
+  &quot;schemaVersion&quot;: 1,
+  &quot;title&quot;: &quot;Airbnb Stay Finder: Nightly Rates, Fees &amp; Availability&quot;,
+  &quot;type&quot;: &quot;object&quot;
+}
+</code></pre></details></section><section class="schema-section" id="output-schema"><h2>Output schema</h2><p>Published result links and storage locations. This schema is not an exhaustive contract for every field in a dataset record.</p><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>listings</code></td><td>string</td><td>optional</td><td>Dataset containing every scraped Airbnb listing. Search-only rows carry prices from the search card; detail-enriched rows add host, amenities, description, exact quote, availability, reviews and calendar.</td></tr></tbody></table></div><p><a href="output-schema.json">Download the published output schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+  &quot;actorOutputSchemaVersion&quot;: 1,
+  &quot;description&quot;: &quot;Airbnb listings with nightly and stay-total prices, currency, fees, coordinates, room and property type, host details, amenities, photos, description, availability, optional reviews and an optional 12-month calendar.&quot;,
+  &quot;properties&quot;: {
+    &quot;listings&quot;: {
+      &quot;description&quot;: &quot;Dataset containing every scraped Airbnb listing. Search-only rows carry prices from the search card; detail-enriched rows add host, amenities, description, exact quote, availability, reviews and calendar.&quot;,
+      &quot;template&quot;: &quot;{{links.apiDefaultDatasetUrl}}/items&quot;,
+      &quot;title&quot;: &quot;Airbnb listings&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    }
+  },
+  &quot;title&quot;: &quot;Airbnb Stay Finder: Nightly Rates, Fees &amp; Availability Output&quot;
 }
 </code></pre></details></section><section class="schema-section" id="dataset-schema"><h2>Dataset schema</h2><p>Published dataset views and any declared field definitions. A view can select only a subset of the returned record fields.</p><p><a href="dataset-schema.json">Download the published dataset schema</a></p><details><summary>View complete JSON</summary><pre><code>{
   &quot;actorSpecification&quot;: 1,
@@ -74,13 +514,45 @@
       &quot;display&quot;: {
         &quot;component&quot;: &quot;table&quot;,
         &quot;properties&quot;: {
-          &quot;hostPhoto&quot;: {
-            &quot;format&quot;: &quot;link&quot;,
-            &quot;label&quot;: &quot;Host Photo&quot;
+          &quot;amenities&quot;: {
+            &quot;format&quot;: &quot;array&quot;,
+            &quot;label&quot;: &quot;Amenities&quot;
+          },
+          &quot;availability&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Availability&quot;
+          },
+          &quot;badges&quot;: {
+            &quot;format&quot;: &quot;array&quot;,
+            &quot;label&quot;: &quot;Badges&quot;
+          },
+          &quot;calendar&quot;: {
+            &quot;format&quot;: &quot;array&quot;,
+            &quot;label&quot;: &quot;Calendar&quot;
+          },
+          &quot;currency&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Currency&quot;
+          },
+          &quot;description&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Description&quot;
+          },
+          &quot;host&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Host&quot;
+          },
+          &quot;hostId&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Host ID&quot;
           },
           &quot;id&quot;: {
             &quot;format&quot;: &quot;text&quot;,
             &quot;label&quot;: &quot;Listing ID&quot;
+          },
+          &quot;images&quot;: {
+            &quot;format&quot;: &quot;array&quot;,
+            &quot;label&quot;: &quot;Images&quot;
           },
           &quot;isSuperhost&quot;: {
             &quot;format&quot;: &quot;boolean&quot;,
@@ -90,53 +562,73 @@
             &quot;format&quot;: &quot;boolean&quot;,
             &quot;label&quot;: &quot;Verified&quot;
           },
-          &quot;latitude&quot;: {
+          &quot;lat&quot;: {
             &quot;format&quot;: &quot;number&quot;,
             &quot;label&quot;: &quot;Latitude&quot;
           },
-          &quot;longitude&quot;: {
+          &quot;lng&quot;: {
             &quot;format&quot;: &quot;number&quot;,
             &quot;label&quot;: &quot;Longitude&quot;
+          },
+          &quot;location&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Location&quot;
           },
           &quot;name&quot;: {
             &quot;format&quot;: &quot;text&quot;,
             &quot;label&quot;: &quot;Name&quot;
           },
-          &quot;originalPrice&quot;: {
-            &quot;format&quot;: &quot;text&quot;,
-            &quot;label&quot;: &quot;Original Price&quot;
+          &quot;nightlyPrice&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Nightly price&quot;
           },
-          &quot;photos&quot;: {
-            &quot;format&quot;: &quot;array&quot;,
-            &quot;label&quot;: &quot;Photos&quot;
+          &quot;nights&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Nights&quot;
           },
-          &quot;price&quot;: {
-            &quot;format&quot;: &quot;text&quot;,
-            &quot;label&quot;: &quot;Price&quot;
+          &quot;priceIncludesFees&quot;: {
+            &quot;format&quot;: &quot;boolean&quot;,
+            &quot;label&quot;: &quot;Fees included&quot;
           },
           &quot;priceQualifier&quot;: {
             &quot;format&quot;: &quot;text&quot;,
-            &quot;label&quot;: &quot;Price Qualifier&quot;
+            &quot;label&quot;: &quot;Price qualifier&quot;
+          },
+          &quot;propertyType&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Property type&quot;
           },
           &quot;rating&quot;: {
-            &quot;format&quot;: &quot;text&quot;,
+            &quot;format&quot;: &quot;number&quot;,
             &quot;label&quot;: &quot;Rating&quot;
+          },
+          &quot;reviewCount&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Reviews&quot;
+          },
+          &quot;reviews&quot;: {
+            &quot;format&quot;: &quot;array&quot;,
+            &quot;label&quot;: &quot;Reviews&quot;
+          },
+          &quot;roomType&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Room type&quot;
           },
           &quot;scrapedAt&quot;: {
             &quot;format&quot;: &quot;text&quot;,
-            &quot;label&quot;: &quot;Scraped At&quot;
+            &quot;label&quot;: &quot;Scraped at&quot;
           },
-          &quot;searchUrl&quot;: {
+          &quot;sourceUrl&quot;: {
             &quot;format&quot;: &quot;link&quot;,
-            &quot;label&quot;: &quot;Search URL&quot;
+            &quot;label&quot;: &quot;Source URL&quot;
           },
-          &quot;subtitle&quot;: {
-            &quot;format&quot;: &quot;text&quot;,
-            &quot;label&quot;: &quot;Subtitle&quot;
+          &quot;totalPrice&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Stay total&quot;
           },
           &quot;type&quot;: {
             &quot;format&quot;: &quot;text&quot;,
-            &quot;label&quot;: &quot;Property Type&quot;
+            &quot;label&quot;: &quot;Type&quot;
           },
           &quot;url&quot;: {
             &quot;format&quot;: &quot;link&quot;,
@@ -151,18 +643,31 @@
           &quot;url&quot;,
           &quot;name&quot;,
           &quot;type&quot;,
-          &quot;subtitle&quot;,
-          &quot;price&quot;,
-          &quot;originalPrice&quot;,
+          &quot;roomType&quot;,
+          &quot;propertyType&quot;,
+          &quot;location&quot;,
+          &quot;lat&quot;,
+          &quot;lng&quot;,
+          &quot;nightlyPrice&quot;,
+          &quot;totalPrice&quot;,
+          &quot;currency&quot;,
+          &quot;nights&quot;,
           &quot;priceQualifier&quot;,
+          &quot;priceIncludesFees&quot;,
           &quot;rating&quot;,
+          &quot;reviewCount&quot;,
+          &quot;host&quot;,
+          &quot;hostId&quot;,
           &quot;isSuperhost&quot;,
           &quot;isVerified&quot;,
-          &quot;hostPhoto&quot;,
-          &quot;latitude&quot;,
-          &quot;longitude&quot;,
-          &quot;photos&quot;,
-          &quot;searchUrl&quot;,
+          &quot;badges&quot;,
+          &quot;amenities&quot;,
+          &quot;description&quot;,
+          &quot;images&quot;,
+          &quot;availability&quot;,
+          &quot;reviews&quot;,
+          &quot;calendar&quot;,
+          &quot;sourceUrl&quot;,
           &quot;scrapedAt&quot;
         ]
       }
@@ -171,29 +676,37 @@
       &quot;display&quot;: {
         &quot;component&quot;: &quot;table&quot;,
         &quot;properties&quot;: {
-          &quot;latitude&quot;: {
-            &quot;format&quot;: &quot;number&quot;,
-            &quot;label&quot;: &quot;Latitude&quot;
+          &quot;currency&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Currency&quot;
           },
-          &quot;longitude&quot;: {
-            &quot;format&quot;: &quot;number&quot;,
-            &quot;label&quot;: &quot;Longitude&quot;
+          &quot;location&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Location&quot;
           },
           &quot;name&quot;: {
             &quot;format&quot;: &quot;text&quot;,
             &quot;label&quot;: &quot;Name&quot;
           },
-          &quot;price&quot;: {
-            &quot;format&quot;: &quot;text&quot;,
-            &quot;label&quot;: &quot;Price&quot;
+          &quot;nightlyPrice&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Nightly price&quot;
           },
           &quot;rating&quot;: {
-            &quot;format&quot;: &quot;text&quot;,
+            &quot;format&quot;: &quot;number&quot;,
             &quot;label&quot;: &quot;Rating&quot;
           },
-          &quot;type&quot;: {
+          &quot;reviewCount&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Reviews&quot;
+          },
+          &quot;roomType&quot;: {
             &quot;format&quot;: &quot;text&quot;,
-            &quot;label&quot;: &quot;Property Type&quot;
+            &quot;label&quot;: &quot;Room type&quot;
+          },
+          &quot;totalPrice&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Stay total&quot;
           },
           &quot;url&quot;: {
             &quot;format&quot;: &quot;link&quot;,
@@ -201,50 +714,69 @@
           }
         }
       },
-      &quot;title&quot;: &quot;Overview&quot;,
+      &quot;title&quot;: &quot;Listings&quot;,
       &quot;transformation&quot;: {
         &quot;fields&quot;: [
           &quot;name&quot;,
-          &quot;price&quot;,
+          &quot;nightlyPrice&quot;,
+          &quot;totalPrice&quot;,
+          &quot;currency&quot;,
           &quot;rating&quot;,
-          &quot;type&quot;,
-          &quot;url&quot;,
-          &quot;latitude&quot;,
-          &quot;longitude&quot;
+          &quot;reviewCount&quot;,
+          &quot;location&quot;,
+          &quot;roomType&quot;,
+          &quot;url&quot;
         ]
       }
     }
   }
 }
-</code></pre></details></section><section class="schema-section" id="key-value-schema"><h2>Key-value schema</h2><p>Published key-value store definitions, when provided by this build.</p><p>This definition is not present in the default published build. See the published README for available documentation.</p></section><section id="published-readme"><h2>Published README</h2><details><summary>Read the full published documentation</summary><h2 id="readme-airbnb-listing-price-location-finder">Airbnb Listing Price &amp; Location Finder</h2>
-<p>Search Airbnb for any city, neighborhood, or region and get back structured listing data — price, rating, host status, GPS coordinates, and photos — straight from the search results, with no need to open each listing one by one.</p>
+</code></pre></details></section><section class="schema-section" id="key-value-schema"><h2>Key-value schema</h2><p>Published key-value store definitions, when provided by this build.</p><p>This definition is not present in the default published build. See the published README for available documentation.</p></section><section id="published-readme"><h2>Published README</h2><details><summary>Read the full published documentation</summary><h2 id="readme-airbnb-stay-finder-nightly-rates-fees-availability">Airbnb Stay Finder: Nightly Rates, Fees &amp; Availability</h2>
+<p>Collect Airbnb stays with the numbers that matter: the <strong>nightly rate</strong>, the <strong>stay total for your dates</strong>, the fee lines Airbnb shows, the host, amenities, coordinates, availability and optional guest reviews — for a whole city or for one listing you already have the link to.</p>
+<p>Unlike search-card-only scrapers, this actor can follow every listing into its detail page, request the exact stay quote for your dates and guests, and return a 12-month day-by-day availability calendar. No Airbnb account, login or cookie is needed.</p>
 <h2 id="readme-what-this-actor-does">What this actor does</h2>
 <ul>
-<li>Searches Airbnb listings for a location by name and reads the first page of results (usually under 20 listings)</li>
-<li>Accepts check-in/check-out dates and guest count to return exact stay pricing instead of a generic nightly rate</li>
-<li>Reports whether each listing's host is a Superhost and/or identity-verified</li>
-<li>Returns GPS coordinates and up to 10 photo URLs per listing</li>
-<li>Every record keeps the same columns: missing text comes back as an empty string, missing coordinates as <code>0</code>, and a listing without photos gets an empty <code>photos</code> list; <code>originalPrice</code> and <code>hostPhoto</code> are the exception and are left out entirely when a listing has no discount or no visible host photo</li>
+<li><strong>Two modes:</strong> <code>search</code> for a location, place ID or map rectangle; <code>details</code> for listing URLs and IDs you supply</li>
+<li><strong>Real price model:</strong> separate <code>nightlyPrice</code>, <code>totalPrice</code>, <code>nights</code>, <code>currency</code>, <code>priceQualifier</code>, fee lines and whether Airbnb says fees are included</li>
+<li><strong>Cursor pagination:</strong> 40 Airbnb cards per page, de-duplicated by listing ID, up to 300 records</li>
+<li><strong>Filters:</strong> dates, guests, nightly price range, room type, property type, bedrooms, beds and bathrooms</li>
+<li><strong>Optional enrichment:</strong> full detail page (host, amenities, photos, description), stay quote, reviews and a 12-month calendar</li>
+<li><strong>Global pricing:</strong> 56 currencies and 35 locales, so prices are not forced into USD or GBP</li>
+<li><strong>Empty fields are omitted</strong> — records never contain <code>null</code>, empty strings or empty arrays</li>
 </ul>
 <h2 id="readme-output-per-listing">Output per listing</h2>
 <ul>
-<li><code>id</code> — Airbnb's unique listing ID</li>
-<li><code>url</code> — direct link to the listing page</li>
-<li><code>name</code> — the property's title</li>
-<li><code>type</code> — property type and location, e.g. <code>Hotel in New York</code></li>
-<li><code>subtitle</code> — the short description snippet shown under the listing</li>
-<li><code>price</code> — the current displayed price, e.g. <code>$150</code></li>
-<li><code>originalPrice</code> — the pre-discount price, present only when the listing is discounted</li>
-<li><code>priceQualifier</code> — what the price covers, e.g. <code>per night</code> or <code>for 5 nights</code></li>
-<li><code>rating</code> — average rating with review count, e.g. <code>4.85 (312)</code></li>
-<li><code>isSuperhost</code> — whether the host has Superhost status</li>
-<li><code>isVerified</code> — whether the host's identity is verified</li>
-<li><code>hostPhoto</code> — URL of the host's profile photo, present only when one is visible on the search result</li>
-<li><code>latitude</code>, <code>longitude</code> — GPS coordinates of the listing (<code>0</code> when Airbnb doesn't provide them)</li>
-<li><code>photos</code> — up to 10 listing photo URLs (can be empty)</li>
-<li><code>searchUrl</code> — the Airbnb search URL the listing was found on</li>
-<li><code>scrapedAt</code> — when the actor fetched the search page (the same value on every record of a run)</li>
+<li><code>id</code> — numeric Airbnb listing ID</li>
+<li><code>url</code> — direct listing page URL</li>
+<li><code>name</code> — listing or room name</li>
+<li><code>type</code> — the category line Airbnb shows, e.g. <code>Apartment in North Bergen</code></li>
+<li><code>roomType</code> — <code>Entire home/apt</code>, <code>Private room</code>, <code>Shared room</code> or <code>Hotel room</code></li>
+<li><code>propertyType</code> — apartment, house, hotel, villa, etc. (detail mode)</li>
+<li><code>location</code> — city or neighborhood</li>
+<li><code>lat</code>, <code>lng</code> — public, approximate coordinates (never the exact address)</li>
+<li><code>nightlyPrice</code>, <code>totalPrice</code>, <code>currency</code>, <code>nights</code> — nightly rate and stay total for the selected dates</li>
+<li><code>priceQualifier</code> — what the displayed quote covers, e.g. <code>for 5 nights</code></li>
+<li><code>priceBreakdown</code> — the price lines Airbnb exposes (nightly line, cleaning/resort fees, discounts)</li>
+<li><code>priceIncludesFees</code> — <code>true</code> when Airbnb marks the quote as including all fees</li>
+<li><code>totalBeforeTaxes</code> — when Airbnb exposes a “total before taxes” line</li>
+<li><code>originalPrice</code>, <code>discount</code> — pre-discount quote and saving, when Airbnb shows one</li>
+<li><code>rating</code>, <code>reviewCount</code> — overall guest rating and number of reviews</li>
+<li><code>images</code>, <code>thumbnail</code> — listing photo URLs</li>
+<li><code>host</code>, <code>hostId</code>, <code>hostPhoto</code>, <code>hostRating</code>, <code>hostReviewCount</code> — host details (detail mode)</li>
+<li><code>isSuperhost</code>, <code>isVerified</code> — host status</li>
+<li><code>badges</code>, <code>isGuestFavorite</code> — Airbnb badges shown on the search card</li>
+<li><code>amenities</code>, <code>amenitiesUnavailable</code> — included and explicitly unavailable amenities (detail mode)</li>
+<li><code>description</code> — listing description with HTML removed (detail mode)</li>
+<li><code>personCapacity</code> — maximum guests</li>
+<li><code>availability</code> — <code>isAvailable</code>, <code>canInstantBook</code> and any unavailability reason for the requested dates</li>
+<li><code>minNights</code>, <code>maxNights</code> — available inside each calendar day</li>
+<li><code>reviews</code> — optional recent reviews with rating, text, date, reviewer and host response</li>
+<li><code>calendar</code> — optional day-by-day availability for up to 12 months</li>
+<li><code>checkIn</code>, <code>checkOut</code> — the stay dates used for the quote</li>
+<li><code>sourceUrl</code> — the search page or listing page that produced the record</li>
+<li><code>scrapedAt</code>, <code>recordType: &quot;listing&quot;</code></li>
 </ul>
+<p>Compatibility aliases are also kept for older integrations: <code>price</code>, <code>photos</code>, <code>latitude</code>, <code>longitude</code> and <code>searchUrl</code>.</p>
 <h2 id="readme-input">Input</h2>
 <div class="table-wrap"><table>
 <thead>
@@ -257,86 +789,234 @@
 </thead>
 <tbody>
 <tr>
+<td><code>mode</code></td>
+<td>string</td>
+<td><code>search</code></td>
+<td><code>search</code> or <code>details</code></td>
+</tr>
+<tr>
 <td><code>location</code></td>
 <td>string</td>
-<td>–</td>
-<td>Location to search, e.g. <code>New York</code>, <code>Paris, France</code>, <code>Tokyo</code>. Required.</td>
+<td><code>New York</code></td>
+<td>City, region, country or neighborhood (mode=search)</td>
 </tr>
 <tr>
-<td><code>checkIn</code></td>
+<td><code>placeId</code></td>
 <td>string</td>
 <td>–</td>
-<td>Check-in date (<code>YYYY-MM-DD</code>). Leave empty for a general search without dates.</td>
+<td>Airbnb/Google place ID; skips text matching (mode=search)</td>
 </tr>
 <tr>
-<td><code>checkOut</code></td>
+<td><code>neighborhood</code></td>
 <td>string</td>
 <td>–</td>
-<td>Check-out date (<code>YYYY-MM-DD</code>). Leave empty for a general search without dates.</td>
+<td>Optional neighborhood combined with <code>location</code> (mode=search)</td>
+</tr>
+<tr>
+<td><code>bbox</code></td>
+<td>object</td>
+<td>–</td>
+<td>Map rectangle: <code>swLat</code>, <code>swLng</code>, <code>neLat</code>, <code>neLng</code>, optional <code>zoom</code> (mode=search)</td>
+</tr>
+<tr>
+<td><code>listingUrls</code></td>
+<td>array</td>
+<td>–</td>
+<td>Airbnb room URLs (mode=details)</td>
+</tr>
+<tr>
+<td><code>listingIds</code></td>
+<td>array</td>
+<td>–</td>
+<td>Numeric listing IDs (mode=details)</td>
+</tr>
+<tr>
+<td><code>checkIn</code>, <code>checkOut</code></td>
+<td>string</td>
+<td>–</td>
+<td>Stay dates in <code>YYYY-MM-DD</code>; both or neither</td>
 </tr>
 <tr>
 <td><code>adults</code></td>
 <td>integer</td>
 <td><code>1</code></td>
-<td>Number of adult guests (1–16); affects pricing and availability.</td>
+<td>Adults, 1–16</td>
 </tr>
 <tr>
-<td><code>maxItems</code></td>
+<td><code>children</code></td>
+<td>integer</td>
+<td><code>0</code></td>
+<td>Children, 0–15</td>
+</tr>
+<tr>
+<td><code>infants</code></td>
+<td>integer</td>
+<td><code>0</code></td>
+<td>Infants, 0–5</td>
+</tr>
+<tr>
+<td><code>pets</code></td>
+<td>integer</td>
+<td><code>0</code></td>
+<td>Pets, 0–5</td>
+</tr>
+<tr>
+<td><code>minPrice</code>, <code>maxPrice</code></td>
+<td>integer</td>
+<td><code>0</code></td>
+<td>Nightly price range; <code>0</code> means no limit</td>
+</tr>
+<tr>
+<td><code>roomType</code></td>
+<td>string</td>
+<td><code>Any</code></td>
+<td><code>Any</code>, <code>Entire home/apt</code>, <code>Private room</code>, <code>Shared room</code>, <code>Hotel room</code></td>
+</tr>
+<tr>
+<td><code>propertyType</code></td>
+<td>string</td>
+<td><code>Any</code></td>
+<td>Airbnb property type, e.g. <code>Apartment</code>, <code>House</code>, <code>Hotel</code></td>
+</tr>
+<tr>
+<td><code>minBedrooms</code>, <code>minBeds</code>, <code>minBathrooms</code></td>
+<td>integer</td>
+<td><code>0</code></td>
+<td>Minimum counts; <code>0</code> means no minimum</td>
+</tr>
+<tr>
+<td><code>maxListings</code></td>
 <td>integer</td>
 <td><code>20</code></td>
-<td>Maximum listings to return (1–100), capped by how many listings Airbnb's own search results page contains (typically under 20).</td>
+<td>Hard cap, 1–300 (prefill: <code>5</code>)</td>
 </tr>
 <tr>
-<td><code>proxy</code></td>
+<td><code>includeDetails</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Fetch each listing page and exact stay quote</td>
+</tr>
+<tr>
+<td><code>includeReviews</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Add recent guest reviews</td>
+</tr>
+<tr>
+<td><code>maxReviews</code></td>
+<td>integer</td>
+<td><code>12</code></td>
+<td>Reviews per listing, 1–24</td>
+</tr>
+<tr>
+<td><code>includeCalendar</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Add the availability calendar</td>
+</tr>
+<tr>
+<td><code>calendarMonths</code></td>
+<td>integer</td>
+<td><code>12</code></td>
+<td>Calendar length, 1–12 months</td>
+</tr>
+<tr>
+<td><code>currency</code></td>
+<td>string</td>
+<td><code>USD</code></td>
+<td>One of 56 supported currencies</td>
+</tr>
+<tr>
+<td><code>locale</code></td>
+<td>string</td>
+<td><code>en</code></td>
+<td>Language/region for labels and dates</td>
+</tr>
+<tr>
+<td><code>proxyConfiguration</code></td>
 <td>object</td>
 <td>–</td>
-<td>Proxy configuration, recommended for larger runs to avoid rate limiting.</td>
+<td>Optional; normally leave empty</td>
 </tr>
 </tbody>
 </table></div>
-<h2 id="readme-example-quick-search-no-dates">Example: quick search, no dates</h2>
+<h2 id="readme-example-cheapest-useful-run">Example: cheapest useful run</h2>
 <pre><code class="language-json">{
   &quot;location&quot;: &quot;New York&quot;,
-  &quot;maxItems&quot;: 10
+  &quot;maxListings&quot;: 5
 }
 </code></pre>
-<h2 id="readme-example-a-specific-stay-for-two-guests">Example: a specific stay for two guests</h2>
+<h2 id="readme-example-a-full-city-scan-with-filters">Example: a full city scan with filters</h2>
 <pre><code class="language-json">{
-  &quot;location&quot;: &quot;Paris, France&quot;,
-  &quot;checkIn&quot;: &quot;2026-07-01&quot;,
-  &quot;checkOut&quot;: &quot;2026-07-05&quot;,
+  &quot;location&quot;: &quot;Lisbon, Portugal&quot;,
+  &quot;checkIn&quot;: &quot;2027-05-10&quot;,
+  &quot;checkOut&quot;: &quot;2027-05-17&quot;,
   &quot;adults&quot;: 2,
-  &quot;maxItems&quot;: 18
+  &quot;minPrice&quot;: 80,
+  &quot;maxPrice&quot;: 250,
+  &quot;roomType&quot;: &quot;Entire home/apt&quot;,
+  &quot;minBedrooms&quot;: 1,
+  &quot;maxListings&quot;: 120,
+  &quot;currency&quot;: &quot;EUR&quot;,
+  &quot;locale&quot;: &quot;pt-PT&quot;
 }
 </code></pre>
-<h2 id="readme-example-large-family-group">Example: large family group</h2>
+<h2 id="readme-example-exact-detail-quote-reviews-and-calendar">Example: exact detail, quote, reviews and calendar</h2>
 <pre><code class="language-json">{
-  &quot;location&quot;: &quot;Orlando, FL&quot;,
-  &quot;adults&quot;: 6,
-  &quot;maxItems&quot;: 18
+  &quot;mode&quot;: &quot;details&quot;,
+  &quot;listingUrls&quot;: [&quot;https://www.airbnb.com/rooms/23222680&quot;],
+  &quot;checkIn&quot;: &quot;2027-03-04&quot;,
+  &quot;checkOut&quot;: &quot;2027-03-09&quot;,
+  &quot;adults&quot;: 2,
+  &quot;includeReviews&quot;: true,
+  &quot;maxReviews&quot;: 24,
+  &quot;includeCalendar&quot;: true,
+  &quot;calendarMonths&quot;: 6,
+  &quot;currency&quot;: &quot;USD&quot;
+}
+</code></pre>
+<h2 id="readme-example-map-rectangle-instead-of-a-city-name">Example: map rectangle instead of a city name</h2>
+<pre><code class="language-json">{
+  &quot;bbox&quot;: {
+    &quot;swLat&quot;: 40.7075,
+    &quot;swLng&quot;: -74.0135,
+    &quot;neLat&quot;: 40.7904,
+    &quot;neLng&quot;: -73.9591,
+    &quot;zoom&quot;: 13
+  },
+  &quot;checkIn&quot;: &quot;2027-04-01&quot;,
+  &quot;checkOut&quot;: &quot;2027-04-04&quot;,
+  &quot;adults&quot;: 2,
+  &quot;maxListings&quot;: 80,
+  &quot;includeDetails&quot;: true
 }
 </code></pre>
 <h2 id="readme-use-cases">Use cases</h2>
 <ul>
-<li><strong>Travel planning</strong> — pull the top search results for a destination into a spreadsheet to compare prices and ratings before booking</li>
-<li><strong>Market research</strong> — compare nightly rates and property mix across neighborhoods or cities</li>
-<li><strong>Competitive analysis for hosts</strong> — see how similarly positioned listings in your area are priced and rated</li>
-<li><strong>Price monitoring</strong> — re-run the same search over time to track how rates move for a destination</li>
-<li><strong>Real estate research</strong> — use listing GPS coordinates to map short-term rental density in an area</li>
+<li><strong>Short-term rental pricing</strong> — compare nightly rates and stay totals across a neighborhood before setting your own calendar</li>
+<li><strong>Travel research</strong> — export a city's stays with ratings, room type and amenities into a spreadsheet or BI tool</li>
+<li><strong>Market monitoring</strong> — re-run the same dates monthly to track rate and availability changes</li>
+<li><strong>Host competitive analysis</strong> — benchmark your listing against nearby Superhosts with similar capacity</li>
+<li><strong>Investment screening</strong> — map approximate coordinates to study short-term rental density by area</li>
+<li><strong>Review mining</strong> — pull recent guest feedback for a shortlist of properties</li>
 </ul>
 <h2 id="readme-faq">FAQ</h2>
-<p><strong>How many listings can I get per search?</strong>
-Each run reads a single Airbnb search results page, so the listing count is capped by how many results that page contains (typically under 20) regardless of how high you set <code>maxItems</code>. If Airbnb blocks the request or the page has no listings, the run is marked as failed with an explanation instead of returning an empty dataset.</p>
-<p><strong>Do I need to set check-in and check-out dates?</strong>
-No — without dates you get Airbnb's general displayed pricing. With dates set, <code>price</code> reflects the actual total for that specific stay.</p>
-<p><strong>Why are some fields empty strings instead of missing?</strong>
-Not every listing has a subtitle, rating, or similar text field — rather than removing those fields, the actor returns an empty string so every record keeps the same shape. The two exceptions are <code>originalPrice</code> and <code>hostPhoto</code>, which are left out of the record entirely when a listing has no discount or no visible host photo.</p>
-<p><strong>Do I need a proxy?</strong>
-Not strictly, but a residential proxy is recommended for larger or repeated runs to avoid being rate-limited by Airbnb.</p>
-<p><strong>Does this require an Airbnb account?</strong>
-No. It reads Airbnb's public search results, which don't require logging in.</p>
-<p><strong>What locations can I search?</strong>
-Anything Airbnb itself supports — cities, neighborhoods, regions, countries, or specific addresses worldwide.</p>
-<p><strong>Is this affiliated with Airbnb?</strong>
-No. This is an independent, third-party actor that reads Airbnb's publicly accessible search pages; it is not affiliated with or endorsed by Airbnb.</p>
-</details></section><section id="python-quickstart"><h2>Python quickstart</h2><p>Use a schema-derived input and the Python standard library to start a run. An Apify account and token are required for execution.</p><p><a href="/apify-actor-examples/guides/02gBCbgBRDoLpMoY5/">Open the step-by-step Python guide →</a></p></section><p class="source-note">Source build <code>ZKoaitiacJr8FXZfn</code>. Documentation is regenerated from the default published build; private drafts are not included.</p></article></div></main><footer class="footer"><strong>Nimbryxo Studio</strong><div class="footer-links"><a href="/apify-actor-examples/topics/">Topics</a><a href="/apify-actor-examples/sources/">Documentation sources</a><a href="https://apify.com/nimbryxo-studio">Apify</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></div></footer></body></html>
+<h3 id="readme-is-nightlyprice-the-same-as-the-number-on-the-search-card">Is <code>nightlyPrice</code> the same as the number on the search card?</h3>
+<p>Usually not. Airbnb's search card shows the <strong>stay total</strong> for the selected dates. <code>totalPrice</code> is that quote; <code>nightlyPrice</code> is parsed from Airbnb's own nightly line (for example, <code>5 nights x $335.80</code>). When you provide dates, both refer to those exact dates. Without dates, Airbnb still returns a five-night display quote, which the actor labels with <code>nights: 5</code>.</p>
+<h3 id="readme-are-all-fees-included-in-totalprice">Are all fees included in <code>totalPrice</code>?</h3>
+<p>Airbnb's quote can include cleaning, service and resort fees, and sometimes a “Prices include all fees” notice. The actor exposes <code>priceBreakdown</code> and <code>priceIncludesFees</code> so you can see what Airbnb included. Taxes and local charges can still vary by destination and are not always part of the displayed quote; treat <code>totalPrice</code> as Airbnb's quoted stay price, not a guaranteed checkout total.</p>
+<h3 id="readme-why-is-the-price-missing-on-some-records">Why is the price missing on some records?</h3>
+<p>In <code>details</code> mode without dates, Airbnb does not show a stay price. Those records still include the listing data. Add <code>checkIn</code> and <code>checkOut</code> to get a quote. In <code>search</code> mode, a small number of cards legitimately omit the primary price line; the actor falls back to Airbnb's nightly explanation when available.</p>
+<h3 id="readme-how-many-listings-can-i-get">How many listings can I get?</h3>
+<p><code>maxListings</code> is capped at 300. Airbnb returns 40 cards per page and de-duplicates/reorders between pages, so a deep search typically yields around 230–240 unique listings per query. Use different neighborhoods, map rectangles or price ranges to cover more of a market. The actor never claims “all listings”.</p>
+<h3 id="readme-why-did-my-location-fail">Why did my location fail?</h3>
+<p>Airbnb returns a generic feed for gibberish queries instead of zero results. The actor validates the location through Airbnb's own autocomplete and fails with a clear message when nothing matches, so you never receive unrelated rows. Neighborhoods, cities, regions and countries all work; you can also supply a <code>placeId</code> or a <code>bbox</code>.</p>
+<h3 id="readme-do-i-need-a-proxy-or-an-airbnb-account">Do I need a proxy or an Airbnb account?</h3>
+<p>No. The actor reads Airbnb's public pages and GraphQL responses without cookies or login. It connects directly first; if Airbnb blocks a request, it automatically retries through an Apify proxy and then a browser. Nothing needs to be configured.</p>
+<h3 id="readme-why-are-coordinates-approximate">Why are coordinates approximate?</h3>
+<p>Airbnb publishes approximate map coordinates before booking to protect host privacy. Use them for area analysis, not for deriving a street address.</p>
+<h3 id="readme-can-i-get-per-day-prices-in-the-calendar">Can I get per-day prices in the calendar?</h3>
+<p>The availability calendar reports whether each date is available, check-in/check-out eligibility and min/max nights. Airbnb does not expose a per-day price in that endpoint. For a price on specific dates, set <code>checkIn</code>/<code>checkOut</code> and use the stay quote.</p>
+<h3 id="readme-is-this-affiliated-with-airbnb">Is this affiliated with Airbnb?</h3>
+<p>No. This is an independent, third-party actor that reads publicly accessible Airbnb pages and responses. It is not affiliated with or endorsed by Airbnb.</p>
+</details></section><section id="python-quickstart"><h2>Python quickstart</h2><p>Use a schema-derived input and the Python standard library to start a run. An Apify account and token are required for execution.</p><p><a href="/apify-actor-examples/guides/02gBCbgBRDoLpMoY5/">Open the step-by-step Python guide →</a></p></section><p class="source-note">Source build <code>zfEcct44bLImtWJsa</code>. Documentation is regenerated from the default published build; private drafts are not included.</p></article></div></main><footer class="footer"><strong>Nimbryxo Studio</strong><div class="footer-links"><a href="/apify-actor-examples/topics/">Topics</a><a href="/apify-actor-examples/sources/">Documentation sources</a><a href="https://apify.com/nimbryxo-studio">Apify</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></div></footer></body></html>

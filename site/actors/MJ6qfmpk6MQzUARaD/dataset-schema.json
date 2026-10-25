@@ -7,28 +7,38 @@
         "nullable": true,
         "type": "string"
       },
+      "agentEmail": {
+        "description": "Published agent email, only when Include agent contact is on",
+        "nullable": true,
+        "type": "string"
+      },
       "agentName": {
         "description": "Listing agent name",
         "nullable": true,
         "type": "string"
       },
       "agentPhone": {
-        "description": "Listing agent phone",
+        "description": "Listing agent phone, only when Include agent contact is on",
         "nullable": true,
         "type": "string"
       },
       "baths": {
-        "description": "Number of bathrooms",
+        "description": "Bathrooms",
         "nullable": true,
         "type": "number"
       },
       "beds": {
-        "description": "Number of bedrooms",
+        "description": "Bedrooms",
         "nullable": true,
         "type": "number"
       },
       "brokerName": {
-        "description": "Brokerage name",
+        "description": "Listing brokerage",
+        "nullable": true,
+        "type": "string"
+      },
+      "brokerPhone": {
+        "description": "Broker phone, only when Include agent contact is on",
         "nullable": true,
         "type": "string"
       },
@@ -37,20 +47,42 @@
         "nullable": true,
         "type": "string"
       },
+      "dataSource": {
+        "description": "zillow or jina_markdown",
+        "type": "string"
+      },
       "daysOnZillow": {
         "description": "Days on Zillow",
         "nullable": true,
         "type": "integer"
       },
       "description": {
-        "description": "Property description",
+        "description": "Listing description",
         "nullable": true,
+        "type": "string"
+      },
+      "detailStatus": {
+        "description": "ok, failed, skipped, or degraded",
+        "type": "string"
+      },
+      "endDateTime": {
+        "description": "Showing end (ISO 8601, property local time)",
+        "nullable": true,
+        "type": "string"
+      },
+      "eventDate": {
+        "description": "Showing date (YYYY-MM-DD, property local time)",
         "type": "string"
       },
       "hoaFee": {
         "description": "Monthly HOA fee ($)",
         "nullable": true,
         "type": "number"
+      },
+      "homeType": {
+        "description": "Property type (e.g. SINGLE_FAMILY)",
+        "nullable": true,
+        "type": "string"
       },
       "latitude": {
         "description": "Latitude",
@@ -62,52 +94,51 @@
         "nullable": true,
         "type": "number"
       },
-      "lotSize": {
-        "description": "Lot size",
+      "lotAreaUnit": {
+        "description": "Lot area unit: sqft or acres",
+        "nullable": true,
+        "type": "string"
+      },
+      "lotAreaValue": {
+        "description": "Lot area size",
+        "nullable": true,
+        "type": "number"
+      },
+      "mlsId": {
+        "description": "MLS listing ID",
+        "nullable": true,
+        "type": "string"
+      },
+      "mlsSource": {
+        "description": "MLS source name",
         "nullable": true,
         "type": "string"
       },
       "nextOpenHouse": {
-        "description": "Soonest upcoming open house event",
+        "description": "Earliest matching showing start for this property (ISO 8601)",
         "nullable": true,
-        "properties": {
-          "endDateTime": {
-            "nullable": true,
-            "type": "string"
-          },
-          "openHouseType": {
-            "type": "string"
-          },
-          "startDateTime": {
-            "type": "string"
-          }
-        },
-        "type": "object"
+        "type": "string"
       },
-      "openHouses": {
-        "description": "All upcoming open house events for this property",
-        "items": {
-          "properties": {
-            "endDateTime": {
-              "description": "End date/time (ISO 8601)",
-              "nullable": true,
-              "type": "string"
-            },
-            "openHouseType": {
-              "description": "INPERSON or VIRTUAL",
-              "type": "string"
-            },
-            "startDateTime": {
-              "description": "Start date/time (ISO 8601)",
-              "type": "string"
-            }
-          },
-          "type": "object"
-        },
-        "type": "array"
+      "openHouseDescription": {
+        "description": "Zillow's short showing summary for the listing",
+        "nullable": true,
+        "type": "string"
+      },
+      "openHouseStatus": {
+        "description": "Showing status: scheduled or cancelled",
+        "type": "string"
+      },
+      "openHouseType": {
+        "description": "INPERSON or VIRTUAL",
+        "type": "string"
+      },
+      "photoCount": {
+        "description": "Number of photos available",
+        "nullable": true,
+        "type": "integer"
       },
       "photos": {
-        "description": "Photo URLs",
+        "description": "Zillow photo CDN URLs",
         "nullable": true,
         "type": "array"
       },
@@ -117,23 +148,30 @@
         "type": "number"
       },
       "pricePerSqft": {
-        "description": "Price per sq ft ($)",
+        "description": "Price per square foot ($)",
         "nullable": true,
         "type": "number"
       },
-      "propertyType": {
-        "description": "Property type (e.g. SINGLE_FAMILY)",
-        "nullable": true,
+      "recordType": {
+        "description": "Always open_house; one record per scheduled showing",
         "type": "string"
       },
       "scrapedAt": {
         "description": "ISO 8601 scrape timestamp",
         "type": "string"
       },
+      "sourceUrl": {
+        "description": "Zillow property detail page URL",
+        "type": "string"
+      },
       "sqft": {
         "description": "Living area (sq ft)",
         "nullable": true,
         "type": "number"
+      },
+      "startDateTime": {
+        "description": "Showing start (ISO 8601, property local time)",
+        "type": "string"
       },
       "state": {
         "description": "State abbreviation",
@@ -145,14 +183,15 @@
         "nullable": true,
         "type": "string"
       },
-      "stories": {
-        "description": "Number of stories",
+      "statusText": {
+        "description": "Zillow status label (e.g. Active)",
+        "nullable": true,
+        "type": "string"
+      },
+      "taxAssessedValue": {
+        "description": "Tax-assessed value ($)",
         "nullable": true,
         "type": "number"
-      },
-      "url": {
-        "description": "Zillow property detail page URL",
-        "type": "string"
       },
       "yearBuilt": {
         "description": "Year built",
@@ -160,7 +199,7 @@
         "type": "integer"
       },
       "zestimate": {
-        "description": "Zillow estimate ($)",
+        "description": "Zillow estimate ($), when Zillow publishes one",
         "nullable": true,
         "type": "number"
       },
@@ -177,7 +216,7 @@
     },
     "type": "object"
   },
-  "title": "Zillow Open Houses",
+  "title": "Zillow Open-House Showings",
   "views": {
     "overview": {
       "display": {
@@ -186,6 +225,10 @@
           "address": {
             "format": "text",
             "label": "Address"
+          },
+          "agentName": {
+            "format": "text",
+            "label": "Agent"
           },
           "baths": {
             "format": "number",
@@ -199,54 +242,65 @@
             "format": "text",
             "label": "City"
           },
-          "daysOnZillow": {
-            "format": "number",
-            "label": "DOZ"
-          },
-          "nextOpenHouse": {
+          "endDateTime": {
             "format": "text",
-            "label": "Next Open House"
+            "label": "End"
+          },
+          "homeType": {
+            "format": "text",
+            "label": "Type"
+          },
+          "openHouseType": {
+            "format": "text",
+            "label": "Showing type"
           },
           "price": {
             "format": "number",
             "label": "Price $"
           },
-          "propertyType": {
-            "format": "text",
-            "label": "Type"
-          },
           "scrapedAt": {
             "format": "text",
             "label": "Scraped At"
+          },
+          "sourceUrl": {
+            "format": "link",
+            "label": "URL"
           },
           "sqft": {
             "format": "number",
             "label": "Sq Ft"
           },
+          "startDateTime": {
+            "format": "text",
+            "label": "Start"
+          },
           "state": {
             "format": "text",
             "label": "State"
           },
-          "url": {
-            "format": "link",
-            "label": "URL"
+          "zipCode": {
+            "format": "text",
+            "label": "ZIP"
           }
         }
       },
-      "title": "Open Houses Overview",
+      "title": "Open-House Schedule",
       "transformation": {
         "fields": [
-          "url",
+          "startDateTime",
+          "endDateTime",
           "address",
           "city",
           "state",
+          "zipCode",
           "price",
           "beds",
           "baths",
           "sqft",
-          "propertyType",
-          "daysOnZillow",
-          "nextOpenHouse",
+          "homeType",
+          "agentName",
+          "openHouseType",
+          "sourceUrl",
           "scrapedAt"
         ]
       }

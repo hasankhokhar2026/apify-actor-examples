@@ -4,123 +4,164 @@
 
 # TikTok Video, Audio & Cover Downloader
 
-Download TikTok video files, cover thumbnails, background audio, and slideshow images by URL. The actor stores each file in Apify's Key-Value Store and returns a stable download URL per asset. Supports quality selection (best, 720p, 540p, 360p, smallest) and a configurable filename template. No TikTok account or cookies are required.
+Download TikTok posts as **clean no-watermark MP4**, watermarked MP4, sound, cover images, slideshow frames, and post metadata. Each file can be re-hosted in Apify Key-Value Store with a stable public link, and every input gets a dataset row — including posts that are deleted, private, region-blocked, age-gated, duplicated, or too large to download.
 
-## What this actor does
+No TikTok account, cookies, API key, or proxy setup is required.
 
-- Accepts TikTok video and photo post URLs or bare numeric post IDs as input (duplicates are processed once)
-- Downloads the selected asset types (video, cover image, audio, slideshow frames) per post
-- Stores each file in the run's Key-Value Store and emits one dataset row per downloaded asset; assets that can't be found or downloaded get no row
-- Supports quality selection for video downloads: best, 720p, 540p, 360p, or smallest
-- Returns file metadata including dimensions, byte size, codec, and bitrate where available
-- Allows a custom filename template with `{postId}`, `{type}`, `{ordinal}`, and `{ext}` placeholders
-- Processes each URL sequentially to avoid rate limiting
-- Empty fields are omitted
+## What you get
 
-## Output per asset
+- One row per asset: video variant, audio, cover, slideshow frame, or metadata
+- Explicit status rows instead of silent skips
+- Clean MP4 (no watermark) downloaded inside the page session and re-hosted to Apify storage
+- Watermarked MP4, covers, audio, and slideshow images returned as stable KV links and/or expiring CDN URLs
+- Resolution-first quality selection (`best`, `1080p`, `720p`, `540p`, `360p`, `smallest`)
+- Post and author metadata: caption, create time, stats, sound details, post type
+- Short-link support (`vm.tiktok.com`, `vt.tiktok.com`, `/t/`) and embed/bare-ID inputs
+- Duplicate detection, `maxItems`, `maxFileSizeMb`, and 1–3 way concurrency
 
-- `postId` — unique TikTok video ID
-- `postUrl` — canonical TikTok post URL
-- `assetType` — type of asset: `video`, `cover`, `audio`, or `image`
-- `ordinal` — index of the asset within its type: the frame number for slideshow images, `0` for everything else
-- `kvsKey` — Key-Value Store key used to store the file (built from `filenameTemplate`, with characters other than letters, digits, `.`, `_` and `-` replaced by `_`)
-- `kvsUrl` — stable Apify Key-Value Store URL to download the file
-- `mimeType` — MIME type the file is stored with: `video/mp4`, `audio/mpeg`, or `image/jpeg` for covers and slideshow images
-- `byteSize` — file size in bytes
-- `width` — pixel width (video and slideshow image assets)
-- `height` — pixel height (video and slideshow image assets)
-- `duration` — duration in seconds (video and audio assets)
-- `codecType` — video codec identifier (e.g. `h264`), video only
-- `bitrate` — video bitrate in bps, video only
-- `gearName` — TikTok quality tier label of the chosen video file (e.g. `normal`, `adapt`), present when TikTok offered a list of quality options
-- `definition` — TikTok's video definition label (e.g. `normal`, `high`), when exposed separately from `gearName`
-- `downloadedAt` — ISO 8601 timestamp when the file was saved to the store
+## How it works
+
+TikTok exposes two different media paths, and this actor uses both:
+
+1. **Embed fast path** — the public embed page returns the watermarked MP4, cover, sound, slideshow images, author, stats, and caption without a browser or login.
+2. **Browser page session** — the clean `playAddr` URL is bound to first-party cookies from the same page load and returns `403` when fetched outside that session. The actor opens the post in Chromium, downloads the selected clean stream inside the session, and stores it in Apify Key-Value Store so the output link keeps working.
+
+Watermarked and direct assets are downloaded to Key-Value Store when `downloadToKv` is `true`. When it is `false`, their source URLs are returned instead. Clean video is always downloaded and re-hosted because a bare source URL would not work for you.
 
 ## Input
 
 | Field | Type | Default | Description |
 |---|---|---|---|
-| `postUrls` | array of strings | — | TikTok post URLs to download, such as `tiktok.com/@user/video/ID`, `/photo/ID`, `/video/ID`, `/v/ID` or `/embed/v2/ID`, or bare numeric IDs. Short `vm.tiktok.com`/`vt.tiktok.com` links are not recognized and are skipped. |
-| `postIds` | array of strings | — | Numeric TikTok post IDs (alternative to `postUrls`; both lists can be combined). |
-| `assetTypes` | array of strings | `["video", "cover"]` | Asset types to download per post: `video`, `images` (slideshow frames), `audio`, `cover`. |
-| `preferredQuality` | string | `"best"` | Target video quality: `best`, `720p`, `540p`, `360p`, or `smallest`. |
-| `filenameTemplate` | string | `"{postId}_{type}_{ordinal}.{ext}"` | Template for Key-Value Store keys. Placeholders: `{postId}`, `{type}`, `{ordinal}`, `{ext}`. |
+| `postUrls` | array of strings | required | Canonical post URLs, short links, embed URLs, or numeric post IDs. Duplicates are processed once. |
+| `assetTypes` | multi-select | `["video"]` | `video`, `audio`, `cover`, `slideshow`, `metadata`. |
+| `videoVariant` | select | `clean` | `clean`, `watermarked`, or `both`. |
+| `quality` | select | `best` | `best` sorts by resolution then bitrate. `1080p`, `720p`, `540p`, `360p`, `smallest` target the closest available stream. Watermarked copies are single-resolution. |
+| `downloadToKv` | boolean | `true` | Store watermarked video, audio, cover, and slideshow files and return `kvsUrl`. Clean video is always stored. |
+| `maxFileSizeMb` | integer | `100` | Per-file cap (1–100 MB). Larger files produce a `too_large` row. |
+| `maxItems` | integer | `1000` | Maximum unique posts to process (1–1000). Extra inputs get a `limit_reached` row. |
+| `maxConcurrency` | integer | `3` | Posts processed in parallel (1–3). |
+| `proxyConfiguration` | object | none | Optional. The actor uses a direct connection by default. |
 
-### Example: Download video and cover thumbnail
-
-```json
-{
-  "postUrls": ["https://www.tiktok.com/@khaby.lame/video/7574844184952081686"],
-  "assetTypes": ["video", "cover"],
-  "preferredQuality": "best"
-}
-```
-
-### Example: Cover thumbnails only (lightweight)
+### Example — one clean video at 540p
 
 ```json
 {
-  "postUrls": [
-    "https://www.tiktok.com/@khaby.lame/video/7574844184952081686",
-    "https://www.tiktok.com/@natgeo/video/7341234567890123456"
-  ],
-  "assetTypes": ["cover"]
-}
-```
-
-### Example: Download at 540p to save storage
-
-```json
-{
-  "postUrls": ["https://www.tiktok.com/@bbcnews/video/7395279524742083872"],
+  "postUrls": ["https://www.tiktok.com/@nba/video/7693329153680035102"],
   "assetTypes": ["video"],
-  "preferredQuality": "540p",
-  "filenameTemplate": "{postId}_video_{ordinal}.{ext}"
+  "videoVariant": "clean",
+  "quality": "540p",
+  "downloadToKv": true,
+  "maxItems": 1
 }
 ```
 
-### Example: Download slideshow images and audio
+### Example — both video variants, cover, and metadata
 
 ```json
 {
-  "postUrls": ["https://www.tiktok.com/@somecreator/video/7123456789012345678"],
-  "assetTypes": ["images", "audio"]
+  "postUrls": ["https://www.tiktok.com/@nba/video/7693329153680035102"],
+  "assetTypes": ["video", "cover", "metadata"],
+  "videoVariant": "both",
+  "quality": "720p",
+  "downloadToKv": true
 }
 ```
 
-## Use cases
+### Example — slideshow frames and sound
 
-- **Content archiving** — preserve brand or creator content before it is deleted or made private
-- **Ad creative libraries** — download competitor or inspiration videos for internal review and benchmarking
-- **Thumbnail pipelines** — bulk-collect cover images for visual classification, brand consistency audits, or moderation workflows
-- **Media production** — pull background music tracks (`audio` asset type) from viral TikTok sounds for licensing research
-- **Dataset building** — compile labeled video/image datasets for computer vision or multimodal ML training
+```json
+{
+  "postUrls": ["https://www.tiktok.com/@khaby.lame/photo/7574844184952081686"],
+  "assetTypes": ["slideshow", "audio", "metadata"],
+  "downloadToKv": true
+}
+```
+
+### Example — URL-only mode for direct assets
+
+```json
+{
+  "postUrls": ["https://www.tiktok.com/@nba/video/7693329153680035102"],
+  "assetTypes": ["audio", "cover"],
+  "downloadToKv": false
+}
+```
+
+## Output
+
+Each dataset row contains the non-empty fields that apply:
+
+- `postId`, `postUrl`, `postType`
+- `assetType`: `video`, `audio`, `cover`, `slideshow`, `metadata`, or `post` for post-level status rows
+- `variant`: `clean` or `watermarked` for video
+- `quality`: selected quality label
+- `ordinal`: slideshow frame index
+- `mimeType`, `byteSize`, `width`, `height`, `duration`
+- `kvsKey`, `kvsUrl` for stored files
+- `originalUrl`, `expiresAt` for the source CDN URL
+- `downloadedAt`, `requiresSession`
+- `status`, `error`
+- Metadata rows add `caption`, `createTime`, author fields, play/like/comment/share/collect counts, music fields, and `imageCount`
+
+### Status values
+
+| Status | Meaning |
+|---|---|
+| `ok` | At least one requested asset or metadata row delivered |
+| `not_found` | Deleted, removed, or unavailable post |
+| `private` | Private account or friends-only post |
+| `region_blocked` | Not available in the current region |
+| `login_required` | Age-gated or login-gated post |
+| `blocked` | TikTok bot wall or rate limit after retries |
+| `unsupported_url` | Input is not a recognizable TikTok post |
+| `short_link_dead` | Short link redirected to a homepage/profile, not a post |
+| `no_video` | Video requested for a slideshow post |
+| `no_slideshow` | Slideshow requested for a video post |
+| `no_audio` | No sound track exposed |
+| `no_cover` | No cover image exposed |
+| `no_assets` | Post resolved but none of the requested assets were available |
+| `download_failed` | CDN download or Key-Value Store write failed |
+| `too_large` | File exceeds `maxFileSizeMb` |
+| `duplicate` | Same post ID appeared earlier in the input |
+| `limit_reached` | `maxItems` cap reached before this input was processed |
+
+## URL expiry and storage
+
+- TikTok CDN URLs (`originalUrl`) are signed and expire in **about 48 hours** (some music URLs expire within 24 hours). They are useful for traceability, not long-term hosting.
+- `kvsUrl` points to the run's Apify Key-Value Store and lasts for that store's retention period. Download important files to your own storage.
+- Clean video source URLs only work with the extracting page session (`requiresSession: true`). That is why the actor always downloads and re-hosts clean video instead of selling a bare URL.
+
+## Limits and behaviour
+
+- **Caps:** 1–1000 posts per run, 3 concurrent posts, 100 MB per file.
+- **Deduplication:** the first occurrence of a post ID is processed; later occurrences get a `duplicate` row.
+- **Clean video:** requires a browser session; if the page is blocked, the actor returns a status row for the clean asset while still delivering metadata/watermarked assets when the embed fast path succeeded.
+- **Region, private, and age-gated posts:** no login and no user cookies are used. Posts that require either are reported with a status row rather than silently omitted.
+- **Field drift:** the parser accepts both `imagePost.images` (modern page data) and `imagePostInfo.displayImages` (embed/legacy), and MIME types are taken from the CDN response rather than assumed.
+- **Watermarked resolution:** TikTok exposes one watermarked copy per post, so `quality` affects clean video only.
 
 ## FAQ
 
-**Q: Do I need a TikTok account or cookies?**  
-A: No. The actor downloads publicly available TikTok videos without any authentication.
+**Do I need a TikTok account or cookies?**
+No. The actor uses public pages and browser-generated first-party cookies only.
 
-**Q: How long are the download URLs valid?**  
-A: Files are stored in the run's default Key-Value Store, and `kvsUrl` works for as long as Apify keeps that run's storage (unnamed storages are removed after your plan's retention period). Download the files to your own storage if you need them for longer.
+**Why can't I get a no-watermark URL without downloading?**
+TikTok's clean `playAddr` returns `403 text/html` unless it is fetched with cookies from the same page session. The actor downloads the file in that session and re-hosts it.
 
-**Q: What is the difference between `video` and `images` asset types?**  
-A: `video` downloads the standard MP4 file for regular video posts. `images` downloads individual frames from TikTok slideshow (photo carousel) posts, one row per frame. Regular video posts do not produce `image` rows.
+**How long do links stay valid?**
+`kvsUrl` lasts for the Key-Value Store retention period. `originalUrl` is a signed CDN URL that expires in about 48 hours.
 
-**Q: What does `preferredQuality` do exactly?**  
-A: When TikTok offers several encodings of a video, the actor picks the one whose quality-tier label contains the requested resolution (e.g. `720`), or the highest/lowest bitrate for `best`/`smallest`. If no entry matches the label, it falls back to the highest-bitrate entry, same as `best`. When TikTok offers no list of encodings, the single available file is downloaded regardless of this setting.
+**What happens to posts that cannot be downloaded?**
+They produce a status row with `status` and `error`, so you can audit the run instead of diffing post IDs.
 
-**Q: What if a URL fails to download?**  
-A: Failed downloads do not block other URLs — the actor moves on to the next post. A post that produces no assets simply has no rows in the dataset rather than an error row, so check your input list against the dataset's distinct `postId` values to see which posts didn't come through. Inputs that aren't recognized as a TikTok post are skipped the same way.
+**Are short links supported?**
+Yes. `vm.tiktok.com`, `vt.tiktok.com`, and `/t/` links are resolved with an HTTP redirect. A dead link gets `short_link_dead`.
 
-**Q: Are short TikTok URLs (vm.tiktok.com, vt.tiktok.com) supported?**  
-A: No. Open the short link in a browser and paste the full `tiktok.com/@user/video/ID` address, or just the numeric ID, instead.
+**Can I use a proxy?**
+It is optional. The actor is direct by default. If you want to route requests through Apify Proxy, select a proxy configuration in the input.
 
-**Q: Can I download multiple posts in one run?**  
-A: Yes. Pass as many URLs as needed in the `postUrls` array. Posts are processed sequentially.
+**Why is a clean video row missing on a slideshow?**
+Slideshows have no video file. Request `slideshow` or `audio` instead; a `no_video` status row is emitted when video is requested.
 
-**Q: What filename template should I use for slideshow images?**  
-A: Keep `{ordinal}` in the template (the default does) so each frame gets a unique, ordered key; without it, frames of the same post overwrite each other in the store.
-
-**Q: Is this affiliated with TikTok?**  
-A: No. It is an independent tool that downloads publicly available TikTok media and is not run or endorsed by TikTok. Only download content you have the right to use.
+**Is this affiliated with TikTok?**
+No. It is an independent tool for publicly available TikTok media. Only download content you have the right to use.
