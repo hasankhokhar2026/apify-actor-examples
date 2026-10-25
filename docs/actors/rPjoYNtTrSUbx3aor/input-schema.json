@@ -1,8 +1,8 @@
 {
-  "description": "Search worldmarket.com by keyword, or browse a department. No login, cookies, or paid proxy required.",
+  "description": "Search worldmarket.com by keyword, browse a department or collection, or paste product URLs. Prices, sale savings, images, SKUs, variants and optional store pickup. No login or cookies required.",
   "properties": {
     "category": {
-      "description": "Browse an entire World Market department.",
+      "description": "A World Market department or curated collection. Use `categoryUrl` instead if you want a sub-category that is not listed here.",
       "editor": "select",
       "enum": [
         "bestSellers",
@@ -42,27 +42,47 @@
         "Sale / Clearance",
         "Wall Decor & Mirrors"
       ],
-      "title": "Department (mode=byCategory)",
+      "title": "Department or collection (mode=byCategory)",
       "type": "string"
+    },
+    "categoryUrl": {
+      "description": "A worldmarket.com category or collection URL, e.g. `https://www.worldmarket.com/c/furniture/shop-all-furniture/`. Takes priority over `category`.",
+      "editor": "textfield",
+      "title": "Custom category or collection URL (mode=byCategory)",
+      "type": "string"
+    },
+    "includePickup": {
+      "default": false,
+      "description": "Add per-store pickup status, quantity and message. Requires `storeId` or `postalCode`.",
+      "prefill": false,
+      "title": "Include store pickup availability",
+      "type": "boolean"
+    },
+    "includeVariants": {
+      "default": true,
+      "description": "Include the selectable color, size or fragrance options for products that have them (up to 20).",
+      "prefill": true,
+      "title": "Include variant options",
+      "type": "boolean"
     },
     "maxItems": {
       "default": 20,
-      "description": "Hard cap on emitted products.",
-      "maximum": 200,
+      "description": "Hard cap on emitted products (1–500). Search and department pages are read 120 tiles at a time.",
+      "maximum": 500,
       "minimum": 1,
-      "prefill": 20,
+      "prefill": 1,
       "title": "Max items",
       "type": "integer"
     },
     "maxPrice": {
-      "description": "Drop products priced above this amount.",
+      "description": "Drop products whose current price is above this amount.",
       "maximum": 100000,
       "minimum": 0,
       "title": "Maximum price (USD)",
       "type": "integer"
     },
     "minPrice": {
-      "description": "Drop products priced below this amount.",
+      "description": "Drop products whose current price is below this amount.",
       "maximum": 100000,
       "minimum": 0,
       "title": "Minimum price (USD)",
@@ -70,7 +90,7 @@
     },
     "mode": {
       "default": "search",
-      "description": "What to fetch.",
+      "description": "What to fetch. `search` uses a keyword, `byCategory` browses a department or collection, and `byProductUrls` reads the URLs you paste.",
       "editor": "select",
       "enum": [
         "search",
@@ -79,24 +99,37 @@
       ],
       "enumTitles": [
         "Search by keyword",
-        "Browse by department",
-        "Lookup specific product URLs"
+        "Browse a department or collection",
+        "Look up product URLs"
       ],
       "prefill": "search",
       "title": "Mode",
       "type": "string"
     },
+    "postalCode": {
+      "description": "US ZIP code used to resolve the nearest store when `storeId` is not set and `includePickup` is enabled.",
+      "editor": "textfield",
+      "title": "ZIP / postal code (optional, pickup only)",
+      "type": "string"
+    },
     "productUrls": {
       "default": [],
-      "description": "Direct worldmarket.com product-page URLs (e.g. `https://www.worldmarket.com/p/<slug>-<id>.html`).",
+      "description": "Direct worldmarket.com product-page URLs, e.g. `https://www.worldmarket.com/p/<slug>-<id>.html`. Up to 500 unique URLs per run.",
       "editor": "stringList",
-      "prefill": [],
       "title": "Product URLs (mode=byProductUrls)",
       "type": "array"
     },
+    "proxyConfiguration": {
+      "description": "Optional. The actor connects directly first and only uses a proxy fallback if World Market blocks a request. Choose your own proxy to use it as that fallback, or leave it unset.",
+      "editor": "proxy",
+      "sectionCaption": "Advanced",
+      "sectionDescription": "Proxy settings.",
+      "title": "Proxy configuration",
+      "type": "object"
+    },
     "searchQuery": {
       "default": "candle",
-      "description": "Free-text keyword search (mode=search), e.g. `candle`, `dining chair`, `chocolate`.",
+      "description": "Keyword to search for (mode=search), e.g. `candle`, `dining chair`, `chocolate`.",
       "editor": "textfield",
       "prefill": "candle",
       "title": "Search query",
@@ -104,7 +137,7 @@
     },
     "sortBy": {
       "default": "bestselling",
-      "description": "Sort order for search/category results.",
+      "description": "Sort order for search and department results. `bestselling` and `newArrivals` keep World Market's own listing order.",
       "editor": "select",
       "enum": [
         "bestselling",
@@ -120,8 +153,13 @@
         "Price: Low to High",
         "Price: High to Low"
       ],
-      "prefill": "bestselling",
       "title": "Sort order",
+      "type": "string"
+    },
+    "storeId": {
+      "description": "A World Market store ID such as `store398`. Used only when `includePickup` is enabled. If omitted, the nearest store is resolved from `postalCode`.",
+      "editor": "textfield",
+      "title": "Store ID (optional, pickup only)",
       "type": "string"
     }
   },

@@ -1,9 +1,9 @@
 {
-  "description": "Find B2B leads by job title, location, and industry using free public search data. No API keys needed.",
+  "description": "Find public LinkedIn profiles by job title, location, and company using cookieless Yahoo search. Returns name, title, company, location, profile URL, and data-quality flags. No login or API keys.",
   "properties": {
     "companyNames": {
       "default": [],
-      "description": "Specific companies to target (e.g. 'Google', 'Microsoft'). Leave empty to search all companies.",
+      "description": "Specific companies to target (max 5). Leave empty to search all companies.",
       "editor": "stringList",
       "items": {
         "type": "string"
@@ -11,15 +11,11 @@
       "title": "Company Names",
       "type": "array"
     },
-    "industries": {
-      "default": [],
-      "description": "Industries to filter by (e.g. 'SaaS', 'Healthcare', 'Finance'). Appended to search query for filtering.",
-      "editor": "stringList",
-      "items": {
-        "type": "string"
-      },
-      "title": "Industries",
-      "type": "array"
+    "includeEmailGuess": {
+      "default": false,
+      "description": "Add a best-effort email guess derived from name + company domain. Guesses are NOT verified and may be wrong. Off by default.",
+      "title": "Include Unverified Email Guess",
+      "type": "boolean"
     },
     "jobTitles": {
       "description": "Job titles to search for (e.g. 'Software Engineer', 'CEO', 'Marketing Manager'). Each title generates a separate search query.",
@@ -45,12 +41,19 @@
       "type": "array"
     },
     "maxLeads": {
-      "default": 100,
-      "description": "Maximum number of leads to return. Higher values require more search queries and take longer.",
-      "maximum": 500,
+      "default": 25,
+      "description": "Maximum number of leads to return (1-100).",
+      "maximum": 100,
       "minimum": 1,
+      "prefill": 1,
       "title": "Max Leads",
       "type": "integer"
+    },
+    "proxyConfiguration": {
+      "description": "Optional Apify proxy configuration. Yahoo may block datacenter IPs.",
+      "editor": "proxy",
+      "title": "Proxy configuration",
+      "type": "object"
     }
   },
   "required": [

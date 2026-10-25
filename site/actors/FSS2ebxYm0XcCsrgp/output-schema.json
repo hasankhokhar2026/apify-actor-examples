@@ -1,13 +1,13 @@
 {
   "actorOutputSchemaVersion": 1,
-  "description": "Hashtag stats records (video/view counts) and TikTok video records (caption, author, music, engagement) collected per hashtag.",
+  "description": "Aggregate hashtag stats rows (video/view totals, source, region) and video rows (caption, author, music, engagement, provenance). Use the recordType field to distinguish rows.",
   "properties": {
     "data": {
-      "description": "Dataset containing hashtag metadata records and/or post records. Use 'recordType' field to distinguish: 'hashtag_metadata' rows have challenge stats; post rows have full video metadata.",
+      "description": "Dataset containing hashtag_metadata stats rows and/or post video rows. Stats rows carry all-time totals; post rows carry the video payload plus source, position, region, scrapedAt, and carriesSearchedHashtag.",
       "template": "{{links.apiDefaultDatasetUrl}}/items",
       "title": "Hashtag Data",
       "type": "string"
     }
   },
-  "title": "TikTok Hashtag Video Feed & Stats Extractor Output"
+  "title": "TikTok Hashtag Stats and Video Feed Output"
 }

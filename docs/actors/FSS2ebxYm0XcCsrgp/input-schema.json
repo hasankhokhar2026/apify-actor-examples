@@ -1,53 +1,80 @@
 {
-  "description": "Scrape TikTok hashtag metadata and/or posts. Metadata mode is always reliable. Posts mode may be blocked by TikTok; auto mode tries posts then falls back gracefully.",
+  "description": "Collect all-time stats for one or more TikTok hashtags and/or the videos underneath them. Stats mode is the cheapest; feed mode returns the public US hashtag feed; search mode returns one page of keyword search; auto combines stats and feed and adds search when the feed is short.",
   "properties": {
     "hashtags": {
-      "description": "List of TikTok hashtags to scrape. You can include or omit the # symbol. Example: comedy, #dance, fyp",
+      "description": "Hashtags to collect. Accepts a bare tag, #tag, or a TikTok tag URL. Case-insensitive, duplicates removed. Up to 10.",
       "editor": "stringList",
       "items": {
         "type": "string"
       },
+      "maxItems": 10,
       "minItems": 1,
       "prefill": [
-        "fyp"
+        "fitness"
       ],
       "title": "Hashtags",
       "type": "array"
     },
-    "includeHashtagMetadata": {
+    "includeStatsRow": {
       "default": true,
-      "description": "When scraping posts, also emit a 'hashtag_metadata' record with the challenge stats (videoCount, viewCount, description, etc.) at the start of each hashtag's results.",
-      "prefill": true,
-      "title": "Include Hashtag Metadata",
+      "description": "Emit the aggregate hashtag stats row before video rows in feed, search and auto modes. Stats mode always emits it.",
+      "title": "Include Stats Row",
       "type": "boolean"
     },
-    "maxPostsPerHashtag": {
-      "default": 50,
-      "description": "Maximum number of posts to scrape per hashtag (when mode includes posts). Set to 0 to skip posts entirely (equivalent to metadata-only mode). Has no effect in metadata-only mode.",
-      "maximum": 500,
+    "maxHashtags": {
+      "default": 10,
+      "description": "Process no more than this many hashtags from the list (1–10). Extra hashtags are skipped.",
+      "maximum": 10,
+      "minimum": 1,
+      "title": "Max Hashtags",
+      "type": "integer"
+    },
+    "maxVideosPerHashtag": {
+      "default": 30,
+      "description": "Upper bound on videos per hashtag for feed, search and auto modes (0–300). Use 0 for stats only. TikTok usually returns fewer than requested: the feed is served in pages of about 30 and many tags stop after roughly 100–150 rows.",
+      "maximum": 300,
       "minimum": 0,
-      "prefill": 5,
-      "title": "Max Posts Per Hashtag",
+      "prefill": 0,
+      "title": "Max Videos Per Hashtag",
       "type": "integer"
     },
     "mode": {
-      "default": "auto",
-      "description": "What to scrape per hashtag. 'metadata' emits one stats record per hashtag (always works). 'posts' fetches videos (may be blocked). 'topPosts' tries a search fallback. 'auto' tries posts, falls back to topPosts, then metadata-only.",
+      "default": "stats",
+      "description": "What to collect. 'stats' returns one aggregate row per hashtag (cheapest). 'feed' returns the public hashtag video feed. 'search' returns one page of TikTok keyword/hashtag search results. 'auto' returns stats plus the feed and adds search results only when the feed is shorter than one page.",
       "editor": "select",
       "enum": [
-        "auto",
-        "metadata",
-        "posts",
-        "topPosts"
+        "stats",
+        "feed",
+        "search",
+        "auto"
       ],
       "enumTitles": [
-        "Auto (posts → topPosts → metadata fallback)",
-        "Metadata only (hashtag stats, always reliable)",
-        "Posts (videos — may be blocked by TikTok)",
-        "Top Posts (search-based fallback, best-effort)"
+        "Stats only — video and view totals",
+        "Hashtag feed — videos under the tag",
+        "Search — one page of TikTok results",
+        "Auto — stats + feed, search when short"
       ],
-      "prefill": "metadata",
-      "title": "Scrape Mode",
+      "prefill": "stats",
+      "title": "Mode",
+      "type": "string"
+    },
+    "proxyConfiguration": {
+      "description": "Optional. Leave empty to use the built-in US residential connection with automatic fallback. Set your own Apify proxy configuration here to override it. Feed mode uses the most residential bandwidth, which is billed by Apify proxy usage.",
+      "editor": "proxy",
+      "title": "Proxy Configuration",
+      "type": "object"
+    },
+    "region": {
+      "default": "US",
+      "description": "Market used for the hashtag feed. Only the United States is verified to return a public feed; other markets are not exposed yet.",
+      "editor": "select",
+      "enum": [
+        "US"
+      ],
+      "enumTitles": [
+        "United States (verified)"
+      ],
+      "title": "Region",
       "type": "string"
     }
   },
@@ -55,6 +82,6 @@
     "hashtags"
   ],
   "schemaVersion": 1,
-  "title": "TikTok Hashtag Scraper Input",
+  "title": "TikTok Hashtag Stats and Video Feed Input",
   "type": "object"
 }

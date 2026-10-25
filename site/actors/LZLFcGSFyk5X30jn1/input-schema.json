@@ -1,0 +1,106 @@
+{
+  "description": "Send emails via SMTP. Works with Gmail, Outlook, Yahoo, SendGrid, Mailgun, or any SMTP server.",
+  "properties": {
+    "attachments": {
+      "description": "File attachments as base64-encoded objects. Each item needs 'filename' (string) and 'data' (base64 string). Example: [{\"filename\": \"report.pdf\", \"data\": \"base64data...\"}]",
+      "editor": "json",
+      "title": "Attachments",
+      "type": "array"
+    },
+    "bcc": {
+      "description": "Blind carbon copy recipient(s). Separate multiple addresses with commas. BCC addresses are hidden from other recipients.",
+      "editor": "textfield",
+      "title": "BCC",
+      "type": "string"
+    },
+    "cc": {
+      "description": "Carbon copy recipient(s). Separate multiple addresses with commas.",
+      "editor": "textfield",
+      "title": "CC",
+      "type": "string"
+    },
+    "html": {
+      "description": "HTML email body. Takes priority over plain text in most email clients. Example: '<h1>Hello</h1><p>This is a test.</p>'",
+      "editor": "textarea",
+      "title": "HTML Body",
+      "type": "string"
+    },
+    "replyTo": {
+      "description": "Reply-to email address. When recipients reply, their response goes to this address instead of the sender.",
+      "editor": "textfield",
+      "title": "Reply-To",
+      "type": "string"
+    },
+    "smtpHost": {
+      "description": "SMTP server hostname. Examples: smtp.gmail.com, smtp.office365.com, smtp.mail.yahoo.com, smtp.mailgun.org, smtp.sendgrid.net",
+      "editor": "textfield",
+      "prefill": "smtp.gmail.com",
+      "sectionCaption": "SMTP Configuration",
+      "sectionDescription": "Provide your SMTP server credentials. For Gmail, use an App Password (not your regular password).",
+      "title": "SMTP Host",
+      "type": "string"
+    },
+    "smtpPassword": {
+      "description": "SMTP login password. For Gmail, use an App Password (Google Account > Security > App Passwords). For SendGrid/Mailgun, use your API key.",
+      "editor": "textfield",
+      "isSecret": true,
+      "title": "SMTP Password",
+      "type": "string"
+    },
+    "smtpPort": {
+      "default": 587,
+      "description": "SMTP server port. Use 587 for STARTTLS (recommended), 465 for SSL/TLS, or 25 for unencrypted.",
+      "editor": "number",
+      "maximum": 65535,
+      "minimum": 1,
+      "prefill": 587,
+      "title": "SMTP Port",
+      "type": "integer"
+    },
+    "smtpUser": {
+      "description": "SMTP login username. Usually your full email address. For SendGrid, use 'apikey' as the username.",
+      "editor": "textfield",
+      "title": "SMTP Username",
+      "type": "string"
+    },
+    "subject": {
+      "description": "Email subject line.",
+      "editor": "textfield",
+      "prefill": "Test Email from Apify",
+      "title": "Subject",
+      "type": "string"
+    },
+    "text": {
+      "description": "Plain text email body. At least one of 'Plain Text Body' or 'HTML Body' must be provided. If both are set, email clients choose which to display.",
+      "editor": "textarea",
+      "title": "Plain Text Body",
+      "type": "string"
+    },
+    "to": {
+      "description": "Recipient email address(es). Separate multiple addresses with commas. Example: 'user@example.com' or 'alice@example.com, bob@example.com'",
+      "editor": "textfield",
+      "prefill": "recipient@example.com",
+      "sectionCaption": "Email",
+      "title": "To",
+      "type": "string"
+    },
+    "useTls": {
+      "default": true,
+      "description": "Enable TLS encryption. Port 587 uses STARTTLS, port 465 uses direct SSL. Recommended: always keep enabled.",
+      "editor": "checkbox",
+      "prefill": true,
+      "title": "Use TLS/SSL",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "to",
+    "subject",
+    "smtpHost",
+    "smtpUser",
+    "smtpPassword"
+  ],
+  "schemaVersion": 1,
+  "title": "Send Email Input",
+  "type": "object"
+}

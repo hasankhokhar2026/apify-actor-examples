@@ -16,10 +16,25 @@
       "title": "Author",
       "type": "object"
     },
+    "authorStats": {
+      "description": "Follower, following, heart, video and digg counts for the author",
+      "title": "Author Stats",
+      "type": "object"
+    },
     "caption": {
       "description": "Post caption/description text",
       "title": "Caption",
       "type": "string"
+    },
+    "carriesAnyHashtag": {
+      "description": "True when the video's caption carries at least one hashtag entity",
+      "title": "Carries Any Hashtag",
+      "type": "boolean"
+    },
+    "carriesSearchedHashtag": {
+      "description": "True when the video's own hashtag entities include the searched tag",
+      "title": "Carries Searched Hashtag",
+      "type": "boolean"
     },
     "collectCount": {
       "description": "Number of times post was saved/collected",
@@ -65,6 +80,11 @@
       "description": "Whether duets are allowed on this post",
       "title": "Duet Enabled",
       "type": "boolean"
+    },
+    "hashtag": {
+      "description": "The requested hashtag (without #) on stats rows",
+      "title": "Hashtag",
+      "type": "string"
     },
     "hashtagId": {
       "description": "TikTok internal challenge ID (string)",
@@ -117,13 +137,18 @@
       "type": "array"
     },
     "music": {
-      "description": "Music/sound used in the post (id, title, authorName, duration, playUrl)",
+      "description": "Music/sound used in the post (id, title, authorName, duration, playUrl, coverUrl)",
       "title": "Music",
       "type": "object"
     },
     "playCount": {
       "description": "Number of video plays",
       "title": "Play Count",
+      "type": "integer"
+    },
+    "position": {
+      "description": "1-based position in the collected feed/search list for the hashtag",
+      "title": "Position",
       "type": "integer"
     },
     "postId": {
@@ -157,14 +182,24 @@
       "type": "string"
     },
     "recordType": {
-      "description": "Discriminator: 'hashtag_metadata' for challenge stats rows, absent for post rows",
+      "description": "Discriminator: 'hashtag_metadata' for aggregate stats rows, 'post' for video rows",
       "title": "Record Type",
+      "type": "string"
+    },
+    "region": {
+      "description": "Market used for the run (US is the verified feed market)",
+      "title": "Region",
       "type": "string"
     },
     "repostCount": {
       "description": "Number of reposts (from statsV2)",
       "title": "Repost Count",
       "type": "integer"
+    },
+    "scrapedAt": {
+      "description": "UTC ISO 8601 timestamp when the record was built",
+      "title": "Scraped At",
+      "type": "string"
     },
     "searchedHashtag": {
       "description": "The normalized hashtag input that produced this record (without #)",
@@ -186,10 +221,20 @@
       "title": "Share Meta",
       "type": "object"
     },
+    "source": {
+      "description": "'challenge_detail' on stats rows; 'feed' or 'search' on video rows",
+      "title": "Source",
+      "type": "string"
+    },
     "stitchEnabled": {
       "description": "Whether stitching is allowed on this post",
       "title": "Stitch Enabled",
       "type": "boolean"
+    },
+    "textExtra": {
+      "description": "Raw TikTok caption entities (hashtags and mentions) when present",
+      "title": "Text Extra",
+      "type": "array"
     },
     "textLanguage": {
       "description": "Language code of the caption text",
@@ -197,22 +242,22 @@
       "type": "string"
     },
     "video": {
-      "description": "Video metadata (width, height, duration, ratio, playUrl, cover, etc.)",
+      "description": "Video metadata (width, height, duration, ratio, playUrl, cover)",
       "title": "Video",
       "type": "object"
     },
     "videoCount": {
-      "description": "Total number of videos using this hashtag (from statsV2, string to avoid overflow)",
+      "description": "All-time number of videos using this hashtag, from statsV2 (string to avoid overflow)",
       "title": "Video Count",
       "type": "string"
     },
     "viewCount": {
-      "description": "Total views across all videos using this hashtag (from statsV2, string)",
+      "description": "All-time views across all videos using this hashtag, from statsV2 (string)",
       "title": "View Count",
       "type": "string"
     }
   },
-  "title": "TikTok Hashtag Scraper Dataset",
+  "title": "TikTok Hashtag Stats and Video Feed Dataset",
   "views": {
     "overview": {
       "display": {
@@ -221,6 +266,10 @@
           "caption": {
             "format": "text",
             "label": "Caption"
+          },
+          "carriesSearchedHashtag": {
+            "format": "text",
+            "label": "Has Tag"
           },
           "commentCount": {
             "format": "number",
@@ -238,6 +287,10 @@
             "format": "number",
             "label": "Plays"
           },
+          "position": {
+            "format": "number",
+            "label": "Position"
+          },
           "postId": {
             "format": "text",
             "label": "Post ID"
@@ -250,9 +303,21 @@
             "format": "text",
             "label": "Type"
           },
+          "region": {
+            "format": "text",
+            "label": "Region"
+          },
+          "scrapedAt": {
+            "format": "text",
+            "label": "Scraped At"
+          },
           "searchedHashtag": {
             "format": "text",
             "label": "Hashtag"
+          },
+          "source": {
+            "format": "text",
+            "label": "Source"
           },
           "videoCount": {
             "format": "text",
@@ -272,8 +337,13 @@
           "hashtagName",
           "videoCount",
           "viewCount",
+          "source",
           "postId",
           "caption",
+          "carriesSearchedHashtag",
+          "position",
+          "region",
+          "scrapedAt",
           "playCount",
           "likeCount",
           "commentCount",

@@ -1,15 +1,187 @@
 {
   "actorSpecification": 1,
-  "fields": {},
+  "fields": {
+    "properties": {
+      "adId": {
+        "description": "adId",
+        "type": "string"
+      },
+      "adLibraryUrl": {
+        "description": "Transparency Center URL for this creative",
+        "nullable": true,
+        "type": "string"
+      },
+      "advertiserCategories": {
+        "description": "advertiserCategories",
+        "type": "array"
+      },
+      "advertiserCountry": {
+        "description": "Advertiser country code",
+        "nullable": true,
+        "type": "string"
+      },
+      "advertiserId": {
+        "description": "Google advertiser ID (AR...)",
+        "type": "string"
+      },
+      "advertiserLegalName": {
+        "description": "Advertiser legal name when Google exposes it",
+        "nullable": true,
+        "type": "string"
+      },
+      "advertiserName": {
+        "description": "Advertiser display name",
+        "type": "string"
+      },
+      "advertiserVerified": {
+        "description": "Whether Google marks the advertiser as verified",
+        "nullable": true,
+        "type": "boolean"
+      },
+      "body": {
+        "description": "Text ad body (same as description when only one is exposed)",
+        "nullable": true,
+        "type": "string"
+      },
+      "callToAction": {
+        "description": "Call-to-action text when exposed",
+        "nullable": true,
+        "type": "string"
+      },
+      "creativeId": {
+        "description": "Google creative ID (CR...)",
+        "type": "string"
+      },
+      "description": {
+        "description": "Text ad description",
+        "nullable": true,
+        "type": "string"
+      },
+      "displayDomain": {
+        "description": "Display domain shown on the ad",
+        "nullable": true,
+        "type": "string"
+      },
+      "firstShown": {
+        "description": "First date the ad was shown (YYYY-MM-DD)",
+        "nullable": true,
+        "type": "string"
+      },
+      "format": {
+        "description": "TEXT, IMAGE or VIDEO",
+        "type": "string"
+      },
+      "headline": {
+        "description": "Text ad headline",
+        "nullable": true,
+        "type": "string"
+      },
+      "imageUrl": {
+        "description": "Image URL for image ads and video posters",
+        "nullable": true,
+        "type": "string"
+      },
+      "imageUrls": {
+        "description": "imageUrls",
+        "type": "array"
+      },
+      "impressionsMax": {
+        "description": "Upper impression bound when Google exposes it",
+        "nullable": true,
+        "type": "integer"
+      },
+      "impressionsMin": {
+        "description": "Lower impression bound when Google exposes it",
+        "nullable": true,
+        "type": "integer"
+      },
+      "landingUrl": {
+        "description": "landingUrl",
+        "type": "string"
+      },
+      "lastShown": {
+        "description": "Last date the ad was shown (YYYY-MM-DD)",
+        "nullable": true,
+        "type": "string"
+      },
+      "platform": {
+        "description": "platform",
+        "type": "string"
+      },
+      "platforms": {
+        "description": "Platforms Google reports for the creative",
+        "nullable": true,
+        "type": "array"
+      },
+      "posterUrl": {
+        "description": "Video poster image URL",
+        "nullable": true,
+        "type": "string"
+      },
+      "previewUrl": {
+        "description": "Preview link or media URL for the creative",
+        "nullable": true,
+        "type": "string"
+      },
+      "productBrand": {
+        "description": "Shopping/product brand for image creatives",
+        "nullable": true,
+        "type": "string"
+      },
+      "productTitle": {
+        "description": "Shopping/product title for image creatives",
+        "nullable": true,
+        "type": "string"
+      },
+      "regionStats": {
+        "description": "regionStats",
+        "type": "array"
+      },
+      "regions": {
+        "description": "Country codes returned for the creative",
+        "nullable": true,
+        "type": "array"
+      },
+      "scrapedAt": {
+        "description": "ISO 8601 timestamp when the record was emitted",
+        "type": "string"
+      },
+      "searchTerm": {
+        "description": "Search term or domain that produced this record",
+        "nullable": true,
+        "type": "string"
+      },
+      "source": {
+        "description": "Data source identifier",
+        "type": "string"
+      },
+      "startUrl": {
+        "description": "Input URL that produced this record, when applicable",
+        "nullable": true,
+        "type": "string"
+      },
+      "videoUrl": {
+        "description": "Direct video URL when Google exposes one; signed and short-lived",
+        "nullable": true,
+        "type": "string"
+      },
+      "videoUrlExpiresAt": {
+        "description": "videoUrlExpiresAt",
+        "type": "string"
+      },
+      "youtubeUrl": {
+        "description": "Stable YouTube link when the creative exposes a video ID",
+        "nullable": true,
+        "type": "string"
+      }
+    },
+    "type": "object"
+  },
   "views": {
     "overview": {
       "display": {
         "component": "table",
         "properties": {
-          "adLibraryUrl": {
-            "format": "link",
-            "label": "Ad Library URL"
-          },
           "advertiserId": {
             "format": "text",
             "label": "Advertiser ID"
@@ -18,63 +190,92 @@
             "format": "text",
             "label": "Advertiser"
           },
+          "body": {
+            "format": "text",
+            "label": "Body"
+          },
           "creativeId": {
             "format": "text",
             "label": "Creative ID"
           },
+          "displayDomain": {
+            "format": "text",
+            "label": "Display domain"
+          },
           "firstShown": {
             "format": "text",
-            "label": "First Shown"
+            "label": "First shown"
           },
           "format": {
             "format": "text",
             "label": "Format"
           },
+          "headline": {
+            "format": "text",
+            "label": "Headline"
+          },
           "imageUrl": {
             "format": "link",
-            "label": "Image URL"
+            "label": "Image"
+          },
+          "impressionsMax": {
+            "format": "number",
+            "label": "Impressions max"
+          },
+          "impressionsMin": {
+            "format": "number",
+            "label": "Impressions min"
           },
           "lastShown": {
             "format": "text",
-            "label": "Last Shown"
+            "label": "Last shown"
           },
           "previewUrl": {
             "format": "link",
-            "label": "Preview URL"
+            "label": "Preview"
+          },
+          "regions": {
+            "format": "array",
+            "label": "Regions"
           },
           "scrapedAt": {
             "format": "text",
-            "label": "Scraped At"
+            "label": "Scraped at"
           },
-          "searchTerm": {
+          "source": {
             "format": "text",
-            "label": "Search Term"
-          },
-          "startUrl": {
-            "format": "link",
-            "label": "Start URL"
+            "label": "Source"
           },
           "videoUrl": {
             "format": "link",
-            "label": "Video URL"
+            "label": "Video"
+          },
+          "youtubeUrl": {
+            "format": "link",
+            "label": "YouTube"
           }
         }
       },
-      "title": "Overview",
+      "title": "Ads",
       "transformation": {
         "fields": [
           "advertiserId",
           "advertiserName",
           "creativeId",
           "format",
+          "headline",
+          "body",
+          "displayDomain",
           "firstShown",
           "lastShown",
+          "regions",
+          "impressionsMin",
+          "impressionsMax",
           "previewUrl",
           "imageUrl",
           "videoUrl",
-          "adLibraryUrl",
-          "startUrl",
-          "searchTerm",
+          "youtubeUrl",
+          "source",
           "scrapedAt"
         ]
       }

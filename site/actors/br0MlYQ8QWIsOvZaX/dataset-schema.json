@@ -6,31 +6,19 @@
       "display": {
         "component": "table",
         "properties": {
-          "company_domain": {
-            "format": "text",
-            "label": "Domain"
-          },
-          "company_name": {
+          "company": {
             "format": "text",
             "label": "Company"
           },
-          "email": {
+          "emailGuess": {
             "format": "text",
-            "label": "Email"
+            "label": "Email Guess (Unverified)"
           },
-          "first_name": {
+          "emailGuessStatus": {
             "format": "text",
-            "label": "First Name"
+            "label": "Email Guess Status"
           },
-          "full_name": {
-            "format": "text",
-            "label": "Full Name"
-          },
-          "last_name": {
-            "format": "text",
-            "label": "Last Name"
-          },
-          "linkedin_url": {
+          "linkedinUrl": {
             "format": "link",
             "label": "LinkedIn URL"
           },
@@ -38,29 +26,41 @@
             "format": "text",
             "label": "Location"
           },
-          "scraped_at": {
+          "name": {
+            "format": "text",
+            "label": "Name"
+          },
+          "position": {
+            "format": "number",
+            "label": "Position"
+          },
+          "scrapedAt": {
             "format": "text",
             "label": "Scraped At"
           },
+          "sourceQuery": {
+            "format": "text",
+            "label": "Source Query"
+          },
           "title": {
             "format": "text",
-            "label": "Job Title"
+            "label": "Title"
           }
         }
       },
       "title": "Detailed View",
       "transformation": {
         "fields": [
-          "full_name",
-          "first_name",
-          "last_name",
+          "name",
           "title",
-          "company_name",
-          "company_domain",
+          "company",
           "location",
-          "linkedin_url",
-          "email",
-          "scraped_at"
+          "linkedinUrl",
+          "sourceQuery",
+          "position",
+          "emailGuess",
+          "emailGuessStatus",
+          "scrapedAt"
         ]
       }
     },
@@ -68,25 +68,21 @@
       "display": {
         "component": "table",
         "properties": {
-          "company_name": {
+          "company": {
             "format": "text",
             "label": "Company"
           },
-          "email": {
-            "format": "text",
-            "label": "Email"
-          },
-          "full_name": {
-            "format": "text",
-            "label": "Name"
-          },
-          "linkedin_url": {
+          "linkedinUrl": {
             "format": "link",
             "label": "LinkedIn"
           },
           "location": {
             "format": "text",
             "label": "Location"
+          },
+          "name": {
+            "format": "text",
+            "label": "Name"
           },
           "title": {
             "format": "text",
@@ -97,12 +93,11 @@
       "title": "Leads Overview",
       "transformation": {
         "fields": [
-          "full_name",
+          "name",
           "title",
-          "company_name",
+          "company",
           "location",
-          "linkedin_url",
-          "email"
+          "linkedinUrl"
         ]
       }
     }
