@@ -1,0 +1,148 @@
+{
+  "description": "Scrape Product Hunt launches via the official GraphQL API. Free API token required (https://api.producthunt.com/v2/oauth/applications).",
+  "properties": {
+    "apiToken": {
+      "description": "Optional Bearer token from https://api.producthunt.com/v2/oauth/applications (free, instant). Without a token, mode=dailyLeaderboard works via public-page scraping with limited fields (no description/makers/media). Token is required for topic, userLaunches, and productDetail modes, and unlocks full launch metadata in dailyLeaderboard.",
+      "editor": "textfield",
+      "isSecret": true,
+      "title": "Product Hunt API token (optional)",
+      "type": "string"
+    },
+    "dateRangeFrom": {
+      "description": "Drop launches posted before this date.",
+      "editor": "textfield",
+      "title": "Date range from (YYYY-MM-DD)",
+      "type": "string"
+    },
+    "dateRangeTo": {
+      "description": "Drop launches posted after this date.",
+      "editor": "textfield",
+      "title": "Date range to (YYYY-MM-DD)",
+      "type": "string"
+    },
+    "featuredOnly": {
+      "default": false,
+      "description": "Only emit launches that were officially featured on the Product Hunt homepage.",
+      "prefill": false,
+      "title": "Featured only",
+      "type": "boolean"
+    },
+    "includeMakers": {
+      "default": true,
+      "description": "Include the makers array (people who built the product). Adds 1 GraphQL field — minor cost.",
+      "prefill": true,
+      "title": "Include makers",
+      "type": "boolean"
+    },
+    "includeMedia": {
+      "default": false,
+      "description": "Include the media array (screenshots, videos uploaded with the launch).",
+      "prefill": false,
+      "title": "Include media (screenshots / videos)",
+      "type": "boolean"
+    },
+    "maxItems": {
+      "default": 50,
+      "description": "Hard cap on emitted records.",
+      "maximum": 5000,
+      "minimum": 1,
+      "prefill": 50,
+      "title": "Max items",
+      "type": "integer"
+    },
+    "minComments": {
+      "description": "Drop launches with fewer comments than this.",
+      "maximum": 100000,
+      "minimum": 0,
+      "title": "Min comments",
+      "type": "integer"
+    },
+    "minVotes": {
+      "description": "Drop launches with fewer up-votes than this.",
+      "maximum": 100000,
+      "minimum": 0,
+      "title": "Min votes",
+      "type": "integer"
+    },
+    "mode": {
+      "default": "dailyLeaderboard",
+      "description": "What to fetch. `dailyLeaderboard` returns featured launches sorted by votes; `topic` returns launches in a specific topic; `userLaunches` returns posts by a user; `productDetail` returns a single product by slug.",
+      "editor": "select",
+      "enum": [
+        "dailyLeaderboard",
+        "topic",
+        "userLaunches",
+        "productDetail"
+      ],
+      "enumTitles": [
+        "Daily / All launches (sortable)",
+        "Launches by topic",
+        "Launches by user (maker or hunter)",
+        "Single product detail (by slug)"
+      ],
+      "prefill": "dailyLeaderboard",
+      "title": "Mode",
+      "type": "string"
+    },
+    "productSlugs": {
+      "default": [],
+      "description": "Product slugs (e.g. `notion`, `figma`). Required for `mode=productDetail`.",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Product slugs (mode=productDetail)",
+      "type": "array"
+    },
+    "sortBy": {
+      "default": "RANKING",
+      "description": "Sort order for posts. RANKING is daily-rank order; VOTES is most-upvoted overall; NEWEST is most recent; FEATURED_AT is featured-date order.",
+      "editor": "select",
+      "enum": [
+        "RANKING",
+        "VOTES",
+        "NEWEST",
+        "FEATURED_AT"
+      ],
+      "enumTitles": [
+        "Daily ranking (default for leaderboard)",
+        "Most votes",
+        "Newest",
+        "Featured-at date"
+      ],
+      "prefill": "RANKING",
+      "title": "Sort by",
+      "type": "string"
+    },
+    "tagAnyOf": {
+      "default": [],
+      "description": "Only emit launches that have at least one of these topic slugs (e.g. `productivity`, `saas`).",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Tags / topics filter",
+      "type": "array"
+    },
+    "topicSlugs": {
+      "default": [],
+      "description": "Topic slugs from Product Hunt URLs (e.g. `artificial-intelligence`, `developer-tools`, `productivity`). Required for `mode=topic`.",
+      "editor": "stringList",
+      "prefill": [
+        "artificial-intelligence"
+      ],
+      "title": "Topic slugs (mode=topic)",
+      "type": "array"
+    },
+    "userSlugs": {
+      "default": [],
+      "description": "Username slugs from Product Hunt URLs (e.g. `rrhoover`, `tibo_maker`). Required for `mode=userLaunches`.",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "User slugs (mode=userLaunches)",
+      "type": "array"
+    }
+  },
+  "required": [
+    "mode"
+  ],
+  "schemaVersion": 1,
+  "title": "Product Hunt Scraper Input",
+  "type": "object"
+}
