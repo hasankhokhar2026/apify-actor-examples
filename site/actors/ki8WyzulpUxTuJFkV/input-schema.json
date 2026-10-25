@@ -1,0 +1,58 @@
+{
+  "description": "Get Facebook Page/Profile followers, following, or friends preview (up to 8 rows per target, Facebook's own logged-out preview cap) plus aggregate counts.",
+  "properties": {
+    "mode": {
+      "default": "followers",
+      "description": "Which preview list to fetch. 'friends' is only meaningful for Profile URLs.",
+      "editor": "select",
+      "enum": [
+        "followers",
+        "following",
+        "friends"
+      ],
+      "enumTitles": [
+        "Followers",
+        "Following",
+        "Friends (Profiles only)"
+      ],
+      "prefill": "followers",
+      "title": "Mode",
+      "type": "string"
+    },
+    "startUrls": {
+      "description": "One or more Facebook Page or Profile URLs (e.g. https://www.facebook.com/nike, https://www.facebook.com/zuck, or https://www.facebook.com/profile.php?id=...).",
+      "editor": "requestListSources",
+      "example": [
+        {
+          "url": "https://www.facebook.com/nike"
+        }
+      ],
+      "items": {
+        "properties": {
+          "url": {
+            "description": "A Facebook Page or Profile URL.",
+            "title": "URL",
+            "type": "string"
+          }
+        },
+        "required": [
+          "url"
+        ],
+        "type": "object"
+      },
+      "prefill": [
+        {
+          "url": "https://www.facebook.com/nike"
+        }
+      ],
+      "title": "Facebook Page or Profile URLs",
+      "type": "array"
+    }
+  },
+  "required": [
+    "startUrls"
+  ],
+  "schemaVersion": 1,
+  "title": "Facebook Followers & Following Scraper Input",
+  "type": "object"
+}
