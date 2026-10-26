@@ -1,0 +1,39 @@
+{
+  "properties": {
+    "maxProducts": {
+      "default": 50,
+      "description": "Maximum number of products to scrape from the store.",
+      "editor": "number",
+      "minimum": 1,
+      "prefill": 5,
+      "title": "Max Products",
+      "type": "integer"
+    },
+    "proxy": {
+      "default": {
+        "useApifyProxy": true
+      },
+      "description": "Proxy settings. Apify's own datacenter egress IPs are blocked by Shopify's edge WAF, so a proxy is required — the default Apify AUTO proxy (free) is sufficient for almost all stores. Switch to RESIDENTIAL only if you still get 403 errors.",
+      "editor": "proxy",
+      "prefill": {
+        "useApifyProxy": true
+      },
+      "title": "Proxy Configuration",
+      "type": "object"
+    },
+    "storeUrl": {
+      "description": "URL of the Shopify store to scrape. Can be the homepage or any page on the store (e.g., https://www.allbirds.com or https://shop-name.myshopify.com).",
+      "editor": "textfield",
+      "prefill": "https://www.allbirds.com",
+      "title": "Shopify Store URL",
+      "type": "string"
+    }
+  },
+  "required": [
+    "storeUrl",
+    "proxy"
+  ],
+  "schemaVersion": 1,
+  "title": "Shopify Scraper Input",
+  "type": "object"
+}
