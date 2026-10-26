@@ -1,0 +1,745 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src &#x27;self&#x27;; script-src &#x27;self&#x27; &#x27;sha256-5kPFbdEAk2OQ/70q37xupveHBTI5KRa/D7eKNfhRShc=&#x27;; style-src &#x27;self&#x27;; img-src &#x27;self&#x27; https: data:; base-uri &#x27;self&#x27;; form-action &#x27;self&#x27;; object-src &#x27;none&#x27;"><title>Pinterest Rich Pin, Board &amp; Creator Field Scraper | Nimbryxo Studio</title><meta name="description" content="Collect Pinterest Pins, profiles, boards and comments with media variants, creator and board detail, product and SEO fields, filtered by saves, followers, verification and more."><meta name="robots" content="index,follow"><link rel="canonical" href="https://hasankhokhar2026.github.io/apify-actor-examples/actors/xfqogY4S7Y5AzxRrH/"><meta property="og:title" content="Pinterest Rich Pin, Board &amp; Creator Field Scraper | Nimbryxo Studio"><meta property="og:description" content="Collect Pinterest Pins, profiles, boards and comments with media variants, creator and board detail, product and SEO fields, filtered by saves, followers, verification and more."><meta property="og:type" content="website"><meta property="og:url" content="https://hasankhokhar2026.github.io/apify-actor-examples/actors/xfqogY4S7Y5AzxRrH/"><meta property="og:site_name" content="Nimbryxo Studio"><meta name="twitter:card" content="summary"><link rel="icon" href="/apify-actor-examples/assets/mark.svg?v=2d20f9dc334a" type="image/svg+xml"><link rel="stylesheet" href="/apify-actor-examples/assets/site.css?v=39545fd4a399"><link rel="stylesheet" href="/apify-actor-examples/assets/brand.css?v=eb0f935ade25"><link rel="alternate" type="application/rss+xml" title="Nimbryxo Studio guides" href="/apify-actor-examples/feed.xml"><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization","name":"Nimbryxo Studio","url":"https://hasankhokhar2026.github.io/apify-actor-examples/","sameAs":["https://apify.com/nimbryxo-studio"]},{"@type":"WebSite","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#website","name":"Nimbryxo Studio","url":"https://hasankhokhar2026.github.io/apify-actor-examples/","publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"inLanguage":"en"},{"@type":"WebPage","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/xfqogY4S7Y5AzxRrH/#webpage","name":"Pinterest Rich Pin, Board & Creator Field Scraper","description":"Collect Pinterest Pins, profiles, boards and comments with media variants, creator and board detail, product and SEO fields, filtered by saves, followers, verification and more.","url":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/xfqogY4S7Y5AzxRrH/","isPartOf":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#website"},"publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"inLanguage":"en","mainEntity":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/xfqogY4S7Y5AzxRrH/#article"},"breadcrumb":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/xfqogY4S7Y5AzxRrH/#breadcrumb"}},{"@type":"TechArticle","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/xfqogY4S7Y5AzxRrH/#article","headline":"Pinterest Rich Pin, Board & Creator Field Scraper","name":"Pinterest Rich Pin, Board & Creator Field Scraper","description":"Collect Pinterest Pins, profiles, boards and comments with media variants, creator and board detail, product and SEO fields, filtered by saves, followers, verification and more.","url":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/xfqogY4S7Y5AzxRrH/","author":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"mainEntityOfPage":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/xfqogY4S7Y5AzxRrH/#webpage"},"inLanguage":"en"},{"@type":"BreadcrumbList","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/xfqogY4S7Y5AzxRrH/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Nimbryxo Studio","item":"https://hasankhokhar2026.github.io/apify-actor-examples/"},{"@type":"ListItem","position":2,"name":"Actors","item":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/"},{"@type":"ListItem","position":3,"name":"Pinterest Rich Pin, Board & Creator Field Scraper","item":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/xfqogY4S7Y5AzxRrH/"}]}]}</script><script src="/apify-actor-examples/assets/site.js?v=7cabac48dd31" defer></script></head><body class="theme-studio"><a href="#main" class="skip-link">Skip to content</a><header><div class="inner"><a href="/apify-actor-examples/" class="brand"><img src="/apify-actor-examples/assets/mark.svg?v=2d20f9dc334a" alt="" width="29" height="29">Nimbryxo Studio</a><nav aria-label="Main navigation"><a href="/apify-actor-examples/actors/" aria-current="page">Actors</a><a href="/apify-actor-examples/guides/">Guides</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></nav></div></header><main id="main"><div class="doc-layout"><aside class="contents" aria-label="On this page"><strong>Contents</strong><a href="#overview">Overview</a><a href="#published-readme">Published README</a><a href="#input-schema">Input schema</a><a href="#output-schema">Output schema</a><a href="#dataset-schema">Dataset schema</a><a href="#python-quickstart">Python quickstart</a></aside><article class="prose"><div class="breadcrumb"><a href="/apify-actor-examples/actors/">Actors</a><span>/</span><span>Pinterest Rich Pin, Board &amp; Creator Field Scraper</span></div><section id="overview"><h1 class="doc-title">Pinterest Rich Pin, Board &amp; Creator Field Scraper</h1><p class="lede">Collect Pinterest Pins, profiles, boards and comments with media variants, creator and board detail, product and SEO fields, filtered by saves, followers, verification and more.</p><div class="actions"><a class="button" href="https://apify.com/nimbryxo-studio/pinterest-rich-pin-board-and-creator-field-scraper">Open on Apify</a><a class="text-link" href="https://github.com/hasankhokhar2026/apify-actor-examples/blob/main/docs/actors/xfqogY4S7Y5AzxRrH/README.md">GitHub source</a></div></section><section class="schema-section" id="input-schema"><h2>Input schema</h2><p>Input fields, types, required flags, descriptions, defaults, and prefills come from the published definition. Prefill examples are distinct from defaults.</p><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>mode</code></td><td>string</td><td>optional</td><td>Choose a collection type. Auto-detect accepts mixed public Pinterest links.</td></tr><tr><td><code>keywords</code></td><td>array</td><td>optional</td><td>One or more words or phrases for search modes.</td></tr><tr><td><code>searchTerms</code></td><td>array</td><td>optional</td><td>Compatibility alias for Search words.</td></tr></tbody></table></div><details><summary>Show all input fields</summary><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>mode</code></td><td>string</td><td>optional</td><td>Choose a collection type. Auto-detect accepts mixed public Pinterest links.</td></tr><tr><td><code>keywords</code></td><td>array</td><td>optional</td><td>One or more words or phrases for search modes.</td></tr><tr><td><code>searchTerms</code></td><td>array</td><td>optional</td><td>Compatibility alias for Search words.</td></tr><tr><td><code>pinUrls</code></td><td>array</td><td>optional</td><td>Public Pin links or numeric Pin IDs.</td></tr><tr><td><code>pinterestUrls</code></td><td>array</td><td>optional</td><td>Compatibility alias for Pin URLs or IDs.</td></tr><tr><td><code>usernames</code></td><td>array</td><td>optional</td><td>Usernames, @usernames, or public profile links.</td></tr><tr><td><code>profiles</code></td><td>array</td><td>optional</td><td>Compatibility alias for Pinterest usernames.</td></tr><tr><td><code>boardUrls</code></td><td>array</td><td>optional</td><td>Public board links or username/board-name paths.</td></tr><tr><td><code>boards</code></td><td>array</td><td>optional</td><td>Compatibility alias for Board URLs.</td></tr><tr><td><code>search</code></td><td>string</td><td>optional</td><td>Keyword to search on Pinterest. Results will be pins matching this query.</td></tr><tr><td><code>startUrls</code></td><td>array</td><td>optional</td><td>List of Pinterest URLs to scrape. Supports pin URLs, user profile URLs, board URLs, and search URLs.</td></tr><tr><td><code>maxItems</code></td><td>integer</td><td>optional</td><td>Maximum number of items to scrape. Set to 0 for unlimited.</td></tr><tr><td><code>maxPages</code></td><td>integer</td><td>optional</td><td>Maximum pagination pages per search, profile, or board. 0 means continue until Pinterest has no next page.</td></tr><tr><td><code>minSaves</code></td><td>integer</td><td>optional</td><td>Keep Pins only when Pinterest supplies at least this many saves.</td></tr><tr><td><code>minCreatorFollowers</code></td><td>integer</td><td>optional</td><td>Keep Pins only when Pinterest supplies a creator follower count at or above this value.</td></tr><tr><td><code>verifiedOnly</code></td><td>boolean</td><td>optional</td><td>Keep only rows explicitly marked verified by Pinterest.</td></tr><tr><td><code>requireOutboundLink</code></td><td>boolean</td><td>optional</td><td>Keep only Pins with a public destination link supplied by Pinterest.</td></tr><tr><td><code>imageOnly</code></td><td>boolean</td><td>optional</td><td>Exclude Pins that Pinterest identifies as video.</td></tr><tr><td><code>excludeAds</code></td><td>boolean</td><td>optional</td><td>Exclude Pins Pinterest marks as promoted or sponsored.</td></tr><tr><td><code>commerceOnly</code></td><td>boolean</td><td>optional</td><td>Keep only Pins with source-backed product or shopping metadata.</td></tr><tr><td><code>includeComments</code></td><td>boolean</td><td>optional</td><td>When enabled, add one real comment/activity row for each collected Pin. Pinterest&#x27;s public cookieless comment path is used automatically.</td></tr><tr><td><code>maxComments</code></td><td>integer</td><td>optional</td><td>Maximum public comment/activity rows to add per Pin when comments are enabled.</td></tr><tr><td><code>cookies</code></td><td>array</td><td>optional</td><td>Optional Cookie Editor JSON export. The actor works without cookies; never share this secret publicly.</td></tr><tr><td><code>cookiesJson</code></td><td>string</td><td>optional</td><td>Compatibility alias for pasting a Cookie Editor JSON export.</td></tr><tr><td><code>endPage</code></td><td>integer</td><td>optional</td><td>Maximum number of pages to paginate through. Set to 0 for unlimited.</td></tr><tr><td><code>enrichDetails</code></td><td>boolean</td><td>optional</td><td>When enabled, each pin from search/profile/board results will be enriched with accurate stats (reaction count, follower count, etc.) by fetching its detail page. Slower but more complete data.</td></tr><tr><td><code>proxy</code></td><td>object</td><td>optional</td><td>Optional proxy settings. Not required — works without proxy from datacenter IPs.</td></tr><tr><td><code>proxyConfiguration</code></td><td>object</td><td>optional</td><td>Compatibility alias for proxy. Direct public Pin/profile pages also work without a proxy.</td></tr></tbody></table></div></details><p><a href="input-schema.json">Download the published input schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+  &quot;description&quot;: &quot;Collect public Pinterest Pins, profiles, boards, board Pins, search results, and comments with optional detail enrichment. All fields are source-backed and optional.&quot;,
+  &quot;properties&quot;: {
+    &quot;boardUrls&quot;: {
+      &quot;default&quot;: [],
+      &quot;description&quot;: &quot;Public board links or username/board-name paths.&quot;,
+      &quot;editor&quot;: &quot;stringList&quot;,
+      &quot;items&quot;: {
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;prefill&quot;: [],
+      &quot;title&quot;: &quot;Board URLs&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;boards&quot;: {
+      &quot;default&quot;: [],
+      &quot;description&quot;: &quot;Compatibility alias for Board URLs.&quot;,
+      &quot;editor&quot;: &quot;stringList&quot;,
+      &quot;items&quot;: {
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;prefill&quot;: [],
+      &quot;title&quot;: &quot;Board URLs (compatibility alias)&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;commerceOnly&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;Keep only Pins with source-backed product or shopping metadata.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Shoppable Pins only&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;cookies&quot;: {
+      &quot;description&quot;: &quot;Optional Cookie Editor JSON export. The actor works without cookies; never share this secret publicly.&quot;,
+      &quot;editor&quot;: &quot;json&quot;,
+      &quot;isSecret&quot;: true,
+      &quot;title&quot;: &quot;Optional Pinterest cookies&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;cookiesJson&quot;: {
+      &quot;description&quot;: &quot;Compatibility alias for pasting a Cookie Editor JSON export.&quot;,
+      &quot;editor&quot;: &quot;textarea&quot;,
+      &quot;isSecret&quot;: true,
+      &quot;title&quot;: &quot;Optional cookies JSON (alias)&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;endPage&quot;: {
+      &quot;default&quot;: 0,
+      &quot;description&quot;: &quot;Maximum number of pages to paginate through. Set to 0 for unlimited.&quot;,
+      &quot;maximum&quot;: 2000,
+      &quot;minimum&quot;: 0,
+      &quot;title&quot;: &quot;End Page&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;enrichDetails&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;When enabled, each pin from search/profile/board results will be enriched with accurate stats (reaction count, follower count, etc.) by fetching its detail page. Slower but more complete data.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Enrich Details&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;excludeAds&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;Exclude Pins Pinterest marks as promoted or sponsored.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Exclude promoted Pins&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;imageOnly&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;Exclude Pins that Pinterest identifies as video.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Images only&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;includeComments&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;When enabled, add one real comment/activity row for each collected Pin. Pinterest&#x27;s public cookieless comment path is used automatically.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Include Pin comments&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;keywords&quot;: {
+      &quot;default&quot;: [],
+      &quot;description&quot;: &quot;One or more words or phrases for search modes.&quot;,
+      &quot;editor&quot;: &quot;stringList&quot;,
+      &quot;items&quot;: {
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;prefill&quot;: [],
+      &quot;title&quot;: &quot;Search words&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;maxComments&quot;: {
+      &quot;default&quot;: 10,
+      &quot;description&quot;: &quot;Maximum public comment/activity rows to add per Pin when comments are enabled.&quot;,
+      &quot;maximum&quot;: 20000,
+      &quot;minimum&quot;: 1,
+      &quot;prefill&quot;: 10,
+      &quot;title&quot;: &quot;Maximum comments per Pin&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;maxItems&quot;: {
+      &quot;default&quot;: 50,
+      &quot;description&quot;: &quot;Maximum number of items to scrape. Set to 0 for unlimited.&quot;,
+      &quot;maximum&quot;: 20000,
+      &quot;minimum&quot;: 0,
+      &quot;title&quot;: &quot;Max Items&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;maxPages&quot;: {
+      &quot;default&quot;: 0,
+      &quot;description&quot;: &quot;Maximum pagination pages per search, profile, or board. 0 means continue until Pinterest has no next page.&quot;,
+      &quot;maximum&quot;: 2000,
+      &quot;minimum&quot;: 0,
+      &quot;prefill&quot;: 0,
+      &quot;title&quot;: &quot;Max pages&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;minCreatorFollowers&quot;: {
+      &quot;description&quot;: &quot;Keep Pins only when Pinterest supplies a creator follower count at or above this value.&quot;,
+      &quot;maximum&quot;: 1000000000,
+      &quot;minimum&quot;: 0,
+      &quot;title&quot;: &quot;Minimum creator followers&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;minSaves&quot;: {
+      &quot;description&quot;: &quot;Keep Pins only when Pinterest supplies at least this many saves.&quot;,
+      &quot;maximum&quot;: 10000000,
+      &quot;minimum&quot;: 0,
+      &quot;title&quot;: &quot;Minimum saves&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;mode&quot;: {
+      &quot;default&quot;: &quot;auto&quot;,
+      &quot;description&quot;: &quot;Choose a collection type. Auto-detect accepts mixed public Pinterest links.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;auto&quot;,
+        &quot;pinDetail&quot;,
+        &quot;comments&quot;,
+        &quot;searchPins&quot;,
+        &quot;searchVideos&quot;,
+        &quot;userProfile&quot;,
+        &quot;userPins&quot;,
+        &quot;userBoards&quot;,
+        &quot;boardDetail&quot;,
+        &quot;boardPins&quot;,
+        &quot;search&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;Auto-detect links&quot;,
+        &quot;Pin details&quot;,
+        &quot;Comments for Pins&quot;,
+        &quot;Search Pins&quot;,
+        &quot;Search video Pins&quot;,
+        &quot;Profile details&quot;,
+        &quot;Pins created by a person&quot;,
+        &quot;Boards owned by a person&quot;,
+        &quot;Board details&quot;,
+        &quot;Pins inside a board&quot;,
+        &quot;Search Pins (legacy)&quot;
+      ],
+      &quot;prefill&quot;: &quot;auto&quot;,
+      &quot;title&quot;: &quot;What to collect&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;pinUrls&quot;: {
+      &quot;default&quot;: [],
+      &quot;description&quot;: &quot;Public Pin links or numeric Pin IDs.&quot;,
+      &quot;editor&quot;: &quot;stringList&quot;,
+      &quot;items&quot;: {
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;prefill&quot;: [],
+      &quot;title&quot;: &quot;Pin URLs or IDs&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;pinterestUrls&quot;: {
+      &quot;default&quot;: [],
+      &quot;description&quot;: &quot;Compatibility alias for Pin URLs or IDs.&quot;,
+      &quot;editor&quot;: &quot;stringList&quot;,
+      &quot;items&quot;: {
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;prefill&quot;: [],
+      &quot;title&quot;: &quot;Pin URLs or IDs (compatibility alias)&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;profiles&quot;: {
+      &quot;default&quot;: [],
+      &quot;description&quot;: &quot;Compatibility alias for Pinterest usernames.&quot;,
+      &quot;editor&quot;: &quot;stringList&quot;,
+      &quot;items&quot;: {
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;prefill&quot;: [],
+      &quot;title&quot;: &quot;Profile names or links (compatibility alias)&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;proxy&quot;: {
+      &quot;description&quot;: &quot;Optional proxy settings. Not required — works without proxy from datacenter IPs.&quot;,
+      &quot;editor&quot;: &quot;proxy&quot;,
+      &quot;title&quot;: &quot;Proxy Configuration&quot;,
+      &quot;type&quot;: &quot;object&quot;
+    },
+    &quot;proxyConfiguration&quot;: {
+      &quot;description&quot;: &quot;Compatibility alias for proxy. Direct public Pin/profile pages also work without a proxy.&quot;,
+      &quot;editor&quot;: &quot;proxy&quot;,
+      &quot;title&quot;: &quot;Proxy configuration (alias)&quot;,
+      &quot;type&quot;: &quot;object&quot;
+    },
+    &quot;requireOutboundLink&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;Keep only Pins with a public destination link supplied by Pinterest.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Require destination link&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;search&quot;: {
+      &quot;description&quot;: &quot;Keyword to search on Pinterest. Results will be pins matching this query.&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;prefill&quot;: &quot;cats&quot;,
+      &quot;title&quot;: &quot;Search Query&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;searchTerms&quot;: {
+      &quot;default&quot;: [],
+      &quot;description&quot;: &quot;Compatibility alias for Search words.&quot;,
+      &quot;editor&quot;: &quot;stringList&quot;,
+      &quot;items&quot;: {
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;prefill&quot;: [],
+      &quot;title&quot;: &quot;Search words (compatibility alias)&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;startUrls&quot;: {
+      &quot;description&quot;: &quot;List of Pinterest URLs to scrape. Supports pin URLs, user profile URLs, board URLs, and search URLs.&quot;,
+      &quot;editor&quot;: &quot;stringList&quot;,
+      &quot;items&quot;: {
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;prefill&quot;: [],
+      &quot;title&quot;: &quot;Pinterest URLs&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;usernames&quot;: {
+      &quot;default&quot;: [],
+      &quot;description&quot;: &quot;Usernames, @usernames, or public profile links.&quot;,
+      &quot;editor&quot;: &quot;stringList&quot;,
+      &quot;items&quot;: {
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;prefill&quot;: [],
+      &quot;title&quot;: &quot;Pinterest usernames&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;verifiedOnly&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;Keep only rows explicitly marked verified by Pinterest.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Verified accounts only&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    }
+  },
+  &quot;required&quot;: [],
+  &quot;schemaVersion&quot;: 1,
+  &quot;title&quot;: &quot;Pinterest Data Extractor Input&quot;,
+  &quot;type&quot;: &quot;object&quot;
+}
+</code></pre></details></section><section class="schema-section" id="output-schema"><h2>Output schema</h2><p>Published result links and storage locations. This schema is not an exhaustive contract for every field in a dataset record.</p><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>results</code></td><td>string</td><td>optional</td><td>Dataset with scraped Pinterest data</td></tr></tbody></table></div><p><a href="output-schema.json">Download the published output schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+  &quot;actorOutputSchemaVersion&quot;: 1,
+  &quot;description&quot;: &quot;One record per Pin, profile, board or comment with media variants, creator and board detail, and engagement counts.&quot;,
+  &quot;properties&quot;: {
+    &quot;results&quot;: {
+      &quot;description&quot;: &quot;Dataset with scraped Pinterest data&quot;,
+      &quot;template&quot;: &quot;{{links.apiDefaultDatasetUrl}}/items&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    }
+  },
+  &quot;title&quot;: &quot;Pinterest Rich Pin, Board &amp; Creator Field Scraper Output&quot;
+}
+</code></pre></details></section><section class="schema-section" id="dataset-schema"><h2>Dataset schema</h2><p>Published dataset views and any declared field definitions. A view can select only a subset of the returned record fields.</p><p><a href="dataset-schema.json">Download the published dataset schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+  &quot;actorSpecification&quot;: 1,
+  &quot;views&quot;: {
+    &quot;detailed&quot;: {
+      &quot;display&quot;: {
+        &quot;component&quot;: &quot;table&quot;,
+        &quot;properties&quot;: {
+          &quot;board_name&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Board&quot;
+          },
+          &quot;board_url&quot;: {
+            &quot;format&quot;: &quot;link&quot;,
+            &quot;label&quot;: &quot;Board URL&quot;
+          },
+          &quot;comment_count&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Comments&quot;
+          },
+          &quot;created_at&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Created&quot;
+          },
+          &quot;description&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Description&quot;
+          },
+          &quot;dominant_color&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Color&quot;
+          },
+          &quot;id&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Pin ID&quot;
+          },
+          &quot;images&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Images&quot;
+          },
+          &quot;is_video&quot;: {
+            &quot;format&quot;: &quot;boolean&quot;,
+            &quot;label&quot;: &quot;Video&quot;
+          },
+          &quot;like_count&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Likes&quot;
+          },
+          &quot;link&quot;: {
+            &quot;format&quot;: &quot;link&quot;,
+            &quot;label&quot;: &quot;Source Link&quot;
+          },
+          &quot;pinner_followers&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Pinner Followers&quot;
+          },
+          &quot;pinner_name&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Pinner Name&quot;
+          },
+          &quot;pinner_username&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Pinner&quot;
+          },
+          &quot;reaction_count&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Reactions&quot;
+          },
+          &quot;reaction_counts&quot;: {
+            &quot;format&quot;: &quot;object&quot;,
+            &quot;label&quot;: &quot;Reaction breakdown&quot;
+          },
+          &quot;save_count&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Saves&quot;
+          },
+          &quot;title&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Title&quot;
+          },
+          &quot;url&quot;: {
+            &quot;format&quot;: &quot;link&quot;,
+            &quot;label&quot;: &quot;Pin URL&quot;
+          },
+          &quot;video_url&quot;: {
+            &quot;format&quot;: &quot;link&quot;,
+            &quot;label&quot;: &quot;Video URL&quot;
+          }
+        }
+      },
+      &quot;title&quot;: &quot;Detailed&quot;,
+      &quot;transformation&quot;: {
+        &quot;fields&quot;: [
+          &quot;record_type&quot;,
+          &quot;id&quot;,
+          &quot;title&quot;,
+          &quot;description&quot;,
+          &quot;url&quot;,
+          &quot;link&quot;,
+          &quot;created_at&quot;,
+          &quot;pinner_username&quot;,
+          &quot;pinner_name&quot;,
+          &quot;pinner_followers&quot;,
+          &quot;board_name&quot;,
+          &quot;board_url&quot;,
+          &quot;save_count&quot;,
+          &quot;comment_count&quot;,
+          &quot;like_count&quot;,
+          &quot;reaction_count&quot;,
+          &quot;reaction_counts&quot;,
+          &quot;pinId&quot;,
+          &quot;pinUrl&quot;,
+          &quot;imageVariants&quot;,
+          &quot;videoVariants&quot;,
+          &quot;creator&quot;,
+          &quot;originalCreator&quot;,
+          &quot;board&quot;,
+          &quot;saves&quot;,
+          &quot;commentCount&quot;,
+          &quot;likeCount&quot;,
+          &quot;reactionCount&quot;,
+          &quot;linkUrl&quot;,
+          &quot;richMetadata&quot;,
+          &quot;is_video&quot;,
+          &quot;video_url&quot;,
+          &quot;dominant_color&quot;,
+          &quot;images&quot;,
+          &quot;source_url&quot;,
+          &quot;scraped_at&quot;
+        ]
+      }
+    },
+    &quot;overview&quot;: {
+      &quot;display&quot;: {
+        &quot;component&quot;: &quot;table&quot;,
+        &quot;properties&quot;: {
+          &quot;board_name&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Board&quot;
+          },
+          &quot;comment_count&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Comments&quot;
+          },
+          &quot;id&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Pin ID&quot;
+          },
+          &quot;is_video&quot;: {
+            &quot;format&quot;: &quot;boolean&quot;,
+            &quot;label&quot;: &quot;Video&quot;
+          },
+          &quot;like_count&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Likes&quot;
+          },
+          &quot;pinner_username&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Pinner&quot;
+          },
+          &quot;reaction_count&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Reactions&quot;
+          },
+          &quot;save_count&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Saves&quot;
+          },
+          &quot;title&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Title&quot;
+          },
+          &quot;url&quot;: {
+            &quot;format&quot;: &quot;link&quot;,
+            &quot;label&quot;: &quot;URL&quot;
+          }
+        }
+      },
+      &quot;title&quot;: &quot;Overview&quot;,
+      &quot;transformation&quot;: {
+        &quot;fields&quot;: [
+          &quot;record_type&quot;,
+          &quot;id&quot;,
+          &quot;title&quot;,
+          &quot;url&quot;,
+          &quot;pinner_username&quot;,
+          &quot;board_name&quot;,
+          &quot;save_count&quot;,
+          &quot;comment_count&quot;,
+          &quot;like_count&quot;,
+          &quot;reaction_count&quot;,
+          &quot;pinId&quot;,
+          &quot;pinUrl&quot;,
+          &quot;imageUrl&quot;,
+          &quot;creatorUsername&quot;,
+          &quot;creatorFollowerCount&quot;,
+          &quot;saves&quot;,
+          &quot;commentCount&quot;,
+          &quot;likeCount&quot;,
+          &quot;reactionCount&quot;,
+          &quot;mediaType&quot;,
+          &quot;linkUrl&quot;,
+          &quot;is_video&quot;,
+          &quot;source_url&quot;,
+          &quot;scraped_at&quot;
+        ]
+      }
+    }
+  }
+}
+</code></pre></details></section><section class="schema-section" id="key-value-schema"><h2>Key-value schema</h2><p>Published key-value store definitions, when provided by this build.</p><p>This definition is not present in the default published build. See the published README for available documentation.</p></section><section id="published-readme"><h2>Published README</h2><details><summary>Read the full published documentation</summary><h2 id="readme-pinterest-rich-pin-board-creator-field-scraper">Pinterest Rich Pin, Board &amp; Creator Field Scraper</h2>
+<p>Pinterest's own pages carry far more structured data than a basic Pin scrape surfaces — media variants, full creator and board objects, product and SEO metadata, Story Pin pages, and reaction breakdowns. This actor pulls that deeper field set for Pins, profiles, boards, search results, and public comments, without requiring login cookies; anything Pinterest doesn't publish for a given record is simply left out of the newer camelCase fields.</p>
+<h2 id="readme-what-this-actor-does">What this actor does</h2>
+<ul>
+<li><strong>Ten collection modes plus auto-detect:</strong> Pin detail, Pin comments, Pin search, video search, profile detail, a creator's Pins, a creator's boards, board detail, and board Pins, plus <code>auto</code> for pasted links.</li>
+<li><strong>Rich Pin context:</strong> media variants, creator and original-creator objects, board objects, destination links, product and SEO metadata, Story Pin pages and reaction counts when Pinterest supplies them.</li>
+<li><strong>Pin filters:</strong> saves, creator followers, verified creator, destination link, image-only, promoted Pins and shoppable Pins. They apply to Pin rows only, never to profile, board or comment rows.</li>
+<li><strong>Cursor paging:</strong> follows Pinterest's own next-page cursors for searches, creator feeds and boards, and skips Pins already returned earlier in the run.</li>
+<li><strong>Omitted fields:</strong> the camelCase fields are dropped when Pinterest doesn't supply them. A few older snake_case fields fall back to <code>0</code>, <code>false</code> or <code>&quot;public&quot;</code> instead (see the note under the output section).</li>
+</ul>
+<h2 id="readme-output-per-record">Output per record</h2>
+<p>Every row includes <code>record_type</code> (<code>pin</code>, <code>profile</code>, <code>board</code> or <code>comment</code>), <code>source_url</code> (the search, profile, board or Pin page it came from) and <code>scraped_at</code>.</p>
+<h3 id="readme-pin-fields">Pin fields</h3>
+<p>Many Pin values appear twice: once under an older snake_case name and once under a newer camelCase name. Any field below may be absent when Pinterest doesn't expose it for that Pin.</p>
+<ul>
+<li><strong>Identity &amp; text:</strong> <code>id</code>/<code>pinId</code>, <code>url</code>/<code>pinUrl</code>, <code>title</code>, <code>description</code>, <code>altText</code>, <code>created_at</code>/<code>createdAt</code>, <code>dominant_color</code>, <code>link</code>/<code>linkUrl</code>, <code>linkDomain</code>, <code>domain</code>, <code>contentCategory</code>, <code>canonicalUrl</code>, <code>canonicalPinId</code>, <code>canonicalPinUrl</code></li>
+<li><strong>Media:</strong> <code>images</code> (size → URL map), <code>imageUrl</code>, <code>imageVariants</code>, <code>videoVariants</code>, <code>video_url</code>/<code>videoUrl</code>, <code>is_video</code>/<code>isVideo</code>, <code>mediaType</code> (<code>image</code>, <code>animatedImage</code> or <code>video</code>), <code>pinFormat</code> (<code>story</code> for Story Pins), <code>mediaMethod</code>, <code>storyPinId</code>, <code>storyPages</code></li>
+<li><strong>SEO &amp; link tracking:</strong> <code>seoTitle</code>, <code>seoDescription</code>, <code>seoUrl</code>, <code>mobileLinkUrl</code>, <code>trackedLinkUrl</code>, <code>utmLinkUrl</code></li>
+<li><strong>Creator:</strong> <code>creator</code>, <code>creatorId</code>, <code>creatorUsername</code>, <code>creatorName</code>, <code>creatorFollowerCount</code>, <code>originalCreator</code> (only when it differs from <code>creator</code>), <code>pinner_id</code>, <code>pinner_username</code>, <code>pinner_name</code>, <code>pinner_followers</code></li>
+<li><strong>Board:</strong> <code>board</code>, <code>boardId</code>/<code>board_id</code>, <code>boardName</code>/<code>board_name</code>, <code>boardDescription</code>, <code>boardUrl</code>/<code>board_url</code>, <code>boardCoverImageUrl</code>, <code>boardPinCount</code>, <code>boardFollowerCount</code>, <code>boardSectionCount</code>, <code>boardCollaboratorCount</code>, <code>boardPrivacy</code>, <code>boardCreatedAt</code>, <code>boardIsCollaborative</code>, <code>boardFollowedByMe</code></li>
+<li><strong>Engagement:</strong> <code>saves</code>/<code>save_count</code>, <code>commentCount</code>/<code>comment_count</code>, <code>repinCount</code>, <code>shareCount</code>, <code>likeCount</code>/<code>like_count</code>, <code>reactionCount</code>/<code>reaction_count</code>, <code>reactionCounts</code>/<code>reaction_counts</code></li>
+<li><strong>Status flags:</strong> <code>isPromoted</code>, <code>commentsDisabled</code>, <code>commentsEligible</code>, <code>isEligibleForImageDownload</code>, <code>isEligibleForProduct</code>, <code>isOutOfStock</code>, <code>isStaleProduct</code>, <code>isUnsafeForComments</code>, <code>isDownstreamPromotion</code>, <code>shouldMute</code></li>
+<li><strong>Shopping:</strong> <code>product</code>, <code>isShoppable</code>, <code>shoppingFlags</code>, <code>richMetadata</code></li>
+</ul>
+<p><code>creator</code> and <code>originalCreator</code> can carry <code>id</code>, <code>username</code>, <code>fullName</code>, <code>firstName</code>, <code>followerCount</code>, <code>avatarSmallUrl</code>, <code>avatarMediumUrl</code>, <code>avatarLargeUrl</code>, <code>isVerified</code>, <code>isAdsOnly</code>, <code>isPrivate</code> and <code>followedByMe</code>. Each <code>imageVariants</code>/<code>videoVariants</code> entry is keyed by Pinterest's own size name and can carry <code>url</code>, <code>width</code>, <code>height</code>, <code>duration</code> and <code>thumbnailUrl</code>. Story Pin pages can carry <code>pageId</code>, <code>layout</code> and a block list with <code>type</code>, <code>text</code>, <code>images</code> and <code>videos</code>.</p>
+<h3 id="readme-profile-fields">Profile fields</h3>
+<ul>
+<li><strong>Identity:</strong> <code>type</code> (always <code>user</code>), <code>id</code>/<code>profileId</code>, <code>username</code>, <code>full_name</code>/<code>fullName</code>, <code>bio</code>, <code>location</code>, <code>createdAt</code></li>
+<li><strong>Counts:</strong> <code>follower_count</code>/<code>followerCount</code>, <code>following_count</code>/<code>followingCount</code>, <code>pin_count</code>/<code>pinCount</code>, <code>board_count</code>/<code>boardCount</code>, <code>monthlyViews</code></li>
+<li><strong>Media &amp; links:</strong> <code>avatarUrls</code>, <code>avatarUrl</code>, <code>image_url</code>, <code>website_url</code>/<code>websiteUrl</code>, <code>domainUrl</code>, <code>profile_url</code>/<code>profileUrl</code></li>
+<li><strong>Account flags:</strong> <code>is_verified</code>, <code>isVerified</code>, <code>isPrivate</code>, <code>isPartner</code>, <code>isVerifiedMerchant</code>, <code>isDomainVerified</code>, <code>isTastemaker</code></li>
+</ul>
+<h3 id="readme-board-fields">Board fields</h3>
+<ul>
+<li><strong>Identity:</strong> <code>type</code> and <code>recordType</code> (both <code>board</code>), <code>id</code>/<code>boardId</code>, <code>name</code>, <code>description</code>, <code>url</code>, <code>owner_username</code>/<code>ownerUsername</code>, <code>owner_name</code>, <code>createdAt</code></li>
+<li><strong>Counts:</strong> <code>pin_count</code>/<code>pinCount</code>, <code>follower_count</code>/<code>followerCount</code>, <code>sectionCount</code>, <code>collaboratorCount</code></li>
+<li><strong>Media &amp; flags:</strong> <code>coverImageUrl</code>, <code>privacy</code>, <code>isCollaborative</code>, <code>followedByMe</code></li>
+</ul>
+<h3 id="readme-comment-fields">Comment fields</h3>
+<ul>
+<li><strong>Content &amp; identity:</strong> <code>id</code>, <code>text</code>, <code>created_at</code>, <code>type</code>, <code>node_id</code>, <code>tags</code>, <code>tagged_users</code>, <code>media</code>, <code>pin_id</code>, <code>pin_url</code></li>
+<li><strong>Author:</strong> <code>author_name</code>, <code>author_username</code>, <code>author_id</code>, <code>author_first_name</code>, <code>author_image</code>, <code>author_image_medium</code>, <code>author_node_id</code>, <code>author_is_private_profile</code></li>
+<li><strong>Engagement &amp; state:</strong> <code>like_count</code>, <code>reaction_counts</code>, <code>reaction_by_me</code>, <code>helpful_count</code>, <code>marked_helpful_by_me</code>, <code>reply_count</code>, <code>is_edited</code>, <code>is_highlighted_by_pin_owner</code>, <code>is_translatable</code></li>
+</ul>
+<p><strong>Note on fallback values:</strong> the camelCase fields are only written when Pinterest supplies a value. A few older snake_case fields are filled with a fallback instead when Pinterest omits them: <code>pinner_followers</code> and <code>reaction_count</code> on Pins, <code>follower_count</code>, <code>following_count</code>, <code>pin_count</code>, <code>board_count</code> and <code>is_verified</code> on profiles, and <code>pin_count</code>, <code>follower_count</code> and <code>privacy</code> (<code>&quot;public&quot;</code>) on boards. Use the camelCase equivalent when you need to tell &quot;zero&quot; apart from &quot;not published&quot;.</p>
+<h2 id="readme-input">Input</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>mode</code></td>
+<td>string</td>
+<td><code>auto</code></td>
+<td><code>auto</code>, <code>pinDetail</code>, <code>comments</code>, <code>searchPins</code>, <code>searchVideos</code>, <code>userProfile</code>, <code>userPins</code>, <code>userBoards</code>, <code>boardDetail</code>, <code>boardPins</code>, or <code>search</code> (same as <code>searchPins</code>).</td>
+</tr>
+<tr>
+<td><code>keywords</code> / <code>searchTerms</code></td>
+<td>array</td>
+<td><code>[]</code></td>
+<td>Search phrases. Used by the search modes and by <code>auto</code>; merged together with <code>search</code>.</td>
+</tr>
+<tr>
+<td><code>search</code></td>
+<td>string</td>
+<td>–</td>
+<td>One extra search phrase, added to <code>keywords</code>.</td>
+</tr>
+<tr>
+<td><code>pinUrls</code> / <code>pinterestUrls</code></td>
+<td>array</td>
+<td><code>[]</code></td>
+<td>Pin URLs or numeric Pin IDs for <code>pinDetail</code> and <code>comments</code>. In <code>auto</code> they are used only when <code>startUrls</code> is empty, and only full Pin URLs are recognised there.</td>
+</tr>
+<tr>
+<td><code>usernames</code> / <code>profiles</code></td>
+<td>array</td>
+<td><code>[]</code></td>
+<td>Usernames, <code>@usernames</code> or profile URLs for <code>userProfile</code>, <code>userPins</code> and <code>userBoards</code>. Not read in <code>auto</code> mode.</td>
+</tr>
+<tr>
+<td><code>boardUrls</code> / <code>boards</code></td>
+<td>array</td>
+<td><code>[]</code></td>
+<td>Board URLs or <code>username/board-name</code> paths for <code>boardDetail</code> and <code>boardPins</code>. Not read in <code>auto</code> mode.</td>
+</tr>
+<tr>
+<td><code>startUrls</code></td>
+<td>array</td>
+<td>–</td>
+<td>Mixed Pin, profile, board and search URLs for <code>auto</code> mode. A profile URL returns the profile row plus that person's Pins.</td>
+</tr>
+<tr>
+<td><code>maxItems</code></td>
+<td>integer</td>
+<td><code>50</code></td>
+<td>Maximum records for the run (<code>0</code> = no limit, up to 20,000). Counts Pin rows in Pin-producing modes, and profile or board rows in <code>userProfile</code>, <code>userBoards</code> and <code>boardDetail</code>. Comment rows and the profile row added by profile URLs are not counted.</td>
+</tr>
+<tr>
+<td><code>maxPages</code></td>
+<td>integer</td>
+<td><code>0</code></td>
+<td>Pages per search, creator feed or board. Only read when <code>endPage</code> is absent from the input; because <code>endPage</code> has its own default, set <code>endPage</code> instead.</td>
+</tr>
+<tr>
+<td><code>endPage</code></td>
+<td>integer</td>
+<td><code>0</code></td>
+<td>Pages per search, creator feed or board; <code>0</code> follows Pinterest's cursor until it ends.</td>
+</tr>
+<tr>
+<td><code>minSaves</code></td>
+<td>integer</td>
+<td>–</td>
+<td>Keep Pins with at least this many saves. Pins without a save count are dropped.</td>
+</tr>
+<tr>
+<td><code>minCreatorFollowers</code></td>
+<td>integer</td>
+<td>–</td>
+<td>Keep Pins whose creator has at least this many followers.</td>
+</tr>
+<tr>
+<td><code>verifiedOnly</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Keep only Pins whose creator object is marked verified. Profiles and boards are not filtered.</td>
+</tr>
+<tr>
+<td><code>requireOutboundLink</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Keep only Pins with a destination link.</td>
+</tr>
+<tr>
+<td><code>imageOnly</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Drop Pins Pinterest marks as video.</td>
+</tr>
+<tr>
+<td><code>excludeAds</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Drop Pins marked as promoted.</td>
+</tr>
+<tr>
+<td><code>commerceOnly</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Keep only Pins with product or shopping data.</td>
+</tr>
+<tr>
+<td><code>includeComments</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Add comment rows after each collected Pin.</td>
+</tr>
+<tr>
+<td><code>maxComments</code></td>
+<td>integer</td>
+<td><code>10</code></td>
+<td>Maximum comment rows per Pin (1–20,000).</td>
+</tr>
+<tr>
+<td><code>enrichDetails</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Re-open each feed Pin (search, creator, board) to refresh its comment, reaction and save counts, creator name/username/followers and video fields.</td>
+</tr>
+<tr>
+<td><code>cookies</code> / <code>cookiesJson</code></td>
+<td>array/string</td>
+<td>–</td>
+<td>Optional Cookie-Editor export. Not needed for any mode.</td>
+</tr>
+<tr>
+<td><code>proxy</code> / <code>proxyConfiguration</code></td>
+<td>object</td>
+<td>–</td>
+<td>Optional proxy configuration.</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="readme-example-detailed-pin">Example: detailed Pin</h3>
+<pre><code class="language-json">{
+  &quot;mode&quot;: &quot;pinDetail&quot;,
+  &quot;pinUrls&quot;: [&quot;https://www.pinterest.com/pin/142567144448888376/&quot;]
+}
+</code></pre>
+<h3 id="readme-example-creator-feed-with-refreshed-counts">Example: creator feed with refreshed counts</h3>
+<pre><code class="language-json">{
+  &quot;mode&quot;: &quot;userPins&quot;,
+  &quot;usernames&quot;: [&quot;crazylaurablog&quot;],
+  &quot;maxItems&quot;: 2000,
+  &quot;endPage&quot;: 0,
+  &quot;enrichDetails&quot;: true
+}
+</code></pre>
+<h3 id="readme-example-board-pins-with-comments">Example: board Pins with comments</h3>
+<pre><code class="language-json">{
+  &quot;mode&quot;: &quot;boardPins&quot;,
+  &quot;boardUrls&quot;: [&quot;https://www.pinterest.com/nasa/hubble-images/&quot;],
+  &quot;maxItems&quot;: 500,
+  &quot;includeComments&quot;: true,
+  &quot;maxComments&quot;: 20
+}
+</code></pre>
+<h3 id="readme-example-filtered-video-search">Example: filtered video search</h3>
+<pre><code class="language-json">{
+  &quot;mode&quot;: &quot;searchVideos&quot;,
+  &quot;keywords&quot;: [&quot;easy dinner&quot;, &quot;travel guide&quot;],
+  &quot;excludeAds&quot;: true,
+  &quot;maxItems&quot;: 500
+}
+</code></pre>
+<h2 id="readme-use-cases">Use cases</h2>
+<ul>
+<li>Audit the destination links, SEO titles and alt text on a brand's Pins.</li>
+<li>Compare creators by follower counts, monthly views and verification flags.</li>
+<li>Inventory a board's Pins together with their section and collaborator counts.</li>
+<li>Collect Story Pins and video Pins with every published media size for a creative library.</li>
+<li>Read the comment threads under high-save Pins in a niche.</li>
+<li>Track which Pins in a search are shoppable, out of stock or promoted.</li>
+</ul>
+<h2 id="readme-faq">FAQ</h2>
+<h3 id="readme-do-i-need-to-log-in">Do I need to log in?</h3>
+<p>No. Every mode works signed-out. The cookie inputs are optional and no mode depends on them.</p>
+<h3 id="readme-what-happens-if-i-run-it-with-no-input">What happens if I run it with no input?</h3>
+<p>When no search phrase, URL, username or board is given, the actor collects the single example Pin from the input form so the run still produces a record.</p>
+<h3 id="readme-why-were-my-usernames-or-boards-ignored">Why were my usernames or boards ignored?</h3>
+<p>In <code>auto</code> mode the actor only reads <code>keywords</code>/<code>search</code>, <code>startUrls</code> and (when <code>startUrls</code> is empty) <code>pinUrls</code>. Pick <code>userProfile</code>, <code>userPins</code>, <code>userBoards</code>, <code>boardDetail</code> or <code>boardPins</code> to use <code>usernames</code> or <code>boardUrls</code>, or paste the profile and board links into <code>startUrls</code>.</p>
+<h3 id="readme-what-is-the-difference-between-searchpins-and-searchvideos">What is the difference between <code>searchPins</code> and <code>searchVideos</code>?</h3>
+<p>Both run the same Pinterest Pin search. <code>searchVideos</code> then keeps only the results Pinterest marks as video, so it can page through more results to fill <code>maxItems</code>. <code>search</code> is an older name for <code>searchPins</code>.</p>
+<h3 id="readme-can-a-run-return-more-than-10-000-rows">Can a run return more than 10,000 rows?</h3>
+<p>Yes. <code>maxItems</code> goes up to 20,000 (or <code>0</code> for no limit), and the actor keeps following Pinterest's cursor as long as Pinterest returns more Pins.</p>
+<h3 id="readme-why-can-a-feed-contain-fewer-rows-than-the-account-s-visible-pin-count">Why can a feed contain fewer rows than the account's visible Pin count?</h3>
+<p>Signed-out feeds, cursor limits, privacy settings, duplicate Pins and your filters all shrink the result. For boards, the actor loads up to <code>maxItems</code> Pins first and then applies the filters, so a filtered board run can return fewer rows than <code>maxItems</code>.</p>
+<h3 id="readme-what-does-enrichdetails-change">What does <code>enrichDetails</code> change?</h3>
+<p>For Pins found through search, creator or board feeds, it opens each Pin's own page and overwrites the comment, reaction and save counts, the creator id, name, username and follower count, and the video flag and URL with the Pin page's values. It does not add new media, product or SEO fields, and it slows the run down. <code>pinDetail</code>, <code>comments</code> and Pin URLs in <code>auto</code> already read the Pin's own page.</p>
+<h3 id="readme-are-filters-based-on-guessed-engagement">Are filters based on guessed engagement?</h3>
+<p>No. <code>minSaves</code>, <code>verifiedOnly</code>, <code>commerceOnly</code> and the other filters only pass a Pin when Pinterest supplied the value they test. A Pin with no published save count is dropped by <code>minSaves</code>.</p>
+<h3 id="readme-which-pinterest-links-are-recognised">Which Pinterest links are recognised?</h3>
+<p>Pin, profile, board and <code>/search/pins/?q=</code> links on pinterest.com and its regional domains (such as pinterest.co.uk, .de, .fr, .ca, .com.au and .jp). Short <code>pin.it</code> links are not recognised.</p>
+<h3 id="readme-is-this-affiliated-with-pinterest">Is this affiliated with Pinterest?</h3>
+<p>No. It's an independent tool that reads publicly visible Pinterest data.</p>
+</details></section><section id="python-quickstart"><h2>Python quickstart</h2><p>Use a schema-derived input and the Python standard library to start a run. An Apify account and token are required for execution.</p><p><a href="/apify-actor-examples/guides/xfqogY4S7Y5AzxRrH/">Open the step-by-step Python guide →</a></p></section><p class="source-note">Source build <code>cnlGONakRO8pqYn2g</code>. Documentation is regenerated from the default published build; private drafts are not included.</p></article></div></main><footer class="footer"><strong>Nimbryxo Studio</strong><div class="footer-links"><a href="/apify-actor-examples/topics/">Topics</a><a href="/apify-actor-examples/sources/">Documentation sources</a><a href="https://apify.com/nimbryxo-studio">Apify</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></div></footer></body></html>

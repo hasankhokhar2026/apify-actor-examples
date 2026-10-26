@@ -1,0 +1,271 @@
+{
+  "description": "Collect public Pinterest Pins, profiles, boards, board Pins, search results, and comments with optional detail enrichment. All fields are source-backed and optional.",
+  "properties": {
+    "boardUrls": {
+      "default": [],
+      "description": "Public board links or username/board-name paths.",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "prefill": [],
+      "title": "Board URLs",
+      "type": "array"
+    },
+    "boards": {
+      "default": [],
+      "description": "Compatibility alias for Board URLs.",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "prefill": [],
+      "title": "Board URLs (compatibility alias)",
+      "type": "array"
+    },
+    "commerceOnly": {
+      "default": false,
+      "description": "Keep only Pins with source-backed product or shopping metadata.",
+      "prefill": false,
+      "title": "Shoppable Pins only",
+      "type": "boolean"
+    },
+    "cookies": {
+      "description": "Optional Cookie Editor JSON export. The actor works without cookies; never share this secret publicly.",
+      "editor": "json",
+      "isSecret": true,
+      "title": "Optional Pinterest cookies",
+      "type": "array"
+    },
+    "cookiesJson": {
+      "description": "Compatibility alias for pasting a Cookie Editor JSON export.",
+      "editor": "textarea",
+      "isSecret": true,
+      "title": "Optional cookies JSON (alias)",
+      "type": "string"
+    },
+    "endPage": {
+      "default": 0,
+      "description": "Maximum number of pages to paginate through. Set to 0 for unlimited.",
+      "maximum": 2000,
+      "minimum": 0,
+      "title": "End Page",
+      "type": "integer"
+    },
+    "enrichDetails": {
+      "default": false,
+      "description": "When enabled, each pin from search/profile/board results will be enriched with accurate stats (reaction count, follower count, etc.) by fetching its detail page. Slower but more complete data.",
+      "prefill": false,
+      "title": "Enrich Details",
+      "type": "boolean"
+    },
+    "excludeAds": {
+      "default": false,
+      "description": "Exclude Pins Pinterest marks as promoted or sponsored.",
+      "prefill": false,
+      "title": "Exclude promoted Pins",
+      "type": "boolean"
+    },
+    "imageOnly": {
+      "default": false,
+      "description": "Exclude Pins that Pinterest identifies as video.",
+      "prefill": false,
+      "title": "Images only",
+      "type": "boolean"
+    },
+    "includeComments": {
+      "default": false,
+      "description": "When enabled, add one real comment/activity row for each collected Pin. Pinterest's public cookieless comment path is used automatically.",
+      "prefill": false,
+      "title": "Include Pin comments",
+      "type": "boolean"
+    },
+    "keywords": {
+      "default": [],
+      "description": "One or more words or phrases for search modes.",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "prefill": [],
+      "title": "Search words",
+      "type": "array"
+    },
+    "maxComments": {
+      "default": 10,
+      "description": "Maximum public comment/activity rows to add per Pin when comments are enabled.",
+      "maximum": 20000,
+      "minimum": 1,
+      "prefill": 10,
+      "title": "Maximum comments per Pin",
+      "type": "integer"
+    },
+    "maxItems": {
+      "default": 50,
+      "description": "Maximum number of items to scrape. Set to 0 for unlimited.",
+      "maximum": 20000,
+      "minimum": 0,
+      "title": "Max Items",
+      "type": "integer"
+    },
+    "maxPages": {
+      "default": 0,
+      "description": "Maximum pagination pages per search, profile, or board. 0 means continue until Pinterest has no next page.",
+      "maximum": 2000,
+      "minimum": 0,
+      "prefill": 0,
+      "title": "Max pages",
+      "type": "integer"
+    },
+    "minCreatorFollowers": {
+      "description": "Keep Pins only when Pinterest supplies a creator follower count at or above this value.",
+      "maximum": 1000000000,
+      "minimum": 0,
+      "title": "Minimum creator followers",
+      "type": "integer"
+    },
+    "minSaves": {
+      "description": "Keep Pins only when Pinterest supplies at least this many saves.",
+      "maximum": 10000000,
+      "minimum": 0,
+      "title": "Minimum saves",
+      "type": "integer"
+    },
+    "mode": {
+      "default": "auto",
+      "description": "Choose a collection type. Auto-detect accepts mixed public Pinterest links.",
+      "editor": "select",
+      "enum": [
+        "auto",
+        "pinDetail",
+        "comments",
+        "searchPins",
+        "searchVideos",
+        "userProfile",
+        "userPins",
+        "userBoards",
+        "boardDetail",
+        "boardPins",
+        "search"
+      ],
+      "enumTitles": [
+        "Auto-detect links",
+        "Pin details",
+        "Comments for Pins",
+        "Search Pins",
+        "Search video Pins",
+        "Profile details",
+        "Pins created by a person",
+        "Boards owned by a person",
+        "Board details",
+        "Pins inside a board",
+        "Search Pins (legacy)"
+      ],
+      "prefill": "auto",
+      "title": "What to collect",
+      "type": "string"
+    },
+    "pinUrls": {
+      "default": [],
+      "description": "Public Pin links or numeric Pin IDs.",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "prefill": [],
+      "title": "Pin URLs or IDs",
+      "type": "array"
+    },
+    "pinterestUrls": {
+      "default": [],
+      "description": "Compatibility alias for Pin URLs or IDs.",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "prefill": [],
+      "title": "Pin URLs or IDs (compatibility alias)",
+      "type": "array"
+    },
+    "profiles": {
+      "default": [],
+      "description": "Compatibility alias for Pinterest usernames.",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "prefill": [],
+      "title": "Profile names or links (compatibility alias)",
+      "type": "array"
+    },
+    "proxy": {
+      "description": "Optional proxy settings. Not required — works without proxy from datacenter IPs.",
+      "editor": "proxy",
+      "title": "Proxy Configuration",
+      "type": "object"
+    },
+    "proxyConfiguration": {
+      "description": "Compatibility alias for proxy. Direct public Pin/profile pages also work without a proxy.",
+      "editor": "proxy",
+      "title": "Proxy configuration (alias)",
+      "type": "object"
+    },
+    "requireOutboundLink": {
+      "default": false,
+      "description": "Keep only Pins with a public destination link supplied by Pinterest.",
+      "prefill": false,
+      "title": "Require destination link",
+      "type": "boolean"
+    },
+    "search": {
+      "description": "Keyword to search on Pinterest. Results will be pins matching this query.",
+      "editor": "textfield",
+      "prefill": "cats",
+      "title": "Search Query",
+      "type": "string"
+    },
+    "searchTerms": {
+      "default": [],
+      "description": "Compatibility alias for Search words.",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "prefill": [],
+      "title": "Search words (compatibility alias)",
+      "type": "array"
+    },
+    "startUrls": {
+      "description": "List of Pinterest URLs to scrape. Supports pin URLs, user profile URLs, board URLs, and search URLs.",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "prefill": [],
+      "title": "Pinterest URLs",
+      "type": "array"
+    },
+    "usernames": {
+      "default": [],
+      "description": "Usernames, @usernames, or public profile links.",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "prefill": [],
+      "title": "Pinterest usernames",
+      "type": "array"
+    },
+    "verifiedOnly": {
+      "default": false,
+      "description": "Keep only rows explicitly marked verified by Pinterest.",
+      "prefill": false,
+      "title": "Verified accounts only",
+      "type": "boolean"
+    }
+  },
+  "required": [],
+  "schemaVersion": 1,
+  "title": "Pinterest Data Extractor Input",
+  "type": "object"
+}
