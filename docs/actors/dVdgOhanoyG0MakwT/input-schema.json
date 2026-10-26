@@ -1,0 +1,59 @@
+{
+  "properties": {
+    "maxConcurrency": {
+      "default": 5,
+      "description": "Parallel fetches per site.",
+      "editor": "number",
+      "maximum": 20,
+      "minimum": 1,
+      "title": "Max Concurrency",
+      "type": "integer"
+    },
+    "maxPagesPerSite": {
+      "default": 20,
+      "description": "Maximum pages to crawl per domain (contact + about + homepage + linked pages).",
+      "editor": "number",
+      "maximum": 200,
+      "minimum": 1,
+      "prefill": 5,
+      "title": "Max Pages Per Site",
+      "type": "integer"
+    },
+    "requestTimeoutSecs": {
+      "default": 15,
+      "description": "HTTP timeout per page in seconds.",
+      "editor": "number",
+      "maximum": 60,
+      "minimum": 5,
+      "title": "Request Timeout (s)",
+      "type": "integer"
+    },
+    "smartPrioritise": {
+      "default": true,
+      "description": "Visit /contact, /about, /team pages first before crawling general links.",
+      "title": "Smart Prioritisation",
+      "type": "boolean"
+    },
+    "urls": {
+      "description": "List of website URLs to scan for contact info.",
+      "editor": "stringList",
+      "prefill": [
+        "https://apify.com"
+      ],
+      "title": "Website URLs",
+      "type": "array"
+    },
+    "useProxy": {
+      "default": false,
+      "description": "Enable Apify residential proxy when a site blocks datacenter IPs.",
+      "title": "Use Proxy",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "urls"
+  ],
+  "schemaVersion": 1,
+  "title": "Website Contact Finder Input",
+  "type": "object"
+}
