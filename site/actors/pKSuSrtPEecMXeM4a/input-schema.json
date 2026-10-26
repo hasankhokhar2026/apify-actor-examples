@@ -1,0 +1,145 @@
+{
+  "description": "Pull stock data from Yahoo Finance for one or more tickers. Toggle which sections to include.",
+  "properties": {
+    "concurrency": {
+      "default": 4,
+      "description": "Number of tickers fetched in parallel. Each fetch is mostly idle waiting on Yahoo, so concurrency speeds up bulk runs significantly. Higher values may trigger Yahoo rate-limits.",
+      "maximum": 16,
+      "minimum": 1,
+      "title": "Concurrency",
+      "type": "integer"
+    },
+    "endDate": {
+      "description": "Latest date for historical OHLCV data. Optional — default is today.",
+      "editor": "textfield",
+      "title": "History end date (YYYY-MM-DD)",
+      "type": "string"
+    },
+    "includeAnalystPriceTargets": {
+      "default": true,
+      "description": "Include analyst price target summary (current / high / low / mean / median).",
+      "title": "Include analyst price targets",
+      "type": "boolean"
+    },
+    "includeDividends": {
+      "default": true,
+      "description": "Include dividend history.",
+      "title": "Include dividends",
+      "type": "boolean"
+    },
+    "includeEarningsCalendar": {
+      "default": true,
+      "description": "Include upcoming earnings/dividend dates + analyst earnings/revenue estimates.",
+      "title": "Include earnings calendar",
+      "type": "boolean"
+    },
+    "includeEarningsHistory": {
+      "default": true,
+      "description": "Include the last 4 quarters of earnings: actual EPS, estimate, surprise amount, and surprise percent.",
+      "title": "Include earnings history",
+      "type": "boolean"
+    },
+    "includeFinancials": {
+      "default": false,
+      "description": "Include income statement, balance sheet, and cash flow statement (annual).",
+      "title": "Include financials",
+      "type": "boolean"
+    },
+    "includeHistory": {
+      "default": true,
+      "description": "Include daily OHLCV history (open / high / low / close / volume) in each record.",
+      "title": "Include OHLCV history",
+      "type": "boolean"
+    },
+    "includeHolders": {
+      "default": false,
+      "description": "Include major / institutional / mutual-fund holder summaries.",
+      "title": "Include holders",
+      "type": "boolean"
+    },
+    "includeInsiderTransactions": {
+      "default": false,
+      "description": "Include the 25 most-recent insider transactions (officers / directors / 10%-owners).",
+      "title": "Include insider transactions",
+      "type": "boolean"
+    },
+    "includeNews": {
+      "default": true,
+      "description": "Include latest news headlines linked to the ticker.",
+      "title": "Include news",
+      "type": "boolean"
+    },
+    "includeOptions": {
+      "default": false,
+      "description": "Include the next-expiration options chain (calls + puts) when listed. Capped at first 50 strikes per side to keep dataset compact.",
+      "title": "Include options chain",
+      "type": "boolean"
+    },
+    "includeQuarterlyFinancials": {
+      "default": false,
+      "description": "Include quarterly income statement, balance sheet, and cash flow (last ~5 quarters). Takes effect only when `includeFinancials` is also on.",
+      "title": "Include quarterly financials",
+      "type": "boolean"
+    },
+    "includeRecommendations": {
+      "default": true,
+      "description": "Include analyst recommendation breakdown (strongBuy / buy / hold / sell / strongSell).",
+      "title": "Include analyst recommendations",
+      "type": "boolean"
+    },
+    "includeSplits": {
+      "default": true,
+      "description": "Include stock-split history.",
+      "title": "Include splits",
+      "type": "boolean"
+    },
+    "includeSustainability": {
+      "default": false,
+      "description": "Include ESG / sustainability scores when Yahoo publishes them (sparse coverage; many tickers return empty).",
+      "title": "Include ESG / sustainability scores",
+      "type": "boolean"
+    },
+    "interval": {
+      "default": "1d",
+      "description": "Candle interval for historical data.",
+      "enum": [
+        "1d",
+        "5d",
+        "1wk",
+        "1mo",
+        "3mo"
+      ],
+      "enumTitles": [
+        "1 day",
+        "5 days",
+        "1 week",
+        "1 month",
+        "3 months"
+      ],
+      "title": "History interval",
+      "type": "string"
+    },
+    "startDate": {
+      "description": "Earliest date for historical OHLCV data. Optional — default is 30 days before today.",
+      "editor": "textfield",
+      "title": "History start date (YYYY-MM-DD)",
+      "type": "string"
+    },
+    "tickers": {
+      "description": "One or more stock ticker symbols (e.g. `AAPL`, `MSFT`, `BRK-B`). Supports US, ETFs, ADRs, foreign tickers with suffix (e.g. `BABA`, `TSM`, `BP.L`).",
+      "editor": "stringList",
+      "prefill": [
+        "AAPL",
+        "MSFT"
+      ],
+      "title": "Tickers",
+      "type": "array"
+    }
+  },
+  "required": [
+    "tickers"
+  ],
+  "schemaVersion": 1,
+  "title": "Yahoo Finance Scraper Input",
+  "type": "object"
+}
