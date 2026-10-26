@@ -1,14 +1,17 @@
 {
+  "description": "Choose what to collect from Google Play: search results, app details, reviews, developer catalogs, similar apps, permissions, or data safety.",
   "properties": {
     "appIds": {
-      "description": "List of Google Play app package IDs for direct lookup (e.g., \"com.google.android.calculator\", \"com.whatsapp\")",
+      "default": [],
+      "description": "Package names or Google Play URLs. Used by details, reviews, similar, permissions, and dataSafety modes.",
       "editor": "stringList",
+      "prefill": [],
       "title": "App IDs",
       "type": "array"
     },
     "country": {
       "default": "us",
-      "description": "Country for localized results, pricing, and availability.",
+      "description": "Storefront for search results, pricing, and availability. Reviews are selected by Language, not Country.",
       "editor": "select",
       "enum": [
         "us",
@@ -111,22 +114,49 @@
         "Colombia",
         "Peru",
         "Israel",
-        "UAE",
+        "United Arab Emirates",
         "Saudi Arabia"
       ],
       "prefill": "us",
       "title": "Country",
       "type": "string"
     },
-    "includeReviews": {
+    "developerId": {
+      "description": "Numeric Google Play developer ID or a developer page URL, used in mode=developer.",
+      "editor": "textfield",
+      "title": "Developer ID",
+      "type": "string"
+    },
+    "developerName": {
+      "description": "Display name shown on Google Play, for example `Google LLC`, used in mode=developer.",
+      "editor": "textfield",
+      "title": "Developer name",
+      "type": "string"
+    },
+    "includeDataSafety": {
       "default": false,
-      "description": "Fetch user reviews for each app. Increases run time.",
-      "title": "Include Reviews",
+      "description": "Add shared data, collected data, security practices, and the privacy policy URL to app records.",
+      "prefill": false,
+      "title": "Include data safety",
+      "type": "boolean"
+    },
+    "includeDetails": {
+      "default": false,
+      "description": "Fetch the full app page for search and developer results, and include app metadata in permissions/dataSafety output. Adds one request per app.",
+      "prefill": false,
+      "title": "Include full app details",
+      "type": "boolean"
+    },
+    "includePermissions": {
+      "default": false,
+      "description": "Add the app's permission list to app records. Works in search, details, developer, and similar modes.",
+      "prefill": false,
+      "title": "Include permissions",
       "type": "boolean"
     },
     "language": {
       "default": "en",
-      "description": "Language for app descriptions and reviews.",
+      "description": "Language for app pages and the review bucket. Google Play uses this language, not Country, to choose reviews.",
       "editor": "select",
       "enum": [
         "en",
@@ -196,34 +226,102 @@
       "title": "Language",
       "type": "string"
     },
-    "maxResults": {
-      "default": 50,
-      "description": "Maximum number of apps to scrape across all search terms",
-      "maximum": 250,
+    "maxItems": {
+      "default": 100,
+      "description": "Hard cap on dataset rows. Search returns at most 250 apps per query. For similar mode one seed app is one row.",
+      "maximum": 10000,
       "minimum": 1,
-      "prefill": 5,
-      "title": "Max Results",
+      "prefill": 3,
+      "title": "Max items",
       "type": "integer"
     },
-    "reviewCount": {
-      "default": 20,
-      "description": "Number of reviews to fetch per app (only used when Include Reviews is enabled)",
-      "maximum": 200,
+    "maxReviewsPerApp": {
+      "default": 100,
+      "description": "Reviews to collect for each app. Google Play returns at most 4,500 reviews per page; the actor paginates up to this cap.",
+      "maximum": 50000,
       "minimum": 1,
-      "prefill": 20,
-      "title": "Reviews Per App",
+      "prefill": 100,
+      "title": "Max reviews per app",
       "type": "integer"
     },
-    "searchTerms": {
-      "description": "List of search keywords to find apps on Google Play Store (e.g., \"calculator\", \"fitness tracker\", \"photo editor\")",
-      "editor": "stringList",
-      "prefill": [
-        "calculator"
+    "mode": {
+      "default": "search",
+      "description": "What to scrape.",
+      "editor": "select",
+      "enum": [
+        "search",
+        "details",
+        "reviews",
+        "developer",
+        "similar",
+        "permissions",
+        "dataSafety"
       ],
-      "title": "Search Terms",
+      "enumTitles": [
+        "Search apps by keyword",
+        "App details by package name or URL",
+        "Reviews for apps",
+        "Developer catalog",
+        "Similar apps",
+        "App permissions",
+        "Data safety labels"
+      ],
+      "prefill": "search",
+      "title": "Mode",
+      "type": "string"
+    },
+    "packageNames": {
+      "default": [],
+      "description": "Android package names such as `com.whatsapp`. Play URLs are also accepted.",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Package names",
+      "type": "array"
+    },
+    "proxyConfiguration": {
+      "description": "Optional. The actor works without a proxy; use one only if Google Play blocks your runs.",
+      "editor": "proxy",
+      "title": "Proxy configuration",
+      "type": "object"
+    },
+    "reviewSort": {
+      "default": "newest",
+      "description": "Order used when fetching reviews.",
+      "editor": "select",
+      "enum": [
+        "newest",
+        "rating",
+        "helpfulness"
+      ],
+      "enumTitles": [
+        "Newest first",
+        "Rating",
+        "Most helpful"
+      ],
+      "prefill": "newest",
+      "title": "Review sort",
+      "type": "string"
+    },
+    "searchQuery": {
+      "default": "calculator",
+      "description": "Keyword to search for in mode=search, for example `photo editor` or `calculator`.",
+      "editor": "textfield",
+      "prefill": "calculator",
+      "title": "Search query",
+      "type": "string"
+    },
+    "startUrls": {
+      "default": [],
+      "description": "Full Google Play app URLs, for example `https://play.google.com/store/apps/details?id=com.whatsapp`.",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Google Play app URLs",
       "type": "array"
     }
   },
+  "required": [
+    "mode"
+  ],
   "schemaVersion": 1,
   "title": "Google Play Store Scraper Input",
   "type": "object"

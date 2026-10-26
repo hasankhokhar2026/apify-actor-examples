@@ -1,39 +1,92 @@
 {
+  "description": "Find publicly listed contact emails for YouTube channels and creators.",
   "properties": {
-    "autoProxyFallback": {
-      "default": true,
-      "description": "Transparently retry a fetch via Apify residential proxy when the direct request looks like a block page (empty body or unusually small response). Saves credits by only using the proxy when needed.",
-      "prefill": true,
-      "title": "Auto proxy fallback",
-      "type": "boolean"
-    },
-    "channelUrls": {
-      "description": "List of YouTube channel URLs to scan for contact emails. Supports @handle, /channel/UC..., /c/name, /user/name formats, and plain @handle shortcuts.",
+    "channels": {
+      "description": "YouTube channel URLs, @handles, UC... channel IDs, or video URLs (mode=channels). Video URLs resolve to their channel.",
       "editor": "stringList",
       "prefill": [
-        "https://www.youtube.com/@apify"
+        "@mkbhd",
+        "@LinusTechTips"
       ],
-      "title": "YouTube channel URLs",
+      "title": "Channels",
       "type": "array"
     },
-    "followExternalProfiles": {
+    "emailDomains": {
+      "description": "Optional list of domains to keep, for example brand.com or gmail.com. Leave empty to keep every discovered email.",
+      "editor": "stringList",
+      "title": "Email domain allowlist",
+      "type": "array"
+    },
+    "includeVideoDescriptions": {
       "default": true,
-      "description": "When true, the scraper also opens external profile links advertised on the channel (Instagram, TikTok, Linktree) to discover emails hidden in their bios.",
+      "description": "Read the descriptions of the latest five videos on each channel.",
       "prefill": true,
-      "title": "Follow external profiles (Instagram / TikTok / Linktree)",
+      "title": "Scan recent video descriptions",
       "type": "boolean"
     },
-    "maxExternalPerChannel": {
-      "default": 5,
-      "description": "Upper bound on how many external profile URLs are fetched per channel (keeps runs cheap and predictable).",
-      "maximum": 50,
+    "includeWebsite": {
+      "default": true,
+      "description": "Visit up to two linked websites (home, contact/about pages and common paths) and one link-in-bio hub per channel.",
+      "prefill": true,
+      "title": "Scan linked websites and link hubs",
+      "type": "boolean"
+    },
+    "maxChannels": {
+      "default": 100,
+      "description": "Maximum number of unique channels processed per run, across both modes.",
+      "maximum": 500,
       "minimum": 1,
-      "title": "Max external profiles followed per channel",
+      "prefill": 2,
+      "title": "Max channels",
       "type": "integer"
+    },
+    "maxEmailsPerChannel": {
+      "default": 5,
+      "description": "Upper bound on the emails returned for each channel. The highest-value public contact is chosen as primaryEmail.",
+      "maximum": 20,
+      "minimum": 1,
+      "prefill": 5,
+      "title": "Max emails per channel",
+      "type": "integer"
+    },
+    "mode": {
+      "default": "channels",
+      "description": "Choose whether to scrape the channels you provide or discover channels from search queries.",
+      "editor": "select",
+      "enum": [
+        "channels",
+        "search"
+      ],
+      "enumTitles": [
+        "Paste channels",
+        "Search YouTube"
+      ],
+      "prefill": "channels",
+      "title": "Mode",
+      "type": "string"
+    },
+    "onlyWithEmail": {
+      "default": false,
+      "description": "When enabled, channels with no public email are left out of the dataset. Error records are still reported.",
+      "prefill": false,
+      "title": "Only channels with a public email",
+      "type": "boolean"
+    },
+    "proxyConfiguration": {
+      "description": "Optional. The actor works without a proxy; set this only when your runs need a specific Apify Proxy connection.",
+      "editor": "proxy",
+      "title": "Proxy configuration",
+      "type": "object"
+    },
+    "searchQueries": {
+      "description": "Keywords used to discover channels through YouTube search (mode=search). Each query returns up to about 20 channels; duplicates and maxChannels are applied across queries.",
+      "editor": "stringList",
+      "title": "Search queries",
+      "type": "array"
     }
   },
   "required": [
-    "channelUrls"
+    "mode"
   ],
   "schemaVersion": 1,
   "title": "YouTube Email Scraper Input",

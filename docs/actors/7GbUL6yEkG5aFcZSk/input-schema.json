@@ -1,93 +1,262 @@
 {
-  "description": "Configure search terms, locations, direct URLs, and limits for scraping Yelp business data and reviews.",
+  "description": "Choose keyword search or direct business lookup, then set review depth and filters.",
   "properties": {
-    "directUrls": {
-      "description": "List of direct Yelp business page URLs to scrape. Use this to scrape specific businesses without searching.",
-      "editor": "requestListSources",
-      "example": [
-        {
-          "url": "https://www.yelp.com/biz/prince-street-pizza-new-york-2"
-        }
-      ],
-      "title": "Direct URLs",
-      "type": "array"
-    },
-    "locations": {
-      "description": "List of locations to search in (e.g., 'New York, NY', 'Los Angeles, CA'). Each search term is combined with each location.",
+    "categories": {
+      "default": [],
+      "description": "Optional Yelp category aliases or names used to narrow search results, for example 'pizza', 'coffee', or 'home_services'. They are combined with the search query.",
       "editor": "stringList",
-      "example": [
-        "New York, NY",
-        "San Francisco, CA"
-      ],
-      "prefill": [
-        "New York, NY"
-      ],
-      "title": "Locations",
+      "prefill": [],
+      "title": "Categories",
       "type": "array"
     },
-    "proxy": {
-      "default": {
-        "apifyProxyGroups": [
-          "RESIDENTIAL"
-        ],
-        "useApifyProxy": true
-      },
-      "description": "REQUIRED. Yelp uses Cloudflare protection. Residential proxy is mandatory; datacenter IPs are reliably blocked.",
-      "editor": "proxy",
-      "prefill": {
-        "apifyProxyGroups": [
-          "RESIDENTIAL"
-        ],
-        "useApifyProxy": true
-      },
-      "title": "Proxy Configuration",
-      "type": "object"
+    "includeReviews": {
+      "default": true,
+      "description": "Turn off to collect only business profiles and skip the review feed.",
+      "prefill": true,
+      "title": "Include reviews",
+      "type": "boolean"
     },
-    "reviewLimit": {
-      "default": 5,
-      "description": "Maximum number of reviews to collect per business. Set to 0 to skip review extraction.",
-      "maximum": 50,
-      "minimum": 0,
-      "prefill": 1,
-      "title": "Reviews per Business",
-      "type": "integer"
+    "location": {
+      "default": "New York, NY",
+      "description": "City, neighborhood, or ZIP code to search in mode=search, for example 'New York, NY' or '10012'.",
+      "editor": "textfield",
+      "prefill": "",
+      "title": "Location",
+      "type": "string"
     },
-    "runTimeoutSecs": {
-      "default": 1800,
-      "description": "Maximum wall-clock time for the run before stopping new fetches. Default 1800s (30 min) suits most production runs; the prefill 240s exists so Apify's 5-min daily quality test passes. Increase for large searchLimit or many locations.",
-      "editor": "number",
-      "maximum": 7200,
-      "minimum": 60,
-      "prefill": 240,
-      "title": "Run Timeout (seconds)",
-      "type": "integer"
-    },
-    "searchLimit": {
-      "default": 10,
-      "description": "Maximum number of business results to collect per search query. The scraper automatically paginates Yelp search (10 results per page) until this limit is reached, the result set is exhausted, or the run timeout is hit. Higher values mean longer runs.",
-      "maximum": 100,
+    "maxItems": {
+      "default": 50,
+      "description": "Hard cap on business records in the dataset. Search is limited to Yelp's 240-result ceiling per query.",
+      "maximum": 500,
       "minimum": 1,
       "prefill": 1,
-      "title": "Search Results Limit",
+      "title": "Maximum businesses",
       "type": "integer"
     },
-    "searchTerms": {
-      "description": "List of search queries (e.g., 'pizza', 'plumber', 'hair salon'). Used together with Locations to find businesses on Yelp.",
-      "editor": "stringList",
-      "example": [
-        "pizza",
-        "sushi",
-        "coffee"
+    "maxReviewsPerBusiness": {
+      "default": 20,
+      "description": "Maximum reviews collected for each business. Reviews are paged 49 at a time from Yelp's public review feed.",
+      "maximum": 1000,
+      "minimum": 1,
+      "prefill": 5,
+      "title": "Reviews per business",
+      "type": "integer"
+    },
+    "minRating": {
+      "default": 0,
+      "description": "Drop businesses rated below this value. Set to 0 to keep every rating.",
+      "maximum": 5,
+      "minimum": 0,
+      "prefill": 0,
+      "title": "Minimum rating",
+      "type": "number"
+    },
+    "mode": {
+      "default": "search",
+      "description": "Search Yelp by keyword and location, or look up specific business URLs, aliases, or 22-character business IDs.",
+      "editor": "select",
+      "enum": [
+        "search",
+        "direct"
       ],
+      "enumTitles": [
+        "Search Yelp by keyword and location",
+        "Scrape specific business URLs or IDs"
+      ],
+      "prefill": "direct",
+      "title": "Mode",
+      "type": "string"
+    },
+    "price": {
+      "default": [],
+      "description": "Optional price levels for mode=search. Leave empty for every price level.",
+      "editor": "select",
+      "items": {
+        "enum": [
+          "$",
+          "$$",
+          "$$$",
+          "$$$$"
+        ],
+        "type": "string"
+      },
+      "prefill": [],
+      "title": "Price levels",
+      "type": "array"
+    },
+    "proxyConfiguration": {
+      "description": "Optional. The actor automatically uses Apify Proxy when Yelp blocks a request; add a country or custom proxy here only when you need a specific route.",
+      "editor": "proxy",
+      "title": "Proxy configuration",
+      "type": "object"
+    },
+    "reviewLanguage": {
+      "default": "en",
+      "description": "Language for the review feed. Choose 'all' to page through every language Yelp reports for the business.",
+      "editor": "select",
+      "enum": [
+        "all",
+        "en",
+        "es",
+        "fr",
+        "de",
+        "it",
+        "pt",
+        "nl",
+        "sv",
+        "da",
+        "no",
+        "fi",
+        "pl",
+        "cs",
+        "el",
+        "tr",
+        "ru",
+        "uk",
+        "he",
+        "ar",
+        "hi",
+        "bn",
+        "ta",
+        "th",
+        "vi",
+        "id",
+        "ms",
+        "tl",
+        "zh",
+        "ja",
+        "ko"
+      ],
+      "enumTitles": [
+        "All available languages",
+        "English",
+        "Spanish",
+        "French",
+        "German",
+        "Italian",
+        "Portuguese",
+        "Dutch",
+        "Swedish",
+        "Danish",
+        "Norwegian",
+        "Finnish",
+        "Polish",
+        "Czech",
+        "Greek",
+        "Turkish",
+        "Russian",
+        "Ukrainian",
+        "Hebrew",
+        "Arabic",
+        "Hindi",
+        "Bengali",
+        "Tamil",
+        "Thai",
+        "Vietnamese",
+        "Indonesian",
+        "Malay",
+        "Tagalog",
+        "Chinese",
+        "Japanese",
+        "Korean"
+      ],
+      "prefill": "en",
+      "title": "Review language",
+      "type": "string"
+    },
+    "reviewRatings": {
+      "default": [
+        "5",
+        "4",
+        "3",
+        "2",
+        "1"
+      ],
+      "description": "Only collect reviews with these star ratings. Choose one or more values.",
+      "editor": "select",
+      "items": {
+        "enum": [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5"
+        ],
+        "type": "string"
+      },
       "prefill": [
-        "pizza"
+        "5",
+        "4",
+        "3",
+        "2",
+        "1"
       ],
-      "title": "Search Terms",
+      "title": "Review star ratings",
+      "type": "array"
+    },
+    "reviewSort": {
+      "default": "DATE_DESC",
+      "description": "Ordering applied to each business's review feed.",
+      "editor": "select",
+      "enum": [
+        "DATE_DESC",
+        "DATE_ASC",
+        "RATING_DESC",
+        "RATING_ASC",
+        "RELEVANCE_DESC",
+        "ELITES_DESC"
+      ],
+      "enumTitles": [
+        "Newest first",
+        "Oldest first",
+        "Highest rated first",
+        "Lowest rated first",
+        "Most relevant first",
+        "Elite reviewers first"
+      ],
+      "prefill": "DATE_DESC",
+      "title": "Review order",
+      "type": "string"
+    },
+    "searchQuery": {
+      "default": "pizza",
+      "description": "Keyword to search for in mode=search, for example 'pizza', 'plumber', or 'coffee shop'.",
+      "editor": "textfield",
+      "prefill": "",
+      "title": "Search query",
+      "type": "string"
+    },
+    "sortBy": {
+      "default": "recommended",
+      "description": "Ordering for mode=search result pages.",
+      "editor": "select",
+      "enum": [
+        "recommended",
+        "rating",
+        "reviewCount"
+      ],
+      "enumTitles": [
+        "Recommended",
+        "Highest rated",
+        "Most reviewed"
+      ],
+      "prefill": "recommended",
+      "title": "Search result order",
+      "type": "string"
+    },
+    "startUrls": {
+      "default": [],
+      "description": "In mode=search, paste Yelp search URLs. In mode=direct, paste business URLs, aliases, or 22-character business IDs.",
+      "editor": "stringList",
+      "prefill": [
+        "https://www.yelp.com/biz/prince-street-pizza-new-york-2"
+      ],
+      "title": "Start URLs",
       "type": "array"
     }
   },
   "required": [
-    "proxy"
+    "mode"
   ],
   "schemaVersion": 1,
   "title": "Yelp Scraper Input",

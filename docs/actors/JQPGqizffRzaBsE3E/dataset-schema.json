@@ -1,88 +1,24 @@
 {
   "actorSpecification": 1,
-  "description": "Apps scraped from the Apple App Store",
-  "title": "App Store Results",
+  "description": "App records, chart rows, and customer reviews from the iOS App Store",
+  "title": "App Store Data",
   "views": {
     "detailed": {
-      "description": "All app details",
+      "description": "Every collected app field, including privacy labels and version history",
       "display": {
         "component": "table",
         "properties": {
-          "appId": {
-            "format": "text",
-            "label": "App ID"
-          },
-          "bundleId": {
-            "format": "text",
-            "label": "Bundle ID"
-          },
-          "category": {
-            "format": "text",
-            "label": "Category"
-          },
-          "contentRating": {
-            "format": "text",
-            "label": "Content Rating"
-          },
           "currency": {
             "format": "text",
             "label": "Currency"
-          },
-          "currentVersionRating": {
-            "format": "number",
-            "label": "Current Version Rating"
-          },
-          "currentVersionRatingCount": {
-            "format": "number",
-            "label": "Current Version Rating Count"
-          },
-          "description": {
-            "format": "text",
-            "label": "Description"
           },
           "developer": {
             "format": "text",
             "label": "Developer"
           },
-          "developerId": {
+          "id": {
             "format": "text",
-            "label": "Developer ID"
-          },
-          "developerUrl": {
-            "format": "link",
-            "label": "Developer URL"
-          },
-          "developerWebsite": {
-            "format": "link",
-            "label": "Developer Website"
-          },
-          "fileSize": {
-            "format": "text",
-            "label": "File Size (bytes)"
-          },
-          "formattedPrice": {
-            "format": "text",
-            "label": "Formatted Price"
-          },
-          "genres": {
-            "format": "text",
-            "label": "Genres"
-          },
-          "icon": {
-            "format": "link",
-            "label": "Icon"
-          },
-          "ipadScreenshots": {
-            "format": "text",
-            "label": "iPad Screenshots"
-          },
-          "languages": {
-            "format": "text",
-            "label": "Languages"
-          },
-          "lastUpdated": {
-            "format": "text",
-            "label": "Last Updated"
+            "label": "App ID"
           },
           "minimumOs": {
             "format": "text",
@@ -104,25 +40,13 @@
             "format": "number",
             "label": "Rating Count"
           },
-          "releaseDate": {
-            "format": "text",
-            "label": "Release Date"
-          },
-          "releaseNotes": {
-            "format": "text",
-            "label": "Release Notes"
-          },
           "scrapedAt": {
             "format": "text",
             "label": "Scraped At"
           },
-          "screenshots": {
-            "format": "text",
-            "label": "Screenshots"
-          },
           "url": {
             "format": "link",
-            "label": "URL"
+            "label": "App Store URL"
           },
           "version": {
             "format": "text",
@@ -130,12 +54,13 @@
           }
         }
       },
-      "title": "Detailed",
+      "title": "Detailed App Data",
       "transformation": {
         "fields": [
-          "appId",
+          "id",
+          "bundleId",
           "name",
-          "url",
+          "subtitle",
           "developer",
           "developerId",
           "developerUrl",
@@ -143,10 +68,12 @@
           "price",
           "formattedPrice",
           "currency",
+          "isFree",
           "rating",
           "ratingCount",
           "currentVersionRating",
           "currentVersionRatingCount",
+          "ratingHistogram",
           "description",
           "releaseNotes",
           "version",
@@ -155,41 +82,53 @@
           "category",
           "genres",
           "contentRating",
-          "bundleId",
+          "ageRating",
           "minimumOs",
+          "requirements",
           "fileSize",
+          "size",
           "icon",
           "screenshots",
           "ipadScreenshots",
           "languages",
+          "privacy",
+          "privacyPolicyUrl",
+          "supportUrl",
+          "versionHistory",
+          "chartPosition",
+          "chartType",
+          "country",
+          "language",
+          "url",
+          "sourceUrl",
           "scrapedAt"
         ]
       }
     },
     "overview": {
-      "description": "Overview of scraped apps",
+      "description": "App and chart records with pricing, ratings, and storefront links",
       "display": {
         "component": "table",
         "properties": {
-          "appId": {
-            "format": "text",
-            "label": "App ID"
+          "chartPosition": {
+            "format": "number",
+            "label": "Chart Position"
           },
-          "category": {
+          "currency": {
             "format": "text",
-            "label": "Category"
-          },
-          "contentRating": {
-            "format": "text",
-            "label": "Content Rating"
+            "label": "Currency"
           },
           "developer": {
             "format": "text",
             "label": "Developer"
           },
-          "formattedPrice": {
+          "genres": {
             "format": "text",
-            "label": "Formatted Price"
+            "label": "Genres"
+          },
+          "id": {
+            "format": "text",
+            "label": "App ID"
           },
           "name": {
             "format": "text",
@@ -209,7 +148,7 @@
           },
           "url": {
             "format": "link",
-            "label": "URL"
+            "label": "App Store URL"
           },
           "version": {
             "format": "text",
@@ -217,20 +156,85 @@
           }
         }
       },
-      "title": "Overview",
+      "title": "Apps & Charts",
       "transformation": {
         "fields": [
-          "appId",
+          "id",
           "name",
           "developer",
           "price",
-          "formattedPrice",
+          "currency",
           "rating",
           "ratingCount",
-          "category",
+          "genres",
           "version",
-          "contentRating",
+          "chartPosition",
           "url"
+        ]
+      }
+    },
+    "reviews": {
+      "description": "Customer reviews with ratings, versions, and developer replies",
+      "display": {
+        "component": "table",
+        "properties": {
+          "appId": {
+            "format": "text",
+            "label": "App ID"
+          },
+          "author": {
+            "format": "text",
+            "label": "Author"
+          },
+          "date": {
+            "format": "text",
+            "label": "Date"
+          },
+          "developerResponse": {
+            "format": "text",
+            "label": "Developer Response"
+          },
+          "id": {
+            "format": "text",
+            "label": "Review ID"
+          },
+          "rating": {
+            "format": "number",
+            "label": "Rating"
+          },
+          "sourceUrl": {
+            "format": "link",
+            "label": "Source"
+          },
+          "title": {
+            "format": "text",
+            "label": "Title"
+          },
+          "version": {
+            "format": "text",
+            "label": "Version"
+          }
+        }
+      },
+      "title": "Reviews",
+      "transformation": {
+        "fields": [
+          "id",
+          "appId",
+          "appName",
+          "country",
+          "rating",
+          "title",
+          "text",
+          "author",
+          "authorUrl",
+          "date",
+          "version",
+          "voteCount",
+          "voteSum",
+          "developerResponse",
+          "sourceUrl",
+          "scrapedAt"
         ]
       }
     }

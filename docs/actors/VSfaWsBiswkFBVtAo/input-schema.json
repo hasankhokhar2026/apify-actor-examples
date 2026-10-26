@@ -1,64 +1,109 @@
 {
-  "description": "Scrape TikTok posts by URL or ID. Extract video metadata, engagement counts, author info, hashtags, music, and more.",
+  "description": "Scrape TikTok posts, profiles, and comment threads without cookies. Paste post URLs or IDs, profile handles, or both.",
   "properties": {
     "includeAuthorStats": {
       "default": true,
-      "description": "Include author follower/following/heart/video counts in the author object.",
+      "description": "Include follower, following, heart, and video counts in author and authorStats.",
       "prefill": true,
-      "title": "Include Author Stats",
+      "title": "Include author stats",
       "type": "boolean"
     },
-    "includeContents": {
+    "includeComments": {
       "default": false,
-      "description": "Include contents array (segment-level text breakdown) from video-detail.",
+      "description": "In posts/profiles mode, attach a comments array to each post. In comments mode, emit root comment rows (comments mode enables this automatically when both comment toggles are off).",
       "prefill": false,
-      "title": "Include Contents",
-      "type": "boolean"
-    },
-    "includeEffectStickers": {
-      "default": false,
-      "description": "Include effectStickers and stickersOnItem arrays from video-detail.",
-      "prefill": false,
-      "title": "Include Effect Stickers",
+      "title": "Include comments",
       "type": "boolean"
     },
     "includeHashtags": {
       "default": true,
-      "description": "Include hashtags array extracted from textExtra.",
+      "description": "Include the hashtags array extracted from the caption.",
       "prefill": true,
-      "title": "Include Hashtags",
-      "type": "boolean"
-    },
-    "includeItemControl": {
-      "default": false,
-      "description": "Include item_control object with can_comment, can_repost, can_share flags.",
-      "prefill": false,
-      "title": "Include Item Control",
+      "title": "Include hashtags",
       "type": "boolean"
     },
     "includeMediaUrls": {
       "default": true,
-      "description": "Include signed video/cover/music play URLs in output. These URLs expire within ~24 hours.",
+      "description": "Include signed video, cover, music, and slideshow image URLs plus mediaUrlExpiresAt. They typically expire in about 48 hours.",
       "prefill": true,
-      "title": "Include Media URLs",
+      "title": "Include media URLs",
       "type": "boolean"
     },
     "includeMentions": {
       "default": true,
-      "description": "Include @mentions extracted from textExtra with start/end offsets.",
+      "description": "Include the mentions array extracted from the caption with text offsets.",
       "prefill": true,
-      "title": "Include Mentions",
+      "title": "Include mentions",
+      "type": "boolean"
+    },
+    "includeRawFields": {
+      "default": false,
+      "description": "Include item_control, contents, effectStickers, and stickersOnItem from the detail payload. Legacy includeEffectStickers/includeItemControl/includeContents inputs map here.",
+      "prefill": false,
+      "title": "Include raw TikTok fields",
+      "type": "boolean"
+    },
+    "includeReplies": {
+      "default": false,
+      "description": "Fetch the reply thread under each root comment and include replies with their parent.",
+      "prefill": false,
+      "title": "Include replies",
       "type": "boolean"
     },
     "includeSubtitles": {
       "default": false,
-      "description": "Include subtitleInfos, bitrateInfo, and volumeInfo arrays (requires video-detail interception).",
+      "description": "Include video.subtitleInfos, video.bitrateInfo, and video.volumeInfo (detail path only).",
       "prefill": false,
-      "title": "Include Subtitles",
+      "title": "Include subtitle and bitrate tracks",
       "type": "boolean"
     },
+    "maxCommentsPerPost": {
+      "default": 100,
+      "description": "Maximum comments plus replies to keep for each post in comments mode, or to attach to each post when Include comments is on.",
+      "maximum": 1000,
+      "minimum": 1,
+      "prefill": 100,
+      "title": "Max comments per post",
+      "type": "integer"
+    },
+    "maxDetail": {
+      "default": 50,
+      "description": "How many posts get the slower page/detail enrichment (caption language, collect/repost counts, video tracks). Remaining posts use the fast embed record. Set to 1 for the smallest daily-test run.",
+      "maximum": 300,
+      "minimum": 1,
+      "prefill": 1,
+      "title": "Max detail lookups",
+      "type": "integer"
+    },
+    "maxItems": {
+      "default": 100,
+      "description": "Global cap on output rows. Posts mode counts posts; profiles mode counts posts; comments mode counts comments and replies. Status rows do not count.",
+      "maximum": 1000,
+      "minimum": 1,
+      "prefill": 1,
+      "title": "Max rows",
+      "type": "integer"
+    },
+    "mode": {
+      "default": "posts",
+      "description": "What to scrape: individual posts, a profile's newest posts, or comment threads on posts.",
+      "editor": "select",
+      "enum": [
+        "posts",
+        "profiles",
+        "comments"
+      ],
+      "enumTitles": [
+        "Posts by URL or ID",
+        "Profiles (newest posts)",
+        "Comments and replies"
+      ],
+      "prefill": "posts",
+      "title": "Mode",
+      "type": "string"
+    },
     "postIds": {
-      "description": "TikTok post IDs as strings (15–20 digit numbers). Alternative to postUrls.",
+      "description": "Numeric TikTok post IDs (15-20 digits). Use this instead of, or in addition to, postUrls.",
       "editor": "stringList",
       "items": {
         "type": "string"
@@ -67,7 +112,7 @@
       "type": "array"
     },
     "postUrls": {
-      "description": "List of TikTok post URLs to scrape. Accepts standard /@user/video/ID format.",
+      "description": "TikTok video/photo URLs, /v/ share links, embed links, vm.tiktok.com or vt.tiktok.com short links, or bare numeric post IDs. Duplicates are scraped once.",
       "editor": "stringList",
       "items": {
         "type": "string"
@@ -75,14 +120,29 @@
       "prefill": [
         "https://www.tiktok.com/@khaby.lame/video/7574844184952081686"
       ],
-      "title": "Post URLs",
+      "title": "Post URLs or IDs",
       "type": "array"
+    },
+    "profiles": {
+      "description": "TikTok usernames (@handle), profile URLs, or bare handles. Profiles mode returns up to 500 newest posts per profile; comments mode can use them as comment targets.",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "title": "Profiles",
+      "type": "array"
+    },
+    "proxyConfiguration": {
+      "description": "Optional. Leave empty to run directly; a proxy is not required. The actor falls back to an Apify datacenter proxy on a block signal.",
+      "editor": "proxy",
+      "title": "Proxy configuration",
+      "type": "object"
     },
     "validateMediaUrls": {
       "default": false,
-      "description": "Probe each video URL with a HEAD request to verify it is accessible. Adds latency per post.",
+      "description": "Check the main media URL with a GET Range request (TikTok's CDN rejects HEAD) and add mediaUrlAccessible. Adds latency.",
       "prefill": false,
-      "title": "Validate Media URLs",
+      "title": "Validate media URLs",
       "type": "boolean"
     }
   },

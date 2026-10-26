@@ -3,102 +3,289 @@
   "fields": {
     "properties": {
       "address": {
-        "description": "District and city",
+        "description": "Full street address",
         "type": "string"
       },
+      "adults": {
+        "description": "Number of adults used for pricing",
+        "type": "integer"
+      },
       "amenities": {
-        "description": "Detected amenities (WiFi, Parking, Pool, etc.)",
+        "description": "Amenity keywords found on the search card",
+        "items": {
+          "type": "string"
+        },
         "type": "array"
       },
-      "breakfastIncluded": {
-        "description": "Whether breakfast is included",
-        "nullable": true,
+      "breakfastAvailable": {
+        "description": "Whether breakfast is available",
         "type": "boolean"
       },
+      "breakfastIncluded": {
+        "description": "Whether a breakfast-included rate exists",
+        "type": "boolean"
+      },
+      "breakfastPrice": {
+        "description": "Breakfast price when it is paid separately",
+        "type": "number"
+      },
       "checkin": {
-        "description": "Check-in date",
+        "description": "Stay check-in date used for the prices",
+        "type": "string"
+      },
+      "checkinTime": {
+        "description": "Check-in time",
         "type": "string"
       },
       "checkout": {
-        "description": "Check-out date",
+        "description": "Stay check-out date used for the prices",
+        "type": "string"
+      },
+      "checkoutTime": {
+        "description": "Check-out time",
         "type": "string"
       },
       "city": {
-        "description": "City name",
+        "description": "City",
+        "type": "string"
+      },
+      "country": {
+        "description": "Country name",
         "type": "string"
       },
       "currency": {
-        "description": "Currency symbol",
+        "description": "ISO 4217 currency code",
         "type": "string"
       },
+      "description": {
+        "description": "Property description",
+        "type": "string"
+      },
+      "detailStatus": {
+        "description": "enriched, search_only or failed",
+        "type": "string"
+      },
+      "discountPercent": {
+        "description": "Discount percentage when an original price is shown",
+        "type": "number"
+      },
       "distance": {
-        "description": "Distance from downtown",
+        "description": "Distance from the city centre as shown by Booking.com",
+        "type": "string"
+      },
+      "freeCancellation": {
+        "description": "Whether a free-cancellation rate exists",
+        "type": "boolean"
+      },
+      "fullAmenities": {
+        "description": "Complete facility list when includeFullAmenities is on",
+        "items": {
+          "type": "string"
+        },
+        "type": "array"
+      },
+      "hotelId": {
+        "description": "Hotel slug from the Booking.com URL",
+        "type": "string"
+      },
+      "latitude": {
+        "description": "Latitude",
+        "type": "number"
+      },
+      "longitude": {
+        "description": "Longitude",
+        "type": "number"
+      },
+      "mode": {
+        "description": "search or details",
         "type": "string"
       },
       "name": {
         "description": "Hotel name",
         "type": "string"
       },
+      "nights": {
+        "description": "Number of nights in the stay",
+        "type": "integer"
+      },
       "originalPrice": {
-        "description": "Original price before discount (0 if no discount)",
-        "nullable": true,
+        "description": "Pre-discount price when Booking.com shows a strike-through price",
         "type": "number"
       },
       "photoUrl": {
         "description": "Main hotel photo URL",
         "type": "string"
       },
+      "photos": {
+        "description": "Hotel photo URLs",
+        "items": {
+          "type": "string"
+        },
+        "type": "array"
+      },
       "price": {
-        "description": "Total price for the stay",
+        "description": "Cheapest total price for the whole stay",
         "type": "number"
       },
+      "pricePerNight": {
+        "description": "Total price divided by the number of nights",
+        "type": "number"
+      },
+      "priceWithTaxes": {
+        "description": "Cheapest rate total plus taxes and fees",
+        "type": "number"
+      },
+      "propertyType": {
+        "description": "Property type from Booking.com",
+        "type": "string"
+      },
       "rating": {
-        "description": "Guest rating (0-10)",
-        "nullable": true,
+        "description": "Guest review score (0-10)",
         "type": "number"
       },
       "reviewCount": {
         "description": "Number of guest reviews",
-        "nullable": true,
         "type": "integer"
       },
+      "reviewSubscores": {
+        "description": "Guest subscores such as Location and Cleanliness",
+        "items": {
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "score": {
+              "type": "number"
+            }
+          },
+          "type": "object"
+        },
+        "type": "array"
+      },
       "reviewWord": {
-        "description": "Rating label (Excellent, Very Good, etc.)",
-        "nullable": true,
+        "description": "Booking.com rating label such as Wonderful or Very Good",
         "type": "string"
+      },
+      "roomTypeCount": {
+        "description": "Number of distinct room types",
+        "type": "integer"
+      },
+      "roomTypes": {
+        "description": "Room and rate options",
+        "items": {
+          "properties": {
+            "amenities": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "bedType": {
+              "type": "string"
+            },
+            "breakfastAvailable": {
+              "type": "boolean"
+            },
+            "breakfastIncluded": {
+              "type": "boolean"
+            },
+            "breakfastPrice": {
+              "type": "number"
+            },
+            "currency": {
+              "type": "string"
+            },
+            "freeCancellation": {
+              "type": "boolean"
+            },
+            "name": {
+              "type": "string"
+            },
+            "originalPrice": {
+              "type": "number"
+            },
+            "price": {
+              "type": "number"
+            },
+            "ratePlans": {
+              "type": "integer"
+            },
+            "size": {
+              "type": "string"
+            },
+            "sleeps": {
+              "type": "string"
+            },
+            "taxesAndFees": {
+              "type": "number"
+            },
+            "totalPrice": {
+              "type": "number"
+            }
+          },
+          "type": "object"
+        },
+        "type": "array"
+      },
+      "rooms": {
+        "description": "Number of rooms used for pricing",
+        "type": "integer"
       },
       "scrapedAt": {
-        "description": "Scrape timestamp (ISO 8601)",
+        "description": "Collection timestamp in ISO 8601 format",
         "type": "string"
       },
+      "source": {
+        "description": "Data source",
+        "type": "string"
+      },
+      "stars": {
+        "description": "Star rating (1-5)",
+        "type": "integer"
+      },
+      "taxesAndFees": {
+        "description": "Taxes and fees shown for the cheapest rate",
+        "type": "number"
+      },
+      "topAmenities": {
+        "description": "Headline facilities",
+        "items": {
+          "type": "string"
+        },
+        "type": "array"
+      },
       "url": {
-        "description": "Direct Booking.com URL",
+        "description": "Booking.com hotel URL",
         "type": "string"
       }
     },
     "type": "object"
   },
-  "title": "Booking.com Hotels (Detailed)",
+  "title": "Booking.com Hotel Search & Details",
   "views": {
     "overview": {
       "display": {
         "component": "table",
         "properties": {
-          "address": {
+          "breakfastIncluded": {
             "format": "text",
-            "label": "Location"
+            "label": "Breakfast"
           },
-          "amenities": {
+          "city": {
             "format": "text",
-            "label": "Amenities"
+            "label": "City"
+          },
+          "country": {
+            "format": "text",
+            "label": "Country"
           },
           "currency": {
             "format": "text",
             "label": "Currency"
           },
-          "distance": {
+          "freeCancellation": {
             "format": "text",
-            "label": "Distance"
+            "label": "Free cancellation"
           },
           "name": {
             "format": "text",
@@ -106,7 +293,15 @@
           },
           "price": {
             "format": "number",
-            "label": "Price"
+            "label": "Stay total"
+          },
+          "pricePerNight": {
+            "format": "number",
+            "label": "Per night"
+          },
+          "propertyType": {
+            "format": "text",
+            "label": "Type"
           },
           "rating": {
             "format": "number",
@@ -118,7 +313,15 @@
           },
           "reviewWord": {
             "format": "text",
-            "label": "Score"
+            "label": "Score word"
+          },
+          "stars": {
+            "format": "number",
+            "label": "Stars"
+          },
+          "topAmenities": {
+            "format": "text",
+            "label": "Top amenities"
           },
           "url": {
             "format": "link",
@@ -131,13 +334,50 @@
         "fields": [
           "name",
           "price",
+          "pricePerNight",
           "currency",
           "rating",
           "reviewCount",
           "reviewWord",
-          "address",
-          "distance",
-          "amenities",
+          "stars",
+          "propertyType",
+          "city",
+          "country",
+          "freeCancellation",
+          "breakfastIncluded",
+          "topAmenities",
+          "url"
+        ]
+      }
+    },
+    "rooms": {
+      "display": {
+        "component": "table",
+        "properties": {
+          "name": {
+            "format": "text",
+            "label": "Hotel"
+          },
+          "roomTypeCount": {
+            "format": "number",
+            "label": "Room types"
+          },
+          "roomTypes": {
+            "format": "text",
+            "label": "Rooms and rates"
+          },
+          "url": {
+            "format": "link",
+            "label": "URL"
+          }
+        }
+      },
+      "title": "Rooms",
+      "transformation": {
+        "fields": [
+          "name",
+          "roomTypeCount",
+          "roomTypes",
           "url"
         ]
       }

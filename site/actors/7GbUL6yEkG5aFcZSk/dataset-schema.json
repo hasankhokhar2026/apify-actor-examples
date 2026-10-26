@@ -1,6 +1,6 @@
 {
   "actorSpecification": 1,
-  "title": "Yelp Businesses",
+  "title": "Yelp Businesses & Reviews",
   "views": {
     "detailed": {
       "display": {
@@ -10,11 +10,11 @@
             "format": "object",
             "label": "Address"
           },
-          "aggregatedRating": {
+          "alias": {
             "format": "text",
-            "label": "Rating"
+            "label": "Alias"
           },
-          "bizId": {
+          "businessId": {
             "format": "text",
             "label": "Business ID"
           },
@@ -22,21 +22,41 @@
             "format": "array",
             "label": "Categories"
           },
-          "cuisine": {
+          "city": {
             "format": "text",
-            "label": "Cuisine"
+            "label": "City"
+          },
+          "country": {
+            "format": "text",
+            "label": "Country"
           },
           "description": {
             "format": "text",
             "label": "Description"
           },
-          "directUrl": {
-            "format": "link",
-            "label": "URL"
+          "encId": {
+            "format": "text",
+            "label": "Yelp business ID"
           },
-          "images": {
-            "format": "array",
-            "label": "Images"
+          "hours": {
+            "format": "object",
+            "label": "Hours"
+          },
+          "isClaimed": {
+            "format": "boolean",
+            "label": "Claimed"
+          },
+          "isClosed": {
+            "format": "boolean",
+            "label": "Closed"
+          },
+          "lat": {
+            "format": "number",
+            "label": "Latitude"
+          },
+          "lng": {
+            "format": "number",
+            "label": "Longitude"
           },
           "name": {
             "format": "text",
@@ -46,46 +66,111 @@
             "format": "text",
             "label": "Phone"
           },
-          "priceRange": {
+          "photos": {
+            "format": "array",
+            "label": "Photos"
+          },
+          "price": {
             "format": "text",
             "label": "Price"
           },
-          "reviewCount": {
+          "rating": {
+            "format": "number",
+            "label": "Rating"
+          },
+          "recordType": {
             "format": "text",
+            "label": "Record type"
+          },
+          "reviewCount": {
+            "format": "number",
             "label": "Reviews"
           },
           "reviews": {
             "format": "array",
             "label": "Reviews"
           },
-          "type": {
+          "reviewsTotal": {
+            "format": "number",
+            "label": "Reviews in feed"
+          },
+          "scrapedAt": {
             "format": "text",
-            "label": "Type"
+            "label": "Scraped at"
+          },
+          "searchLocation": {
+            "format": "text",
+            "label": "Search location"
+          },
+          "searchQuery": {
+            "format": "text",
+            "label": "Search query"
+          },
+          "searchRank": {
+            "format": "number",
+            "label": "Search rank"
+          },
+          "sourceUrl": {
+            "format": "link",
+            "label": "Source URL"
+          },
+          "sponsored": {
+            "format": "boolean",
+            "label": "Sponsored"
+          },
+          "state": {
+            "format": "text",
+            "label": "State"
+          },
+          "url": {
+            "format": "link",
+            "label": "Yelp URL"
           },
           "website": {
             "format": "link",
             "label": "Website"
+          },
+          "zip": {
+            "format": "text",
+            "label": "ZIP"
           }
         }
       },
       "title": "Detailed",
       "transformation": {
         "fields": [
-          "directUrl",
-          "bizId",
+          "recordType",
+          "businessId",
+          "encId",
+          "alias",
           "name",
-          "description",
           "categories",
-          "type",
-          "phone",
-          "reviewCount",
-          "aggregatedRating",
-          "priceRange",
-          "cuisine",
-          "website",
-          "images",
           "address",
-          "reviews"
+          "city",
+          "state",
+          "zip",
+          "country",
+          "lat",
+          "lng",
+          "rating",
+          "reviewCount",
+          "reviewsTotal",
+          "price",
+          "phone",
+          "website",
+          "hours",
+          "photos",
+          "url",
+          "isClosed",
+          "isClaimed",
+          "description",
+          "reviews",
+          "searchRank",
+          "sponsored",
+          "searchQuery",
+          "searchLocation",
+          "sourceUrl",
+          "scrapedAt"
         ]
       }
     },
@@ -93,13 +178,13 @@
       "display": {
         "component": "table",
         "properties": {
-          "address": {
-            "format": "object",
-            "label": "Address"
+          "categories": {
+            "format": "array",
+            "label": "Categories"
           },
-          "aggregatedRating": {
+          "city": {
             "format": "text",
-            "label": "Rating"
+            "label": "City"
           },
           "name": {
             "format": "text",
@@ -109,13 +194,33 @@
             "format": "text",
             "label": "Phone"
           },
-          "priceRange": {
+          "price": {
             "format": "text",
             "label": "Price"
           },
+          "rating": {
+            "format": "number",
+            "label": "Rating"
+          },
           "reviewCount": {
-            "format": "text",
+            "format": "number",
             "label": "Reviews"
+          },
+          "searchRank": {
+            "format": "number",
+            "label": "Search rank"
+          },
+          "sponsored": {
+            "format": "boolean",
+            "label": "Sponsored"
+          },
+          "state": {
+            "format": "text",
+            "label": "State"
+          },
+          "url": {
+            "format": "link",
+            "label": "Yelp URL"
           }
         }
       },
@@ -123,11 +228,16 @@
       "transformation": {
         "fields": [
           "name",
-          "aggregatedRating",
+          "rating",
           "reviewCount",
-          "priceRange",
+          "price",
           "phone",
-          "address"
+          "city",
+          "state",
+          "categories",
+          "url",
+          "searchRank",
+          "sponsored"
         ]
       }
     }

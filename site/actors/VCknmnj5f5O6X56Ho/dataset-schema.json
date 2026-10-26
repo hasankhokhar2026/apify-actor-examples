@@ -2,361 +2,394 @@
   "actorSpecification": 1,
   "fields": {
     "properties": {
-      "adSupported": {
-        "description": "Whether the app contains ads",
-        "type": "boolean"
-      },
-      "appId": {
-        "description": "Unique package ID of the app (e.g., com.google.android.calculator)",
+      "IAPRange": {
+        "description": "Displayed in-app purchase range.",
         "type": "string"
       },
+      "adSupported": {
+        "description": "Whether the app contains ads.",
+        "type": "boolean"
+      },
+      "androidVersion": {
+        "description": "Minimum Android version when published.",
+        "type": "string"
+      },
+      "appId": {
+        "description": "Backward-compatible alias of packageName.",
+        "type": "string"
+      },
+      "appTitle": {
+        "description": "App name for a review record.",
+        "type": "string"
+      },
+      "appVersion": {
+        "description": "App version the review was written for.",
+        "type": "string"
+      },
+      "author": {
+        "description": "Reviewer name.",
+        "type": "string"
+      },
+      "available": {
+        "description": "Whether the app is listed in the selected storefront.",
+        "type": "boolean"
+      },
       "categories": {
-        "description": "List of app categories",
+        "description": "Categories as objects with name and id.",
+        "items": {
+          "type": "object"
+        },
         "type": "array"
       },
       "containsAds": {
-        "description": "Whether the app is marked as containing ads",
+        "description": "Whether the app is marked as containing ads.",
         "type": "boolean"
       },
-      "contentRating": {
-        "description": "Content rating (e.g., Everyone, Teen)",
+      "content": {
+        "description": "Backward-compatible alias of text.",
         "type": "string"
       },
+      "contentRating": {
+        "description": "Content rating, for example Everyone or Teen.",
+        "type": "string"
+      },
+      "country": {
+        "description": "Storefront used for the request.",
+        "type": "string"
+      },
+      "criterias": {
+        "description": "Per-criterion ratings when Google Play provides them.",
+        "items": {
+          "type": "object"
+        },
+        "type": "array"
+      },
       "currency": {
-        "description": "Price currency code (e.g., USD)",
+        "description": "ISO currency code.",
+        "type": "string"
+      },
+      "dataSafety": {
+        "description": "Shared data, collected data, security practices, and privacy policy URL.",
+        "type": "object"
+      },
+      "date": {
+        "description": "Review date in ISO 8601 format.",
         "type": "string"
       },
       "description": {
-        "description": "Full app description text",
+        "description": "Full app description as plain text.",
+        "type": "string"
+      },
+      "descriptionHTML": {
+        "description": "Full app description with Google Play HTML markup.",
         "type": "string"
       },
       "developer": {
-        "description": "Name of the app developer",
+        "description": "Developer display name.",
         "type": "string"
       },
       "developerAddress": {
-        "description": "Developer physical address",
+        "description": "Developer contact address.",
         "type": "string"
       },
       "developerEmail": {
-        "description": "Developer contact email",
+        "description": "Developer contact email.",
         "type": "string"
       },
       "developerId": {
-        "description": "Google Play developer ID",
+        "description": "Google Play developer ID.",
+        "type": "string"
+      },
+      "developerInput": {
+        "description": "Developer ID or display name used for the run.",
+        "type": "string"
+      },
+      "developerLegalAddress": {
+        "description": "Legal developer address.",
+        "type": "string"
+      },
+      "developerLegalEmail": {
+        "description": "Legal developer email.",
+        "type": "string"
+      },
+      "developerLegalName": {
+        "description": "Legal developer name.",
+        "type": "string"
+      },
+      "developerLegalPhone": {
+        "description": "Legal developer phone number.",
+        "type": "string"
+      },
+      "developerReply": {
+        "description": "Developer reply text and date when present.",
+        "type": "object"
+      },
+      "developerUrl": {
+        "description": "Developer catalog URL.",
         "type": "string"
       },
       "developerWebsite": {
-        "description": "Developer website URL",
+        "description": "Developer website.",
         "type": "string"
       },
       "free": {
-        "description": "Whether the app is free",
+        "description": "Whether the app is free.",
         "type": "boolean"
       },
       "genre": {
-        "description": "App category/genre name (e.g., Tools, Games)",
+        "description": "Primary genre name.",
         "type": "string"
       },
       "genreId": {
-        "description": "App genre identifier",
+        "description": "Primary genre ID.",
         "type": "string"
       },
       "headerImage": {
-        "description": "URL of the app header/feature image",
+        "description": "Header image URL.",
         "type": "string"
       },
+      "helpfulCount": {
+        "description": "Number of helpful votes.",
+        "type": "integer"
+      },
       "histogram": {
-        "description": "Rating distribution [1-star, 2-star, 3-star, 4-star, 5-star]",
+        "description": "Rating distribution from 1 star to 5 stars.",
+        "items": {
+          "type": "integer"
+        },
         "type": "array"
       },
       "icon": {
-        "description": "URL of the app icon",
+        "description": "App icon URL.",
+        "type": "string"
+      },
+      "id": {
+        "description": "Stable identifier. For app records this is the Android package name; for reviews it is the review ID.",
         "type": "string"
       },
       "installs": {
-        "description": "Approximate install count displayed on Play Store (e.g., 1,000,000+)",
+        "description": "Displayed install count, for example 1,000,000,000+.",
+        "type": "string"
+      },
+      "isExactMatch": {
+        "description": "Whether the record is Google Play's exact-match card.",
+        "type": "boolean"
+      },
+      "language": {
+        "description": "Language used for the request.",
         "type": "string"
       },
       "lastUpdated": {
-        "description": "Date of last update",
+        "description": "Backward-compatible alias of updated.",
         "type": "string"
       },
-      "minInstalls": {
-        "description": "Minimum install count threshold",
+      "maxInstalls": {
+        "description": "Upper bound of the install estimate.",
         "type": "integer"
       },
-      "price": {
-        "description": "App price (0 for free apps)",
-        "type": "number"
+      "minInstalls": {
+        "description": "Lower bound of the install estimate.",
+        "type": "integer"
       },
-      "privacyPolicy": {
-        "description": "URL of the privacy policy",
+      "name": {
+        "description": "App name.",
         "type": "string"
       },
+      "offersIAP": {
+        "description": "Whether the app offers in-app purchases.",
+        "type": "boolean"
+      },
+      "packageName": {
+        "description": "Android package name, for example com.whatsapp.",
+        "type": "string"
+      },
+      "permissionGroups": {
+        "description": "Permissions grouped the way Google Play presents them.",
+        "items": {
+          "type": "object"
+        },
+        "type": "array"
+      },
+      "permissions": {
+        "description": "Flat permission list with permission, group, and type.",
+        "items": {
+          "type": "object"
+        },
+        "type": "array"
+      },
+      "price": {
+        "description": "App price in the selected storefront currency. Zero means free.",
+        "type": "number"
+      },
+      "priceText": {
+        "description": "Localized price text.",
+        "type": "string"
+      },
+      "privacyPolicy": {
+        "description": "Privacy policy URL.",
+        "type": "string"
+      },
+      "rank": {
+        "description": "One-based position in search or developer results.",
+        "type": "integer"
+      },
+      "rating": {
+        "description": "Average rating from 0 to 5.",
+        "type": "number"
+      },
+      "ratingCount": {
+        "description": "Total number of ratings.",
+        "type": "integer"
+      },
       "ratings": {
-        "description": "Total number of ratings",
+        "description": "Backward-compatible alias of ratingCount.",
         "type": "integer"
       },
       "realInstalls": {
-        "description": "Estimated real install count",
+        "description": "Google Play install estimate.",
         "type": "integer"
       },
       "recentChanges": {
-        "description": "What's new / changelog text",
+        "description": "Latest changelog.",
+        "type": "string"
+      },
+      "recordType": {
+        "description": "app, review, permissions, dataSafety, or similar.",
         "type": "string"
       },
       "released": {
-        "description": "Original release date",
+        "description": "Original release date as displayed by Google Play.",
+        "type": "string"
+      },
+      "repliedAt": {
+        "description": "Backward-compatible developer reply date.",
+        "type": "string"
+      },
+      "replyContent": {
+        "description": "Backward-compatible developer reply text.",
         "type": "string"
       },
       "reviewCount": {
-        "description": "Total number of written reviews",
+        "description": "Total number of written reviews.",
         "type": "integer"
       },
+      "reviewId": {
+        "description": "Review ID (backward-compatible alias of id).",
+        "type": "string"
+      },
+      "reviewUrl": {
+        "description": "Permalink to the review.",
+        "type": "string"
+      },
       "reviews": {
-        "description": "User reviews (when includeReviews is enabled)",
+        "description": "Nested reviews when reviews are requested alongside app records.",
+        "items": {
+          "type": "object"
+        },
         "type": "array"
       },
       "score": {
-        "description": "Average user rating (0-5)",
+        "description": "Backward-compatible alias of rating.",
         "type": "number"
       },
+      "scoreText": {
+        "description": "Rating as displayed by Google Play.",
+        "type": "string"
+      },
       "scrapedAt": {
-        "description": "ISO 8601 timestamp of when the data was scraped",
+        "description": "ISO 8601 collection timestamp.",
         "type": "string"
       },
       "screenshots": {
-        "description": "List of screenshot URLs",
+        "description": "Screenshot URLs.",
+        "items": {
+          "type": "string"
+        },
         "type": "array"
       },
+      "searchQuery": {
+        "description": "Search query that produced the record.",
+        "type": "string"
+      },
+      "similarApps": {
+        "description": "Apps related to the seed app.",
+        "items": {
+          "type": "object"
+        },
+        "type": "array"
+      },
+      "size": {
+        "description": "Download size when Google Play exposes it.",
+        "type": "string"
+      },
+      "sort": {
+        "description": "Review sort order.",
+        "type": "string"
+      },
+      "sourceUrl": {
+        "description": "URL the record was collected from.",
+        "type": "string"
+      },
+      "storeCountry": {
+        "description": "Storefront used for a review request.",
+        "type": "string"
+      },
+      "summary": {
+        "description": "Short app summary.",
+        "type": "string"
+      },
+      "text": {
+        "description": "Review text.",
+        "type": "string"
+      },
+      "thumbsUpCount": {
+        "description": "Backward-compatible alias of helpfulCount.",
+        "type": "integer"
+      },
       "title": {
-        "description": "Name of the app",
+        "description": "Backward-compatible alias of name.",
+        "type": "string"
+      },
+      "updated": {
+        "description": "Last update date.",
         "type": "string"
       },
       "url": {
-        "description": "Google Play Store URL of the app",
+        "description": "Google Play app URL.",
+        "type": "string"
+      },
+      "userImage": {
+        "description": "Reviewer avatar URL.",
+        "type": "string"
+      },
+      "userName": {
+        "description": "Reviewer name (backward-compatible alias of author).",
         "type": "string"
       },
       "version": {
-        "description": "Current app version",
+        "description": "Latest app version when Google Play publishes it.",
         "type": "string"
       },
       "video": {
-        "description": "URL of the promo video",
+        "description": "Promo video URL.",
         "type": "string"
       }
     },
     "type": "object"
   },
-  "title": "Google Play Store Apps",
+  "title": "Google Play Store records",
   "views": {
-    "detailed": {
-      "display": {
-        "component": "table",
-        "properties": {
-          "adSupported": {
-            "format": "boolean",
-            "label": "Ad Supported"
-          },
-          "appId": {
-            "format": "text",
-            "label": "App ID"
-          },
-          "categories": {
-            "format": "text",
-            "label": "Categories"
-          },
-          "containsAds": {
-            "format": "boolean",
-            "label": "Contains Ads"
-          },
-          "contentRating": {
-            "format": "text",
-            "label": "Content Rating"
-          },
-          "currency": {
-            "format": "text",
-            "label": "Currency"
-          },
-          "description": {
-            "format": "text",
-            "label": "Description"
-          },
-          "developer": {
-            "format": "text",
-            "label": "Developer"
-          },
-          "developerAddress": {
-            "format": "text",
-            "label": "Address"
-          },
-          "developerEmail": {
-            "format": "text",
-            "label": "Email"
-          },
-          "developerId": {
-            "format": "text",
-            "label": "Developer ID"
-          },
-          "developerWebsite": {
-            "format": "text",
-            "label": "Website"
-          },
-          "free": {
-            "format": "boolean",
-            "label": "Free"
-          },
-          "genre": {
-            "format": "text",
-            "label": "Genre"
-          },
-          "genreId": {
-            "format": "text",
-            "label": "Genre ID"
-          },
-          "headerImage": {
-            "format": "text",
-            "label": "Header Image"
-          },
-          "histogram": {
-            "format": "text",
-            "label": "Histogram"
-          },
-          "icon": {
-            "format": "text",
-            "label": "Icon"
-          },
-          "installs": {
-            "format": "text",
-            "label": "Installs"
-          },
-          "lastUpdated": {
-            "format": "text",
-            "label": "Last Updated"
-          },
-          "minInstalls": {
-            "format": "number",
-            "label": "Min Installs"
-          },
-          "price": {
-            "format": "number",
-            "label": "Price"
-          },
-          "privacyPolicy": {
-            "format": "text",
-            "label": "Privacy Policy"
-          },
-          "ratings": {
-            "format": "number",
-            "label": "Ratings"
-          },
-          "realInstalls": {
-            "format": "number",
-            "label": "Real Installs"
-          },
-          "recentChanges": {
-            "format": "text",
-            "label": "Recent Changes"
-          },
-          "released": {
-            "format": "text",
-            "label": "Released"
-          },
-          "reviewCount": {
-            "format": "number",
-            "label": "Reviews"
-          },
-          "score": {
-            "format": "number",
-            "label": "Rating"
-          },
-          "scrapedAt": {
-            "format": "text",
-            "label": "Scraped At"
-          },
-          "screenshots": {
-            "format": "text",
-            "label": "Screenshots"
-          },
-          "title": {
-            "format": "text",
-            "label": "Title"
-          },
-          "url": {
-            "format": "text",
-            "label": "URL"
-          },
-          "version": {
-            "format": "text",
-            "label": "Version"
-          },
-          "video": {
-            "format": "text",
-            "label": "Video"
-          }
-        }
-      },
-      "title": "Detailed Results",
-      "transformation": {
-        "fields": [
-          "appId",
-          "title",
-          "url",
-          "developer",
-          "developerId",
-          "developerEmail",
-          "developerWebsite",
-          "developerAddress",
-          "score",
-          "ratings",
-          "reviewCount",
-          "histogram",
-          "installs",
-          "minInstalls",
-          "realInstalls",
-          "price",
-          "free",
-          "currency",
-          "genre",
-          "genreId",
-          "categories",
-          "icon",
-          "headerImage",
-          "screenshots",
-          "video",
-          "contentRating",
-          "adSupported",
-          "containsAds",
-          "released",
-          "lastUpdated",
-          "version",
-          "description",
-          "recentChanges",
-          "privacyPolicy",
-          "scrapedAt"
-        ]
-      }
-    },
     "overview": {
       "display": {
         "component": "table",
         "properties": {
-          "appId": {
+          "currency": {
             "format": "text",
-            "label": "App ID"
-          },
-          "contentRating": {
-            "format": "text",
-            "label": "Content Rating"
+            "label": "Currency"
           },
           "developer": {
             "format": "text",
             "label": "Developer"
-          },
-          "free": {
-            "format": "boolean",
-            "label": "Free"
           },
           "genre": {
             "format": "text",
@@ -366,37 +399,161 @@
             "format": "text",
             "label": "Installs"
           },
+          "name": {
+            "format": "text",
+            "label": "App"
+          },
+          "packageName": {
+            "format": "text",
+            "label": "Package"
+          },
           "price": {
             "format": "number",
             "label": "Price"
           },
-          "ratings": {
-            "format": "number",
-            "label": "Ratings"
-          },
-          "score": {
+          "rating": {
             "format": "number",
             "label": "Rating"
           },
-          "title": {
+          "ratingCount": {
+            "format": "number",
+            "label": "Ratings"
+          },
+          "updated": {
             "format": "text",
-            "label": "Title"
+            "label": "Updated"
+          },
+          "url": {
+            "format": "text",
+            "label": "URL"
           }
         }
       },
-      "title": "Apps Overview",
+      "title": "Apps",
       "transformation": {
         "fields": [
-          "appId",
-          "title",
+          "packageName",
+          "name",
           "developer",
-          "score",
-          "ratings",
+          "rating",
+          "ratingCount",
           "installs",
-          "free",
           "price",
+          "currency",
           "genre",
-          "contentRating"
+          "updated",
+          "url"
+        ]
+      }
+    },
+    "reviews": {
+      "display": {
+        "component": "table",
+        "properties": {
+          "appId": {
+            "format": "text",
+            "label": "App ID"
+          },
+          "appTitle": {
+            "format": "text",
+            "label": "App"
+          },
+          "author": {
+            "format": "text",
+            "label": "Author"
+          },
+          "date": {
+            "format": "text",
+            "label": "Date"
+          },
+          "helpfulCount": {
+            "format": "number",
+            "label": "Helpful"
+          },
+          "rating": {
+            "format": "number",
+            "label": "Rating"
+          },
+          "reviewId": {
+            "format": "text",
+            "label": "Review ID"
+          },
+          "text": {
+            "format": "text",
+            "label": "Review"
+          }
+        }
+      },
+      "title": "Reviews",
+      "transformation": {
+        "fields": [
+          "reviewId",
+          "appId",
+          "appTitle",
+          "author",
+          "rating",
+          "text",
+          "date",
+          "helpfulCount"
+        ]
+      }
+    },
+    "similar": {
+      "display": {
+        "component": "table",
+        "properties": {
+          "name": {
+            "format": "text",
+            "label": "Seed app"
+          },
+          "packageName": {
+            "format": "text",
+            "label": "Seed package"
+          },
+          "similarApps": {
+            "format": "text",
+            "label": "Similar apps"
+          }
+        }
+      },
+      "title": "Similar apps",
+      "transformation": {
+        "fields": [
+          "packageName",
+          "name",
+          "similarApps"
+        ]
+      }
+    },
+    "trust": {
+      "display": {
+        "component": "table",
+        "properties": {
+          "dataSafety": {
+            "format": "text",
+            "label": "Data safety"
+          },
+          "name": {
+            "format": "text",
+            "label": "App"
+          },
+          "packageName": {
+            "format": "text",
+            "label": "Package"
+          },
+          "permissions": {
+            "format": "text",
+            "label": "Permissions"
+          }
+        }
+      },
+      "title": "Permissions and data safety",
+      "transformation": {
+        "fields": [
+          "packageName",
+          "name",
+          "permissions",
+          "dataSafety"
         ]
       }
     }

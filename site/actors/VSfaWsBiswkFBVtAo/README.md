@@ -1,134 +1,156 @@
-# TikTok Post & Slideshow Detail Scraper
+# TikTok Post Scraper
 
-Hand this actor a TikTok video or photo-carousel link — or just the numeric post ID — and it returns the full post record: engagement numbers, the creator's profile snapshot at scrape time, the sound used, every hashtag and @mention, and the signed URLs needed to view or download the media. No TikTok login or cookies required.
+Paste a TikTok link, a bare post ID, or a profile handle and get structured post data back: engagement counts, the creator's snapshot at scrape time, the sound, every hashtag and @mention, carousel images, and signed media URLs. The actor also reads comment threads, including replies, and can walk a profile's newest posts. No TikTok account, cookies, or login are required.
 
-## What this actor does
+## Three ways to use it
 
-- Accepts standard TikTok post URLs (`/@user/video/ID` or `/@user/photo/ID`), share and embed links that contain the post ID, and/or raw numeric post IDs in the same run; duplicates are scraped once
-- Returns engagement counts at full precision, so viral posts with billions of plays or likes don't overflow into negative numbers
-- Captures a snapshot of the author's profile (handle, display name, bio, verification, follower/following/heart/video counts)
-- Resolves the sound used on the post, including its title, artist, and copyright status
-- Separates hashtags and @mentions out of the caption, each with its own identifiers
-- Empty fields are omitted from each record rather than returned as null or blank
+| Mode | What you provide | What you get |
+|---|---|---|
+| **Posts** | Video/photo URLs, share links, or numeric IDs | One row per post |
+| **Profiles** | Handles, @names, or profile URLs | One row per newest post, up to 500 per profile |
+| **Comments** | Post URLs/IDs and/or profiles | One row per comment and reply, up to 1,000 per post |
 
-## Output per post
+The default run is the smallest useful one: one known slideshow post, embed-first, no comments.
 
-- `postId` — unique TikTok post ID
-- `postUrl` — canonical post URL
-- `postType` — `video` or `slideshow`
-- `caption` — full post caption text
-- `textLanguage` — detected language code of the caption
-- `createTime` — Unix timestamp of publication
-- `createdAt` — ISO 8601 publication date
-- `locationCreated` — creator-set location tag, when present
-- `viewerRegion` — inferred viewer region code
-- `playCount`, `likeCount`, `commentCount`, `shareCount`, `collectCount`, `repostCount` — engagement counts
-- `isAd`, `isAigc`, `isECVideo` — paid-ad, AI-generated-content, and e-commerce flags
-- `stitchEnabled`, `duetEnabled`, `shareEnabled` — creator-controlled interaction permissions
-- `commentStatus` — comment permission level (0=all, 1=friends, 2=none)
-- `privateItem`, `forFriend`, `originalItem` — visibility/origin flags
-- `diversificationLabels`, `channelTags`, `warnInfo` — TikTok's own content category/warning labels, when present
-- `poi` — tagged location (restaurant, landmark, etc.), when present
-- `AIGCDescription`, `adLabelVersion` — AI-content disclosure text and ad-label version, when TikTok sets them
-- `author.id`, `author.secUid` — author's TikTok IDs
-- `author.username`, `author.displayName`, `author.bio` — author profile text
-- `author.verified`, `author.privateAccount` — author account flags
-- `author.roomId` — non-empty when the author is currently livestreaming
-- `author.avatarUrl` — author avatar image URL
-- `author.followerCount`, `author.followingCount`, `author.heartCount`, `author.videoCount` — author stats snapshot
-- `music.id`, `music.title`, `music.authorName`, `music.album`, `music.original`, `music.duration`, `music.shootDuration` — sound details
-- `music.isCopyrighted`, `music.isCommerceMusic`, `music.isUnlimitedMusic`, `music.isPrivate` — sound licensing/visibility flags
-- `music.dspLinks` — links to the song on streaming services, when TikTok provides them
-- `music.playUrl`, `music.coverUrl` — signed audio URLs
-- `video.width`, `video.height`, `video.duration`, `video.ratio`, `video.definition`, `video.bitrate`, `video.codecType`, `video.format`, `video.size`, `video.videoQuality` — video technical metadata
-- `video.playUrl`, `video.downloadAddr`, `video.cover`, `video.originCover`, `video.dynamicCover` — signed video/cover URLs
-- `video.subtitleInfos`, `video.bitrateInfo`, `video.volumeInfo` — subtitle/quality tracks, only when `includeSubtitles` is on
-- `images` — array of slideshow images (for `postType: "slideshow"`), each with `ordinal` (0-based position), `width`, `height` and `urlList`
-- `mediaUrlExpiresAt` — ISO 8601 timestamp when the signed media URLs expire
-- `hashtags` — array of `{id, name, isCommerce}` objects
-- `mentions` — array of `{username, start, end, awemeId}` objects marking caption offsets (`awemeId` when TikTok supplies it)
-- `mediaUrlAccessible` — `true`/`false` result of checking the video play URL, only when `validateMediaUrls` is on
-- `item_control`, `contents`, `effectStickers`, `stickersOnItem` — raw TikTok fields, only when the matching input toggle is on
+## What makes it useful
+
+- **Fast first, rich when asked.** Every post starts on TikTok's embed surface (~0.7 s). The slower page/detail path runs only for `maxDetail` posts, so bulk runs stay quick while the first rows still carry language, collect/repost counts, and video tracks.
+- **Slideshows stay slideshows.** Carousel posts are detected from both the embed shape (`imagePostInfo.displayImages`) and the detail shape (`imagePost.images`), so the images array is not lost when the fast path misses.
+- **Bare IDs work.** IDs are opened with a safe placeholder username instead of the `/video/<id>` path that redirects to a 404.
+- **No silent holes.** Deleted, private, region-locked, or blocked inputs become explicit `recordType: "status"` rows with a reason, not an empty dataset.
+- **Honest media checks.** TikTok's video CDN rejects `HEAD`; the optional URL check uses a `GET Range` request and reports what actually answered.
+- **Deduplicated.** The same post ID from a URL, a short link, and an ID list is scraped once. Comments are deduplicated by comment ID.
 
 ## Input
 
-| Field | Type | Default | Description |
+| Field | Type | Default | Notes |
 |---|---|---|---|
-| `postUrls` | array | – | TikTok post URLs (`/@user/video/ID` or `/@user/photo/ID`). |
-| `postIds` | array | – | Numeric post IDs (15–20 digits) as an alternative to `postUrls`. |
-| `includeMediaUrls` | boolean | `true` | Include signed video, cover, and music URLs (and `mediaUrlExpiresAt`) in the output. Slideshow `images` URLs are always included. |
-| `validateMediaUrls` | boolean | `false` | Check whether the video play URL answers at scrape time and add the result as `mediaUrlAccessible`. |
-| `includeAuthorStats` | boolean | `true` | Include follower/following/heart/video counts in the author object. |
-| `includeSubtitles` | boolean | `false` | Include `subtitleInfos`, `bitrateInfo`, and `volumeInfo` on the video object. |
-| `includeHashtags` | boolean | `true` | Include the `hashtags` array extracted from the caption. |
-| `includeMentions` | boolean | `true` | Include the `mentions` array extracted from the caption. |
-| `includeEffectStickers` | boolean | `false` | Include `effectStickers` and `stickersOnItem` arrays. |
-| `includeItemControl` | boolean | `false` | Include the `item_control` object (`can_comment`, `can_repost`, `can_share` flags). |
-| `includeContents` | boolean | `false` | Include the `contents` array — a segment-level breakdown of the caption text. |
+| `mode` | select | `posts` | `posts`, `profiles`, or `comments` |
+| `postUrls` | array | one slideshow prefill | Video/photo URLs, `/v/` and `/share/` links, embed links, `vm.tiktok.com`/`vt.tiktok.com`/`tiktok.com/t/` short links, or bare IDs |
+| `postIds` | array | – | 15–20 digit numeric IDs |
+| `profiles` | array | – | `@handle`, profile URL, or bare handle; up to 500 newest posts per profile |
+| `maxItems` | integer 1–1000 | `100` | Global row cap. Posts/profiles count posts; comments counts comments + replies |
+| `maxDetail` | integer 1–300 | `50` | How many posts get the slower page/detail enrichment |
+| `maxCommentsPerPost` | integer 1–1000 | `100` | Comments + replies kept per post |
+| `includeReplies` | boolean | `false` | Fetch reply threads under root comments |
+| `includeComments` | boolean | `false` | Attach a `comments` array in posts/profiles mode; emit root comment rows in comments mode |
+| `proxyConfiguration` | object | – | Optional. Direct requests are the default; AUTO datacenter is used on a block signal |
+| `includeMediaUrls` | boolean | `true` | Signed video/cover/music/image URLs and `mediaUrlExpiresAt` |
+| `validateMediaUrls` | boolean | `false` | Range GET probe → `mediaUrlAccessible` |
+| `includeAuthorStats` | boolean | `true` | `authorStats` and legacy author counts |
+| `includeHashtags` | boolean | `true` | Hashtags array |
+| `includeMentions` | boolean | `true` | Mentions array with offsets |
+| `includeSubtitles` | boolean | `false` | `video.subtitleInfos`, `bitrateInfo`, `volumeInfo` |
+| `includeRawFields` | boolean | `false` | `item_control`, `contents`, `effectStickers`, `stickersOnItem` |
 
-### Example: scrape a single video post
+### Examples
 
-```json
-{
-  "postUrls": ["https://www.tiktok.com/@khaby.lame/video/7574844184952081686"],
-  "includeMediaUrls": true,
-  "includeAuthorStats": true,
-  "includeHashtags": true,
-  "includeMentions": true
-}
-```
-
-### Example: scrape multiple posts by ID, skip media URLs
+Scrape one video and one carousel, with detail enrichment:
 
 ```json
 {
-  "postIds": ["7574844184952081686", "7640880319159094559"],
-  "includeMediaUrls": false,
-  "includeAuthorStats": true
+  "mode": "posts",
+  "postUrls": [
+    "https://www.tiktok.com/@natgeo/video/7683891628230315295",
+    "https://www.tiktok.com/@nba/photo/7690755132400618783"
+  ],
+  "maxItems": 2,
+  "maxDetail": 2
 }
 ```
 
-### Example: scrape a photo carousel (slideshow) post
+Walk a profile's newest posts:
 
 ```json
 {
-  "postUrls": ["https://www.tiktok.com/@natgeo/photo/7650496998889573645"],
-  "includeMediaUrls": true,
-  "includeAuthorStats": true
+  "mode": "profiles",
+  "profiles": ["natgeo"],
+  "maxItems": 50,
+  "maxDetail": 20
 }
 ```
 
-## Use cases
+Read comments and replies from a post:
 
-- **Influencer marketing** — pull post-level metrics, author stats, and sound details for campaign reporting
-- **Trend research** — track engagement velocity on specific posts to spot momentum before it peaks
-- **Competitive benchmarking** — compare your own posts against a competitor's using the same engagement fields
-- **Media archiving** — grab signed video, cover, and slideshow image URLs for a moderation or archival workflow
-- **Partner vetting** — check a creator's post for ad/AIGC flags and interaction settings before a brand deal
-- **Academic datasets** — assemble structured TikTok post metadata for social-media research
+```json
+{
+  "mode": "comments",
+  "postUrls": ["https://www.tiktok.com/@natgeo/video/7683891628230315295"],
+  "maxCommentsPerPost": 200,
+  "includeReplies": true,
+  "maxItems": 200
+}
+```
+
+Bulk short links and IDs:
+
+```json
+{
+  "mode": "posts",
+  "postUrls": ["https://vm.tiktok.com/ZMabc123/"],
+  "postIds": ["7574844184952081686"],
+  "maxItems": 100
+}
+```
+
+## Output
+
+Every record is omit-empty: absent fields are left out rather than returned as `null`, `""`, or an empty array.
+
+### Post rows (`recordType: "post"`)
+
+- `postId`, `postType` (`video`/`slideshow`), `postUrl`
+- `caption`, `textLanguage`, `createTime`, `createdAt`, `locationCreated`, `viewerRegion`
+- `author` — id, secUid, username, displayName, bio, verified, privateAccount, avatarUrl, roomId (legacy counts also live here)
+- `authorStats` — followerCount, followingCount, heartCount, videoCount
+- `stats` — playCount, likeCount, commentCount, shareCount, collectCount, repostCount (also kept as flat legacy fields)
+- `flags` — stitchEnabled, duetEnabled, shareEnabled, commentStatus, isAd, isAigc, isECVideo, privateItem, forFriend, originalItem, plus labels when present (also kept flat)
+- `music` — id, title, authorName, album, original, duration, shootDuration, licensing flags, dspLinks, playUrl, coverUrl
+- `video` — width, height, duration, ratio, definition, bitrate, codecType, format, size, videoQuality, playUrl, downloadAddr, cover, originCover, dynamicCover, optional subtitle/bitrate/volume tracks
+- `images` — ordered carousel objects: `ordinal`, `width`, `height`, `urlList`
+- `hashtags`, `mentions`
+- `mediaUrlExpiresAt`, optional `mediaUrlAccessible`
+- `source` (`embed`, `detail`, `ssr`, or `profile`), `scrapedAt`, `recordType`
+- Profiles mode adds `profileUsername`, `position`, and `isPinned` when the profile pinned the post
+- `comments` when `includeComments` is on: root comments, each optionally carrying a `replies` array
+
+### Comment rows (`recordType: "comment"` or `"reply"`)
+
+`commentId`, `postId`, `postUrl`, `text`, `createTime`, `createdAt`, `likeCount`, `replyCount`, `isPinnedByAuthor`, `isLikedByAuthor`, `isTranslatable`, `language`, `isReply`, `replyToCommentId`, `threadId`, `user` (id, secUid, username, displayName, avatarUrl, optional verified), `images`, `textExtra`, optional share link/stickers/labels, `source`, `scrapedAt`.
+
+### Status rows (`recordType: "status"`)
+
+`status` is one of `not_found`, `private`, `region`, or `blocked`, plus `input`, optional `postId`, `message`, `httpStatus`, `source`, and `scrapedAt`. Status rows are diagnostics and do not count toward `maxItems`.
+
+## Limits and behaviour
+
+- **Posts:** up to `maxItems` rows (1–1000). `maxDetail` caps the slower page/detail lookups (1–300).
+- **Profiles:** up to 500 newest posts per profile and `maxItems` rows overall. The profile feed normally comes from TikTok's itemList; if that XHR returns an empty body, the actor retries and then falls back to the creator itemList endpoint.
+- **Comments:** up to 1,000 comment + reply rows per post. TikTok's `total` counter is not used as a progress guarantee; the actor follows the cursor and stops after repeated empty windows.
+- **Pacing:** requests are spaced 1.2–2.0 s apart. HTTP 429 and 503 responses are retried with a 1.5–4.5 s backoff.
+- **Media URLs** are signed and typically expire in about 48 hours. `mediaUrlExpiresAt` tells you when.
+- **Private / deleted / region-locked posts** cannot be read without cookies; they produce a status row.
+- **Comments on deleted posts** may look identical to a post with no comments; the actor reports the post status it observed.
 
 ## FAQ
 
 **Do I need a TikTok account or cookies?**
-No. The actor reads TikTok's public post pages; no login is required.
+No. The actor uses public embed pages, the public video page, and unsigned comment endpoints.
 
-**How long do the signed media URLs stay valid?**
-Typically around 24 hours. `mediaUrlExpiresAt` tells you the exact expiry so you know when to re-scrape or download.
+**Is a proxy required?**
+No. Direct requests are the primary path. If TikTok blocks the request, the actor retries with an Apify datacenter proxy. A proxy is exposed only for users who want to supply their own.
 
-**What's the difference between `postUrls` and `postIds`?**
-They identify the same posts two ways — a full URL or the raw numeric ID. You can mix both in one run.
+**Why do some rows have more fields than others?**
+The embed path is fast but omits a few detail-only values (caption language, collect/repost counts, video tracks). Raise `maxDetail` to enrich more posts; the actor never fabricates a field it could not read.
 
-**Does this handle slideshow (photo carousel) posts?**
-Yes. Carousel posts are returned with `postType: "slideshow"` and their images are listed in the `images` array instead of `video`.
+**How do I get only slideshows?**
+Provide slideshow URLs or IDs. Slideshow rows have `postType: "slideshow"` and an ordered `images` array. There is no separate slideshow-only mode because the same post-ID path covers videos and carousels.
 
-**What does `validateMediaUrls` actually check?**
-It requests the post's video play URL once and records whether it answered in `mediaUrlAccessible`. The URL is returned either way; cover, music and slideshow URLs aren't checked. This adds some time per post.
+**Why is a row missing?**
+Check the status view. Inputs that cannot be parsed, resolved, or read are reported there instead of disappearing.
 
-**Are counts on very viral posts accurate?**
-Yes. Some of TikTok's count fields wrap around to negative numbers past roughly 2 billion; the actor reads the full-precision counts instead, so posts with billions of plays come back correctly.
-
-**Can I scrape a private or deleted post?**
-No. Private and removed posts aren't publicly viewable, so those IDs/URLs are skipped and produce no row. Inputs that can't be read as a post URL or a 15–20 digit ID are skipped too.
+**Can I attach comments to post rows?**
+Yes. Set `includeComments: true` in posts or profiles mode; set `includeReplies` too if you want reply threads nested under each root comment.
 
 **Is this affiliated with TikTok?**
-No. This is an independent, third-party actor that reads TikTok's publicly viewable post pages.
+No. This is an independent, third-party actor that reads publicly viewable TikTok content.

@@ -2,57 +2,88 @@
   "actorSpecification": 1,
   "views": {
     "overview": {
-      "description": "Emails extracted per YouTube channel.",
+      "description": "Channel metadata and public contact emails, with provenance.",
       "display": {
         "component": "table",
         "properties": {
-          "channelHandle": {
-            "label": "Handle"
-          },
           "channelId": {
             "label": "Channel ID"
           },
-          "channelName": {
-            "label": "Channel name"
+          "country": {
+            "label": "Country"
           },
-          "channelUrl": {
-            "format": "link",
-            "label": "Channel URL"
+          "emailSource": {
+            "label": "Email source"
           },
           "emails": {
             "format": "array",
-            "label": "Emails"
+            "label": "All emails"
           },
-          "externalLinks": {
+          "handle": {
+            "label": "Handle"
+          },
+          "hasHiddenEmail": {
+            "format": "boolean",
+            "label": "Hidden email gate"
+          },
+          "links": {
             "format": "array",
-            "label": "External links"
+            "label": "Links"
+          },
+          "name": {
+            "label": "Channel name"
+          },
+          "primaryEmail": {
+            "label": "Primary email"
+          },
+          "recordType": {
+            "label": "Record type"
           },
           "scrapedAt": {
             "format": "date",
             "label": "Scraped at"
           },
-          "sources": {
-            "format": "array",
-            "label": "Sources"
+          "socials": {
+            "format": "object",
+            "label": "Socials"
+          },
+          "sourceUrl": {
+            "format": "link",
+            "label": "About page"
           },
           "subscriberCount": {
             "format": "number",
             "label": "Subscribers"
+          },
+          "url": {
+            "format": "link",
+            "label": "Channel URL"
+          },
+          "websiteCandidate": {
+            "format": "link",
+            "label": "Website"
           }
         }
       },
       "title": "Overview",
       "transformation": {
         "fields": [
-          "channelUrl",
-          "channelName",
-          "channelHandle",
           "channelId",
+          "handle",
+          "name",
+          "url",
           "subscriberCount",
+          "country",
+          "primaryEmail",
+          "emailSource",
           "emails",
-          "externalLinks",
-          "sources",
-          "scrapedAt"
+          "hasHiddenEmail",
+          "websiteCandidate",
+          "links",
+          "socials",
+          "sourceUrl",
+          "scrapedAt",
+          "recordType"
         ]
       }
     }

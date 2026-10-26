@@ -1,13 +1,19 @@
 {
   "actorOutputSchemaVersion": 1,
-  "description": "Dataset of Apple App Store app records with pricing, ratings, developer info, screenshots, and optional customer reviews.",
+  "description": "App metadata, chart rankings, and customer reviews from the iOS App Store, including privacy labels, version history, and developer responses when Apple exposes them.",
   "properties": {
     "apps": {
-      "description": "Dataset containing all scraped App Store apps.",
+      "description": "Dataset containing App Store apps, developer catalog entries, and chart rows.",
       "template": "{{links.apiDefaultDatasetUrl}}/items",
-      "title": "App Store Apps",
+      "title": "App and chart records",
+      "type": "string"
+    },
+    "reviews": {
+      "description": "Dataset containing App Store customer reviews and any developer responses.",
+      "template": "{{links.apiDefaultDatasetUrl}}/items",
+      "title": "Customer reviews",
       "type": "string"
     }
   },
-  "title": "App Store Search, Lookup & Reviews Scraper Output"
+  "title": "iOS App Store Deep Reviews & App Intelligence Output"
 }
