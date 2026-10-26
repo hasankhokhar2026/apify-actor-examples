@@ -1,0 +1,68 @@
+{
+  "description": "Scrape property listings from Zillow. Search by location for sale, rent, or sold properties, or provide direct property URLs.",
+  "properties": {
+    "endPage": {
+      "default": 5,
+      "description": "Maximum search result pages to scrape per search (1-20). Each page has up to 40 properties.",
+      "maximum": 20,
+      "minimum": 1,
+      "prefill": 1,
+      "title": "Maximum Pages",
+      "type": "integer"
+    },
+    "maxItems": {
+      "default": 50,
+      "description": "Maximum number of property listings to scrape (1-500).",
+      "maximum": 500,
+      "minimum": 1,
+      "prefill": 5,
+      "title": "Maximum Properties",
+      "type": "integer"
+    },
+    "mode": {
+      "default": "BUY",
+      "description": "Type of property search — for sale, for rent, or recently sold.",
+      "editor": "select",
+      "enum": [
+        "BUY",
+        "RENT",
+        "SOLD"
+      ],
+      "enumTitles": [
+        "For Sale (Buy)",
+        "For Rent",
+        "Recently Sold"
+      ],
+      "title": "Search Mode",
+      "type": "string"
+    },
+    "scrapeDetails": {
+      "default": true,
+      "description": "Fetch each property's detail page for full description, schools, tax history, price history, and more. Disable for faster runs with only search-level data.",
+      "sectionCaption": "Options",
+      "title": "Scrape Full Details",
+      "type": "boolean"
+    },
+    "search": {
+      "description": "City and state to search for properties (e.g., 'Houston, TX', 'San Francisco, CA', 'Miami, FL').",
+      "editor": "textfield",
+      "prefill": "Houston, TX",
+      "sectionCaption": "Search Settings",
+      "sectionDescription": "Enter a location and choose a search mode. At least one of Search Location or Start URLs is required.",
+      "title": "Search Location",
+      "type": "string"
+    },
+    "startUrls": {
+      "description": "Direct Zillow property detail URLs or search page URLs. Paste URLs from your browser.",
+      "editor": "requestListSources",
+      "sectionCaption": "Direct URLs",
+      "sectionDescription": "Provide Zillow URLs directly instead of or in addition to location search.",
+      "title": "Start URLs",
+      "type": "array"
+    }
+  },
+  "required": [],
+  "schemaVersion": 1,
+  "title": "Zillow Property Scraper",
+  "type": "object"
+}

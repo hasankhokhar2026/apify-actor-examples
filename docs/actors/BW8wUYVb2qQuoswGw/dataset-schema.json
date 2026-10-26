@@ -1,0 +1,224 @@
+{
+  "actorSpecification": 1,
+  "fields": {
+    "properties": {
+      "address": {
+        "description": "Full street address",
+        "type": "string"
+      },
+      "agentName": {
+        "description": "Listing agent name",
+        "nullable": true,
+        "type": "string"
+      },
+      "agentPhone": {
+        "description": "Agent phone number",
+        "nullable": true,
+        "type": "string"
+      },
+      "baths": {
+        "description": "Number of bathrooms",
+        "nullable": true,
+        "type": "number"
+      },
+      "beds": {
+        "description": "Number of bedrooms",
+        "nullable": true,
+        "type": "integer"
+      },
+      "brokerName": {
+        "description": "Listing broker name",
+        "nullable": true,
+        "type": "string"
+      },
+      "city": {
+        "description": "City",
+        "type": "string"
+      },
+      "daysOnZillow": {
+        "description": "Days listed on Zillow",
+        "nullable": true,
+        "type": "integer"
+      },
+      "description": {
+        "description": "Property description text",
+        "nullable": true,
+        "type": "string"
+      },
+      "features": {
+        "description": "Property features (heating, cooling, etc.)",
+        "nullable": true,
+        "type": "object"
+      },
+      "hoaFee": {
+        "description": "Monthly HOA fee",
+        "nullable": true,
+        "type": "number"
+      },
+      "latitude": {
+        "description": "GPS latitude",
+        "nullable": true,
+        "type": "number"
+      },
+      "longitude": {
+        "description": "GPS longitude",
+        "nullable": true,
+        "type": "number"
+      },
+      "lotSize": {
+        "description": "Lot size",
+        "nullable": true,
+        "type": "string"
+      },
+      "parking": {
+        "description": "Parking information",
+        "nullable": true,
+        "type": "string"
+      },
+      "photos": {
+        "description": "Photo URLs",
+        "nullable": true,
+        "type": "array"
+      },
+      "price": {
+        "description": "Listing price in USD",
+        "nullable": true,
+        "type": "integer"
+      },
+      "priceHistory": {
+        "description": "Price change history",
+        "nullable": true,
+        "type": "array"
+      },
+      "pricePerSqft": {
+        "description": "Price per square foot",
+        "nullable": true,
+        "type": "number"
+      },
+      "propertyType": {
+        "description": "Property type (SINGLE_FAMILY, CONDO, etc.)",
+        "nullable": true,
+        "type": "string"
+      },
+      "rentZestimate": {
+        "description": "Zillow estimated rent",
+        "nullable": true,
+        "type": "integer"
+      },
+      "schools": {
+        "description": "Nearby schools with ratings",
+        "nullable": true,
+        "type": "array"
+      },
+      "scrapedAt": {
+        "description": "ISO timestamp when data was scraped",
+        "type": "string"
+      },
+      "sqft": {
+        "description": "Living area in square feet",
+        "nullable": true,
+        "type": "integer"
+      },
+      "state": {
+        "description": "State abbreviation",
+        "type": "string"
+      },
+      "status": {
+        "description": "Listing status (FOR_SALE, FOR_RENT, SOLD, etc.)",
+        "type": "string"
+      },
+      "stories": {
+        "description": "Number of stories",
+        "nullable": true,
+        "type": "integer"
+      },
+      "taxHistory": {
+        "description": "Tax assessment history",
+        "nullable": true,
+        "type": "array"
+      },
+      "url": {
+        "description": "Zillow property detail page URL",
+        "type": "string"
+      },
+      "yearBuilt": {
+        "description": "Year the property was built",
+        "nullable": true,
+        "type": "integer"
+      },
+      "zestimate": {
+        "description": "Zillow estimated value",
+        "nullable": true,
+        "type": "integer"
+      },
+      "zipCode": {
+        "description": "ZIP code",
+        "type": "string"
+      },
+      "zpid": {
+        "description": "Zillow Property ID (numeric for properties, string for buildings)"
+      }
+    },
+    "type": "object"
+  },
+  "title": "Zillow Properties",
+  "views": {
+    "overview": {
+      "display": {
+        "component": "table",
+        "properties": {
+          "address": {
+            "format": "text",
+            "label": "Address"
+          },
+          "baths": {
+            "format": "number",
+            "label": "Baths"
+          },
+          "beds": {
+            "format": "number",
+            "label": "Beds"
+          },
+          "price": {
+            "format": "number",
+            "label": "Price"
+          },
+          "propertyType": {
+            "format": "text",
+            "label": "Type"
+          },
+          "sqft": {
+            "format": "number",
+            "label": "Sqft"
+          },
+          "status": {
+            "format": "text",
+            "label": "Status"
+          },
+          "url": {
+            "format": "link",
+            "label": "URL"
+          },
+          "yearBuilt": {
+            "format": "number",
+            "label": "Year Built"
+          }
+        }
+      },
+      "title": "Properties",
+      "transformation": {
+        "fields": [
+          "address",
+          "price",
+          "beds",
+          "baths",
+          "sqft",
+          "propertyType",
+          "status",
+          "yearBuilt",
+          "url"
+        ]
+      }
+    }
+  }
+}
