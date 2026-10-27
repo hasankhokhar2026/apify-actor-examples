@@ -1,0 +1,359 @@
+{
+  "description": "Search European car listings on AutoScout24, or fetch specific car details by URL.",
+  "properties": {
+    "bodyType": {
+      "default": "",
+      "description": "Vehicle body type filter (mode=searchCars).",
+      "editor": "select",
+      "enum": [
+        "",
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "12",
+        "13",
+        "7"
+      ],
+      "enumTitles": [
+        "Any",
+        "Small car",
+        "Convertible / Cabrio",
+        "Coupe",
+        "SUV / Off-road / Pickup",
+        "Estate / Kombi",
+        "Sedan / Limousine",
+        "Van / Minibus",
+        "Panel van / Transporter",
+        "Other"
+      ],
+      "title": "Body Type",
+      "type": "string"
+    },
+    "condition": {
+      "default": "",
+      "description": "Vehicle condition.",
+      "editor": "select",
+      "enum": [
+        "",
+        "N",
+        "U"
+      ],
+      "enumTitles": [
+        "Any",
+        "New",
+        "Used"
+      ],
+      "title": "Condition",
+      "type": "string"
+    },
+    "country": {
+      "default": "de",
+      "description": "Country marketplace to search in.",
+      "editor": "select",
+      "enum": [
+        "de",
+        "at",
+        "be",
+        "fr",
+        "it",
+        "nl",
+        "pl",
+        "es",
+        "ch"
+      ],
+      "enumTitles": [
+        "Germany",
+        "Austria",
+        "Belgium",
+        "France",
+        "Italy",
+        "Netherlands",
+        "Poland",
+        "Spain",
+        "Switzerland"
+      ],
+      "prefill": "de",
+      "title": "Country",
+      "type": "string"
+    },
+    "doorsFrom": {
+      "description": "Minimum number of doors.",
+      "maximum": 7,
+      "minimum": 2,
+      "title": "Doors From",
+      "type": "integer"
+    },
+    "doorsTo": {
+      "description": "Maximum number of doors.",
+      "maximum": 7,
+      "minimum": 2,
+      "title": "Doors To",
+      "type": "integer"
+    },
+    "fuelType": {
+      "default": "",
+      "description": "Fuel type filter.",
+      "editor": "select",
+      "enum": [
+        "",
+        "petrol",
+        "diesel",
+        "electric",
+        "hybrid",
+        "hydrogen",
+        "lpg",
+        "cng"
+      ],
+      "enumTitles": [
+        "Any",
+        "Petrol",
+        "Diesel",
+        "Electric",
+        "Hybrid",
+        "Hydrogen",
+        "LPG",
+        "CNG"
+      ],
+      "title": "Fuel Type",
+      "type": "string"
+    },
+    "listingUrls": {
+      "description": "AutoScout24 car listing URLs to fetch details for.",
+      "editor": "stringList",
+      "title": "Listing URLs (mode=getCarDetails)",
+      "type": "array"
+    },
+    "make": {
+      "description": "Car brand/manufacturer to filter by (e.g. BMW, Mercedes-Benz, Volkswagen, Audi, Toyota).",
+      "editor": "select",
+      "enum": [
+        "",
+        "Alfa Romeo",
+        "Audi",
+        "BMW",
+        "Chevrolet",
+        "Citroen",
+        "Dacia",
+        "Fiat",
+        "Ford",
+        "Honda",
+        "Hyundai",
+        "Jaguar",
+        "Jeep",
+        "Kia",
+        "Land Rover",
+        "Lexus",
+        "Mazda",
+        "Mercedes-Benz",
+        "Mini",
+        "Mitsubishi",
+        "Nissan",
+        "Opel",
+        "Peugeot",
+        "Porsche",
+        "Renault",
+        "SEAT",
+        "Skoda",
+        "Subaru",
+        "Suzuki",
+        "Tesla",
+        "Toyota",
+        "Volkswagen",
+        "Volvo"
+      ],
+      "enumTitles": [
+        "Any make",
+        "Alfa Romeo",
+        "Audi",
+        "BMW",
+        "Chevrolet",
+        "Citroen",
+        "Dacia",
+        "Fiat",
+        "Ford",
+        "Honda",
+        "Hyundai",
+        "Jaguar",
+        "Jeep",
+        "Kia",
+        "Land Rover",
+        "Lexus",
+        "Mazda",
+        "Mercedes-Benz",
+        "Mini",
+        "Mitsubishi",
+        "Nissan",
+        "Opel",
+        "Peugeot",
+        "Porsche",
+        "Renault",
+        "SEAT",
+        "Skoda",
+        "Subaru",
+        "Suzuki",
+        "Tesla",
+        "Toyota",
+        "Volkswagen",
+        "Volvo"
+      ],
+      "prefill": "BMW",
+      "title": "Car Make",
+      "type": "string"
+    },
+    "maxItems": {
+      "default": 100,
+      "description": "Maximum number of car listings to return. Default (100) covers a typical single-page-plus scrape for real usage; the platform's automated daily test run uses the lower prefill (5) so it finishes in well under a minute and reliably confirms the actor still works, without wasting run time/quota on every scheduled check.",
+      "maximum": 1000,
+      "minimum": 1,
+      "prefill": 5,
+      "title": "Max Items",
+      "type": "integer"
+    },
+    "mileageMax": {
+      "description": "Maximum mileage in kilometres.",
+      "maximum": 2000000,
+      "minimum": 0,
+      "title": "Max Mileage (km)",
+      "type": "integer"
+    },
+    "mode": {
+      "default": "searchCars",
+      "description": "What to do: search for cars or fetch specific listing details.",
+      "editor": "select",
+      "enum": [
+        "searchCars",
+        "getCarDetails"
+      ],
+      "enumTitles": [
+        "Search cars by filters",
+        "Get car details by listing URLs"
+      ],
+      "prefill": "searchCars",
+      "title": "Mode",
+      "type": "string"
+    },
+    "model": {
+      "description": "Model name to filter (e.g. 3 Series, Golf, A4). Leave empty for all models.",
+      "editor": "textfield",
+      "title": "Car Model",
+      "type": "string"
+    },
+    "powerFrom": {
+      "description": "Minimum engine power (unit set by Power Unit below).",
+      "maximum": 2000,
+      "minimum": 0,
+      "title": "Power From",
+      "type": "integer"
+    },
+    "powerTo": {
+      "description": "Maximum engine power (unit set by Power Unit below).",
+      "maximum": 2000,
+      "minimum": 0,
+      "title": "Power To",
+      "type": "integer"
+    },
+    "powerUnit": {
+      "default": "kw",
+      "description": "Unit for Power From / Power To.",
+      "editor": "select",
+      "enum": [
+        "kw",
+        "hp"
+      ],
+      "enumTitles": [
+        "kW",
+        "HP (PS)"
+      ],
+      "prefill": "kw",
+      "title": "Power Unit",
+      "type": "string"
+    },
+    "priceFrom": {
+      "description": "Minimum price in EUR.",
+      "maximum": 10000000,
+      "minimum": 0,
+      "title": "Price From (EUR)",
+      "type": "integer"
+    },
+    "priceTo": {
+      "description": "Maximum price in EUR.",
+      "maximum": 10000000,
+      "minimum": 0,
+      "title": "Price To (EUR)",
+      "type": "integer"
+    },
+    "seatsFrom": {
+      "description": "Minimum number of seats.",
+      "maximum": 12,
+      "minimum": 1,
+      "title": "Seats From",
+      "type": "integer"
+    },
+    "seatsTo": {
+      "description": "Maximum number of seats.",
+      "maximum": 12,
+      "minimum": 1,
+      "title": "Seats To",
+      "type": "integer"
+    },
+    "sellerType": {
+      "default": "",
+      "description": "Filter by dealer or private seller.",
+      "editor": "select",
+      "enum": [
+        "",
+        "dealer",
+        "private"
+      ],
+      "enumTitles": [
+        "Any",
+        "Dealer",
+        "Private seller"
+      ],
+      "title": "Seller Type",
+      "type": "string"
+    },
+    "transmission": {
+      "default": "",
+      "description": "Transmission type filter.",
+      "editor": "select",
+      "enum": [
+        "",
+        "automatic",
+        "manual",
+        "semi-automatic"
+      ],
+      "enumTitles": [
+        "Any",
+        "Automatic",
+        "Manual",
+        "Semi-automatic"
+      ],
+      "title": "Transmission",
+      "type": "string"
+    },
+    "yearFrom": {
+      "description": "Minimum first registration year.",
+      "maximum": 2026,
+      "minimum": 1900,
+      "title": "Year From",
+      "type": "integer"
+    },
+    "yearTo": {
+      "description": "Maximum first registration year.",
+      "maximum": 2026,
+      "minimum": 1900,
+      "title": "Year To",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "mode"
+  ],
+  "schemaVersion": 1,
+  "title": "AutoScout24 Scraper Input",
+  "type": "object"
+}
