@@ -1,0 +1,70 @@
+{
+  "description": "Scrape TikTok's Explore/Trending feed. Choose specific category IDs or enable auto-discovery to find all available categories.",
+  "properties": {
+    "autoDiscoverCategories": {
+      "default": false,
+      "description": "When enabled, navigates to TikTok's Explore page and clicks each category tab to discover all available category IDs from the live UI. Discovered categories are added to the categories list.",
+      "prefill": false,
+      "title": "Auto-Discover Categories",
+      "type": "boolean"
+    },
+    "categories": {
+      "default": [
+        {
+          "id": 123,
+          "name": "All"
+        }
+      ],
+      "description": "Category IDs to explore. The 'All' category (id=123) is always available. Use autoDiscoverCategories=true to find additional category IDs from the live TikTok UI.",
+      "editor": "json",
+      "items": {
+        "properties": {
+          "id": {
+            "description": "Numeric TikTok category type ID (e.g. 123 for All)",
+            "title": "Category ID",
+            "type": "integer"
+          },
+          "name": {
+            "description": "Human-readable category label (e.g. All, Entertainment, Sports)",
+            "title": "Category Name",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "prefill": [
+        {
+          "id": 123,
+          "name": "All"
+        }
+      ],
+      "title": "Categories",
+      "type": "array"
+    },
+    "categoryId": {
+      "description": "Shorthand: a single integer category ID. Maps to categories=[{id: N}]. Use 123 for All.",
+      "title": "Category ID (shorthand)",
+      "type": "integer"
+    },
+    "maxItems": {
+      "description": "Alias for maxItemsPerCategory. If both are set, maxItemsPerCategory takes precedence.",
+      "maximum": 500,
+      "minimum": 1,
+      "title": "Max Items (alias)",
+      "type": "integer"
+    },
+    "maxItemsPerCategory": {
+      "default": 50,
+      "description": "Maximum number of trending posts to collect per category.",
+      "maximum": 500,
+      "minimum": 1,
+      "prefill": 10,
+      "title": "Max Items Per Category",
+      "type": "integer"
+    }
+  },
+  "required": [],
+  "schemaVersion": 1,
+  "title": "TikTok Explore/Trending Scraper Input",
+  "type": "object"
+}

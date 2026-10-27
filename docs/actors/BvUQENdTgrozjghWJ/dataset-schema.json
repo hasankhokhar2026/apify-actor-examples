@@ -1,0 +1,210 @@
+{
+  "actorSpecification": 1,
+  "fields": {
+    "author": {
+      "description": "Author profile snapshot (id, username, displayName, verified, followerCount, avatarUrl)",
+      "title": "Author",
+      "type": "object"
+    },
+    "caption": {
+      "description": "Post caption/description text",
+      "title": "Caption",
+      "type": "string"
+    },
+    "categoryId": {
+      "description": "TikTok's numeric category type ID (e.g. 123 for 'All')",
+      "title": "Category ID",
+      "type": "integer"
+    },
+    "categoryName": {
+      "description": "Human-readable category name (e.g. 'All', 'Entertainment', 'Sports')",
+      "title": "Category Name",
+      "type": "string"
+    },
+    "collectCount": {
+      "description": "Number of times post was saved/collected",
+      "title": "Collect Count",
+      "type": "integer"
+    },
+    "commentCount": {
+      "description": "Number of comments",
+      "title": "Comment Count",
+      "type": "integer"
+    },
+    "createTime": {
+      "description": "Unix timestamp when the post was created",
+      "title": "Create Time",
+      "type": "integer"
+    },
+    "createdAt": {
+      "description": "ISO 8601 UTC timestamp of post creation",
+      "title": "Created At",
+      "type": "string"
+    },
+    "duetEnabled": {
+      "description": "Whether duets are allowed on this post",
+      "title": "Duet Enabled",
+      "type": "boolean"
+    },
+    "feedType": {
+      "description": "Always 'explore' for rows from this actor",
+      "title": "Feed Type",
+      "type": "string"
+    },
+    "hashtags": {
+      "description": "Hashtags used in the post",
+      "title": "Hashtags",
+      "type": "array"
+    },
+    "images": {
+      "description": "Slideshow images for photo posts (postType='slideshow')",
+      "title": "Images",
+      "type": "array"
+    },
+    "isAd": {
+      "description": "Whether the post is a paid advertisement",
+      "title": "Is Ad",
+      "type": "boolean"
+    },
+    "likeCount": {
+      "description": "Number of likes (from statsV2)",
+      "title": "Like Count",
+      "type": "integer"
+    },
+    "locationCreated": {
+      "description": "Country code where the post was created",
+      "title": "Location Created",
+      "type": "string"
+    },
+    "mediaUrlExpiresAt": {
+      "description": "ISO 8601 UTC timestamp when signed media URLs expire",
+      "title": "Media URL Expires At",
+      "type": "string"
+    },
+    "mentions": {
+      "description": "@mentions in the caption",
+      "title": "Mentions",
+      "type": "array"
+    },
+    "music": {
+      "description": "Sound/music used in the post (id, title, authorName, duration, album)",
+      "title": "Music",
+      "type": "object"
+    },
+    "playCount": {
+      "description": "Number of video plays",
+      "title": "Play Count",
+      "type": "integer"
+    },
+    "postId": {
+      "description": "Unique TikTok post/video ID (string)",
+      "title": "Post ID",
+      "type": "string"
+    },
+    "postType": {
+      "description": "Either 'video' or 'slideshow'",
+      "title": "Post Type",
+      "type": "string"
+    },
+    "postUrl": {
+      "description": "Direct URL to the TikTok post",
+      "title": "Post URL",
+      "type": "string"
+    },
+    "repostCount": {
+      "description": "Number of reposts",
+      "title": "Repost Count",
+      "type": "integer"
+    },
+    "shareCount": {
+      "description": "Number of shares",
+      "title": "Share Count",
+      "type": "integer"
+    },
+    "shareEnabled": {
+      "description": "Whether sharing is enabled on this post",
+      "title": "Share Enabled",
+      "type": "boolean"
+    },
+    "stitchEnabled": {
+      "description": "Whether stitching is allowed on this post",
+      "title": "Stitch Enabled",
+      "type": "boolean"
+    },
+    "textLanguage": {
+      "description": "Language code of the caption",
+      "title": "Text Language",
+      "type": "string"
+    },
+    "video": {
+      "description": "Video metadata (width, height, duration, playUrl, cover, zoomCover)",
+      "title": "Video",
+      "type": "object"
+    }
+  },
+  "title": "TikTok Explore/Trending Scraper Dataset",
+  "views": {
+    "overview": {
+      "display": {
+        "component": "table",
+        "properties": {
+          "caption": {
+            "format": "text",
+            "label": "Caption"
+          },
+          "categoryId": {
+            "format": "number",
+            "label": "Category ID"
+          },
+          "categoryName": {
+            "format": "text",
+            "label": "Category"
+          },
+          "commentCount": {
+            "format": "number",
+            "label": "Comments"
+          },
+          "createdAt": {
+            "format": "text",
+            "label": "Created At"
+          },
+          "feedType": {
+            "format": "text",
+            "label": "Feed Type"
+          },
+          "likeCount": {
+            "format": "number",
+            "label": "Likes"
+          },
+          "playCount": {
+            "format": "number",
+            "label": "Plays"
+          },
+          "postId": {
+            "format": "text",
+            "label": "Post ID"
+          },
+          "postUrl": {
+            "format": "link",
+            "label": "Post URL"
+          }
+        }
+      },
+      "title": "Overview",
+      "transformation": {
+        "fields": [
+          "categoryName",
+          "categoryId",
+          "feedType",
+          "postId",
+          "caption",
+          "likeCount",
+          "playCount",
+          "commentCount",
+          "createdAt",
+          "postUrl"
+        ]
+      }
+    }
+  }
+}
