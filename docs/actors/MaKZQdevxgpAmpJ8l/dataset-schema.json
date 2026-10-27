@@ -1,6 +1,45 @@
 {
   "actorSpecification": 1,
   "views": {
+    "collections": {
+      "display": {
+        "component": "table",
+        "properties": {
+          "handle": {
+            "format": "text",
+            "label": "Handle"
+          },
+          "productsCount": {
+            "format": "number",
+            "label": "Reported products"
+          },
+          "storeUrl": {
+            "format": "link",
+            "label": "Store"
+          },
+          "title": {
+            "format": "text",
+            "label": "Collection"
+          },
+          "url": {
+            "format": "link",
+            "label": "Collection URL"
+          }
+        }
+      },
+      "title": "Collections",
+      "transformation": {
+        "fields": [
+          "recordType",
+          "title",
+          "handle",
+          "productsCount",
+          "storeUrl",
+          "url",
+          "scrapedAt"
+        ]
+      }
+    },
     "detailed": {
       "display": {
         "component": "table",
@@ -9,91 +48,78 @@
             "format": "text",
             "label": "Available"
           },
-          "compareAtPrice": {
+          "currency": {
             "format": "text",
-            "label": "Compare At"
+            "label": "Currency"
           },
-          "createdAt": {
-            "format": "text",
-            "label": "Created"
+          "price": {
+            "format": "number",
+            "label": "Price"
           },
-          "description": {
-            "format": "text",
-            "label": "Description"
-          },
-          "handle": {
-            "format": "text",
-            "label": "Handle"
-          },
-          "id": {
+          "productId": {
             "format": "text",
             "label": "Product ID"
           },
-          "images": {
-            "format": "text",
-            "label": "Images"
-          },
-          "price": {
-            "format": "text",
-            "label": "Price"
-          },
-          "productType": {
-            "format": "text",
-            "label": "Type"
-          },
           "scrapedAt": {
             "format": "text",
-            "label": "Scraped At"
+            "label": "Scraped at"
+          },
+          "sourceUrl": {
+            "format": "link",
+            "label": "Source"
           },
           "storeUrl": {
             "format": "link",
-            "label": "Store URL"
-          },
-          "tags": {
-            "format": "text",
-            "label": "Tags"
+            "label": "Store"
           },
           "title": {
             "format": "text",
             "label": "Title"
           },
-          "updatedAt": {
-            "format": "text",
-            "label": "Updated"
-          },
           "url": {
             "format": "link",
-            "label": "URL"
-          },
-          "variants": {
-            "format": "text",
-            "label": "Variants"
-          },
-          "vendor": {
-            "format": "text",
-            "label": "Vendor"
+            "label": "Product URL"
           }
         }
       },
       "title": "Detailed",
       "transformation": {
         "fields": [
+          "recordType",
+          "productId",
           "id",
-          "title",
           "handle",
+          "title",
           "url",
-          "description",
           "vendor",
           "productType",
           "tags",
-          "price",
-          "compareAtPrice",
-          "available",
-          "variants",
-          "images",
+          "description",
           "createdAt",
           "updatedAt",
+          "publishedAt",
+          "publishedScope",
+          "price",
+          "priceMin",
+          "priceMax",
+          "compareAtPrice",
+          "compareAtPriceMax",
+          "discountPercent",
+          "onSale",
+          "currency",
+          "available",
+          "variantCount",
+          "availableVariantCount",
+          "variants",
+          "images",
+          "imageDetails",
+          "featuredImage",
+          "options",
+          "collectionHandle",
+          "store",
           "storeUrl",
+          "source",
+          "sourceUrl",
           "scrapedAt"
         ]
       }
@@ -107,16 +133,24 @@
             "label": "Available"
           },
           "compareAtPrice": {
+            "format": "number",
+            "label": "Compare at"
+          },
+          "currency": {
             "format": "text",
-            "label": "Compare At"
+            "label": "Currency"
           },
           "price": {
-            "format": "text",
+            "format": "number",
             "label": "Price"
           },
           "productType": {
             "format": "text",
             "label": "Type"
+          },
+          "storeUrl": {
+            "format": "link",
+            "label": "Store"
           },
           "title": {
             "format": "text",
@@ -124,7 +158,7 @@
           },
           "url": {
             "format": "link",
-            "label": "URL"
+            "label": "Product URL"
           },
           "vendor": {
             "format": "text",
@@ -132,16 +166,79 @@
           }
         }
       },
-      "title": "Overview",
+      "title": "Products",
       "transformation": {
         "fields": [
+          "recordType",
           "title",
           "price",
+          "currency",
           "compareAtPrice",
+          "available",
           "vendor",
           "productType",
-          "available",
+          "storeUrl",
           "url"
+        ]
+      }
+    },
+    "variants": {
+      "display": {
+        "component": "table",
+        "properties": {
+          "available": {
+            "format": "text",
+            "label": "Available"
+          },
+          "barcode": {
+            "format": "text",
+            "label": "Barcode"
+          },
+          "compareAtPrice": {
+            "format": "number",
+            "label": "Compare at"
+          },
+          "inventoryQuantity": {
+            "format": "number",
+            "label": "Inventory"
+          },
+          "price": {
+            "format": "number",
+            "label": "Price"
+          },
+          "productTitle": {
+            "format": "text",
+            "label": "Product"
+          },
+          "productUrl": {
+            "format": "link",
+            "label": "Product URL"
+          },
+          "sku": {
+            "format": "text",
+            "label": "SKU"
+          },
+          "title": {
+            "format": "text",
+            "label": "Variant"
+          }
+        }
+      },
+      "title": "Variants",
+      "transformation": {
+        "fields": [
+          "recordType",
+          "productTitle",
+          "title",
+          "sku",
+          "price",
+          "compareAtPrice",
+          "currency",
+          "available",
+          "barcode",
+          "inventoryQuantity",
+          "storeUrl",
+          "productUrl"
         ]
       }
     }

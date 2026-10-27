@@ -1,0 +1,560 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src &#x27;self&#x27;; script-src &#x27;self&#x27; &#x27;sha256-goELZnaWAzxvie3GyugDTcXtAxX04ZZXESxAhojgeq8=&#x27;; style-src &#x27;self&#x27;; img-src &#x27;self&#x27; https: data:; base-uri &#x27;self&#x27;; form-action &#x27;self&#x27;; object-src &#x27;none&#x27;"><title>Eventbrite Event Finder with Venue Geocoordinates | Nimbryxo Studio</title><meta name="description" content="Browse Eventbrite listings by city or category and get event dates, venue address and geocoordinates, cover images, organizer and ticket link for every event."><meta name="robots" content="index,follow"><link rel="canonical" href="https://hasankhokhar2026.github.io/apify-actor-examples/actors/FdMoiJCc2SsI8M9PA/"><meta property="og:title" content="Eventbrite Event Finder with Venue Geocoordinates | Nimbryxo Studio"><meta property="og:description" content="Browse Eventbrite listings by city or category and get event dates, venue address and geocoordinates, cover images, organizer and ticket link for every event."><meta property="og:type" content="website"><meta property="og:url" content="https://hasankhokhar2026.github.io/apify-actor-examples/actors/FdMoiJCc2SsI8M9PA/"><meta property="og:site_name" content="Nimbryxo Studio"><meta name="twitter:card" content="summary"><link rel="icon" href="/apify-actor-examples/assets/mark.svg?v=2d20f9dc334a" type="image/svg+xml"><link rel="stylesheet" href="/apify-actor-examples/assets/site.css?v=39545fd4a399"><link rel="stylesheet" href="/apify-actor-examples/assets/brand.css?v=eb0f935ade25"><link rel="alternate" type="application/rss+xml" title="Nimbryxo Studio guides" href="/apify-actor-examples/feed.xml"><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization","name":"Nimbryxo Studio","url":"https://hasankhokhar2026.github.io/apify-actor-examples/","sameAs":["https://apify.com/nimbryxo-studio"]},{"@type":"WebSite","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#website","name":"Nimbryxo Studio","url":"https://hasankhokhar2026.github.io/apify-actor-examples/","publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"inLanguage":"en"},{"@type":"WebPage","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/FdMoiJCc2SsI8M9PA/#webpage","name":"Eventbrite Event Finder with Venue Geocoordinates","description":"Browse Eventbrite listings by city or category and get event dates, venue address and geocoordinates, cover images, organizer and ticket link for every event.","url":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/FdMoiJCc2SsI8M9PA/","isPartOf":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#website"},"publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"inLanguage":"en","mainEntity":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/FdMoiJCc2SsI8M9PA/#article"},"breadcrumb":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/FdMoiJCc2SsI8M9PA/#breadcrumb"}},{"@type":"TechArticle","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/FdMoiJCc2SsI8M9PA/#article","headline":"Eventbrite Event Finder with Venue Geocoordinates","name":"Eventbrite Event Finder with Venue Geocoordinates","description":"Browse Eventbrite listings by city or category and get event dates, venue address and geocoordinates, cover images, organizer and ticket link for every event.","url":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/FdMoiJCc2SsI8M9PA/","author":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"mainEntityOfPage":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/FdMoiJCc2SsI8M9PA/#webpage"},"inLanguage":"en"},{"@type":"BreadcrumbList","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/FdMoiJCc2SsI8M9PA/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Nimbryxo Studio","item":"https://hasankhokhar2026.github.io/apify-actor-examples/"},{"@type":"ListItem","position":2,"name":"Actors","item":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/"},{"@type":"ListItem","position":3,"name":"Eventbrite Event Finder with Venue Geocoordinates","item":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/FdMoiJCc2SsI8M9PA/"}]}]}</script><script src="/apify-actor-examples/assets/site.js?v=7cabac48dd31" defer></script></head><body class="theme-studio"><a href="#main" class="skip-link">Skip to content</a><header><div class="inner"><a href="/apify-actor-examples/" class="brand"><img src="/apify-actor-examples/assets/mark.svg?v=2d20f9dc334a" alt="" width="29" height="29">Nimbryxo Studio</a><nav aria-label="Main navigation"><a href="/apify-actor-examples/actors/" aria-current="page">Actors</a><a href="/apify-actor-examples/guides/">Guides</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></nav></div></header><main id="main"><div class="doc-layout"><aside class="contents" aria-label="On this page"><strong>Contents</strong><a href="#overview">Overview</a><a href="#published-readme">Published README</a><a href="#input-schema">Input schema</a><a href="#output-schema">Output schema</a><a href="#dataset-schema">Dataset schema</a><a href="#python-quickstart">Python quickstart</a></aside><article class="prose"><div class="breadcrumb"><a href="/apify-actor-examples/actors/">Actors</a><span>/</span><span>Eventbrite Event Finder with Venue Geocoordinates</span></div><section id="overview"><h1 class="doc-title">Eventbrite Event Finder with Venue Geocoordinates</h1><p class="lede">Browse Eventbrite listings by city or category and get event dates, venue address and geocoordinates, cover images, organizer and ticket link for every event.</p><div class="actions"><a class="button" href="https://apify.com/nimbryxo-studio/eventbrite-event-finder-with-venue-geocoordinates">Open on Apify</a><a class="text-link" href="https://github.com/hasankhokhar2026/apify-actor-examples/blob/main/docs/actors/FdMoiJCc2SsI8M9PA/README.md">GitHub source</a></div></section><section class="schema-section" id="input-schema"><h2>Input schema</h2><p>Input fields, types, required flags, descriptions, defaults, and prefills come from the published definition. Prefill examples are distinct from defaults.</p><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>startUrls</code></td><td>array</td><td>optional</td><td>Eventbrite browse URLs (e.g., https://www.eventbrite.com/d/ny--new-york/all-events/). Any filters in the URL are preserved.</td></tr><tr><td><code>location</code></td><td>string</td><td>optional</td><td>City/region slug to use when no startUrls are provided. Format: &#x27;ny--new-york&#x27;, &#x27;ca--san-francisco&#x27;, &#x27;united-states&#x27;, &#x27;online&#x27;.</td></tr><tr><td><code>category</code></td><td>string</td><td>optional</td><td>Category slug for the search (e.g., &#x27;music&#x27;, &#x27;business&#x27;, &#x27;food-and-drink&#x27;, &#x27;sports&#x27;). Combined with location.</td></tr></tbody></table></div><details><summary>Show all input fields</summary><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>startUrls</code></td><td>array</td><td>optional</td><td>Eventbrite browse URLs (e.g., https://www.eventbrite.com/d/ny--new-york/all-events/). Any filters in the URL are preserved.</td></tr><tr><td><code>location</code></td><td>string</td><td>optional</td><td>City/region slug to use when no startUrls are provided. Format: &#x27;ny--new-york&#x27;, &#x27;ca--san-francisco&#x27;, &#x27;united-states&#x27;, &#x27;online&#x27;.</td></tr><tr><td><code>category</code></td><td>string</td><td>optional</td><td>Category slug for the search (e.g., &#x27;music&#x27;, &#x27;business&#x27;, &#x27;food-and-drink&#x27;, &#x27;sports&#x27;). Combined with location.</td></tr><tr><td><code>maxItems</code></td><td>integer</td><td>optional</td><td>Maximum number of events to return.</td></tr></tbody></table></div></details><p><a href="input-schema.json">Download the published input schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+  &quot;properties&quot;: {
+    &quot;category&quot;: {
+      &quot;description&quot;: &quot;Category slug for the search (e.g., &#x27;music&#x27;, &#x27;business&#x27;, &#x27;food-and-drink&#x27;, &#x27;sports&#x27;). Combined with location.&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;title&quot;: &quot;Category (optional)&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;location&quot;: {
+      &quot;description&quot;: &quot;City/region slug to use when no startUrls are provided. Format: &#x27;ny--new-york&#x27;, &#x27;ca--san-francisco&#x27;, &#x27;united-states&#x27;, &#x27;online&#x27;.&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;title&quot;: &quot;Location (optional)&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;maxItems&quot;: {
+      &quot;default&quot;: 50,
+      &quot;description&quot;: &quot;Maximum number of events to return.&quot;,
+      &quot;maximum&quot;: 500,
+      &quot;minimum&quot;: 1,
+      &quot;prefill&quot;: 5,
+      &quot;title&quot;: &quot;Max Items&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;startUrls&quot;: {
+      &quot;description&quot;: &quot;Eventbrite browse URLs (e.g., https://www.eventbrite.com/d/ny--new-york/all-events/). Any filters in the URL are preserved.&quot;,
+      &quot;editor&quot;: &quot;stringList&quot;,
+      &quot;prefill&quot;: [
+        &quot;https://www.eventbrite.com/d/united-states/all-events/&quot;
+      ],
+      &quot;title&quot;: &quot;Start URLs&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    }
+  },
+  &quot;required&quot;: [],
+  &quot;schemaVersion&quot;: 1,
+  &quot;title&quot;: &quot;Eventbrite Scraper Input&quot;,
+  &quot;type&quot;: &quot;object&quot;
+}
+</code></pre></details></section><section class="schema-section" id="output-schema"><h2>Output schema</h2><p>Published result links and storage locations. This schema is not an exhaustive contract for every field in a dataset record.</p><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>events</code></td><td>string</td><td>optional</td><td>Eventbrite Events</td></tr></tbody></table></div><p><a href="output-schema.json">Download the published output schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+  &quot;actorOutputSchemaVersion&quot;: 1,
+  &quot;description&quot;: &quot;Eventbrite events with dates, venue address and geocoordinates, cover images, category, organizer and ticket link.&quot;,
+  &quot;properties&quot;: {
+    &quot;events&quot;: {
+      &quot;template&quot;: &quot;{{links.apiDefaultDatasetUrl}}/items&quot;,
+      &quot;title&quot;: &quot;Eventbrite Events&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    }
+  },
+  &quot;title&quot;: &quot;Eventbrite Event Finder with Venue Geocoordinates Output&quot;,
+  &quot;type&quot;: &quot;object&quot;
+}
+</code></pre></details></section><section class="schema-section" id="dataset-schema"><h2>Dataset schema</h2><p>Published dataset views and any declared field definitions. A view can select only a subset of the returned record fields.</p><p><a href="dataset-schema.json">Download the published dataset schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+  &quot;actorSpecification&quot;: 1,
+  &quot;fields&quot;: {
+    &quot;properties&quot;: {
+      &quot;category&quot;: {
+        &quot;description&quot;: &quot;Primary Eventbrite category&quot;,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;endDate&quot;: {
+        &quot;description&quot;: &quot;End date (YYYY-MM-DD)&quot;,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;endTime&quot;: {
+        &quot;description&quot;: &quot;End time (HH:MM)&quot;,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;format&quot;: {
+        &quot;description&quot;: &quot;Event format (Concert, Conference, Workshop, etc.)&quot;,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;gallery&quot;: {
+        &quot;description&quot;: &quot;All event images at highest available CDN resolution&quot;,
+        &quot;type&quot;: &quot;array&quot;
+      },
+      &quot;id&quot;: {
+        &quot;description&quot;: &quot;Eventbrite event ID&quot;,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;imageUrl&quot;: {
+        &quot;description&quot;: &quot;Event cover image URL — highest-resolution variant (CDN serves up to 2160px wide)&quot;,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;isCancelled&quot;: {
+        &quot;description&quot;: &quot;Whether the event is cancelled&quot;,
+        &quot;type&quot;: &quot;boolean&quot;
+      },
+      &quot;isOnline&quot;: {
+        &quot;description&quot;: &quot;Whether it&#x27;s an online event&quot;,
+        &quot;type&quot;: &quot;boolean&quot;
+      },
+      &quot;language&quot;: {
+        &quot;description&quot;: &quot;Event language code&quot;,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;latitude&quot;: {
+        &quot;description&quot;: &quot;Latitude&quot;,
+        &quot;type&quot;: &quot;number&quot;
+      },
+      &quot;longitude&quot;: {
+        &quot;description&quot;: &quot;Longitude&quot;,
+        &quot;type&quot;: &quot;number&quot;
+      },
+      &quot;name&quot;: {
+        &quot;description&quot;: &quot;Event name&quot;,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;primaryOrganizerId&quot;: {
+        &quot;description&quot;: &quot;Organizer ID&quot;,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;scrapedAt&quot;: {
+        &quot;description&quot;: &quot;ISO 8601 scrape timestamp&quot;,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;startDate&quot;: {
+        &quot;description&quot;: &quot;Start date (YYYY-MM-DD)&quot;,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;startTime&quot;: {
+        &quot;description&quot;: &quot;Start time (HH:MM)&quot;,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;summary&quot;: {
+        &quot;description&quot;: &quot;Short summary&quot;,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;tags&quot;: {
+        &quot;description&quot;: &quot;Organizer tags / keywords&quot;,
+        &quot;type&quot;: &quot;array&quot;
+      },
+      &quot;ticketsBy&quot;: {
+        &quot;description&quot;: &quot;Ticket provider name&quot;,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;ticketsUrl&quot;: {
+        &quot;description&quot;: &quot;Direct checkout URL&quot;,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;timezone&quot;: {
+        &quot;description&quot;: &quot;IANA timezone (America/New_York)&quot;,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;url&quot;: {
+        &quot;description&quot;: &quot;Event page URL&quot;,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;venueAddress&quot;: {
+        &quot;description&quot;: &quot;Full street address&quot;,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;venueCity&quot;: {
+        &quot;description&quot;: &quot;Venue city&quot;,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;venueCountry&quot;: {
+        &quot;description&quot;: &quot;Venue country code&quot;,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;venueName&quot;: {
+        &quot;description&quot;: &quot;Primary venue name&quot;,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;venuePostalCode&quot;: {
+        &quot;description&quot;: &quot;Postal code&quot;,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;venueRegion&quot;: {
+        &quot;description&quot;: &quot;Venue state/region&quot;,
+        &quot;type&quot;: &quot;string&quot;
+      }
+    },
+    &quot;type&quot;: &quot;object&quot;
+  },
+  &quot;title&quot;: &quot;Eventbrite Events&quot;,
+  &quot;views&quot;: {
+    &quot;detailed&quot;: {
+      &quot;display&quot;: {
+        &quot;component&quot;: &quot;table&quot;,
+        &quot;properties&quot;: {
+          &quot;category&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Category&quot;
+          },
+          &quot;endDate&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;End Date&quot;
+          },
+          &quot;endTime&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;End Time&quot;
+          },
+          &quot;format&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Format&quot;
+          },
+          &quot;gallery&quot;: {
+            &quot;format&quot;: &quot;array&quot;,
+            &quot;label&quot;: &quot;Gallery&quot;
+          },
+          &quot;id&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;ID&quot;
+          },
+          &quot;imageUrl&quot;: {
+            &quot;format&quot;: &quot;link&quot;,
+            &quot;label&quot;: &quot;Image&quot;
+          },
+          &quot;isOnline&quot;: {
+            &quot;format&quot;: &quot;boolean&quot;,
+            &quot;label&quot;: &quot;Online&quot;
+          },
+          &quot;latitude&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Lat&quot;
+          },
+          &quot;longitude&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Lng&quot;
+          },
+          &quot;name&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Name&quot;
+          },
+          &quot;scrapedAt&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Scraped At&quot;
+          },
+          &quot;startDate&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Start Date&quot;
+          },
+          &quot;startTime&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Start Time&quot;
+          },
+          &quot;summary&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Summary&quot;
+          },
+          &quot;tags&quot;: {
+            &quot;format&quot;: &quot;array&quot;,
+            &quot;label&quot;: &quot;Tags&quot;
+          },
+          &quot;ticketsUrl&quot;: {
+            &quot;format&quot;: &quot;link&quot;,
+            &quot;label&quot;: &quot;Tickets&quot;
+          },
+          &quot;timezone&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;TZ&quot;
+          },
+          &quot;url&quot;: {
+            &quot;format&quot;: &quot;link&quot;,
+            &quot;label&quot;: &quot;URL&quot;
+          },
+          &quot;venueAddress&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Address&quot;
+          },
+          &quot;venueCity&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;City&quot;
+          },
+          &quot;venueCountry&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Country&quot;
+          },
+          &quot;venueName&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Venue&quot;
+          },
+          &quot;venuePostalCode&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Postal&quot;
+          },
+          &quot;venueRegion&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Region&quot;
+          }
+        }
+      },
+      &quot;title&quot;: &quot;Detailed Results&quot;,
+      &quot;transformation&quot;: {
+        &quot;fields&quot;: [
+          &quot;id&quot;,
+          &quot;name&quot;,
+          &quot;summary&quot;,
+          &quot;startDate&quot;,
+          &quot;startTime&quot;,
+          &quot;endDate&quot;,
+          &quot;endTime&quot;,
+          &quot;timezone&quot;,
+          &quot;isOnline&quot;,
+          &quot;venueName&quot;,
+          &quot;venueAddress&quot;,
+          &quot;venueCity&quot;,
+          &quot;venueRegion&quot;,
+          &quot;venueCountry&quot;,
+          &quot;venuePostalCode&quot;,
+          &quot;latitude&quot;,
+          &quot;longitude&quot;,
+          &quot;category&quot;,
+          &quot;format&quot;,
+          &quot;tags&quot;,
+          &quot;imageUrl&quot;,
+          &quot;gallery&quot;,
+          &quot;url&quot;,
+          &quot;ticketsUrl&quot;,
+          &quot;scrapedAt&quot;
+        ]
+      }
+    },
+    &quot;overview&quot;: {
+      &quot;display&quot;: {
+        &quot;component&quot;: &quot;table&quot;,
+        &quot;properties&quot;: {
+          &quot;category&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Category&quot;
+          },
+          &quot;name&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Name&quot;
+          },
+          &quot;startDate&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Date&quot;
+          },
+          &quot;startTime&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Time&quot;
+          },
+          &quot;url&quot;: {
+            &quot;format&quot;: &quot;link&quot;,
+            &quot;label&quot;: &quot;URL&quot;
+          },
+          &quot;venueCity&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;City&quot;
+          },
+          &quot;venueName&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Venue&quot;
+          },
+          &quot;venueRegion&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Region&quot;
+          }
+        }
+      },
+      &quot;title&quot;: &quot;Overview&quot;,
+      &quot;transformation&quot;: {
+        &quot;fields&quot;: [
+          &quot;name&quot;,
+          &quot;startDate&quot;,
+          &quot;startTime&quot;,
+          &quot;venueName&quot;,
+          &quot;venueCity&quot;,
+          &quot;venueRegion&quot;,
+          &quot;category&quot;,
+          &quot;url&quot;
+        ]
+      }
+    }
+  }
+}
+</code></pre></details></section><section class="schema-section" id="key-value-schema"><h2>Key-value schema</h2><p>Published key-value store definitions, when provided by this build.</p><p>This definition is not present in the default published build. See the published README for available documentation.</p></section><section id="published-readme"><h2>Published README</h2><details><summary>Read the full published documentation</summary><h2 id="readme-eventbrite-event-finder-with-venue-geocoordinates">Eventbrite Event Finder with Venue Geocoordinates</h2>
+<p>Browse Eventbrite's public listing pages by city, category, or a direct browse URL and get a flat, structured row for every event — venue address, geocoordinates, cover image, organizer and ticket link included.</p>
+<h2 id="readme-what-this-actor-does">What this actor does</h2>
+<ul>
+<li>Reads public Eventbrite &quot;browse&quot; pages (built from a location slug and category slug, or pasted as URLs) and pages through them until <code>maxItems</code> is reached or a page comes back with fewer than 10 events</li>
+<li>Resolves each event's venue into a street address, city, region, country, postal code and latitude/longitude</li>
+<li>Collects the event's cover image at every resolution Eventbrite publishes, from the uncropped master down to the display thumbnail</li>
+<li>Splits each event's tags into its Eventbrite category, format (e.g. Concert, Workshop), and organizer-chosen keyword tags</li>
+<li>Returns every field on every record: when Eventbrite doesn't publish a value, the field holds an empty string, <code>false</code>, an empty array, or <code>0</code> for the coordinates, instead of being left out</li>
+</ul>
+<h2 id="readme-output-per-event">Output per event</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>Eventbrite event ID</td>
+</tr>
+<tr>
+<td><code>name</code></td>
+<td>Event name</td>
+</tr>
+<tr>
+<td><code>summary</code></td>
+<td>Short summary, truncated to 1000 characters</td>
+</tr>
+<tr>
+<td><code>url</code></td>
+<td>Event page URL</td>
+</tr>
+<tr>
+<td><code>ticketsUrl</code></td>
+<td>Direct checkout URL</td>
+</tr>
+<tr>
+<td><code>startDate</code> / <code>startTime</code></td>
+<td>Event start date (<code>YYYY-MM-DD</code>) and time</td>
+</tr>
+<tr>
+<td><code>endDate</code> / <code>endTime</code></td>
+<td>Event end date and time</td>
+</tr>
+<tr>
+<td><code>timezone</code></td>
+<td>IANA timezone of the event (e.g. <code>America/New_York</code>)</td>
+</tr>
+<tr>
+<td><code>isOnline</code></td>
+<td><code>true</code> if the event is a virtual/online event</td>
+</tr>
+<tr>
+<td><code>isCancelled</code></td>
+<td><code>true</code> if Eventbrite marks the event cancelled</td>
+</tr>
+<tr>
+<td><code>venueName</code></td>
+<td>Primary venue name</td>
+</tr>
+<tr>
+<td><code>venueAddress</code></td>
+<td>Full display address of the venue</td>
+</tr>
+<tr>
+<td><code>venueCity</code> / <code>venueRegion</code> / <code>venueCountry</code> / <code>venuePostalCode</code></td>
+<td>Venue address components</td>
+</tr>
+<tr>
+<td><code>latitude</code> / <code>longitude</code></td>
+<td>Venue geocoordinates; both are <code>0</code> when Eventbrite gives no venue location (for example online events)</td>
+</tr>
+<tr>
+<td><code>imageUrl</code></td>
+<td>Highest-resolution cover image Eventbrite serves for the event</td>
+</tr>
+<tr>
+<td><code>gallery</code></td>
+<td>Every image variant Eventbrite exposes for the cover (master, large, medium, small, thumbnail), in descending quality</td>
+</tr>
+<tr>
+<td><code>category</code></td>
+<td>Eventbrite category, e.g. &quot;Music&quot; or &quot;Business&quot;</td>
+</tr>
+<tr>
+<td><code>format</code></td>
+<td>Event format, e.g. &quot;Concert&quot; or &quot;Workshop&quot;</td>
+</tr>
+<tr>
+<td><code>tags</code></td>
+<td>Organizer-assigned keyword tags</td>
+</tr>
+<tr>
+<td><code>primaryOrganizerId</code></td>
+<td>Organizer's Eventbrite ID</td>
+</tr>
+<tr>
+<td><code>ticketsBy</code></td>
+<td>Ticket provider name</td>
+</tr>
+<tr>
+<td><code>language</code></td>
+<td>Listing language code</td>
+</tr>
+<tr>
+<td><code>scrapedAt</code></td>
+<td>ISO 8601 timestamp of when the run started (the same on every record of a run)</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="readme-input">Input</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>startUrls</code></td>
+<td>array</td>
+<td>–</td>
+<td>Eventbrite browse URLs (e.g. <code>https://www.eventbrite.com/d/ny--new-york/all-events/</code>). Any filters already in the URL are kept. URLs that aren't on an Eventbrite domain are ignored. When at least one URL is given, <code>location</code> and <code>category</code> are not used.</td>
+</tr>
+<tr>
+<td><code>location</code></td>
+<td>string</td>
+<td>–</td>
+<td>City/region slug used when no <code>startUrls</code> are given, e.g. <code>ny--new-york</code>, <code>ca--san-francisco</code>, <code>united-states</code>, <code>online</code>. Defaults to <code>united-states</code> when left blank.</td>
+</tr>
+<tr>
+<td><code>category</code></td>
+<td>string</td>
+<td>–</td>
+<td>Category slug, e.g. <code>music</code>, <code>business</code>, <code>food-and-drink</code>, <code>sports</code>. Combined with <code>location</code>; without it, all events are browsed.</td>
+</tr>
+<tr>
+<td><code>maxItems</code></td>
+<td>integer</td>
+<td><code>50</code></td>
+<td>Maximum number of events to return across all URLs (1–500). Events listed under several URLs are returned once.</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="readme-example-search-by-city-and-category">Example: search by city and category</h3>
+<pre><code class="language-json">{
+  &quot;location&quot;: &quot;ny--new-york&quot;,
+  &quot;category&quot;: &quot;music&quot;,
+  &quot;maxItems&quot;: 100
+}
+</code></pre>
+<h3 id="readme-example-browse-online-events-directly">Example: browse online events directly</h3>
+<pre><code class="language-json">{
+  &quot;startUrls&quot;: [&quot;https://www.eventbrite.com/d/online/business/&quot;],
+  &quot;maxItems&quot;: 50
+}
+</code></pre>
+<h3 id="readme-example-paste-a-pre-filtered-browse-url">Example: paste a pre-filtered browse URL</h3>
+<pre><code class="language-json">{
+  &quot;startUrls&quot;: [&quot;https://www.eventbrite.com/d/united-kingdom--london/food-and-drink/&quot;],
+  &quot;maxItems&quot;: 200
+}
+</code></pre>
+<h2 id="readme-use-cases">Use cases</h2>
+<ul>
+<li><strong>Event marketing research</strong> — track what competitors in your category and city are promoting</li>
+<li><strong>Venue analytics</strong> — group events by <code>venueName</code> and coordinates to see which venues are most active</li>
+<li><strong>Calendar and city-guide aggregation</strong> — pull current listings into a local events calendar</li>
+<li><strong>Organizer lead generation</strong> — identify active event organizers in a target region</li>
+<li><strong>Travel planning</strong> — see what's happening in a destination city on specific dates</li>
+</ul>
+<h2 id="readme-faq">FAQ</h2>
+<p><strong>Do I need to log in or provide a proxy?</strong>
+No. The actor reads Eventbrite's public browse pages directly; no account, cookies, or proxy configuration is needed.</p>
+<p><strong>How do I target a specific city?</strong>
+Use the location slug Eventbrite uses in its own URLs, such as <code>ny--new-york</code>, <code>ca--san-francisco</code>, <code>tx--austin</code>, <code>united-kingdom</code>, or <code>online</code> for virtual-only events. You can also paste any Eventbrite browse URL straight into <code>startUrls</code>.</p>
+<p><strong>Why are some fields empty strings instead of missing?</strong>
+Every event record always contains the full set of fields; when Eventbrite doesn't publish a value (for example, no format tag or no venue for an online event), the field is returned as an empty string, <code>false</code>, an empty array, or <code>0</code> (for <code>latitude</code>/<code>longitude</code>) rather than being left out. Treat <code>0, 0</code> coordinates as &quot;unknown&quot;.</p>
+<p><strong>Does this include both free and paid events?</strong>
+The actor doesn't filter by price, so it returns whatever the browse page lists. Ticket prices are not part of the output; use <code>ticketsUrl</code> to check them.</p>
+<p><strong>How current is the data?</strong>
+Browse pages reflect Eventbrite's live listings, so newly published or updated events show up on the next run.</p>
+<p><strong>Is this affiliated with Eventbrite?</strong>
+No. This actor independently reads Eventbrite's public pages and is not affiliated with, endorsed by, or sponsored by Eventbrite.</p>
+<p><strong>Why might I get fewer events than <code>maxItems</code>?</strong>
+If a location/category combination has fewer live events than requested, or the browse pages run out before <code>maxItems</code> is reached, the actor returns everything it found instead of padding the output.</p>
+</details></section><section id="python-quickstart"><h2>Python quickstart</h2><p>Use a schema-derived input and the Python standard library to start a run. An Apify account and token are required for execution.</p><p><a href="/apify-actor-examples/guides/FdMoiJCc2SsI8M9PA/">Open the step-by-step Python guide →</a></p></section><p class="source-note">Source build <code>egKyfIVQg5evzisKK</code>. Documentation is regenerated from the default published build; private drafts are not included.</p></article></div></main><footer class="footer"><strong>Nimbryxo Studio</strong><div class="footer-links"><a href="/apify-actor-examples/topics/">Topics</a><a href="/apify-actor-examples/sources/">Documentation sources</a><a href="https://apify.com/nimbryxo-studio">Apify</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></div></footer></body></html>

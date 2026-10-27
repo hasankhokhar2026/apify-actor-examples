@@ -1,141 +1,191 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src &#x27;self&#x27;; script-src &#x27;self&#x27; &#x27;sha256-sze8KeS8oryC6GQZ17oYjm5NNR1SKWU2Bm/Lp1MuZik=&#x27;; style-src &#x27;self&#x27;; img-src &#x27;self&#x27; https: data:; base-uri &#x27;self&#x27;; form-action &#x27;self&#x27;; object-src &#x27;none&#x27;"><title>Product Hunt Launch &amp; Topic Data Exporter | Nimbryxo Studio</title><meta name="description" content="Export Product Hunt launches with votes, comments, makers, hunter and topics from the daily leaderboard, a topic, a maker&#x27;s history, or specific product slugs."><meta name="robots" content="index,follow"><link rel="canonical" href="https://hasankhokhar2026.github.io/apify-actor-examples/actors/GAAwZYbMvugYH1EkV/"><meta property="og:title" content="Product Hunt Launch &amp; Topic Data Exporter | Nimbryxo Studio"><meta property="og:description" content="Export Product Hunt launches with votes, comments, makers, hunter and topics from the daily leaderboard, a topic, a maker&#x27;s history, or specific product slugs."><meta property="og:type" content="website"><meta property="og:url" content="https://hasankhokhar2026.github.io/apify-actor-examples/actors/GAAwZYbMvugYH1EkV/"><meta property="og:site_name" content="Nimbryxo Studio"><meta name="twitter:card" content="summary"><link rel="icon" href="/apify-actor-examples/assets/mark.svg?v=2d20f9dc334a" type="image/svg+xml"><link rel="stylesheet" href="/apify-actor-examples/assets/site.css?v=39545fd4a399"><link rel="stylesheet" href="/apify-actor-examples/assets/brand.css?v=eb0f935ade25"><link rel="alternate" type="application/rss+xml" title="Nimbryxo Studio guides" href="/apify-actor-examples/feed.xml"><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization","name":"Nimbryxo Studio","url":"https://hasankhokhar2026.github.io/apify-actor-examples/","sameAs":["https://apify.com/nimbryxo-studio"]},{"@type":"WebSite","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#website","name":"Nimbryxo Studio","url":"https://hasankhokhar2026.github.io/apify-actor-examples/","publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"inLanguage":"en"},{"@type":"WebPage","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/GAAwZYbMvugYH1EkV/#webpage","name":"Product Hunt Launch & Topic Data Exporter","description":"Export Product Hunt launches with votes, comments, makers, hunter and topics from the daily leaderboard, a topic, a maker's history, or specific product slugs.","url":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/GAAwZYbMvugYH1EkV/","isPartOf":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#website"},"publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"inLanguage":"en","mainEntity":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/GAAwZYbMvugYH1EkV/#article"},"breadcrumb":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/GAAwZYbMvugYH1EkV/#breadcrumb"}},{"@type":"TechArticle","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/GAAwZYbMvugYH1EkV/#article","headline":"Product Hunt Launch & Topic Data Exporter","name":"Product Hunt Launch & Topic Data Exporter","description":"Export Product Hunt launches with votes, comments, makers, hunter and topics from the daily leaderboard, a topic, a maker's history, or specific product slugs.","url":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/GAAwZYbMvugYH1EkV/","author":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"mainEntityOfPage":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/GAAwZYbMvugYH1EkV/#webpage"},"inLanguage":"en"},{"@type":"BreadcrumbList","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/GAAwZYbMvugYH1EkV/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Nimbryxo Studio","item":"https://hasankhokhar2026.github.io/apify-actor-examples/"},{"@type":"ListItem","position":2,"name":"Actors","item":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/"},{"@type":"ListItem","position":3,"name":"Product Hunt Launch & Topic Data Exporter","item":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/GAAwZYbMvugYH1EkV/"}]}]}</script><script src="/apify-actor-examples/assets/site.js?v=7cabac48dd31" defer></script></head><body class="theme-studio"><a href="#main" class="skip-link">Skip to content</a><header><div class="inner"><a href="/apify-actor-examples/" class="brand"><img src="/apify-actor-examples/assets/mark.svg?v=2d20f9dc334a" alt="" width="29" height="29">Nimbryxo Studio</a><nav aria-label="Main navigation"><a href="/apify-actor-examples/actors/" aria-current="page">Actors</a><a href="/apify-actor-examples/guides/">Guides</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></nav></div></header><main id="main"><div class="doc-layout"><aside class="contents" aria-label="On this page"><strong>Contents</strong><a href="#overview">Overview</a><a href="#published-readme">Published README</a><a href="#input-schema">Input schema</a><a href="#output-schema">Output schema</a><a href="#dataset-schema">Dataset schema</a><a href="#python-quickstart">Python quickstart</a></aside><article class="prose"><div class="breadcrumb"><a href="/apify-actor-examples/actors/">Actors</a><span>/</span><span>Product Hunt Launch &amp; Topic Data Exporter</span></div><section id="overview"><h1 class="doc-title">Product Hunt Launch &amp; Topic Data Exporter</h1><p class="lede">Export Product Hunt launches with votes, comments, makers, hunter and topics from the daily leaderboard, a topic, a maker&#x27;s history, or specific product slugs.</p><div class="actions"><a class="button" href="https://apify.com/nimbryxo-studio/product-hunt-launch-and-topic-data-exporter">Open on Apify</a><a class="text-link" href="https://github.com/hasankhokhar2026/apify-actor-examples/blob/main/docs/actors/GAAwZYbMvugYH1EkV/README.md">GitHub source</a></div></section><section class="schema-section" id="input-schema"><h2>Input schema</h2><p>Input fields, types, required flags, descriptions, defaults, and prefills come from the published definition. Prefill examples are distinct from defaults.</p><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>apiToken</code></td><td>string</td><td>optional</td><td>Optional Bearer token from https://api.producthunt.com/v2/oauth/applications (free, instant). Without a token, mode=dailyLeaderboard works via public-page scraping with limited fields (no description/makers/media). Token is required for topic, userLaunches, and productDetail modes, and unlocks full launch metadata in dailyLeaderboard.</td></tr><tr><td><code>mode</code></td><td>string</td><td>required</td><td>What to fetch. `dailyLeaderboard` returns featured launches sorted by votes; `topic` returns launches in a specific topic; `userLaunches` returns posts by a user; `productDetail` returns a single product by slug.</td></tr><tr><td><code>topicSlugs</code></td><td>array</td><td>optional</td><td>Topic slugs from Product Hunt URLs (e.g. `artificial-intelligence`, `developer-tools`, `productivity`). Required for `mode=topic`.</td></tr></tbody></table></div><details><summary>Show all input fields</summary><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>apiToken</code></td><td>string</td><td>optional</td><td>Optional Bearer token from https://api.producthunt.com/v2/oauth/applications (free, instant). Without a token, mode=dailyLeaderboard works via public-page scraping with limited fields (no description/makers/media). Token is required for topic, userLaunches, and productDetail modes, and unlocks full launch metadata in dailyLeaderboard.</td></tr><tr><td><code>mode</code></td><td>string</td><td>required</td><td>What to fetch. `dailyLeaderboard` returns featured launches sorted by votes; `topic` returns launches in a specific topic; `userLaunches` returns posts by a user; `productDetail` returns a single product by slug.</td></tr><tr><td><code>topicSlugs</code></td><td>array</td><td>optional</td><td>Topic slugs from Product Hunt URLs (e.g. `artificial-intelligence`, `developer-tools`, `productivity`). Required for `mode=topic`.</td></tr><tr><td><code>userSlugs</code></td><td>array</td><td>optional</td><td>Username slugs from Product Hunt URLs (e.g. `rrhoover`, `tibo_maker`). Required for `mode=userLaunches`.</td></tr><tr><td><code>productSlugs</code></td><td>array</td><td>optional</td><td>Product slugs (e.g. `notion`, `figma`). Required for `mode=productDetail`.</td></tr><tr><td><code>sortBy</code></td><td>string</td><td>optional</td><td>Sort order for posts. RANKING is daily-rank order; VOTES is most-upvoted overall; NEWEST is most recent; FEATURED_AT is featured-date order.</td></tr><tr><td><code>featuredOnly</code></td><td>boolean</td><td>optional</td><td>Only emit launches that were officially featured on the Product Hunt homepage.</td></tr><tr><td><code>dateRangeFrom</code></td><td>string</td><td>optional</td><td>Drop launches posted before this date.</td></tr><tr><td><code>dateRangeTo</code></td><td>string</td><td>optional</td><td>Drop launches posted after this date.</td></tr><tr><td><code>minVotes</code></td><td>integer</td><td>optional</td><td>Drop launches with fewer up-votes than this.</td></tr><tr><td><code>minComments</code></td><td>integer</td><td>optional</td><td>Drop launches with fewer comments than this.</td></tr><tr><td><code>tagAnyOf</code></td><td>array</td><td>optional</td><td>Only emit launches that have at least one of these topic slugs (e.g. `productivity`, `saas`).</td></tr><tr><td><code>includeMakers</code></td><td>boolean</td><td>optional</td><td>Include the makers array (people who built the product). Adds 1 GraphQL field — minor cost.</td></tr><tr><td><code>includeMedia</code></td><td>boolean</td><td>optional</td><td>Include the media array (screenshots, videos uploaded with the launch).</td></tr><tr><td><code>maxItems</code></td><td>integer</td><td>optional</td><td>Hard cap on emitted records.</td></tr></tbody></table></div></details><p><a href="input-schema.json">Download the published input schema</a></p><details><summary>View complete JSON</summary><pre><code>{
-  &quot;description&quot;: &quot;Scrape Product Hunt launches via the official GraphQL API. Free API token required (https://api.producthunt.com/v2/oauth/applications).&quot;,
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src &#x27;self&#x27;; script-src &#x27;self&#x27; &#x27;sha256-sze8KeS8oryC6GQZ17oYjm5NNR1SKWU2Bm/Lp1MuZik=&#x27;; style-src &#x27;self&#x27;; img-src &#x27;self&#x27; https: data:; base-uri &#x27;self&#x27;; form-action &#x27;self&#x27;; object-src &#x27;none&#x27;"><title>Product Hunt Launch &amp; Topic Data Exporter | Nimbryxo Studio</title><meta name="description" content="Export Product Hunt launches with votes, comments, makers, hunter and topics from the daily leaderboard, a topic, a maker&#x27;s history, or specific product slugs."><meta name="robots" content="index,follow"><link rel="canonical" href="https://hasankhokhar2026.github.io/apify-actor-examples/actors/GAAwZYbMvugYH1EkV/"><meta property="og:title" content="Product Hunt Launch &amp; Topic Data Exporter | Nimbryxo Studio"><meta property="og:description" content="Export Product Hunt launches with votes, comments, makers, hunter and topics from the daily leaderboard, a topic, a maker&#x27;s history, or specific product slugs."><meta property="og:type" content="website"><meta property="og:url" content="https://hasankhokhar2026.github.io/apify-actor-examples/actors/GAAwZYbMvugYH1EkV/"><meta property="og:site_name" content="Nimbryxo Studio"><meta name="twitter:card" content="summary"><link rel="icon" href="/apify-actor-examples/assets/mark.svg?v=2d20f9dc334a" type="image/svg+xml"><link rel="stylesheet" href="/apify-actor-examples/assets/site.css?v=39545fd4a399"><link rel="stylesheet" href="/apify-actor-examples/assets/brand.css?v=eb0f935ade25"><link rel="alternate" type="application/rss+xml" title="Nimbryxo Studio guides" href="/apify-actor-examples/feed.xml"><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization","name":"Nimbryxo Studio","url":"https://hasankhokhar2026.github.io/apify-actor-examples/","sameAs":["https://apify.com/nimbryxo-studio"]},{"@type":"WebSite","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#website","name":"Nimbryxo Studio","url":"https://hasankhokhar2026.github.io/apify-actor-examples/","publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"inLanguage":"en"},{"@type":"WebPage","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/GAAwZYbMvugYH1EkV/#webpage","name":"Product Hunt Launch & Topic Data Exporter","description":"Export Product Hunt launches with votes, comments, makers, hunter and topics from the daily leaderboard, a topic, a maker's history, or specific product slugs.","url":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/GAAwZYbMvugYH1EkV/","isPartOf":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#website"},"publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"inLanguage":"en","mainEntity":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/GAAwZYbMvugYH1EkV/#article"},"breadcrumb":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/GAAwZYbMvugYH1EkV/#breadcrumb"}},{"@type":"TechArticle","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/GAAwZYbMvugYH1EkV/#article","headline":"Product Hunt Launch & Topic Data Exporter","name":"Product Hunt Launch & Topic Data Exporter","description":"Export Product Hunt launches with votes, comments, makers, hunter and topics from the daily leaderboard, a topic, a maker's history, or specific product slugs.","url":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/GAAwZYbMvugYH1EkV/","author":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"mainEntityOfPage":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/GAAwZYbMvugYH1EkV/#webpage"},"inLanguage":"en"},{"@type":"BreadcrumbList","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/GAAwZYbMvugYH1EkV/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Nimbryxo Studio","item":"https://hasankhokhar2026.github.io/apify-actor-examples/"},{"@type":"ListItem","position":2,"name":"Actors","item":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/"},{"@type":"ListItem","position":3,"name":"Product Hunt Launch & Topic Data Exporter","item":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/GAAwZYbMvugYH1EkV/"}]}]}</script><script src="/apify-actor-examples/assets/site.js?v=7cabac48dd31" defer></script></head><body class="theme-studio"><a href="#main" class="skip-link">Skip to content</a><header><div class="inner"><a href="/apify-actor-examples/" class="brand"><img src="/apify-actor-examples/assets/mark.svg?v=2d20f9dc334a" alt="" width="29" height="29">Nimbryxo Studio</a><nav aria-label="Main navigation"><a href="/apify-actor-examples/actors/" aria-current="page">Actors</a><a href="/apify-actor-examples/guides/">Guides</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></nav></div></header><main id="main"><div class="doc-layout"><aside class="contents" aria-label="On this page"><strong>Contents</strong><a href="#overview">Overview</a><a href="#published-readme">Published README</a><a href="#input-schema">Input schema</a><a href="#output-schema">Output schema</a><a href="#dataset-schema">Dataset schema</a><a href="#python-quickstart">Python quickstart</a></aside><article class="prose"><div class="breadcrumb"><a href="/apify-actor-examples/actors/">Actors</a><span>/</span><span>Product Hunt Launch &amp; Topic Data Exporter</span></div><section id="overview"><h1 class="doc-title">Product Hunt Launch &amp; Topic Data Exporter</h1><p class="lede">Export Product Hunt launches with votes, comments, makers, hunter and topics from the daily leaderboard, a topic, a maker&#x27;s history, or specific product slugs.</p><div class="actions"><a class="button" href="https://apify.com/nimbryxo-studio/product-hunt-launch-and-topic-data-exporter">Open on Apify</a><a class="text-link" href="https://github.com/hasankhokhar2026/apify-actor-examples/blob/main/docs/actors/GAAwZYbMvugYH1EkV/README.md">GitHub source</a></div></section><section class="schema-section" id="input-schema"><h2>Input schema</h2><p>Input fields, types, required flags, descriptions, defaults, and prefills come from the published definition. Prefill examples are distinct from defaults.</p><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>mode</code></td><td>string</td><td>required</td><td>Pick the launch feed, a leaderboard period, a date range, a topic, a category, a keyword search, specific products, or specific launches.</td></tr><tr><td><code>period</code></td><td>string</td><td>optional</td><td>Used when mode is `leaderboard`. Daily = one day, weekly = ISO week, monthly = calendar month, yearly = calendar year.</td></tr><tr><td><code>date</code></td><td>string</td><td>optional</td><td>Optional date for mode=leaderboard, in YYYY-MM-DD form. The daily period uses the exact day; weekly, monthly and yearly use that day&#x27;s ISO week, month or year. Defaults to today.</td></tr></tbody></table></div><details><summary>Show all input fields</summary><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>mode</code></td><td>string</td><td>required</td><td>Pick the launch feed, a leaderboard period, a date range, a topic, a category, a keyword search, specific products, or specific launches.</td></tr><tr><td><code>period</code></td><td>string</td><td>optional</td><td>Used when mode is `leaderboard`. Daily = one day, weekly = ISO week, monthly = calendar month, yearly = calendar year.</td></tr><tr><td><code>date</code></td><td>string</td><td>optional</td><td>Optional date for mode=leaderboard, in YYYY-MM-DD form. The daily period uses the exact day; weekly, monthly and yearly use that day&#x27;s ISO week, month or year. Defaults to today.</td></tr><tr><td><code>from</code></td><td>string</td><td>optional</td><td>Optional first day for mode=dailyRange, in YYYY-MM-DD form. Defaults to the `to` date, or yesterday.</td></tr><tr><td><code>to</code></td><td>string</td><td>optional</td><td>Optional last day for mode=dailyRange, in YYYY-MM-DD form. Defaults to the `from` date, or yesterday.</td></tr><tr><td><code>topicSlugs</code></td><td>array</td><td>optional</td><td>Topics for mode=topic, e.g. `artificial-intelligence`, `developer-tools`, or a full `/topics/...` URL.</td></tr><tr><td><code>categorySlugs</code></td><td>array</td><td>optional</td><td>Categories for mode=category, e.g. `ai-code-editors`, `productivity`, or a full `/categories/...` URL.</td></tr><tr><td><code>searchQuery</code></td><td>string</td><td>optional</td><td>Keyword for mode=search, e.g. `notion`, `ai browser`, `invoice`. Product Hunt searches products, then the actor resolves each product&#x27;s latest launch.</td></tr><tr><td><code>productSlugs</code></td><td>array</td><td>optional</td><td>Products for mode=product, e.g. `notion`, `figma`, or full `https://www.producthunt.com/products/...` URLs. Each product&#x27;s latest launch is returned.</td></tr><tr><td><code>postIds</code></td><td>array</td><td>optional</td><td>Launches for mode=launch, e.g. `strawberry-1-0`, or full `https://www.producthunt.com/products/...?launch=...` URLs.</td></tr><tr><td><code>maxItems</code></td><td>integer</td><td>optional</td><td>Stop after this many launch records. One record is one launch (comments and reviews stay attached to it).</td></tr><tr><td><code>maxPages</code></td><td>integer</td><td>optional</td><td>Page cap per feed, topic, category, search query, product history, comment thread or review feed. A full Product Hunt day is about 40-60 pages of 20 launches.</td></tr><tr><td><code>maxComments</code></td><td>integer</td><td>optional</td><td>Used when `includeComments` is on. Comments are read 20 threads per page, including replies, and capped at this number.</td></tr><tr><td><code>maxReviews</code></td><td>integer</td><td>optional</td><td>Used when `includeReviews` is on. Reviews are read 10 per page and capped at this number.</td></tr><tr><td><code>includeDetails</code></td><td>boolean</td><td>optional</td><td>Fetch the full launch page for description, hunter, makers, media, website, pricing, ranks and review score. Turn off for a faster, lighter feed.</td></tr><tr><td><code>includeComments</code></td><td>boolean</td><td>optional</td><td>Attach the discussion thread (comments and nested replies) to each launch. Adds one or more requests per launch.</td></tr><tr><td><code>includeReviews</code></td><td>boolean</td><td>optional</td><td>Attach Product Hunt&#x27;s detailed reviews, ratings, pros and cons to each launch. Adds one request per 10 reviews.</td></tr><tr><td><code>includeHistory</code></td><td>boolean</td><td>optional</td><td>Attach every earlier launch from the same product, newest first.</td></tr><tr><td><code>featuredOnly</code></td><td>boolean</td><td>optional</td><td>Keep only launches that Product Hunt selected for the homepage.</td></tr><tr><td><code>proxyConfiguration</code></td><td>object</td><td>optional</td><td>Optional. The actor works without a proxy; add one only if Product Hunt blocks your network or you need a specific location.</td></tr></tbody></table></div></details><p><a href="input-schema.json">Download the published input schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+  &quot;description&quot;: &quot;Collect Product Hunt launches, products, comments and reviews without a Product Hunt account or API token.&quot;,
   &quot;properties&quot;: {
-    &quot;apiToken&quot;: {
-      &quot;description&quot;: &quot;Optional Bearer token from https://api.producthunt.com/v2/oauth/applications (free, instant). Without a token, mode=dailyLeaderboard works via public-page scraping with limited fields (no description/makers/media). Token is required for topic, userLaunches, and productDetail modes, and unlocks full launch metadata in dailyLeaderboard.&quot;,
-      &quot;editor&quot;: &quot;textfield&quot;,
-      &quot;isSecret&quot;: true,
-      &quot;title&quot;: &quot;Product Hunt API token (optional)&quot;,
-      &quot;type&quot;: &quot;string&quot;
+    &quot;categorySlugs&quot;: {
+      &quot;default&quot;: [],
+      &quot;description&quot;: &quot;Categories for mode=category, e.g. `ai-code-editors`, `productivity`, or a full `/categories/...` URL.&quot;,
+      &quot;editor&quot;: &quot;stringList&quot;,
+      &quot;prefill&quot;: [],
+      &quot;title&quot;: &quot;Category slugs or URLs&quot;,
+      &quot;type&quot;: &quot;array&quot;
     },
-    &quot;dateRangeFrom&quot;: {
-      &quot;description&quot;: &quot;Drop launches posted before this date.&quot;,
+    &quot;date&quot;: {
+      &quot;description&quot;: &quot;Optional date for mode=leaderboard, in YYYY-MM-DD form. The daily period uses the exact day; weekly, monthly and yearly use that day&#x27;s ISO week, month or year. Defaults to today.&quot;,
       &quot;editor&quot;: &quot;textfield&quot;,
-      &quot;title&quot;: &quot;Date range from (YYYY-MM-DD)&quot;,
-      &quot;type&quot;: &quot;string&quot;
-    },
-    &quot;dateRangeTo&quot;: {
-      &quot;description&quot;: &quot;Drop launches posted after this date.&quot;,
-      &quot;editor&quot;: &quot;textfield&quot;,
-      &quot;title&quot;: &quot;Date range to (YYYY-MM-DD)&quot;,
+      &quot;title&quot;: &quot;Leaderboard date&quot;,
       &quot;type&quot;: &quot;string&quot;
     },
     &quot;featuredOnly&quot;: {
       &quot;default&quot;: false,
-      &quot;description&quot;: &quot;Only emit launches that were officially featured on the Product Hunt homepage.&quot;,
+      &quot;description&quot;: &quot;Keep only launches that Product Hunt selected for the homepage.&quot;,
       &quot;prefill&quot;: false,
-      &quot;title&quot;: &quot;Featured only&quot;,
+      &quot;title&quot;: &quot;Featured launches only&quot;,
       &quot;type&quot;: &quot;boolean&quot;
     },
-    &quot;includeMakers&quot;: {
-      &quot;default&quot;: true,
-      &quot;description&quot;: &quot;Include the makers array (people who built the product). Adds 1 GraphQL field — minor cost.&quot;,
-      &quot;prefill&quot;: true,
-      &quot;title&quot;: &quot;Include makers&quot;,
-      &quot;type&quot;: &quot;boolean&quot;
+    &quot;from&quot;: {
+      &quot;description&quot;: &quot;Optional first day for mode=dailyRange, in YYYY-MM-DD form. Defaults to the `to` date, or yesterday.&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;title&quot;: &quot;From date&quot;,
+      &quot;type&quot;: &quot;string&quot;
     },
-    &quot;includeMedia&quot;: {
+    &quot;includeComments&quot;: {
       &quot;default&quot;: false,
-      &quot;description&quot;: &quot;Include the media array (screenshots, videos uploaded with the launch).&quot;,
+      &quot;description&quot;: &quot;Attach the discussion thread (comments and nested replies) to each launch. Adds one or more requests per launch.&quot;,
       &quot;prefill&quot;: false,
-      &quot;title&quot;: &quot;Include media (screenshots / videos)&quot;,
+      &quot;title&quot;: &quot;Include comments and replies&quot;,
       &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;includeDetails&quot;: {
+      &quot;default&quot;: true,
+      &quot;description&quot;: &quot;Fetch the full launch page for description, hunter, makers, media, website, pricing, ranks and review score. Turn off for a faster, lighter feed.&quot;,
+      &quot;prefill&quot;: true,
+      &quot;title&quot;: &quot;Include launch and product details&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;includeHistory&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;Attach every earlier launch from the same product, newest first.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Include launch history&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;includeReviews&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;Attach Product Hunt&#x27;s detailed reviews, ratings, pros and cons to each launch. Adds one request per 10 reviews.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Include product reviews&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;maxComments&quot;: {
+      &quot;default&quot;: 50,
+      &quot;description&quot;: &quot;Used when `includeComments` is on. Comments are read 20 threads per page, including replies, and capped at this number.&quot;,
+      &quot;maximum&quot;: 500,
+      &quot;minimum&quot;: 1,
+      &quot;prefill&quot;: 20,
+      &quot;title&quot;: &quot;Maximum comments per launch&quot;,
+      &quot;type&quot;: &quot;integer&quot;
     },
     &quot;maxItems&quot;: {
       &quot;default&quot;: 50,
-      &quot;description&quot;: &quot;Hard cap on emitted records.&quot;,
-      &quot;maximum&quot;: 5000,
+      &quot;description&quot;: &quot;Stop after this many launch records. One record is one launch (comments and reviews stay attached to it).&quot;,
+      &quot;maximum&quot;: 1000,
       &quot;minimum&quot;: 1,
-      &quot;prefill&quot;: 50,
-      &quot;title&quot;: &quot;Max items&quot;,
+      &quot;prefill&quot;: 3,
+      &quot;title&quot;: &quot;Maximum records&quot;,
       &quot;type&quot;: &quot;integer&quot;
     },
-    &quot;minComments&quot;: {
-      &quot;description&quot;: &quot;Drop launches with fewer comments than this.&quot;,
-      &quot;maximum&quot;: 100000,
-      &quot;minimum&quot;: 0,
-      &quot;title&quot;: &quot;Min comments&quot;,
+    &quot;maxPages&quot;: {
+      &quot;default&quot;: 10,
+      &quot;description&quot;: &quot;Page cap per feed, topic, category, search query, product history, comment thread or review feed. A full Product Hunt day is about 40-60 pages of 20 launches.&quot;,
+      &quot;maximum&quot;: 60,
+      &quot;minimum&quot;: 1,
+      &quot;prefill&quot;: 1,
+      &quot;title&quot;: &quot;Maximum pages per source&quot;,
       &quot;type&quot;: &quot;integer&quot;
     },
-    &quot;minVotes&quot;: {
-      &quot;description&quot;: &quot;Drop launches with fewer up-votes than this.&quot;,
-      &quot;maximum&quot;: 100000,
-      &quot;minimum&quot;: 0,
-      &quot;title&quot;: &quot;Min votes&quot;,
+    &quot;maxReviews&quot;: {
+      &quot;default&quot;: 20,
+      &quot;description&quot;: &quot;Used when `includeReviews` is on. Reviews are read 10 per page and capped at this number.&quot;,
+      &quot;maximum&quot;: 200,
+      &quot;minimum&quot;: 1,
+      &quot;prefill&quot;: 10,
+      &quot;title&quot;: &quot;Maximum reviews per product&quot;,
       &quot;type&quot;: &quot;integer&quot;
     },
     &quot;mode&quot;: {
-      &quot;default&quot;: &quot;dailyLeaderboard&quot;,
-      &quot;description&quot;: &quot;What to fetch. `dailyLeaderboard` returns featured launches sorted by votes; `topic` returns launches in a specific topic; `userLaunches` returns posts by a user; `productDetail` returns a single product by slug.&quot;,
+      &quot;default&quot;: &quot;latest&quot;,
+      &quot;description&quot;: &quot;Pick the launch feed, a leaderboard period, a date range, a topic, a category, a keyword search, specific products, or specific launches.&quot;,
       &quot;editor&quot;: &quot;select&quot;,
       &quot;enum&quot;: [
-        &quot;dailyLeaderboard&quot;,
+        &quot;latest&quot;,
+        &quot;leaderboard&quot;,
+        &quot;dailyRange&quot;,
         &quot;topic&quot;,
-        &quot;userLaunches&quot;,
-        &quot;productDetail&quot;
+        &quot;category&quot;,
+        &quot;search&quot;,
+        &quot;product&quot;,
+        &quot;launch&quot;
       ],
       &quot;enumTitles&quot;: [
-        &quot;Daily / All launches (sortable)&quot;,
-        &quot;Launches by topic&quot;,
-        &quot;Launches by user (maker or hunter)&quot;,
-        &quot;Single product detail (by slug)&quot;
+        &quot;Latest launches (today&#x27;s full feed)&quot;,
+        &quot;Leaderboard (daily, weekly, monthly or yearly)&quot;,
+        &quot;Daily range (one or more days)&quot;,
+        &quot;Topic launches&quot;,
+        &quot;Category launches&quot;,
+        &quot;Keyword product search&quot;,
+        &quot;Specific products (latest launch)&quot;,
+        &quot;Specific launches&quot;
       ],
-      &quot;prefill&quot;: &quot;dailyLeaderboard&quot;,
-      &quot;title&quot;: &quot;Mode&quot;,
+      &quot;prefill&quot;: &quot;latest&quot;,
+      &quot;title&quot;: &quot;What to scrape&quot;,
       &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;period&quot;: {
+      &quot;default&quot;: &quot;daily&quot;,
+      &quot;description&quot;: &quot;Used when mode is `leaderboard`. Daily = one day, weekly = ISO week, monthly = calendar month, yearly = calendar year.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;daily&quot;,
+        &quot;weekly&quot;,
+        &quot;monthly&quot;,
+        &quot;yearly&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;Daily&quot;,
+        &quot;Weekly&quot;,
+        &quot;Monthly&quot;,
+        &quot;Yearly&quot;
+      ],
+      &quot;prefill&quot;: &quot;daily&quot;,
+      &quot;title&quot;: &quot;Leaderboard period&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;postIds&quot;: {
+      &quot;default&quot;: [],
+      &quot;description&quot;: &quot;Launches for mode=launch, e.g. `strawberry-1-0`, or full `https://www.producthunt.com/products/...?launch=...` URLs.&quot;,
+      &quot;editor&quot;: &quot;stringList&quot;,
+      &quot;prefill&quot;: [],
+      &quot;title&quot;: &quot;Launch slugs or URLs&quot;,
+      &quot;type&quot;: &quot;array&quot;
     },
     &quot;productSlugs&quot;: {
       &quot;default&quot;: [],
-      &quot;description&quot;: &quot;Product slugs (e.g. `notion`, `figma`). Required for `mode=productDetail`.&quot;,
+      &quot;description&quot;: &quot;Products for mode=product, e.g. `notion`, `figma`, or full `https://www.producthunt.com/products/...` URLs. Each product&#x27;s latest launch is returned.&quot;,
       &quot;editor&quot;: &quot;stringList&quot;,
       &quot;prefill&quot;: [],
-      &quot;title&quot;: &quot;Product slugs (mode=productDetail)&quot;,
+      &quot;title&quot;: &quot;Product slugs or URLs&quot;,
       &quot;type&quot;: &quot;array&quot;
     },
-    &quot;sortBy&quot;: {
-      &quot;default&quot;: &quot;RANKING&quot;,
-      &quot;description&quot;: &quot;Sort order for posts. RANKING is daily-rank order; VOTES is most-upvoted overall; NEWEST is most recent; FEATURED_AT is featured-date order.&quot;,
-      &quot;editor&quot;: &quot;select&quot;,
-      &quot;enum&quot;: [
-        &quot;RANKING&quot;,
-        &quot;VOTES&quot;,
-        &quot;NEWEST&quot;,
-        &quot;FEATURED_AT&quot;
-      ],
-      &quot;enumTitles&quot;: [
-        &quot;Daily ranking (default for leaderboard)&quot;,
-        &quot;Most votes&quot;,
-        &quot;Newest&quot;,
-        &quot;Featured-at date&quot;
-      ],
-      &quot;prefill&quot;: &quot;RANKING&quot;,
-      &quot;title&quot;: &quot;Sort by&quot;,
+    &quot;proxyConfiguration&quot;: {
+      &quot;default&quot;: {
+        &quot;useApifyProxy&quot;: false
+      },
+      &quot;description&quot;: &quot;Optional. The actor works without a proxy; add one only if Product Hunt blocks your network or you need a specific location.&quot;,
+      &quot;editor&quot;: &quot;proxy&quot;,
+      &quot;prefill&quot;: {
+        &quot;useApifyProxy&quot;: true
+      },
+      &quot;title&quot;: &quot;Proxy configuration&quot;,
+      &quot;type&quot;: &quot;object&quot;
+    },
+    &quot;searchQuery&quot;: {
+      &quot;description&quot;: &quot;Keyword for mode=search, e.g. `notion`, `ai browser`, `invoice`. Product Hunt searches products, then the actor resolves each product&#x27;s latest launch.&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;title&quot;: &quot;Search query&quot;,
       &quot;type&quot;: &quot;string&quot;
     },
-    &quot;tagAnyOf&quot;: {
-      &quot;default&quot;: [],
-      &quot;description&quot;: &quot;Only emit launches that have at least one of these topic slugs (e.g. `productivity`, `saas`).&quot;,
-      &quot;editor&quot;: &quot;stringList&quot;,
-      &quot;prefill&quot;: [],
-      &quot;title&quot;: &quot;Tags / topics filter&quot;,
-      &quot;type&quot;: &quot;array&quot;
+    &quot;to&quot;: {
+      &quot;description&quot;: &quot;Optional last day for mode=dailyRange, in YYYY-MM-DD form. Defaults to the `from` date, or yesterday.&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;title&quot;: &quot;To date&quot;,
+      &quot;type&quot;: &quot;string&quot;
     },
     &quot;topicSlugs&quot;: {
       &quot;default&quot;: [],
-      &quot;description&quot;: &quot;Topic slugs from Product Hunt URLs (e.g. `artificial-intelligence`, `developer-tools`, `productivity`). Required for `mode=topic`.&quot;,
-      &quot;editor&quot;: &quot;stringList&quot;,
-      &quot;prefill&quot;: [
-        &quot;artificial-intelligence&quot;
-      ],
-      &quot;title&quot;: &quot;Topic slugs (mode=topic)&quot;,
-      &quot;type&quot;: &quot;array&quot;
-    },
-    &quot;userSlugs&quot;: {
-      &quot;default&quot;: [],
-      &quot;description&quot;: &quot;Username slugs from Product Hunt URLs (e.g. `rrhoover`, `tibo_maker`). Required for `mode=userLaunches`.&quot;,
+      &quot;description&quot;: &quot;Topics for mode=topic, e.g. `artificial-intelligence`, `developer-tools`, or a full `/topics/...` URL.&quot;,
       &quot;editor&quot;: &quot;stringList&quot;,
       &quot;prefill&quot;: [],
-      &quot;title&quot;: &quot;User slugs (mode=userLaunches)&quot;,
+      &quot;title&quot;: &quot;Topic slugs or URLs&quot;,
       &quot;type&quot;: &quot;array&quot;
     }
   },
@@ -146,18 +196,24 @@
   &quot;title&quot;: &quot;Product Hunt Scraper Input&quot;,
   &quot;type&quot;: &quot;object&quot;
 }
-</code></pre></details></section><section class="schema-section" id="output-schema"><h2>Output schema</h2><p>Published result links and storage locations. This schema is not an exhaustive contract for every field in a dataset record.</p><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>products</code></td><td>string</td><td>optional</td><td>Dataset containing all scraped Product Hunt launches.</td></tr></tbody></table></div><p><a href="output-schema.json">Download the published output schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+</code></pre></details></section><section class="schema-section" id="output-schema"><h2>Output schema</h2><p>Published result links and storage locations. This schema is not an exhaustive contract for every field in a dataset record.</p><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>launches</code></td><td>string</td><td>optional</td><td>Dataset containing launch records. Comments and reviews are nested arrays on the launch when enabled.</td></tr><tr><td><code>products</code></td><td>string</td><td>optional</td><td>Backward-compatible alias of the same launch dataset.</td></tr></tbody></table></div><p><a href="output-schema.json">Download the published output schema</a></p><details><summary>View complete JSON</summary><pre><code>{
   &quot;actorOutputSchemaVersion&quot;: 1,
-  &quot;description&quot;: &quot;Product Hunt launches, makers, hunters, votes, comments, and topics — daily leaderboard, by topic, by user, or single product detail.&quot;,
+  &quot;description&quot;: &quot;One dataset row per Product Hunt launch, with product details, ranks, makers, media, optional comments/replies, optional reviews and optional launch history.&quot;,
   &quot;properties&quot;: {
-    &quot;products&quot;: {
-      &quot;description&quot;: &quot;Dataset containing all scraped Product Hunt launches.&quot;,
+    &quot;launches&quot;: {
+      &quot;description&quot;: &quot;Dataset containing launch records. Comments and reviews are nested arrays on the launch when enabled.&quot;,
       &quot;template&quot;: &quot;{{links.apiDefaultDatasetUrl}}/items&quot;,
       &quot;title&quot;: &quot;Product Hunt launches&quot;,
       &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;products&quot;: {
+      &quot;description&quot;: &quot;Backward-compatible alias of the same launch dataset.&quot;,
+      &quot;template&quot;: &quot;{{links.apiDefaultDatasetUrl}}/items&quot;,
+      &quot;title&quot;: &quot;Product Hunt launches (legacy link)&quot;,
+      &quot;type&quot;: &quot;string&quot;
     }
   },
-  &quot;title&quot;: &quot;Product Hunt Launch &amp; Topic Data Exporter Output&quot;
+  &quot;title&quot;: &quot;Product Hunt Launch, Comment and Review Exporter Output&quot;
 }
 </code></pre></details></section><section class="schema-section" id="dataset-schema"><h2>Dataset schema</h2><p>Published dataset views and any declared field definitions. A view can select only a subset of the returned record fields.</p><p><a href="dataset-schema.json">Download the published dataset schema</a></p><details><summary>View complete JSON</summary><pre><code>{
   &quot;actorSpecification&quot;: 1,
@@ -174,61 +230,65 @@
           &quot;tagline&quot;,
           &quot;votesCount&quot;,
           &quot;commentsCount&quot;,
+          &quot;reviewsCount&quot;,
+          &quot;reviewsRating&quot;,
+          &quot;dailyRank&quot;,
           &quot;featuredAt&quot;,
           &quot;topics&quot;,
-          &quot;makers&quot;,
-          &quot;phUrl&quot;
+          &quot;website&quot;,
+          &quot;url&quot;
         ]
       }
     }
   }
 }
-</code></pre></details></section><section class="schema-section" id="key-value-schema"><h2>Key-value schema</h2><p>Published key-value store definitions, when provided by this build.</p><p>This definition is not present in the default published build. See the published README for available documentation.</p></section><section id="published-readme"><h2>Published README</h2><details><summary>Read the full published documentation</summary><h2 id="readme-product-hunt-launch-topic-data-exporter">Product Hunt Launch &amp; Topic Data Exporter</h2>
-<p>Pull launches straight from <a href="https://www.producthunt.com">Product Hunt</a> — the daily leaderboard, launches under a topic, a maker's launch history, or a specific list of products by slug — with votes, comments, topics, hunter, and maker details attached to each one.</p>
-<h2 id="readme-authentication">Authentication</h2>
-<p>A free Product Hunt developer token unlocks full launch detail (description, makers, hunter, media) and the topic/user/single-product modes. Without one, only <code>dailyLeaderboard</code> mode works, with a reduced field set. To get a token:</p>
-<ol>
-<li>Sign in at producthunt.com</li>
-<li>Open https://api.producthunt.com/v2/oauth/applications</li>
-<li>Click <strong>Add application</strong> with any name/redirect URL</li>
-<li>Copy the <strong>Developer Token</strong> and paste it into this actor's <code>apiToken</code> field</li>
-</ol>
-<h2 id="readme-what-this-actor-does">What this actor does</h2>
-<ul>
-<li>Four modes: the daily leaderboard, launches under a topic, a maker's launch history, or specific products by slug</li>
-<li>Returns full launch metadata — name, tagline, description, votes, comments, topics, hunter, and makers — when a token is supplied</li>
-<li>Filters by featured status, date range, minimum votes/comments, and topic tags</li>
-<li>Sorts the leaderboard and topic modes by ranking, total votes, newest, or featured date (token required)</li>
-<li>Fields a launch doesn't have (e.g. no listed makers) are omitted rather than left as null</li>
-</ul>
-<h2 id="readme-output-per-launch">Output per launch</h2>
-<p>With an <code>apiToken</code> (any mode):</p>
-<ul>
-<li><code>id</code>, <code>slug</code>, <code>name</code>, <code>tagline</code>, <code>description</code></li>
-<li><code>productUrl</code> — the product's website link as listed on Product Hunt</li>
-<li><code>phUrl</code> — the launch's Product Hunt page</li>
-<li><code>votesCount</code>, <code>commentsCount</code>, <code>reviewsCount</code></li>
-<li><code>featuredAt</code>, <code>createdAt</code> — ISO timestamps</li>
-<li><code>topics</code> — array of topic slugs (e.g. <code>productivity</code>, <code>saas</code>)</li>
-<li><code>topicDetails</code> — full topic objects with <code>id</code>, <code>slug</code>, <code>name</code></li>
-<li><code>hunter</code> — <code>{id, username, name, headline, profileImage}</code> of whoever submitted the launch</li>
-<li><code>makers</code> — array of the people who built the product (same shape as <code>hunter</code>), when <code>includeMakers</code> is on</li>
-<li><code>media</code> — screenshots and videos (<code>url</code>, <code>type</code>, <code>videoUrl</code>), when <code>includeMedia</code> is on</li>
-<li><code>recordType</code> — always <code>post</code></li>
-<li><code>scrapedAt</code> — when this actor retrieved the record</li>
-</ul>
-<p>Without an <code>apiToken</code> (<code>dailyLeaderboard</code> only — a smaller, differently-shaped record read from the public daily leaderboard pages):</p>
-<ul>
-<li><code>id</code>, <code>slug</code>, <code>name</code>, <code>tagline</code></li>
-<li><code>productPageUrl</code> — the launch's Product Hunt product page, when available (no <code>description</code>, <code>hunter</code>, <code>makers</code>, or <code>media</code>)</li>
-<li><code>phUrl</code> — the launch's Product Hunt page</li>
-<li><code>votesCount</code>, <code>commentsCount</code></li>
-<li><code>featuredAt</code>, <code>scheduledAt</code>, <code>createdAt</code>, <code>updatedAt</code> — ISO timestamps, when available</li>
-<li><code>dailyRank</code>, <code>weeklyRank</code>, <code>monthlyRank</code> — leaderboard rank, when available</li>
-<li><code>topics</code>, <code>topicDetails</code> — same shape as the token path</li>
-<li><code>thumbnailUrl</code> — launch thumbnail image</li>
-<li><code>recordType</code>, <code>scrapedAt</code></li>
-</ul>
+</code></pre></details></section><section class="schema-section" id="key-value-schema"><h2>Key-value schema</h2><p>Published key-value store definitions, when provided by this build.</p><p>This definition is not present in the default published build. See the published README for available documentation.</p></section><section id="published-readme"><h2>Published README</h2><details><summary>Read the full published documentation</summary><h2 id="readme-product-hunt-launch-comment-review-exporter">Product Hunt Launch, Comment &amp; Review Exporter</h2>
+<p>Collect Product Hunt launches from the <strong>full daily feed</strong>, daily/weekly/monthly/yearly leaderboards, a topic, a category, a keyword search, a list of products, or a list of specific launches. No Product Hunt account, API token, cookie or browser is needed.</p>
+<p>Each row is one launch with votes, comments count, rank, hunter, makers, topics, media, website, pricing, review score, and an optional discussion thread, review list, and launch history.</p>
+<h2 id="readme-modes">Modes</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Mode</th>
+<th>What it returns</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>latest</code></td>
+<td>Today's complete daily feed (falls back to yesterday while today's feed is still empty). Cursor-paginated: a busy day has roughly 700-950 launches, not just the visible top 20.</td>
+</tr>
+<tr>
+<td><code>leaderboard</code></td>
+<td>One daily, weekly, monthly or yearly leaderboard, cursor-paginated. Pick the period and an optional date.</td>
+</tr>
+<tr>
+<td><code>dailyRange</code></td>
+<td>Every launch on each day between <code>from</code> and <code>to</code>, deduplicated across days.</td>
+</tr>
+<tr>
+<td><code>topic</code></td>
+<td>Products in a topic, resolved to each product's latest launch.</td>
+</tr>
+<tr>
+<td><code>category</code></td>
+<td>Products in a category, resolved to each product's latest launch.</td>
+</tr>
+<tr>
+<td><code>search</code></td>
+<td>Product Hunt product search for a keyword, resolved to each product's latest launch.</td>
+</tr>
+<tr>
+<td><code>product</code></td>
+<td>One or more product slugs/URLs, returning each product's latest launch with full product data.</td>
+</tr>
+<tr>
+<td><code>launch</code></td>
+<td>One or more launch slugs/URLs, returning those exact launches.</td>
+</tr>
+</tbody>
+</table></div>
+<p>Turn on <code>includeDetails</code> for the full launch page (description, maker/hunter profiles, media, website, pricing, ranks, review score). Turn on <code>includeComments</code>, <code>includeReviews</code>, and <code>includeHistory</code> to attach the discussion thread, detailed reviews, and earlier launches from the same product.</p>
 <h2 id="readme-input">Input</h2>
 <div class="table-wrap"><table>
 <thead>
@@ -241,170 +301,210 @@
 </thead>
 <tbody>
 <tr>
-<td><code>apiToken</code></td>
-<td>string (secret)</td>
-<td>–</td>
-<td>Product Hunt developer token. Required for every mode except <code>dailyLeaderboard</code>, which works without one at reduced field detail.</td>
+<td><code>mode</code></td>
+<td>select</td>
+<td><code>latest</code></td>
+<td><code>latest</code>, <code>leaderboard</code>, <code>dailyRange</code>, <code>topic</code>, <code>category</code>, <code>search</code>, <code>product</code>, or <code>launch</code>.</td>
 </tr>
 <tr>
-<td><code>mode</code></td>
+<td><code>period</code></td>
+<td>select</td>
+<td><code>daily</code></td>
+<td>Leaderboard period: <code>daily</code>, <code>weekly</code>, <code>monthly</code>, <code>yearly</code>.</td>
+</tr>
+<tr>
+<td><code>date</code></td>
 <td>string</td>
-<td><code>dailyLeaderboard</code></td>
-<td><code>dailyLeaderboard</code>, <code>topic</code>, <code>userLaunches</code>, or <code>productDetail</code>.</td>
+<td>today</td>
+<td>Leaderboard date (<code>YYYY-MM-DD</code>). Weekly/monthly/yearly use that day's ISO week, month, or year.</td>
+</tr>
+<tr>
+<td><code>from</code>, <code>to</code></td>
+<td>string</td>
+<td>yesterday</td>
+<td>Inclusive day range for <code>dailyRange</code>.</td>
 </tr>
 <tr>
 <td><code>topicSlugs</code></td>
 <td>array</td>
 <td><code>[]</code></td>
-<td>Topic slugs to fetch, e.g. <code>[&quot;artificial-intelligence&quot;]</code>. Required for <code>mode=topic</code>.</td>
+<td>Topic slugs or <code>/topics/...</code> URLs.</td>
 </tr>
 <tr>
-<td><code>userSlugs</code></td>
+<td><code>categorySlugs</code></td>
 <td>array</td>
 <td><code>[]</code></td>
-<td>Username slugs whose launches to fetch, e.g. <code>[&quot;rrhoover&quot;]</code>. Required for <code>mode=userLaunches</code>.</td>
+<td>Category slugs or <code>/categories/...</code> URLs.</td>
+</tr>
+<tr>
+<td><code>searchQuery</code></td>
+<td>string</td>
+<td>–</td>
+<td>Keyword for <code>search</code>.</td>
 </tr>
 <tr>
 <td><code>productSlugs</code></td>
 <td>array</td>
 <td><code>[]</code></td>
-<td>Product slugs to look up, e.g. <code>[&quot;notion&quot;, &quot;figma&quot;]</code>. Required for <code>mode=productDetail</code>.</td>
+<td>Product slugs or product URLs.</td>
 </tr>
 <tr>
-<td><code>sortBy</code></td>
-<td>string</td>
-<td><code>RANKING</code></td>
-<td><code>RANKING</code>, <code>VOTES</code>, <code>NEWEST</code>, or <code>FEATURED_AT</code>. Used by <code>dailyLeaderboard</code> and <code>topic</code> with a token; without a token, launches keep the leaderboard's own order.</td>
-</tr>
-<tr>
-<td><code>featuredOnly</code></td>
-<td>boolean</td>
-<td><code>false</code></td>
-<td>Only emit launches that were officially featured.</td>
-</tr>
-<tr>
-<td><code>dateRangeFrom</code></td>
-<td>string</td>
-<td>–</td>
-<td>Drop launches posted before this date (<code>YYYY-MM-DD</code>). Without a token, this is the first leaderboard day to read.</td>
-</tr>
-<tr>
-<td><code>dateRangeTo</code></td>
-<td>string</td>
-<td>–</td>
-<td>Drop launches posted after this date (<code>YYYY-MM-DD</code>). With a token the range ends at the start of this day, so launches from the day itself are left out; without a token, this is the last leaderboard day to read (default: yesterday).</td>
-</tr>
-<tr>
-<td><code>minVotes</code></td>
-<td>integer</td>
-<td>–</td>
-<td>Drop launches with fewer up-votes than this.</td>
-</tr>
-<tr>
-<td><code>minComments</code></td>
-<td>integer</td>
-<td>–</td>
-<td>Drop launches with fewer comments than this.</td>
-</tr>
-<tr>
-<td><code>tagAnyOf</code></td>
+<td><code>postIds</code></td>
 <td>array</td>
 <td><code>[]</code></td>
-<td>Only emit launches with at least one of these topic slugs.</td>
-</tr>
-<tr>
-<td><code>includeMakers</code></td>
-<td>boolean</td>
-<td><code>true</code></td>
-<td>Include the <code>makers</code> array (token only).</td>
-</tr>
-<tr>
-<td><code>includeMedia</code></td>
-<td>boolean</td>
-<td><code>false</code></td>
-<td>Include the <code>media</code> array (token only).</td>
+<td>Launch slugs or launch URLs.</td>
 </tr>
 <tr>
 <td><code>maxItems</code></td>
 <td>integer</td>
 <td><code>50</code></td>
-<td>Cap on emitted records for the whole run, counted after filters (1–5000).</td>
+<td>Record cap, 1-1000.</td>
+</tr>
+<tr>
+<td><code>maxPages</code></td>
+<td>integer</td>
+<td><code>10</code></td>
+<td>Page cap per source, 1-60. A full day is about 40-60 pages of 20 launches.</td>
+</tr>
+<tr>
+<td><code>maxComments</code></td>
+<td>integer</td>
+<td><code>50</code></td>
+<td>Comment cap per launch, 1-500. Threads are read 20 per page.</td>
+</tr>
+<tr>
+<td><code>maxReviews</code></td>
+<td>integer</td>
+<td><code>20</code></td>
+<td>Review cap per product, 1-200. Reviews are read 10 per page.</td>
+</tr>
+<tr>
+<td><code>includeDetails</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td>Fetch the full launch page.</td>
+</tr>
+<tr>
+<td><code>includeComments</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Attach comments and nested replies.</td>
+</tr>
+<tr>
+<td><code>includeReviews</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Attach detailed reviews, ratings, pros and cons.</td>
+</tr>
+<tr>
+<td><code>includeHistory</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Attach the product's earlier launches.</td>
+</tr>
+<tr>
+<td><code>featuredOnly</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Keep only homepage-featured launches.</td>
+</tr>
+<tr>
+<td><code>proxyConfiguration</code></td>
+<td>object</td>
+<td>off</td>
+<td>Optional. The actor works without a proxy.</td>
 </tr>
 </tbody>
 </table></div>
-<h3 id="readme-example-top-ai-launches-with-a-vote-floor">Example: top AI launches with a vote floor</h3>
+<p>The default prefill reads three latest launches with details on, comments/reviews/history off.</p>
+<h2 id="readme-output">Output</h2>
+<p>Every launch row uses camelCase fields and omits empty values entirely (no <code>null</code>, no empty strings or arrays):</p>
+<ul>
+<li><strong>Identity</strong> — <code>id</code>, <code>slug</code>, <code>name</code>, <code>tagline</code>, <code>description</code>, <code>url</code>, <code>phUrl</code>, <code>sourceUrl</code>, <code>recordType</code>, <code>scrapedAt</code></li>
+<li><strong>Votes and discussion</strong> — <code>votesCount</code>, <code>launchDayScore</code>, <code>commentsCount</code>, <code>reviewsCount</code>, <code>reviewsRating</code></li>
+<li><strong>Rank and timing</strong> — <code>dailyRank</code>, <code>weeklyRank</code>, <code>monthlyRank</code>, <code>launchNumber</code>, <code>featured</code>, <code>featuredAt</code>, <code>createdAt</code>, <code>scheduledAt</code>, <code>updatedAt</code>, <code>launchState</code>, <code>isPromoted</code></li>
+<li><strong>People and taxonomy</strong> — <code>hunter</code>, <code>makers</code>, <code>topics</code>, <code>topicDetails</code></li>
+<li><strong>Product</strong> — <code>website</code>, <code>websiteDomain</code>, <code>pricingType</code>, <code>product</code> (id, slug, name, tagline, website, social links, categories, followers, reviews count/rating, first launch date)</li>
+<li><strong>Media and badges</strong> — <code>media</code> (image/video URL, dimensions, platform), <code>thumbnailUrl</code>, <code>badges</code>, <code>promo</code></li>
+<li><strong>Optional arrays</strong> — <code>comments</code> (with nested <code>replies</code>), <code>reviews</code> (ratings, text, pros/cons, reviewer, source launch), <code>launchHistory</code></li>
+</ul>
+<p><code>phUrl</code> is the legacy short launch link (<code>/posts/&lt;slug&gt;</code>); <code>url</code> is the canonical Product Hunt product/launch link. <code>website</code> is the product's own site. <code>pricingType</code> is Product Hunt's value when present (<code>free</code>, <code>free_options</code>, <code>payment_required</code>) and otherwise a normalized <code>free</code>/<code>paid</code> from the product's structured data.</p>
+<h2 id="readme-examples">Examples</h2>
+<h3 id="readme-full-feed-for-one-busy-day">Full feed for one busy day</h3>
 <pre><code class="language-json">{
-  &quot;apiToken&quot;: &quot;&lt;your-token&gt;&quot;,
+  &quot;mode&quot;: &quot;dailyRange&quot;,
+  &quot;from&quot;: &quot;2026-10-25&quot;,
+  &quot;to&quot;: &quot;2026-10-25&quot;,
+  &quot;maxItems&quot;: 1000,
+  &quot;maxPages&quot;: 60,
+  &quot;includeDetails&quot;: true
+}
+</code></pre>
+<h3 id="readme-weekly-ai-leaderboard-with-comments">Weekly AI leaderboard with comments</h3>
+<pre><code class="language-json">{
+  &quot;mode&quot;: &quot;leaderboard&quot;,
+  &quot;period&quot;: &quot;weekly&quot;,
+  &quot;date&quot;: &quot;2026-10-26&quot;,
+  &quot;featuredOnly&quot;: true,
+  &quot;maxItems&quot;: 50,
+  &quot;includeComments&quot;: true,
+  &quot;maxComments&quot;: 40
+}
+</code></pre>
+<h3 id="readme-latest-launches-in-a-topic-with-reviews">Latest launches in a topic, with reviews</h3>
+<pre><code class="language-json">{
   &quot;mode&quot;: &quot;topic&quot;,
   &quot;topicSlugs&quot;: [&quot;artificial-intelligence&quot;],
-  &quot;sortBy&quot;: &quot;VOTES&quot;,
-  &quot;dateRangeFrom&quot;: &quot;2026-01-01&quot;,
-  &quot;minVotes&quot;: 500,
-  &quot;maxItems&quot;: 100
+  &quot;maxItems&quot;: 20,
+  &quot;includeDetails&quot;: true,
+  &quot;includeReviews&quot;: true,
+  &quot;maxReviews&quot;: 20
 }
 </code></pre>
-<h3 id="readme-example-featured-launches-for-one-day-ranked">Example: featured launches for one day, ranked</h3>
+<h3 id="readme-one-product-with-its-launch-history">One product with its launch history</h3>
 <pre><code class="language-json">{
-  &quot;apiToken&quot;: &quot;&lt;your-token&gt;&quot;,
-  &quot;mode&quot;: &quot;dailyLeaderboard&quot;,
-  &quot;sortBy&quot;: &quot;RANKING&quot;,
-  &quot;featuredOnly&quot;: true,
-  &quot;dateRangeFrom&quot;: &quot;2026-10-01&quot;,
-  &quot;dateRangeTo&quot;: &quot;2026-10-02&quot;,
-  &quot;maxItems&quot;: 30
+  &quot;mode&quot;: &quot;product&quot;,
+  &quot;productSlugs&quot;: [&quot;notion&quot;],
+  &quot;includeDetails&quot;: true,
+  &quot;includeHistory&quot;: true,
+  &quot;maxPages&quot;: 5
 }
 </code></pre>
-<h3 id="readme-example-last-week-s-leaderboards-without-a-token">Example: last week's leaderboards without a token</h3>
+<h3 id="readme-specific-launches-by-url">Specific launches by URL</h3>
 <pre><code class="language-json">{
-  &quot;mode&quot;: &quot;dailyLeaderboard&quot;,
-  &quot;dateRangeFrom&quot;: &quot;2026-10-04&quot;,
-  &quot;dateRangeTo&quot;: &quot;2026-10-10&quot;,
-  &quot;maxItems&quot;: 200
+  &quot;mode&quot;: &quot;launch&quot;,
+  &quot;postIds&quot;: [
+    &quot;https://www.producthunt.com/products/strawberry?launch=strawberry-1-0&quot;
+  ],
+  &quot;includeComments&quot;: true,
+  &quot;maxComments&quot;: 100
 }
 </code></pre>
-<h3 id="readme-example-a-maker-s-launch-history">Example: a maker's launch history</h3>
-<pre><code class="language-json">{
-  &quot;apiToken&quot;: &quot;&lt;your-token&gt;&quot;,
-  &quot;mode&quot;: &quot;userLaunches&quot;,
-  &quot;userSlugs&quot;: [&quot;rrhoover&quot;],
-  &quot;maxItems&quot;: 50
-}
-</code></pre>
-<h3 id="readme-example-look-up-specific-products-by-slug">Example: look up specific products by slug</h3>
-<pre><code class="language-json">{
-  &quot;apiToken&quot;: &quot;&lt;your-token&gt;&quot;,
-  &quot;mode&quot;: &quot;productDetail&quot;,
-  &quot;productSlugs&quot;: [&quot;notion&quot;, &quot;figma&quot;, &quot;linear&quot;]
-}
-</code></pre>
-<h2 id="readme-use-cases">Use cases</h2>
+<h2 id="readme-how-it-works">How it works</h2>
+<p>The actor uses Product Hunt's public frontend GraphQL endpoint with the same persisted queries the website loads, a desktop browser user agent, <code>X-Requested-With</code>, the Product Hunt timezone header, and <code>apollo-require-preflight</code>. It sends the full query document plus its sha256 persisted-query hash, so no token or cookie is ever involved.</p>
+<p>If Product Hunt ships a new frontend build and a persisted hash stops matching, the actor refreshes the query document from the page's Apollo SSR payload, retries once, and then falls back to the page's embedded JSON state. A 200 response with an empty block is treated as a block or a source fault, never as a successful empty run.</p>
+<p>Comments paginate 20 threads per page with reply cursors; reviews paginate 10 per page; launch history paginates 10 per page. Records are deduplicated by launch, comment, and review id.</p>
+<h2 id="readme-reliability-and-limits">Reliability and limits</h2>
 <ul>
-<li><strong>VC deal flow</strong> — daily monitoring of new launches in target verticals</li>
-<li><strong>Founder research</strong> — track every product launching in your category</li>
-<li><strong>PM benchmarking</strong> — study tagline and positioning patterns among top-voted launches</li>
-<li><strong>Growth marketing</strong> — spot emerging tools worth integrating with or promoting</li>
-<li><strong>Newsletter curation</strong> — compile a digest of the day's top launches with full descriptions</li>
-<li><strong>Hunter/maker mapping</strong> — identify the most prolific hunters and makers in a given space</li>
+<li>Retries with backoff on 429/5xx/timeouts; a Cloudflare challenge produces a failed run with a clear status message instead of an empty dataset.</li>
+<li><code>maxItems</code>, <code>maxPages</code>, <code>maxComments</code>, and <code>maxReviews</code> are hard caps. A day with more launches than <code>maxItems</code> stops exactly at the cap.</li>
+<li>Product Hunt's maker profile pages are protected by a challenge, so maker emails and social handles are not part of this dataset. Launch data includes maker names, usernames, headlines, avatars and follower counts when the source exposes them.</li>
+<li>Funding amount and employee count are not reliably exposed by the public product pages and are omitted.</li>
+<li>Very large launches can have hundreds of comments; raise <code>maxComments</code> up to 500 for those threads.</li>
+<li>Topic/category/search results are products, so the actor resolves each product's latest launch. Older launches from the same product are available with <code>includeHistory</code>.</li>
+<li>Search is product search (the same search the Product Hunt site uses), not a free-text search over historical launch descriptions.</li>
 </ul>
 <h2 id="readme-faq">FAQ</h2>
-<p><strong>Do I need a Product Hunt account?</strong>
-Only to get a token for full fields and the topic/user/product-detail modes. <code>dailyLeaderboard</code> mode works without any token, with a smaller field set. Running another mode without a token ends straight away with a status message asking for one.</p>
-<p><strong>Which days does <code>dailyLeaderboard</code> cover?</strong>
-Without a token it reads the public daily leaderboard pages: yesterday's by default, or each day from <code>dateRangeTo</code> back to <code>dateRangeFrom</code>. With a token it lists Product Hunt launches in the <code>sortBy</code> order; set <code>dateRangeFrom</code>/<code>dateRangeTo</code> to limit it to specific days.</p>
-<p><strong>What changes when I add a token?</strong>
-Without a token you get id, slug, name, tagline, votes, comments, ranks, topics, dates, and a thumbnail. With a token, launches also include description, hunter, makers, full media, and <code>reviewsCount</code>.</p>
-<p><strong>Is the developer token paid?</strong>
-No, it's free and issued instantly from your own Product Hunt account.</p>
-<p><strong>What's the difference between <code>hunter</code> and <code>makers</code>?</strong>
-The hunter is whoever submitted the launch to Product Hunt — often a community member, not necessarily the founder. Makers are the people who actually built the product.</p>
-<p><strong>Why is <code>productUrl</code> missing on some launches?</strong>
-A small number of launches don't list an external website; that field is simply omitted rather than returned empty.</p>
+<p><strong>Do I need a Product Hunt account or API token?</strong>
+No. The actor reads the same public frontend data the website renders. There is nothing to sign up for.</p>
+<p><strong>Why do I get more than 20 launches per day?</strong>
+The visible leaderboard is a preview. The actor follows the cursor until the source is exhausted, which is normally 700-950 launches on a busy day.</p>
+<p><strong>Are comments and reviews included by default?</strong>
+No. They are opt-in because they add requests. Set <code>includeComments</code> and/or <code>includeReviews</code> to attach them to each launch record.</p>
+<p><strong>What happens if Product Hunt blocks the request?</strong>
+The actor retries, optionally rotates your proxy session if you supplied a proxy, and fails the run with a status message. It never reports a blocked or empty page as a successful empty dataset.</p>
 <p><strong>Can I get older launches?</strong>
-Yes. With a token, use <code>dateRangeFrom</code>/<code>dateRangeTo</code> in <code>topic</code> or <code>dailyLeaderboard</code> mode, look products up by slug with <code>productDetail</code>, or list a maker's launches with <code>userLaunches</code>. Without a token, set the date range to the leaderboard days you want.</p>
-<p><strong>What does &quot;featured&quot; mean?</strong>
-Product Hunt selects a subset of submitted launches to feature on its homepage; those launches have a <code>featuredAt</code> date. <code>featuredOnly</code> keeps only launches with one.</p>
-<p><strong>Can I get comment text or review text?</strong>
-<code>commentsCount</code> and <code>reviewsCount</code> are included, but individual comment and review text aren't. Use <code>phUrl</code> to link out to the discussion thread.</p>
+Yes: set a past <code>from</code>/<code>to</code> for <code>dailyRange</code>, pick a past leaderboard date, use <code>product</code> with <code>includeHistory</code>, or pass an old launch URL in <code>launch</code> mode.</p>
 <p><strong>Is this affiliated with Product Hunt?</strong>
-No. This is an independent, third-party actor built on Product Hunt's public developer API; it isn't affiliated with or endorsed by Product Hunt.</p>
-</details></section><section id="python-quickstart"><h2>Python quickstart</h2><p>Use a schema-derived input and the Python standard library to start a run. An Apify account and token are required for execution.</p><p><a href="/apify-actor-examples/guides/GAAwZYbMvugYH1EkV/">Open the step-by-step Python guide →</a></p></section><p class="source-note">Source build <code>TygJu0pUJEXoDKPub</code>. Documentation is regenerated from the default published build; private drafts are not included.</p></article></div></main><footer class="footer"><strong>Nimbryxo Studio</strong><div class="footer-links"><a href="/apify-actor-examples/topics/">Topics</a><a href="/apify-actor-examples/sources/">Documentation sources</a><a href="https://apify.com/nimbryxo-studio">Apify</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></div></footer></body></html>
+No. This is an independent, third-party exporter that reads Product Hunt's public web data. It is not affiliated with or endorsed by Product Hunt.</p>
+</details></section><section id="python-quickstart"><h2>Python quickstart</h2><p>Use a schema-derived input and the Python standard library to start a run. An Apify account and token are required for execution.</p><p><a href="/apify-actor-examples/guides/GAAwZYbMvugYH1EkV/">Open the step-by-step Python guide →</a></p></section><p class="source-note">Source build <code>DPfPO9IfFq8xZmcGb</code>. Documentation is regenerated from the default published build; private drafts are not included.</p></article></div></main><footer class="footer"><strong>Nimbryxo Studio</strong><div class="footer-links"><a href="/apify-actor-examples/topics/">Topics</a><a href="/apify-actor-examples/sources/">Documentation sources</a><a href="https://apify.com/nimbryxo-studio">Apify</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></div></footer></body></html>

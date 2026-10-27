@@ -1,7 +1,116 @@
 {
   "actorSpecification": 1,
-  "title": "LinkedIn Ads",
+  "title": "LinkedIn Ad Library",
   "views": {
+    "creatives": {
+      "display": {
+        "component": "table",
+        "properties": {
+          "ad_format": {
+            "format": "text",
+            "label": "Format"
+          },
+          "ad_url": {
+            "format": "link",
+            "label": "Ad URL"
+          },
+          "advertiser_name": {
+            "format": "text",
+            "label": "Advertiser"
+          },
+          "body_text_full": {
+            "format": "text",
+            "label": "Full copy"
+          },
+          "headline": {
+            "format": "text",
+            "label": "Headline"
+          },
+          "image_urls": {
+            "format": "text",
+            "label": "Images"
+          },
+          "landing_url": {
+            "format": "link",
+            "label": "Landing"
+          },
+          "video_poster_url": {
+            "format": "image",
+            "label": "Poster"
+          },
+          "video_urls": {
+            "format": "text",
+            "label": "Videos"
+          }
+        }
+      },
+      "title": "Creatives",
+      "transformation": {
+        "fields": [
+          "advertiser_name",
+          "ad_format",
+          "headline",
+          "body_text_full",
+          "image_urls",
+          "video_urls",
+          "video_poster_url",
+          "landing_url",
+          "ad_url"
+        ]
+      }
+    },
+    "euTargeting": {
+      "display": {
+        "component": "table",
+        "properties": {
+          "ad_url": {
+            "format": "link",
+            "label": "Ad URL"
+          },
+          "advertiser_name": {
+            "format": "text",
+            "label": "Advertiser"
+          },
+          "country": {
+            "format": "text",
+            "label": "Country"
+          },
+          "impressions_by_country": {
+            "format": "text",
+            "label": "Country shares"
+          },
+          "targeting_language": {
+            "format": "text",
+            "label": "Language"
+          },
+          "targeting_location_included": {
+            "format": "text",
+            "label": "Locations"
+          },
+          "targeting_parameters": {
+            "format": "text",
+            "label": "Targeting parameters"
+          },
+          "total_impressions": {
+            "format": "text",
+            "label": "Impressions"
+          }
+        }
+      },
+      "title": "EU Transparency",
+      "transformation": {
+        "fields": [
+          "advertiser_name",
+          "country",
+          "total_impressions",
+          "impressions_by_country",
+          "targeting_language",
+          "targeting_location_included",
+          "targeting_parameters",
+          "ad_url"
+        ]
+      }
+    },
     "overview": {
       "display": {
         "component": "table",
@@ -20,7 +129,11 @@
           },
           "body_text": {
             "format": "text",
-            "label": "Body"
+            "label": "Copy preview"
+          },
+          "country": {
+            "format": "text",
+            "label": "Country"
           },
           "cta_text": {
             "format": "text",
@@ -55,6 +168,7 @@
           "start_date",
           "end_date",
           "total_impressions",
+          "country",
           "ad_url"
         ]
       }

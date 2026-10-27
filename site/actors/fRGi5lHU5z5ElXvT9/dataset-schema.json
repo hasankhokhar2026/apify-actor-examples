@@ -1,14 +1,50 @@
 {
   "actorSpecification": 1,
-  "title": "Social Media Profiles",
+  "title": "Username Checks & Profiles",
   "views": {
     "overview": {
       "display": {
         "component": "table",
         "properties": {
+          "availability": {
+            "format": "text",
+            "label": "Availability"
+          },
+          "confidence": {
+            "format": "text",
+            "label": "Confidence"
+          },
+          "displayName": {
+            "format": "text",
+            "label": "Display Name"
+          },
+          "evidence": {
+            "format": "text",
+            "label": "Evidence"
+          },
+          "exists": {
+            "format": "text",
+            "label": "Exists"
+          },
+          "httpStatus": {
+            "format": "number",
+            "label": "HTTP"
+          },
+          "matchScore": {
+            "format": "number",
+            "label": "Match"
+          },
           "platform": {
             "format": "text",
             "label": "Platform"
+          },
+          "query": {
+            "format": "text",
+            "label": "Query"
+          },
+          "recordType": {
+            "format": "text",
+            "label": "Type"
           },
           "status": {
             "format": "text",
@@ -17,20 +53,91 @@
           "url": {
             "format": "link",
             "label": "Profile URL"
-          },
-          "username": {
-            "format": "text",
-            "label": "Username"
           }
         }
       },
-      "title": "Found Profiles",
+      "title": "Checks & Profiles",
       "transformation": {
         "fields": [
-          "username",
+          "recordType",
+          "query",
           "platform",
           "url",
-          "status"
+          "exists",
+          "status",
+          "availability",
+          "confidence",
+          "evidence",
+          "httpStatus",
+          "displayName",
+          "matchScore"
+        ]
+      }
+    },
+    "summary": {
+      "display": {
+        "component": "table",
+        "properties": {
+          "coverage": {
+            "format": "text",
+            "label": "Coverage"
+          },
+          "durationSecs": {
+            "format": "number",
+            "label": "Seconds"
+          },
+          "mode": {
+            "format": "text",
+            "label": "Mode"
+          },
+          "notFound": {
+            "format": "number",
+            "label": "Not Found"
+          },
+          "platformsChecked": {
+            "format": "number",
+            "label": "Platforms"
+          },
+          "profilesFound": {
+            "format": "number",
+            "label": "Found"
+          },
+          "queriesChecked": {
+            "format": "number",
+            "label": "Queries"
+          },
+          "recordType": {
+            "format": "text",
+            "label": "Type"
+          },
+          "rows": {
+            "format": "number",
+            "label": "Rows"
+          },
+          "status": {
+            "format": "text",
+            "label": "Status"
+          },
+          "unknown": {
+            "format": "number",
+            "label": "Unknown"
+          }
+        }
+      },
+      "title": "Run Summary",
+      "transformation": {
+        "fields": [
+          "recordType",
+          "mode",
+          "coverage",
+          "status",
+          "queriesChecked",
+          "platformsChecked",
+          "profilesFound",
+          "notFound",
+          "unknown",
+          "rows",
+          "durationSecs"
         ]
       }
     }

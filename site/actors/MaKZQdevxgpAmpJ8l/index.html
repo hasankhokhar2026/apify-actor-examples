@@ -1,58 +1,241 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src &#x27;self&#x27;; script-src &#x27;self&#x27; &#x27;sha256-pe/demOaBgs23vagfCYAlkx72IOy4AukZeOYQDnkSmw=&#x27;; style-src &#x27;self&#x27;; img-src &#x27;self&#x27; https: data:; base-uri &#x27;self&#x27;; form-action &#x27;self&#x27;; object-src &#x27;none&#x27;"><title>Shopify Store Catalog &amp; Pricing Extractor | Nimbryxo Studio</title><meta name="description" content="Extract a Shopify store&#x27;s product catalog with titles, prices, compare-at prices, variants, SKUs, images and stock availability from any custom or myshopify.com domain."><meta name="robots" content="index,follow"><link rel="canonical" href="https://hasankhokhar2026.github.io/apify-actor-examples/actors/MaKZQdevxgpAmpJ8l/"><meta property="og:title" content="Shopify Store Catalog &amp; Pricing Extractor | Nimbryxo Studio"><meta property="og:description" content="Extract a Shopify store&#x27;s product catalog with titles, prices, compare-at prices, variants, SKUs, images and stock availability from any custom or myshopify.com domain."><meta property="og:type" content="website"><meta property="og:url" content="https://hasankhokhar2026.github.io/apify-actor-examples/actors/MaKZQdevxgpAmpJ8l/"><meta property="og:site_name" content="Nimbryxo Studio"><meta name="twitter:card" content="summary"><link rel="icon" href="/apify-actor-examples/assets/mark.svg?v=2d20f9dc334a" type="image/svg+xml"><link rel="stylesheet" href="/apify-actor-examples/assets/site.css?v=39545fd4a399"><link rel="stylesheet" href="/apify-actor-examples/assets/brand.css?v=eb0f935ade25"><link rel="alternate" type="application/rss+xml" title="Nimbryxo Studio guides" href="/apify-actor-examples/feed.xml"><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization","name":"Nimbryxo Studio","url":"https://hasankhokhar2026.github.io/apify-actor-examples/","sameAs":["https://apify.com/nimbryxo-studio"]},{"@type":"WebSite","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#website","name":"Nimbryxo Studio","url":"https://hasankhokhar2026.github.io/apify-actor-examples/","publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"inLanguage":"en"},{"@type":"WebPage","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/MaKZQdevxgpAmpJ8l/#webpage","name":"Shopify Store Catalog & Pricing Extractor","description":"Extract a Shopify store's product catalog with titles, prices, compare-at prices, variants, SKUs, images and stock availability from any custom or myshopify.com domain.","url":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/MaKZQdevxgpAmpJ8l/","isPartOf":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#website"},"publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"inLanguage":"en","mainEntity":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/MaKZQdevxgpAmpJ8l/#article"},"breadcrumb":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/MaKZQdevxgpAmpJ8l/#breadcrumb"}},{"@type":"TechArticle","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/MaKZQdevxgpAmpJ8l/#article","headline":"Shopify Store Catalog & Pricing Extractor","name":"Shopify Store Catalog & Pricing Extractor","description":"Extract a Shopify store's product catalog with titles, prices, compare-at prices, variants, SKUs, images and stock availability from any custom or myshopify.com domain.","url":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/MaKZQdevxgpAmpJ8l/","author":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"mainEntityOfPage":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/MaKZQdevxgpAmpJ8l/#webpage"},"inLanguage":"en"},{"@type":"BreadcrumbList","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/MaKZQdevxgpAmpJ8l/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Nimbryxo Studio","item":"https://hasankhokhar2026.github.io/apify-actor-examples/"},{"@type":"ListItem","position":2,"name":"Actors","item":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/"},{"@type":"ListItem","position":3,"name":"Shopify Store Catalog & Pricing Extractor","item":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/MaKZQdevxgpAmpJ8l/"}]}]}</script><script src="/apify-actor-examples/assets/site.js?v=7cabac48dd31" defer></script></head><body class="theme-studio"><a href="#main" class="skip-link">Skip to content</a><header><div class="inner"><a href="/apify-actor-examples/" class="brand"><img src="/apify-actor-examples/assets/mark.svg?v=2d20f9dc334a" alt="" width="29" height="29">Nimbryxo Studio</a><nav aria-label="Main navigation"><a href="/apify-actor-examples/actors/" aria-current="page">Actors</a><a href="/apify-actor-examples/guides/">Guides</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></nav></div></header><main id="main"><div class="doc-layout"><aside class="contents" aria-label="On this page"><strong>Contents</strong><a href="#overview">Overview</a><a href="#published-readme">Published README</a><a href="#input-schema">Input schema</a><a href="#output-schema">Output schema</a><a href="#dataset-schema">Dataset schema</a><a href="#python-quickstart">Python quickstart</a></aside><article class="prose"><div class="breadcrumb"><a href="/apify-actor-examples/actors/">Actors</a><span>/</span><span>Shopify Store Catalog &amp; Pricing Extractor</span></div><section id="overview"><h1 class="doc-title">Shopify Store Catalog &amp; Pricing Extractor</h1><p class="lede">Extract a Shopify store&#x27;s product catalog with titles, prices, compare-at prices, variants, SKUs, images and stock availability from any custom or myshopify.com domain.</p><div class="actions"><a class="button" href="https://apify.com/nimbryxo-studio/shopify-store-catalog-and-pricing-extractor">Open on Apify</a><a class="text-link" href="https://github.com/hasankhokhar2026/apify-actor-examples/blob/main/docs/actors/MaKZQdevxgpAmpJ8l/README.md">GitHub source</a></div></section><section class="schema-section" id="input-schema"><h2>Input schema</h2><p>Input fields, types, required flags, descriptions, defaults, and prefills come from the published definition. Prefill examples are distinct from defaults.</p><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>storeUrl</code></td><td>string</td><td>required</td><td>URL of the Shopify store to scrape. Can be the homepage or any page on the store (e.g., https://www.allbirds.com or https://shop-name.myshopify.com).</td></tr><tr><td><code>maxProducts</code></td><td>integer</td><td>optional</td><td>Maximum number of products to scrape from the store.</td></tr><tr><td><code>proxy</code></td><td>object</td><td>required</td><td>Proxy settings. Apify&#x27;s own datacenter egress IPs are blocked by Shopify&#x27;s edge WAF, so a proxy is required — the default Apify AUTO proxy (free) is sufficient for almost all stores. Switch to RESIDENTIAL only if you still get 403 errors.</td></tr></tbody></table></div><p><a href="input-schema.json">Download the published input schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src &#x27;self&#x27;; script-src &#x27;self&#x27; &#x27;sha256-pe/demOaBgs23vagfCYAlkx72IOy4AukZeOYQDnkSmw=&#x27;; style-src &#x27;self&#x27;; img-src &#x27;self&#x27; https: data:; base-uri &#x27;self&#x27;; form-action &#x27;self&#x27;; object-src &#x27;none&#x27;"><title>Shopify Store Catalog &amp; Pricing Extractor | Nimbryxo Studio</title><meta name="description" content="Extract a Shopify store&#x27;s product catalog with titles, prices, compare-at prices, variants, SKUs, images and stock availability from any custom or myshopify.com domain."><meta name="robots" content="index,follow"><link rel="canonical" href="https://hasankhokhar2026.github.io/apify-actor-examples/actors/MaKZQdevxgpAmpJ8l/"><meta property="og:title" content="Shopify Store Catalog &amp; Pricing Extractor | Nimbryxo Studio"><meta property="og:description" content="Extract a Shopify store&#x27;s product catalog with titles, prices, compare-at prices, variants, SKUs, images and stock availability from any custom or myshopify.com domain."><meta property="og:type" content="website"><meta property="og:url" content="https://hasankhokhar2026.github.io/apify-actor-examples/actors/MaKZQdevxgpAmpJ8l/"><meta property="og:site_name" content="Nimbryxo Studio"><meta name="twitter:card" content="summary"><link rel="icon" href="/apify-actor-examples/assets/mark.svg?v=2d20f9dc334a" type="image/svg+xml"><link rel="stylesheet" href="/apify-actor-examples/assets/site.css?v=39545fd4a399"><link rel="stylesheet" href="/apify-actor-examples/assets/brand.css?v=eb0f935ade25"><link rel="alternate" type="application/rss+xml" title="Nimbryxo Studio guides" href="/apify-actor-examples/feed.xml"><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization","name":"Nimbryxo Studio","url":"https://hasankhokhar2026.github.io/apify-actor-examples/","sameAs":["https://apify.com/nimbryxo-studio"]},{"@type":"WebSite","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#website","name":"Nimbryxo Studio","url":"https://hasankhokhar2026.github.io/apify-actor-examples/","publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"inLanguage":"en"},{"@type":"WebPage","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/MaKZQdevxgpAmpJ8l/#webpage","name":"Shopify Store Catalog & Pricing Extractor","description":"Extract a Shopify store's product catalog with titles, prices, compare-at prices, variants, SKUs, images and stock availability from any custom or myshopify.com domain.","url":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/MaKZQdevxgpAmpJ8l/","isPartOf":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#website"},"publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"inLanguage":"en","mainEntity":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/MaKZQdevxgpAmpJ8l/#article"},"breadcrumb":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/MaKZQdevxgpAmpJ8l/#breadcrumb"}},{"@type":"TechArticle","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/MaKZQdevxgpAmpJ8l/#article","headline":"Shopify Store Catalog & Pricing Extractor","name":"Shopify Store Catalog & Pricing Extractor","description":"Extract a Shopify store's product catalog with titles, prices, compare-at prices, variants, SKUs, images and stock availability from any custom or myshopify.com domain.","url":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/MaKZQdevxgpAmpJ8l/","author":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"mainEntityOfPage":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/MaKZQdevxgpAmpJ8l/#webpage"},"inLanguage":"en"},{"@type":"BreadcrumbList","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/MaKZQdevxgpAmpJ8l/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Nimbryxo Studio","item":"https://hasankhokhar2026.github.io/apify-actor-examples/"},{"@type":"ListItem","position":2,"name":"Actors","item":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/"},{"@type":"ListItem","position":3,"name":"Shopify Store Catalog & Pricing Extractor","item":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/MaKZQdevxgpAmpJ8l/"}]}]}</script><script src="/apify-actor-examples/assets/site.js?v=7cabac48dd31" defer></script></head><body class="theme-studio"><a href="#main" class="skip-link">Skip to content</a><header><div class="inner"><a href="/apify-actor-examples/" class="brand"><img src="/apify-actor-examples/assets/mark.svg?v=2d20f9dc334a" alt="" width="29" height="29">Nimbryxo Studio</a><nav aria-label="Main navigation"><a href="/apify-actor-examples/actors/" aria-current="page">Actors</a><a href="/apify-actor-examples/guides/">Guides</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></nav></div></header><main id="main"><div class="doc-layout"><aside class="contents" aria-label="On this page"><strong>Contents</strong><a href="#overview">Overview</a><a href="#published-readme">Published README</a><a href="#input-schema">Input schema</a><a href="#output-schema">Output schema</a><a href="#dataset-schema">Dataset schema</a><a href="#python-quickstart">Python quickstart</a></aside><article class="prose"><div class="breadcrumb"><a href="/apify-actor-examples/actors/">Actors</a><span>/</span><span>Shopify Store Catalog &amp; Pricing Extractor</span></div><section id="overview"><h1 class="doc-title">Shopify Store Catalog &amp; Pricing Extractor</h1><p class="lede">Extract a Shopify store&#x27;s product catalog with titles, prices, compare-at prices, variants, SKUs, images and stock availability from any custom or myshopify.com domain.</p><div class="actions"><a class="button" href="https://apify.com/nimbryxo-studio/shopify-store-catalog-and-pricing-extractor">Open on Apify</a><a class="text-link" href="https://github.com/hasankhokhar2026/apify-actor-examples/blob/main/docs/actors/MaKZQdevxgpAmpJ8l/README.md">GitHub source</a></div></section><section class="schema-section" id="input-schema"><h2>Input schema</h2><p>Input fields, types, required flags, descriptions, defaults, and prefills come from the published definition. Prefill examples are distinct from defaults.</p><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>mode</code></td><td>string</td><td>required</td><td>What to scrape. `catalog` walks the public product feed, `collection` walks specific collections, `product` fetches exact product handles, `search` uses the storefront search suggestions, `collections` lists collection metadata, and `auto` detects the type of each URL in `startUrls`.</td></tr><tr><td><code>storeUrls</code></td><td>array</td><td>optional</td><td>Store domains or URLs, e.g. `deathwishcoffee.com` or `https://www.allbirds.com`. Accepts custom domains and `*.myshopify.com`. A product or collection URL is reduced to its store for catalog/collections/search modes.</td></tr><tr><td><code>startUrls</code></td><td>array</td><td>optional</td><td>Store, collection or product URLs. In `auto` mode each URL selects its own job: `/products/&lt;handle&gt;` fetches one product, `/collections/&lt;handle&gt;` fetches a collection, any other store URL fetches the catalog. In the other modes these URLs add stores and, for collection/product modes, their handles.</td></tr></tbody></table></div><details><summary>Show all input fields</summary><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>mode</code></td><td>string</td><td>required</td><td>What to scrape. `catalog` walks the public product feed, `collection` walks specific collections, `product` fetches exact product handles, `search` uses the storefront search suggestions, `collections` lists collection metadata, and `auto` detects the type of each URL in `startUrls`.</td></tr><tr><td><code>storeUrls</code></td><td>array</td><td>optional</td><td>Store domains or URLs, e.g. `deathwishcoffee.com` or `https://www.allbirds.com`. Accepts custom domains and `*.myshopify.com`. A product or collection URL is reduced to its store for catalog/collections/search modes.</td></tr><tr><td><code>startUrls</code></td><td>array</td><td>optional</td><td>Store, collection or product URLs. In `auto` mode each URL selects its own job: `/products/&lt;handle&gt;` fetches one product, `/collections/&lt;handle&gt;` fetches a collection, any other store URL fetches the catalog. In the other modes these URLs add stores and, for collection/product modes, their handles.</td></tr><tr><td><code>collectionHandles</code></td><td>array</td><td>optional</td><td>Collection handles or collection URLs, e.g. `new-arrivals`, `sale`, or `https://store.com/collections/sale`. Handles are applied to every store in `storeUrls`; a full collection URL is applied to its own store.</td></tr><tr><td><code>productHandles</code></td><td>array</td><td>optional</td><td>Product handles or product URLs, e.g. `dark-roast-coffee` or `https://store.com/products/dark-roast-coffee`. Handles are applied to every store in `storeUrls`; a full product URL is applied to its own store.</td></tr><tr><td><code>searchQuery</code></td><td>string</td><td>optional</td><td>In-store search term. Shopify&#x27;s public suggest endpoint returns at most 10 products per store and has no pagination.</td></tr><tr><td><code>currency</code></td><td>string</td><td>optional</td><td>ISO 4217 code to pin prices to, e.g. `USD`, `EUR`, `GBP`. Use `store` to use the store&#x27;s base currency from `/meta.json`. Pinning is important because Shopify localizes prices by IP.</td></tr><tr><td><code>country</code></td><td>string</td><td>optional</td><td>Two-letter ISO country code passed as `?country=` to the storefront, e.g. `US`, `GB`, `DE`.</td></tr><tr><td><code>vendor</code></td><td>string</td><td>optional</td><td>Keep products whose vendor contains this text (case-insensitive).</td></tr><tr><td><code>productType</code></td><td>string</td><td>optional</td><td>Keep products whose product type contains this text (case-insensitive).</td></tr><tr><td><code>tag</code></td><td>string</td><td>optional</td><td>Keep products with at least one tag containing this text (case-insensitive).</td></tr><tr><td><code>minPrice</code></td><td>number</td><td>optional</td><td>Drop products whose lowest variant price is below this value.</td></tr><tr><td><code>maxPrice</code></td><td>number</td><td>optional</td><td>Drop products whose lowest variant price is above this value.</td></tr><tr><td><code>available</code></td><td>string</td><td>optional</td><td>Keep all products, only products with at least one purchasable variant, or only sold-out products.</td></tr><tr><td><code>maxItems</code></td><td>integer</td><td>optional</td><td>Hard cap on dataset rows across all stores. When `flattenVariants` is on, each variant row counts as one.</td></tr><tr><td><code>maxPages</code></td><td>integer</td><td>optional</td><td>Page cap per product/collection feed. Each page holds up to 250 items and Shopify refuses offsets above 25,000, so the effective maximum is 100.</td></tr><tr><td><code>includeDetails</code></td><td>boolean</td><td>optional</td><td>Fetch `/products/{handle}.json` for each emitted product to add barcode, weight/grams and inventory fields. Costs one extra request per product and is off by default. Product mode always uses the detail endpoint.</td></tr><tr><td><code>flattenVariants</code></td><td>boolean</td><td>optional</td><td>Emit one `recordType: variant` row per variant instead of one product row with nested variants. Variant and product IDs are de-duplicated.</td></tr><tr><td><code>proxyConfiguration</code></td><td>object</td><td>optional</td><td>Leave empty to fetch directly. After a 403 or 429 block the actor retries through Apify&#x27;s datacenter proxy (AUTO) automatically. If you set this, your configuration is used for that retry instead of AUTO; direct requests are still tried first.</td></tr></tbody></table></div></details><p><a href="input-schema.json">Download the published input schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+  &quot;description&quot;: &quot;Scrape one or many Shopify storefronts: full catalog, collection, single product, in-store search, or the collection directory.&quot;,
   &quot;properties&quot;: {
-    &quot;maxProducts&quot;: {
-      &quot;default&quot;: 50,
-      &quot;description&quot;: &quot;Maximum number of products to scrape from the store.&quot;,
-      &quot;editor&quot;: &quot;number&quot;,
+    &quot;available&quot;: {
+      &quot;default&quot;: &quot;any&quot;,
+      &quot;description&quot;: &quot;Keep all products, only products with at least one purchasable variant, or only sold-out products.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;any&quot;,
+        &quot;available&quot;,
+        &quot;unavailable&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;Any availability&quot;,
+        &quot;In stock only&quot;,
+        &quot;Sold out only&quot;
+      ],
+      &quot;prefill&quot;: &quot;any&quot;,
+      &quot;title&quot;: &quot;Availability&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;collectionHandles&quot;: {
+      &quot;default&quot;: [],
+      &quot;description&quot;: &quot;Collection handles or collection URLs, e.g. `new-arrivals`, `sale`, or `https://store.com/collections/sale`. Handles are applied to every store in `storeUrls`; a full collection URL is applied to its own store.&quot;,
+      &quot;editor&quot;: &quot;stringList&quot;,
+      &quot;prefill&quot;: [],
+      &quot;title&quot;: &quot;Collection handles (mode=collection)&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;country&quot;: {
+      &quot;description&quot;: &quot;Two-letter ISO country code passed as `?country=` to the storefront, e.g. `US`, `GB`, `DE`.&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;title&quot;: &quot;Country (optional)&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;currency&quot;: {
+      &quot;default&quot;: &quot;store&quot;,
+      &quot;description&quot;: &quot;ISO 4217 code to pin prices to, e.g. `USD`, `EUR`, `GBP`. Use `store` to use the store&#x27;s base currency from `/meta.json`. Pinning is important because Shopify localizes prices by IP.&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;prefill&quot;: &quot;USD&quot;,
+      &quot;title&quot;: &quot;Currency&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;flattenVariants&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;Emit one `recordType: variant` row per variant instead of one product row with nested variants. Variant and product IDs are de-duplicated.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;One row per variant&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;includeDetails&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;Fetch `/products/{handle}.json` for each emitted product to add barcode, weight/grams and inventory fields. Costs one extra request per product and is off by default. Product mode always uses the detail endpoint.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Include barcode, weight and inventory&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;maxItems&quot;: {
+      &quot;default&quot;: 1000,
+      &quot;description&quot;: &quot;Hard cap on dataset rows across all stores. When `flattenVariants` is on, each variant row counts as one.&quot;,
+      &quot;maximum&quot;: 50000,
       &quot;minimum&quot;: 1,
-      &quot;prefill&quot;: 5,
-      &quot;title&quot;: &quot;Max Products&quot;,
+      &quot;prefill&quot;: 3,
+      &quot;title&quot;: &quot;Max records&quot;,
       &quot;type&quot;: &quot;integer&quot;
     },
-    &quot;proxy&quot;: {
-      &quot;default&quot;: {
-        &quot;useApifyProxy&quot;: true
-      },
-      &quot;description&quot;: &quot;Proxy settings. Apify&#x27;s own datacenter egress IPs are blocked by Shopify&#x27;s edge WAF, so a proxy is required — the default Apify AUTO proxy (free) is sufficient for almost all stores. Switch to RESIDENTIAL only if you still get 403 errors.&quot;,
+    &quot;maxPages&quot;: {
+      &quot;default&quot;: 100,
+      &quot;description&quot;: &quot;Page cap per product/collection feed. Each page holds up to 250 items and Shopify refuses offsets above 25,000, so the effective maximum is 100.&quot;,
+      &quot;maximum&quot;: 100,
+      &quot;minimum&quot;: 1,
+      &quot;prefill&quot;: 100,
+      &quot;title&quot;: &quot;Max pages per feed&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;maxPrice&quot;: {
+      &quot;description&quot;: &quot;Drop products whose lowest variant price is above this value.&quot;,
+      &quot;maximum&quot;: 1000000,
+      &quot;minimum&quot;: 0,
+      &quot;title&quot;: &quot;Maximum price&quot;,
+      &quot;type&quot;: &quot;number&quot;
+    },
+    &quot;minPrice&quot;: {
+      &quot;description&quot;: &quot;Drop products whose lowest variant price is below this value.&quot;,
+      &quot;maximum&quot;: 1000000,
+      &quot;minimum&quot;: 0,
+      &quot;title&quot;: &quot;Minimum price&quot;,
+      &quot;type&quot;: &quot;number&quot;
+    },
+    &quot;mode&quot;: {
+      &quot;default&quot;: &quot;catalog&quot;,
+      &quot;description&quot;: &quot;What to scrape. `catalog` walks the public product feed, `collection` walks specific collections, `product` fetches exact product handles, `search` uses the storefront search suggestions, `collections` lists collection metadata, and `auto` detects the type of each URL in `startUrls`.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;catalog&quot;,
+        &quot;collection&quot;,
+        &quot;product&quot;,
+        &quot;search&quot;,
+        &quot;collections&quot;,
+        &quot;auto&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;Full store catalog&quot;,
+        &quot;Specific collections&quot;,
+        &quot;Specific products&quot;,
+        &quot;In-store search&quot;,
+        &quot;Collection directory&quot;,
+        &quot;Auto-detect from URLs&quot;
+      ],
+      &quot;prefill&quot;: &quot;catalog&quot;,
+      &quot;title&quot;: &quot;Mode&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;productHandles&quot;: {
+      &quot;default&quot;: [],
+      &quot;description&quot;: &quot;Product handles or product URLs, e.g. `dark-roast-coffee` or `https://store.com/products/dark-roast-coffee`. Handles are applied to every store in `storeUrls`; a full product URL is applied to its own store.&quot;,
+      &quot;editor&quot;: &quot;stringList&quot;,
+      &quot;prefill&quot;: [],
+      &quot;title&quot;: &quot;Product handles (mode=product)&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;productType&quot;: {
+      &quot;description&quot;: &quot;Keep products whose product type contains this text (case-insensitive).&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;title&quot;: &quot;Product type contains&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;proxyConfiguration&quot;: {
+      &quot;description&quot;: &quot;Leave empty to fetch directly. After a 403 or 429 block the actor retries through Apify&#x27;s datacenter proxy (AUTO) automatically. If you set this, your configuration is used for that retry instead of AUTO; direct requests are still tried first.&quot;,
       &quot;editor&quot;: &quot;proxy&quot;,
-      &quot;prefill&quot;: {
-        &quot;useApifyProxy&quot;: true
-      },
-      &quot;title&quot;: &quot;Proxy Configuration&quot;,
+      &quot;title&quot;: &quot;Proxy configuration (optional)&quot;,
       &quot;type&quot;: &quot;object&quot;
     },
-    &quot;storeUrl&quot;: {
-      &quot;description&quot;: &quot;URL of the Shopify store to scrape. Can be the homepage or any page on the store (e.g., https://www.allbirds.com or https://shop-name.myshopify.com).&quot;,
+    &quot;searchQuery&quot;: {
+      &quot;description&quot;: &quot;In-store search term. Shopify&#x27;s public suggest endpoint returns at most 10 products per store and has no pagination.&quot;,
       &quot;editor&quot;: &quot;textfield&quot;,
-      &quot;prefill&quot;: &quot;https://www.allbirds.com&quot;,
-      &quot;title&quot;: &quot;Shopify Store URL&quot;,
+      &quot;title&quot;: &quot;Search query (mode=search)&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;startUrls&quot;: {
+      &quot;default&quot;: [],
+      &quot;description&quot;: &quot;Store, collection or product URLs. In `auto` mode each URL selects its own job: `/products/&lt;handle&gt;` fetches one product, `/collections/&lt;handle&gt;` fetches a collection, any other store URL fetches the catalog. In the other modes these URLs add stores and, for collection/product modes, their handles.&quot;,
+      &quot;editor&quot;: &quot;stringList&quot;,
+      &quot;prefill&quot;: [],
+      &quot;title&quot;: &quot;Start URLs (mixed, optional)&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;storeUrls&quot;: {
+      &quot;description&quot;: &quot;Store domains or URLs, e.g. `deathwishcoffee.com` or `https://www.allbirds.com`. Accepts custom domains and `*.myshopify.com`. A product or collection URL is reduced to its store for catalog/collections/search modes.&quot;,
+      &quot;editor&quot;: &quot;stringList&quot;,
+      &quot;prefill&quot;: [
+        &quot;https://deathwishcoffee.com&quot;
+      ],
+      &quot;title&quot;: &quot;Shopify store URLs&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;tag&quot;: {
+      &quot;description&quot;: &quot;Keep products with at least one tag containing this text (case-insensitive).&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;title&quot;: &quot;Tag contains&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;vendor&quot;: {
+      &quot;description&quot;: &quot;Keep products whose vendor contains this text (case-insensitive).&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;title&quot;: &quot;Vendor contains&quot;,
       &quot;type&quot;: &quot;string&quot;
     }
   },
   &quot;required&quot;: [
-    &quot;storeUrl&quot;,
-    &quot;proxy&quot;
+    &quot;mode&quot;
   ],
   &quot;schemaVersion&quot;: 1,
-  &quot;title&quot;: &quot;Shopify Scraper Input&quot;,
+  &quot;title&quot;: &quot;Shopify Store Catalog &amp; Pricing Extractor Input&quot;,
   &quot;type&quot;: &quot;object&quot;
 }
-</code></pre></details></section><section class="schema-section" id="output-schema"><h2>Output schema</h2><p>Published result links and storage locations. This schema is not an exhaustive contract for every field in a dataset record.</p><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>products</code></td><td>string</td><td>optional</td><td>Dataset containing all scraped Shopify products</td></tr></tbody></table></div><p><a href="output-schema.json">Download the published output schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+</code></pre></details></section><section class="schema-section" id="output-schema"><h2>Output schema</h2><p>Published result links and storage locations. This schema is not an exhaustive contract for every field in a dataset record.</p><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>items</code></td><td>string</td><td>optional</td><td>Dataset containing product, variant and collection records (filtered by recordType).</td></tr><tr><td><code>runSummary</code></td><td>string</td><td>optional</td><td>Key-value store record named OUTPUT with per-store OK/CAPPED/PARTIAL and error statuses.</td></tr></tbody></table></div><p><a href="output-schema.json">Download the published output schema</a></p><details><summary>View complete JSON</summary><pre><code>{
   &quot;actorOutputSchemaVersion&quot;: 1,
-  &quot;description&quot;: &quot;One record per product from a Shopify store with title, price, compare-at price, variants, SKUs, images and stock availability.&quot;,
+  &quot;description&quot;: &quot;Dataset rows for products, variants or collections, plus a per-store run summary record.&quot;,
   &quot;properties&quot;: {
-    &quot;products&quot;: {
-      &quot;description&quot;: &quot;Dataset containing all scraped Shopify products&quot;,
+    &quot;items&quot;: {
+      &quot;description&quot;: &quot;Dataset containing product, variant and collection records (filtered by recordType).&quot;,
       &quot;template&quot;: &quot;{{links.apiDefaultDatasetUrl}}/items&quot;,
-      &quot;title&quot;: &quot;Shopify Products&quot;,
+      &quot;title&quot;: &quot;Shopify records&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;runSummary&quot;: {
+      &quot;description&quot;: &quot;Key-value store record named OUTPUT with per-store OK/CAPPED/PARTIAL and error statuses.&quot;,
+      &quot;template&quot;: &quot;{{links.apiDefaultKeyValueStoreUrl}}/keys&quot;,
+      &quot;title&quot;: &quot;Per-store run summary&quot;,
       &quot;type&quot;: &quot;string&quot;
     }
   },
-  &quot;title&quot;: &quot;Shopify Store Catalog &amp; Pricing Extractor Output&quot;
+  &quot;title&quot;: &quot;Shopify Store Catalog &amp; Pricing Extractor Output&quot;,
+  &quot;type&quot;: &quot;object&quot;
 }
 </code></pre></details></section><section class="schema-section" id="dataset-schema"><h2>Dataset schema</h2><p>Published dataset views and any declared field definitions. A view can select only a subset of the returned record fields.</p><p><a href="dataset-schema.json">Download the published dataset schema</a></p><details><summary>View complete JSON</summary><pre><code>{
   &quot;actorSpecification&quot;: 1,
   &quot;views&quot;: {
+    &quot;collections&quot;: {
+      &quot;display&quot;: {
+        &quot;component&quot;: &quot;table&quot;,
+        &quot;properties&quot;: {
+          &quot;handle&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Handle&quot;
+          },
+          &quot;productsCount&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Reported products&quot;
+          },
+          &quot;storeUrl&quot;: {
+            &quot;format&quot;: &quot;link&quot;,
+            &quot;label&quot;: &quot;Store&quot;
+          },
+          &quot;title&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Collection&quot;
+          },
+          &quot;url&quot;: {
+            &quot;format&quot;: &quot;link&quot;,
+            &quot;label&quot;: &quot;Collection URL&quot;
+          }
+        }
+      },
+      &quot;title&quot;: &quot;Collections&quot;,
+      &quot;transformation&quot;: {
+        &quot;fields&quot;: [
+          &quot;recordType&quot;,
+          &quot;title&quot;,
+          &quot;handle&quot;,
+          &quot;productsCount&quot;,
+          &quot;storeUrl&quot;,
+          &quot;url&quot;,
+          &quot;scrapedAt&quot;
+        ]
+      }
+    },
     &quot;detailed&quot;: {
       &quot;display&quot;: {
         &quot;component&quot;: &quot;table&quot;,
@@ -61,91 +244,78 @@
             &quot;format&quot;: &quot;text&quot;,
             &quot;label&quot;: &quot;Available&quot;
           },
-          &quot;compareAtPrice&quot;: {
+          &quot;currency&quot;: {
             &quot;format&quot;: &quot;text&quot;,
-            &quot;label&quot;: &quot;Compare At&quot;
+            &quot;label&quot;: &quot;Currency&quot;
           },
-          &quot;createdAt&quot;: {
-            &quot;format&quot;: &quot;text&quot;,
-            &quot;label&quot;: &quot;Created&quot;
+          &quot;price&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Price&quot;
           },
-          &quot;description&quot;: {
-            &quot;format&quot;: &quot;text&quot;,
-            &quot;label&quot;: &quot;Description&quot;
-          },
-          &quot;handle&quot;: {
-            &quot;format&quot;: &quot;text&quot;,
-            &quot;label&quot;: &quot;Handle&quot;
-          },
-          &quot;id&quot;: {
+          &quot;productId&quot;: {
             &quot;format&quot;: &quot;text&quot;,
             &quot;label&quot;: &quot;Product ID&quot;
           },
-          &quot;images&quot;: {
-            &quot;format&quot;: &quot;text&quot;,
-            &quot;label&quot;: &quot;Images&quot;
-          },
-          &quot;price&quot;: {
-            &quot;format&quot;: &quot;text&quot;,
-            &quot;label&quot;: &quot;Price&quot;
-          },
-          &quot;productType&quot;: {
-            &quot;format&quot;: &quot;text&quot;,
-            &quot;label&quot;: &quot;Type&quot;
-          },
           &quot;scrapedAt&quot;: {
             &quot;format&quot;: &quot;text&quot;,
-            &quot;label&quot;: &quot;Scraped At&quot;
+            &quot;label&quot;: &quot;Scraped at&quot;
+          },
+          &quot;sourceUrl&quot;: {
+            &quot;format&quot;: &quot;link&quot;,
+            &quot;label&quot;: &quot;Source&quot;
           },
           &quot;storeUrl&quot;: {
             &quot;format&quot;: &quot;link&quot;,
-            &quot;label&quot;: &quot;Store URL&quot;
-          },
-          &quot;tags&quot;: {
-            &quot;format&quot;: &quot;text&quot;,
-            &quot;label&quot;: &quot;Tags&quot;
+            &quot;label&quot;: &quot;Store&quot;
           },
           &quot;title&quot;: {
             &quot;format&quot;: &quot;text&quot;,
             &quot;label&quot;: &quot;Title&quot;
           },
-          &quot;updatedAt&quot;: {
-            &quot;format&quot;: &quot;text&quot;,
-            &quot;label&quot;: &quot;Updated&quot;
-          },
           &quot;url&quot;: {
             &quot;format&quot;: &quot;link&quot;,
-            &quot;label&quot;: &quot;URL&quot;
-          },
-          &quot;variants&quot;: {
-            &quot;format&quot;: &quot;text&quot;,
-            &quot;label&quot;: &quot;Variants&quot;
-          },
-          &quot;vendor&quot;: {
-            &quot;format&quot;: &quot;text&quot;,
-            &quot;label&quot;: &quot;Vendor&quot;
+            &quot;label&quot;: &quot;Product URL&quot;
           }
         }
       },
       &quot;title&quot;: &quot;Detailed&quot;,
       &quot;transformation&quot;: {
         &quot;fields&quot;: [
+          &quot;recordType&quot;,
+          &quot;productId&quot;,
           &quot;id&quot;,
-          &quot;title&quot;,
           &quot;handle&quot;,
+          &quot;title&quot;,
           &quot;url&quot;,
-          &quot;description&quot;,
           &quot;vendor&quot;,
           &quot;productType&quot;,
           &quot;tags&quot;,
-          &quot;price&quot;,
-          &quot;compareAtPrice&quot;,
-          &quot;available&quot;,
-          &quot;variants&quot;,
-          &quot;images&quot;,
+          &quot;description&quot;,
           &quot;createdAt&quot;,
           &quot;updatedAt&quot;,
+          &quot;publishedAt&quot;,
+          &quot;publishedScope&quot;,
+          &quot;price&quot;,
+          &quot;priceMin&quot;,
+          &quot;priceMax&quot;,
+          &quot;compareAtPrice&quot;,
+          &quot;compareAtPriceMax&quot;,
+          &quot;discountPercent&quot;,
+          &quot;onSale&quot;,
+          &quot;currency&quot;,
+          &quot;available&quot;,
+          &quot;variantCount&quot;,
+          &quot;availableVariantCount&quot;,
+          &quot;variants&quot;,
+          &quot;images&quot;,
+          &quot;imageDetails&quot;,
+          &quot;featuredImage&quot;,
+          &quot;options&quot;,
+          &quot;collectionHandle&quot;,
+          &quot;store&quot;,
           &quot;storeUrl&quot;,
+          &quot;source&quot;,
+          &quot;sourceUrl&quot;,
           &quot;scrapedAt&quot;
         ]
       }
@@ -159,16 +329,24 @@
             &quot;label&quot;: &quot;Available&quot;
           },
           &quot;compareAtPrice&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Compare at&quot;
+          },
+          &quot;currency&quot;: {
             &quot;format&quot;: &quot;text&quot;,
-            &quot;label&quot;: &quot;Compare At&quot;
+            &quot;label&quot;: &quot;Currency&quot;
           },
           &quot;price&quot;: {
-            &quot;format&quot;: &quot;text&quot;,
+            &quot;format&quot;: &quot;number&quot;,
             &quot;label&quot;: &quot;Price&quot;
           },
           &quot;productType&quot;: {
             &quot;format&quot;: &quot;text&quot;,
             &quot;label&quot;: &quot;Type&quot;
+          },
+          &quot;storeUrl&quot;: {
+            &quot;format&quot;: &quot;link&quot;,
+            &quot;label&quot;: &quot;Store&quot;
           },
           &quot;title&quot;: {
             &quot;format&quot;: &quot;text&quot;,
@@ -176,7 +354,7 @@
           },
           &quot;url&quot;: {
             &quot;format&quot;: &quot;link&quot;,
-            &quot;label&quot;: &quot;URL&quot;
+            &quot;label&quot;: &quot;Product URL&quot;
           },
           &quot;vendor&quot;: {
             &quot;format&quot;: &quot;text&quot;,
@@ -184,50 +362,130 @@
           }
         }
       },
-      &quot;title&quot;: &quot;Overview&quot;,
+      &quot;title&quot;: &quot;Products&quot;,
       &quot;transformation&quot;: {
         &quot;fields&quot;: [
+          &quot;recordType&quot;,
           &quot;title&quot;,
           &quot;price&quot;,
+          &quot;currency&quot;,
           &quot;compareAtPrice&quot;,
+          &quot;available&quot;,
           &quot;vendor&quot;,
           &quot;productType&quot;,
-          &quot;available&quot;,
+          &quot;storeUrl&quot;,
           &quot;url&quot;
+        ]
+      }
+    },
+    &quot;variants&quot;: {
+      &quot;display&quot;: {
+        &quot;component&quot;: &quot;table&quot;,
+        &quot;properties&quot;: {
+          &quot;available&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Available&quot;
+          },
+          &quot;barcode&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Barcode&quot;
+          },
+          &quot;compareAtPrice&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Compare at&quot;
+          },
+          &quot;inventoryQuantity&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Inventory&quot;
+          },
+          &quot;price&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Price&quot;
+          },
+          &quot;productTitle&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Product&quot;
+          },
+          &quot;productUrl&quot;: {
+            &quot;format&quot;: &quot;link&quot;,
+            &quot;label&quot;: &quot;Product URL&quot;
+          },
+          &quot;sku&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;SKU&quot;
+          },
+          &quot;title&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Variant&quot;
+          }
+        }
+      },
+      &quot;title&quot;: &quot;Variants&quot;,
+      &quot;transformation&quot;: {
+        &quot;fields&quot;: [
+          &quot;recordType&quot;,
+          &quot;productTitle&quot;,
+          &quot;title&quot;,
+          &quot;sku&quot;,
+          &quot;price&quot;,
+          &quot;compareAtPrice&quot;,
+          &quot;currency&quot;,
+          &quot;available&quot;,
+          &quot;barcode&quot;,
+          &quot;inventoryQuantity&quot;,
+          &quot;storeUrl&quot;,
+          &quot;productUrl&quot;
         ]
       }
     }
   }
 }
 </code></pre></details></section><section class="schema-section" id="key-value-schema"><h2>Key-value schema</h2><p>Published key-value store definitions, when provided by this build.</p><p>This definition is not present in the default published build. See the published README for available documentation.</p></section><section id="published-readme"><h2>Published README</h2><details><summary>Read the full published documentation</summary><h2 id="readme-shopify-store-catalog-pricing-extractor">Shopify Store Catalog &amp; Pricing Extractor</h2>
-<p>Point this actor at any Shopify-powered store — a custom domain or a <code>myshopify.com</code> address — and get its product catalog back as structured data: pricing, variants, SKUs, stock status, and images for every product.</p>
-<h2 id="readme-what-this-actor-does">What this actor does</h2>
-<ul>
-<li>Works on any Shopify storefront, custom domain or default <code>.myshopify.com</code> address</li>
-<li>Returns product titles, descriptions, vendor, product type, and tags</li>
-<li>Captures current price and compare-at price per product, so discounts are visible</li>
-<li>Lists every variant with its own SKU, price, stock status, and option values (size, color, etc.)</li>
-<li>Every record has the same fields; values the store doesn't provide (e.g. no compare-at price) come back as an empty string, empty array, or <code>0</code> rather than being guessed</li>
-</ul>
-<h2 id="readme-output-per-product">Output per product</h2>
-<ul>
-<li><code>id</code> — Shopify's internal product ID</li>
-<li><code>title</code> — product title</li>
-<li><code>handle</code> — URL-friendly product slug</li>
-<li><code>url</code> — full product page URL</li>
-<li><code>description</code> — product description, plain text</li>
-<li><code>vendor</code> — brand/vendor name</li>
-<li><code>productType</code> — product category</li>
-<li><code>tags</code> — array of product tags</li>
-<li><code>price</code> — current price, from the first variant</li>
-<li><code>compareAtPrice</code> — original price before a discount; an empty string when the product isn't on sale</li>
-<li><code>available</code> — whether any variant is currently in stock</li>
-<li><code>variants</code> — array of <code>{id, title, sku, price, compareAtPrice, available, option1, option2, option3}</code></li>
-<li><code>images</code> — array of product image URLs</li>
-<li><code>createdAt</code>, <code>updatedAt</code> — when the product was created/last updated in the store</li>
-<li><code>storeUrl</code> — the store that was scraped</li>
-<li><code>scrapedAt</code> — ISO 8601 timestamp of when this actor collected the record</li>
-</ul>
+<p>Turn any public Shopify storefront into a structured product feed. Point the actor at one store or a list of stores, choose a mode, and get prices, compare-at prices, variants, stock status, images, options, collection metadata and optional barcode/weight/inventory detail.</p>
+<p>No Shopify account, admin API key, cookie or login is required. The actor reads the same public storefront JSON that a shopper's browser receives. Proxy setup is also optional: requests go direct first, and the actor switches to Apify's datacenter proxy automatically only after a real 403 or 429 block.</p>
+<h2 id="readme-modes">Modes</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Mode</th>
+<th>What it does</th>
+<th>Source endpoint</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>catalog</code></td>
+<td>Full published product feed for every store</td>
+<td><code>/products.json?limit=250&amp;page=N</code></td>
+</tr>
+<tr>
+<td><code>collection</code></td>
+<td>Products from one or more collection handles/URLs</td>
+<td><code>/collections/{handle}/products.json</code></td>
+</tr>
+<tr>
+<td><code>product</code></td>
+<td>Exact products by handle or product URL</td>
+<td><code>/products/{handle}.json</code></td>
+</tr>
+<tr>
+<td><code>search</code></td>
+<td>In-store product search, up to 10 results per store</td>
+<td><code>/search/suggest.json</code></td>
+</tr>
+<tr>
+<td><code>collections</code></td>
+<td>Collection directory with titles, handles and reported counts</td>
+<td><code>/collections.json?limit=250&amp;page=N</code></td>
+</tr>
+<tr>
+<td><code>auto</code></td>
+<td>Mixed <code>startUrls</code>; each URL selects its own job</td>
+<td>Detected per URL</td>
+</tr>
+</tbody>
+</table></div>
+<p><code>auto</code> treats <code>/products/&lt;handle&gt;</code> as a product job, <code>/collections/&lt;handle&gt;</code> as a collection job, <code>/collections</code> as a collection-directory job, and any other store URL as a catalog job.</p>
 <h2 id="readme-input">Input</h2>
 <div class="table-wrap"><table>
 <thead>
@@ -235,70 +493,267 @@
 <th>Field</th>
 <th>Type</th>
 <th>Default</th>
-<th>Description</th>
+<th>Notes</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>storeUrl</code></td>
+<td><code>mode</code></td>
+<td>select</td>
+<td><code>catalog</code></td>
+<td>One of the six modes above.</td>
+</tr>
+<tr>
+<td><code>storeUrls</code></td>
+<td>string list</td>
+<td>-</td>
+<td>Store domains or full URLs; <code>*.myshopify.com</code> is supported. The prefill uses <code>deathwishcoffee.com</code>.</td>
+</tr>
+<tr>
+<td><code>startUrls</code></td>
+<td>string list</td>
+<td>empty</td>
+<td>Mixed store/product/collection URLs. Used mainly by <code>auto</code>.</td>
+</tr>
+<tr>
+<td><code>collectionHandles</code></td>
+<td>string list</td>
+<td>empty</td>
+<td>Handles or collection URLs for <code>mode=collection</code>.</td>
+</tr>
+<tr>
+<td><code>productHandles</code></td>
+<td>string list</td>
+<td>empty</td>
+<td>Handles or product URLs for <code>mode=product</code>.</td>
+</tr>
+<tr>
+<td><code>searchQuery</code></td>
 <td>string</td>
-<td>–</td>
-<td><strong>Required.</strong> The Shopify store to scrape — a custom domain or <code>*.myshopify.com</code> address.</td>
+<td>empty</td>
+<td>Required for <code>mode=search</code>.</td>
 </tr>
 <tr>
-<td><code>maxProducts</code></td>
+<td><code>currency</code></td>
+<td>string</td>
+<td><code>store</code></td>
+<td>ISO 4217 code such as <code>USD</code> or <code>EUR</code>; <code>store</code> uses <code>/meta.json</code>.</td>
+</tr>
+<tr>
+<td><code>country</code></td>
+<td>string</td>
+<td>empty</td>
+<td>Optional ISO-2 country passed as <code>?country=</code>.</td>
+</tr>
+<tr>
+<td><code>vendor</code></td>
+<td>string</td>
+<td>empty</td>
+<td>Case-insensitive vendor substring filter.</td>
+</tr>
+<tr>
+<td><code>productType</code></td>
+<td>string</td>
+<td>empty</td>
+<td>Case-insensitive product-type substring filter.</td>
+</tr>
+<tr>
+<td><code>tag</code></td>
+<td>string</td>
+<td>empty</td>
+<td>Keep products with a tag containing this substring.</td>
+</tr>
+<tr>
+<td><code>minPrice</code></td>
+<td>number</td>
+<td>empty</td>
+<td>Drop products below this lowest-variant price.</td>
+</tr>
+<tr>
+<td><code>maxPrice</code></td>
+<td>number</td>
+<td>empty</td>
+<td>Drop products above this lowest-variant price.</td>
+</tr>
+<tr>
+<td><code>available</code></td>
+<td>select</td>
+<td><code>any</code></td>
+<td><code>any</code>, <code>available</code> or <code>unavailable</code>.</td>
+</tr>
+<tr>
+<td><code>maxItems</code></td>
 <td>integer</td>
-<td><code>50</code></td>
-<td>Maximum number of products to return.</td>
+<td><code>1000</code></td>
+<td>1-50,000 dataset rows; variant rows count individually when flattening.</td>
 </tr>
 <tr>
-<td><code>proxy</code></td>
+<td><code>maxPages</code></td>
+<td>integer</td>
+<td><code>100</code></td>
+<td>1-100 pages per feed. Shopify refuses offsets above 25,000.</td>
+</tr>
+<tr>
+<td><code>includeDetails</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>One extra <code>/products/{handle}.json</code> request per product for barcode, weight and inventory.</td>
+</tr>
+<tr>
+<td><code>flattenVariants</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Emit one <code>recordType: variant</code> row per variant instead of nested product rows.</td>
+</tr>
+<tr>
+<td><code>proxyConfiguration</code></td>
 <td>object</td>
-<td><code>{&quot;useApifyProxy&quot;: true}</code></td>
-<td>Proxy configuration used for the requests. Required; the default setting works for almost every store.</td>
+<td>empty</td>
+<td>Direct requests are always tried first. After a 403/429 the actor retries via AUTO, or via this configuration if provided.</td>
 </tr>
 </tbody>
 </table></div>
-<h3 id="readme-example-a-small-test-run">Example: a small test run</h3>
+<p>The smallest useful run is also the daily prefill: <code>deathwishcoffee.com</code>, three records, no detail enrichment.</p>
+<h3 id="readme-examples">Examples</h3>
+<p>Full catalog from one store:</p>
 <pre><code class="language-json">{
-  &quot;storeUrl&quot;: &quot;https://www.allbirds.com&quot;,
-  &quot;maxProducts&quot;: 10,
-  &quot;proxy&quot;: { &quot;useApifyProxy&quot;: true }
+  &quot;mode&quot;: &quot;catalog&quot;,
+  &quot;storeUrls&quot;: [&quot;https://deathwishcoffee.com&quot;],
+  &quot;currency&quot;: &quot;USD&quot;,
+  &quot;maxItems&quot;: 100
 }
 </code></pre>
-<h3 id="readme-example-a-larger-catalog-pull">Example: a larger catalog pull</h3>
+<p>Collection and sale filters:</p>
 <pre><code class="language-json">{
-  &quot;storeUrl&quot;: &quot;https://shop-name.myshopify.com&quot;,
-  &quot;maxProducts&quot;: 500,
-  &quot;proxy&quot;: { &quot;useApifyProxy&quot;: true }
+  &quot;mode&quot;: &quot;collection&quot;,
+  &quot;storeUrls&quot;: [&quot;allbirds.com&quot;],
+  &quot;collectionHandles&quot;: [&quot;mens-sale&quot;],
+  &quot;maxPrice&quot;: 100,
+  &quot;available&quot;: &quot;available&quot;,
+  &quot;flattenVariants&quot;: true
 }
 </code></pre>
-<h2 id="readme-use-cases">Use cases</h2>
+<p>Exact products by URL:</p>
+<pre><code class="language-json">{
+  &quot;mode&quot;: &quot;product&quot;,
+  &quot;startUrls&quot;: [
+    &quot;https://deathwishcoffee.com/products/valhalla-java&quot;,
+    &quot;https://deathwishcoffee.com/products/dark-roast&quot;
+  ],
+  &quot;includeDetails&quot;: true
+}
+</code></pre>
+<p>Search a set of stores:</p>
+<pre><code class="language-json">{
+  &quot;mode&quot;: &quot;search&quot;,
+  &quot;storeUrls&quot;: [&quot;allbirds.com&quot;, &quot;rothys.com&quot;],
+  &quot;searchQuery&quot;: &quot;wool runner&quot;,
+  &quot;maxItems&quot;: 20
+}
+</code></pre>
+<p>Mixed URLs in one run:</p>
+<pre><code class="language-json">{
+  &quot;mode&quot;: &quot;auto&quot;,
+  &quot;startUrls&quot;: [
+    &quot;https://allbirds.com&quot;,
+    &quot;https://allbirds.com/collections/mens&quot;,
+    &quot;https://allbirds.com/products/wool-runner&quot;
+  ]
+}
+</code></pre>
+<h2 id="readme-product-output">Product output</h2>
+<p>Product records use <code>recordType: &quot;product&quot;</code> and contain:</p>
 <ul>
-<li><strong>Price monitoring</strong> — track a competitor's pricing and discount activity over time</li>
-<li><strong>Catalog audits</strong> — check your own store's live titles, tags, and stock status in bulk</li>
-<li><strong>Dropshipping research</strong> — pull a supplier's full catalog with variant-level SKUs</li>
-<li><strong>Market mapping</strong> — compare product types and vendors across several stores in the same niche</li>
-<li><strong>Inventory watch</strong> — monitor when specific SKUs go in or out of stock</li>
-<li><strong>Data migration</strong> — export a store's catalog as a starting point for moving platforms</li>
+<li><code>productId</code> and legacy <code>id</code>, <code>handle</code>, <code>title</code>, <code>url</code></li>
+<li><code>vendor</code>, <code>productType</code>, <code>tags</code></li>
+<li><code>bodyHtml</code> (raw) and <code>description</code> (plain text)</li>
+<li><code>createdAt</code>, <code>updatedAt</code>, <code>publishedAt</code>, <code>publishedScope</code></li>
+<li><code>price</code>, <code>priceMin</code>, <code>priceMax</code>, <code>compareAtPrice</code>, <code>compareAtPriceMax</code>, <code>discountPercent</code>, <code>onSale</code>, <code>currency</code></li>
+<li><code>available</code>, <code>variantCount</code>, <code>availableVariantCount</code></li>
+<li><code>variants</code>: variant id, title, SKU, price, compare-at price, availability, option values and named <code>options</code></li>
+<li><code>images</code> (URL list), <code>imageDetails</code> (URL/width/height/position), <code>featuredImage</code></li>
+<li><code>options</code>: option names and their values</li>
+<li><code>store</code>: <code>{url, name, currency}</code>, plus legacy <code>storeUrl</code></li>
+<li><code>source</code>, <code>sourceUrl</code>, <code>scrapedAt</code>, <code>recordType</code></li>
 </ul>
+<p>With <code>includeDetails</code> enabled, variants can also contain <code>barcode</code>, <code>weight</code>, <code>weightUnit</code>, <code>grams</code>, <code>inventoryQuantity</code>, <code>inventoryPolicy</code>, <code>inventoryManagement</code>, <code>quantityRule</code>, <code>requiresShipping</code> and <code>taxable</code>. Inventory quantities are only emitted when the store exposes <code>inventory_management</code> and the value is not Shopify's <code>999999</code> untracked sentinel.</p>
+<p>When the detail endpoint omits the <code>available</code> flag but publishes inventory management, availability is derived from stock: positive quantity, or <code>inventory_policy=continue</code>, means available. Without published inventory the flag stays omitted rather than being guessed.</p>
+<h2 id="readme-variant-output">Variant output</h2>
+<p>With <code>flattenVariants: true</code>, each variant becomes its own row with <code>recordType: &quot;variant&quot;</code>, plus the parent <code>productId</code>, <code>productHandle</code>, <code>productTitle</code>, <code>productUrl</code>, <code>vendor</code> and <code>productType</code>. Product and variant IDs are de-duplicated.</p>
+<h2 id="readme-collection-output">Collection output</h2>
+<p><code>mode=collections</code> emits <code>recordType: &quot;collection&quot;</code> rows with <code>collectionId</code>, <code>handle</code>, <code>url</code>, <code>title</code>, <code>description</code>, <code>productsCount</code> (the store's reported count), timestamps, image, <code>store</code>, <code>sourceUrl</code> and <code>scrapedAt</code>.</p>
+<h2 id="readme-run-summary">Run summary</h2>
+<p>The dataset stays clean: products, variants and collections only. A separate key-value record named <code>OUTPUT</code> holds the run summary with each store's status, HTTP code, pages fetched, record counts, detail failures and capped flag.</p>
+<p>Per-store statuses:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Status</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>OK</code></td>
+<td>The feed was read normally.</td>
+</tr>
+<tr>
+<td><code>CAPPED</code></td>
+<td>The page cap or Shopify's 25,000-offset ceiling was reached.</td>
+</tr>
+<tr>
+<td><code>PARTIAL</code></td>
+<td>Some pages or detail requests failed after data was collected.</td>
+</tr>
+<tr>
+<td><code>PASSWORD_PROTECTED</code></td>
+<td>The store returned 401.</td>
+</tr>
+<tr>
+<td><code>FROZEN</code></td>
+<td>The store returned 402.</td>
+</tr>
+<tr>
+<td><code>BLOCKED</code></td>
+<td>The store returned 403, including after the automatic proxy retry.</td>
+</tr>
+<tr>
+<td><code>NO_JSON</code></td>
+<td>The store returned 404 or a non-JSON response.</td>
+</tr>
+<tr>
+<td><code>RATE_LIMITED</code></td>
+<td>The store returned 429 after retries.</td>
+</tr>
+</tbody>
+</table></div>
+<p>If every store fails, the run fails with the per-store map instead of finishing silently with an empty dataset. If some stores succeed, the run succeeds and the summary reports the failures.</p>
+<h2 id="readme-pagination-notes">Pagination notes</h2>
+<ul>
+<li>250 products per page, the Shopify maximum.</li>
+<li>Short pages are not the end of the feed. The walker continues until an empty page, an error, <code>maxPages</code>, or the 25,000-offset ceiling.</li>
+<li>Products are de-duplicated by store and product ID; variants by store and variant ID.</li>
+<li><code>maxItems</code> is a global cap across all stores and jobs.</li>
+</ul>
+<h2 id="readme-currency">Currency</h2>
+<p>Shopify localizes prices by IP. The actor pins <code>?currency=</code> on every list, collection and product request. The default <code>store</code> setting reads the store's base currency from <code>/meta.json</code>; an explicit ISO code overrides it. Each product records the currency reported by its variants when available.</p>
 <h2 id="readme-faq">FAQ</h2>
-<p><strong>Do I need a Shopify account or API key?</strong>
-No. This actor reads data that Shopify stores make publicly available without authentication.</p>
-<p><strong>How do I know if a store is built on Shopify?</strong>
-If the store is Shopify-powered, this actor will return products immediately; if it isn't, the run completes with no products.</p>
-<p><strong>Can I scrape a password-protected store?</strong>
-No. Password-protected storefronts require a login this actor doesn't support.</p>
-<p><strong>Is there a limit on how many products I can get?</strong>
-No hard limit — set <code>maxProducts</code> as high as you need and the actor paginates through the full catalog.</p>
-<p><strong>Why am I getting no results or a 403-style failure?</strong>
-Some stores sit behind extra firewall protection. The <code>proxy</code> input is required precisely to handle this; the default setting resolves it for almost every store.</p>
-<p><strong>Do I get the full HTML product description?</strong>
-No, descriptions are returned as plain text with formatting tags removed.</p>
-<p><strong>Does this work on Shopify Plus stores?</strong>
-Yes — Shopify Plus stores expose the same catalog data as standard Shopify stores.</p>
-<p><strong>Why do <code>price</code> and <code>compareAtPrice</code> only reflect one variant?</strong>
-Those two top-level fields mirror the first variant for a quick overview; check the <code>variants</code> array for the price of every individual variant.</p>
-<p><strong>Is this affiliated with Shopify?</strong>
-No. This is an independent, third-party actor that reads publicly available store data; it isn't affiliated with or endorsed by Shopify Inc.</p>
-</details></section><section id="python-quickstart"><h2>Python quickstart</h2><p>Use a schema-derived input and the Python standard library to start a run. An Apify account and token are required for execution.</p><p><a href="/apify-actor-examples/guides/MaKZQdevxgpAmpJ8l/">Open the step-by-step Python guide →</a></p></section><p class="source-note">Source build <code>gKcnm6Hy1wTv8Jdbv</code>. Documentation is regenerated from the default published build; private drafts are not included.</p></article></div></main><footer class="footer"><strong>Nimbryxo Studio</strong><div class="footer-links"><a href="/apify-actor-examples/topics/">Topics</a><a href="/apify-actor-examples/sources/">Documentation sources</a><a href="https://apify.com/nimbryxo-studio">Apify</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></div></footer></body></html>
+<p><strong>Do I need a Shopify account or API key?</strong> No. The actor only reads public storefront JSON.</p>
+<p><strong>Do I need a proxy?</strong> No. Direct requests are tried first. Apify's datacenter proxy is used only after a 403 or 429.</p>
+<p><strong>Why does search return at most 10 products per store?</strong> That is Shopify's public suggest endpoint limit. There is no pagination on it. Use <code>catalog</code> or <code>collection</code> mode for larger feeds.</p>
+<p><strong>Why is the product count lower than the collection page says?</strong> Collection product endpoints expose only purchasable/published products, while <code>products_count</code> counts more. The reported count is kept as <code>productsCount</code> and is not treated as ground truth.</p>
+<p><strong>Why are some inventory fields missing?</strong> Inventory is a merchant setting. Stores that do not publish <code>inventory_quantity</code> cannot be forced to reveal it, and the untracked <code>999999</code> sentinel is never emitted as stock.</p>
+<p><strong>What happens on password-protected stores?</strong> Their public JSON returns 401. The actor reports <code>PASSWORD_PROTECTED</code> and does not retry with a proxy.</p>
+<p><strong>Why did a large store stop at 25,000 products?</strong> Shopify rejects page offsets above 25,000 on <code>/products.json</code>. Split large catalogs by collection to go deeper.</p>
+<p><strong>Are descriptions HTML or plain text?</strong> Both are available: <code>bodyHtml</code> keeps the original markup and <code>description</code> is a plain-text version.</p>
+<p><strong>Is this affiliated with Shopify?</strong> No. It is an independent third-party tool that reads publicly available storefront data.</p>
+<h2 id="readme-limits">Limits</h2>
+<ul>
+<li>Password-protected stores are not scrapable through the public JSON.</li>
+<li>Stores that disable the JSON endpoints return <code>NO_JSON</code>.</li>
+<li>Collection membership is not exposed publicly; the actor emits collection records instead of inventing per-product membership.</li>
+<li>Search is capped at 10 products per store.</li>
+<li>Inventory counts are available only where the store publishes them.</li>
+<li>The product feed is limited to the newest 25,000 products per store/feed.</li>
+</ul>
+</details></section><section id="python-quickstart"><h2>Python quickstart</h2><p>Use a schema-derived input and the Python standard library to start a run. An Apify account and token are required for execution.</p><p><a href="/apify-actor-examples/guides/MaKZQdevxgpAmpJ8l/">Open the step-by-step Python guide →</a></p></section><p class="source-note">Source build <code>Wr4VAIbGszYovSvit</code>. Documentation is regenerated from the default published build; private drafts are not included.</p></article></div></main><footer class="footer"><strong>Nimbryxo Studio</strong><div class="footer-links"><a href="/apify-actor-examples/topics/">Topics</a><a href="/apify-actor-examples/sources/">Documentation sources</a><a href="https://apify.com/nimbryxo-studio">Apify</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></div></footer></body></html>

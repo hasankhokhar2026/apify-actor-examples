@@ -1,141 +1,191 @@
 {
-  "description": "Scrape Product Hunt launches via the official GraphQL API. Free API token required (https://api.producthunt.com/v2/oauth/applications).",
+  "description": "Collect Product Hunt launches, products, comments and reviews without a Product Hunt account or API token.",
   "properties": {
-    "apiToken": {
-      "description": "Optional Bearer token from https://api.producthunt.com/v2/oauth/applications (free, instant). Without a token, mode=dailyLeaderboard works via public-page scraping with limited fields (no description/makers/media). Token is required for topic, userLaunches, and productDetail modes, and unlocks full launch metadata in dailyLeaderboard.",
-      "editor": "textfield",
-      "isSecret": true,
-      "title": "Product Hunt API token (optional)",
-      "type": "string"
+    "categorySlugs": {
+      "default": [],
+      "description": "Categories for mode=category, e.g. `ai-code-editors`, `productivity`, or a full `/categories/...` URL.",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Category slugs or URLs",
+      "type": "array"
     },
-    "dateRangeFrom": {
-      "description": "Drop launches posted before this date.",
+    "date": {
+      "description": "Optional date for mode=leaderboard, in YYYY-MM-DD form. The daily period uses the exact day; weekly, monthly and yearly use that day's ISO week, month or year. Defaults to today.",
       "editor": "textfield",
-      "title": "Date range from (YYYY-MM-DD)",
-      "type": "string"
-    },
-    "dateRangeTo": {
-      "description": "Drop launches posted after this date.",
-      "editor": "textfield",
-      "title": "Date range to (YYYY-MM-DD)",
+      "title": "Leaderboard date",
       "type": "string"
     },
     "featuredOnly": {
       "default": false,
-      "description": "Only emit launches that were officially featured on the Product Hunt homepage.",
+      "description": "Keep only launches that Product Hunt selected for the homepage.",
       "prefill": false,
-      "title": "Featured only",
+      "title": "Featured launches only",
       "type": "boolean"
     },
-    "includeMakers": {
-      "default": true,
-      "description": "Include the makers array (people who built the product). Adds 1 GraphQL field — minor cost.",
-      "prefill": true,
-      "title": "Include makers",
-      "type": "boolean"
+    "from": {
+      "description": "Optional first day for mode=dailyRange, in YYYY-MM-DD form. Defaults to the `to` date, or yesterday.",
+      "editor": "textfield",
+      "title": "From date",
+      "type": "string"
     },
-    "includeMedia": {
+    "includeComments": {
       "default": false,
-      "description": "Include the media array (screenshots, videos uploaded with the launch).",
+      "description": "Attach the discussion thread (comments and nested replies) to each launch. Adds one or more requests per launch.",
       "prefill": false,
-      "title": "Include media (screenshots / videos)",
+      "title": "Include comments and replies",
       "type": "boolean"
+    },
+    "includeDetails": {
+      "default": true,
+      "description": "Fetch the full launch page for description, hunter, makers, media, website, pricing, ranks and review score. Turn off for a faster, lighter feed.",
+      "prefill": true,
+      "title": "Include launch and product details",
+      "type": "boolean"
+    },
+    "includeHistory": {
+      "default": false,
+      "description": "Attach every earlier launch from the same product, newest first.",
+      "prefill": false,
+      "title": "Include launch history",
+      "type": "boolean"
+    },
+    "includeReviews": {
+      "default": false,
+      "description": "Attach Product Hunt's detailed reviews, ratings, pros and cons to each launch. Adds one request per 10 reviews.",
+      "prefill": false,
+      "title": "Include product reviews",
+      "type": "boolean"
+    },
+    "maxComments": {
+      "default": 50,
+      "description": "Used when `includeComments` is on. Comments are read 20 threads per page, including replies, and capped at this number.",
+      "maximum": 500,
+      "minimum": 1,
+      "prefill": 20,
+      "title": "Maximum comments per launch",
+      "type": "integer"
     },
     "maxItems": {
       "default": 50,
-      "description": "Hard cap on emitted records.",
-      "maximum": 5000,
+      "description": "Stop after this many launch records. One record is one launch (comments and reviews stay attached to it).",
+      "maximum": 1000,
       "minimum": 1,
-      "prefill": 50,
-      "title": "Max items",
+      "prefill": 3,
+      "title": "Maximum records",
       "type": "integer"
     },
-    "minComments": {
-      "description": "Drop launches with fewer comments than this.",
-      "maximum": 100000,
-      "minimum": 0,
-      "title": "Min comments",
+    "maxPages": {
+      "default": 10,
+      "description": "Page cap per feed, topic, category, search query, product history, comment thread or review feed. A full Product Hunt day is about 40-60 pages of 20 launches.",
+      "maximum": 60,
+      "minimum": 1,
+      "prefill": 1,
+      "title": "Maximum pages per source",
       "type": "integer"
     },
-    "minVotes": {
-      "description": "Drop launches with fewer up-votes than this.",
-      "maximum": 100000,
-      "minimum": 0,
-      "title": "Min votes",
+    "maxReviews": {
+      "default": 20,
+      "description": "Used when `includeReviews` is on. Reviews are read 10 per page and capped at this number.",
+      "maximum": 200,
+      "minimum": 1,
+      "prefill": 10,
+      "title": "Maximum reviews per product",
       "type": "integer"
     },
     "mode": {
-      "default": "dailyLeaderboard",
-      "description": "What to fetch. `dailyLeaderboard` returns featured launches sorted by votes; `topic` returns launches in a specific topic; `userLaunches` returns posts by a user; `productDetail` returns a single product by slug.",
+      "default": "latest",
+      "description": "Pick the launch feed, a leaderboard period, a date range, a topic, a category, a keyword search, specific products, or specific launches.",
       "editor": "select",
       "enum": [
-        "dailyLeaderboard",
+        "latest",
+        "leaderboard",
+        "dailyRange",
         "topic",
-        "userLaunches",
-        "productDetail"
+        "category",
+        "search",
+        "product",
+        "launch"
       ],
       "enumTitles": [
-        "Daily / All launches (sortable)",
-        "Launches by topic",
-        "Launches by user (maker or hunter)",
-        "Single product detail (by slug)"
+        "Latest launches (today's full feed)",
+        "Leaderboard (daily, weekly, monthly or yearly)",
+        "Daily range (one or more days)",
+        "Topic launches",
+        "Category launches",
+        "Keyword product search",
+        "Specific products (latest launch)",
+        "Specific launches"
       ],
-      "prefill": "dailyLeaderboard",
-      "title": "Mode",
+      "prefill": "latest",
+      "title": "What to scrape",
       "type": "string"
+    },
+    "period": {
+      "default": "daily",
+      "description": "Used when mode is `leaderboard`. Daily = one day, weekly = ISO week, monthly = calendar month, yearly = calendar year.",
+      "editor": "select",
+      "enum": [
+        "daily",
+        "weekly",
+        "monthly",
+        "yearly"
+      ],
+      "enumTitles": [
+        "Daily",
+        "Weekly",
+        "Monthly",
+        "Yearly"
+      ],
+      "prefill": "daily",
+      "title": "Leaderboard period",
+      "type": "string"
+    },
+    "postIds": {
+      "default": [],
+      "description": "Launches for mode=launch, e.g. `strawberry-1-0`, or full `https://www.producthunt.com/products/...?launch=...` URLs.",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Launch slugs or URLs",
+      "type": "array"
     },
     "productSlugs": {
       "default": [],
-      "description": "Product slugs (e.g. `notion`, `figma`). Required for `mode=productDetail`.",
+      "description": "Products for mode=product, e.g. `notion`, `figma`, or full `https://www.producthunt.com/products/...` URLs. Each product's latest launch is returned.",
       "editor": "stringList",
       "prefill": [],
-      "title": "Product slugs (mode=productDetail)",
+      "title": "Product slugs or URLs",
       "type": "array"
     },
-    "sortBy": {
-      "default": "RANKING",
-      "description": "Sort order for posts. RANKING is daily-rank order; VOTES is most-upvoted overall; NEWEST is most recent; FEATURED_AT is featured-date order.",
-      "editor": "select",
-      "enum": [
-        "RANKING",
-        "VOTES",
-        "NEWEST",
-        "FEATURED_AT"
-      ],
-      "enumTitles": [
-        "Daily ranking (default for leaderboard)",
-        "Most votes",
-        "Newest",
-        "Featured-at date"
-      ],
-      "prefill": "RANKING",
-      "title": "Sort by",
+    "proxyConfiguration": {
+      "default": {
+        "useApifyProxy": false
+      },
+      "description": "Optional. The actor works without a proxy; add one only if Product Hunt blocks your network or you need a specific location.",
+      "editor": "proxy",
+      "prefill": {
+        "useApifyProxy": true
+      },
+      "title": "Proxy configuration",
+      "type": "object"
+    },
+    "searchQuery": {
+      "description": "Keyword for mode=search, e.g. `notion`, `ai browser`, `invoice`. Product Hunt searches products, then the actor resolves each product's latest launch.",
+      "editor": "textfield",
+      "title": "Search query",
       "type": "string"
     },
-    "tagAnyOf": {
-      "default": [],
-      "description": "Only emit launches that have at least one of these topic slugs (e.g. `productivity`, `saas`).",
-      "editor": "stringList",
-      "prefill": [],
-      "title": "Tags / topics filter",
-      "type": "array"
+    "to": {
+      "description": "Optional last day for mode=dailyRange, in YYYY-MM-DD form. Defaults to the `from` date, or yesterday.",
+      "editor": "textfield",
+      "title": "To date",
+      "type": "string"
     },
     "topicSlugs": {
       "default": [],
-      "description": "Topic slugs from Product Hunt URLs (e.g. `artificial-intelligence`, `developer-tools`, `productivity`). Required for `mode=topic`.",
-      "editor": "stringList",
-      "prefill": [
-        "artificial-intelligence"
-      ],
-      "title": "Topic slugs (mode=topic)",
-      "type": "array"
-    },
-    "userSlugs": {
-      "default": [],
-      "description": "Username slugs from Product Hunt URLs (e.g. `rrhoover`, `tibo_maker`). Required for `mode=userLaunches`.",
+      "description": "Topics for mode=topic, e.g. `artificial-intelligence`, `developer-tools`, or a full `/topics/...` URL.",
       "editor": "stringList",
       "prefill": [],
-      "title": "User slugs (mode=userLaunches)",
+      "title": "Topic slugs or URLs",
       "type": "array"
     }
   },

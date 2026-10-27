@@ -1,93 +1,131 @@
-# Username Lookup Across 400+ Social Platforms
+# Verified Username Lookup Across Social Platforms
 
-People reuse the same handle everywhere — this actor checks a username or nickname against 400+ sites at once and reports back which ones actually have a live, public profile under that name. Feed it one username or a batch, narrow it to a handful of platforms or let it check everything, and get a flat list of real, working profile links.
+Most username checkers answer one question with one bit: "found" or "not found". That bit is often wrong, because a login wall, a Cloudflare challenge, an empty app shell and a soft-404 all return HTTP 200. This actor answers the question honestly: it checks a handle against **29 platforms that passed a known-handle plus random-handle validation gate**, and it labels every answer with `status`, `confidence` and `evidence`. When a platform blocks, logs out or returns an ambiguous page, the row says `unknown` instead of pretending the handle is free.
 
-## What this actor does
+## What it does
 
-- Checks each username against your choice of 400+ sites: social networks, video, music, gaming, developer, professional, and messaging platforms
-- Confirms every "Found" result with a live request to the platform at run time, using that platform's own sign of a real profile (status code, error text or redirect), rather than guessing from the URL pattern alone
-- Supports a wildcard separator (`{?}`) so one query like `john{?}doe` checks `john_doe`, `john-doe`, and `john.doe` in one go
-- Runs multiple usernames in the same batch (duplicates are checked once) and caps the total number of rows returned
-- When you filter to specific platforms, also lists those platforms where no profile was confirmed; without a filter, only `Found` rows are returned
+- **Lookup**: check one or many handles, `@handles` or profile URLs. Found profiles are returned with the canonical profile URL, HTTP status, confidence and an evidence label. Blocked or ambiguous checks are returned as `unknown`.
+- **Availability**: get one row per platform with `availability` = `available`, `taken` or `unknown`. This is the mode to use before choosing a new handle.
+- **Name search**: turn a full name into up to 10 handle candidates (`johnsmith`, `john.smith`, `john_smith`, `john-smith`, `jsmith`, ...), check each candidate, and score matches using the number of platforms found plus display-name similarity.
+- **Verified coverage**: 29 platforms with hard status or positive content-signature rules, validated against real control handles and cryptographic random handles with zero false positives in the discovery run.
+- **Extended coverage**: an optional 400+ platform catalogue. Extended rows are always `confidence: low`, use a best-effort status check, and never contaminate the verified result set silently.
+- **No cookies, accounts or API keys.** All checks are direct requests to public profile URLs or public JSON/oEmbed/XML/RSS endpoints.
 
-## Output per check
+## Why the status matters
 
-- `username` — the username or nickname that was searched
-- `platform` — the name of the platform checked (e.g. `GitHub`, `Instagram`)
-- `url` — the profile URL when `status` is `Found`; an empty string when `Not Found`
-- `status` — `Found`, or `Not Found` (only when `platforms` is set; means no profile was confirmed, which also covers checks the platform blocked or that timed out)
+| Status | Meaning |
+|---|---|
+| `found` | The platform returned a hard positive signal: 200 with a profile signature, JSON profile, oEmbed payload, RSS feed or XML profile. |
+| `not_found` | The platform returned a hard negative: 404/410, JSON 404/400, oEmbed 400, "no such user", or an explicit not-found body. |
+| `unknown` | The platform blocked us, returned a challenge/login page, rate-limited, timed out, or answered with a page that cannot prove either existence or absence. `exists` is omitted. |
 
-If no row at all is produced (for example, no profile found anywhere and no `platforms` filter), the run ends with a failed status and an empty dataset.
+An `unknown` row is **not** proof that the handle is available. It means the actor could not check that platform reliably at that moment. Re-run later, lower concurrency, or check that platform manually.
 
-## Input
+## Output fields
 
-| Field | Type | Default | Description |
+Each profile/check row contains:
+
+- `recordType` — `profile` or `summary`
+- `query` — the handle or full name you asked for
+- `username` — the checked handle (the candidate handle in name search)
+- `platform`, `platformId`, `category`
+- `url` — the canonical profile URL
+- `exists` — `true` for found, `false` for a hard not-found; omitted for `unknown`
+- `availability` — `taken`, `available` or `unknown` in availability mode
+- `status` — `found`, `not_found` or `unknown`
+- `statusReason` — present for `unknown` rows, e.g. `cloudflare_challenge`, `login_wall`, `rate_limited`, `timeout`, `soft_404`
+- `confidence` — `high`, `medium` or `low`
+- `evidence` — how the verdict was reached, e.g. `http_200`, `json_200`, `oembed_author`, `embed_followers`, `rss_200`, `xml_profile`
+- `httpStatus`, `responseTimeMs`
+- `displayName`, `bio`, `avatarUrl` — when the platform exposes them
+- `candidate`, `matchScore` — name-search rows only
+
+Every run also emits one `summary` record with counts (`profilesFound`, `notFound`, `unknown`, `available`, `taken`), `queriesChecked`, `platformsChecked`, `rows`, `durationSecs`, `status` and any ignored platform names.
+
+Empty fields are omitted everywhere. There are no `null`, `""`, `[]` or `{}` values in the dataset.
+
+## Inputs
+
+| Field | Type | Default | Notes |
 |---|---|---|---|
-| `queries` | array | – | **Required.** Usernames or nicknames to search. Supports `{?}` wildcard expansion (e.g. `john{?}doe`). |
-| `platforms` | array | – (all 400+) | Limit the search to specific platforms (pick from the list). Leave empty to check every supported platform. |
-| `maxResults` | integer | – (no limit) | Maximum total rows (Found and Not Found) to return across all usernames, in input order. Leave empty for no limit. |
+| `mode` | select | `lookup` | `lookup`, `availability` or `name_search`. |
+| `usernames` | array | `["torvalds"]` | Handles, `@handles` or profile URLs. Required for lookup/availability. |
+| `names` | array | — | Full names for name search. |
+| `coverage` | select | `verified` | `verified` (29 platforms) or `extended` (400+ best-effort platforms). |
+| `platforms` | multi-select | 7 verified platforms | Leave empty for all platforms in the chosen coverage. |
+| `maxConcurrency` | integer | `12` | 1–12. The discovery run validated 12 as the safe default. |
+| `maxResults` | integer | `500` | 1–5,000 profile/check rows. The summary is extra. |
+| `proxyConfiguration` | object | — | Optional. The actor works with no proxy. |
 
-### Example: check one username everywhere
+Caps: 50 queries per run (10 when extended coverage is active), 10 name candidates per name, 5,000 rows. Duplicate queries, candidates and platform checks are de-duplicated before any request is made.
 
-```json
-{
-  "queries": ["johndoe"],
-  "maxResults": 200
-}
-```
-
-### Example: check several usernames on specific platforms
+## Example: lookup one handle on the verified set
 
 ```json
 {
-  "queries": ["johndoe", "jane_smith"],
-  "platforms": ["Instagram", "GitHub", "LinkedIn", "YouTube"]
+  "mode": "lookup",
+  "usernames": ["torvalds"],
+  "coverage": "verified",
+  "maxResults": 50
 }
 ```
 
-### Example: wildcard separator expansion
+## Example: check whether a handle is free
 
 ```json
 {
-  "queries": ["john{?}doe"],
-  "platforms": ["Instagram", "TikTok", "Twitter"]
+  "mode": "availability",
+  "usernames": ["mynewbrand"],
+  "platforms": ["GitHub", "YouTube", "TikTok", "Instagram", "Pinterest", "X/Twitter", "Bluesky"],
+  "maxResults": 50
 }
 ```
 
-## Use cases
+## Example: find profiles from a full name
 
-- **Lead enrichment** — attach every public social account to a prospect's known handle
-- **Brand protection** — see where your brand name is already claimed across platforms
-- **OSINT research** — build a systematic picture of a username's online footprint
-- **Background checks** — verify someone's public digital presence before engaging with them
-- **Username availability** — shortlist platforms where a desired handle shows no existing profile, then confirm on the site itself
-- **Competitive mapping** — chart a competitor's presence across video, social, and developer platforms
+```json
+{
+  "mode": "name_search",
+  "names": ["Linus Torvalds"],
+  "platforms": ["GitHub", "Bluesky", "Mastodon.social"],
+  "maxResults": 100
+}
+```
+
+## Coverage tiers
+
+**Verified (29):** GitHub, GitLab, YouTube, TikTok, Instagram, Pinterest, Twitch, X/Twitter, Medium, SoundCloud, Steam, Snapchat, Bluesky, Mastodon.social, Threads, Dribbble, Behance, Vimeo, Keybase, Substack, Flickr, HackerNews, Dev.to, HuggingFace, Chess.com, Lichess, Goodreads, Patreon, About.me.
+
+These platforms were tested with real control handles and three cryptographic random handles each. The validated set returned **71/74 control handles found (96%)**, **0/87 random handles found (0% false positives)** and only 4 unknown results. One username across all 29 took about 3.8 seconds at 12-way concurrency.
+
+**Extended (400+):** pulled from the public Sherlock site catalogue after removing known soft-404 traps, login-walled platforms, dead domains and adult sites. Extended checks use a status-only rule and are always `confidence: low`. Treat them as leads, not proof.
+
+## What is deliberately excluded
+
+Reddit, LinkedIn, Facebook, Telegram, VK, npm, Letterboxd, Untappd, Rumble, Linktree, Ko-fi, ProductHunt, Quora, AllMyLinks, BabyRu, Tumblr, Codeberg and osu! were blocked, login-walled or timed out during discovery. PyPI, Last.fm, Trakt, eBay, Odysee, Dailymotion, Spotify and F3.cool return 200 for random handles and are excluded from the verified set. If a platform becomes reliably checkable without cookies, it can be added to a future verified registry.
 
 ## FAQ
 
-**Do I need an account or API key for any platform?**
-No. Every check is a direct request to the platform's own public profile URL.
+**Do I need cookies, an account or an API key?**
+No. The actor uses only public pages and public JSON/oEmbed/XML/RSS endpoints. It never asks for platform credentials.
 
-**How long does a run take?**
-It depends on how many usernames and platforms you check, and on how quickly each site answers; usernames are checked one after another. Narrowing `platforms` to a shortlist finishes much faster since fewer sites are checked.
+**Do I need a proxy?**
+No. The verified set works without one. You can attach an Apify proxy configuration if you want requests routed through it, but it is not required.
 
-**What does the `{?}` wildcard do?**
-It expands to the three most common separators — underscore, hyphen, and period — so `john{?}doe` checks `john_doe`, `john-doe`, and `john.doe` as three separate usernames.
+**Why is a platform `unknown` instead of `not_found`?**
+Because the platform blocked the request, showed a challenge/login page, rate-limited, timed out, or returned a page that proves nothing. The actor refuses to turn that into a false "available" answer.
 
-**Why doesn't `johndoe` also match `john.doe`?**
-Matching is exact per username string. Use the `{?}` wildcard if you want the common separator variants checked together.
+**Why does a live profile sometimes belong to a different person?**
+A handle is not an identity. The same handle can be registered by someone else on another platform. `displayName` and `bio` are provided to help you disambiguate, but you should verify identity yourself.
 
-**Why are some big platforms, like Facebook, missing from the list?**
-Only platforms whose public profile pages can be checked reliably without logging in are included. Pick from the `platforms` list to see exactly what is supported.
+**How does name search score matches?**
+Each candidate is checked on the selected platforms. The score combines the share of platforms where the candidate exists (60%) with the best display-name token overlap against the searched name (40%). A candidate with no found profiles is not emitted.
 
-**Can I search by email or phone number instead of a username?**
-No — this actor only matches against usernames and nicknames.
+**What happens when nothing is found?**
+The run succeeds and emits a summary row with `status: no_results`. It does not fail the run.
 
-**Why is `url` empty on a "Not Found" row?**
-A `Not Found` row means the platform was checked but no profile could be confirmed, so there's no URL to report. That usually means the username isn't registered there, but a platform that blocks or times out the check is reported the same way.
+**How are retries handled?**
+HTTP 419, 429, 5xx and timeouts are retried twice with exponential backoff and jitter. A failed check after retries becomes `unknown`, never `not_found`.
 
-**How reliable is a "Found" result?**
-Each "Found" row is backed by a live check against the platform at run time, not just a guessed URL. False positives can still occur on platforms with unusual redirect or error-page behavior, so open the link before relying on it.
-
-**Is this affiliated with any of the listed platforms?**
-No. This is an independent, third-party actor that checks publicly accessible profile pages; it isn't affiliated with Instagram, GitHub, TikTok, or any other platform it checks.
+**Is this affiliated with the platforms?**
+No. This is an independent actor that checks publicly accessible profile pages.

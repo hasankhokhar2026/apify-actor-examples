@@ -1,19 +1,53 @@
 {
-  "description": "Search for places, get business details, or scrape reviews from Yandex Maps.",
+  "description": "Search Yandex Maps for businesses, fetch full business cards, or collect reviews. Cookieless: no login, API key, cookies or browser are needed.",
   "properties": {
-    "businessUrls": {
-      "description": "Yandex Maps business page URLs (mode=getDetails or getReviews). Format: https://yandex.com/maps/org/{name}/{id}/",
+    "bbox": {
+      "description": "Optional rectangular area, for example '37.45,55.65,37.85,55.85'. Results outside the rectangle are dropped.",
+      "editor": "textfield",
+      "title": "Bounding box (west,south,east,north)",
+      "type": "string"
+    },
+    "businessIds": {
+      "description": "Yandex Maps organization IDs, one per line. Use for getDetails or getReviews.",
       "editor": "stringList",
       "items": {
         "type": "string"
       },
-      "prefill": [],
-      "title": "Business URLs",
+      "title": "Business IDs",
       "type": "array"
+    },
+    "categoryIds": {
+      "description": "Optional Yandex category IDs, one per line. The category ID appears in each place's categoryDetails. Used server-side in searchPlaces and verified client-side.",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "title": "Category IDs",
+      "type": "array"
+    },
+    "city": {
+      "description": "City name in any language, for example 'Moscow', 'Kazan' or 'Istanbul'. Yandex Maps resolves the city centre and passes it to the search.",
+      "editor": "textfield",
+      "prefill": "Moscow",
+      "title": "City",
+      "type": "string"
+    },
+    "coordinates": {
+      "description": "Optional point for a local search, for example '55.7558,37.6173'. When set, it overrides the city centre. Combine with Radius to search around the point.",
+      "editor": "textfield",
+      "title": "Centre point (latitude,longitude)",
+      "type": "string"
+    },
+    "goodPlace": {
+      "default": false,
+      "description": "Yandex Good Place quality filter. Used as a server-side search filter and verified client-side on place records.",
+      "prefill": false,
+      "title": "Only Good Place businesses",
+      "type": "boolean"
     },
     "language": {
       "default": "en",
-      "description": "UI and results language.",
+      "description": "Interface and metadata language. Review text stays in the reviewer's language and translations are returned separately.",
       "editor": "select",
       "enum": [
         "en",
@@ -38,39 +72,75 @@
       "title": "Language",
       "type": "string"
     },
-    "maxItems": {
-      "default": 20,
-      "description": "Maximum number of records to return (places or reviews).",
-      "maximum": 500,
+    "maxConcurrency": {
+      "default": 5,
+      "description": "How many business pages or review batches to process at once. Higher is faster but more likely to trigger rate limiting.",
+      "maximum": 20,
       "minimum": 1,
-      "prefill": 20,
-      "title": "Max Items",
+      "title": "Maximum concurrent requests",
+      "type": "integer"
+    },
+    "maxItems": {
+      "default": 100,
+      "description": "Run-wide cap. In searchPlaces and getDetails it counts places; in getReviews it counts reviews across all businesses.",
+      "maximum": 5000,
+      "minimum": 1,
+      "prefill": 3,
+      "title": "Maximum records",
+      "type": "integer"
+    },
+    "maxPagesPerQuery": {
+      "default": 10,
+      "description": "Yandex returns 25 businesses per page. More pages find more places but take longer.",
+      "maximum": 50,
+      "minimum": 1,
+      "title": "Maximum search pages per query",
+      "type": "integer"
+    },
+    "maxReviewsPerPlace": {
+      "default": 100,
+      "description": "Review cap for each business. Yandex exposes up to 600 reviews per sort order; the actor combines four orders to reach up to 2,400 unique reviews per business.",
+      "maximum": 2400,
+      "minimum": 1,
+      "title": "Maximum reviews per place",
       "type": "integer"
     },
     "minRating": {
       "default": "any",
-      "description": "Filter out places below this rating. Only applies in searchPlaces mode.",
+      "description": "Drop businesses below this rating. Businesses without a rating are dropped when a threshold is set. Applies to place records.",
       "editor": "select",
       "enum": [
         "any",
         "3",
         "3.5",
         "4",
-        "4.5"
+        "4.5",
+        "4.7",
+        "4.9"
       ],
       "enumTitles": [
         "Any rating",
         "3+ stars",
         "3.5+ stars",
         "4+ stars",
-        "4.5+ stars"
+        "4.5+ stars",
+        "4.7+ stars",
+        "4.9+ stars"
       ],
-      "title": "Minimum Rating (searchPlaces only)",
+      "title": "Minimum place rating",
       "type": "string"
+    },
+    "minReviewCount": {
+      "default": 0,
+      "description": "Drop businesses with fewer text reviews. 0 disables the filter. Applies to place records.",
+      "maximum": 1000000,
+      "minimum": 0,
+      "title": "Minimum place review count",
+      "type": "integer"
     },
     "mode": {
       "default": "searchPlaces",
-      "description": "What to scrape. searchPlaces: search for businesses by keyword. getDetails: fetch full details of specific business URLs. getReviews: scrape reviews from specific business URLs.",
+      "description": "What to collect. searchPlaces finds businesses by keyword. getDetails returns full business cards for IDs or URLs. getReviews collects customer reviews for IDs, URLs or a search.",
       "editor": "select",
       "enum": [
         "searchPlaces",
@@ -79,57 +149,156 @@
       ],
       "enumTitles": [
         "Search places by keyword",
-        "Get details for specific business URLs",
-        "Get reviews for specific business URLs"
+        "Get business details for IDs or URLs",
+        "Get reviews for businesses or a search"
       ],
       "prefill": "searchPlaces",
       "title": "Mode",
       "type": "string"
     },
-    "proxyConfiguration": {
-      "description": "Recommended. Yandex may trigger captcha on datacenter IPs. Residential proxies give best results.",
-      "editor": "proxy",
-      "prefill": {
-        "apifyProxyGroups": [
-          "RESIDENTIAL"
+    "openNow": {
+      "default": false,
+      "description": "Keep only businesses that Yandex reports as open at collection time. Applies to place records.",
+      "prefill": false,
+      "title": "Only open businesses",
+      "type": "boolean"
+    },
+    "priceCategories": {
+      "default": [],
+      "description": "Keep businesses in any of these price bands. Leave empty for all prices. Server-side in searchPlaces, verified client-side elsewhere.",
+      "editor": "select",
+      "items": {
+        "enum": [
+          "price_cheap",
+          "price_reasonable",
+          "price_expensive",
+          "price_very_expensive"
         ],
-        "useApifyProxy": true
+        "enumTitles": [
+          "Inexpensive",
+          "Moderate",
+          "Expensive",
+          "Very expensive"
+        ],
+        "type": "string"
       },
-      "title": "Proxy Configuration",
+      "prefill": [],
+      "title": "Price categories",
+      "type": "array",
+      "uniqueItems": true
+    },
+    "proxyConfiguration": {
+      "description": "Optional. The actor works without a proxy and negotiates access automatically. Supply a proxy only if you want to pin a specific country or provider.",
+      "editor": "proxy",
+      "title": "Proxy configuration",
       "type": "object"
     },
-    "reviewsSortOrder": {
-      "default": "by_date_desc",
-      "description": "How to sort reviews. Only applies in getReviews mode.",
-      "editor": "select",
-      "enum": [
-        "by_date_desc",
-        "by_rating_desc",
-        "by_relevance"
-      ],
-      "enumTitles": [
-        "Newest first",
-        "Highest rated first",
-        "Most relevant"
-      ],
-      "title": "Reviews Sort Order (getReviews only)",
+    "radiusKm": {
+      "description": "Keep only places within this distance of the centre point or city centre. Results are measured by straight-line distance and filtered strictly.",
+      "maximum": 50,
+      "minimum": 1,
+      "title": "Radius (km)",
+      "type": "integer"
+    },
+    "requirePhone": {
+      "default": false,
+      "description": "Drop businesses without a phone number. Applies to searchPlaces and getDetails.",
+      "prefill": false,
+      "title": "Only businesses with a phone",
+      "type": "boolean"
+    },
+    "requireWebsite": {
+      "default": false,
+      "description": "Drop businesses without a website. Applies to searchPlaces and getDetails.",
+      "prefill": false,
+      "title": "Only businesses with a website",
+      "type": "boolean"
+    },
+    "reviewDateFrom": {
+      "description": "Keep reviews published on or after this date (YYYY-MM-DD).",
+      "editor": "textfield",
+      "title": "Reviews from date",
       "type": "string"
     },
+    "reviewDateTo": {
+      "description": "Keep reviews published on or before this date (YYYY-MM-DD).",
+      "editor": "textfield",
+      "title": "Reviews to date",
+      "type": "string"
+    },
+    "reviewMaxRating": {
+      "description": "Keep only reviews with at most this many stars (1-5).",
+      "maximum": 5,
+      "minimum": 1,
+      "title": "Maximum review rating",
+      "type": "integer"
+    },
+    "reviewMinRating": {
+      "description": "Keep only reviews with at least this many stars (1-5).",
+      "maximum": 5,
+      "minimum": 1,
+      "title": "Minimum review rating",
+      "type": "integer"
+    },
+    "reviewRequireOwnerReply": {
+      "default": false,
+      "description": "Keep only reviews where the business wrote a reply.",
+      "prefill": false,
+      "title": "Only reviews with an owner reply",
+      "type": "boolean"
+    },
+    "reviewSort": {
+      "default": "relevance",
+      "description": "Primary review order. When you ask for more than 600 reviews per place, the actor also walks the other three orders and merges them, removing duplicates.",
+      "editor": "select",
+      "enum": [
+        "relevance",
+        "time",
+        "rating_desc",
+        "rating_asc"
+      ],
+      "enumTitles": [
+        "Most relevant",
+        "Newest first",
+        "Highest rating first",
+        "Lowest rating first"
+      ],
+      "title": "Review sort order",
+      "type": "string"
+    },
+    "reviewTextContains": {
+      "description": "One phrase per line. A review is kept when its text contains any of these phrases, ignoring case.",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "title": "Review text contains",
+      "type": "array"
+    },
     "searchQueries": {
-      "description": "One or more search queries (mode=searchPlaces). Combine business type and location, e.g. 'coffee shops Moscow', 'sushi restaurant Istanbul'.",
+      "description": "One query per line, for example 'coffee' or 'dentist'. Used by searchPlaces, and by getReviews when no business IDs or URLs are supplied.",
       "editor": "stringList",
       "items": {
         "type": "string"
       },
       "prefill": [
-        "coffee shops Moscow"
+        "coffee"
       ],
-      "title": "Search Queries",
+      "title": "Search queries",
+      "type": "array"
+    },
+    "startUrls": {
+      "description": "Yandex Maps organization URLs, short links or search URLs, one per line. Business and search URLs work in both getDetails and getReviews.",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "title": "Business or search URLs",
       "type": "array"
     },
     "yandexDomain": {
-      "default": "yandex.ru",
-      "description": "Yandex Maps regional domain to use.",
+      "default": "yandex.com",
+      "description": "Regional Yandex domain. yandex.com works worldwide; regional domains return local metadata.",
       "editor": "select",
       "enum": [
         "yandex.com",
@@ -147,8 +316,8 @@
         "Uzbekistan (yandex.uz)",
         "Belarus (yandex.by)"
       ],
-      "prefill": "yandex.ru",
-      "title": "Yandex Domain",
+      "prefill": "yandex.com",
+      "title": "Yandex domain",
       "type": "string"
     }
   },

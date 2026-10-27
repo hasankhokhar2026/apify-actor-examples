@@ -1,170 +1,165 @@
-# Product Hunt Launch & Topic Data Exporter
+# Product Hunt Launch, Comment & Review Exporter
 
-Pull launches straight from [Product Hunt](https://www.producthunt.com) — the daily leaderboard, launches under a topic, a maker's launch history, or a specific list of products by slug — with votes, comments, topics, hunter, and maker details attached to each one.
+Collect Product Hunt launches from the **full daily feed**, daily/weekly/monthly/yearly leaderboards, a topic, a category, a keyword search, a list of products, or a list of specific launches. No Product Hunt account, API token, cookie or browser is needed.
 
-## Authentication
+Each row is one launch with votes, comments count, rank, hunter, makers, topics, media, website, pricing, review score, and an optional discussion thread, review list, and launch history.
 
-A free Product Hunt developer token unlocks full launch detail (description, makers, hunter, media) and the topic/user/single-product modes. Without one, only `dailyLeaderboard` mode works, with a reduced field set. To get a token:
+## Modes
 
-1. Sign in at producthunt.com
-2. Open https://api.producthunt.com/v2/oauth/applications
-3. Click **Add application** with any name/redirect URL
-4. Copy the **Developer Token** and paste it into this actor's `apiToken` field
+| Mode | What it returns |
+|---|---|
+| `latest` | Today's complete daily feed (falls back to yesterday while today's feed is still empty). Cursor-paginated: a busy day has roughly 700-950 launches, not just the visible top 20. |
+| `leaderboard` | One daily, weekly, monthly or yearly leaderboard, cursor-paginated. Pick the period and an optional date. |
+| `dailyRange` | Every launch on each day between `from` and `to`, deduplicated across days. |
+| `topic` | Products in a topic, resolved to each product's latest launch. |
+| `category` | Products in a category, resolved to each product's latest launch. |
+| `search` | Product Hunt product search for a keyword, resolved to each product's latest launch. |
+| `product` | One or more product slugs/URLs, returning each product's latest launch with full product data. |
+| `launch` | One or more launch slugs/URLs, returning those exact launches. |
 
-## What this actor does
-
-- Four modes: the daily leaderboard, launches under a topic, a maker's launch history, or specific products by slug
-- Returns full launch metadata — name, tagline, description, votes, comments, topics, hunter, and makers — when a token is supplied
-- Filters by featured status, date range, minimum votes/comments, and topic tags
-- Sorts the leaderboard and topic modes by ranking, total votes, newest, or featured date (token required)
-- Fields a launch doesn't have (e.g. no listed makers) are omitted rather than left as null
-
-## Output per launch
-
-With an `apiToken` (any mode):
-
-- `id`, `slug`, `name`, `tagline`, `description`
-- `productUrl` — the product's website link as listed on Product Hunt
-- `phUrl` — the launch's Product Hunt page
-- `votesCount`, `commentsCount`, `reviewsCount`
-- `featuredAt`, `createdAt` — ISO timestamps
-- `topics` — array of topic slugs (e.g. `productivity`, `saas`)
-- `topicDetails` — full topic objects with `id`, `slug`, `name`
-- `hunter` — `{id, username, name, headline, profileImage}` of whoever submitted the launch
-- `makers` — array of the people who built the product (same shape as `hunter`), when `includeMakers` is on
-- `media` — screenshots and videos (`url`, `type`, `videoUrl`), when `includeMedia` is on
-- `recordType` — always `post`
-- `scrapedAt` — when this actor retrieved the record
-
-Without an `apiToken` (`dailyLeaderboard` only — a smaller, differently-shaped record read from the public daily leaderboard pages):
-
-- `id`, `slug`, `name`, `tagline`
-- `productPageUrl` — the launch's Product Hunt product page, when available (no `description`, `hunter`, `makers`, or `media`)
-- `phUrl` — the launch's Product Hunt page
-- `votesCount`, `commentsCount`
-- `featuredAt`, `scheduledAt`, `createdAt`, `updatedAt` — ISO timestamps, when available
-- `dailyRank`, `weeklyRank`, `monthlyRank` — leaderboard rank, when available
-- `topics`, `topicDetails` — same shape as the token path
-- `thumbnailUrl` — launch thumbnail image
-- `recordType`, `scrapedAt`
+Turn on `includeDetails` for the full launch page (description, maker/hunter profiles, media, website, pricing, ranks, review score). Turn on `includeComments`, `includeReviews`, and `includeHistory` to attach the discussion thread, detailed reviews, and earlier launches from the same product.
 
 ## Input
 
 | Field | Type | Default | Description |
 |---|---|---|---|
-| `apiToken` | string (secret) | – | Product Hunt developer token. Required for every mode except `dailyLeaderboard`, which works without one at reduced field detail. |
-| `mode` | string | `dailyLeaderboard` | `dailyLeaderboard`, `topic`, `userLaunches`, or `productDetail`. |
-| `topicSlugs` | array | `[]` | Topic slugs to fetch, e.g. `["artificial-intelligence"]`. Required for `mode=topic`. |
-| `userSlugs` | array | `[]` | Username slugs whose launches to fetch, e.g. `["rrhoover"]`. Required for `mode=userLaunches`. |
-| `productSlugs` | array | `[]` | Product slugs to look up, e.g. `["notion", "figma"]`. Required for `mode=productDetail`. |
-| `sortBy` | string | `RANKING` | `RANKING`, `VOTES`, `NEWEST`, or `FEATURED_AT`. Used by `dailyLeaderboard` and `topic` with a token; without a token, launches keep the leaderboard's own order. |
-| `featuredOnly` | boolean | `false` | Only emit launches that were officially featured. |
-| `dateRangeFrom` | string | – | Drop launches posted before this date (`YYYY-MM-DD`). Without a token, this is the first leaderboard day to read. |
-| `dateRangeTo` | string | – | Drop launches posted after this date (`YYYY-MM-DD`). With a token the range ends at the start of this day, so launches from the day itself are left out; without a token, this is the last leaderboard day to read (default: yesterday). |
-| `minVotes` | integer | – | Drop launches with fewer up-votes than this. |
-| `minComments` | integer | – | Drop launches with fewer comments than this. |
-| `tagAnyOf` | array | `[]` | Only emit launches with at least one of these topic slugs. |
-| `includeMakers` | boolean | `true` | Include the `makers` array (token only). |
-| `includeMedia` | boolean | `false` | Include the `media` array (token only). |
-| `maxItems` | integer | `50` | Cap on emitted records for the whole run, counted after filters (1–5000). |
+| `mode` | select | `latest` | `latest`, `leaderboard`, `dailyRange`, `topic`, `category`, `search`, `product`, or `launch`. |
+| `period` | select | `daily` | Leaderboard period: `daily`, `weekly`, `monthly`, `yearly`. |
+| `date` | string | today | Leaderboard date (`YYYY-MM-DD`). Weekly/monthly/yearly use that day's ISO week, month, or year. |
+| `from`, `to` | string | yesterday | Inclusive day range for `dailyRange`. |
+| `topicSlugs` | array | `[]` | Topic slugs or `/topics/...` URLs. |
+| `categorySlugs` | array | `[]` | Category slugs or `/categories/...` URLs. |
+| `searchQuery` | string | – | Keyword for `search`. |
+| `productSlugs` | array | `[]` | Product slugs or product URLs. |
+| `postIds` | array | `[]` | Launch slugs or launch URLs. |
+| `maxItems` | integer | `50` | Record cap, 1-1000. |
+| `maxPages` | integer | `10` | Page cap per source, 1-60. A full day is about 40-60 pages of 20 launches. |
+| `maxComments` | integer | `50` | Comment cap per launch, 1-500. Threads are read 20 per page. |
+| `maxReviews` | integer | `20` | Review cap per product, 1-200. Reviews are read 10 per page. |
+| `includeDetails` | boolean | `true` | Fetch the full launch page. |
+| `includeComments` | boolean | `false` | Attach comments and nested replies. |
+| `includeReviews` | boolean | `false` | Attach detailed reviews, ratings, pros and cons. |
+| `includeHistory` | boolean | `false` | Attach the product's earlier launches. |
+| `featuredOnly` | boolean | `false` | Keep only homepage-featured launches. |
+| `proxyConfiguration` | object | off | Optional. The actor works without a proxy. |
 
-### Example: top AI launches with a vote floor
+The default prefill reads three latest launches with details on, comments/reviews/history off.
+
+## Output
+
+Every launch row uses camelCase fields and omits empty values entirely (no `null`, no empty strings or arrays):
+
+- **Identity** — `id`, `slug`, `name`, `tagline`, `description`, `url`, `phUrl`, `sourceUrl`, `recordType`, `scrapedAt`
+- **Votes and discussion** — `votesCount`, `launchDayScore`, `commentsCount`, `reviewsCount`, `reviewsRating`
+- **Rank and timing** — `dailyRank`, `weeklyRank`, `monthlyRank`, `launchNumber`, `featured`, `featuredAt`, `createdAt`, `scheduledAt`, `updatedAt`, `launchState`, `isPromoted`
+- **People and taxonomy** — `hunter`, `makers`, `topics`, `topicDetails`
+- **Product** — `website`, `websiteDomain`, `pricingType`, `product` (id, slug, name, tagline, website, social links, categories, followers, reviews count/rating, first launch date)
+- **Media and badges** — `media` (image/video URL, dimensions, platform), `thumbnailUrl`, `badges`, `promo`
+- **Optional arrays** — `comments` (with nested `replies`), `reviews` (ratings, text, pros/cons, reviewer, source launch), `launchHistory`
+
+`phUrl` is the legacy short launch link (`/posts/<slug>`); `url` is the canonical Product Hunt product/launch link. `website` is the product's own site. `pricingType` is Product Hunt's value when present (`free`, `free_options`, `payment_required`) and otherwise a normalized `free`/`paid` from the product's structured data.
+
+## Examples
+
+### Full feed for one busy day
 
 ```json
 {
-  "apiToken": "<your-token>",
+  "mode": "dailyRange",
+  "from": "2026-10-25",
+  "to": "2026-10-25",
+  "maxItems": 1000,
+  "maxPages": 60,
+  "includeDetails": true
+}
+```
+
+### Weekly AI leaderboard with comments
+
+```json
+{
+  "mode": "leaderboard",
+  "period": "weekly",
+  "date": "2026-10-26",
+  "featuredOnly": true,
+  "maxItems": 50,
+  "includeComments": true,
+  "maxComments": 40
+}
+```
+
+### Latest launches in a topic, with reviews
+
+```json
+{
   "mode": "topic",
   "topicSlugs": ["artificial-intelligence"],
-  "sortBy": "VOTES",
-  "dateRangeFrom": "2026-01-01",
-  "minVotes": 500,
-  "maxItems": 100
+  "maxItems": 20,
+  "includeDetails": true,
+  "includeReviews": true,
+  "maxReviews": 20
 }
 ```
 
-### Example: featured launches for one day, ranked
+### One product with its launch history
 
 ```json
 {
-  "apiToken": "<your-token>",
-  "mode": "dailyLeaderboard",
-  "sortBy": "RANKING",
-  "featuredOnly": true,
-  "dateRangeFrom": "2026-10-01",
-  "dateRangeTo": "2026-10-02",
-  "maxItems": 30
+  "mode": "product",
+  "productSlugs": ["notion"],
+  "includeDetails": true,
+  "includeHistory": true,
+  "maxPages": 5
 }
 ```
 
-### Example: last week's leaderboards without a token
+### Specific launches by URL
 
 ```json
 {
-  "mode": "dailyLeaderboard",
-  "dateRangeFrom": "2026-10-04",
-  "dateRangeTo": "2026-10-10",
-  "maxItems": 200
+  "mode": "launch",
+  "postIds": [
+    "https://www.producthunt.com/products/strawberry?launch=strawberry-1-0"
+  ],
+  "includeComments": true,
+  "maxComments": 100
 }
 ```
 
-### Example: a maker's launch history
+## How it works
 
-```json
-{
-  "apiToken": "<your-token>",
-  "mode": "userLaunches",
-  "userSlugs": ["rrhoover"],
-  "maxItems": 50
-}
-```
+The actor uses Product Hunt's public frontend GraphQL endpoint with the same persisted queries the website loads, a desktop browser user agent, `X-Requested-With`, the Product Hunt timezone header, and `apollo-require-preflight`. It sends the full query document plus its sha256 persisted-query hash, so no token or cookie is ever involved.
 
-### Example: look up specific products by slug
+If Product Hunt ships a new frontend build and a persisted hash stops matching, the actor refreshes the query document from the page's Apollo SSR payload, retries once, and then falls back to the page's embedded JSON state. A 200 response with an empty block is treated as a block or a source fault, never as a successful empty run.
 
-```json
-{
-  "apiToken": "<your-token>",
-  "mode": "productDetail",
-  "productSlugs": ["notion", "figma", "linear"]
-}
-```
+Comments paginate 20 threads per page with reply cursors; reviews paginate 10 per page; launch history paginates 10 per page. Records are deduplicated by launch, comment, and review id.
 
-## Use cases
+## Reliability and limits
 
-- **VC deal flow** — daily monitoring of new launches in target verticals
-- **Founder research** — track every product launching in your category
-- **PM benchmarking** — study tagline and positioning patterns among top-voted launches
-- **Growth marketing** — spot emerging tools worth integrating with or promoting
-- **Newsletter curation** — compile a digest of the day's top launches with full descriptions
-- **Hunter/maker mapping** — identify the most prolific hunters and makers in a given space
+- Retries with backoff on 429/5xx/timeouts; a Cloudflare challenge produces a failed run with a clear status message instead of an empty dataset.
+- `maxItems`, `maxPages`, `maxComments`, and `maxReviews` are hard caps. A day with more launches than `maxItems` stops exactly at the cap.
+- Product Hunt's maker profile pages are protected by a challenge, so maker emails and social handles are not part of this dataset. Launch data includes maker names, usernames, headlines, avatars and follower counts when the source exposes them.
+- Funding amount and employee count are not reliably exposed by the public product pages and are omitted.
+- Very large launches can have hundreds of comments; raise `maxComments` up to 500 for those threads.
+- Topic/category/search results are products, so the actor resolves each product's latest launch. Older launches from the same product are available with `includeHistory`.
+- Search is product search (the same search the Product Hunt site uses), not a free-text search over historical launch descriptions.
 
 ## FAQ
 
-**Do I need a Product Hunt account?**
-Only to get a token for full fields and the topic/user/product-detail modes. `dailyLeaderboard` mode works without any token, with a smaller field set. Running another mode without a token ends straight away with a status message asking for one.
+**Do I need a Product Hunt account or API token?**
+No. The actor reads the same public frontend data the website renders. There is nothing to sign up for.
 
-**Which days does `dailyLeaderboard` cover?**
-Without a token it reads the public daily leaderboard pages: yesterday's by default, or each day from `dateRangeTo` back to `dateRangeFrom`. With a token it lists Product Hunt launches in the `sortBy` order; set `dateRangeFrom`/`dateRangeTo` to limit it to specific days.
+**Why do I get more than 20 launches per day?**
+The visible leaderboard is a preview. The actor follows the cursor until the source is exhausted, which is normally 700-950 launches on a busy day.
 
-**What changes when I add a token?**
-Without a token you get id, slug, name, tagline, votes, comments, ranks, topics, dates, and a thumbnail. With a token, launches also include description, hunter, makers, full media, and `reviewsCount`.
+**Are comments and reviews included by default?**
+No. They are opt-in because they add requests. Set `includeComments` and/or `includeReviews` to attach them to each launch record.
 
-**Is the developer token paid?**
-No, it's free and issued instantly from your own Product Hunt account.
-
-**What's the difference between `hunter` and `makers`?**
-The hunter is whoever submitted the launch to Product Hunt — often a community member, not necessarily the founder. Makers are the people who actually built the product.
-
-**Why is `productUrl` missing on some launches?**
-A small number of launches don't list an external website; that field is simply omitted rather than returned empty.
+**What happens if Product Hunt blocks the request?**
+The actor retries, optionally rotates your proxy session if you supplied a proxy, and fails the run with a status message. It never reports a blocked or empty page as a successful empty dataset.
 
 **Can I get older launches?**
-Yes. With a token, use `dateRangeFrom`/`dateRangeTo` in `topic` or `dailyLeaderboard` mode, look products up by slug with `productDetail`, or list a maker's launches with `userLaunches`. Without a token, set the date range to the leaderboard days you want.
-
-**What does "featured" mean?**
-Product Hunt selects a subset of submitted launches to feature on its homepage; those launches have a `featuredAt` date. `featuredOnly` keeps only launches with one.
-
-**Can I get comment text or review text?**
-`commentsCount` and `reviewsCount` are included, but individual comment and review text aren't. Use `phUrl` to link out to the discussion thread.
+Yes: set a past `from`/`to` for `dailyRange`, pick a past leaderboard date, use `product` with `includeHistory`, or pass an old launch URL in `launch` mode.
 
 **Is this affiliated with Product Hunt?**
-No. This is an independent, third-party actor built on Product Hunt's public developer API; it isn't affiliated with or endorsed by Product Hunt.
+No. This is an independent, third-party exporter that reads Product Hunt's public web data. It is not affiliated with or endorsed by Product Hunt.

@@ -1,0 +1,107 @@
+# Eventbrite Event Finder with Venue Geocoordinates
+
+Browse Eventbrite's public listing pages by city, category, or a direct browse URL and get a flat, structured row for every event — venue address, geocoordinates, cover image, organizer and ticket link included.
+
+## What this actor does
+
+- Reads public Eventbrite "browse" pages (built from a location slug and category slug, or pasted as URLs) and pages through them until `maxItems` is reached or a page comes back with fewer than 10 events
+- Resolves each event's venue into a street address, city, region, country, postal code and latitude/longitude
+- Collects the event's cover image at every resolution Eventbrite publishes, from the uncropped master down to the display thumbnail
+- Splits each event's tags into its Eventbrite category, format (e.g. Concert, Workshop), and organizer-chosen keyword tags
+- Returns every field on every record: when Eventbrite doesn't publish a value, the field holds an empty string, `false`, an empty array, or `0` for the coordinates, instead of being left out
+
+## Output per event
+
+| Field | Description |
+|---|---|
+| `id` | Eventbrite event ID |
+| `name` | Event name |
+| `summary` | Short summary, truncated to 1000 characters |
+| `url` | Event page URL |
+| `ticketsUrl` | Direct checkout URL |
+| `startDate` / `startTime` | Event start date (`YYYY-MM-DD`) and time |
+| `endDate` / `endTime` | Event end date and time |
+| `timezone` | IANA timezone of the event (e.g. `America/New_York`) |
+| `isOnline` | `true` if the event is a virtual/online event |
+| `isCancelled` | `true` if Eventbrite marks the event cancelled |
+| `venueName` | Primary venue name |
+| `venueAddress` | Full display address of the venue |
+| `venueCity` / `venueRegion` / `venueCountry` / `venuePostalCode` | Venue address components |
+| `latitude` / `longitude` | Venue geocoordinates; both are `0` when Eventbrite gives no venue location (for example online events) |
+| `imageUrl` | Highest-resolution cover image Eventbrite serves for the event |
+| `gallery` | Every image variant Eventbrite exposes for the cover (master, large, medium, small, thumbnail), in descending quality |
+| `category` | Eventbrite category, e.g. "Music" or "Business" |
+| `format` | Event format, e.g. "Concert" or "Workshop" |
+| `tags` | Organizer-assigned keyword tags |
+| `primaryOrganizerId` | Organizer's Eventbrite ID |
+| `ticketsBy` | Ticket provider name |
+| `language` | Listing language code |
+| `scrapedAt` | ISO 8601 timestamp of when the run started (the same on every record of a run) |
+
+## Input
+
+| Field | Type | Default | Description |
+|---|---|---|---|
+| `startUrls` | array | – | Eventbrite browse URLs (e.g. `https://www.eventbrite.com/d/ny--new-york/all-events/`). Any filters already in the URL are kept. URLs that aren't on an Eventbrite domain are ignored. When at least one URL is given, `location` and `category` are not used. |
+| `location` | string | – | City/region slug used when no `startUrls` are given, e.g. `ny--new-york`, `ca--san-francisco`, `united-states`, `online`. Defaults to `united-states` when left blank. |
+| `category` | string | – | Category slug, e.g. `music`, `business`, `food-and-drink`, `sports`. Combined with `location`; without it, all events are browsed. |
+| `maxItems` | integer | `50` | Maximum number of events to return across all URLs (1–500). Events listed under several URLs are returned once. |
+
+### Example: search by city and category
+
+```json
+{
+  "location": "ny--new-york",
+  "category": "music",
+  "maxItems": 100
+}
+```
+
+### Example: browse online events directly
+
+```json
+{
+  "startUrls": ["https://www.eventbrite.com/d/online/business/"],
+  "maxItems": 50
+}
+```
+
+### Example: paste a pre-filtered browse URL
+
+```json
+{
+  "startUrls": ["https://www.eventbrite.com/d/united-kingdom--london/food-and-drink/"],
+  "maxItems": 200
+}
+```
+
+## Use cases
+
+- **Event marketing research** — track what competitors in your category and city are promoting
+- **Venue analytics** — group events by `venueName` and coordinates to see which venues are most active
+- **Calendar and city-guide aggregation** — pull current listings into a local events calendar
+- **Organizer lead generation** — identify active event organizers in a target region
+- **Travel planning** — see what's happening in a destination city on specific dates
+
+## FAQ
+
+**Do I need to log in or provide a proxy?**
+No. The actor reads Eventbrite's public browse pages directly; no account, cookies, or proxy configuration is needed.
+
+**How do I target a specific city?**
+Use the location slug Eventbrite uses in its own URLs, such as `ny--new-york`, `ca--san-francisco`, `tx--austin`, `united-kingdom`, or `online` for virtual-only events. You can also paste any Eventbrite browse URL straight into `startUrls`.
+
+**Why are some fields empty strings instead of missing?**
+Every event record always contains the full set of fields; when Eventbrite doesn't publish a value (for example, no format tag or no venue for an online event), the field is returned as an empty string, `false`, an empty array, or `0` (for `latitude`/`longitude`) rather than being left out. Treat `0, 0` coordinates as "unknown".
+
+**Does this include both free and paid events?**
+The actor doesn't filter by price, so it returns whatever the browse page lists. Ticket prices are not part of the output; use `ticketsUrl` to check them.
+
+**How current is the data?**
+Browse pages reflect Eventbrite's live listings, so newly published or updated events show up on the next run.
+
+**Is this affiliated with Eventbrite?**
+No. This actor independently reads Eventbrite's public pages and is not affiliated with, endorsed by, or sponsored by Eventbrite.
+
+**Why might I get fewer events than `maxItems`?**
+If a location/category combination has fewer live events than requested, or the browse pages run out before `maxItems` is reached, the actor returns everything it found instead of padding the output.

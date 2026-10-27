@@ -1,178 +1,198 @@
 # LinkedIn Ad Library Keyword & Advertiser Scraper
 
-Search the **public LinkedIn Ad Library** (`linkedin.com/ad-library`) by keyword, advertiser, country, or date range. Get headline, body copy, advertiser info, media URLs, and CTA for the ads on each search's results page — with optional detail-page enrichment for the paying entity, canonical advertiser URL, and full body text.
+Search the **public LinkedIn Ad Library** without an account, cookies, or a login. Collect paginated ads by keyword, advertiser name, payer, exact company ID, or a pasted Ad Library URL — then enrich each ad with its full copy, CTA, landing URL, video, paying entity, and the EU transparency block (run dates, impression range, country shares, and targeting).
 
-**No login or LinkedIn account required.** The Ad Library is fully public and the actor runs without cookies.
+The actor is built for competitor research, creative monitoring, and B2B ad intelligence. It reads the same public pages a logged-out visitor sees, so it works with zero credentials.
 
-## What this actor does
+## Modes
 
-- Searches the Ad Library by keyword, advertiser name, country, or a date range, or accepts a pre-built Ad Library URL directly
-- Returns each ad's headline, body copy, advertiser info, media URLs, and call-to-action, from the first results page of every search (no further pages are loaded)
-- Optionally enriches each ad from its detail page with the paying entity, canonical advertiser URL, and full body text
-- Date windows of the last 30 days, 90 days or year, or a custom range — inactive ads included where LinkedIn still lists them
-- Combines every keyword × advertiser combination you provide, scoped by your country and date filters, and removes duplicate ads across searches
-- Empty fields are dropped from each record
+| Mode | What it does | Inputs it uses |
+| --- | --- | --- |
+| `search` (default) | Builds one search per keyword / advertiser / payer / company-ID group, paginates it, dedupes by ad ID, and optionally opens every detail page. | `searchTerms`, `advertisers`, `companyIds`, `companyUrls`, `payer`, filters |
+| `adDetails` | Re-scrapes specific ads from their IDs or detail URLs. | `adIds`, `directUrls` (detail URLs) |
+| `directUrls` | Accepts pasted Ad Library search URLs, company URLs, and ad detail URLs. Search filters are preserved. | `directUrls` |
+| `count` | Returns the total number of matching ads per search, without pagination. | The same search inputs |
 
-## Output per ad
+Every keyword, advertiser, payer, and company-ID group is an **independent search** (a union). Filters such as country, date, sort, impressions, and targeting apply to all of them.
 
-For each ad on the search results page:
+## Inputs
 
-| Field | Description |
-| --- | --- |
-| `ad_id` | LinkedIn ad / creative identifier |
-| `ad_url` | Direct LinkedIn Ad Library detail URL |
-| `ad_format` | `image` / `video` / `carousel` / `document` / `text` / `inmail` (with enrichment, LinkedIn's own lower-cased format label from the detail page) |
-| `advertiser_name` | Sponsoring entity (company or person) |
-| `advertiser_logo` | Logo image URL |
-| `advertiser_tagline` | Sponsoring entity tagline (e.g. "Chief AI Officer") |
-| `advertiser_url` | LinkedIn company page URL |
-| `body_text` | Ad commentary / body copy as shown in the preview |
-| `headline` | Ad headline copy |
-| `cta_text` | Call-to-action text (e.g. "Learn more", "Apply now") |
-| `cta_url` | Click-through destination URL |
-| `media_urls` | All image / video / document / carousel slide URLs |
-| `scraped_at` | ISO 8601 UTC timestamp of extraction |
-
-When `enrichWithDetailPage=true` is enabled, additional fields are pulled from each ad's detail page:
-
-| Field | Description |
-| --- | --- |
-| `paid_for_by` | Entity that paid for the ad (often differs from the advertiser) |
-| `body_text_full` | Full body / commentary text from the detail page (sometimes longer than the preview) |
-| `advertiser_url` | Canonical advertiser URL — replaces the search-result URL when the detail page has one |
-| `ad_format` | Format label from the detail page, when present (replaces the search-result value) |
-
-## Input
-
-| Parameter | Type | Default | Description |
+| Input | Type | Default | Description |
 | --- | --- | --- | --- |
-| `searchTerms` | Array | `[]` | Keyword search queries (e.g. `"AI"`, `"remote work"`). Matched against ad copy and advertiser name. |
-| `advertisers` | Array | `[]` | Advertiser / company names (e.g. `"Microsoft"`, `"Salesforce"`). |
-| `countries` | Array | `[]` | ISO-3166-1 alpha-2 country codes (e.g. `"US"`, `"GB"`, `"IN"`). |
-| `dateOption` | Enum | `last-30-days` | `last-30-days` / `last-90-days` / `last-year` / `custom`. The 30-day default applies to every keyword/advertiser/country search unless you change it (not to `directUrls`) |
-| `dateFrom` | String | — | YYYY-MM-DD, only used when `dateOption=custom` (with `custom` and no dates, no date filter is sent). |
-| `dateTo` | String | — | YYYY-MM-DD, only used when `dateOption=custom`. |
-| `directUrls` | Array | `[]` | Pre-built Ad Library URLs — paste directly if you already configured filters in the LinkedIn UI. Fetched as-is, before the keyword/advertiser searches. |
-| `maxResults` | Integer | `50` | Maximum ads to return across all queries (1–1000). |
-| `enrichWithDetailPage` | Boolean | `false` | Open each ad's detail page to add `paid_for_by`, full body text, and canonical advertiser URL. Slower but more complete. |
-| `proxy` | Object | `{"useApifyProxy": true}` | Defaults to free Apify Proxy (no residential group needed). |
+| `mode` | Select | `search` | `search`, `adDetails`, `directUrls`, or `count`. |
+| `searchTerms` | String list | `[]` | Keyword searches. |
+| `advertisers` | String list | `[]` | Advertiser names (fuzzy) or LinkedIn company URLs. |
+| `companyIds` | String list | `[]` | Exact numeric LinkedIn company IDs; multiple IDs are OR-ed. URLs are accepted. |
+| `companyUrls` | String list | `[]` | Company page URLs, resolved to their numeric organization ID. |
+| `payer` | String list | `[]` | Legal entity that paid for the ad. |
+| `advertiserMatch` | Select | `startsWith` | Client-side precision for advertiser-name searches: `any`, `startsWith`, `exact`. |
+| `countries` | String list | `[]` | ISO-3166 alpha-2 codes (`US`, `GB`, `DE`) or `ALL`. Multiple codes are comma-joined. |
+| `dateOption` | Select | `last-30-days` | `any-time`, `last-30-days`, `current-month`, `current-year`, `last-year`, `custom-date-range`. |
+| `startDate` / `endDate` | String | — | Required for `custom-date-range` (YYYY-MM-DD, within the last 12 months). |
+| `sortOrder` | Select | `newest` | `newest` or `oldest`. |
+| `impressionsMinValue` / `impressionsMaxValue` | Integer | — | EU impression range. LinkedIn requires both values. |
+| `impressionsMinUnit` / `impressionsMaxUnit` | Select | `none` | `none`, `thousand`, or `million`. |
+| `targetingIncluded` / `targetingExcluded` | String list | `[]` | EU targeting facets: `LANGUAGE`, `LOCATION`, `AUDIENCE`, `DEMOGRAPHIC`, `COMPANY`, `EDUCATION`, `JOB`, `INTERESTS_AND_TRAITS`. |
+| `includeDetails` | Boolean | `true` | Open each ad's detail page for full copy, CTA, landing URL, video, payer, and EU data. |
+| `decodeShortLinks` | Boolean | `false` | Resolve `lnkd.in` and similar short links to the final landing URL. |
+| `adIds` | String list | `[]` | Ad IDs or detail URLs, for `adDetails`. |
+| `directUrls` | URL list | `[]` | Pasted Ad Library search/detail URLs or company URLs. |
+| `maxItems` | Integer | `50` | Global cap per run (1–4,800). |
 
-You can combine inputs freely — every keyword × advertiser combination is tried, scoped by your country and date filters. With only `countries` (or nothing at all), a single search filtered by country and the date window is run.
+### Prefill
 
-### Example input — keyword search, fast
+The default prefill is the smallest run with a reliable result: Microsoft's exact company ID, the last 30 days, three ads, and detail enrichment on.
+
+```json
+{
+  "mode": "search",
+  "companyIds": ["1035"],
+  "dateOption": "last-30-days",
+  "includeDetails": true,
+  "maxItems": 3
+}
+```
+
+### Example — keyword search, card data only
 
 ```json
 {
   "searchTerms": ["AI", "machine learning"],
-  "countries": ["US"],
+  "countries": ["US", "DE"],
   "dateOption": "last-30-days",
-  "maxResults": 50
+  "includeDetails": false,
+  "maxItems": 100
 }
 ```
 
-### Example input — advertiser focus, full enrichment
+### Example — exact advertiser with EU transparency
 
 ```json
 {
-  "advertisers": ["Microsoft", "Salesforce"],
-  "dateOption": "last-90-days",
-  "maxResults": 100,
-  "enrichWithDetailPage": true
+  "companyIds": ["1035"],
+  "countries": ["DE"],
+  "dateOption": "last-year",
+  "includeDetails": true,
+  "maxItems": 200
 }
 ```
 
-### Example input — direct Ad Library URL
+### Example — re-scrape specific ads
 
 ```json
 {
-  "directUrls": [
-    { "url": "https://www.linkedin.com/ad-library/search?keyword=cloud&country=US" }
-  ]
+  "mode": "adDetails",
+  "adIds": ["1611810664", "https://www.linkedin.com/ad-library/detail/1658527466"]
 }
 ```
 
-### Example input — custom date range
+### Example — count only
 
 ```json
 {
-  "searchTerms": ["recruiting"],
-  "dateOption": "custom",
-  "dateFrom": "2026-01-01",
-  "dateTo": "2026-03-31"
+  "mode": "count",
+  "searchTerms": ["AI"],
+  "countries": ["US"],
+  "dateOption": "last-30-days"
 }
 ```
 
-## Example output
+## Output
 
-```json
-{
-  "ad_id": "12345678",
-  "ad_url": "https://www.linkedin.com/ad-library/detail/12345678",
-  "ad_format": "video",
-  "advertiser_name": "Anthropic",
-  "advertiser_url": "https://www.linkedin.com/company/anthropicresearch",
-  "advertiser_logo": "https://media.licdn.com/dms/image/.../company-logo.jpg",
-  "headline": "Build with Claude",
-  "body_text": "Ship faster with the Claude API. Trusted by 1000s of developers.",
-  "cta_text": "Learn more",
-  "cta_url": "https://www.anthropic.com/api",
-  "media_urls": ["https://media.licdn.com/dms/image/.../ad-creative.jpg"],
-  "paid_for_by": "Anthropic PBC",
-  "body_text_full": "Ship faster with the Claude API. Trusted by 1000s of developers building agents, RAG pipelines, coding assistants, and more.",
-  "scraped_at": "2026-05-05T13:42:18Z"
-}
-```
+Each ad is one dataset row with `recordType: "ad"`. Count mode emits `recordType: "count"` rows. Empty values are removed at every depth — there are no `null`, empty-string, empty-array, or sentinel rows.
 
-## Use cases
+### Ad fields
 
-- **Competitive intelligence** — Monitor what competitors are running, in which countries, with what messaging.
-- **Lead generation** — Build prospect lists of companies actively spending on LinkedIn ads in your category.
-- **Brand monitoring** — Track every ad featuring your brand, products, or trademarks.
-- **Creative research** — Mine patterns in headline length, CTA choice, and media format across an industry.
-- **Geographic analysis** — Compare ad strategies across markets by combining country + advertiser filters.
-- **Compliance / due diligence** — Verify what an advertiser is publicly claiming on LinkedIn (`paid_for_by` shows the actual paying entity).
+| Field | Description |
+| --- | --- |
+| `ad_id` | LinkedIn ad / creative ID. |
+| `ad_url` | Public Ad Library detail URL. |
+| `recordType` | `ad`. |
+| `sourceUrl` | The search URL or detail URL that produced the row. |
+| `scrapedAt` / `scraped_at` | ISO 8601 UTC scrape timestamp (`scraped_at` is the legacy alias). |
+| `advertiser_name`, `advertiser_id`, `advertiser_url`, `advertiser_logo`, `advertiser_tagline` | Advertiser identity. `advertiser_id` is a numeric company ID when available, otherwise a member/showcase slug. |
+| `paid_for_by` | Paying legal entity from the detail page. |
+| `ad_format`, `creative_type`, `format_label` | Normalized format (`image`, `video`, `carousel`, `document`, `message`, `spotlight`, `job`, `event`, `article`, `follow_company`, `dynamic`, `text`) plus the raw creative type and LinkedIn's label. |
+| `headline` | Ad headline when present. |
+| `body_text` | Copy preview from the search card (or the full preview when scraping a detail URL directly). |
+| `body_text_full` | Full detail-page copy (up to roughly 2,700 characters). |
+| `cta_text` | CTA button text (`Learn more`, `Register`, ...). |
+| `landing_url`, `landing_url_raw`, `landing_domain`, `is_shortlink` | Cleaned landing URL (only the `trk` parameter is removed), original URL, hostname, and short-link flag. |
+| `media` | List of `{type, url, expiresAt}` entries (`image`, `poster`, `video`). |
+| `media_urls`, `image_urls`, `video_urls`, `video_poster_url` | Flat media lists for compatibility and convenience. |
+| `start_date`, `end_date`, `duration_days`, `is_active` | Run dates and duration from the EU transparency block. `is_active` is only present when an end date exists. |
+| `total_impressions`, `impressions_min`, `impressions_max` | Impression range label and parsed bounds. |
+| `impressions_by_country` | `{country, shareRaw, sharePct, isUpperBound?, isLowerBound?, estimatedMin?, estimatedMax?}` rows. |
+| `targeting_language`, `targeting_location_included`, `targeting_location_excluded`, `targeting_parameters` | EU targeting data. Parameters are `{category, targeted, excluded}` rows. |
+| `has_dsa_data` | Always a boolean. `false` means LinkedIn did not publish the EU transparency block for that ad. |
+| `country`, `top_country` | The single delivery-country filter when one is set; the largest impression-share country from the DSA block. |
+| `variants_count` | Number of creative variants on the detail page. |
+
+### Count fields
+
+| Field | Description |
+| --- | --- |
+| `recordType` | `count`. |
+| `sourceUrl` | The search URL used. |
+| `scrapedAt` / `scraped_at` | ISO timestamp. |
+| `query`, `queryType`, `queryValue` | The search label, e.g. `keyword`, `advertiser`, `payer`, `companyIds`, `filters`. |
+| `totalCount` | LinkedIn's reported number of matching ads. |
+
+## Pagination, dedupe, and limits
+
+- The Ad Library returns **24 ads per page** and exposes a pagination token.
+- The actor follows up to **200 pages (4,800 ads) per search**, then stops. This is the practical ceiling the Ad Library accepts.
+- Results are deduplicated by `ad_id` across pages and searches.
+- `maxItems` is a global cap across all searches (1–4,800). It trims the final page exactly.
+- Broad searches can match hundreds of thousands of ads. Slice them by country, date window, keyword, or exact company IDs to reach more than 4,800 rows.
+- `maxItems` limits rows, not requests: with `includeDetails: true`, one detail request is made per collected ad (up to the cap).
+
+## Reliability and errors
+
+- The actor uses `curl_cffi` with a Chrome 131 TLS fingerprint and a **fresh Apify Proxy AUTO session/IP for every request** (sticky sessions fail when they land on a blocked IP). Each request is retried up to five times with backoff.
+- If AUTO stays blocked, the actor tries a headless browser on AUTO, then the Apify UNBLOCKER group for that request. Proxy setup is automatic; there is no proxy input.
+- Partial runs are reported honestly in the status message. If some searches are blocked and others return data, the dataset keeps the good rows and the status says how many queries were blocked.
+- If every request is blocked, or a search that should return data comes back empty, the run **fails with a clear message**. It never pushes a fake "blocked" row.
+- Detail-page failures (404/410 or a transient block) keep the card record and log the failure.
+- A legitimate `0 results` search also fails the run with an explicit "0 results" message rather than silently succeeding with an empty dataset.
+- A run summary (pages, details, query statuses) is saved to the key-value store as `run_summary`.
 
 ## FAQ
 
-**Do I need a LinkedIn account?**
-No. The Ad Library is fully public — anyone can browse it without logging in. The actor makes the same anonymous requests the public web UI does.
+**Do I need a LinkedIn account or cookies?**
+No. The Ad Library is public guest content. The actor makes the same anonymous requests the public site does.
 
-**Do I need a proxy?**
-No. The default Apify Proxy (no residential group required) works out of the box.
+**Do I need to configure a proxy?**
+No. The actor selects and rotates its proxy automatically.
 
-**What's the difference between `searchTerms` and `advertisers`?**
-- `searchTerms` matches ad copy AND advertiser name (broad keyword search).
-- `advertisers` matches only the advertiser display name (narrow company-targeted search).
+**Why do some ads lack impressions, dates, or targeting?**
+LinkedIn only publishes that transparency block for ads served in the EU. Non-EU ads have no run dates, impression range, country shares, or targeting data. The `has_dsa_data` flag tells you which is which. This is a source limitation, not a scraper bug.
 
-Combine them when you want to find a specific company's ads about a specific topic.
+**Why are media URLs signed?**
+LinkedIn CDN URLs carry an `e=` expiry parameter. The actor exposes the URL and its `expiresAt` date in `media[].expiresAt`. Download or archive media before it expires if you need a permanent copy.
 
-**When should I enable `enrichWithDetailPage`?**
-Whenever you need `paid_for_by` (regulatory / compliance use cases), the canonical advertiser URL, or the full body text. It opens one extra page per ad, so runs take noticeably longer — leave it off for fast list pulls and turn it on for high-value reporting.
+**What is the difference between `advertisers` and `companyIds`?**
+`advertisers` is a fuzzy name search and can include partners or resellers. `companyIds` is exact and is the best way to collect only a specific company's ads.
 
-**What does `dateOption=custom` enable?**
-A user-defined `dateFrom` / `dateTo` window. LinkedIn returns ads served at any time during that window. Without `custom`, the actor uses LinkedIn's predefined buckets (last 30 / 90 / 365 days).
+**Why is `body_text` shorter than `body_text_full`?**
+The search card shows a truncated preview. `body_text_full` comes from the detail page and is only present when `includeDetails` is on (or when the mode is `adDetails`).
 
-**How many ads can I scrape per run?**
-Each search contributes only the ads on its first results page; the actor doesn't load further pages. To collect more, add more keywords, advertisers or direct URLs (each becomes its own search) and raise `maxResults` (up to 1000), or split the work into separate runs by keyword / country.
+**How do I get more than 4,800 ads?**
+Split the request by country, date range, keyword, or company ID and run each slice separately. Deduplicate downstream by `ad_id` if slices overlap.
 
-**What if a query returns no ads?**
-The actor moves on to the rest. If no ads are collected at all, the dataset gets a single status record instead: `type: "linkedin_ads_blocked"`, `reason` (`upstream_error`, or `crash` after an unexpected error), `message`, `scrapedAt`, and for `upstream_error` up to 10 `requestedUrls`. Filter on `type` to separate it from ad records.
-
-**Why are impression counts or targeting facets not in the output?**
-LinkedIn loads those numbers via a separate request after the page renders, which this actor's static-page extraction doesn't execute, so they're never included in any record — not even for DSA-regulated ads that show them on linkedin.com itself.
-
-**How current is the data?**
-Live — every run hits LinkedIn at request time. Schedule the actor for daily / hourly refreshes.
-
-**Can I scrape closed / paused ads?**
-Yes, as long as LinkedIn still lists them in the Ad Library for your date window; pick `last-year` or a `custom` range to reach older ones.
+**Can I see spend, budget, CTR, or conversions?**
+No. LinkedIn does not publish those values in the Ad Library. Impressions are ranges, not exact counts.
 
 **Is this affiliated with LinkedIn?**
-No. This is an independent, third-party actor that reads LinkedIn's public Ad Library; it isn't affiliated with or endorsed by LinkedIn Corporation.
+No. This is an independent third-party actor that reads LinkedIn's public Ad Library. It is not affiliated with or endorsed by LinkedIn Corporation.
 
 ## Limitations
 
-- Only ads visible in the public Ad Library are scraped — no access to LinkedIn's full Campaign Manager.
-- Impression counts and targeting facets are never included: LinkedIn loads them via a separate request after the page renders, which this actor's extraction doesn't execute.
-- Only the first results page of each search is read.
-- LinkedIn may rate-limit unusually fast or large requests; spread very large pulls across multiple runs rather than one very large `maxResults`.
+- Only public Ad Library ads are available; Campaign Manager data is not accessible.
+- EU transparency data (dates, impressions, country shares, targeting) is published only for EU-served ads.
+- LinkedIn reports impression ranges rather than exact impressions.
+- Each search is capped at 4,800 ads (200 pages × 24).
+- Media URLs are signed and expire; `expiresAt` is provided for archival planning.
+- Per-ad delivery country is not published. `country` reflects a single-country search filter; `top_country` is the largest DSA share.
+- Carousel/document slide text and non-EU active status are not published by the source.
+- LinkedIn may rate-limit aggressive runs; the actor retries and reports partial results rather than fabricating rows.

@@ -1,0 +1,38 @@
+{
+  "properties": {
+    "category": {
+      "description": "Category slug for the search (e.g., 'music', 'business', 'food-and-drink', 'sports'). Combined with location.",
+      "editor": "textfield",
+      "title": "Category (optional)",
+      "type": "string"
+    },
+    "location": {
+      "description": "City/region slug to use when no startUrls are provided. Format: 'ny--new-york', 'ca--san-francisco', 'united-states', 'online'.",
+      "editor": "textfield",
+      "title": "Location (optional)",
+      "type": "string"
+    },
+    "maxItems": {
+      "default": 50,
+      "description": "Maximum number of events to return.",
+      "maximum": 500,
+      "minimum": 1,
+      "prefill": 5,
+      "title": "Max Items",
+      "type": "integer"
+    },
+    "startUrls": {
+      "description": "Eventbrite browse URLs (e.g., https://www.eventbrite.com/d/ny--new-york/all-events/). Any filters in the URL are preserved.",
+      "editor": "stringList",
+      "prefill": [
+        "https://www.eventbrite.com/d/united-states/all-events/"
+      ],
+      "title": "Start URLs",
+      "type": "array"
+    }
+  },
+  "required": [],
+  "schemaVersion": 1,
+  "title": "Eventbrite Scraper Input",
+  "type": "object"
+}

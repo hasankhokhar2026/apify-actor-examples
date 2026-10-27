@@ -1,39 +1,176 @@
 {
+  "description": "Scrape one or many Shopify storefronts: full catalog, collection, single product, in-store search, or the collection directory.",
   "properties": {
-    "maxProducts": {
-      "default": 50,
-      "description": "Maximum number of products to scrape from the store.",
-      "editor": "number",
+    "available": {
+      "default": "any",
+      "description": "Keep all products, only products with at least one purchasable variant, or only sold-out products.",
+      "editor": "select",
+      "enum": [
+        "any",
+        "available",
+        "unavailable"
+      ],
+      "enumTitles": [
+        "Any availability",
+        "In stock only",
+        "Sold out only"
+      ],
+      "prefill": "any",
+      "title": "Availability",
+      "type": "string"
+    },
+    "collectionHandles": {
+      "default": [],
+      "description": "Collection handles or collection URLs, e.g. `new-arrivals`, `sale`, or `https://store.com/collections/sale`. Handles are applied to every store in `storeUrls`; a full collection URL is applied to its own store.",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Collection handles (mode=collection)",
+      "type": "array"
+    },
+    "country": {
+      "description": "Two-letter ISO country code passed as `?country=` to the storefront, e.g. `US`, `GB`, `DE`.",
+      "editor": "textfield",
+      "title": "Country (optional)",
+      "type": "string"
+    },
+    "currency": {
+      "default": "store",
+      "description": "ISO 4217 code to pin prices to, e.g. `USD`, `EUR`, `GBP`. Use `store` to use the store's base currency from `/meta.json`. Pinning is important because Shopify localizes prices by IP.",
+      "editor": "textfield",
+      "prefill": "USD",
+      "title": "Currency",
+      "type": "string"
+    },
+    "flattenVariants": {
+      "default": false,
+      "description": "Emit one `recordType: variant` row per variant instead of one product row with nested variants. Variant and product IDs are de-duplicated.",
+      "prefill": false,
+      "title": "One row per variant",
+      "type": "boolean"
+    },
+    "includeDetails": {
+      "default": false,
+      "description": "Fetch `/products/{handle}.json` for each emitted product to add barcode, weight/grams and inventory fields. Costs one extra request per product and is off by default. Product mode always uses the detail endpoint.",
+      "prefill": false,
+      "title": "Include barcode, weight and inventory",
+      "type": "boolean"
+    },
+    "maxItems": {
+      "default": 1000,
+      "description": "Hard cap on dataset rows across all stores. When `flattenVariants` is on, each variant row counts as one.",
+      "maximum": 50000,
       "minimum": 1,
-      "prefill": 5,
-      "title": "Max Products",
+      "prefill": 3,
+      "title": "Max records",
       "type": "integer"
     },
-    "proxy": {
-      "default": {
-        "useApifyProxy": true
-      },
-      "description": "Proxy settings. Apify's own datacenter egress IPs are blocked by Shopify's edge WAF, so a proxy is required — the default Apify AUTO proxy (free) is sufficient for almost all stores. Switch to RESIDENTIAL only if you still get 403 errors.",
+    "maxPages": {
+      "default": 100,
+      "description": "Page cap per product/collection feed. Each page holds up to 250 items and Shopify refuses offsets above 25,000, so the effective maximum is 100.",
+      "maximum": 100,
+      "minimum": 1,
+      "prefill": 100,
+      "title": "Max pages per feed",
+      "type": "integer"
+    },
+    "maxPrice": {
+      "description": "Drop products whose lowest variant price is above this value.",
+      "maximum": 1000000,
+      "minimum": 0,
+      "title": "Maximum price",
+      "type": "number"
+    },
+    "minPrice": {
+      "description": "Drop products whose lowest variant price is below this value.",
+      "maximum": 1000000,
+      "minimum": 0,
+      "title": "Minimum price",
+      "type": "number"
+    },
+    "mode": {
+      "default": "catalog",
+      "description": "What to scrape. `catalog` walks the public product feed, `collection` walks specific collections, `product` fetches exact product handles, `search` uses the storefront search suggestions, `collections` lists collection metadata, and `auto` detects the type of each URL in `startUrls`.",
+      "editor": "select",
+      "enum": [
+        "catalog",
+        "collection",
+        "product",
+        "search",
+        "collections",
+        "auto"
+      ],
+      "enumTitles": [
+        "Full store catalog",
+        "Specific collections",
+        "Specific products",
+        "In-store search",
+        "Collection directory",
+        "Auto-detect from URLs"
+      ],
+      "prefill": "catalog",
+      "title": "Mode",
+      "type": "string"
+    },
+    "productHandles": {
+      "default": [],
+      "description": "Product handles or product URLs, e.g. `dark-roast-coffee` or `https://store.com/products/dark-roast-coffee`. Handles are applied to every store in `storeUrls`; a full product URL is applied to its own store.",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Product handles (mode=product)",
+      "type": "array"
+    },
+    "productType": {
+      "description": "Keep products whose product type contains this text (case-insensitive).",
+      "editor": "textfield",
+      "title": "Product type contains",
+      "type": "string"
+    },
+    "proxyConfiguration": {
+      "description": "Leave empty to fetch directly. After a 403 or 429 block the actor retries through Apify's datacenter proxy (AUTO) automatically. If you set this, your configuration is used for that retry instead of AUTO; direct requests are still tried first.",
       "editor": "proxy",
-      "prefill": {
-        "useApifyProxy": true
-      },
-      "title": "Proxy Configuration",
+      "title": "Proxy configuration (optional)",
       "type": "object"
     },
-    "storeUrl": {
-      "description": "URL of the Shopify store to scrape. Can be the homepage or any page on the store (e.g., https://www.allbirds.com or https://shop-name.myshopify.com).",
+    "searchQuery": {
+      "description": "In-store search term. Shopify's public suggest endpoint returns at most 10 products per store and has no pagination.",
       "editor": "textfield",
-      "prefill": "https://www.allbirds.com",
-      "title": "Shopify Store URL",
+      "title": "Search query (mode=search)",
+      "type": "string"
+    },
+    "startUrls": {
+      "default": [],
+      "description": "Store, collection or product URLs. In `auto` mode each URL selects its own job: `/products/<handle>` fetches one product, `/collections/<handle>` fetches a collection, any other store URL fetches the catalog. In the other modes these URLs add stores and, for collection/product modes, their handles.",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Start URLs (mixed, optional)",
+      "type": "array"
+    },
+    "storeUrls": {
+      "description": "Store domains or URLs, e.g. `deathwishcoffee.com` or `https://www.allbirds.com`. Accepts custom domains and `*.myshopify.com`. A product or collection URL is reduced to its store for catalog/collections/search modes.",
+      "editor": "stringList",
+      "prefill": [
+        "https://deathwishcoffee.com"
+      ],
+      "title": "Shopify store URLs",
+      "type": "array"
+    },
+    "tag": {
+      "description": "Keep products with at least one tag containing this text (case-insensitive).",
+      "editor": "textfield",
+      "title": "Tag contains",
+      "type": "string"
+    },
+    "vendor": {
+      "description": "Keep products whose vendor contains this text (case-insensitive).",
+      "editor": "textfield",
+      "title": "Vendor contains",
       "type": "string"
     }
   },
   "required": [
-    "storeUrl",
-    "proxy"
+    "mode"
   ],
   "schemaVersion": 1,
-  "title": "Shopify Scraper Input",
+  "title": "Shopify Store Catalog & Pricing Extractor Input",
   "type": "object"
 }

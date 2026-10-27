@@ -1,96 +1,194 @@
 # Shopify Store Catalog & Pricing Extractor
 
-Point this actor at any Shopify-powered store — a custom domain or a `myshopify.com` address — and get its product catalog back as structured data: pricing, variants, SKUs, stock status, and images for every product.
+Turn any public Shopify storefront into a structured product feed. Point the actor at one store or a list of stores, choose a mode, and get prices, compare-at prices, variants, stock status, images, options, collection metadata and optional barcode/weight/inventory detail.
 
-## What this actor does
+No Shopify account, admin API key, cookie or login is required. The actor reads the same public storefront JSON that a shopper's browser receives. Proxy setup is also optional: requests go direct first, and the actor switches to Apify's datacenter proxy automatically only after a real 403 or 429 block.
 
-- Works on any Shopify storefront, custom domain or default `.myshopify.com` address
-- Returns product titles, descriptions, vendor, product type, and tags
-- Captures current price and compare-at price per product, so discounts are visible
-- Lists every variant with its own SKU, price, stock status, and option values (size, color, etc.)
-- Every record has the same fields; values the store doesn't provide (e.g. no compare-at price) come back as an empty string, empty array, or `0` rather than being guessed
+## Modes
 
-## Output per product
+| Mode | What it does | Source endpoint |
+|---|---|---|
+| `catalog` | Full published product feed for every store | `/products.json?limit=250&page=N` |
+| `collection` | Products from one or more collection handles/URLs | `/collections/{handle}/products.json` |
+| `product` | Exact products by handle or product URL | `/products/{handle}.json` |
+| `search` | In-store product search, up to 10 results per store | `/search/suggest.json` |
+| `collections` | Collection directory with titles, handles and reported counts | `/collections.json?limit=250&page=N` |
+| `auto` | Mixed `startUrls`; each URL selects its own job | Detected per URL |
 
-- `id` — Shopify's internal product ID
-- `title` — product title
-- `handle` — URL-friendly product slug
-- `url` — full product page URL
-- `description` — product description, plain text
-- `vendor` — brand/vendor name
-- `productType` — product category
-- `tags` — array of product tags
-- `price` — current price, from the first variant
-- `compareAtPrice` — original price before a discount; an empty string when the product isn't on sale
-- `available` — whether any variant is currently in stock
-- `variants` — array of `{id, title, sku, price, compareAtPrice, available, option1, option2, option3}`
-- `images` — array of product image URLs
-- `createdAt`, `updatedAt` — when the product was created/last updated in the store
-- `storeUrl` — the store that was scraped
-- `scrapedAt` — ISO 8601 timestamp of when this actor collected the record
+`auto` treats `/products/<handle>` as a product job, `/collections/<handle>` as a collection job, `/collections` as a collection-directory job, and any other store URL as a catalog job.
 
 ## Input
 
-| Field | Type | Default | Description |
+| Field | Type | Default | Notes |
 |---|---|---|---|
-| `storeUrl` | string | – | **Required.** The Shopify store to scrape — a custom domain or `*.myshopify.com` address. |
-| `maxProducts` | integer | `50` | Maximum number of products to return. |
-| `proxy` | object | `{"useApifyProxy": true}` | Proxy configuration used for the requests. Required; the default setting works for almost every store. |
+| `mode` | select | `catalog` | One of the six modes above. |
+| `storeUrls` | string list | - | Store domains or full URLs; `*.myshopify.com` is supported. The prefill uses `deathwishcoffee.com`. |
+| `startUrls` | string list | empty | Mixed store/product/collection URLs. Used mainly by `auto`. |
+| `collectionHandles` | string list | empty | Handles or collection URLs for `mode=collection`. |
+| `productHandles` | string list | empty | Handles or product URLs for `mode=product`. |
+| `searchQuery` | string | empty | Required for `mode=search`. |
+| `currency` | string | `store` | ISO 4217 code such as `USD` or `EUR`; `store` uses `/meta.json`. |
+| `country` | string | empty | Optional ISO-2 country passed as `?country=`. |
+| `vendor` | string | empty | Case-insensitive vendor substring filter. |
+| `productType` | string | empty | Case-insensitive product-type substring filter. |
+| `tag` | string | empty | Keep products with a tag containing this substring. |
+| `minPrice` | number | empty | Drop products below this lowest-variant price. |
+| `maxPrice` | number | empty | Drop products above this lowest-variant price. |
+| `available` | select | `any` | `any`, `available` or `unavailable`. |
+| `maxItems` | integer | `1000` | 1-50,000 dataset rows; variant rows count individually when flattening. |
+| `maxPages` | integer | `100` | 1-100 pages per feed. Shopify refuses offsets above 25,000. |
+| `includeDetails` | boolean | `false` | One extra `/products/{handle}.json` request per product for barcode, weight and inventory. |
+| `flattenVariants` | boolean | `false` | Emit one `recordType: variant` row per variant instead of nested product rows. |
+| `proxyConfiguration` | object | empty | Direct requests are always tried first. After a 403/429 the actor retries via AUTO, or via this configuration if provided. |
 
-### Example: a small test run
+The smallest useful run is also the daily prefill: `deathwishcoffee.com`, three records, no detail enrichment.
+
+### Examples
+
+Full catalog from one store:
 
 ```json
 {
-  "storeUrl": "https://www.allbirds.com",
-  "maxProducts": 10,
-  "proxy": { "useApifyProxy": true }
+  "mode": "catalog",
+  "storeUrls": ["https://deathwishcoffee.com"],
+  "currency": "USD",
+  "maxItems": 100
 }
 ```
 
-### Example: a larger catalog pull
+Collection and sale filters:
 
 ```json
 {
-  "storeUrl": "https://shop-name.myshopify.com",
-  "maxProducts": 500,
-  "proxy": { "useApifyProxy": true }
+  "mode": "collection",
+  "storeUrls": ["allbirds.com"],
+  "collectionHandles": ["mens-sale"],
+  "maxPrice": 100,
+  "available": "available",
+  "flattenVariants": true
 }
 ```
 
-## Use cases
+Exact products by URL:
 
-- **Price monitoring** — track a competitor's pricing and discount activity over time
-- **Catalog audits** — check your own store's live titles, tags, and stock status in bulk
-- **Dropshipping research** — pull a supplier's full catalog with variant-level SKUs
-- **Market mapping** — compare product types and vendors across several stores in the same niche
-- **Inventory watch** — monitor when specific SKUs go in or out of stock
-- **Data migration** — export a store's catalog as a starting point for moving platforms
+```json
+{
+  "mode": "product",
+  "startUrls": [
+    "https://deathwishcoffee.com/products/valhalla-java",
+    "https://deathwishcoffee.com/products/dark-roast"
+  ],
+  "includeDetails": true
+}
+```
+
+Search a set of stores:
+
+```json
+{
+  "mode": "search",
+  "storeUrls": ["allbirds.com", "rothys.com"],
+  "searchQuery": "wool runner",
+  "maxItems": 20
+}
+```
+
+Mixed URLs in one run:
+
+```json
+{
+  "mode": "auto",
+  "startUrls": [
+    "https://allbirds.com",
+    "https://allbirds.com/collections/mens",
+    "https://allbirds.com/products/wool-runner"
+  ]
+}
+```
+
+## Product output
+
+Product records use `recordType: "product"` and contain:
+
+- `productId` and legacy `id`, `handle`, `title`, `url`
+- `vendor`, `productType`, `tags`
+- `bodyHtml` (raw) and `description` (plain text)
+- `createdAt`, `updatedAt`, `publishedAt`, `publishedScope`
+- `price`, `priceMin`, `priceMax`, `compareAtPrice`, `compareAtPriceMax`, `discountPercent`, `onSale`, `currency`
+- `available`, `variantCount`, `availableVariantCount`
+- `variants`: variant id, title, SKU, price, compare-at price, availability, option values and named `options`
+- `images` (URL list), `imageDetails` (URL/width/height/position), `featuredImage`
+- `options`: option names and their values
+- `store`: `{url, name, currency}`, plus legacy `storeUrl`
+- `source`, `sourceUrl`, `scrapedAt`, `recordType`
+
+With `includeDetails` enabled, variants can also contain `barcode`, `weight`, `weightUnit`, `grams`, `inventoryQuantity`, `inventoryPolicy`, `inventoryManagement`, `quantityRule`, `requiresShipping` and `taxable`. Inventory quantities are only emitted when the store exposes `inventory_management` and the value is not Shopify's `999999` untracked sentinel.
+
+When the detail endpoint omits the `available` flag but publishes inventory management, availability is derived from stock: positive quantity, or `inventory_policy=continue`, means available. Without published inventory the flag stays omitted rather than being guessed.
+
+## Variant output
+
+With `flattenVariants: true`, each variant becomes its own row with `recordType: "variant"`, plus the parent `productId`, `productHandle`, `productTitle`, `productUrl`, `vendor` and `productType`. Product and variant IDs are de-duplicated.
+
+## Collection output
+
+`mode=collections` emits `recordType: "collection"` rows with `collectionId`, `handle`, `url`, `title`, `description`, `productsCount` (the store's reported count), timestamps, image, `store`, `sourceUrl` and `scrapedAt`.
+
+## Run summary
+
+The dataset stays clean: products, variants and collections only. A separate key-value record named `OUTPUT` holds the run summary with each store's status, HTTP code, pages fetched, record counts, detail failures and capped flag.
+
+Per-store statuses:
+
+| Status | Meaning |
+|---|---|
+| `OK` | The feed was read normally. |
+| `CAPPED` | The page cap or Shopify's 25,000-offset ceiling was reached. |
+| `PARTIAL` | Some pages or detail requests failed after data was collected. |
+| `PASSWORD_PROTECTED` | The store returned 401. |
+| `FROZEN` | The store returned 402. |
+| `BLOCKED` | The store returned 403, including after the automatic proxy retry. |
+| `NO_JSON` | The store returned 404 or a non-JSON response. |
+| `RATE_LIMITED` | The store returned 429 after retries. |
+
+If every store fails, the run fails with the per-store map instead of finishing silently with an empty dataset. If some stores succeed, the run succeeds and the summary reports the failures.
+
+## Pagination notes
+
+- 250 products per page, the Shopify maximum.
+- Short pages are not the end of the feed. The walker continues until an empty page, an error, `maxPages`, or the 25,000-offset ceiling.
+- Products are de-duplicated by store and product ID; variants by store and variant ID.
+- `maxItems` is a global cap across all stores and jobs.
+
+## Currency
+
+Shopify localizes prices by IP. The actor pins `?currency=` on every list, collection and product request. The default `store` setting reads the store's base currency from `/meta.json`; an explicit ISO code overrides it. Each product records the currency reported by its variants when available.
 
 ## FAQ
 
-**Do I need a Shopify account or API key?**
-No. This actor reads data that Shopify stores make publicly available without authentication.
+**Do I need a Shopify account or API key?** No. The actor only reads public storefront JSON.
 
-**How do I know if a store is built on Shopify?**
-If the store is Shopify-powered, this actor will return products immediately; if it isn't, the run completes with no products.
+**Do I need a proxy?** No. Direct requests are tried first. Apify's datacenter proxy is used only after a 403 or 429.
 
-**Can I scrape a password-protected store?**
-No. Password-protected storefronts require a login this actor doesn't support.
+**Why does search return at most 10 products per store?** That is Shopify's public suggest endpoint limit. There is no pagination on it. Use `catalog` or `collection` mode for larger feeds.
 
-**Is there a limit on how many products I can get?**
-No hard limit — set `maxProducts` as high as you need and the actor paginates through the full catalog.
+**Why is the product count lower than the collection page says?** Collection product endpoints expose only purchasable/published products, while `products_count` counts more. The reported count is kept as `productsCount` and is not treated as ground truth.
 
-**Why am I getting no results or a 403-style failure?**
-Some stores sit behind extra firewall protection. The `proxy` input is required precisely to handle this; the default setting resolves it for almost every store.
+**Why are some inventory fields missing?** Inventory is a merchant setting. Stores that do not publish `inventory_quantity` cannot be forced to reveal it, and the untracked `999999` sentinel is never emitted as stock.
 
-**Do I get the full HTML product description?**
-No, descriptions are returned as plain text with formatting tags removed.
+**What happens on password-protected stores?** Their public JSON returns 401. The actor reports `PASSWORD_PROTECTED` and does not retry with a proxy.
 
-**Does this work on Shopify Plus stores?**
-Yes — Shopify Plus stores expose the same catalog data as standard Shopify stores.
+**Why did a large store stop at 25,000 products?** Shopify rejects page offsets above 25,000 on `/products.json`. Split large catalogs by collection to go deeper.
 
-**Why do `price` and `compareAtPrice` only reflect one variant?**
-Those two top-level fields mirror the first variant for a quick overview; check the `variants` array for the price of every individual variant.
+**Are descriptions HTML or plain text?** Both are available: `bodyHtml` keeps the original markup and `description` is a plain-text version.
 
-**Is this affiliated with Shopify?**
-No. This is an independent, third-party actor that reads publicly available store data; it isn't affiliated with or endorsed by Shopify Inc.
+**Is this affiliated with Shopify?** No. It is an independent third-party tool that reads publicly available storefront data.
+
+## Limits
+
+- Password-protected stores are not scrapable through the public JSON.
+- Stores that disable the JSON endpoints return `NO_JSON`.
+- Collection membership is not exposed publicly; the actor emits collection records instead of inventing per-product membership.
+- Search is capped at 10 products per store.
+- Inventory counts are available only where the store publishes them.
+- The product feed is limited to the newest 25,000 products per store/feed.

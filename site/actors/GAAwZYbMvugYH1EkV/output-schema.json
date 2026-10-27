@@ -1,13 +1,19 @@
 {
   "actorOutputSchemaVersion": 1,
-  "description": "Product Hunt launches, makers, hunters, votes, comments, and topics — daily leaderboard, by topic, by user, or single product detail.",
+  "description": "One dataset row per Product Hunt launch, with product details, ranks, makers, media, optional comments/replies, optional reviews and optional launch history.",
   "properties": {
-    "products": {
-      "description": "Dataset containing all scraped Product Hunt launches.",
+    "launches": {
+      "description": "Dataset containing launch records. Comments and reviews are nested arrays on the launch when enabled.",
       "template": "{{links.apiDefaultDatasetUrl}}/items",
       "title": "Product Hunt launches",
       "type": "string"
+    },
+    "products": {
+      "description": "Backward-compatible alias of the same launch dataset.",
+      "template": "{{links.apiDefaultDatasetUrl}}/items",
+      "title": "Product Hunt launches (legacy link)",
+      "type": "string"
     }
   },
-  "title": "Product Hunt Launch & Topic Data Exporter Output"
+  "title": "Product Hunt Launch, Comment and Review Exporter Output"
 }

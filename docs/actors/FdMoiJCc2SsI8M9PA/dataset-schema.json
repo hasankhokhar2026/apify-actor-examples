@@ -1,0 +1,316 @@
+{
+  "actorSpecification": 1,
+  "fields": {
+    "properties": {
+      "category": {
+        "description": "Primary Eventbrite category",
+        "type": "string"
+      },
+      "endDate": {
+        "description": "End date (YYYY-MM-DD)",
+        "type": "string"
+      },
+      "endTime": {
+        "description": "End time (HH:MM)",
+        "type": "string"
+      },
+      "format": {
+        "description": "Event format (Concert, Conference, Workshop, etc.)",
+        "type": "string"
+      },
+      "gallery": {
+        "description": "All event images at highest available CDN resolution",
+        "type": "array"
+      },
+      "id": {
+        "description": "Eventbrite event ID",
+        "type": "string"
+      },
+      "imageUrl": {
+        "description": "Event cover image URL — highest-resolution variant (CDN serves up to 2160px wide)",
+        "type": "string"
+      },
+      "isCancelled": {
+        "description": "Whether the event is cancelled",
+        "type": "boolean"
+      },
+      "isOnline": {
+        "description": "Whether it's an online event",
+        "type": "boolean"
+      },
+      "language": {
+        "description": "Event language code",
+        "type": "string"
+      },
+      "latitude": {
+        "description": "Latitude",
+        "type": "number"
+      },
+      "longitude": {
+        "description": "Longitude",
+        "type": "number"
+      },
+      "name": {
+        "description": "Event name",
+        "type": "string"
+      },
+      "primaryOrganizerId": {
+        "description": "Organizer ID",
+        "type": "string"
+      },
+      "scrapedAt": {
+        "description": "ISO 8601 scrape timestamp",
+        "type": "string"
+      },
+      "startDate": {
+        "description": "Start date (YYYY-MM-DD)",
+        "type": "string"
+      },
+      "startTime": {
+        "description": "Start time (HH:MM)",
+        "type": "string"
+      },
+      "summary": {
+        "description": "Short summary",
+        "type": "string"
+      },
+      "tags": {
+        "description": "Organizer tags / keywords",
+        "type": "array"
+      },
+      "ticketsBy": {
+        "description": "Ticket provider name",
+        "type": "string"
+      },
+      "ticketsUrl": {
+        "description": "Direct checkout URL",
+        "type": "string"
+      },
+      "timezone": {
+        "description": "IANA timezone (America/New_York)",
+        "type": "string"
+      },
+      "url": {
+        "description": "Event page URL",
+        "type": "string"
+      },
+      "venueAddress": {
+        "description": "Full street address",
+        "type": "string"
+      },
+      "venueCity": {
+        "description": "Venue city",
+        "type": "string"
+      },
+      "venueCountry": {
+        "description": "Venue country code",
+        "type": "string"
+      },
+      "venueName": {
+        "description": "Primary venue name",
+        "type": "string"
+      },
+      "venuePostalCode": {
+        "description": "Postal code",
+        "type": "string"
+      },
+      "venueRegion": {
+        "description": "Venue state/region",
+        "type": "string"
+      }
+    },
+    "type": "object"
+  },
+  "title": "Eventbrite Events",
+  "views": {
+    "detailed": {
+      "display": {
+        "component": "table",
+        "properties": {
+          "category": {
+            "format": "text",
+            "label": "Category"
+          },
+          "endDate": {
+            "format": "text",
+            "label": "End Date"
+          },
+          "endTime": {
+            "format": "text",
+            "label": "End Time"
+          },
+          "format": {
+            "format": "text",
+            "label": "Format"
+          },
+          "gallery": {
+            "format": "array",
+            "label": "Gallery"
+          },
+          "id": {
+            "format": "text",
+            "label": "ID"
+          },
+          "imageUrl": {
+            "format": "link",
+            "label": "Image"
+          },
+          "isOnline": {
+            "format": "boolean",
+            "label": "Online"
+          },
+          "latitude": {
+            "format": "number",
+            "label": "Lat"
+          },
+          "longitude": {
+            "format": "number",
+            "label": "Lng"
+          },
+          "name": {
+            "format": "text",
+            "label": "Name"
+          },
+          "scrapedAt": {
+            "format": "text",
+            "label": "Scraped At"
+          },
+          "startDate": {
+            "format": "text",
+            "label": "Start Date"
+          },
+          "startTime": {
+            "format": "text",
+            "label": "Start Time"
+          },
+          "summary": {
+            "format": "text",
+            "label": "Summary"
+          },
+          "tags": {
+            "format": "array",
+            "label": "Tags"
+          },
+          "ticketsUrl": {
+            "format": "link",
+            "label": "Tickets"
+          },
+          "timezone": {
+            "format": "text",
+            "label": "TZ"
+          },
+          "url": {
+            "format": "link",
+            "label": "URL"
+          },
+          "venueAddress": {
+            "format": "text",
+            "label": "Address"
+          },
+          "venueCity": {
+            "format": "text",
+            "label": "City"
+          },
+          "venueCountry": {
+            "format": "text",
+            "label": "Country"
+          },
+          "venueName": {
+            "format": "text",
+            "label": "Venue"
+          },
+          "venuePostalCode": {
+            "format": "text",
+            "label": "Postal"
+          },
+          "venueRegion": {
+            "format": "text",
+            "label": "Region"
+          }
+        }
+      },
+      "title": "Detailed Results",
+      "transformation": {
+        "fields": [
+          "id",
+          "name",
+          "summary",
+          "startDate",
+          "startTime",
+          "endDate",
+          "endTime",
+          "timezone",
+          "isOnline",
+          "venueName",
+          "venueAddress",
+          "venueCity",
+          "venueRegion",
+          "venueCountry",
+          "venuePostalCode",
+          "latitude",
+          "longitude",
+          "category",
+          "format",
+          "tags",
+          "imageUrl",
+          "gallery",
+          "url",
+          "ticketsUrl",
+          "scrapedAt"
+        ]
+      }
+    },
+    "overview": {
+      "display": {
+        "component": "table",
+        "properties": {
+          "category": {
+            "format": "text",
+            "label": "Category"
+          },
+          "name": {
+            "format": "text",
+            "label": "Name"
+          },
+          "startDate": {
+            "format": "text",
+            "label": "Date"
+          },
+          "startTime": {
+            "format": "text",
+            "label": "Time"
+          },
+          "url": {
+            "format": "link",
+            "label": "URL"
+          },
+          "venueCity": {
+            "format": "text",
+            "label": "City"
+          },
+          "venueName": {
+            "format": "text",
+            "label": "Venue"
+          },
+          "venueRegion": {
+            "format": "text",
+            "label": "Region"
+          }
+        }
+      },
+      "title": "Overview",
+      "transformation": {
+        "fields": [
+          "name",
+          "startDate",
+          "startTime",
+          "venueName",
+          "venueCity",
+          "venueRegion",
+          "category",
+          "url"
+        ]
+      }
+    }
+  }
+}

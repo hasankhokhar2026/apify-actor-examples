@@ -1,9 +1,39 @@
 {
-  "description": "Configure the LinkedIn Ad Library search. Provide keywords, advertiser names, or pre-built Ad Library URLs.",
+  "description": "Search the public LinkedIn Ad Library, scrape specific ads, or count matches. Every keyword, advertiser, payer, and company-ID group becomes its own search; country, date, sort, impression, and targeting filters apply to all searches.",
   "properties": {
+    "adIds": {
+      "default": [],
+      "description": "Numeric ad IDs or linkedin.com/ad-library/detail/... URLs. Used by mode adDetails.",
+      "editor": "stringList",
+      "example": [
+        "1611810664"
+      ],
+      "items": {
+        "type": "string"
+      },
+      "title": "Ad IDs or Detail URLs",
+      "type": "array"
+    },
+    "advertiserMatch": {
+      "default": "startsWith",
+      "description": "Client-side precision for advertiser-name searches. Exact company IDs are never filtered. 'Starts with' removes partner-noise results while keeping names such as 'Microsoft in Business'.",
+      "editor": "select",
+      "enum": [
+        "any",
+        "startsWith",
+        "exact"
+      ],
+      "enumTitles": [
+        "Any match",
+        "Starts with",
+        "Exact name"
+      ],
+      "title": "Advertiser Name Match",
+      "type": "string"
+    },
     "advertisers": {
       "default": [],
-      "description": "Advertiser / company names to search (e.g., 'Microsoft', 'Salesforce'). LinkedIn matches the advertiser display name.",
+      "description": "Advertiser names (fuzzy accountOwner search) or LinkedIn company URLs. Each name is an independent search. Use companyIds for exact matching.",
       "editor": "stringList",
       "example": [
         "Microsoft",
@@ -15,109 +45,267 @@
       "title": "Advertisers",
       "type": "array"
     },
+    "companyIds": {
+      "default": [],
+      "description": "Exact numeric LinkedIn company IDs (for example, Microsoft is 1035). Multiple IDs are OR-ed in one exact search. Company URLs are accepted too.",
+      "editor": "stringList",
+      "example": [
+        "1035",
+        "3608"
+      ],
+      "items": {
+        "type": "string"
+      },
+      "prefill": [
+        "1035"
+      ],
+      "title": "LinkedIn Company IDs",
+      "type": "array"
+    },
+    "companyUrls": {
+      "default": [],
+      "description": "LinkedIn company page URLs. The actor resolves each public page to its numeric organization ID and searches it exactly.",
+      "editor": "stringList",
+      "example": [
+        "https://www.linkedin.com/company/microsoft"
+      ],
+      "items": {
+        "type": "string"
+      },
+      "title": "Company URLs",
+      "type": "array"
+    },
     "countries": {
       "default": [],
-      "description": "ISO-3166-1 alpha-2 country codes (e.g., 'US', 'GB', 'IN'). Filters ads to those served in the selected countries.",
+      "description": "ISO-3166 alpha-2 delivery country codes (US, GB, DE, ...) or ALL. Multiple codes are sent in one comma-separated filter.",
       "editor": "stringList",
+      "example": [
+        "US",
+        "DE"
+      ],
       "items": {
         "type": "string"
       },
       "title": "Countries",
       "type": "array"
     },
-    "dateFrom": {
-      "description": "Start date for custom range (YYYY-MM-DD). Only used when dateOption=custom.",
-      "editor": "textfield",
-      "nullable": true,
-      "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
-      "title": "Date From",
-      "type": "string"
-    },
     "dateOption": {
       "default": "last-30-days",
-      "description": "Pre-defined date window. Use 'custom' to specify exact dateFrom/dateTo.",
+      "description": "LinkedIn's date window. Use custom-date-range with startDate/endDate for an exact period (maximum 12 months back).",
       "editor": "select",
       "enum": [
+        "any-time",
         "last-30-days",
-        "last-90-days",
+        "current-month",
+        "current-year",
         "last-year",
-        "custom"
+        "custom-date-range"
       ],
       "enumTitles": [
+        "Any time",
         "Last 30 days",
-        "Last 90 days",
-        "Last 365 days",
-        "Custom range (use dateFrom / dateTo)"
+        "Current month",
+        "Current year",
+        "Last year",
+        "Custom date range"
       ],
+      "prefill": "last-30-days",
       "title": "Date Range",
       "type": "string"
     },
-    "dateTo": {
-      "description": "End date for custom range (YYYY-MM-DD). Only used when dateOption=custom.",
-      "editor": "textfield",
-      "nullable": true,
-      "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
-      "title": "Date To",
-      "type": "string"
+    "decodeShortLinks": {
+      "default": false,
+      "description": "Resolve lnkd.in and similar short links to their final landing URL. Adds one request per short link.",
+      "editor": "checkbox",
+      "title": "Decode Short Links",
+      "type": "boolean"
     },
     "directUrls": {
       "default": [],
-      "description": "Pre-built LinkedIn Ad Library URLs. Use this if you've already configured filters on linkedin.com/ad-library and just want to paste the URL.",
+      "description": "Pasted Ad Library search URLs, ad detail URLs, or LinkedIn company page URLs. Search filters are preserved.",
       "editor": "requestListSources",
       "example": [
         {
-          "url": "https://www.linkedin.com/ad-library/search?keyword=AI"
+          "url": "https://www.linkedin.com/ad-library/search?keyword=AI&countries=US"
         }
       ],
       "title": "Direct URLs",
       "type": "array"
     },
-    "enrichWithDetailPage": {
-      "default": false,
-      "description": "When true, fetches each ad's detail page (/ad-library/detail/{id}) to enrich records with `paid_for_by` (DSA disclosure), canonical `advertiser_url`, and any longer body copy. Adds ~0.5-1 s per ad. Note: impressions and targeting facets are loaded via XHR after render and are NOT extractable without a full browser session, so they remain unavailable.",
-      "editor": "checkbox",
-      "title": "Enrich With Detail Page",
-      "type": "boolean"
+    "endDate": {
+      "description": "End of a custom range (YYYY-MM-DD). Required when dateOption is custom-date-range.",
+      "editor": "textfield",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+      "title": "End Date",
+      "type": "string"
     },
-    "maxResults": {
-      "default": 50,
-      "description": "Maximum number of ads to return across all queries.",
+    "impressionsMaxUnit": {
+      "default": "none",
+      "description": "Unit for the maximum impression value.",
+      "editor": "select",
+      "enum": [
+        "none",
+        "thousand",
+        "million"
+      ],
+      "enumTitles": [
+        "Units",
+        "Thousands",
+        "Millions"
+      ],
+      "title": "Maximum Impressions Unit",
+      "type": "string"
+    },
+    "impressionsMaxValue": {
+      "description": "Upper bound of the impression range (EU transparency data only). Required together with the minimum value.",
       "editor": "number",
-      "maximum": 1000,
-      "minimum": 1,
-      "prefill": 3,
-      "title": "Maximum Results",
+      "maximum": 1000000000,
+      "minimum": 0,
+      "title": "Maximum Impressions Value",
       "type": "integer"
     },
-    "proxy": {
-      "default": {
-        "useApifyProxy": true
-      },
-      "description": "Optional proxy. The LinkedIn Ad Library is fully public and works from datacenter IPs, so the default Apify Proxy is enabled but no residential group is required.",
-      "editor": "proxy",
-      "prefill": {
-        "useApifyProxy": true
-      },
-      "title": "Proxy Configuration",
-      "type": "object"
+    "impressionsMinUnit": {
+      "default": "none",
+      "description": "Unit for the minimum impression value.",
+      "editor": "select",
+      "enum": [
+        "none",
+        "thousand",
+        "million"
+      ],
+      "enumTitles": [
+        "Units",
+        "Thousands",
+        "Millions"
+      ],
+      "title": "Minimum Impressions Unit",
+      "type": "string"
     },
-    "searchTerms": {
+    "impressionsMinValue": {
+      "description": "Lower bound of the impression range (EU transparency data only). LinkedIn requires both a minimum and a maximum value.",
+      "editor": "number",
+      "maximum": 1000000000,
+      "minimum": 0,
+      "title": "Minimum Impressions Value",
+      "type": "integer"
+    },
+    "includeDetails": {
+      "default": true,
+      "description": "Open each ad's detail page for full copy, CTA, landing URL, video, payer, and EU transparency data. Adds one request per ad.",
+      "editor": "checkbox",
+      "prefill": true,
+      "title": "Include Detail Pages",
+      "type": "boolean"
+    },
+    "maxItems": {
+      "default": 50,
+      "description": "Global cap on ads returned across all searches (1-4800). Each search can return at most 4,800 ads (200 pages of 24).",
+      "editor": "number",
+      "maximum": 4800,
+      "minimum": 1,
+      "prefill": 3,
+      "title": "Maximum Records",
+      "type": "integer"
+    },
+    "mode": {
+      "default": "search",
+      "description": "What to collect: search the library, open specific ads, process pasted URLs, or count matches only.",
+      "editor": "select",
+      "enum": [
+        "search",
+        "adDetails",
+        "directUrls",
+        "count"
+      ],
+      "enumTitles": [
+        "Search the Ad Library",
+        "Specific ad IDs / detail URLs",
+        "Pasted Ad Library / company URLs",
+        "Count matches only"
+      ],
+      "prefill": "search",
+      "title": "Mode",
+      "type": "string"
+    },
+    "payer": {
       "default": [],
-      "description": "Keyword search queries (e.g., 'AI', 'cloud computing'). The Ad Library matches ads whose copy or advertiser contains any of these terms.",
+      "description": "Search ads by the legal entity that paid for them, e.g. 'Microsoft Corporation'. Each payer is an independent search.",
       "editor": "stringList",
       "example": [
-        "AI",
-        "remote work"
+        "Microsoft Corporation"
       ],
       "items": {
         "type": "string"
       },
-      "title": "Search Terms",
+      "title": "Paid for by (payer)",
+      "type": "array"
+    },
+    "searchTerms": {
+      "default": [],
+      "description": "One or more keyword searches, e.g. 'AI' or 'cloud computing'. Each keyword is an independent search (union), not a combination.",
+      "editor": "stringList",
+      "example": [
+        "AI",
+        "cloud computing"
+      ],
+      "items": {
+        "type": "string"
+      },
+      "title": "Keywords",
+      "type": "array"
+    },
+    "sortOrder": {
+      "default": "newest",
+      "description": "Newest first or oldest first.",
+      "editor": "select",
+      "enum": [
+        "newest",
+        "oldest"
+      ],
+      "enumTitles": [
+        "Newest first",
+        "Oldest first"
+      ],
+      "title": "Sort Order",
+      "type": "string"
+    },
+    "startDate": {
+      "description": "Start of a custom range (YYYY-MM-DD). Required when dateOption is custom-date-range.",
+      "editor": "textfield",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+      "title": "Start Date",
+      "type": "string"
+    },
+    "targetingExcluded": {
+      "default": [],
+      "description": "Filters ads that exclude any of these categories (EU transparency data only). Values: LANGUAGE, LOCATION, AUDIENCE, DEMOGRAPHIC, COMPANY, EDUCATION, JOB, INTERESTS_AND_TRAITS.",
+      "editor": "stringList",
+      "example": [
+        "COMPANY"
+      ],
+      "items": {
+        "type": "string"
+      },
+      "title": "Excluded Targeting Facets",
+      "type": "array"
+    },
+    "targetingIncluded": {
+      "default": [],
+      "description": "Filters ads that target any of these categories (EU transparency data only). Values: LANGUAGE, LOCATION, AUDIENCE, DEMOGRAPHIC, COMPANY, EDUCATION, JOB, INTERESTS_AND_TRAITS.",
+      "editor": "stringList",
+      "example": [
+        "LANGUAGE",
+        "JOB"
+      ],
+      "items": {
+        "type": "string"
+      },
+      "title": "Included Targeting Facets",
       "type": "array"
     }
   },
   "required": [],
   "schemaVersion": 1,
-  "title": "LinkedIn Ads Scraper Input",
+  "title": "LinkedIn Ad Library Scraper Input",
   "type": "object"
 }

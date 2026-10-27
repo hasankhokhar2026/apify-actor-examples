@@ -1,13 +1,20 @@
 {
   "actorOutputSchemaVersion": 1,
-  "description": "One record per product from a Shopify store with title, price, compare-at price, variants, SKUs, images and stock availability.",
+  "description": "Dataset rows for products, variants or collections, plus a per-store run summary record.",
   "properties": {
-    "products": {
-      "description": "Dataset containing all scraped Shopify products",
+    "items": {
+      "description": "Dataset containing product, variant and collection records (filtered by recordType).",
       "template": "{{links.apiDefaultDatasetUrl}}/items",
-      "title": "Shopify Products",
+      "title": "Shopify records",
+      "type": "string"
+    },
+    "runSummary": {
+      "description": "Key-value store record named OUTPUT with per-store OK/CAPPED/PARTIAL and error statuses.",
+      "template": "{{links.apiDefaultKeyValueStoreUrl}}/keys",
+      "title": "Per-store run summary",
       "type": "string"
     }
   },
-  "title": "Shopify Store Catalog & Pricing Extractor Output"
+  "title": "Shopify Store Catalog & Pricing Extractor Output",
+  "type": "object"
 }
