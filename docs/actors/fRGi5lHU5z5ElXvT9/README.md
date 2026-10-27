@@ -53,10 +53,10 @@ Empty fields are omitted everywhere. There are no `null`, `""`, `[]` or `{}` val
 | Field | Type | Default | Notes |
 |---|---|---|---|
 | `mode` | select | `lookup` | `lookup`, `availability` or `name_search`. |
-| `usernames` | array | `["torvalds"]` | Handles, `@handles` or profile URLs. Required for lookup/availability. |
+| `usernames` | array | — | Handles, `@handles` or profile URLs. Required for lookup/availability. |
 | `names` | array | — | Full names for name search. |
 | `coverage` | select | `verified` | `verified` (29 platforms) or `extended` (400+ best-effort platforms). |
-| `platforms` | multi-select | 7 verified platforms | Leave empty for all platforms in the chosen coverage. |
+| `platforms` | multi-select | — | Leave empty for all platforms in the chosen coverage. |
 | `maxConcurrency` | integer | `12` | 1–12. The discovery run validated 12 as the safe default. |
 | `maxResults` | integer | `500` | 1–5,000 profile/check rows. The summary is extra. |
 | `proxyConfiguration` | object | — | Optional. The actor works with no proxy. |

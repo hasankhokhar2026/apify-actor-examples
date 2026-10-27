@@ -29,8 +29,8 @@ Turn on `includeDetails` for the full launch page (description, maker/hunter pro
 |---|---|---|---|
 | `mode` | select | `latest` | `latest`, `leaderboard`, `dailyRange`, `topic`, `category`, `search`, `product`, or `launch`. |
 | `period` | select | `daily` | Leaderboard period: `daily`, `weekly`, `monthly`, `yearly`. |
-| `date` | string | today | Leaderboard date (`YYYY-MM-DD`). Weekly/monthly/yearly use that day's ISO week, month, or year. |
-| `from`, `to` | string | yesterday | Inclusive day range for `dailyRange`. |
+| `date` | string | — | Leaderboard date (`YYYY-MM-DD`). Weekly/monthly/yearly use that day's ISO week, month, or year. |
+| `from`, `to` | string | — | Inclusive day range for `dailyRange`. |
 | `topicSlugs` | array | `[]` | Topic slugs or `/topics/...` URLs. |
 | `categorySlugs` | array | `[]` | Category slugs or `/categories/...` URLs. |
 | `searchQuery` | string | – | Keyword for `search`. |

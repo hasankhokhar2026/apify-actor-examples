@@ -1,0 +1,151 @@
+{
+  "properties": {
+    "companyCategories": {
+      "description": "Filter companies by category (e.g. 'saas', 'fintech'). Case-insensitive substring match on startup name/slug.",
+      "editor": "stringList",
+      "title": "Company Category Filter",
+      "type": "array"
+    },
+    "excludeCompanies": {
+      "description": "Block-list of company names/slugs (case-insensitive).",
+      "editor": "stringList",
+      "title": "Exclude Companies",
+      "type": "array"
+    },
+    "experience": {
+      "default": "any",
+      "description": "Filter by experience level (matches on job title/description keywords).",
+      "editor": "select",
+      "enum": [
+        "any",
+        "junior",
+        "mid",
+        "senior",
+        "executive"
+      ],
+      "enumTitles": [
+        "Any",
+        "Junior / Entry",
+        "Mid",
+        "Senior",
+        "Executive"
+      ],
+      "title": "Experience Level",
+      "type": "string"
+    },
+    "includeCompanies": {
+      "description": "Allow-list of company names/slugs (case-insensitive).",
+      "editor": "stringList",
+      "title": "Include Companies",
+      "type": "array"
+    },
+    "includeNoSalary": {
+      "default": true,
+      "description": "When false, jobs with no compensation field are filtered out.",
+      "title": "Include Jobs Without Salary Data",
+      "type": "boolean"
+    },
+    "jobTitle": {
+      "description": "Client-side filter: only jobs whose title contains this phrase (case-insensitive).",
+      "editor": "textfield",
+      "title": "Job Title Filter",
+      "type": "string"
+    },
+    "jobType": {
+      "default": "any",
+      "description": "Filter by employment type (matches on job metadata/description).",
+      "editor": "select",
+      "enum": [
+        "any",
+        "full-time",
+        "part-time",
+        "contract",
+        "internship"
+      ],
+      "enumTitles": [
+        "Any",
+        "Full-time",
+        "Part-time",
+        "Contract",
+        "Internship"
+      ],
+      "title": "Job Type",
+      "type": "string"
+    },
+    "keyword": {
+      "description": "Client-side keyword filter across title + company + location (case-insensitive).",
+      "editor": "textfield",
+      "title": "Keyword",
+      "type": "string"
+    },
+    "location": {
+      "description": "Client-side location filter (case-insensitive match on any location name).",
+      "editor": "textfield",
+      "title": "Location Filter",
+      "type": "string"
+    },
+    "maxItems": {
+      "default": 50,
+      "description": "Maximum jobs returned after filtering.",
+      "editor": "number",
+      "maximum": 500,
+      "minimum": 1,
+      "prefill": 5,
+      "title": "Max Items",
+      "type": "integer"
+    },
+    "maxSalary": {
+      "default": 0,
+      "description": "Maximum annual compensation. 0 = unlimited.",
+      "editor": "number",
+      "maximum": 1000000,
+      "minimum": 0,
+      "title": "Maximum Salary (USD/year)",
+      "type": "integer"
+    },
+    "minSalary": {
+      "default": 0,
+      "description": "Minimum annual compensation parsed from job compensation field.",
+      "editor": "number",
+      "maximum": 1000000,
+      "minimum": 0,
+      "title": "Minimum Salary (USD/year)",
+      "type": "integer"
+    },
+    "remoteOnly": {
+      "default": false,
+      "description": "Return only jobs flagged as remote.",
+      "title": "Remote Only",
+      "type": "boolean"
+    },
+    "sort": {
+      "default": "none",
+      "description": "Sort by posted date (when available).",
+      "editor": "select",
+      "enum": [
+        "newest",
+        "oldest",
+        "none"
+      ],
+      "enumTitles": [
+        "Newest First",
+        "Oldest First",
+        "As Returned"
+      ],
+      "title": "Sort Order",
+      "type": "string"
+    },
+    "startUrls": {
+      "description": "Wellfound URLs. Default is https://wellfound.com/jobs. Supports ?remote=true and other query params. /role/l/ deep-filter URLs require residential proxy (escalated automatically).",
+      "editor": "stringList",
+      "prefill": [
+        "https://wellfound.com/jobs"
+      ],
+      "title": "Start URLs",
+      "type": "array"
+    }
+  },
+  "schemaVersion": 1,
+  "title": "Wellfound Jobs Scraper Input",
+  "type": "object"
+}
