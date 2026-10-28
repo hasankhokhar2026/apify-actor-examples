@@ -1,0 +1,547 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src &#x27;self&#x27;; script-src &#x27;self&#x27; &#x27;sha256-4MPP0dkA7Ew1C3LEHH+qnZzHdpbRDB/ExFY4q5j2cq8=&#x27;; style-src &#x27;self&#x27;; img-src &#x27;self&#x27; https: data:; base-uri &#x27;self&#x27;; form-action &#x27;self&#x27;; object-src &#x27;none&#x27;"><title>YouTube Trending Feed Extractor by Category &amp; Market | Nimbryxo Studio</title><meta name="description" content="Get video lists for YouTube&#x27;s Gaming, Music, News, Movies and Trending sections in any of 31 regional markets, with views, duration and channel details; rows from a fallback search"><meta name="robots" content="index,follow"><link rel="canonical" href="https://hasankhokhar2026.github.io/apify-actor-examples/actors/GnLvTq8m3i6444nUe/"><meta property="og:title" content="YouTube Trending Feed Extractor by Category &amp; Market | Nimbryxo Studio"><meta property="og:description" content="Get video lists for YouTube&#x27;s Gaming, Music, News, Movies and Trending sections in any of 31 regional markets, with views, duration and channel details; rows from a fallback search"><meta property="og:type" content="website"><meta property="og:url" content="https://hasankhokhar2026.github.io/apify-actor-examples/actors/GnLvTq8m3i6444nUe/"><meta property="og:site_name" content="Nimbryxo Studio"><meta name="twitter:card" content="summary"><link rel="icon" href="/apify-actor-examples/assets/mark.svg?v=2d20f9dc334a" type="image/svg+xml"><link rel="stylesheet" href="/apify-actor-examples/assets/site.css?v=39545fd4a399"><link rel="stylesheet" href="/apify-actor-examples/assets/brand.css?v=eb0f935ade25"><link rel="alternate" type="application/rss+xml" title="Nimbryxo Studio guides" href="/apify-actor-examples/feed.xml"><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization","name":"Nimbryxo Studio","url":"https://hasankhokhar2026.github.io/apify-actor-examples/","sameAs":["https://apify.com/nimbryxo-studio"]},{"@type":"WebSite","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#website","name":"Nimbryxo Studio","url":"https://hasankhokhar2026.github.io/apify-actor-examples/","publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"inLanguage":"en"},{"@type":"WebPage","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/GnLvTq8m3i6444nUe/#webpage","name":"YouTube Trending Feed Extractor by Category & Market","description":"Get video lists for YouTube's Gaming, Music, News, Movies and Trending sections in any of 31 regional markets, with views, duration and channel details; rows from a fallback search are labeled.","url":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/GnLvTq8m3i6444nUe/","isPartOf":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#website"},"publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"inLanguage":"en","mainEntity":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/GnLvTq8m3i6444nUe/#article"},"breadcrumb":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/GnLvTq8m3i6444nUe/#breadcrumb"}},{"@type":"TechArticle","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/GnLvTq8m3i6444nUe/#article","headline":"YouTube Trending Feed Extractor by Category & Market","name":"YouTube Trending Feed Extractor by Category & Market","description":"Get video lists for YouTube's Gaming, Music, News, Movies and Trending sections in any of 31 regional markets, with views, duration and channel details; rows from a fallback search are labeled.","url":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/GnLvTq8m3i6444nUe/","author":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"mainEntityOfPage":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/GnLvTq8m3i6444nUe/#webpage"},"inLanguage":"en"},{"@type":"BreadcrumbList","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/GnLvTq8m3i6444nUe/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Nimbryxo Studio","item":"https://hasankhokhar2026.github.io/apify-actor-examples/"},{"@type":"ListItem","position":2,"name":"Actors","item":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/"},{"@type":"ListItem","position":3,"name":"YouTube Trending Feed Extractor by Category & Market","item":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/GnLvTq8m3i6444nUe/"}]}]}</script><script src="/apify-actor-examples/assets/site.js?v=7cabac48dd31" defer></script></head><body class="theme-studio"><a href="#main" class="skip-link">Skip to content</a><header><div class="inner"><a href="/apify-actor-examples/" class="brand"><img src="/apify-actor-examples/assets/mark.svg?v=2d20f9dc334a" alt="" width="29" height="29">Nimbryxo Studio</a><nav aria-label="Main navigation"><a href="/apify-actor-examples/actors/" aria-current="page">Actors</a><a href="/apify-actor-examples/guides/">Guides</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></nav></div></header><main id="main"><div class="doc-layout"><aside class="contents" aria-label="On this page"><strong>Contents</strong><a href="#overview">Overview</a><a href="#published-readme">Published README</a><a href="#input-schema">Input schema</a><a href="#output-schema">Output schema</a><a href="#dataset-schema">Dataset schema</a><a href="#python-quickstart">Python quickstart</a></aside><article class="prose"><div class="breadcrumb"><a href="/apify-actor-examples/actors/">Actors</a><span>/</span><span>YouTube Trending Feed Extractor by Category &amp; Market</span></div><section id="overview"><h1 class="doc-title">YouTube Trending Feed Extractor by Category &amp; Market</h1><p class="lede">Get video lists for YouTube&#x27;s Gaming, Music, News, Movies and Trending sections in any of 31 regional markets, with views, duration and channel details; rows from a fallback search are labeled.</p><div class="actions"><a class="button" href="https://apify.com/nimbryxo-studio/youtube-trending-feed-extractor-by-category">Open on Apify</a><a class="text-link" href="https://github.com/hasankhokhar2026/apify-actor-examples/blob/main/docs/actors/GnLvTq8m3i6444nUe/README.md">GitHub source</a></div></section><section class="schema-section" id="input-schema"><h2>Input schema</h2><p>Input fields, types, required flags, descriptions, defaults, and prefills come from the published definition. Prefill examples are distinct from defaults.</p><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>category</code></td><td>string</td><td>optional</td><td>Which YouTube trending section to scrape. &#x27;Gaming&#x27;, &#x27;News&#x27;, and &#x27;Music&#x27; work without authentication. &#x27;Now&#x27; (main trending feed) and &#x27;Movies&#x27; are auth-gated for cookieless requests and automatically use a clearly labeled public search fallback instead of returning nothing.</td></tr><tr><td><code>maxResults</code></td><td>integer</td><td>optional</td><td>Maximum number of trending videos to return. YouTube Gaming typically surfaces 200-400 videos across all shelf sections.</td></tr><tr><td><code>market</code></td><td>string</td><td>optional</td><td>Country/region for localized trending results. Sets the gl URL parameter to target the correct regional trending feed.</td></tr></tbody></table></div><p><a href="input-schema.json">Download the published input schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+  &quot;description&quot;: &quot;Scrape trending and popular YouTube videos by category. Supports Gaming, News, Music, Movies, and Now Trending sections with regional market targeting.&quot;,
+  &quot;properties&quot;: {
+    &quot;category&quot;: {
+      &quot;default&quot;: &quot;gaming&quot;,
+      &quot;description&quot;: &quot;Which YouTube trending section to scrape. &#x27;Gaming&#x27;, &#x27;News&#x27;, and &#x27;Music&#x27; work without authentication. &#x27;Now&#x27; (main trending feed) and &#x27;Movies&#x27; are auth-gated for cookieless requests and automatically use a clearly labeled public search fallback instead of returning nothing.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;now&quot;,
+        &quot;gaming&quot;,
+        &quot;music&quot;,
+        &quot;movies&quot;,
+        &quot;news&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;Now Trending&quot;,
+        &quot;Gaming&quot;,
+        &quot;Music&quot;,
+        &quot;Movies&quot;,
+        &quot;News&quot;
+      ],
+      &quot;prefill&quot;: &quot;gaming&quot;,
+      &quot;title&quot;: &quot;Category&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;market&quot;: {
+      &quot;default&quot;: &quot;US&quot;,
+      &quot;description&quot;: &quot;Country/region for localized trending results. Sets the gl URL parameter to target the correct regional trending feed.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;US&quot;,
+        &quot;GB&quot;,
+        &quot;CA&quot;,
+        &quot;AU&quot;,
+        &quot;DE&quot;,
+        &quot;FR&quot;,
+        &quot;JP&quot;,
+        &quot;KR&quot;,
+        &quot;BR&quot;,
+        &quot;IN&quot;,
+        &quot;MX&quot;,
+        &quot;IT&quot;,
+        &quot;ES&quot;,
+        &quot;NL&quot;,
+        &quot;PL&quot;,
+        &quot;RU&quot;,
+        &quot;SE&quot;,
+        &quot;NO&quot;,
+        &quot;DK&quot;,
+        &quot;FI&quot;,
+        &quot;ZA&quot;,
+        &quot;SG&quot;,
+        &quot;HK&quot;,
+        &quot;TW&quot;,
+        &quot;ID&quot;,
+        &quot;MY&quot;,
+        &quot;TH&quot;,
+        &quot;PH&quot;,
+        &quot;AR&quot;,
+        &quot;CO&quot;,
+        &quot;CL&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;United States&quot;,
+        &quot;United Kingdom&quot;,
+        &quot;Canada&quot;,
+        &quot;Australia&quot;,
+        &quot;Germany&quot;,
+        &quot;France&quot;,
+        &quot;Japan&quot;,
+        &quot;South Korea&quot;,
+        &quot;Brazil&quot;,
+        &quot;India&quot;,
+        &quot;Mexico&quot;,
+        &quot;Italy&quot;,
+        &quot;Spain&quot;,
+        &quot;Netherlands&quot;,
+        &quot;Poland&quot;,
+        &quot;Russia&quot;,
+        &quot;Sweden&quot;,
+        &quot;Norway&quot;,
+        &quot;Denmark&quot;,
+        &quot;Finland&quot;,
+        &quot;South Africa&quot;,
+        &quot;Singapore&quot;,
+        &quot;Hong Kong&quot;,
+        &quot;Taiwan&quot;,
+        &quot;Indonesia&quot;,
+        &quot;Malaysia&quot;,
+        &quot;Thailand&quot;,
+        &quot;Philippines&quot;,
+        &quot;Argentina&quot;,
+        &quot;Colombia&quot;,
+        &quot;Chile&quot;
+      ],
+      &quot;title&quot;: &quot;Market / Region&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;maxResults&quot;: {
+      &quot;default&quot;: 50,
+      &quot;description&quot;: &quot;Maximum number of trending videos to return. YouTube Gaming typically surfaces 200-400 videos across all shelf sections.&quot;,
+      &quot;maximum&quot;: 200,
+      &quot;minimum&quot;: 1,
+      &quot;prefill&quot;: 20,
+      &quot;title&quot;: &quot;Max Results&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    }
+  },
+  &quot;required&quot;: [],
+  &quot;schemaVersion&quot;: 1,
+  &quot;title&quot;: &quot;YouTube Trending Scraper Input&quot;,
+  &quot;type&quot;: &quot;object&quot;
+}
+</code></pre></details></section><section class="schema-section" id="output-schema"><h2>Output schema</h2><p>Published result links and storage locations. This schema is not an exhaustive contract for every field in a dataset record.</p><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>videos</code></td><td>string</td><td>optional</td><td>Dataset containing all scraped ranked trending video rows for the requested category.</td></tr></tbody></table></div><p><a href="output-schema.json">Download the published output schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+  &quot;actorOutputSchemaVersion&quot;: 1,
+  &quot;description&quot;: &quot;Ranked trending video rows for the requested category.&quot;,
+  &quot;properties&quot;: {
+    &quot;videos&quot;: {
+      &quot;description&quot;: &quot;Dataset containing all scraped ranked trending video rows for the requested category.&quot;,
+      &quot;template&quot;: &quot;{{links.apiDefaultDatasetUrl}}/items&quot;,
+      &quot;title&quot;: &quot;YouTube Trending Scraper dataset&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    }
+  },
+  &quot;title&quot;: &quot;YouTube Trending Feed Extractor by Category &amp; Market Output&quot;
+}
+</code></pre></details></section><section class="schema-section" id="dataset-schema"><h2>Dataset schema</h2><p>Published dataset views and any declared field definitions. A view can select only a subset of the returned record fields.</p><p><a href="dataset-schema.json">Download the published dataset schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+  &quot;actorSpecification&quot;: 1,
+  &quot;views&quot;: {
+    &quot;full&quot;: {
+      &quot;display&quot;: {
+        &quot;component&quot;: &quot;table&quot;,
+        &quot;properties&quot;: {
+          &quot;badges&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Badges&quot;
+          },
+          &quot;category&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Category&quot;
+          },
+          &quot;channelHandle&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Handle&quot;
+          },
+          &quot;channelId&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Channel ID&quot;
+          },
+          &quot;channelName&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Channel&quot;
+          },
+          &quot;channelUrl&quot;: {
+            &quot;format&quot;: &quot;link&quot;,
+            &quot;label&quot;: &quot;Channel URL&quot;
+          },
+          &quot;durationSeconds&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Duration (s)&quot;
+          },
+          &quot;durationText&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Duration&quot;
+          },
+          &quot;fallbackQuery&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Fallback Query&quot;
+          },
+          &quot;isLive&quot;: {
+            &quot;format&quot;: &quot;boolean&quot;,
+            &quot;label&quot;: &quot;Live&quot;
+          },
+          &quot;isVerified&quot;: {
+            &quot;format&quot;: &quot;boolean&quot;,
+            &quot;label&quot;: &quot;Verified&quot;
+          },
+          &quot;market&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Market&quot;
+          },
+          &quot;playlistId&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Playlist/Album ID&quot;
+          },
+          &quot;position&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;#&quot;
+          },
+          &quot;publishedDate&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Published Date&quot;
+          },
+          &quot;publishedTimeText&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Published&quot;
+          },
+          &quot;scrapedAt&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Scraped At&quot;
+          },
+          &quot;sourceType&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Source&quot;
+          },
+          &quot;thumbnailUrl&quot;: {
+            &quot;format&quot;: &quot;link&quot;,
+            &quot;label&quot;: &quot;Thumbnail&quot;
+          },
+          &quot;title&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Title&quot;
+          },
+          &quot;type&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Type&quot;
+          },
+          &quot;url&quot;: {
+            &quot;format&quot;: &quot;link&quot;,
+            &quot;label&quot;: &quot;URL&quot;
+          },
+          &quot;videoId&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Video ID&quot;
+          },
+          &quot;viewCount&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Views&quot;
+          },
+          &quot;viewCountText&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Views Text&quot;
+          }
+        }
+      },
+      &quot;title&quot;: &quot;Full Details&quot;,
+      &quot;transformation&quot;: {
+        &quot;fields&quot;: [
+          &quot;position&quot;,
+          &quot;type&quot;,
+          &quot;videoId&quot;,
+          &quot;playlistId&quot;,
+          &quot;title&quot;,
+          &quot;url&quot;,
+          &quot;channelName&quot;,
+          &quot;channelId&quot;,
+          &quot;channelUrl&quot;,
+          &quot;channelHandle&quot;,
+          &quot;isVerified&quot;,
+          &quot;viewCount&quot;,
+          &quot;viewCountText&quot;,
+          &quot;publishedTimeText&quot;,
+          &quot;publishedDate&quot;,
+          &quot;durationText&quot;,
+          &quot;durationSeconds&quot;,
+          &quot;thumbnailUrl&quot;,
+          &quot;badges&quot;,
+          &quot;isLive&quot;,
+          &quot;category&quot;,
+          &quot;market&quot;,
+          &quot;sourceType&quot;,
+          &quot;fallbackQuery&quot;,
+          &quot;scrapedAt&quot;
+        ]
+      }
+    },
+    &quot;overview&quot;: {
+      &quot;display&quot;: {
+        &quot;component&quot;: &quot;table&quot;,
+        &quot;properties&quot;: {
+          &quot;category&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Category&quot;
+          },
+          &quot;channelName&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Channel&quot;
+          },
+          &quot;fallbackQuery&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Fallback Query&quot;
+          },
+          &quot;isLive&quot;: {
+            &quot;format&quot;: &quot;boolean&quot;,
+            &quot;label&quot;: &quot;Live&quot;
+          },
+          &quot;market&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Market&quot;
+          },
+          &quot;position&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;#&quot;
+          },
+          &quot;sourceType&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Source&quot;
+          },
+          &quot;title&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Title&quot;
+          },
+          &quot;type&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Type&quot;
+          },
+          &quot;url&quot;: {
+            &quot;format&quot;: &quot;link&quot;,
+            &quot;label&quot;: &quot;URL&quot;
+          },
+          &quot;videoId&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Video ID&quot;
+          },
+          &quot;viewCountText&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Views&quot;
+          }
+        }
+      },
+      &quot;title&quot;: &quot;Trending Overview&quot;,
+      &quot;transformation&quot;: {
+        &quot;fields&quot;: [
+          &quot;position&quot;,
+          &quot;type&quot;,
+          &quot;videoId&quot;,
+          &quot;title&quot;,
+          &quot;url&quot;,
+          &quot;channelName&quot;,
+          &quot;viewCountText&quot;,
+          &quot;isLive&quot;,
+          &quot;category&quot;,
+          &quot;market&quot;,
+          &quot;sourceType&quot;,
+          &quot;fallbackQuery&quot;
+        ]
+      }
+    }
+  }
+}
+</code></pre></details></section><section class="schema-section" id="key-value-schema"><h2>Key-value schema</h2><p>Published key-value store definitions, when provided by this build.</p><p>This definition is not present in the default published build. See the published README for available documentation.</p></section><section id="published-readme"><h2>Published README</h2><details><summary>Read the full published documentation</summary><h2 id="readme-youtube-trending-feed-extractor-by-category-market">YouTube Trending Feed Extractor by Category &amp; Market</h2>
+<p>Pull video lists for YouTube's Gaming, Music, News, Movies and main Trending sections in any of 31 regional markets, with position, channel, view count, duration and thumbnail for each entry, and a clear label on rows that came from a fallback search.</p>
+<h2 id="readme-what-this-actor-does">What this actor does</h2>
+<ul>
+<li>Tries YouTube's Gaming, Music, News and main Trending pages first</li>
+<li>Uses a labeled public YouTube search instead when a page can't be read (always for Movies, and for Gaming when the page lists fewer than 10 items), marking every row with <code>sourceType</code> and the <code>fallbackQuery</code> used</li>
+<li>Targets any of 31 regional markets so results reflect what's trending in that country</li>
+<li>Captures playlists and albums alongside individual videos when a category page shows them, and removes duplicates</li>
+<li>Omits any field that has no value for a given row rather than returning null</li>
+</ul>
+<h2 id="readme-output-per-item">Output per item</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>position</code></td>
+<td>Order in the returned list (page order for category pages, search order for search-fallback rows)</td>
+</tr>
+<tr>
+<td><code>type</code></td>
+<td><code>video</code>, <code>playlist</code>, or <code>album</code></td>
+</tr>
+<tr>
+<td><code>videoId</code></td>
+<td>YouTube video ID, for video rows</td>
+</tr>
+<tr>
+<td><code>playlistId</code></td>
+<td>YouTube playlist/album ID, for playlist or album rows</td>
+</tr>
+<tr>
+<td><code>url</code></td>
+<td>Link to the video or playlist</td>
+</tr>
+<tr>
+<td><code>title</code></td>
+<td>Video or playlist title</td>
+</tr>
+<tr>
+<td><code>channelName</code></td>
+<td>Channel display name</td>
+</tr>
+<tr>
+<td><code>channelId</code></td>
+<td>Channel's YouTube ID, when resolved</td>
+</tr>
+<tr>
+<td><code>channelUrl</code></td>
+<td>Full channel URL, when resolved</td>
+</tr>
+<tr>
+<td><code>channelHandle</code></td>
+<td>Channel's @handle, when available</td>
+</tr>
+<tr>
+<td><code>isVerified</code></td>
+<td>Whether the channel shows a verified badge (video rows only)</td>
+</tr>
+<tr>
+<td><code>viewCount</code></td>
+<td>View count as a number, when parseable</td>
+</tr>
+<tr>
+<td><code>viewCountText</code></td>
+<td>View count exactly as displayed, e.g. &quot;3.2M views&quot;</td>
+</tr>
+<tr>
+<td><code>publishedTimeText</code></td>
+<td>Relative publish time as displayed, e.g. &quot;2 days ago&quot;</td>
+</tr>
+<tr>
+<td><code>publishedDate</code></td>
+<td>Upload date, when it can be read from the video's own page (video rows)</td>
+</tr>
+<tr>
+<td><code>durationText</code></td>
+<td>Duration as displayed, e.g. &quot;12:34&quot;</td>
+</tr>
+<tr>
+<td><code>durationSeconds</code></td>
+<td>Duration converted to seconds</td>
+</tr>
+<tr>
+<td><code>thumbnailUrl</code></td>
+<td>Highest-resolution thumbnail URL available</td>
+</tr>
+<tr>
+<td><code>badges</code></td>
+<td>Badge labels shown on the item, e.g. &quot;4K&quot;, &quot;CC&quot;</td>
+</tr>
+<tr>
+<td><code>isLive</code></td>
+<td>Whether the item is a live stream</td>
+</tr>
+<tr>
+<td><code>category</code></td>
+<td>The input category used for this run</td>
+</tr>
+<tr>
+<td><code>market</code></td>
+<td>The regional market used for this run</td>
+</tr>
+<tr>
+<td><code>sourceType</code></td>
+<td><code>category_page</code> when read directly, or <code>search_fallback</code> when a fallback search was used</td>
+</tr>
+<tr>
+<td><code>fallbackQuery</code></td>
+<td>The search query used, only present when <code>sourceType</code> is <code>search_fallback</code></td>
+</tr>
+<tr>
+<td><code>scrapedAt</code></td>
+<td>UTC timestamp of when the record was scraped</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Status rows:</strong> if a run finds nothing, the dataset gets a single status row instead of video rows. For <code>category: &quot;now&quot;</code> when even the search fallback fails, that row is <code>{success: false, category, market, sourceType: &quot;auth_required&quot;, error, scrapedAt}</code>. For any other category with no results, it is <code>{recordType: &quot;status&quot;, status: &quot;no_results&quot;, category, market, resultCount: 0, scrapedAt}</code>. Filter these out by checking for <code>videoId</code>/<code>playlistId</code>.</p>
+<h2 id="readme-input">Input</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>category</code></td>
+<td>string</td>
+<td><code>gaming</code></td>
+<td>Trending section to read: now (main Trending feed), gaming, music, movies, or news</td>
+</tr>
+<tr>
+<td><code>maxResults</code></td>
+<td>integer</td>
+<td><code>50</code></td>
+<td>Maximum number of items to return (1–200)</td>
+</tr>
+<tr>
+<td><code>market</code></td>
+<td>string</td>
+<td><code>US</code></td>
+<td>Regional market (31 options), e.g. US, GB, CA, AU, DE, FR, JP, KR, BR, IN, MX. It sets the region and interface language used for the page or search</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="readme-category-notes">Category notes</h3>
+<ul>
+<li><code>gaming</code> reads the YouTube Gaming page; if that page shows fewer than 10 items, a search for &quot;gaming&quot; is used instead.</li>
+<li><code>news</code> reads the YouTube News page's shelves; if they can't be read, it searches &quot;latest news&quot; (then &quot;world news&quot;).</li>
+<li><code>music</code> reads the YouTube Music channel's playlists and videos; if they can't be read, it searches &quot;official music video&quot; (then &quot;new music&quot;).</li>
+<li><code>now</code> tries the main Trending page, which usually needs a signed-in session; when it's unavailable, it searches &quot;trending videos&quot; (then &quot;popular videos&quot;).</li>
+<li><code>movies</code> always uses a search for &quot;new movie trailer &lt;current year&gt;&quot; (then &quot;official movie trailer&quot;).</li>
+</ul>
+<p>Search-fallback rows are ordinary search results for that phrase in the chosen market, not YouTube's own trending ranking.</p>
+<h3 id="readme-example-gaming-trending-in-japan">Example: gaming trending in Japan</h3>
+<pre><code class="language-json">{
+  &quot;category&quot;: &quot;gaming&quot;,
+  &quot;maxResults&quot;: 20,
+  &quot;market&quot;: &quot;JP&quot;
+}
+</code></pre>
+<h3 id="readme-example-main-trending-feed-us">Example: main trending feed, US</h3>
+<pre><code class="language-json">{
+  &quot;category&quot;: &quot;now&quot;,
+  &quot;maxResults&quot;: 50,
+  &quot;market&quot;: &quot;US&quot;
+}
+</code></pre>
+<h3 id="readme-example-music-trending-in-brazil">Example: music trending in Brazil</h3>
+<pre><code class="language-json">{
+  &quot;category&quot;: &quot;music&quot;,
+  &quot;maxResults&quot;: 20,
+  &quot;market&quot;: &quot;BR&quot;
+}
+</code></pre>
+<h2 id="readme-use-cases">Use cases</h2>
+<ul>
+<li><strong>Daily trend monitoring</strong> — schedule runs to track what's rising in Gaming or Music each day</li>
+<li><strong>Content strategy</strong> — see which video lengths, formats and titles are performing well right now</li>
+<li><strong>Competitive and creator intelligence</strong> — spot which channels keep appearing across trending categories</li>
+<li><strong>Cross-market comparison</strong> — run the same category across several <code>market</code> values to compare regional trends</li>
+<li><strong>News-cycle tracking</strong> — use <code>news</code> to capture the day's top-story videos</li>
+</ul>
+<h2 id="readme-faq">FAQ</h2>
+<p><strong>Why do some rows say <code>search_fallback</code>?</strong>
+YouTube's main Trending feed and the Movies channel aren't available without signing in, and the other category pages sometimes can't be read either. Rather than returning nothing, the actor runs a public search instead and marks every resulting row with <code>sourceType: &quot;search_fallback&quot;</code> plus the <code>fallbackQuery</code> it used, so you always know where a row came from. Rows read from the category page itself carry <code>sourceType: &quot;category_page&quot;</code>.</p>
+<p><strong>How many items can one run return?</strong>
+Up to <code>maxResults</code> (200 max). The real number depends on how many items the category page or fallback search shows on the day, after duplicates are removed.</p>
+<p><strong>What does <code>market</code> actually change?</strong>
+It sets YouTube's region and interface language for the category page or fallback search, so results lean towards that country instead of a global default.</p>
+<p><strong>Are playlists and albums included, or only videos?</strong>
+Category pages that show ranked playlists or albums alongside videos will include them, distinguished by the <code>type</code> field (<code>video</code>, <code>playlist</code>, or <code>album</code>); <code>playlistId</code> is only present on non-video rows.</p>
+<p><strong>Are live streams included?</strong>
+Yes. Live items are flagged with <code>isLive: true</code> and usually carry a &quot;LIVE&quot; badge in <code>badges</code>.</p>
+<p><strong>Why are fields like <code>durationText</code> or <code>publishedTimeText</code> missing from some rows?</strong>
+Live streams don't have a fixed duration or publish time yet, so those fields are left out of that row rather than filled with a placeholder.</p>
+<p><strong>Is this affiliated with YouTube?</strong>
+No. This actor reads YouTube's public pages and is not affiliated with, endorsed by, or sponsored by YouTube or Google.</p>
+</details></section><section id="python-quickstart"><h2>Python quickstart</h2><p>Use a schema-derived input and the Python standard library to start a run. An Apify account and token are required for execution.</p><p><a href="/apify-actor-examples/guides/GnLvTq8m3i6444nUe/">Open the step-by-step Python guide →</a></p></section><p class="source-note">Source build <code>8MMI1b8gVkx1fXooU</code>. Documentation is regenerated from the default published build; private drafts are not included.</p></article></div></main><footer class="footer"><strong>Nimbryxo Studio</strong><div class="footer-links"><a href="/apify-actor-examples/topics/">Topics</a><a href="/apify-actor-examples/sources/">Documentation sources</a><a href="https://apify.com/nimbryxo-studio">Apify</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></div></footer></body></html>
