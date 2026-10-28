@@ -1,0 +1,76 @@
+{
+  "description": "Search Naver Blog posts, fetch posts from a specific blog, or get full post details.",
+  "properties": {
+    "blogId": {
+      "description": "Naver blog user ID (e.g. `hello_world123` from blog.naver.com/hello_world123). Required for mode=blogPosts.",
+      "editor": "textfield",
+      "title": "Blog ID",
+      "type": "string"
+    },
+    "maxItems": {
+      "default": 20,
+      "description": "Hard cap on emitted records.",
+      "maximum": 1000,
+      "minimum": 1,
+      "prefill": 20,
+      "title": "Max items",
+      "type": "integer"
+    },
+    "mode": {
+      "default": "search",
+      "description": "What to fetch.",
+      "editor": "select",
+      "enum": [
+        "search",
+        "blogPosts",
+        "postDetails"
+      ],
+      "enumTitles": [
+        "Search blog posts by keyword",
+        "Fetch posts from a specific blog",
+        "Get full post details for a list of URLs"
+      ],
+      "prefill": "search",
+      "title": "Mode",
+      "type": "string"
+    },
+    "postUrls": {
+      "default": [],
+      "description": "List of Naver blog post URLs to fetch in detail (e.g. https://blog.naver.com/userid/123456789).",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Post URLs (mode=postDetails)",
+      "type": "array"
+    },
+    "query": {
+      "default": "travel Korea",
+      "description": "Keyword or phrase to search across all Naver blog posts (mode=search).",
+      "editor": "textfield",
+      "prefill": "travel Korea",
+      "title": "Search query",
+      "type": "string"
+    },
+    "sortBy": {
+      "default": "sim",
+      "description": "Sort order for search results.",
+      "editor": "select",
+      "enum": [
+        "sim",
+        "date"
+      ],
+      "enumTitles": [
+        "Relevance (sim)",
+        "Newest first (date)"
+      ],
+      "prefill": "sim",
+      "title": "Sort by (mode=search)",
+      "type": "string"
+    }
+  },
+  "required": [
+    "mode"
+  ],
+  "schemaVersion": 1,
+  "title": "Naver Blog Scraper Input",
+  "type": "object"
+}
