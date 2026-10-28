@@ -1,0 +1,104 @@
+{
+  "description": "Search Coupang products, get product details, browse categories, or fetch best sellers.",
+  "properties": {
+    "categoryId": {
+      "description": "Coupang category ID to browse products from.",
+      "editor": "textfield",
+      "title": "Category ID (mode=categoryProducts)",
+      "type": "string"
+    },
+    "keyword": {
+      "description": "Keyword to search for products (mode=search).",
+      "editor": "textfield",
+      "prefill": "laptop",
+      "title": "Search keyword",
+      "type": "string"
+    },
+    "maxItems": {
+      "default": 20,
+      "description": "Maximum number of products to return.",
+      "maximum": 500,
+      "minimum": 1,
+      "prefill": 20,
+      "title": "Max items",
+      "type": "integer"
+    },
+    "maxPrice": {
+      "description": "Maximum product price in Korean Won.",
+      "maximum": 100000000,
+      "minimum": 0,
+      "title": "Maximum price (KRW)",
+      "type": "integer"
+    },
+    "minPrice": {
+      "description": "Minimum product price in Korean Won.",
+      "maximum": 100000000,
+      "minimum": 0,
+      "title": "Minimum price (KRW)",
+      "type": "integer"
+    },
+    "mode": {
+      "default": "search",
+      "description": "What to fetch from Coupang.",
+      "editor": "select",
+      "enum": [
+        "search",
+        "productDetails",
+        "categoryProducts",
+        "bestSellers"
+      ],
+      "enumTitles": [
+        "Search products by keyword",
+        "Get product details by product ID",
+        "Browse products by category",
+        "Get best sellers"
+      ],
+      "prefill": "search",
+      "title": "Mode",
+      "type": "string"
+    },
+    "productIds": {
+      "default": [],
+      "description": "List of Coupang product IDs to fetch details for.",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Product IDs (mode=productDetails)",
+      "type": "array"
+    },
+    "rocketOnly": {
+      "default": false,
+      "description": "Only include products with Rocket delivery (free next-day delivery).",
+      "prefill": false,
+      "title": "Rocket delivery only",
+      "type": "boolean"
+    },
+    "sortBy": {
+      "default": "bestSelling",
+      "description": "Sort order for search results.",
+      "editor": "select",
+      "enum": [
+        "bestSelling",
+        "priceAsc",
+        "priceDesc",
+        "rating",
+        "newest"
+      ],
+      "enumTitles": [
+        "Best Selling",
+        "Price: Low to High",
+        "Price: High to Low",
+        "Rating",
+        "Newest"
+      ],
+      "prefill": "bestSelling",
+      "title": "Sort by",
+      "type": "string"
+    }
+  },
+  "required": [
+    "mode"
+  ],
+  "schemaVersion": 1,
+  "title": "Coupang Scraper Input",
+  "type": "object"
+}
