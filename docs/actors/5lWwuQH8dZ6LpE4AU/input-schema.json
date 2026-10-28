@@ -1,0 +1,50 @@
+{
+  "description": "Scrape employee reviews from a Glassdoor company reviews page. Provide a Glassdoor session cookie to access more reviews (pagination requires login).",
+  "properties": {
+    "companyUrl": {
+      "description": "Glassdoor company reviews page URL (e.g., 'https://www.glassdoor.com/Reviews/Google-Reviews-E9079.htm').",
+      "editor": "textfield",
+      "prefill": "https://www.glassdoor.com/Reviews/Google-Reviews-E9079.htm",
+      "title": "Company Reviews URL",
+      "type": "string"
+    },
+    "cookie": {
+      "description": "Your Glassdoor session cookie value for full pagination. Without this, only ~3-6 reviews from page 1 are available. To get the cookie: log into Glassdoor in your browser, open DevTools > Application > Cookies > glassdoor.com, and copy the full cookie string (or just the 'GSESSIONID' value).",
+      "editor": "textfield",
+      "isSecret": true,
+      "title": "Glassdoor Session Cookie (Optional)",
+      "type": "string"
+    },
+    "maxItems": {
+      "default": 100,
+      "description": "Maximum number of reviews to scrape.",
+      "maximum": 1000,
+      "minimum": 1,
+      "prefill": 5,
+      "title": "Maximum Items",
+      "type": "integer"
+    },
+    "sort": {
+      "default": "DATE",
+      "description": "How to sort reviews.",
+      "editor": "select",
+      "enum": [
+        "DATE",
+        "RELEVANCE"
+      ],
+      "enumTitles": [
+        "Newest First",
+        "Most Relevant"
+      ],
+      "prefill": "DATE",
+      "title": "Sort Order",
+      "type": "string"
+    }
+  },
+  "required": [
+    "companyUrl"
+  ],
+  "schemaVersion": 1,
+  "title": "Glassdoor Reviews Scraper Input",
+  "type": "object"
+}
