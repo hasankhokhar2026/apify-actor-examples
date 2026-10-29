@@ -1,0 +1,109 @@
+# Welcome to the Jungle Job Listings & Salary Scraper
+
+Welcome to the Jungle is one of Europe's largest job boards, with a strong base of French and international employers who publish unusually detailed postings — sector, required experience, education level and often a salary range. This actor searches those postings by keyword and filters and returns every field a listing carries.
+
+## What this actor does
+
+- **Searches by keyword, location, contract type and remote policy** in one request, across six listing languages
+- **Normalizes contract and remote values** into readable labels (e.g. `full_time` becomes `Full-Time`) while keeping the raw source value alongside
+- **Surfaces salary when disclosed**, along with its currency, instead of guessing or estimating pay
+- **Returns classification data** most job boards omit: industry sector, profession category/sub-category, required experience and education level
+- Fields a posting doesn't disclose (such as salary or education level) are left out of that record rather than sent empty
+
+## Output per job
+
+- `jobId` — unique job identifier
+- `title` — job title as posted
+- `companyName`, `companySlug`, `companyLogoUrl` — hiring company name, URL slug and logo
+- `location` — human-readable location string
+- `cities`, `countries` — every office city/country the listing covers
+- `contractType`, `contractTypeRaw` — readable contract label (e.g. `Full-Time`) and the source's raw value
+- `remote`, `remoteRaw` — readable remote-policy label (e.g. `Hybrid`) and the source's raw value
+- `salary`, `salaryCurrency` — salary range text and currency, when the employer discloses pay
+- `description` — job summary text
+- `keyMissions` — list of key responsibilities
+- `publishedAt`, `publishedAtDate` — publication timestamp and date
+- `applicationUrl`, `sourceUrl` — direct link to apply / the listing's canonical URL
+- `sectors`, `sectorCategories` — industry sectors and their parent categories
+- `professionCategory`, `professionSubCategory`, `jobTitle` — Welcome to the Jungle's standardized profession taxonomy for the role
+- `experience` — minimum experience required
+- `educationLevel` — minimum education level required
+- `benefits` — list of company benefits mentioned in the posting
+- `jobLanguage` — language the posting was written in
+- `contractDurationMinMonths`, `contractDurationMaxMonths` — duration range for internships/temporary contracts, when stated
+- `wkReference` — Welcome to the Jungle's internal reference code for the listing
+- `scrapedAt` — ISO 8601 timestamp of the scrape
+
+## Input
+
+| Field | Type | Default | Description |
+|---|---|---|---|
+| `searchQuery` | string | – | Job title, keywords or skills to search for. |
+| `location` | string | – | City or country to filter by, e.g. `Paris` or `France`. Leave empty for all locations. |
+| `contractType` | string | – (any) | Filter by contract: `full_time`, `part_time`, `internship`, `apprenticeship`, `freelance`, `temporary`, `vie`, `graduate_program`, `volunteer` or `other`. |
+| `remote` | string | – (any) | Filter by remote policy: `fulltime` (fully remote), `partial` (hybrid), `punctual` (occasional) or `no` (on-site only). |
+| `language` | string | `en` | Language index to search: `en`, `fr`, `de`, `es`, `it` or `pt`. |
+| `maxItems` | integer | `25` | Maximum number of job listings to return (1–500). |
+
+### Example: software roles in Paris
+
+```json
+{
+    "searchQuery": "software engineer",
+    "location": "Paris",
+    "contractType": "full_time",
+    "maxItems": 50
+}
+```
+
+### Example: fully remote postings, French index
+
+```json
+{
+    "searchQuery": "développeur",
+    "remote": "fulltime",
+    "language": "fr",
+    "maxItems": 30
+}
+```
+
+### Example: internships anywhere
+
+```json
+{
+    "searchQuery": "marketing",
+    "contractType": "internship",
+    "maxItems": 20
+}
+```
+
+## Use cases
+
+- **Job market research** — track which roles, sectors and contract types are trending on a major European job board
+- **Salary benchmarking** — collect the subset of listings that disclose pay to compare compensation by role and location
+- **Competitive hiring intelligence** — monitor how actively specific employers are posting and what they require
+- **Recruitment sourcing** — build a candidate-facing feed of open roles filtered by location and remote policy
+- **Workforce planning research** — compare experience and education requirements across professions
+
+## FAQ
+
+**Do I need a Welcome to the Jungle account to use this?**
+No — the actor reads the site's public job-search results and requires no login.
+
+**Why is `salary` missing from most records?**
+Welcome to the Jungle only shows a salary range when the employer chooses to disclose one; this actor can't return a figure the listing itself doesn't contain.
+
+**Can I search in languages other than English?**
+Yes — set `language` to `fr`, `de`, `es`, `it` or `pt` to search that language's listing index instead of English.
+
+**What's the difference between `contractType` and `contractTypeRaw`?**
+`contractType` is a human-readable label the actor derives (e.g. `Full-Time`), while `contractTypeRaw` keeps the exact value the source API returned, in case you need to match on it directly.
+
+**How many listings can one run return?**
+Up to 500 via `maxItems`; Welcome to the Jungle's own index determines how many actually match your filters.
+
+**Does `sectors` tell me the hiring company's industry?**
+Yes — `sectors` and the broader `sectorCategories` describe the employer's industry, separate from `professionCategory`, which classifies the role itself.
+
+**Is this affiliated with Welcome to the Jungle?**
+No, this is an independent, third-party actor that reads Welcome to the Jungle's public job search. It is not affiliated with or endorsed by Welcome to the Jungle.

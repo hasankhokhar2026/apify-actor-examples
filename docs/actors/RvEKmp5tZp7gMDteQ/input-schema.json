@@ -1,0 +1,111 @@
+{
+  "description": "Search job listings on Welcome to the Jungle — filter by keyword, location, contract type, remote preference, and language.",
+  "properties": {
+    "contractType": {
+      "default": "",
+      "description": "Filter by employment contract type.",
+      "editor": "select",
+      "enum": [
+        "",
+        "full_time",
+        "part_time",
+        "internship",
+        "apprenticeship",
+        "freelance",
+        "temporary",
+        "vie",
+        "graduate_program",
+        "volunteer",
+        "other"
+      ],
+      "enumTitles": [
+        "Any contract type",
+        "Full-Time",
+        "Part-Time",
+        "Internship",
+        "Apprenticeship",
+        "Freelance / Consulting",
+        "Temporary (CDD)",
+        "VIE (International Corporate Volunteer)",
+        "Graduate Program",
+        "Volunteer",
+        "Other"
+      ],
+      "prefill": "",
+      "title": "Contract type",
+      "type": "string"
+    },
+    "language": {
+      "default": "en",
+      "description": "Language of the job postings to search. 'en' searches the English-language index; 'fr' searches French listings.",
+      "editor": "select",
+      "enum": [
+        "en",
+        "fr",
+        "de",
+        "es",
+        "it",
+        "pt"
+      ],
+      "enumTitles": [
+        "English",
+        "French",
+        "German",
+        "Spanish",
+        "Italian",
+        "Portuguese"
+      ],
+      "prefill": "en",
+      "title": "Job listing language",
+      "type": "string"
+    },
+    "location": {
+      "description": "City or country to filter results (e.g. 'Paris', 'London', 'France'). Leave empty for all locations.",
+      "editor": "textfield",
+      "title": "Location",
+      "type": "string"
+    },
+    "maxItems": {
+      "default": 25,
+      "description": "Maximum number of job listings to return (1–500).",
+      "maximum": 500,
+      "minimum": 1,
+      "prefill": 25,
+      "title": "Max items",
+      "type": "integer"
+    },
+    "remote": {
+      "default": "",
+      "description": "Filter by remote work arrangement.",
+      "editor": "select",
+      "enum": [
+        "",
+        "fulltime",
+        "partial",
+        "punctual",
+        "no"
+      ],
+      "enumTitles": [
+        "Any remote policy",
+        "Fully Remote",
+        "Hybrid (Partial Remote)",
+        "Occasionally Remote",
+        "On-Site Only"
+      ],
+      "prefill": "",
+      "title": "Remote policy",
+      "type": "string"
+    },
+    "searchQuery": {
+      "description": "Job title, keywords, or skills to search for (e.g. 'software engineer', 'product manager', 'data scientist').",
+      "editor": "textfield",
+      "prefill": "software engineer",
+      "title": "Search query",
+      "type": "string"
+    }
+  },
+  "required": [],
+  "schemaVersion": 1,
+  "title": "Welcome to the Jungle Jobs Scraper Input",
+  "type": "object"
+}
