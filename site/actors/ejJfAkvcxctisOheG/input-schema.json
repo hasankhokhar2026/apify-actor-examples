@@ -1,0 +1,49 @@
+{
+  "properties": {
+    "market": {
+      "default": "en-US",
+      "description": "Bing market code for localized results (e.g., 'en-US', 'fr-FR', 'de-DE').",
+      "editor": "textfield",
+      "prefill": "en-US",
+      "title": "Market / Language",
+      "type": "string"
+    },
+    "maxResultsPerQuery": {
+      "default": 10,
+      "description": "Maximum number of results per query.",
+      "maximum": 100,
+      "minimum": 1,
+      "prefill": 5,
+      "title": "Max Results Per Query",
+      "type": "integer"
+    },
+    "proxyConfiguration": {
+      "default": {
+        "useApifyProxy": false
+      },
+      "description": "Proxy config. Works without proxy by default.",
+      "editor": "proxy",
+      "title": "Proxy Configuration",
+      "type": "object"
+    },
+    "queries": {
+      "description": "List of search queries to look up on Bing.",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "prefill": [
+        "food in NYC"
+      ],
+      "title": "Search Queries",
+      "type": "array"
+    }
+  },
+  "required": [
+    "queries"
+  ],
+  "schemaVersion": 1,
+  "title": "Bing Search Scraper Input",
+  "type": "object"
+}

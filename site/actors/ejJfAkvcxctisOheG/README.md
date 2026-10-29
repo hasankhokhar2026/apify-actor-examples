@@ -1,0 +1,87 @@
+# Bing Organic Search Results Scraper
+
+Bing still powers a meaningful share of desktop search traffic, and its ranking often diverges from Google's. This actor submits your keywords to Bing and returns the organic result list — title, URL, display URL and snippet — in the order Bing ranked them, for whichever market and language you choose.
+
+## What this actor does
+
+- **Runs a batch of search queries** in one job and tags every result row with the query that produced it
+- **Preserves rank order** — each result carries a `position` so you can track movement over time
+- **Localizes results** to any Bing market/language code, not just English
+- **Paginates automatically** up to your requested result count per query
+
+## Output per result
+
+- `query` — the search query that produced this result
+- `position` — 1-based rank of the result within its query
+- `title` — result title as shown on the Bing SERP
+- `url` — destination URL of the result
+- `displayUrl` — the URL text Bing displays under the title, or an empty string if that result card doesn't show one
+- `description` — result snippet/description text, or an empty string if that result card doesn't show one
+- `searchUrl` — the Bing search URL used to fetch this result page
+- `scrapedAt` — ISO 8601 timestamp of when the result was scraped
+
+## Input
+
+| Field | Type | Default | Description |
+|---|---|---|---|
+| `queries` | array | – | List of search queries to look up on Bing. |
+| `maxResultsPerQuery` | integer | `10` | Maximum results to return per query (1–100), fetched via automatic pagination. |
+| `market` | string | `en-US` | Bing market/language code for localized results (e.g. `fr-FR`, `de-DE`, `ja-JP`). |
+| `proxyConfiguration` | object | `{"useApifyProxy": false}` | Proxy configuration; every run currently connects through an Apify proxy regardless of this setting. |
+
+### Example: multi-query SEO check
+
+```json
+{
+    "queries": ["best restaurants NYC", "python web frameworks"],
+    "maxResultsPerQuery": 20,
+    "market": "en-US"
+}
+```
+
+### Example: localized market
+
+```json
+{
+    "queries": ["meilleurs restaurants Paris"],
+    "maxResultsPerQuery": 30,
+    "market": "fr-FR"
+}
+```
+
+### Example: single query, top results only
+
+```json
+{
+    "queries": ["apify alternatives"],
+    "maxResultsPerQuery": 10
+}
+```
+
+## Use cases
+
+- **Rank tracking** — monitor where your site lands on Bing for target keywords over time
+- **Competitor analysis** — see which domains occupy the top Bing positions for an industry term
+- **Content gap research** — pull the top-ranking titles and snippets for a topic to spot content gaps
+- **Cross-market comparisons** — run the same keyword across several `market` codes to see how rankings differ by country/language
+- **Lead sourcing** — search niche business terms and collect the resulting URLs and snippets in bulk
+
+## FAQ
+
+**Do I need a proxy to run this?**
+No manual setup is needed — every run automatically connects through an Apify-managed proxy for reliable access; the `proxyConfiguration` field does not currently change that.
+
+**Which market codes are supported?**
+Any Bing market/language code, such as `en-US`, `en-GB`, `fr-FR`, `de-DE`, `es-ES`, `it-IT`, `ja-JP`, `pt-BR`, `zh-CN`, `ko-KR`, `nl-NL`, `ru-RU` or `ar-SA`.
+
+**How many results can one query return?**
+Up to 100 per query, fetched across multiple result pages automatically — you don't need to manage pagination yourself.
+
+**Does this include ads, People Also Ask, or other Bing SERP widgets?**
+No, this actor returns organic results only — title, URL, display URL and snippet for each ranked position.
+
+**Will results differ if I change the market code for the same query?**
+Yes. Bing serves different ranked results, and sometimes different language content, depending on the market/language code you set.
+
+**Is this affiliated with Microsoft or Bing?**
+No, this is an independent, third-party actor that queries Bing's public search results. It is not affiliated with or endorsed by Microsoft.

@@ -1,0 +1,81 @@
+{
+  "actorSpecification": 1,
+  "fields": {
+    "properties": {
+      "description": {
+        "description": "Result snippet/description",
+        "type": "string"
+      },
+      "displayUrl": {
+        "description": "Displayed URL text",
+        "nullable": true,
+        "type": "string"
+      },
+      "position": {
+        "description": "Position in results (1-based)",
+        "type": "integer"
+      },
+      "query": {
+        "description": "Search query used",
+        "type": "string"
+      },
+      "scrapedAt": {
+        "description": "ISO 8601 scrape timestamp",
+        "type": "string"
+      },
+      "searchUrl": {
+        "description": "Bing search URL used",
+        "type": "string"
+      },
+      "title": {
+        "description": "Result title",
+        "type": "string"
+      },
+      "url": {
+        "description": "Result URL",
+        "type": "string"
+      }
+    },
+    "type": "object"
+  },
+  "title": "Bing Search Results",
+  "views": {
+    "overview": {
+      "display": {
+        "component": "table",
+        "properties": {
+          "description": {
+            "format": "text",
+            "label": "Description"
+          },
+          "position": {
+            "format": "number",
+            "label": "#"
+          },
+          "query": {
+            "format": "text",
+            "label": "Query"
+          },
+          "title": {
+            "format": "text",
+            "label": "Title"
+          },
+          "url": {
+            "format": "link",
+            "label": "URL"
+          }
+        }
+      },
+      "title": "Results",
+      "transformation": {
+        "fields": [
+          "query",
+          "position",
+          "title",
+          "url",
+          "description"
+        ]
+      }
+    }
+  }
+}
