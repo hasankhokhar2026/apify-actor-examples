@@ -1,0 +1,79 @@
+{
+  "description": "Extract photos from Google Maps places.",
+  "properties": {
+    "enrichDetails": {
+      "default": true,
+      "description": "When enabled, reads each photo's metadata: contributor name/URL, observed upload date, original dimensions, aspect ratio, orientation, caption, and tags. Disable for thumbnail-level rows (photo/thumbnail URL, business context, category, video flag and duration). Every surface is walked in both modes, so disabling trims per-photo work instead of skipping the walk.",
+      "prefill": true,
+      "title": "Enrich Photo Details",
+      "type": "boolean"
+    },
+    "maxPhotos": {
+      "default": 100,
+      "description": "Maximum number of photos to extract (1-100000). Google may expose fewer photos for a place or category.",
+      "maximum": 100000,
+      "minimum": 1,
+      "prefill": 20,
+      "title": "Max Photos",
+      "type": "integer"
+    },
+    "photoCategory": {
+      "default": "all",
+      "description": "Filter photos by category tab.",
+      "editor": "select",
+      "enum": [
+        "all",
+        "by_owner",
+        "by_visitors",
+        "food_and_drink",
+        "outdoor",
+        "indoor",
+        "menu",
+        "videos"
+      ],
+      "enumTitles": [
+        "All Photos",
+        "By Owner",
+        "By Visitors",
+        "Food & Drink",
+        "Outdoor",
+        "Indoor",
+        "Menu",
+        "Videos"
+      ],
+      "title": "Photo Category",
+      "type": "string"
+    },
+    "placeId": {
+      "description": "Canonical Google Place ID beginning with ChIJ. Use this instead of placeUrl when available.",
+      "editor": "textfield",
+      "example": "ChIJabtoT7hlwokRLECK0SW3_8I",
+      "title": "Google Place ID",
+      "type": "string"
+    },
+    "placeUrl": {
+      "description": "Google Maps URL of the place to scrape photos from.",
+      "editor": "textfield",
+      "prefill": "https://www.google.com/maps/place/Empire+State+Building/@40.7484405,-73.9878584,17z/data=!3m1!4b1!4m6!3m5!1s0x89c259a9b3117469:0xd134e199a405a163!8m2!3d40.7484405!4d-73.9878584!16zL20vMDJfMjg2",
+      "title": "Place URL",
+      "type": "string"
+    },
+    "proxyConfiguration": {
+      "description": "Optional proxy settings. Direct access is tried first; bounded recovery uses the hardcoded US RESIDENTIAL group unless direct-only mode is explicitly selected with useApifyProxy=false.",
+      "editor": "proxy",
+      "prefill": {
+        "apifyProxyCountry": "US",
+        "apifyProxyGroups": [
+          "RESIDENTIAL"
+        ],
+        "useApifyProxy": true
+      },
+      "title": "Proxy Configuration",
+      "type": "object"
+    }
+  },
+  "required": [],
+  "schemaVersion": 1,
+  "title": "Google Maps Photos Scraper",
+  "type": "object"
+}
