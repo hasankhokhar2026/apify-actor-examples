@@ -1,0 +1,76 @@
+{
+  "properties": {
+    "locations": {
+      "description": "Optional list of Workday location UUIDs (the facet values shown in the Workday location filter). Values from the facets response: facets[].values[].id.",
+      "editor": "stringList",
+      "title": "Location Facet IDs",
+      "type": "array"
+    },
+    "maxItems": {
+      "default": 3,
+      "description": "Maximum number of jobs to return.",
+      "editor": "number",
+      "maximum": 10000,
+      "minimum": 1,
+      "prefill": 3,
+      "title": "Max Items",
+      "type": "integer"
+    },
+    "postedAt": {
+      "description": "Optional cutoff. Accepts an ISO date (2026-04-01) or a relative string like '7 days' / '30 days'. Jobs posted before the cutoff are skipped when startDate or postedOn can be parsed.",
+      "editor": "textfield",
+      "title": "Posted At Cutoff",
+      "type": "string"
+    },
+    "proxyConfiguration": {
+      "default": {
+        "useApifyProxy": true
+      },
+      "description": "Apify proxy (datacenter is enough — Workday's public API accepts datacenter IPs cleanly).",
+      "editor": "proxy",
+      "prefill": {
+        "useApifyProxy": true
+      },
+      "title": "Proxy Configuration",
+      "type": "object"
+    },
+    "scrapeDetails": {
+      "default": true,
+      "description": "Fetch each job's detail endpoint for the full HTML description, timeType, country, canApply, etc. Turn off for listing-only, faster runs.",
+      "editor": "checkbox",
+      "prefill": true,
+      "title": "Scrape Job Details",
+      "type": "boolean"
+    },
+    "searchText": {
+      "description": "Optional full-text keyword filter passed as searchText on the Workday API (e.g. 'engineer', 'marketing').",
+      "editor": "textfield",
+      "title": "Search Keyword",
+      "type": "string"
+    },
+    "startAt": {
+      "description": "Optional ISO date (2026-05-01) or relative '14 days'. Skips jobs whose startDate is before the cutoff.",
+      "editor": "textfield",
+      "title": "Start Date Cutoff",
+      "type": "string"
+    },
+    "startUrls": {
+      "default": [
+        "https://salesforce.wd12.myworkdayjobs.com/External_Career_Site"
+      ],
+      "description": "Public Workday careers-site URLs to scrape. Accepts tenant career pages (e.g. https://salesforce.wd12.myworkdayjobs.com/External_Career_Site) or direct job URLs that contain /job/...",
+      "editor": "stringList",
+      "prefill": [
+        "https://salesforce.wd12.myworkdayjobs.com/External_Career_Site"
+      ],
+      "title": "Workday Careers URLs",
+      "type": "array"
+    }
+  },
+  "required": [
+    "startUrls"
+  ],
+  "schemaVersion": 1,
+  "title": "Workday Jobs Scraper Input",
+  "type": "object"
+}
