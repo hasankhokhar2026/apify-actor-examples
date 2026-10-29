@@ -1,36 +1,81 @@
 {
-  "description": "Get Facebook Page/Profile followers, following, or friends preview (up to 8 rows per target, Facebook's own logged-out preview cap) plus aggregate counts.",
+  "description": "Collect the public followers and/or following lists of Facebook Pages and Profiles, including real cursor pagination, list-size transparency, search, and optional profile counts/contact/category enrichment. No login, cookies, or proxy setup required.",
   "properties": {
+    "deduplicateRows": {
+      "default": false,
+      "description": "When enabled, each profileId/profileUrl is emitted once across all targets and modes (first occurrence wins). Per-target pagination duplicates are always removed.",
+      "prefill": false,
+      "title": "Deduplicate rows across targets",
+      "type": "boolean"
+    },
+    "includeProfileDetails": {
+      "default": false,
+      "description": "Adds row-level follower/following counts, category, email, phone, website, address, work, education, current city, and hometown when Facebook exposes them. Uses two opt-in GraphQL requests per row (header + light About) plus a profile-HTML fallback, all capped by maxItems. Off by default; absent fields are omitted, never fabricated.",
+      "prefill": false,
+      "title": "Include profile counts and contact details",
+      "type": "boolean"
+    },
+    "maxItems": {
+      "default": 50,
+      "description": "Hard cap on row records across all targets. The default is 50; the daily prefill uses 8. Set 8 to reproduce the old 8-row preview behavior.",
+      "maximum": 10000,
+      "minimum": 1,
+      "prefill": 8,
+      "title": "Maximum total rows",
+      "type": "integer"
+    },
+    "maxItemsPerTarget": {
+      "default": 0,
+      "description": "Optional cap per target (0 = no per-target cap). Use it to stop one large account from using the whole maxItems budget.",
+      "maximum": 10000,
+      "minimum": 0,
+      "prefill": 0,
+      "title": "Maximum rows per target",
+      "type": "integer"
+    },
     "mode": {
       "default": "followers",
-      "description": "Which preview list to fetch. 'friends' is only meaningful for Profile URLs.",
+      "description": "Which public list(s) to collect. 'both' collects Followers and Following. 'friends' is a legacy alias: Facebook does not expose Friends to logged-out visitors, so it returns the Followers collection with isFallback=true.",
       "editor": "select",
       "enum": [
         "followers",
         "following",
+        "both",
         "friends"
       ],
       "enumTitles": [
         "Followers",
         "Following",
-        "Friends (Profiles only)"
+        "Followers + Following",
+        "Friends (legacy alias - returns Followers)"
       ],
       "prefill": "followers",
       "title": "Mode",
       "type": "string"
     },
+    "searchQuery": {
+      "default": "",
+      "description": "Keep only accounts whose name contains this text (Facebook's own in-list search, case-insensitive substring). Empty means no filter; one-character queries are treated as no filter because Facebook ignores them.",
+      "editor": "textfield",
+      "prefill": "",
+      "title": "Search inside the list",
+      "type": "string"
+    },
     "startUrls": {
-      "description": "One or more Facebook Page or Profile URLs (e.g. https://www.facebook.com/nike, https://www.facebook.com/zuck, or https://www.facebook.com/profile.php?id=...).",
+      "description": "One or more Facebook Page or Profile targets. Accepts full URLs, profile.php?id=..., /people/<name>/<id>/ (plus /followers, /following, /friends, or /both suffixes), /p/..., and URLs already ending in /followers, /following, or ?sk=... . The m/mobile/touch hosts are normalized to www. mbasic is rejected because it is login-gated, and groups/events/marketplace/media pages are not supported. Bare usernames are accepted by the actor; the Console URL-list editor expects a full URL.",
       "editor": "requestListSources",
       "example": [
         {
           "url": "https://www.facebook.com/nike"
+        },
+        {
+          "url": "https://www.facebook.com/zuck"
         }
       ],
       "items": {
         "properties": {
           "url": {
-            "description": "A Facebook Page or Profile URL.",
+            "description": "A Facebook Page or Profile URL, profile.php?id=..., /people/... URL, or bare username.",
             "title": "URL",
             "type": "string"
           }

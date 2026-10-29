@@ -1,108 +1,174 @@
 {
-  "description": "Pull stock data from Yahoo Finance for one or more tickers. Toggle which sections to include.",
+  "description": "Quote, chart, fundamentals, news, analyst, holder, option, fund, filing, search, screener, trending and market-summary data from Yahoo Finance. No account, API key or proxy setup is required.",
   "properties": {
     "concurrency": {
       "default": 4,
-      "description": "Number of tickers fetched in parallel. Each fetch is mostly idle waiting on Yahoo, so concurrency speeds up bulk runs significantly. Higher values may trigger Yahoo rate-limits.",
+      "description": "Number of tickers fetched in parallel (mode=tickers).",
       "maximum": 16,
       "minimum": 1,
+      "prefill": 1,
       "title": "Concurrency",
       "type": "integer"
     },
     "endDate": {
-      "description": "Latest date for historical OHLCV data. Optional — default is today.",
+      "description": "Latest date for historical bars (`YYYY-MM-DD`). Overrides `range` (mode=tickers).",
       "editor": "textfield",
-      "title": "History end date (YYYY-MM-DD)",
+      "title": "History end date",
       "type": "string"
     },
     "includeAnalystPriceTargets": {
       "default": true,
-      "description": "Include analyst price target summary (current / high / low / mean / median).",
-      "title": "Include analyst price targets",
+      "description": "Include the analyst price-target summary.",
+      "prefill": false,
+      "title": "Include price targets",
       "type": "boolean"
     },
     "includeDividends": {
       "default": true,
-      "description": "Include dividend history.",
+      "description": "Include the full dividend history from Yahoo chart events.",
+      "prefill": false,
       "title": "Include dividends",
       "type": "boolean"
     },
     "includeEarningsCalendar": {
       "default": true,
-      "description": "Include upcoming earnings/dividend dates + analyst earnings/revenue estimates.",
+      "description": "Include upcoming earnings dates, estimates and dividend dates.",
+      "prefill": false,
       "title": "Include earnings calendar",
+      "type": "boolean"
+    },
+    "includeEarningsEstimates": {
+      "default": false,
+      "description": "Include EPS and revenue estimates plus growth estimates.",
+      "prefill": false,
+      "title": "Include earnings estimates",
       "type": "boolean"
     },
     "includeEarningsHistory": {
       "default": true,
-      "description": "Include the last 4 quarters of earnings: actual EPS, estimate, surprise amount, and surprise percent.",
+      "description": "Include recent quarters with EPS actual, estimate, difference and surprise.",
+      "prefill": false,
       "title": "Include earnings history",
       "type": "boolean"
     },
     "includeFinancials": {
       "default": false,
-      "description": "Include income statement, balance sheet, and cash flow statement (annual).",
-      "title": "Include financials",
+      "description": "Include annual income statement, balance sheet and cash-flow statement.",
+      "prefill": false,
+      "title": "Include annual financials",
+      "type": "boolean"
+    },
+    "includeFundData": {
+      "default": false,
+      "description": "Include fund profile, top holdings and performance for ETFs and mutual funds.",
+      "prefill": false,
+      "title": "Include fund data",
       "type": "boolean"
     },
     "includeHistory": {
       "default": true,
-      "description": "Include daily OHLCV history (open / high / low / close / volume) in each record.",
+      "description": "Include historical bars with adjusted close.",
+      "prefill": false,
       "title": "Include OHLCV history",
       "type": "boolean"
     },
     "includeHolders": {
       "default": false,
-      "description": "Include major / institutional / mutual-fund holder summaries.",
+      "description": "Include institutional, mutual-fund, major-holder and insider-holder summaries.",
+      "prefill": false,
       "title": "Include holders",
       "type": "boolean"
     },
-    "includeInsiderTransactions": {
+    "includeInsiders": {
       "default": false,
-      "description": "Include the 25 most-recent insider transactions (officers / directors / 10%-owners).",
-      "title": "Include insider transactions",
+      "description": "Include insider transactions, insider holders and net share-purchase activity.",
+      "prefill": false,
+      "title": "Include insider activity",
+      "type": "boolean"
+    },
+    "includeInsights": {
+      "default": false,
+      "description": "Include technical outlook, research reports and significant developments.",
+      "prefill": false,
+      "title": "Include analyst insights",
       "type": "boolean"
     },
     "includeNews": {
       "default": true,
-      "description": "Include latest news headlines linked to the ticker.",
+      "description": "Include ticker-related news headlines.",
+      "prefill": false,
       "title": "Include news",
       "type": "boolean"
     },
     "includeOptions": {
       "default": false,
-      "description": "Include the next-expiration options chain (calls + puts) when listed. Capped at first 50 strikes per side to keep dataset compact.",
+      "description": "Include option chains for optionable symbols.",
+      "prefill": false,
       "title": "Include options chain",
+      "type": "boolean"
+    },
+    "includePrePost": {
+      "default": false,
+      "description": "Include extended-hours bars for intraday history.",
+      "prefill": false,
+      "title": "Include pre/post market bars",
       "type": "boolean"
     },
     "includeQuarterlyFinancials": {
       "default": false,
-      "description": "Include quarterly income statement, balance sheet, and cash flow (last ~5 quarters). Takes effect only when `includeFinancials` is also on.",
+      "description": "Add quarterly statements under `financials.quarterly`. Takes effect only when `includeFinancials` is also on.",
+      "prefill": false,
       "title": "Include quarterly financials",
       "type": "boolean"
     },
     "includeRecommendations": {
       "default": true,
-      "description": "Include analyst recommendation breakdown (strongBuy / buy / hold / sell / strongSell).",
-      "title": "Include analyst recommendations",
+      "description": "Include the analyst recommendation summary and four-period recommendation trend.",
+      "prefill": false,
+      "title": "Include recommendations",
+      "type": "boolean"
+    },
+    "includeRelatedSymbols": {
+      "default": false,
+      "description": "Include Yahoo's related-symbol recommendations.",
+      "prefill": false,
+      "title": "Include related symbols",
+      "type": "boolean"
+    },
+    "includeSecFilings": {
+      "default": false,
+      "description": "Include recent SEC filings with EDGAR links and exhibits.",
+      "prefill": false,
+      "title": "Include SEC filings",
       "type": "boolean"
     },
     "includeSplits": {
       "default": true,
-      "description": "Include stock-split history.",
+      "description": "Include stock-split history with numerator and denominator.",
+      "prefill": false,
       "title": "Include splits",
       "type": "boolean"
     },
-    "includeSustainability": {
+    "includeUpgradesDowngrades": {
       "default": false,
-      "description": "Include ESG / sustainability scores when Yahoo publishes them (sparse coverage; many tickers return empty).",
-      "title": "Include ESG / sustainability scores",
+      "description": "Include the latest analyst rating changes.",
+      "prefill": false,
+      "title": "Include upgrades and downgrades",
       "type": "boolean"
     },
     "interval": {
       "default": "1d",
-      "description": "Candle interval for historical data.",
+      "description": "Candle interval. Intraday intervals have shorter Yahoo range limits; incompatible combinations are clamped and reported in the run status.",
+      "editor": "select",
       "enum": [
+        "1m",
+        "2m",
+        "5m",
+        "15m",
+        "30m",
+        "60m",
+        "90m",
+        "1h",
         "1d",
         "5d",
         "1wk",
@@ -110,34 +176,408 @@
         "3mo"
       ],
       "enumTitles": [
+        "1 minute",
+        "2 minutes",
+        "5 minutes",
+        "15 minutes",
+        "30 minutes",
+        "60 minutes",
+        "90 minutes",
+        "1 hour",
         "1 day",
         "5 days",
         "1 week",
         "1 month",
         "3 months"
       ],
-      "title": "History interval",
+      "prefill": "1d",
+      "title": "Chart interval",
+      "type": "string"
+    },
+    "language": {
+      "default": "en-US",
+      "description": "Language used for names, news and localized labels.",
+      "editor": "select",
+      "enum": [
+        "en-US",
+        "en-GB",
+        "de-DE",
+        "fr-FR",
+        "es-ES",
+        "it-IT",
+        "nl-NL",
+        "pt-BR",
+        "ja-JP",
+        "zh-Hant-HK",
+        "zh-Hans-CN",
+        "ko-KR",
+        "ru-RU",
+        "ar-SA",
+        "hi-IN",
+        "tr-TR",
+        "pl-PL",
+        "sv-SE",
+        "da-DK",
+        "fi-FI",
+        "no-NO"
+      ],
+      "enumTitles": [
+        "English (US)",
+        "English (UK)",
+        "German",
+        "French",
+        "Spanish",
+        "Italian",
+        "Dutch",
+        "Portuguese (Brazil)",
+        "Japanese",
+        "Chinese (Traditional, Hong Kong)",
+        "Chinese (Simplified, China)",
+        "Korean",
+        "Russian",
+        "Arabic",
+        "Hindi",
+        "Turkish",
+        "Polish",
+        "Swedish",
+        "Danish",
+        "Finnish",
+        "Norwegian"
+      ],
+      "prefill": "en-US",
+      "title": "Language",
+      "type": "string"
+    },
+    "maxNews": {
+      "default": 25,
+      "description": "Maximum news items per ticker. Yahoo's news graph serves 200+ items through cursor pagination; the actor caps this request at 200.",
+      "maximum": 200,
+      "minimum": 1,
+      "prefill": 10,
+      "title": "Max news items",
+      "type": "integer"
+    },
+    "maxOptionContracts": {
+      "default": 50,
+      "description": "Maximum calls and maximum puts per expiration.",
+      "maximum": 500,
+      "minimum": 1,
+      "prefill": 50,
+      "title": "Max contracts per side",
+      "type": "integer"
+    },
+    "maxResults": {
+      "default": 50,
+      "description": "Maximum records for screener, customScreener, trending and marketSummary modes. Search uses maxSearchResults.",
+      "maximum": 5000,
+      "minimum": 1,
+      "prefill": 1,
+      "title": "Max results",
+      "type": "integer"
+    },
+    "maxSearchResults": {
+      "default": 10,
+      "description": "Maximum number of search results to return (mode=search).",
+      "maximum": 50,
+      "minimum": 1,
+      "prefill": 10,
+      "title": "Max search results",
+      "type": "integer"
+    },
+    "maxStrike": {
+      "description": "Drop option contracts above this strike.",
+      "maximum": 1000000000,
+      "minimum": 0,
+      "title": "Maximum strike",
+      "type": "number"
+    },
+    "minImpliedVolatilityPercent": {
+      "description": "Drop contracts below this implied volatility in percent, e.g. 25 means 25%.",
+      "maximum": 1000,
+      "minimum": 0,
+      "title": "Minimum implied volatility (%)",
+      "type": "number"
+    },
+    "minOpenInterest": {
+      "description": "Drop option contracts below this open interest. Contracts with no open interest are excluded when this is set.",
+      "maximum": 1000000000,
+      "minimum": 0,
+      "title": "Minimum open interest",
+      "type": "integer"
+    },
+    "minStrike": {
+      "description": "Drop option contracts below this strike.",
+      "maximum": 1000000000,
+      "minimum": 0,
+      "title": "Minimum strike",
+      "type": "number"
+    },
+    "minVolume": {
+      "description": "Drop option contracts below this volume. Contracts with no volume are excluded when this is set.",
+      "maximum": 1000000000,
+      "minimum": 0,
+      "title": "Minimum option volume",
+      "type": "integer"
+    },
+    "mode": {
+      "default": "tickers",
+      "description": "What to scrape.",
+      "editor": "select",
+      "enum": [
+        "tickers",
+        "search",
+        "screener",
+        "customScreener",
+        "trending",
+        "marketSummary"
+      ],
+      "enumTitles": [
+        "Tickers",
+        "Symbol search",
+        "Predefined screener",
+        "Custom region screener",
+        "Trending symbols",
+        "Market summary"
+      ],
+      "prefill": "tickers",
+      "title": "Mode",
+      "type": "string"
+    },
+    "optionContractType": {
+      "default": "both",
+      "description": "Which option sides to return.",
+      "editor": "select",
+      "enum": [
+        "both",
+        "calls",
+        "puts"
+      ],
+      "enumTitles": [
+        "Calls and puts",
+        "Calls only",
+        "Puts only"
+      ],
+      "prefill": "both",
+      "title": "Option contract type",
+      "type": "string"
+    },
+    "optionExpirations": {
+      "default": 1,
+      "description": "How many upcoming option expirations to fetch (mode=tickers, includeOptions=true).",
+      "maximum": 25,
+      "minimum": 1,
+      "prefill": 1,
+      "title": "Option expirations",
+      "type": "integer"
+    },
+    "range": {
+      "default": "1mo",
+      "description": "History range used when no start/end dates are supplied (mode=tickers).",
+      "editor": "select",
+      "enum": [
+        "1d",
+        "5d",
+        "1mo",
+        "3mo",
+        "6mo",
+        "1y",
+        "2y",
+        "5y",
+        "10y",
+        "ytd",
+        "max"
+      ],
+      "enumTitles": [
+        "1 day",
+        "5 days",
+        "1 month",
+        "3 months",
+        "6 months",
+        "1 year",
+        "2 years",
+        "5 years",
+        "10 years",
+        "Year to date",
+        "Max"
+      ],
+      "prefill": "5d",
+      "title": "Chart range",
+      "type": "string"
+    },
+    "region": {
+      "default": "US",
+      "description": "Yahoo market region used for quotes, search, trending, localization and mode=customScreener.",
+      "editor": "select",
+      "enum": [
+        "US",
+        "GB",
+        "DE",
+        "FR",
+        "JP",
+        "HK",
+        "IN",
+        "CA",
+        "AU",
+        "BR",
+        "CN",
+        "KR",
+        "TW",
+        "SG",
+        "CH",
+        "NL",
+        "ES",
+        "IT",
+        "SE",
+        "NO",
+        "DK",
+        "FI",
+        "BE",
+        "AT",
+        "IE",
+        "NZ",
+        "ZA",
+        "MX",
+        "AR",
+        "CL",
+        "PE"
+      ],
+      "enumTitles": [
+        "United States",
+        "United Kingdom",
+        "Germany",
+        "France",
+        "Japan",
+        "Hong Kong",
+        "India",
+        "Canada",
+        "Australia",
+        "Brazil",
+        "China",
+        "South Korea",
+        "Taiwan",
+        "Singapore",
+        "Switzerland",
+        "Netherlands",
+        "Spain",
+        "Italy",
+        "Sweden",
+        "Norway",
+        "Denmark",
+        "Finland",
+        "Belgium",
+        "Austria",
+        "Ireland",
+        "New Zealand",
+        "South Africa",
+        "Mexico",
+        "Argentina",
+        "Chile",
+        "Peru"
+      ],
+      "prefill": "US",
+      "title": "Region",
+      "type": "string"
+    },
+    "screenerId": {
+      "default": "day_gainers",
+      "description": "Yahoo predefined screener to run (mode=screener). Predefined screeners are US-centric; use mode=customScreener for a region-aware list.",
+      "editor": "select",
+      "enum": [
+        "day_gainers",
+        "day_losers",
+        "most_actives",
+        "most_shorted_stocks",
+        "undervalued_growth_stocks",
+        "growth_technology_stocks",
+        "aggressive_small_caps",
+        "small_cap_gainers",
+        "all_cryptocurrencies_us",
+        "day_gainers_cryptocurrencies",
+        "day_losers_cryptocurrencies",
+        "most_actives_cryptocurrencies",
+        "highest_valuation_private_company",
+        "recently_funded_private_company",
+        "most_funded_private_company",
+        "top_mutual_funds",
+        "day_gainers_mutual_funds",
+        "portfolio_anchors",
+        "solid_large_growth_funds",
+        "solid_midcap_growth_funds",
+        "conservative_foreign_funds",
+        "high_yield_bond"
+      ],
+      "enumTitles": [
+        "Day Gainers",
+        "Day Losers",
+        "Most Actives",
+        "Most Shorted Stocks",
+        "Undervalued Growth Stocks",
+        "Growth Technology Stocks",
+        "Aggressive Small Caps",
+        "Small Cap Gainers",
+        "All Cryptocurrencies (US)",
+        "Day Gainers - Cryptocurrencies",
+        "Day Losers - Cryptocurrencies",
+        "Most Actives - Cryptocurrencies",
+        "Highest Valuation Private Companies",
+        "Recently Funded Private Companies",
+        "Most Funded Private Companies",
+        "Top Mutual Funds",
+        "Day Gainers - Mutual Funds",
+        "Portfolio Anchors",
+        "Solid Large Growth Funds",
+        "Solid Mid-Cap Growth Funds",
+        "Conservative Foreign Funds",
+        "High Yield Bond"
+      ],
+      "prefill": "day_gainers",
+      "title": "Screener",
+      "type": "string"
+    },
+    "screenerSort": {
+      "default": "intradaymarketcap",
+      "description": "Sort field for mode=customScreener.",
+      "editor": "select",
+      "enum": [
+        "intradaymarketcap",
+        "percentchange",
+        "dayvolume"
+      ],
+      "enumTitles": [
+        "Market cap",
+        "Percent change",
+        "Volume"
+      ],
+      "prefill": "intradaymarketcap",
+      "title": "Custom screener sort",
+      "type": "string"
+    },
+    "searchQuery": {
+      "description": "Company, fund, index, currency or crypto name to search for (mode=search).",
+      "editor": "textfield",
+      "prefill": "Apple",
+      "title": "Search query",
       "type": "string"
     },
     "startDate": {
-      "description": "Earliest date for historical OHLCV data. Optional — default is 30 days before today.",
+      "description": "Earliest date for historical bars (`YYYY-MM-DD`). Overrides `range` (mode=tickers).",
       "editor": "textfield",
-      "title": "History start date (YYYY-MM-DD)",
+      "title": "History start date",
       "type": "string"
     },
     "tickers": {
-      "description": "One or more stock ticker symbols (e.g. `AAPL`, `MSFT`, `BRK-B`). Supports US, ETFs, ADRs, foreign tickers with suffix (e.g. `BABA`, `TSM`, `BP.L`).",
+      "default": [],
+      "description": "Symbols or Yahoo Finance quote URLs (mode=tickers). Examples: `AAPL`, `BRK.B`, `^GSPC`, `EURUSD=X`, `BTC-USD`, `7203.T`, `https://finance.yahoo.com/quote/AAPL/`.",
       "editor": "stringList",
       "prefill": [
-        "AAPL",
-        "MSFT"
+        "AAPL"
       ],
       "title": "Tickers",
       "type": "array"
     }
   },
   "required": [
-    "tickers"
+    "mode"
   ],
   "schemaVersion": 1,
   "title": "Yahoo Finance Scraper Input",

@@ -1,15 +1,97 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src &#x27;self&#x27;; script-src &#x27;self&#x27; &#x27;sha256-2N9+7Iu7V7NpKVZ+bqsgLLsozw+vQOW19QnKFcSFfP0=&#x27;; style-src &#x27;self&#x27;; img-src &#x27;self&#x27; https: data:; base-uri &#x27;self&#x27;; form-action &#x27;self&#x27;; object-src &#x27;none&#x27;"><title>Facebook Marketplace Listing &amp; Price Extractor | Nimbryxo Studio</title><meta name="description" content="Extract public Facebook Marketplace listings by city feed, category, keyword search, or direct item URL, with price, location, photos, delivery method, seller, and listing status p"><meta name="robots" content="index,follow"><link rel="canonical" href="https://hasankhokhar2026.github.io/apify-actor-examples/actors/DTj8k33mijt0OfkpR/"><meta property="og:title" content="Facebook Marketplace Listing &amp; Price Extractor | Nimbryxo Studio"><meta property="og:description" content="Extract public Facebook Marketplace listings by city feed, category, keyword search, or direct item URL, with price, location, photos, delivery method, seller, and listing status p"><meta property="og:type" content="website"><meta property="og:url" content="https://hasankhokhar2026.github.io/apify-actor-examples/actors/DTj8k33mijt0OfkpR/"><meta property="og:site_name" content="Nimbryxo Studio"><meta name="twitter:card" content="summary"><link rel="icon" href="/apify-actor-examples/assets/mark.svg?v=2d20f9dc334a" type="image/svg+xml"><link rel="stylesheet" href="/apify-actor-examples/assets/site.css?v=39545fd4a399"><link rel="stylesheet" href="/apify-actor-examples/assets/brand.css?v=eb0f935ade25"><link rel="alternate" type="application/rss+xml" title="Nimbryxo Studio guides" href="/apify-actor-examples/feed.xml"><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization","name":"Nimbryxo Studio","url":"https://hasankhokhar2026.github.io/apify-actor-examples/","sameAs":["https://apify.com/nimbryxo-studio"]},{"@type":"WebSite","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#website","name":"Nimbryxo Studio","url":"https://hasankhokhar2026.github.io/apify-actor-examples/","publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"inLanguage":"en"},{"@type":"WebPage","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/DTj8k33mijt0OfkpR/#webpage","name":"Facebook Marketplace Listing & Price Extractor","description":"Extract public Facebook Marketplace listings by city feed, category, keyword search, or direct item URL, with price, location, photos, delivery method, seller, and listing status per item.","url":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/DTj8k33mijt0OfkpR/","isPartOf":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#website"},"publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"inLanguage":"en","mainEntity":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/DTj8k33mijt0OfkpR/#article"},"breadcrumb":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/DTj8k33mijt0OfkpR/#breadcrumb"}},{"@type":"TechArticle","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/DTj8k33mijt0OfkpR/#article","headline":"Facebook Marketplace Listing & Price Extractor","name":"Facebook Marketplace Listing & Price Extractor","description":"Extract public Facebook Marketplace listings by city feed, category, keyword search, or direct item URL, with price, location, photos, delivery method, seller, and listing status per item.","url":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/DTj8k33mijt0OfkpR/","author":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"mainEntityOfPage":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/DTj8k33mijt0OfkpR/#webpage"},"inLanguage":"en"},{"@type":"BreadcrumbList","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/DTj8k33mijt0OfkpR/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Nimbryxo Studio","item":"https://hasankhokhar2026.github.io/apify-actor-examples/"},{"@type":"ListItem","position":2,"name":"Actors","item":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/"},{"@type":"ListItem","position":3,"name":"Facebook Marketplace Listing & Price Extractor","item":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/DTj8k33mijt0OfkpR/"}]}]}</script><script src="/apify-actor-examples/assets/site.js?v=7cabac48dd31" defer></script></head><body class="theme-studio"><a href="#main" class="skip-link">Skip to content</a><header><div class="inner"><a href="/apify-actor-examples/" class="brand"><img src="/apify-actor-examples/assets/mark.svg?v=2d20f9dc334a" alt="" width="29" height="29">Nimbryxo Studio</a><nav aria-label="Main navigation"><a href="/apify-actor-examples/actors/" aria-current="page">Actors</a><a href="/apify-actor-examples/guides/">Guides</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></nav></div></header><main id="main"><div class="doc-layout"><aside class="contents" aria-label="On this page"><strong>Contents</strong><a href="#overview">Overview</a><a href="#published-readme">Published README</a><a href="#input-schema">Input schema</a><a href="#output-schema">Output schema</a><a href="#dataset-schema">Dataset schema</a><a href="#python-quickstart">Python quickstart</a></aside><article class="prose"><div class="breadcrumb"><a href="/apify-actor-examples/actors/">Actors</a><span>/</span><span>Facebook Marketplace Listing &amp; Price Extractor</span></div><section id="overview"><h1 class="doc-title">Facebook Marketplace Listing &amp; Price Extractor</h1><p class="lede">Extract public Facebook Marketplace listings by city feed, category, keyword search, or direct item URL, with price, location, photos, delivery method, seller, and listing status per item.</p><div class="actions"><a class="button" href="https://apify.com/nimbryxo-studio/facebook-marketplace-listing-and-price-extractor">Open on Apify</a><a class="text-link" href="https://github.com/hasankhokhar2026/apify-actor-examples/blob/main/docs/actors/DTj8k33mijt0OfkpR/README.md">GitHub source</a></div></section><section class="schema-section" id="input-schema"><h2>Input schema</h2><p>Input fields, types, required flags, descriptions, defaults, and prefills come from the published definition. Prefill examples are distinct from defaults.</p><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>startUrls</code></td><td>array</td><td>optional</td><td>One or more Facebook Marketplace search, category, location, or direct item URLs. Use this or searchQuery plus location.</td></tr><tr><td><code>searchQuery</code></td><td>string</td><td>optional</td><td>Keyword or phrase for structured Marketplace discovery, for example laptop, furniture, or used bicycle. Requires location when startUrls is omitted.</td></tr><tr><td><code>location</code></td><td>string</td><td>optional</td><td>Marketplace location slug or city/state value, for example nyc, seattle, or New York, NY.</td></tr></tbody></table></div><details><summary>Show all input fields</summary><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>startUrls</code></td><td>array</td><td>optional</td><td>One or more Facebook Marketplace search, category, location, or direct item URLs. Use this or searchQuery plus location.</td></tr><tr><td><code>searchQuery</code></td><td>string</td><td>optional</td><td>Keyword or phrase for structured Marketplace discovery, for example laptop, furniture, or used bicycle. Requires location when startUrls is omitted.</td></tr><tr><td><code>location</code></td><td>string</td><td>optional</td><td>Marketplace location slug or city/state value, for example nyc, seattle, or New York, NY.</td></tr><tr><td><code>latitude</code></td><td>number</td><td>optional</td><td>Optional structured-search center latitude.</td></tr><tr><td><code>longitude</code></td><td>number</td><td>optional</td><td>Optional structured-search center longitude.</td></tr><tr><td><code>radiusKm</code></td><td>integer</td><td>optional</td><td>Optional search radius around the structured location.</td></tr><tr><td><code>categoryId</code></td><td>string</td><td>optional</td><td>Optional Facebook Marketplace category ID.</td></tr><tr><td><code>sortBy</code></td><td>string</td><td>optional</td><td>Requested Marketplace sort order; the actor also sorts by verified output values when applicable.</td></tr><tr><td><code>minPrice</code></td><td>number</td><td>optional</td><td>Optional minimum listing price. Listings without a verifiable price are excluded when this filter is used.</td></tr><tr><td><code>maxPrice</code></td><td>number</td><td>optional</td><td>Optional maximum listing price.</td></tr><tr><td><code>condition</code></td><td>string</td><td>optional</td><td>Optional verified item-condition filter.</td></tr><tr><td><code>deliveryMethod</code></td><td>string</td><td>optional</td><td>Optional verified delivery-method filter.</td></tr><tr><td><code>daysSinceListed</code></td><td>integer</td><td>optional</td><td>Optional age filter. Listings without a verifiable creation time are excluded when enabled.</td></tr><tr><td><code>maxItems</code></td><td>integer</td><td>optional</td><td>Global output limit across all sources.</td></tr><tr><td><code>maxItemsPerUrl</code></td><td>integer</td><td>optional</td><td>Per-source output limit.</td></tr><tr><td><code>resultsLimit</code></td><td>integer</td><td>optional</td><td>Legacy per-source limit retained for existing integrations. maxItemsPerUrl takes precedence when supplied.</td></tr><tr><td><code>scrapeMode</code></td><td>string</td><td>optional</td><td>Fast streams search-page records. Deep visits listing pages for additional fields. Auto follows the detail compatibility setting.</td></tr><tr><td><code>includeListingDetails</code></td><td>boolean</td><td>optional</td><td>Compatibility alias that enables deep detail enrichment.</td></tr><tr><td><code>includeAllPhotos</code></td><td>boolean</td><td>optional</td><td>Enables deep mode so all photo data exposed by Facebook can be retained.</td></tr><tr><td><code>deduplicateAcrossInputs</code></td><td>boolean</td><td>optional</td><td>Emit each listing ID once across sources. Disable to preserve repeated results from repeated input URLs.</td></tr><tr><td><code>proxyConfiguration</code></td><td>object</td><td>optional</td><td>US residential Apify Proxy is used by default and enforced whenever Apify Proxy is selected because Marketplace access is proxy-dependent.</td></tr></tbody></table></div></details><p><a href="input-schema.json">Download the published input schema</a></p><details><summary>View complete JSON</summary><pre><code>{
-  &quot;description&quot;: &quot;Scrape public Facebook Marketplace listings by URL or keyword and location. Supports US city, state, category, price, condition, delivery, sorting, detail, and multi-source searches.&quot;,
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src &#x27;self&#x27;; script-src &#x27;self&#x27; &#x27;sha256-2N9+7Iu7V7NpKVZ+bqsgLLsozw+vQOW19QnKFcSFfP0=&#x27;; style-src &#x27;self&#x27;; img-src &#x27;self&#x27; https: data:; base-uri &#x27;self&#x27;; form-action &#x27;self&#x27;; object-src &#x27;none&#x27;"><title>Facebook Marketplace Listing &amp; Price Extractor | Nimbryxo Studio</title><meta name="description" content="Extract public Facebook Marketplace listings by city feed, category, keyword search, or direct item URL, with price, location, photos, delivery method, seller, and listing status p"><meta name="robots" content="index,follow"><link rel="canonical" href="https://hasankhokhar2026.github.io/apify-actor-examples/actors/DTj8k33mijt0OfkpR/"><meta property="og:title" content="Facebook Marketplace Listing &amp; Price Extractor | Nimbryxo Studio"><meta property="og:description" content="Extract public Facebook Marketplace listings by city feed, category, keyword search, or direct item URL, with price, location, photos, delivery method, seller, and listing status p"><meta property="og:type" content="website"><meta property="og:url" content="https://hasankhokhar2026.github.io/apify-actor-examples/actors/DTj8k33mijt0OfkpR/"><meta property="og:site_name" content="Nimbryxo Studio"><meta name="twitter:card" content="summary"><link rel="icon" href="/apify-actor-examples/assets/mark.svg?v=2d20f9dc334a" type="image/svg+xml"><link rel="stylesheet" href="/apify-actor-examples/assets/site.css?v=39545fd4a399"><link rel="stylesheet" href="/apify-actor-examples/assets/brand.css?v=eb0f935ade25"><link rel="alternate" type="application/rss+xml" title="Nimbryxo Studio guides" href="/apify-actor-examples/feed.xml"><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization","name":"Nimbryxo Studio","url":"https://hasankhokhar2026.github.io/apify-actor-examples/","sameAs":["https://apify.com/nimbryxo-studio"]},{"@type":"WebSite","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#website","name":"Nimbryxo Studio","url":"https://hasankhokhar2026.github.io/apify-actor-examples/","publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"inLanguage":"en"},{"@type":"WebPage","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/DTj8k33mijt0OfkpR/#webpage","name":"Facebook Marketplace Listing & Price Extractor","description":"Extract public Facebook Marketplace listings by city feed, category, keyword search, or direct item URL, with price, location, photos, delivery method, seller, and listing status per item.","url":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/DTj8k33mijt0OfkpR/","isPartOf":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#website"},"publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"inLanguage":"en","mainEntity":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/DTj8k33mijt0OfkpR/#article"},"breadcrumb":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/DTj8k33mijt0OfkpR/#breadcrumb"}},{"@type":"TechArticle","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/DTj8k33mijt0OfkpR/#article","headline":"Facebook Marketplace Listing & Price Extractor","name":"Facebook Marketplace Listing & Price Extractor","description":"Extract public Facebook Marketplace listings by city feed, category, keyword search, or direct item URL, with price, location, photos, delivery method, seller, and listing status per item.","url":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/DTj8k33mijt0OfkpR/","author":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"mainEntityOfPage":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/DTj8k33mijt0OfkpR/#webpage"},"inLanguage":"en"},{"@type":"BreadcrumbList","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/DTj8k33mijt0OfkpR/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Nimbryxo Studio","item":"https://hasankhokhar2026.github.io/apify-actor-examples/"},{"@type":"ListItem","position":2,"name":"Actors","item":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/"},{"@type":"ListItem","position":3,"name":"Facebook Marketplace Listing & Price Extractor","item":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/DTj8k33mijt0OfkpR/"}]}]}</script><script src="/apify-actor-examples/assets/site.js?v=7cabac48dd31" defer></script></head><body class="theme-studio"><a href="#main" class="skip-link">Skip to content</a><header><div class="inner"><a href="/apify-actor-examples/" class="brand"><img src="/apify-actor-examples/assets/mark.svg?v=2d20f9dc334a" alt="" width="29" height="29">Nimbryxo Studio</a><nav aria-label="Main navigation"><a href="/apify-actor-examples/actors/" aria-current="page">Actors</a><a href="/apify-actor-examples/guides/">Guides</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></nav></div></header><main id="main"><div class="doc-layout"><aside class="contents" aria-label="On this page"><strong>Contents</strong><a href="#overview">Overview</a><a href="#published-readme">Published README</a><a href="#input-schema">Input schema</a><a href="#output-schema">Output schema</a><a href="#dataset-schema">Dataset schema</a><a href="#python-quickstart">Python quickstart</a></aside><article class="prose"><div class="breadcrumb"><a href="/apify-actor-examples/actors/">Actors</a><span>/</span><span>Facebook Marketplace Listing &amp; Price Extractor</span></div><section id="overview"><h1 class="doc-title">Facebook Marketplace Listing &amp; Price Extractor</h1><p class="lede">Extract public Facebook Marketplace listings by city feed, category, keyword search, or direct item URL, with price, location, photos, delivery method, seller, and listing status per item.</p><div class="actions"><a class="button" href="https://apify.com/nimbryxo-studio/facebook-marketplace-listing-and-price-extractor">Open on Apify</a><a class="text-link" href="https://github.com/hasankhokhar2026/apify-actor-examples/blob/main/docs/actors/DTj8k33mijt0OfkpR/README.md">GitHub source</a></div></section><section class="schema-section" id="input-schema"><h2>Input schema</h2><p>Input fields, types, required flags, descriptions, defaults, and prefills come from the published definition. Prefill examples are distinct from defaults.</p><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>mode</code></td><td>string</td><td>optional</td><td>What to scrape. auto uses startUrls when present and otherwise builds a keyword search. search builds a search from searchQueries plus location. urls scrapes the given Marketplace search, category, or city-feed URLs. items fetches direct item URLs or numeric IDs.</td></tr><tr><td><code>startUrls</code></td><td>array</td><td>optional</td><td>Marketplace search, city-category, global-category, city-feed, or /marketplace/item/ URLs. In mode=items, a bare numeric listing ID is also accepted.</td></tr><tr><td><code>searchQueries</code></td><td>array</td><td>optional</td><td>One to 20 keywords or phrases (mode=search or mode=auto without URLs). Each query becomes one source.</td></tr></tbody></table></div><details><summary>Show all input fields</summary><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>mode</code></td><td>string</td><td>optional</td><td>What to scrape. auto uses startUrls when present and otherwise builds a keyword search. search builds a search from searchQueries plus location. urls scrapes the given Marketplace search, category, or city-feed URLs. items fetches direct item URLs or numeric IDs.</td></tr><tr><td><code>startUrls</code></td><td>array</td><td>optional</td><td>Marketplace search, city-category, global-category, city-feed, or /marketplace/item/ URLs. In mode=items, a bare numeric listing ID is also accepted.</td></tr><tr><td><code>searchQueries</code></td><td>array</td><td>optional</td><td>One to 20 keywords or phrases (mode=search or mode=auto without URLs). Each query becomes one source.</td></tr><tr><td><code>location</code></td><td>string</td><td>optional</td><td>Marketplace location slug, city, postal code, or address used by keyword search (mode=search or mode=auto without URLs). Examples: nyc, Austin, Texas, 90210, London.</td></tr><tr><td><code>country</code></td><td>string</td><td>optional</td><td>ISO 3166-1 alpha-2 country used when resolving a human location. Use GB for London, CA for Toronto, and so on.</td></tr><tr><td><code>latitude</code></td><td>number</td><td>optional</td><td>Optional search center latitude. Provide longitude too.</td></tr><tr><td><code>longitude</code></td><td>number</td><td>optional</td><td>Optional search center longitude. Provide latitude too.</td></tr><tr><td><code>radiusKm</code></td><td>integer</td><td>optional</td><td>Search radius in kilometres for keyword or category search. URL mode keeps the radius in the URL unless you set this explicitly.</td></tr><tr><td><code>category</code></td><td>string</td><td>optional</td><td>Marketplace category. If searchQueries is empty, the actor opens the city category feed (or the global category feed for a human location). Books, shoes, games, motorcycles, cell-phones, computers, video-games, and cameras were verified as category feeds but expose no server category ID, so they are not usable as keyword filters; use categoryId or a category URL for those.</td></tr><tr><td><code>categoryId</code></td><td>string</td><td>optional</td><td>Advanced numeric Facebook category ID. Takes precedence over category when set.</td></tr><tr><td><code>sortBy</code></td><td>string</td><td>optional</td><td>Server-side sort where Marketplace supports it, plus a client-side re-sort by price or posting time. Rows without a price sort last.</td></tr><tr><td><code>minPrice</code></td><td>number</td><td>optional</td><td>Only listings at or above this price. Rows without a price are dropped.</td></tr><tr><td><code>maxPrice</code></td><td>number</td><td>optional</td><td>Only listings at or below this price. Rows without a price are dropped.</td></tr><tr><td><code>condition</code></td><td>string</td><td>optional</td><td>Server-side condition filter in search/category modes. In deep mode the detail condition is checked too; fast URL rows without condition data are kept.</td></tr><tr><td><code>deliveryMethod</code></td><td>string</td><td>optional</td><td>Client-side filter over the listing&#x27;s delivery types. Listings without delivery data are dropped when this filter is active. Legacy local_pickup is accepted as local.</td></tr><tr><td><code>daysSinceListed</code></td><td>integer</td><td>optional</td><td>Only listings created within this many days. Rows without a posting time are dropped.</td></tr><tr><td><code>availability</code></td><td>string</td><td>optional</td><td>Client-side status filter. Search feeds are mostly available; sold and pending are more common on direct item pages.</td></tr><tr><td><code>exactMatch</code></td><td>boolean</td><td>optional</td><td>Keep only rows whose title (and description in deep mode) contains every query word.</td></tr><tr><td><code>maxItems</code></td><td>integer</td><td>optional</td><td>Global output limit across all sources.</td></tr><tr><td><code>maxItemsPerUrl</code></td><td>integer</td><td>optional</td><td>Per-source output limit.</td></tr><tr><td><code>maxPagesPerUrl</code></td><td>integer</td><td>optional</td><td>Cost guard for cursor pagination. The actor stops earlier on source exhaustion, a repeated cursor, two empty pages, or maxItems. There is no fixed row cap: a Phase 6 probe reached 1,694 unique search rows across 71 pages before Facebook returned an empty page 72.</td></tr><tr><td><code>scrapeMode</code></td><td>string</td><td>optional</td><td>fast streams feed rows. deep fetches each listing page for description, condition, attributes, seller, coordinates, and photos. auto follows includeListingDetails and includeAllPhotos.</td></tr><tr><td><code>includeListingDetails</code></td><td>boolean</td><td>optional</td><td>Compatibility alias that enables deep mode unless scrapeMode=fast is explicit.</td></tr><tr><td><code>includeAllPhotos</code></td><td>boolean</td><td>optional</td><td>Enables deep mode and adds the full photo gallery.</td></tr><tr><td><code>rehostImages</code></td><td>boolean</td><td>optional</td><td>Copy primary photos and seller avatars into the actor key-value store so the emitted URLs do not expire. The original Facebook URL is kept in primaryPhotoUrlOriginal. When off, mediaUrlTemporary is emitted.</td></tr><tr><td><code>deduplicateAcrossInputs</code></td><td>boolean</td><td>optional</td><td>Emit each listing ID once across sources. Disable to preserve repeats from repeated input URLs.</td></tr><tr><td><code>proxyConfiguration</code></td><td>object</td><td>optional</td><td>Optional advanced override. The actor works without a proxy and automatically escalates only when Facebook blocks a request. A missing value never stops a run.</td></tr></tbody></table></div></details><p><a href="input-schema.json">Download the published input schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+  &quot;description&quot;: &quot;Scrape public Facebook Marketplace listings without cookies or login. Search by keyword and location, scrape Marketplace URLs, or fetch direct item pages. Fast mode reads feed rows; deep mode adds descriptions, condition, seller, coordinates, and photos.&quot;,
   &quot;properties&quot;: {
+    &quot;availability&quot;: {
+      &quot;default&quot;: &quot;all&quot;,
+      &quot;description&quot;: &quot;Client-side status filter. Search feeds are mostly available; sold and pending are more common on direct item pages.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;all&quot;,
+        &quot;available&quot;,
+        &quot;sold&quot;,
+        &quot;pending&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;All listings&quot;,
+        &quot;Available&quot;,
+        &quot;Sold&quot;,
+        &quot;Pending&quot;
+      ],
+      &quot;prefill&quot;: &quot;all&quot;,
+      &quot;title&quot;: &quot;Availability&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;category&quot;: {
+      &quot;default&quot;: &quot;all&quot;,
+      &quot;description&quot;: &quot;Marketplace category. If searchQueries is empty, the actor opens the city category feed (or the global category feed for a human location). Books, shoes, games, motorcycles, cell-phones, computers, video-games, and cameras were verified as category feeds but expose no server category ID, so they are not usable as keyword filters; use categoryId or a category URL for those.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;all&quot;,
+        &quot;vehicles&quot;,
+        &quot;electronics&quot;,
+        &quot;furniture&quot;,
+        &quot;home&quot;,
+        &quot;tools&quot;,
+        &quot;sports&quot;,
+        &quot;toys&quot;,
+        &quot;appliances&quot;,
+        &quot;jewelry&quot;,
+        &quot;autoparts&quot;,
+        &quot;garden&quot;,
+        &quot;pets&quot;,
+        &quot;books&quot;,
+        &quot;shoes&quot;,
+        &quot;games&quot;,
+        &quot;motorcycles&quot;,
+        &quot;boats&quot;,
+        &quot;antiques&quot;,
+        &quot;arts&quot;,
+        &quot;health&quot;,
+        &quot;cell-phones&quot;,
+        &quot;computers&quot;,
+        &quot;video-games&quot;,
+        &quot;cameras&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;All categories&quot;,
+        &quot;Vehicles&quot;,
+        &quot;Electronics&quot;,
+        &quot;Furniture&quot;,
+        &quot;Home goods&quot;,
+        &quot;Tools&quot;,
+        &quot;Sporting goods&quot;,
+        &quot;Toys and games&quot;,
+        &quot;Appliances&quot;,
+        &quot;Jewelry and watches&quot;,
+        &quot;Auto parts&quot;,
+        &quot;Garden and outdoor&quot;,
+        &quot;Pet supplies&quot;,
+        &quot;Books&quot;,
+        &quot;Shoes&quot;,
+        &quot;Games&quot;,
+        &quot;Motorcycles&quot;,
+        &quot;Boats&quot;,
+        &quot;Antiques and collectibles&quot;,
+        &quot;Arts and crafts&quot;,
+        &quot;Health and beauty&quot;,
+        &quot;Cell phones&quot;,
+        &quot;Computers&quot;,
+        &quot;Video games&quot;,
+        &quot;Cameras&quot;
+      ],
+      &quot;prefill&quot;: &quot;all&quot;,
+      &quot;title&quot;: &quot;Category&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
     &quot;categoryId&quot;: {
-      &quot;description&quot;: &quot;Optional Facebook Marketplace category ID.&quot;,
+      &quot;description&quot;: &quot;Advanced numeric Facebook category ID. Takes precedence over category when set.&quot;,
       &quot;editor&quot;: &quot;textfield&quot;,
       &quot;title&quot;: &quot;Category ID&quot;,
       &quot;type&quot;: &quot;string&quot;
     },
     &quot;condition&quot;: {
       &quot;default&quot;: &quot;any&quot;,
-      &quot;description&quot;: &quot;Optional verified item-condition filter.&quot;,
+      &quot;description&quot;: &quot;Server-side condition filter in search/category modes. In deep mode the detail condition is checked too; fast URL rows without condition data are kept.&quot;,
       &quot;editor&quot;: &quot;select&quot;,
       &quot;enum&quot;: [
         &quot;any&quot;,
@@ -25,27 +107,540 @@
         &quot;Used: good&quot;,
         &quot;Used: fair&quot;
       ],
+      &quot;prefill&quot;: &quot;any&quot;,
       &quot;title&quot;: &quot;Condition&quot;,
       &quot;type&quot;: &quot;string&quot;
     },
+    &quot;country&quot;: {
+      &quot;default&quot;: &quot;US&quot;,
+      &quot;description&quot;: &quot;ISO 3166-1 alpha-2 country used when resolving a human location. Use GB for London, CA for Toronto, and so on.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;AD&quot;,
+        &quot;AE&quot;,
+        &quot;AF&quot;,
+        &quot;AG&quot;,
+        &quot;AI&quot;,
+        &quot;AL&quot;,
+        &quot;AM&quot;,
+        &quot;AO&quot;,
+        &quot;AQ&quot;,
+        &quot;AR&quot;,
+        &quot;AS&quot;,
+        &quot;AT&quot;,
+        &quot;AU&quot;,
+        &quot;AW&quot;,
+        &quot;AX&quot;,
+        &quot;AZ&quot;,
+        &quot;BA&quot;,
+        &quot;BB&quot;,
+        &quot;BD&quot;,
+        &quot;BE&quot;,
+        &quot;BF&quot;,
+        &quot;BG&quot;,
+        &quot;BH&quot;,
+        &quot;BI&quot;,
+        &quot;BJ&quot;,
+        &quot;BL&quot;,
+        &quot;BM&quot;,
+        &quot;BN&quot;,
+        &quot;BO&quot;,
+        &quot;BQ&quot;,
+        &quot;BR&quot;,
+        &quot;BS&quot;,
+        &quot;BT&quot;,
+        &quot;BV&quot;,
+        &quot;BW&quot;,
+        &quot;BY&quot;,
+        &quot;BZ&quot;,
+        &quot;CA&quot;,
+        &quot;CC&quot;,
+        &quot;CD&quot;,
+        &quot;CF&quot;,
+        &quot;CG&quot;,
+        &quot;CH&quot;,
+        &quot;CI&quot;,
+        &quot;CK&quot;,
+        &quot;CL&quot;,
+        &quot;CM&quot;,
+        &quot;CN&quot;,
+        &quot;CO&quot;,
+        &quot;CR&quot;,
+        &quot;CU&quot;,
+        &quot;CV&quot;,
+        &quot;CW&quot;,
+        &quot;CX&quot;,
+        &quot;CY&quot;,
+        &quot;CZ&quot;,
+        &quot;DE&quot;,
+        &quot;DJ&quot;,
+        &quot;DK&quot;,
+        &quot;DM&quot;,
+        &quot;DO&quot;,
+        &quot;DZ&quot;,
+        &quot;EC&quot;,
+        &quot;EE&quot;,
+        &quot;EG&quot;,
+        &quot;EH&quot;,
+        &quot;ER&quot;,
+        &quot;ES&quot;,
+        &quot;ET&quot;,
+        &quot;FI&quot;,
+        &quot;FJ&quot;,
+        &quot;FK&quot;,
+        &quot;FM&quot;,
+        &quot;FO&quot;,
+        &quot;FR&quot;,
+        &quot;GA&quot;,
+        &quot;GB&quot;,
+        &quot;GD&quot;,
+        &quot;GE&quot;,
+        &quot;GF&quot;,
+        &quot;GG&quot;,
+        &quot;GH&quot;,
+        &quot;GI&quot;,
+        &quot;GL&quot;,
+        &quot;GM&quot;,
+        &quot;GN&quot;,
+        &quot;GP&quot;,
+        &quot;GQ&quot;,
+        &quot;GR&quot;,
+        &quot;GS&quot;,
+        &quot;GT&quot;,
+        &quot;GU&quot;,
+        &quot;GW&quot;,
+        &quot;GY&quot;,
+        &quot;HK&quot;,
+        &quot;HM&quot;,
+        &quot;HN&quot;,
+        &quot;HR&quot;,
+        &quot;HT&quot;,
+        &quot;HU&quot;,
+        &quot;ID&quot;,
+        &quot;IE&quot;,
+        &quot;IL&quot;,
+        &quot;IM&quot;,
+        &quot;IN&quot;,
+        &quot;IO&quot;,
+        &quot;IQ&quot;,
+        &quot;IR&quot;,
+        &quot;IS&quot;,
+        &quot;IT&quot;,
+        &quot;JE&quot;,
+        &quot;JM&quot;,
+        &quot;JO&quot;,
+        &quot;JP&quot;,
+        &quot;KE&quot;,
+        &quot;KG&quot;,
+        &quot;KH&quot;,
+        &quot;KI&quot;,
+        &quot;KM&quot;,
+        &quot;KN&quot;,
+        &quot;KP&quot;,
+        &quot;KR&quot;,
+        &quot;KW&quot;,
+        &quot;KY&quot;,
+        &quot;KZ&quot;,
+        &quot;LA&quot;,
+        &quot;LB&quot;,
+        &quot;LC&quot;,
+        &quot;LI&quot;,
+        &quot;LK&quot;,
+        &quot;LR&quot;,
+        &quot;LS&quot;,
+        &quot;LT&quot;,
+        &quot;LU&quot;,
+        &quot;LV&quot;,
+        &quot;LY&quot;,
+        &quot;MA&quot;,
+        &quot;MC&quot;,
+        &quot;MD&quot;,
+        &quot;ME&quot;,
+        &quot;MF&quot;,
+        &quot;MG&quot;,
+        &quot;MH&quot;,
+        &quot;MK&quot;,
+        &quot;ML&quot;,
+        &quot;MM&quot;,
+        &quot;MN&quot;,
+        &quot;MO&quot;,
+        &quot;MP&quot;,
+        &quot;MQ&quot;,
+        &quot;MR&quot;,
+        &quot;MS&quot;,
+        &quot;MT&quot;,
+        &quot;MU&quot;,
+        &quot;MV&quot;,
+        &quot;MW&quot;,
+        &quot;MX&quot;,
+        &quot;MY&quot;,
+        &quot;MZ&quot;,
+        &quot;NA&quot;,
+        &quot;NC&quot;,
+        &quot;NE&quot;,
+        &quot;NF&quot;,
+        &quot;NG&quot;,
+        &quot;NI&quot;,
+        &quot;NL&quot;,
+        &quot;NO&quot;,
+        &quot;NP&quot;,
+        &quot;NR&quot;,
+        &quot;NU&quot;,
+        &quot;NZ&quot;,
+        &quot;OM&quot;,
+        &quot;PA&quot;,
+        &quot;PE&quot;,
+        &quot;PF&quot;,
+        &quot;PG&quot;,
+        &quot;PH&quot;,
+        &quot;PK&quot;,
+        &quot;PL&quot;,
+        &quot;PM&quot;,
+        &quot;PN&quot;,
+        &quot;PR&quot;,
+        &quot;PS&quot;,
+        &quot;PT&quot;,
+        &quot;PW&quot;,
+        &quot;PY&quot;,
+        &quot;QA&quot;,
+        &quot;RE&quot;,
+        &quot;RO&quot;,
+        &quot;RS&quot;,
+        &quot;RU&quot;,
+        &quot;RW&quot;,
+        &quot;SA&quot;,
+        &quot;SB&quot;,
+        &quot;SC&quot;,
+        &quot;SD&quot;,
+        &quot;SE&quot;,
+        &quot;SG&quot;,
+        &quot;SH&quot;,
+        &quot;SI&quot;,
+        &quot;SJ&quot;,
+        &quot;SK&quot;,
+        &quot;SL&quot;,
+        &quot;SM&quot;,
+        &quot;SN&quot;,
+        &quot;SO&quot;,
+        &quot;SR&quot;,
+        &quot;SS&quot;,
+        &quot;ST&quot;,
+        &quot;SV&quot;,
+        &quot;SX&quot;,
+        &quot;SY&quot;,
+        &quot;SZ&quot;,
+        &quot;TC&quot;,
+        &quot;TD&quot;,
+        &quot;TF&quot;,
+        &quot;TG&quot;,
+        &quot;TH&quot;,
+        &quot;TJ&quot;,
+        &quot;TK&quot;,
+        &quot;TL&quot;,
+        &quot;TM&quot;,
+        &quot;TN&quot;,
+        &quot;TO&quot;,
+        &quot;TR&quot;,
+        &quot;TT&quot;,
+        &quot;TV&quot;,
+        &quot;TW&quot;,
+        &quot;TZ&quot;,
+        &quot;UA&quot;,
+        &quot;UG&quot;,
+        &quot;UM&quot;,
+        &quot;US&quot;,
+        &quot;UY&quot;,
+        &quot;UZ&quot;,
+        &quot;VA&quot;,
+        &quot;VC&quot;,
+        &quot;VE&quot;,
+        &quot;VG&quot;,
+        &quot;VI&quot;,
+        &quot;VN&quot;,
+        &quot;VU&quot;,
+        &quot;WF&quot;,
+        &quot;WS&quot;,
+        &quot;XK&quot;,
+        &quot;YE&quot;,
+        &quot;YT&quot;,
+        &quot;ZA&quot;,
+        &quot;ZM&quot;,
+        &quot;ZW&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;Andorra&quot;,
+        &quot;United Arab Emirates&quot;,
+        &quot;Afghanistan&quot;,
+        &quot;Antigua and Barbuda&quot;,
+        &quot;Anguilla&quot;,
+        &quot;Albania&quot;,
+        &quot;Armenia&quot;,
+        &quot;Angola&quot;,
+        &quot;Antarctica&quot;,
+        &quot;Argentina&quot;,
+        &quot;American Samoa&quot;,
+        &quot;Austria&quot;,
+        &quot;Australia&quot;,
+        &quot;Aruba&quot;,
+        &quot;Aland Islands&quot;,
+        &quot;Azerbaijan&quot;,
+        &quot;Bosnia and Herzegovina&quot;,
+        &quot;Barbados&quot;,
+        &quot;Bangladesh&quot;,
+        &quot;Belgium&quot;,
+        &quot;Burkina Faso&quot;,
+        &quot;Bulgaria&quot;,
+        &quot;Bahrain&quot;,
+        &quot;Burundi&quot;,
+        &quot;Benin&quot;,
+        &quot;Saint Barthelemy&quot;,
+        &quot;Bermuda&quot;,
+        &quot;Brunei&quot;,
+        &quot;Bolivia&quot;,
+        &quot;Caribbean Netherlands&quot;,
+        &quot;Brazil&quot;,
+        &quot;Bahamas&quot;,
+        &quot;Bhutan&quot;,
+        &quot;Bouvet Island&quot;,
+        &quot;Botswana&quot;,
+        &quot;Belarus&quot;,
+        &quot;Belize&quot;,
+        &quot;Canada&quot;,
+        &quot;Cocos Islands&quot;,
+        &quot;Democratic Republic of the Congo&quot;,
+        &quot;Central African Republic&quot;,
+        &quot;Republic of the Congo&quot;,
+        &quot;Switzerland&quot;,
+        &quot;Cote d&#x27;Ivoire&quot;,
+        &quot;Cook Islands&quot;,
+        &quot;Chile&quot;,
+        &quot;Cameroon&quot;,
+        &quot;China&quot;,
+        &quot;Colombia&quot;,
+        &quot;Costa Rica&quot;,
+        &quot;Cuba&quot;,
+        &quot;Cape Verde&quot;,
+        &quot;Curacao&quot;,
+        &quot;Christmas Island&quot;,
+        &quot;Cyprus&quot;,
+        &quot;Czechia&quot;,
+        &quot;Germany&quot;,
+        &quot;Djibouti&quot;,
+        &quot;Denmark&quot;,
+        &quot;Dominica&quot;,
+        &quot;Dominican Republic&quot;,
+        &quot;Algeria&quot;,
+        &quot;Ecuador&quot;,
+        &quot;Estonia&quot;,
+        &quot;Egypt&quot;,
+        &quot;Western Sahara&quot;,
+        &quot;Eritrea&quot;,
+        &quot;Spain&quot;,
+        &quot;Ethiopia&quot;,
+        &quot;Finland&quot;,
+        &quot;Fiji&quot;,
+        &quot;Falkland Islands&quot;,
+        &quot;Micronesia&quot;,
+        &quot;Faroe Islands&quot;,
+        &quot;France&quot;,
+        &quot;Gabon&quot;,
+        &quot;United Kingdom&quot;,
+        &quot;Grenada&quot;,
+        &quot;Georgia&quot;,
+        &quot;French Guiana&quot;,
+        &quot;Guernsey&quot;,
+        &quot;Ghana&quot;,
+        &quot;Gibraltar&quot;,
+        &quot;Greenland&quot;,
+        &quot;Gambia&quot;,
+        &quot;Guinea&quot;,
+        &quot;Guadeloupe&quot;,
+        &quot;Equatorial Guinea&quot;,
+        &quot;Greece&quot;,
+        &quot;South Georgia and the South Sandwich Islands&quot;,
+        &quot;Guatemala&quot;,
+        &quot;Guam&quot;,
+        &quot;Guinea-Bissau&quot;,
+        &quot;Guyana&quot;,
+        &quot;Hong Kong&quot;,
+        &quot;Heard Island and McDonald Islands&quot;,
+        &quot;Honduras&quot;,
+        &quot;Croatia&quot;,
+        &quot;Haiti&quot;,
+        &quot;Hungary&quot;,
+        &quot;Indonesia&quot;,
+        &quot;Ireland&quot;,
+        &quot;Israel&quot;,
+        &quot;Isle of Man&quot;,
+        &quot;India&quot;,
+        &quot;British Indian Ocean Territory&quot;,
+        &quot;Iraq&quot;,
+        &quot;Iran&quot;,
+        &quot;Iceland&quot;,
+        &quot;Italy&quot;,
+        &quot;Jersey&quot;,
+        &quot;Jamaica&quot;,
+        &quot;Jordan&quot;,
+        &quot;Japan&quot;,
+        &quot;Kenya&quot;,
+        &quot;Kyrgyzstan&quot;,
+        &quot;Cambodia&quot;,
+        &quot;Kiribati&quot;,
+        &quot;Comoros&quot;,
+        &quot;Saint Kitts and Nevis&quot;,
+        &quot;North Korea&quot;,
+        &quot;South Korea&quot;,
+        &quot;Kuwait&quot;,
+        &quot;Cayman Islands&quot;,
+        &quot;Kazakhstan&quot;,
+        &quot;Laos&quot;,
+        &quot;Lebanon&quot;,
+        &quot;Saint Lucia&quot;,
+        &quot;Liechtenstein&quot;,
+        &quot;Sri Lanka&quot;,
+        &quot;Liberia&quot;,
+        &quot;Lesotho&quot;,
+        &quot;Lithuania&quot;,
+        &quot;Luxembourg&quot;,
+        &quot;Latvia&quot;,
+        &quot;Libya&quot;,
+        &quot;Morocco&quot;,
+        &quot;Monaco&quot;,
+        &quot;Moldova&quot;,
+        &quot;Montenegro&quot;,
+        &quot;Saint Martin&quot;,
+        &quot;Madagascar&quot;,
+        &quot;Marshall Islands&quot;,
+        &quot;North Macedonia&quot;,
+        &quot;Mali&quot;,
+        &quot;Myanmar&quot;,
+        &quot;Mongolia&quot;,
+        &quot;Macao&quot;,
+        &quot;Northern Mariana Islands&quot;,
+        &quot;Martinique&quot;,
+        &quot;Mauritania&quot;,
+        &quot;Montserrat&quot;,
+        &quot;Malta&quot;,
+        &quot;Mauritius&quot;,
+        &quot;Maldives&quot;,
+        &quot;Malawi&quot;,
+        &quot;Mexico&quot;,
+        &quot;Malaysia&quot;,
+        &quot;Mozambique&quot;,
+        &quot;Namibia&quot;,
+        &quot;New Caledonia&quot;,
+        &quot;Niger&quot;,
+        &quot;Norfolk Island&quot;,
+        &quot;Nigeria&quot;,
+        &quot;Nicaragua&quot;,
+        &quot;Netherlands&quot;,
+        &quot;Norway&quot;,
+        &quot;Nepal&quot;,
+        &quot;Nauru&quot;,
+        &quot;Niue&quot;,
+        &quot;New Zealand&quot;,
+        &quot;Oman&quot;,
+        &quot;Panama&quot;,
+        &quot;Peru&quot;,
+        &quot;French Polynesia&quot;,
+        &quot;Papua New Guinea&quot;,
+        &quot;Philippines&quot;,
+        &quot;Pakistan&quot;,
+        &quot;Poland&quot;,
+        &quot;Saint Pierre and Miquelon&quot;,
+        &quot;Pitcairn Islands&quot;,
+        &quot;Puerto Rico&quot;,
+        &quot;Palestine&quot;,
+        &quot;Portugal&quot;,
+        &quot;Palau&quot;,
+        &quot;Paraguay&quot;,
+        &quot;Qatar&quot;,
+        &quot;Reunion&quot;,
+        &quot;Romania&quot;,
+        &quot;Serbia&quot;,
+        &quot;Russia&quot;,
+        &quot;Rwanda&quot;,
+        &quot;Saudi Arabia&quot;,
+        &quot;Solomon Islands&quot;,
+        &quot;Seychelles&quot;,
+        &quot;Sudan&quot;,
+        &quot;Sweden&quot;,
+        &quot;Singapore&quot;,
+        &quot;Saint Helena&quot;,
+        &quot;Slovenia&quot;,
+        &quot;Svalbard and Jan Mayen&quot;,
+        &quot;Slovakia&quot;,
+        &quot;Sierra Leone&quot;,
+        &quot;San Marino&quot;,
+        &quot;Senegal&quot;,
+        &quot;Somalia&quot;,
+        &quot;Suriname&quot;,
+        &quot;South Sudan&quot;,
+        &quot;Sao Tome and Principe&quot;,
+        &quot;El Salvador&quot;,
+        &quot;Sint Maarten&quot;,
+        &quot;Syria&quot;,
+        &quot;Eswatini&quot;,
+        &quot;Turks and Caicos Islands&quot;,
+        &quot;Chad&quot;,
+        &quot;French Southern Territories&quot;,
+        &quot;Togo&quot;,
+        &quot;Thailand&quot;,
+        &quot;Tajikistan&quot;,
+        &quot;Tokelau&quot;,
+        &quot;Timor-Leste&quot;,
+        &quot;Turkmenistan&quot;,
+        &quot;Tunisia&quot;,
+        &quot;Tonga&quot;,
+        &quot;Turkiye&quot;,
+        &quot;Trinidad and Tobago&quot;,
+        &quot;Tuvalu&quot;,
+        &quot;Taiwan&quot;,
+        &quot;Tanzania&quot;,
+        &quot;Ukraine&quot;,
+        &quot;Uganda&quot;,
+        &quot;United States Minor Outlying Islands&quot;,
+        &quot;United States&quot;,
+        &quot;Uruguay&quot;,
+        &quot;Uzbekistan&quot;,
+        &quot;Vatican City&quot;,
+        &quot;Saint Vincent and the Grenadines&quot;,
+        &quot;Venezuela&quot;,
+        &quot;British Virgin Islands&quot;,
+        &quot;U.S. Virgin Islands&quot;,
+        &quot;Vietnam&quot;,
+        &quot;Vanuatu&quot;,
+        &quot;Wallis and Futuna&quot;,
+        &quot;Samoa&quot;,
+        &quot;Kosovo&quot;,
+        &quot;Yemen&quot;,
+        &quot;Mayotte&quot;,
+        &quot;South Africa&quot;,
+        &quot;Zambia&quot;,
+        &quot;Zimbabwe&quot;
+      ],
+      &quot;prefill&quot;: &quot;US&quot;,
+      &quot;title&quot;: &quot;Country&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
     &quot;daysSinceListed&quot;: {
-      &quot;description&quot;: &quot;Optional age filter. Listings without a verifiable creation time are excluded when enabled.&quot;,
+      &quot;description&quot;: &quot;Only listings created within this many days. Rows without a posting time are dropped.&quot;,
       &quot;editor&quot;: &quot;number&quot;,
-      &quot;minimum&quot;: 0,
+      &quot;maximum&quot;: 365,
+      &quot;minimum&quot;: 1,
       &quot;title&quot;: &quot;Listed Within (days)&quot;,
       &quot;type&quot;: &quot;integer&quot;
     },
     &quot;deduplicateAcrossInputs&quot;: {
       &quot;default&quot;: true,
-      &quot;description&quot;: &quot;Emit each listing ID once across sources. Disable to preserve repeated results from repeated input URLs.&quot;,
-      &quot;editor&quot;: &quot;checkbox&quot;,
+      &quot;description&quot;: &quot;Emit each listing ID once across sources. Disable to preserve repeats from repeated input URLs.&quot;,
       &quot;prefill&quot;: true,
       &quot;title&quot;: &quot;Deduplicate Across Inputs&quot;,
       &quot;type&quot;: &quot;boolean&quot;
     },
     &quot;deliveryMethod&quot;: {
       &quot;default&quot;: &quot;all&quot;,
-      &quot;description&quot;: &quot;Optional verified delivery-method filter.&quot;,
+      &quot;description&quot;: &quot;Client-side filter over the listing&#x27;s delivery types. Listings without delivery data are dropped when this filter is active. Legacy local_pickup is accepted as local.&quot;,
       &quot;editor&quot;: &quot;select&quot;,
       &quot;enum&quot;: [
         &quot;all&quot;,
@@ -57,27 +652,33 @@
         &quot;Shipping&quot;,
         &quot;Local pickup or meetup&quot;
       ],
+      &quot;prefill&quot;: &quot;all&quot;,
       &quot;title&quot;: &quot;Delivery Method&quot;,
       &quot;type&quot;: &quot;string&quot;
     },
+    &quot;exactMatch&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;Keep only rows whose title (and description in deep mode) contains every query word.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Exact Keyword Match&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
     &quot;includeAllPhotos&quot;: {
       &quot;default&quot;: false,
-      &quot;description&quot;: &quot;Enables deep mode so all photo data exposed by Facebook can be retained.&quot;,
-      &quot;editor&quot;: &quot;checkbox&quot;,
+      &quot;description&quot;: &quot;Enables deep mode and adds the full photo gallery.&quot;,
       &quot;prefill&quot;: false,
       &quot;title&quot;: &quot;Include All Photos&quot;,
       &quot;type&quot;: &quot;boolean&quot;
     },
     &quot;includeListingDetails&quot;: {
       &quot;default&quot;: false,
-      &quot;description&quot;: &quot;Compatibility alias that enables deep detail enrichment.&quot;,
-      &quot;editor&quot;: &quot;checkbox&quot;,
+      &quot;description&quot;: &quot;Compatibility alias that enables deep mode unless scrapeMode=fast is explicit.&quot;,
       &quot;prefill&quot;: false,
       &quot;title&quot;: &quot;Include Listing Details&quot;,
       &quot;type&quot;: &quot;boolean&quot;
     },
     &quot;latitude&quot;: {
-      &quot;description&quot;: &quot;Optional structured-search center latitude.&quot;,
+      &quot;description&quot;: &quot;Optional search center latitude. Provide longitude too.&quot;,
       &quot;editor&quot;: &quot;number&quot;,
       &quot;maximum&quot;: 90,
       &quot;minimum&quot;: -90,
@@ -85,14 +686,15 @@
       &quot;type&quot;: &quot;number&quot;
     },
     &quot;location&quot;: {
-      &quot;description&quot;: &quot;Marketplace location slug or city/state value, for example nyc, seattle, or New York, NY.&quot;,
+      &quot;description&quot;: &quot;Marketplace location slug, city, postal code, or address used by keyword search (mode=search or mode=auto without URLs). Examples: nyc, Austin, Texas, 90210, London.&quot;,
       &quot;editor&quot;: &quot;textfield&quot;,
-      &quot;example&quot;: &quot;nyc&quot;,
+      &quot;example&quot;: &quot;Austin, Texas&quot;,
+      &quot;prefill&quot;: &quot;nyc&quot;,
       &quot;title&quot;: &quot;Location&quot;,
       &quot;type&quot;: &quot;string&quot;
     },
     &quot;longitude&quot;: {
-      &quot;description&quot;: &quot;Optional structured-search center longitude.&quot;,
+      &quot;description&quot;: &quot;Optional search center longitude. Provide latitude too.&quot;,
       &quot;editor&quot;: &quot;number&quot;,
       &quot;maximum&quot;: 180,
       &quot;minimum&quot;: -180,
@@ -105,7 +707,7 @@
       &quot;editor&quot;: &quot;number&quot;,
       &quot;maximum&quot;: 10000,
       &quot;minimum&quot;: 1,
-      &quot;prefill&quot;: 5,
+      &quot;prefill&quot;: 3,
       &quot;title&quot;: &quot;Maximum Listings&quot;,
       &quot;type&quot;: &quot;integer&quot;
     },
@@ -115,63 +717,80 @@
       &quot;editor&quot;: &quot;number&quot;,
       &quot;maximum&quot;: 10000,
       &quot;minimum&quot;: 1,
-      &quot;prefill&quot;: 5,
+      &quot;prefill&quot;: 3,
       &quot;title&quot;: &quot;Maximum Listings Per URL&quot;,
       &quot;type&quot;: &quot;integer&quot;
     },
+    &quot;maxPagesPerUrl&quot;: {
+      &quot;default&quot;: 100,
+      &quot;description&quot;: &quot;Cost guard for cursor pagination. The actor stops earlier on source exhaustion, a repeated cursor, two empty pages, or maxItems. There is no fixed row cap: a Phase 6 probe reached 1,694 unique search rows across 71 pages before Facebook returned an empty page 72.&quot;,
+      &quot;editor&quot;: &quot;number&quot;,
+      &quot;maximum&quot;: 500,
+      &quot;minimum&quot;: 1,
+      &quot;prefill&quot;: 1,
+      &quot;title&quot;: &quot;Maximum Pages Per URL&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
     &quot;maxPrice&quot;: {
-      &quot;description&quot;: &quot;Optional maximum listing price.&quot;,
+      &quot;description&quot;: &quot;Only listings at or below this price. Rows without a price are dropped.&quot;,
       &quot;editor&quot;: &quot;number&quot;,
       &quot;minimum&quot;: 0,
       &quot;title&quot;: &quot;Maximum Price&quot;,
       &quot;type&quot;: &quot;number&quot;
     },
     &quot;minPrice&quot;: {
-      &quot;description&quot;: &quot;Optional minimum listing price. Listings without a verifiable price are excluded when this filter is used.&quot;,
+      &quot;description&quot;: &quot;Only listings at or above this price. Rows without a price are dropped.&quot;,
       &quot;editor&quot;: &quot;number&quot;,
       &quot;minimum&quot;: 0,
       &quot;title&quot;: &quot;Minimum Price&quot;,
       &quot;type&quot;: &quot;number&quot;
     },
+    &quot;mode&quot;: {
+      &quot;default&quot;: &quot;auto&quot;,
+      &quot;description&quot;: &quot;What to scrape. auto uses startUrls when present and otherwise builds a keyword search. search builds a search from searchQueries plus location. urls scrapes the given Marketplace search, category, or city-feed URLs. items fetches direct item URLs or numeric IDs.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;auto&quot;,
+        &quot;search&quot;,
+        &quot;urls&quot;,
+        &quot;items&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;Auto (use URLs first, then keyword search)&quot;,
+        &quot;Search by keyword and location&quot;,
+        &quot;Scrape these Marketplace URLs&quot;,
+        &quot;Fetch these listing URLs or IDs&quot;
+      ],
+      &quot;prefill&quot;: &quot;urls&quot;,
+      &quot;title&quot;: &quot;Mode&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
     &quot;proxyConfiguration&quot;: {
-      &quot;default&quot;: {
-        &quot;apifyProxyCountry&quot;: &quot;US&quot;,
-        &quot;apifyProxyGroups&quot;: [
-          &quot;RESIDENTIAL&quot;
-        ],
-        &quot;useApifyProxy&quot;: true
-      },
-      &quot;description&quot;: &quot;US residential Apify Proxy is used by default and enforced whenever Apify Proxy is selected because Marketplace access is proxy-dependent.&quot;,
+      &quot;description&quot;: &quot;Optional advanced override. The actor works without a proxy and automatically escalates only when Facebook blocks a request. A missing value never stops a run.&quot;,
       &quot;editor&quot;: &quot;proxy&quot;,
-      &quot;prefill&quot;: {
-        &quot;apifyProxyCountry&quot;: &quot;US&quot;,
-        &quot;apifyProxyGroups&quot;: [
-          &quot;RESIDENTIAL&quot;
-        ],
-        &quot;useApifyProxy&quot;: true
-      },
       &quot;title&quot;: &quot;Proxy Configuration&quot;,
       &quot;type&quot;: &quot;object&quot;
     },
     &quot;radiusKm&quot;: {
-      &quot;description&quot;: &quot;Optional search radius around the structured location.&quot;,
+      &quot;default&quot;: 65,
+      &quot;description&quot;: &quot;Search radius in kilometres for keyword or category search. URL mode keeps the radius in the URL unless you set this explicitly.&quot;,
       &quot;editor&quot;: &quot;number&quot;,
       &quot;maximum&quot;: 500,
       &quot;minimum&quot;: 1,
+      &quot;prefill&quot;: 65,
       &quot;title&quot;: &quot;Radius (km)&quot;,
       &quot;type&quot;: &quot;integer&quot;
     },
-    &quot;resultsLimit&quot;: {
-      &quot;description&quot;: &quot;Legacy per-source limit retained for existing integrations. maxItemsPerUrl takes precedence when supplied.&quot;,
-      &quot;editor&quot;: &quot;number&quot;,
-      &quot;maximum&quot;: 10000,
-      &quot;minimum&quot;: 1,
-      &quot;title&quot;: &quot;Legacy Results Limit&quot;,
-      &quot;type&quot;: &quot;integer&quot;
+    &quot;rehostImages&quot;: {
+      &quot;default&quot;: true,
+      &quot;description&quot;: &quot;Copy primary photos and seller avatars into the actor key-value store so the emitted URLs do not expire. The original Facebook URL is kept in primaryPhotoUrlOriginal. When off, mediaUrlTemporary is emitted.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Rehost Images&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
     },
     &quot;scrapeMode&quot;: {
       &quot;default&quot;: &quot;fast&quot;,
-      &quot;description&quot;: &quot;Fast streams search-page records. Deep visits listing pages for additional fields. Auto follows the detail compatibility setting.&quot;,
+      &quot;description&quot;: &quot;fast streams feed rows. deep fetches each listing page for description, condition, attributes, seller, coordinates, and photos. auto follows includeListingDetails and includeAllPhotos.&quot;,
       &quot;editor&quot;: &quot;select&quot;,
       &quot;enum&quot;: [
         &quot;fast&quot;,
@@ -179,42 +798,55 @@
         &quot;auto&quot;
       ],
       &quot;enumTitles&quot;: [
-        &quot;Fast search results&quot;,
-        &quot;Deep listing details&quot;,
-        &quot;Automatic&quot;
+        &quot;Fast (feed data only)&quot;,
+        &quot;Deep (fetch each listing page)&quot;,
+        &quot;Auto (deep only when details or photos are requested)&quot;
       ],
       &quot;prefill&quot;: &quot;fast&quot;,
       &quot;title&quot;: &quot;Scrape Mode&quot;,
       &quot;type&quot;: &quot;string&quot;
     },
-    &quot;searchQuery&quot;: {
-      &quot;description&quot;: &quot;Keyword or phrase for structured Marketplace discovery, for example laptop, furniture, or used bicycle. Requires location when startUrls is omitted.&quot;,
-      &quot;editor&quot;: &quot;textfield&quot;,
-      &quot;example&quot;: &quot;laptop&quot;,
-      &quot;title&quot;: &quot;Search Query&quot;,
-      &quot;type&quot;: &quot;string&quot;
+    &quot;searchQueries&quot;: {
+      &quot;default&quot;: [],
+      &quot;description&quot;: &quot;One to 20 keywords or phrases (mode=search or mode=auto without URLs). Each query becomes one source.&quot;,
+      &quot;editor&quot;: &quot;stringList&quot;,
+      &quot;example&quot;: [
+        &quot;laptop&quot;,
+        &quot;office chair&quot;
+      ],
+      &quot;prefill&quot;: [
+        &quot;laptop&quot;
+      ],
+      &quot;title&quot;: &quot;Search Queries&quot;,
+      &quot;type&quot;: &quot;array&quot;
     },
     &quot;sortBy&quot;: {
       &quot;default&quot;: &quot;relevance&quot;,
-      &quot;description&quot;: &quot;Requested Marketplace sort order; the actor also sorts by verified output values when applicable.&quot;,
+      &quot;description&quot;: &quot;Server-side sort where Marketplace supports it, plus a client-side re-sort by price or posting time. Rows without a price sort last.&quot;,
       &quot;editor&quot;: &quot;select&quot;,
       &quot;enum&quot;: [
         &quot;relevance&quot;,
         &quot;newest&quot;,
+        &quot;oldest&quot;,
         &quot;price_asc&quot;,
-        &quot;price_desc&quot;
+        &quot;price_desc&quot;,
+        &quot;distance&quot;
       ],
       &quot;enumTitles&quot;: [
         &quot;Relevance&quot;,
-        &quot;Newest&quot;,
+        &quot;Newest first&quot;,
+        &quot;Oldest first&quot;,
         &quot;Price: low to high&quot;,
-        &quot;Price: high to low&quot;
+        &quot;Price: high to low&quot;,
+        &quot;Distance (requires coordinates)&quot;
       ],
+      &quot;prefill&quot;: &quot;relevance&quot;,
       &quot;title&quot;: &quot;Sort Order&quot;,
       &quot;type&quot;: &quot;string&quot;
     },
     &quot;startUrls&quot;: {
-      &quot;description&quot;: &quot;One or more Facebook Marketplace search, category, location, or direct item URLs. Use this or searchQuery plus location.&quot;,
+      &quot;default&quot;: [],
+      &quot;description&quot;: &quot;Marketplace search, city-category, global-category, city-feed, or /marketplace/item/ URLs. In mode=items, a bare numeric listing ID is also accepted.&quot;,
       &quot;editor&quot;: &quot;requestListSources&quot;,
       &quot;example&quot;: [
         {
@@ -224,7 +856,7 @@
       &quot;items&quot;: {
         &quot;properties&quot;: {
           &quot;url&quot;: {
-            &quot;description&quot;: &quot;A valid Facebook Marketplace URL, such as a city feed, search, category, or /marketplace/item/&lt;id&gt; page.&quot;,
+            &quot;description&quot;: &quot;A valid Facebook Marketplace URL or a listing ID in mode=items.&quot;,
             &quot;title&quot;: &quot;URL&quot;,
             &quot;type&quot;: &quot;string&quot;
           }
@@ -239,20 +871,20 @@
           &quot;url&quot;: &quot;https://www.facebook.com/marketplace/nyc/search/?query=laptop&quot;
         }
       ],
-      &quot;title&quot;: &quot;Marketplace URLs&quot;,
+      &quot;title&quot;: &quot;Marketplace URLs or Item IDs&quot;,
       &quot;type&quot;: &quot;array&quot;
     }
   },
   &quot;schemaVersion&quot;: 1,
-  &quot;title&quot;: &quot;Facebook Marketplace Scraper Input&quot;,
+  &quot;title&quot;: &quot;Facebook Marketplace Input&quot;,
   &quot;type&quot;: &quot;object&quot;
 }
-</code></pre></details></section><section class="schema-section" id="output-schema"><h2>Output schema</h2><p>Published result links and storage locations. This schema is not an exhaustive contract for every field in a dataset record.</p><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>listings</code></td><td>string</td><td>optional</td><td>Default dataset containing one JSON object per Marketplace listing, including normalized fields and source attribution.</td></tr></tbody></table></div><p><a href="output-schema.json">Download the published output schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+</code></pre></details></section><section class="schema-section" id="output-schema"><h2>Output schema</h2><p>Published result links and storage locations. This schema is not an exhaustive contract for every field in a dataset record.</p><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>listings</code></td><td>string</td><td>optional</td><td>Default dataset containing one JSON object per Marketplace listing, including normalized canonical fields, legacy Facebook aliases, and source attribution.</td></tr></tbody></table></div><p><a href="output-schema.json">Download the published output schema</a></p><details><summary>View complete JSON</summary><pre><code>{
   &quot;actorOutputSchemaVersion&quot;: 1,
-  &quot;description&quot;: &quot;Facebook Marketplace listings with price, location, photos, delivery method, seller, and listing status per item.&quot;,
+  &quot;description&quot;: &quot;One JSON object per Facebook Marketplace listing. Canonical groups: identity and provenance (id, listingUrl, sourceUrl, sourceType, inputIndex, searchQuery, locationQueried, recordType, scrapedAt), core fields (title, description, price, strikethroughPrice, condition, conditionLabel, attributes, categoryId, categoryName, categorySlug, categoryPath), location (locationText, city, state, latitude, longitude, distanceKm when radius filtering had coordinates), delivery and status (deliveryTypes, shippingAvailable, localPickupAvailable, creationTime, createdAt, listingAgeDays, isLive, isSold, isPending, isHidden, listingStatus), seller (seller with optional profileUrl and dealer, sellerDataAvailability), media (primaryPhotoUrl, primaryPhotoUrlOriginal, mediaUrlTemporary, photos, videoUrl, videos), vehicleDetails (including conditional specs, numberOfOwners, isPaidOff), vehicleVin and vehicleVinSource, and quality/access (dataMode, extractionSource, qualityStatus, missingFields, accessState, detailFetchStatus). Facebook field-name aliases such as marketplace_listing_title, listing_price, marketplace_listing_seller, location, delivery_types, creation_time, primary_listing_photo, listingPhotos, listingVideo, and vehicle are kept when present. Private-seller contact, vehicle features/Carfax/plate/website, and permanent video URLs are not available logged out. Empty values are omitted.&quot;,
   &quot;properties&quot;: {
     &quot;listings&quot;: {
-      &quot;description&quot;: &quot;Default dataset containing one JSON object per Marketplace listing, including normalized fields and source attribution.&quot;,
+      &quot;description&quot;: &quot;Default dataset containing one JSON object per Marketplace listing, including normalized canonical fields, legacy Facebook aliases, and source attribution.&quot;,
       &quot;template&quot;: &quot;{{links.apiDefaultDatasetUrl}}/items&quot;,
       &quot;title&quot;: &quot;Marketplace Listings Dataset&quot;,
       &quot;type&quot;: &quot;string&quot;
@@ -372,19 +1004,55 @@
           &quot;id&quot;,
           &quot;title&quot;,
           &quot;price&quot;,
+          &quot;description&quot;,
+          &quot;condition&quot;,
+          &quot;conditionLabel&quot;,
+          &quot;attributes&quot;,
+          &quot;categoryId&quot;,
+          &quot;categoryName&quot;,
+          &quot;categorySlug&quot;,
+          &quot;categoryPath&quot;,
           &quot;city&quot;,
           &quot;state&quot;,
           &quot;locationText&quot;,
+          &quot;latitude&quot;,
+          &quot;longitude&quot;,
+          &quot;distanceKm&quot;,
+          &quot;deliveryTypes&quot;,
+          &quot;shippingAvailable&quot;,
+          &quot;localPickupAvailable&quot;,
+          &quot;creationTime&quot;,
+          &quot;createdAt&quot;,
+          &quot;listingAgeDays&quot;,
+          &quot;isLive&quot;,
+          &quot;isSold&quot;,
+          &quot;isPending&quot;,
+          &quot;isHidden&quot;,
+          &quot;listingStatus&quot;,
+          &quot;seller&quot;,
+          &quot;sellerDataAvailability&quot;,
+          &quot;primaryPhotoUrl&quot;,
+          &quot;primaryPhotoUrlOriginal&quot;,
+          &quot;mediaUrlTemporary&quot;,
+          &quot;photos&quot;,
+          &quot;videoUrl&quot;,
+          &quot;videos&quot;,
+          &quot;vehicleDetails&quot;,
+          &quot;vehicleVin&quot;,
+          &quot;vehicleVinSource&quot;,
           &quot;sourceUrl&quot;,
           &quot;sourceType&quot;,
           &quot;inputIndex&quot;,
           &quot;searchQuery&quot;,
           &quot;locationQueried&quot;,
+          &quot;dataMode&quot;,
+          &quot;detailFetchStatus&quot;,
           &quot;extractionSource&quot;,
           &quot;qualityStatus&quot;,
           &quot;missingFields&quot;,
           &quot;accessState&quot;,
-          &quot;primaryPhotoUrl&quot;,
+          &quot;recordType&quot;,
+          &quot;scrapedAt&quot;,
           &quot;marketplace_listing_title&quot;,
           &quot;listing_price&quot;,
           &quot;strikethrough_price&quot;,
@@ -423,6 +1091,14 @@
             &quot;format&quot;: &quot;text&quot;,
             &quot;label&quot;: &quot;City&quot;
           },
+          &quot;condition&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Condition&quot;
+          },
+          &quot;deliveryTypes&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Delivery&quot;
+          },
           &quot;listingUrl&quot;: {
             &quot;format&quot;: &quot;link&quot;,
             &quot;label&quot;: &quot;Listing URL&quot;
@@ -446,6 +1122,10 @@
           &quot;qualityStatus&quot;: {
             &quot;format&quot;: &quot;text&quot;,
             &quot;label&quot;: &quot;Quality&quot;
+          },
+          &quot;seller&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Seller&quot;
           },
           &quot;sourceType&quot;: {
             &quot;format&quot;: &quot;text&quot;,
@@ -473,6 +1153,9 @@
           &quot;city&quot;,
           &quot;state&quot;,
           &quot;locationText&quot;,
+          &quot;condition&quot;,
+          &quot;deliveryTypes&quot;,
+          &quot;seller&quot;,
           &quot;primaryPhotoUrl&quot;,
           &quot;sourceUrl&quot;,
           &quot;sourceType&quot;,
@@ -491,56 +1174,18 @@
   }
 }
 </code></pre></details></section><section class="schema-section" id="key-value-schema"><h2>Key-value schema</h2><p>Published key-value store definitions, when provided by this build.</p><p>This definition is not present in the default published build. See the published README for available documentation.</p></section><section id="published-readme"><h2>Published README</h2><details><summary>Read the full published documentation</summary><h2 id="readme-facebook-marketplace-listing-price-extractor">Facebook Marketplace Listing &amp; Price Extractor</h2>
-<p>Pull public Facebook Marketplace listings from a city feed, a category, a keyword search, or a direct item link. Point it at one or more Marketplace URLs — or just give it a keyword and a location — and get back structured rows with price, location, photos, delivery method, and listing status for cars, furniture, electronics, apartments, and everything else people list on Marketplace.</p>
+<p>Extract public Facebook Marketplace listings without cookies, login, or a proxy of your own. Point the actor at Marketplace search, category, city-feed, or direct item URLs, or give it a keyword plus a city, and get one structured row per listing with price, location, delivery, status, seller, photos, and optional detail fields.</p>
 <h2 id="readme-what-this-actor-does">What this actor does</h2>
 <ul>
-<li>Scrapes any mix of Marketplace location feeds, category feeds, keyword-search feeds, and direct item URLs in a single run</li>
-<li>Builds a search feed automatically from a keyword and location when you don't supply a URL</li>
-<li>Filters results by price range, item condition, delivery method, and listing age, checked against the data each listing actually returns</li>
-<li>Can visit each listing's own page for extra detail (description, attributes, additional photos) instead of relying on search-result data alone</li>
-<li>Tags every row with which input URL produced it, so results from several searches stay attributable</li>
-<li>Drops duplicate listing IDs seen across different inputs by default</li>
-<li>Values Facebook doesn't expose are never guessed: core fields stay in every row as empty strings, <code>null</code> or <code>false</code>, and extra source fields appear only when present</li>
+<li>Scrapes keyword searches, city categories, global categories, city/location feeds, and direct item pages in one run.</li>
+<li>Builds a Marketplace search from <code>searchQueries</code> + <code>location</code>, resolving city names, postal codes, and addresses server-side.</li>
+<li>Paginates search and category feeds with Facebook's cursor, stopping on source exhaustion, a repeated cursor, two empty pages, <code>maxPagesPerUrl</code>, or <code>maxItems</code>. There is no fixed row cap: the Phase 6 probe reached 1,694 unique search rows across 71 pages before Facebook returned an empty page 72.</li>
+<li>Reads feed rows in <code>fast</code> mode and fetches each listing page in <code>deep</code> mode for description, condition, attributes, seller, coordinates, gallery, and vehicle fields.</li>
+<li>Applies price, condition, delivery, age, availability, category, and exact-keyword filters against the data each row actually carries.</li>
+<li>Rehosts the primary photo into the actor key-value store by default so the emitted URL does not expire; the original signed URL is retained. If a download fails, the original signed URL is kept and flagged <code>mediaUrlTemporary: true</code>.</li>
+<li>Empty fields are omitted: null, empty-string, empty-list, and empty-object values are never emitted. <code>0</code> and <code>false</code> are preserved.</li>
+<li>Works without user cookies. The proxy ladder starts direct and only escalates when Facebook blocks a request; residential is a hardcoded last resort after free rungs fail, never a schema default.</li>
 </ul>
-<h2 id="readme-output-per-listing">Output per listing</h2>
-<p>Every row has the same core set of fields. When Facebook doesn't expose a value, that field is still present as an empty string, <code>null</code>, <code>false</code> or an empty list rather than being dropped.</p>
-<p><strong>Normalized fields</strong></p>
-<ul>
-<li><code>id</code> — Facebook's Marketplace listing ID</li>
-<li><code>title</code> — the listing title (<code>null</code> if not found)</li>
-<li><code>price</code> — object with <code>amount</code>, <code>currency</code>, <code>formatted</code>, and <code>amountWithOffset</code> (each <code>null</code> when unknown)</li>
-<li><code>city</code>, <code>state</code>, <code>locationText</code> — the listing's location (<code>null</code> when not exposed)</li>
-<li><code>primaryPhotoUrl</code> — URL of the main listing photo</li>
-<li><code>listingUrl</code> — direct link to the listing (<code>https://www.facebook.com/marketplace/item/&lt;id&gt;</code>)</li>
-<li><code>creationTime</code> — when the listing was posted (Unix timestamp), only when Facebook exposes it</li>
-<li><code>listingPhotos</code>, <code>listingVideo</code>, <code>vehicle</code> — extra media and vehicle data, only when the source page includes them</li>
-</ul>
-<p><strong>Run and source information</strong></p>
-<ul>
-<li><code>facebookUrl</code>, <code>sourceUrl</code> — the Marketplace page this row was scraped from (the input URL, or the generated search URL)</li>
-<li><code>sourceType</code> — whether that input was a <code>search</code>, <code>category</code>, <code>location</code>, or <code>direct-item</code> URL</li>
-<li><code>inputIndex</code> — position of the input in <code>startUrls</code>, or <code>-1</code> for a search generated from <code>searchQuery</code> + <code>location</code></li>
-<li><code>searchQuery</code>, <code>locationQueried</code> — the keyword and location behind a generated search; <code>null</code> for rows from <code>startUrls</code></li>
-<li><code>dataMode</code> — <code>fast</code> or <code>deep</code>, depending on whether listing pages were visited</li>
-<li><code>extractionSource</code> — internal label for how the row was found (<code>null</code> when not recorded)</li>
-<li><code>accessState</code> — page-access status for the source; always <code>results</code> on rows that reach the dataset</li>
-<li><code>qualityStatus</code> — <code>complete</code> when both ID and title were found, <code>partial</code> otherwise</li>
-<li><code>missingFields</code> — which of <code>title</code>, <code>price</code>, <code>location</code> couldn't be read for this row</li>
-<li><code>sellerDataAvailability</code> — <code>exposed</code> when the seller's name or ID was found, <code>not_exposed</code> otherwise</li>
-<li><code>scrapedAt</code> — ISO 8601 UTC time the row was written</li>
-</ul>
-<p><strong>Facebook's own field names (kept for compatibility)</strong></p>
-<ul>
-<li><code>marketplace_listing_title</code>, <code>listing_price</code> (<code>formatted_amount</code>, <code>amount</code>, <code>amount_with_offset_in_currency</code>, sometimes <code>currency</code>), <code>strikethrough_price</code>, <code>comparable_price</code>, <code>comparable_price_type</code>, <code>min_listing_price</code>, <code>max_listing_price</code></li>
-<li><code>location.reverse_geocode</code> — <code>city</code>, <code>state</code>, and <code>city_page</code> (<code>display_name</code>, <code>id</code>)</li>
-<li><code>primary_listing_photo</code> — <code>image.uri</code> and photo <code>id</code></li>
-<li><code>is_sold</code>, <code>is_pending</code>, <code>is_live</code>, <code>is_hidden</code>, <code>is_viewer_seller</code> — status flags (<code>is_live</code> is <code>null</code> when unknown)</li>
-<li><code>delivery_types</code> — delivery/pickup methods the seller offers (empty list when not exposed)</li>
-<li><code>marketplace_listing_category_id</code> — Facebook's category ID for the listing</li>
-<li><code>marketplace_listing_seller</code> — seller <code>name</code> and <code>id</code> (empty strings when not exposed)</li>
-<li><code>custom_title</code>, <code>custom_sub_titles_with_rendering_flags</code>, <code>origin_group</code>, <code>listing_video</code>, <code>parent_listing</code></li>
-</ul>
-<p>Any other fields Facebook includes for a listing are passed through under their original names. Examples are <code>redacted_description</code> and <code>attribute_data</code>, which are more common in <code>deep</code> mode.</p>
 <h2 id="readme-input">Input</h2>
 <div class="table-wrap"><table>
 <thead>
@@ -553,176 +1198,307 @@
 </thead>
 <tbody>
 <tr>
-<td><code>startUrls</code></td>
-<td>array</td>
-<td>–</td>
-<td>Marketplace search, category, location, or direct item URLs to scrape</td>
+<td><code>mode</code></td>
+<td>string</td>
+<td><code>auto</code></td>
+<td><code>auto</code> uses <code>startUrls</code> when present, otherwise keyword search. <code>search</code> builds searches from <code>searchQueries</code> + <code>location</code>. <code>urls</code> scrapes Marketplace URLs. <code>items</code> fetches direct item URLs or numeric IDs.</td>
 </tr>
 <tr>
-<td><code>searchQuery</code></td>
-<td>string</td>
-<td>–</td>
-<td>Keyword to search for; only used when <code>startUrls</code> has no valid Marketplace URL, and then <code>location</code> is required</td>
+<td><code>startUrls</code></td>
+<td>array</td>
+<td>none</td>
+<td>Marketplace search, city-category, global-category, city-feed, or <code>/marketplace/item/</code> URLs. In <code>items</code> mode a bare numeric listing ID is also accepted.</td>
+</tr>
+<tr>
+<td><code>searchQueries</code></td>
+<td>array</td>
+<td><code>[]</code></td>
+<td>One to 20 keywords or phrases. Each query becomes one source. Legacy <code>searchQuery</code> is mapped in code.</td>
 </tr>
 <tr>
 <td><code>location</code></td>
 <td>string</td>
-<td>–</td>
-<td>Marketplace location slug or city/state to pair with <code>searchQuery</code>, e.g. <code>nyc</code> or <code>Austin, TX</code></td>
+<td>none</td>
+<td>Marketplace slug, city, postal code, or address, e.g. <code>nyc</code>, <code>Austin, Texas</code>, <code>90210</code>, <code>London</code>. Required for keyword search unless coordinates are provided.</td>
+</tr>
+<tr>
+<td><code>country</code></td>
+<td>string</td>
+<td><code>US</code></td>
+<td>ISO 3166-1 alpha-2 country used when resolving a human location. Use <code>GB</code> for London, <code>CA</code> for Toronto, and so on.</td>
 </tr>
 <tr>
 <td><code>latitude</code></td>
 <td>number</td>
-<td>–</td>
-<td>Center latitude, added to the generated <code>searchQuery</code> search only</td>
+<td>none</td>
+<td>Optional search center latitude. Provide <code>longitude</code> too. Overrides <code>location</code> when both are set.</td>
 </tr>
 <tr>
 <td><code>longitude</code></td>
 <td>number</td>
-<td>–</td>
-<td>Center longitude, added to the generated <code>searchQuery</code> search only</td>
+<td>none</td>
+<td>Optional search center longitude. Provide <code>latitude</code> too.</td>
 </tr>
 <tr>
 <td><code>radiusKm</code></td>
 <td>integer</td>
-<td>–</td>
-<td>Search radius in kilometers (1–500), added to the generated <code>searchQuery</code> search only</td>
+<td><code>65</code></td>
+<td>Search radius in kilometres (1-500). Sent server-side (search uses kilometres; category and city queries convert to metres) and enforced client-side over listing coordinates. Rows whose coordinates are absent cannot be distance-checked and are kept; the status message reports how many were kept that way. URL-mode sources use the radius embedded in the page unless <code>radiusKm</code> is set explicitly.</td>
+</tr>
+<tr>
+<td><code>category</code></td>
+<td>string</td>
+<td><code>all</code></td>
+<td>Curated Marketplace category: <code>vehicles</code>, <code>electronics</code>, <code>furniture</code>, <code>home</code>, <code>tools</code>, <code>sports</code>, <code>toys</code>, <code>appliances</code>, <code>jewelry</code>, <code>autoparts</code>, <code>garden</code>, <code>pets</code>, <code>books</code>, <code>shoes</code>, <code>games</code>, <code>motorcycles</code>, <code>boats</code>, <code>antiques</code>, <code>arts</code>, <code>health</code>, <code>cell-phones</code>, <code>computers</code>, <code>video-games</code>, <code>cameras</code>, or <code>all</code>. With no <code>searchQueries</code>, opens the city or global category feed instead. Books, shoes, games, motorcycles, cell-phones, computers, video-games, and cameras were verified as category feeds but expose no server category ID, so they cannot be used as keyword filters; use <code>categoryId</code> or a category URL instead. Cameras returned rows in the city feed but 0 rows globally in the probe.</td>
 </tr>
 <tr>
 <td><code>categoryId</code></td>
 <td>string</td>
-<td>–</td>
-<td>Facebook Marketplace category ID, added to the generated <code>searchQuery</code> search only</td>
+<td>none</td>
+<td>Advanced numeric Facebook category ID. Takes precedence over <code>category</code>.</td>
 </tr>
 <tr>
 <td><code>sortBy</code></td>
 <td>string</td>
 <td><code>relevance</code></td>
-<td><code>relevance</code>, <code>newest</code>, <code>price_asc</code>, or <code>price_desc</code>. Sent to Facebook for a generated search; the actor also re-orders each batch of rows it writes by price or posting time</td>
+<td><code>relevance</code>, <code>newest</code>, <code>oldest</code>, <code>price_asc</code>, <code>price_desc</code>, or <code>distance</code>. Sent server-side where Marketplace supports it; price and time are re-sorted client-side, with rows missing a price or date last.</td>
 </tr>
 <tr>
 <td><code>minPrice</code></td>
 <td>number</td>
-<td>–</td>
-<td>Only return listings priced at or above this amount; listings without a readable price are dropped</td>
+<td>none</td>
+<td>Minimum price. Listings without a readable price are dropped when set.</td>
 </tr>
 <tr>
 <td><code>maxPrice</code></td>
 <td>number</td>
-<td>–</td>
-<td>Only return listings priced at or below this amount; listings without a readable price are dropped</td>
+<td>none</td>
+<td>Maximum price. Listings without a readable price are dropped when set.</td>
 </tr>
 <tr>
 <td><code>condition</code></td>
 <td>string</td>
 <td><code>any</code></td>
-<td><code>any</code>, <code>new</code>, <code>used_like_new</code>, <code>used_good</code>, or <code>used_fair</code>; listings whose condition can't be read are dropped</td>
+<td><code>any</code>, <code>new</code>, <code>used_like_new</code>, <code>used_good</code>, or <code>used_fair</code>. Sent server-side in search/category modes; checked again in deep mode. Fast rows without condition data are kept.</td>
 </tr>
 <tr>
 <td><code>deliveryMethod</code></td>
 <td>string</td>
 <td><code>all</code></td>
-<td><code>all</code>, <code>shipping</code>, or <code>local</code>; listings without matching delivery data are dropped</td>
+<td><code>all</code>, <code>shipping</code>, or <code>local</code>. Client-side over <code>delivery_types</code>; legacy <code>local_pickup</code> is accepted and normalized to <code>local</code>. Rows without delivery data are dropped while this filter is active.</td>
 </tr>
 <tr>
 <td><code>daysSinceListed</code></td>
 <td>integer</td>
-<td>–</td>
-<td>Only include listings created within this many days; listings without a posting time are dropped</td>
+<td>none</td>
+<td>Only listings created within this many days (1–365). Rows without a posting time are dropped.</td>
+</tr>
+<tr>
+<td><code>availability</code></td>
+<td>string</td>
+<td><code>all</code></td>
+<td><code>all</code>, <code>available</code>, <code>sold</code>, or <code>pending</code>. Client-side over <code>is_live</code>/<code>is_sold</code>/<code>is_pending</code>.</td>
+</tr>
+<tr>
+<td><code>exactMatch</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Keep only rows whose title (and description in deep mode) contains every query word.</td>
 </tr>
 <tr>
 <td><code>maxItems</code></td>
 <td>integer</td>
 <td><code>50</code></td>
-<td>Maximum listings to return across all inputs combined</td>
+<td>Global output limit across all sources (1–10000).</td>
 </tr>
 <tr>
 <td><code>maxItemsPerUrl</code></td>
 <td>integer</td>
 <td><code>50</code></td>
-<td>Maximum listings to return from each individual input URL</td>
+<td>Per-source output limit (1–10000).</td>
 </tr>
 <tr>
-<td><code>resultsLimit</code></td>
+<td><code>maxPagesPerUrl</code></td>
 <td>integer</td>
-<td>–</td>
-<td>Older per-source limit kept for existing integrations; <code>maxItemsPerUrl</code> takes priority when both are set</td>
+<td><code>100</code></td>
+<td>Cost guard for cursor pagination (1–500). The actor stops earlier on source exhaustion, a repeated cursor, two empty pages, or <code>maxItems</code>. The observed search ceiling was 1,694 unique rows over 71 pages; this is not an enforced cap.</td>
 </tr>
 <tr>
 <td><code>scrapeMode</code></td>
 <td>string</td>
 <td><code>fast</code></td>
-<td><code>fast</code> (search-result data only), <code>deep</code> (also visits each listing page for extra fields), or <code>auto</code> (behaves like <code>fast</code> unless <code>includeListingDetails</code> or <code>includeAllPhotos</code> is on)</td>
+<td><code>fast</code> streams feed rows. <code>deep</code> fetches each listing page for description, condition, attributes, seller, coordinates, and photos. <code>auto</code> follows <code>includeListingDetails</code>/<code>includeAllPhotos</code>.</td>
 </tr>
 <tr>
 <td><code>includeListingDetails</code></td>
 <td>boolean</td>
 <td><code>false</code></td>
-<td>Turns on the same per-listing detail fetch as <code>scrapeMode: deep</code></td>
+<td>Compatibility alias that enables deep mode unless <code>scrapeMode</code> is explicitly <code>fast</code>.</td>
 </tr>
 <tr>
 <td><code>includeAllPhotos</code></td>
 <td>boolean</td>
 <td><code>false</code></td>
-<td>Also turns on the per-listing detail fetch (same effect as <code>deep</code>); photos are kept as Facebook exposes them</td>
+<td>Enables deep mode and emits the full photo gallery.</td>
+</tr>
+<tr>
+<td><code>rehostImages</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td>Copy primary photos and seller avatars into the actor key-value store. When off, signed Facebook URLs are emitted as-is (including the seller avatar) with <code>mediaUrlTemporary: true</code>.</td>
 </tr>
 <tr>
 <td><code>deduplicateAcrossInputs</code></td>
 <td>boolean</td>
 <td><code>true</code></td>
-<td>Return each listing ID once across all inputs. When turned off, the same listing can appear in several rows, including repeats from a single input in <code>fast</code> mode</td>
+<td>Emit each listing ID once across sources. Disable to preserve repeats from repeated input URLs.</td>
 </tr>
 <tr>
 <td><code>proxyConfiguration</code></td>
 <td>object</td>
-<td><code>{&quot;useApifyProxy&quot;: true, &quot;apifyProxyGroups&quot;: [&quot;RESIDENTIAL&quot;], &quot;apifyProxyCountry&quot;: &quot;US&quot;}</code></td>
-<td>Proxy used to reach Marketplace. Whenever Apify Proxy is enabled, the actor uses the US residential group regardless of the group or country you pick</td>
+<td>none</td>
+<td>Optional advanced override. The actor works without a proxy and escalates only after a real block. Explicit user configuration is respected exactly.</td>
 </tr>
 </tbody>
 </table></div>
+<h3 id="readme-legacy-inputs">Legacy inputs</h3>
+<p><code>searchQuery</code> is mapped to <code>searchQueries</code> when the new field is absent. <code>resultsLimit</code> is still accepted from API clients and maps to <code>maxItemsPerUrl</code> when that field is absent; it is intentionally not shown in the schema. <code>deliveryMethod: &quot;local_pickup&quot;</code> is normalized to <code>local</code>. The old production input with a US residential <code>proxyConfiguration</code> still runs unchanged, although it is no longer the default.</p>
+<h2 id="readme-output-per-listing">Output per listing</h2>
+<p>Every dataset row is one listing object. Empty values are omitted at every depth; consumers should treat a missing field as unknown rather than <code>null</code>.</p>
+<p><strong>Identity and provenance</strong></p>
+<ul>
+<li><code>id</code>, <code>title</code>, <code>listingUrl</code>, <code>sourceUrl</code>, <code>facebookUrl</code></li>
+<li><code>sourceType</code> (<code>search</code>, <code>category</code>, <code>location</code>, or <code>direct-item</code>), <code>inputIndex</code></li>
+<li><code>searchQuery</code>, <code>locationQueried</code>, <code>categoryQueried</code></li>
+<li><code>recordType</code> (<code>listing</code>), <code>scrapedAt</code></li>
+</ul>
+<p><strong>Core fields</strong></p>
+<ul>
+<li><code>price</code> — <code>{ amount, currency, formatted, amountWithOffset }</code>; <code>currency</code> is usually absent in fast feed rows and present in deep mode</li>
+<li><code>strikethroughPrice</code>, <code>description</code>, <code>condition</code>, <code>conditionLabel</code></li>
+<li><code>attributes</code> — <code>{ name, value, label }</code> entries</li>
+<li><code>categoryId</code>, <code>categoryName</code>, <code>categorySlug</code>, <code>categoryPath</code></li>
+</ul>
+<p><strong>Location</strong></p>
+<ul>
+<li><code>locationText</code>, <code>city</code>, <code>state</code>, <code>latitude</code>, <code>longitude</code>, <code>distanceKm</code> (when the radius filter ran and the listing has coordinates)</li>
+</ul>
+<p><strong>Delivery, status, and age</strong></p>
+<ul>
+<li><code>deliveryTypes</code>, <code>shippingAvailable</code>, <code>localPickupAvailable</code></li>
+<li><code>creationTime</code>, <code>createdAt</code>, <code>listingAgeDays</code></li>
+<li><code>isLive</code>, <code>isSold</code>, <code>isPending</code>, <code>isHidden</code>, <code>isViewerSeller</code>, <code>listingStatus</code></li>
+</ul>
+<p><strong>Seller</strong></p>
+<ul>
+<li><code>seller</code> — <code>{ id, name, profileUrl, profilePictureUrl, rating, ratingCount, ratingsPrivate, dealer }</code></li>
+<li><code>profileUrl</code> is emitted only for stable numeric Facebook user IDs as <code>https://www.facebook.com/profile.php?id=&lt;numeric id&gt;</code>. <code>pfbid...</code> Marketplace seller IDs are session-scoped opaque tokens that often resolve to dead or restricted pages, so they are never turned into profile links.</li>
+<li><code>dealer</code> is emitted only for dealer/business rows (<code>DIRECT_DEALERSHIP</code> or dealer fields present, never <code>PRIVATE_SELLER</code>): <code>{ name, street, city, region, postalCode, country, phone, phoneUniversal }</code>. Private-seller phone/email is never fabricated or collected.</li>
+<li><code>sellerDataAvailability</code> (<code>exposed</code> or <code>not_exposed</code>)</li>
+</ul>
+<p><strong>Media and vehicle</strong></p>
+<ul>
+<li><code>primaryPhotoUrl</code> (rehosted KV URL when rehosting succeeds), <code>primaryPhotoUrlOriginal</code>, <code>mediaUrlTemporary</code>; failed primary, avatar, and gallery rehosts fall back to the original signed URL with the temporary flag set instead of dropping the media.</li>
+<li><code>photos</code> — <code>{ id, url, width, height, caption }</code>; only when <code>includeAllPhotos</code> is enabled</li>
+<li><code>videoUrl</code>, <code>videos</code></li>
+<li><code>vehicleDetails</code> — <code>{ make, model, trim, odometer, transmission, fuelType, exteriorColor, interiorColor, titleStatus, sellerType, condition, specs, numberOfOwners, isPaidOff }</code> for vehicle listings; conditional fields are omitted when Facebook does not expose them</li>
+<li><code>specs</code> — <code>{ gasMileageCity, gasMileageCombined, gasMileageHighway, safetyRatingFront, safetyRatingOverall, safetyRatingRollover, safetyRatingSide, safetyRatingSideBarrier, co2Emissions, engineSize, horsePower }</code>, each as <code>{ value, unit }</code> when present</li>
+<li><code>vehicleVin</code> and <code>vehicleVinSource</code> — <code>structured</code> when Facebook supplies the field, otherwise <code>description</code> only for a checksum-valid 17-character VIN found in the listing text. Invalid VIN-shaped prose is never emitted.</li>
+</ul>
+<p><strong>Quality and access</strong></p>
+<ul>
+<li><code>dataMode</code> (<code>fast</code> or <code>deep</code>), <code>extractionSource</code>, <code>qualityStatus</code> (<code>complete</code> or <code>partial</code>)</li>
+<li><code>missingFields</code> — expected canonical fields that were absent</li>
+<li><code>accessState</code>, <code>detailFetchStatus</code> (deep/direct rows)</li>
+</ul>
+<p><strong>Facebook compatibility aliases</strong></p>
+<p>The actor also emits, when present: <code>marketplace_listing_title</code>, <code>listing_price</code> (<code>amount</code>, <code>formatted_amount</code>, <code>amount_with_offset_in_currency</code>, <code>currency</code>), <code>strikethrough_price</code>, <code>location</code>, <code>is_hidden</code>, <code>is_live</code>, <code>is_pending</code>, <code>is_sold</code>, <code>is_viewer_seller</code>, <code>delivery_types</code>, <code>marketplace_listing_category_id</code>, <code>marketplace_listing_seller</code>, <code>primary_listing_photo</code>, <code>listingPhotos</code>, <code>listingVideo</code>, <code>vehicle</code>, <code>custom_title</code>, <code>custom_sub_titles_with_rendering_flags</code>, <code>origin_group</code>, <code>parent_listing</code>, <code>comparable_price</code>, <code>comparable_price_type</code>, <code>min_listing_price</code>, <code>max_listing_price</code>, <code>redacted_description</code>, <code>attribute_data</code>, <code>creation_time</code>, <code>share_uri</code>, <code>shipping_offered</code>, <code>commerce_badges_info</code>, <code>cross_post_info</code>, <code>search_pivots</code>, and <code>created_with_seller_app</code>. <code>shipping_offered</code> is a raw Facebook compatibility value and can be <code>false</code> even when <code>deliveryTypes</code> contains a shipping value; use the derived <code>shippingAvailable</code> flag instead.</p>
+<h2 id="readme-example-daily-prefill">Example: daily prefill</h2>
+<pre><code class="language-json">{
+  &quot;mode&quot;: &quot;urls&quot;,
+  &quot;startUrls&quot;: [
+    { &quot;url&quot;: &quot;https://www.facebook.com/marketplace/nyc/search/?query=laptop&quot; }
+  ],
+  &quot;maxItems&quot;: 3,
+  &quot;maxItemsPerUrl&quot;: 3,
+  &quot;maxPagesPerUrl&quot;: 1,
+  &quot;scrapeMode&quot;: &quot;fast&quot;,
+  &quot;includeListingDetails&quot;: false,
+  &quot;includeAllPhotos&quot;: false,
+  &quot;rehostImages&quot;: false,
+  &quot;deduplicateAcrossInputs&quot;: true
+}
+</code></pre>
 <h2 id="readme-example-keyword-search-by-city">Example: keyword search by city</h2>
 <pre><code class="language-json">{
-  &quot;searchQuery&quot;: &quot;laptop&quot;,
-  &quot;location&quot;: &quot;New York, NY&quot;,
+  &quot;mode&quot;: &quot;search&quot;,
+  &quot;searchQueries&quot;: [&quot;laptop&quot;, &quot;office chair&quot;],
+  &quot;location&quot;: &quot;Austin, Texas&quot;,
+  &quot;country&quot;: &quot;US&quot;,
+  &quot;radiusKm&quot;: 40,
   &quot;condition&quot;: &quot;used_good&quot;,
   &quot;minPrice&quot;: 50,
   &quot;maxPrice&quot;: 500,
   &quot;maxItems&quot;: 100
 }
 </code></pre>
-<h2 id="readme-example-scrape-a-category-feed-with-full-listing-detail">Example: scrape a category feed with full listing detail</h2>
+<h2 id="readme-example-deep-detail-scrape">Example: deep detail scrape</h2>
 <pre><code class="language-json">{
-  &quot;startUrls&quot;: [{ &quot;url&quot;: &quot;https://www.facebook.com/marketplace/sanfrancisco/instruments&quot; }],
+  &quot;mode&quot;: &quot;urls&quot;,
+  &quot;startUrls&quot;: [
+    { &quot;url&quot;: &quot;https://www.facebook.com/marketplace/nyc/electronics&quot; }
+  ],
   &quot;scrapeMode&quot;: &quot;deep&quot;,
-  &quot;maxItemsPerUrl&quot;: 40
+  &quot;includeAllPhotos&quot;: true,
+  &quot;maxItemsPerUrl&quot;: 20
 }
 </code></pre>
-<h2 id="readme-example-a-single-item-page">Example: a single item page</h2>
+<h2 id="readme-example-direct-item">Example: direct item</h2>
 <pre><code class="language-json">{
-  &quot;startUrls&quot;: [{ &quot;url&quot;: &quot;https://www.facebook.com/marketplace/item/772594759027016/&quot; }]
+  &quot;mode&quot;: &quot;items&quot;,
+  &quot;startUrls&quot;: [
+    { &quot;url&quot;: &quot;https://www.facebook.com/marketplace/item/772594759027016/&quot; }
+  ],
+  &quot;includeAllPhotos&quot;: true
 }
 </code></pre>
 <h2 id="readme-use-cases">Use cases</h2>
 <ul>
-<li><strong>Price monitoring</strong> — track asking prices for a specific product category across cities over time</li>
-<li><strong>Resale and arbitrage</strong> — scan multiple city feeds for underpriced items in a category you resell</li>
-<li><strong>Vehicle shopping</strong> — pull vehicle listings by location and price range instead of scrolling the app</li>
-<li><strong>Apartment hunting</strong> — collect rental listings from several neighborhood feeds into one dataset</li>
-<li><strong>Market research</strong> — compare listing volume and pricing for a product across regions or time periods</li>
+<li><strong>Price monitoring</strong> — track asking prices for a product or category across cities over time.</li>
+<li><strong>Resale and arbitrage</strong> — scan multiple city feeds for underpriced items.</li>
+<li><strong>Vehicle shopping</strong> — pull vehicle listings by location, price range, and condition.</li>
+<li><strong>Apartment hunting</strong> — collect rental and furniture listings from several neighborhoods.</li>
+<li><strong>Market research</strong> — compare listing volume and pricing across regions.</li>
+</ul>
+<h2 id="readme-verified-hard-limits">Verified hard limits</h2>
+<p>These limits were measured in the Phase 6 research and are not configurable away:</p>
+<ul>
+<li><strong>24 listings per search page.</strong> <code>count</code> 24/50/100/250 all return 24; the cursor still advances.</li>
+<li><strong>City feed: 20 listings, no cursor.</strong> The actor keeps the mode for compatibility, warns in the status message, and returns at most 20 rows. Use a keyword or category URL for volume.</li>
+<li><strong>Delivery filter is client-side.</strong> Facebook's delivery server parameters are no-ops (<code>shipping-only</code> returned 0 rows, <code>local-only</code> did not filter). The actor filters on <code>delivery_types</code> after fetching.</li>
+<li><strong>Private-seller contact is not exposed.</strong> No phone, email, or messaging path appears logged out. The actor never fabricates contact data. Dealer rows with <code>DIRECT_DEALERSHIP</code> can expose <code>dealership_name</code>, <code>listing_address</code>, and <code>seller_phone_number</code>; those are emitted in <code>seller.dealer</code> only for dealer rows.</li>
+<li><strong>Vehicle features, Carfax, registration plate, and website link are null logged out.</strong> They are not emitted. VIN is different: structured VIN is always null, but a checksum-valid VIN pasted in the description is emitted with <code>vehicleVinSource: &quot;description&quot;</code>.</li>
+<li><strong>Signed media URLs expire in roughly 4.3–4.5 days.</strong> Primary photos and avatars are rehosted when <code>rehostImages</code> is true; gallery photos are rehosted when <code>includeAllPhotos</code> is enabled. If a download fails (including CDN blocking one network path), the actor retries over an alternate proxy and then keeps the original signed URL with <code>mediaUrlTemporary: true</code>. Videos remain signed and temporary (<code>mediaUrlTemporary: true</code>); safe video rehosting is not implemented.</li>
+<li><strong>Property rentals category is unsupported.</strong> <code>/marketplace/&lt;city&gt;/propertyrentals</code> redirects without usable variables. Use a keyword search such as <code>query=apartment</code> as the workaround.</li>
+<li><strong>Cloud free proxy rungs are blocked.</strong> Direct, fresh-session, and Apify Proxy AUTO returned the login wall on the cloud; residential is the hardcoded last resort after those free rungs and is never a schema default.</li>
 </ul>
 <h2 id="readme-faq">FAQ</h2>
-<p><strong>Why did I get fewer listings than <code>maxItems</code>?</strong>
-<code>maxItems</code> and <code>maxItemsPerUrl</code> are ceilings, not guarantees. A search or feed may simply have fewer matching listings, Facebook may stop loading more as the page is scrolled, or your filters may remove listings that don't expose the data they check. If no listing at all can be returned and Facebook's page wasn't recognised as a genuine empty result, the run is marked as failed with the reason in its status message.</p>
-<p><strong>What's the difference between <code>fast</code> and <code>deep</code> scrape mode?</strong>
-<code>fast</code> reads only what's already on the search/feed results page and writes rows as they are found. <code>deep</code> additionally opens each listing's own page to pick up fields like the description, extra photos, and category-specific attributes (e.g. vehicle details) that aren't shown in the feed view, and writes rows once that source is finished.</p>
-<p><strong>Why is the seller empty on some rows?</strong>
-Facebook doesn't expose seller identity on every listing or in every view. When it isn't on the page, <code>marketplace_listing_seller</code> keeps empty <code>name</code> and <code>id</code> values and <code>sellerDataAvailability</code> is <code>not_exposed</code>.</p>
-<p><strong>Can I combine several searches or cities in one run?</strong>
-Yes. Add multiple entries to <code>startUrls</code>, mixing location feeds, category feeds, search feeds, and direct item URLs as needed; each row records which input it came from via <code>sourceUrl</code> and <code>sourceType</code>. <code>searchQuery</code> and <code>location</code> are ignored as soon as <code>startUrls</code> contains a valid Marketplace URL, so put keyword searches into the URLs themselves when mixing.</p>
+<p><strong>Why did I get fewer rows than <code>maxItems</code>?</strong>
+<code>maxItems</code> and <code>maxItemsPerUrl</code> are ceilings, not guarantees. The source may have fewer matches, Facebook may stop paginating, or client filters may remove rows that lack the evidence they check. If nothing can be returned and no source produced a valid empty result, the run fails with the access states in its status message.</p>
+<p><strong>What is the difference between fast and deep mode?</strong>
+<code>fast</code> reads only the search/category feed and streams rows. <code>deep</code> also fetches each listing page for description, condition, attributes, seller, coordinates, photos, and vehicle detail. Deep rows keep the fast row if a detail fetch fails, with <code>detailFetchStatus</code> set.</p>
+<p><strong>Why is the seller or currency missing on some rows?</strong>
+Facebook does not expose every field in every view. Feed rows usually omit currency, condition, and some seller details; deep mode fills them when available. <code>price.currency</code> is intentionally absent when it cannot be determined rather than guessed.</p>
 <p><strong>Does this need Facebook login or cookies?</strong>
-No. It reads Marketplace pages that are publicly accessible without signing in.</p>
-<p><strong>Do I need to configure a proxy myself?</strong>
-No. The default US residential proxy is what the actor relies on, and when Apify Proxy is enabled it always uses that group and country. To target another region's Marketplace, use that city's Marketplace URL or <code>location</code>.</p>
+No. It reads publicly accessible Marketplace pages without signing in. Private-seller contact details and private profile scraping are not available logged out and are not collected. A <code>seller.profileUrl</code> is derived only from stable numeric seller IDs; session-scoped <code>pfbid...</code> tokens are not linked. Dealer name/address/phone are emitted only for dealer rows that expose them.</p>
+<p><strong>Do I need to configure a proxy?</strong>
+No. The actor starts with a direct TLS-impersonated request and escalates to a fresh session and then Apify Proxy AUTO only when a request is actually blocked. Cloud verification showed all free rungs still return Facebook's login wall, so residential is the hardcoded last resort after them; it is never a schema default. An explicit <code>proxyConfiguration</code> is honored as provided.</p>
+<p><strong>Why is the city feed capped at 20 listings?</strong>
+Facebook's city/location feed returns one page of about 20 listings with no cursor. The actor keeps the mode for compatibility and warns in the status message. Use a keyword or category URL for volume.</p>
+<p><strong>How many listings can a search return?</strong>
+Search and category feeds paginate with a 24-item page. There is no hardcoded 600-row stop. Phase 6 reached 71 pages / 1,694 unique rows, then page 72 returned an empty payload while still reporting <code>has_next_page</code>. The actor stops on source exhaustion, a repeated cursor, two consecutive empty pages, <code>maxPagesPerUrl</code>, or <code>maxItems</code>, so larger jobs need a higher <code>maxPagesPerUrl</code> and <code>maxItems</code> rather than price/category splitting.</p>
+<p><strong>Do photo URLs expire?</strong>
+Facebook CDN URLs are signed and expire in roughly 4.3–4.5 days. With <code>rehostImages: true</code> the primary photo and seller avatar are copied into the actor key-value store so <code>primaryPhotoUrl</code> and the avatar URL are stable; the signed primary URL remains in <code>primaryPhotoUrlOriginal</code>. With <code>rehostImages: false</code>, signed primary and avatar URLs are emitted as-is with <code>mediaUrlTemporary: true</code>. Gallery photos are also rehosted with <code>includeAllPhotos</code>; any photo whose download fails keeps its original signed URL and the row is marked <code>mediaUrlTemporary: true</code>, so the gallery is never silently dropped. Video URLs always remain temporary and are marked with <code>mediaUrlTemporary</code>.</p>
 <p><strong>Is this affiliated with Facebook or Meta?</strong>
-No. This is an independent, third-party actor that reads publicly accessible Facebook Marketplace pages; it is not affiliated with or endorsed by Meta.</p>
-</details></section><section id="python-quickstart"><h2>Python quickstart</h2><p>Use a schema-derived input and the Python standard library to start a run. An Apify account and token are required for execution.</p><p><a href="/apify-actor-examples/guides/DTj8k33mijt0OfkpR/">Open the step-by-step Python guide →</a></p></section><p class="source-note">Source build <code>AK0ywyUr2nZblIv6d</code>. Documentation is regenerated from the default published build; private drafts are not included.</p></article></div></main><footer class="footer"><strong>Nimbryxo Studio</strong><div class="footer-links"><a href="/apify-actor-examples/topics/">Topics</a><a href="/apify-actor-examples/sources/">Documentation sources</a><a href="https://apify.com/nimbryxo-studio">Apify</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></div></footer></body></html>
+No. This is an independent third-party actor that reads publicly accessible Facebook Marketplace pages. It is not affiliated with or endorsed by Meta.</p>
+</details></section><section id="python-quickstart"><h2>Python quickstart</h2><p>Use a schema-derived input and the Python standard library to start a run. An Apify account and token are required for execution.</p><p><a href="/apify-actor-examples/guides/DTj8k33mijt0OfkpR/">Open the step-by-step Python guide →</a></p></section><p class="source-note">Source build <code>hZnF0rAlhJEPRa5AQ</code>. Documentation is regenerated from the default published build; private drafts are not included.</p></article></div></main><footer class="footer"><strong>Nimbryxo Studio</strong><div class="footer-links"><a href="/apify-actor-examples/topics/">Topics</a><a href="/apify-actor-examples/sources/">Documentation sources</a><a href="https://apify.com/nimbryxo-studio">Apify</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></div></footer></body></html>

@@ -1,11 +1,11 @@
 {
   "actorOutputSchemaVersion": 1,
-  "description": "Facebook Page/Profile followers, following, and friends preview rows (up to 8 per target) plus aggregate follower/following counts, with parsed location/workplace/school fields.",
+  "description": "Facebook Page/Profile follower and following rows collected through public cursor pagination, plus per-target summaries with the actual collection name, reported list size, pagination completeness, access state, and follower/following counts. Optional includeProfileDetails enrichment adds row-level counts and About contact/category fields when Facebook exposes them.",
   "properties": {
     "records": {
-      "description": "Dataset containing all scraped follower/following/friend rows and per-target summary records.",
+      "description": "Dataset containing all scraped follower/following rows, per-target summary records, and per-target error records.",
       "template": "{{links.apiDefaultDatasetUrl}}/items",
-      "title": "Followers / Following / Friends records",
+      "title": "Followers / Following records",
       "type": "string"
     }
   },

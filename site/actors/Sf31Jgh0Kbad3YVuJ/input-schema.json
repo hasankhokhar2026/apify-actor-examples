@@ -1,6 +1,22 @@
 {
-  "description": "Collect any public X profile and its posts without login or cookies.",
+  "description": "Collect any public X profile and its posts without login, cookies or API keys.",
   "properties": {
+    "activeWithinDays": {
+      "default": 0,
+      "description": "Optional. Skip accounts whose newest public post is older than this many days. 0 means any. Requires reading the latest posts to evaluate.",
+      "maximum": 36500,
+      "minimum": 0,
+      "prefill": 0,
+      "title": "Active within days",
+      "type": "integer"
+    },
+    "bioKeywords": {
+      "default": [],
+      "description": "Optional. Keep only accounts whose name or bio contains every keyword (case-insensitive).",
+      "editor": "stringList",
+      "title": "Bio keywords",
+      "type": "array"
+    },
     "dateFrom": {
       "description": "Optional. Only keep posts published on or after this date.",
       "editor": "datepicker",
@@ -13,12 +29,19 @@
       "title": "Posted before",
       "type": "string"
     },
+    "enrichEngagement": {
+      "default": true,
+      "description": "Refresh each collected post through its public status page for views, bookmarks and complete media. Adds one request per post. Turn off for the cheapest profile-only runs.",
+      "prefill": false,
+      "title": "Enrich engagement per post",
+      "type": "boolean"
+    },
     "include": {
       "default": [
         "profileInfo",
         "latestPosts"
       ],
-      "description": "Pick one or more data groups. Everything works without cookies; X's login-only About panel is reported as unavailable.",
+      "description": "Pick one or more data groups. Everything works without cookies. `topPosts` is engagement-ranked from the candidate pool (X serves no public Top tab to guests). `replies` and `highlights` are best-effort: X sometimes refuses those guest timelines.",
       "editor": "select",
       "items": {
         "enum": [
@@ -26,69 +49,144 @@
           "latestPosts",
           "topPosts",
           "media",
+          "replies",
+          "highlights",
           "about"
         ],
         "enumTitles": [
           "Profile info (bio, followers, verification)",
           "Latest posts (newest first)",
-          "Top posts (most popular highlights)",
-          "Media posts only (photos and videos)",
-          "About this account (login-only, unavailable)"
+          "Top posts (engagement-ranked)",
+          "Media posts only (photos, videos, GIFs)",
+          "Replies the account sent (best effort)",
+          "Highlights tab (cursor-paged)",
+          "About panel (login-only; reported as unavailable)"
         ],
         "type": "string"
       },
       "prefill": [
-        "profileInfo",
-        "latestPosts"
+        "profileInfo"
       ],
       "title": "What to collect",
       "type": "array",
       "uniqueItems": true
     },
+    "includeHighlights": {
+      "default": false,
+      "description": "Also collect the account's curated Highlights tab. The guest legacy userId query pages the whole set through its bottom cursor (observed 100-1,097 rows on large accounts); the live one-page query remains a fallback.",
+      "prefill": false,
+      "title": "Include Highlights tab",
+      "type": "boolean"
+    },
     "includeReplies": {
       "default": false,
-      "description": "Also collect replies the account sent. Uses the guest UserTweetsAndReplies burst plus profile-scoped `filter:replies` search windows (may be empty when X refuses logged-out callers).",
+      "description": "Keep replies the account sent. Best effort: X only serves the reply timeline to logged-out callers on some attempts.",
       "prefill": false,
       "title": "Include replies",
       "type": "boolean"
     },
     "includeRetweets": {
       "default": false,
-      "description": "Keep retweets in the results. Turn off to get only posts the account wrote itself.",
+      "description": "Keep reposts in the results. Turn off to get only posts the account wrote itself.",
       "prefill": false,
-      "title": "Include retweets",
+      "title": "Include reposts",
       "type": "boolean"
     },
     "language": {
-      "description": "Optional. Keep only posts detected in this language, e.g. `en`, `es`, `ja`. Leave empty for all languages.",
+      "description": "Optional. Keep only posts detected in this language, e.g. `en`, `es`, `ja`. Locale forms such as `en-US` or `pt-BR` are normalized to their two-letter code in code, so old tasks keep working.",
       "editor": "textfield",
       "title": "Post language",
       "type": "string"
     },
+    "maxFollowers": {
+      "default": 0,
+      "description": "Optional. Skip accounts above this follower count. 0 means any.",
+      "maximum": 1000000000,
+      "minimum": 0,
+      "prefill": 0,
+      "title": "Maximum followers",
+      "type": "integer"
+    },
     "maxPostsPerProfile": {
       "default": 50,
-      "description": "Target number of posts per account (1-1000). The actor merges the profile timeline, top posts, the replies timeline and profile-scoped search windows, then de-duplicates by post id before applying this cap. High values are filled with older posts when X search serves logged-out callers.",
+      "description": "Target number of posts per account (1-1000). The actor follows X's guest timeline bottom cursor back to X's ceiling of about 3,200 posts; guest search top-ups are best effort. Filter-heavy runs page until the target number of matching rows is found or the source ceiling is reached. A pinned post can be added beyond this cap when it passes your filters; it stays in chronological order for latest and in ranked order for top.",
       "maximum": 1000,
       "minimum": 1,
+      "prefill": 3,
       "title": "Maximum posts per profile",
+      "type": "integer"
+    },
+    "mediaType": {
+      "default": "any",
+      "description": "Optional. Keep only posts with this media type. `media` in What to collect already limits rows to media posts.",
+      "editor": "select",
+      "enum": [
+        "any",
+        "photos",
+        "videos",
+        "gifs"
+      ],
+      "enumTitles": [
+        "Any media",
+        "Photos only",
+        "Videos only",
+        "GIFs only"
+      ],
+      "prefill": "any",
+      "title": "Media type",
+      "type": "string"
+    },
+    "minAccountAgeDays": {
+      "default": 0,
+      "description": "Optional. Skip accounts younger than this. 0 means any. Accounts without a public join date are skipped when this is set.",
+      "maximum": 100000,
+      "minimum": 0,
+      "prefill": 0,
+      "title": "Minimum account age (days)",
+      "type": "integer"
+    },
+    "minFollowers": {
+      "default": 0,
+      "description": "Optional. Skip accounts below this follower count. 0 means any.",
+      "maximum": 1000000000,
+      "minimum": 0,
+      "prefill": 0,
+      "title": "Minimum followers",
       "type": "integer"
     },
     "minimumLikes": {
       "description": "Optional. Drop posts with fewer likes than this.",
+      "maximum": 1000000000,
       "minimum": 0,
       "title": "Minimum likes",
       "type": "integer"
     },
+    "minimumQuotes": {
+      "description": "Optional. Drop posts with fewer quotes than this. Posts whose quote count X does not expose are dropped when this is set.",
+      "maximum": 1000000000,
+      "minimum": 0,
+      "title": "Minimum quotes",
+      "type": "integer"
+    },
     "minimumReplies": {
       "description": "Optional. Drop posts with fewer replies than this.",
+      "maximum": 1000000000,
       "minimum": 0,
       "title": "Minimum replies",
       "type": "integer"
     },
     "minimumRetweets": {
-      "description": "Optional. Drop posts with fewer retweets than this.",
+      "description": "Optional. Drop posts with fewer reposts than this.",
+      "maximum": 1000000000,
       "minimum": 0,
-      "title": "Minimum retweets",
+      "title": "Minimum reposts",
+      "type": "integer"
+    },
+    "minimumViews": {
+      "description": "Optional. Drop posts with fewer views than this. Posts whose view count X does not expose are dropped when this is set.",
+      "maximum": 1000000000000,
+      "minimum": 0,
+      "title": "Minimum views",
       "type": "integer"
     },
     "onlyVerified": {
@@ -100,38 +198,77 @@
     },
     "onlyWithMedia": {
       "default": false,
-      "description": "Keep only posts that contain photos, videos or GIFs.",
+      "description": "Keep only posts that contain media.",
       "prefill": false,
-      "title": "Only posts with images or videos",
+      "title": "Only posts with images, videos or GIFs",
       "type": "boolean"
     },
+    "postUrls": {
+      "default": [],
+      "description": "Optional. Collect these exact posts (focal post plus up to 3 replies each) in addition to the profiles above. Accepts `https://x.com/user/status/123` or a numeric post id.",
+      "editor": "stringList",
+      "example": [
+        "https://x.com/NASA/status/2114801524358406570"
+      ],
+      "title": "Specific post URLs or ids",
+      "type": "array"
+    },
     "proxyConfiguration": {
-      "description": "Optional. Use a proxy if you plan large runs or see frequent rate limits.",
+      "description": "Optional. The actor works without a proxy and tries a direct connection first. Use this only if you want to override the built-in direct -> Apify AUTO escalation.",
       "editor": "proxy",
+      "prefill": {
+        "useApifyProxy": false
+      },
       "sectionCaption": "Advanced",
       "sectionDescription": "Optional extras. The actor works fully without these.",
       "title": "Proxy configuration",
       "type": "object"
     },
     "usernames": {
-      "description": "Accounts to collect. Paste handles like `elonmusk`, `@apify`, or full links like `https://x.com/elonmusk`. Handles and links can be mixed.",
+      "default": [],
+      "description": "Accounts to collect. Paste handles like `elonmusk`, `@apify`, profile links like `https://x.com/elonmusk`, numeric ids like `11348282` or `id:11348282`. Handles, links and ids can be mixed.",
       "editor": "stringList",
       "example": [
-        "elonmusk",
-        "https://x.com/apify"
+        "NASA",
+        "https://x.com/apify",
+        "id:11348282"
       ],
-      "minItems": 1,
       "prefill": [
-        "elonmusk"
+        "NASA"
       ],
-      "title": "Twitter usernames or profile links",
+      "title": "X usernames, profile links or numeric ids",
       "type": "array"
+    },
+    "verifiedType": {
+      "default": "any",
+      "description": "Optional. Keep only accounts with this verification type. X and FxTwitter labels are normalized in code.",
+      "editor": "select",
+      "enum": [
+        "any",
+        "blue",
+        "business",
+        "government"
+      ],
+      "enumTitles": [
+        "Any verification",
+        "Blue / individual",
+        "Business / organization",
+        "Government"
+      ],
+      "prefill": "any",
+      "title": "Verification type",
+      "type": "string"
+    },
+    "withWebsiteOnly": {
+      "default": false,
+      "description": "Skip accounts that expose no website link in their profile or bio.",
+      "prefill": false,
+      "title": "Only accounts with a website",
+      "type": "boolean"
     }
   },
-  "required": [
-    "usernames"
-  ],
+  "required": [],
   "schemaVersion": 1,
-  "title": "Twitter (X) Profile Scraper",
+  "title": "X (Twitter) Profile & Post Engagement Extractor",
   "type": "object"
 }

@@ -1,8 +1,152 @@
 {
   "actorSpecification": 1,
-  "title": "Yahoo Finance tickers",
+  "title": "Yahoo Finance records",
   "views": {
-    "overview": {
+    "discovery": {
+      "display": {
+        "component": "table",
+        "properties": {
+          "currentPrice": {
+            "format": "number",
+            "label": "Price"
+          },
+          "dayChangePercent": {
+            "format": "number",
+            "label": "%"
+          },
+          "exchange": {
+            "format": "text",
+            "label": "Exchange"
+          },
+          "industry": {
+            "format": "text",
+            "label": "Industry"
+          },
+          "longName": {
+            "format": "text",
+            "label": "Long name"
+          },
+          "name": {
+            "format": "text",
+            "label": "Name"
+          },
+          "quoteType": {
+            "format": "text",
+            "label": "Quote type"
+          },
+          "rank": {
+            "format": "number",
+            "label": "Rank"
+          },
+          "recordType": {
+            "format": "text",
+            "label": "Type"
+          },
+          "region": {
+            "format": "text",
+            "label": "Region"
+          },
+          "screenerId": {
+            "format": "text",
+            "label": "Screener"
+          },
+          "screenerName": {
+            "format": "text",
+            "label": "Screener name"
+          },
+          "sector": {
+            "format": "text",
+            "label": "Sector"
+          },
+          "shortName": {
+            "format": "text",
+            "label": "Short name"
+          },
+          "sourceUrl": {
+            "format": "link",
+            "label": "Yahoo URL"
+          },
+          "ticker": {
+            "format": "text",
+            "label": "Ticker"
+          }
+        }
+      },
+      "title": "Discovery results",
+      "transformation": {
+        "fields": [
+          "recordType",
+          "ticker",
+          "name",
+          "longName",
+          "shortName",
+          "exchange",
+          "quoteType",
+          "sector",
+          "industry",
+          "screenerId",
+          "screenerName",
+          "region",
+          "rank",
+          "currentPrice",
+          "dayChangePercent",
+          "sourceUrl"
+        ]
+      }
+    },
+    "errors": {
+      "display": {
+        "component": "table",
+        "properties": {
+          "error": {
+            "format": "text",
+            "label": "Error"
+          },
+          "message": {
+            "format": "text",
+            "label": "Message"
+          },
+          "reason": {
+            "format": "text",
+            "label": "Reason"
+          },
+          "recordType": {
+            "format": "text",
+            "label": "Type"
+          },
+          "scrapedAt": {
+            "format": "text",
+            "label": "Scraped at"
+          },
+          "sourceUrl": {
+            "format": "link",
+            "label": "Yahoo URL"
+          },
+          "ticker": {
+            "format": "text",
+            "label": "Ticker"
+          },
+          "type": {
+            "format": "text",
+            "label": "Error type"
+          }
+        }
+      },
+      "title": "Errors",
+      "transformation": {
+        "fields": [
+          "recordType",
+          "type",
+          "error",
+          "ticker",
+          "reason",
+          "message",
+          "sourceUrl",
+          "scrapedAt"
+        ]
+      }
+    },
+    "tickers": {
       "display": {
         "component": "table",
         "properties": {
@@ -30,11 +174,15 @@
             "format": "number",
             "label": "Market Cap"
           },
+          "marketState": {
+            "format": "text",
+            "label": "Market"
+          },
           "sector": {
             "format": "text",
             "label": "Sector"
           },
-          "summaryUrl": {
+          "sourceUrl": {
             "format": "link",
             "label": "Yahoo URL"
           },
@@ -44,7 +192,7 @@
           }
         }
       },
-      "title": "Stock overview",
+      "title": "Ticker overview",
       "transformation": {
         "fields": [
           "ticker",
@@ -55,7 +203,8 @@
           "currentPrice",
           "marketCap",
           "dayChangePercent",
-          "summaryUrl"
+          "marketState",
+          "sourceUrl"
         ]
       }
     }

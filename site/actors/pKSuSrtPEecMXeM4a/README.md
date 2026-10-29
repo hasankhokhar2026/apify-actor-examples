@@ -1,136 +1,342 @@
 # Yahoo Finance Market Data & Fundamentals Scraper
 
-Give this actor a list of ticker symbols and it returns everything Yahoo Finance shows on a quote page in one structured record per ticker: live quote data, historical price candles, financial statements, dividends and splits, news, analyst ratings, and holder data. Works for stocks, ETFs, indices, currency pairs, and crypto.
+Yahoo Finance is the default reference point for public market data, but its quote pages mix delayed prices, statements, analyst views, holder tables and option chains across dozens of separate views. This actor turns those views into one clean dataset: give it a watchlist, a search phrase, a screener, a region or nothing at all for a market overview, and receive structured records with source URLs and timestamps. It works for stocks, ETFs, mutual funds, indices, currency pairs, futures and crypto, and needs no account, API key or proxy setup.
 
 ## What this actor does
 
-- Fetches a quote snapshot per ticker covering the company, intraday price, 52-week range, valuation ratios, and dividend yield
-- Optionally pulls daily/weekly/monthly price history for a date range you choose
-- Optionally pulls income statement, balance sheet, cash flow, dividends, splits, news, analyst recommendations, and institutional/mutual-fund holders
-- Supports US equities, ETFs, foreign-suffix tickers, market indices, currency pairs, and crypto symbols
-- Fields a ticker doesn't have data for are omitted; a ticker that fails entirely gets an `error` field instead of breaking the run
+- **Six modes:** `tickers` (default), `search`, `screener`, `customScreener`, `trending`, `marketSummary`
+- **Deep quote data:** regular, pre-market and US post-market prices, bid/ask, day and 52-week ranges, valuation ratios, margins, growth, short interest, analyst targets and company risk scores
+- **History and events:** 13 chart intervals, 11 ranges, optional pre/post-market bars, adjusted close, full dividend history and split history
+- **Statements and ownership:** annual and quarterly income, balance-sheet and cash-flow statements with expanded high-fill fields; institutional, fund, major-holder and insider data
+- **Options and funds:** multiple current expirations with contract-level filters; ETF/mutual-fund profile, top holdings, bond ratings, sector weights, Morningstar ratings and performance
+- **Research extras:** search results with a localized lookup fallback, 22 predefined screeners, a region-aware custom screener, region-based trending symbols, market summary, up to 200 news items, analyst ratings, SEC filings and related symbols
+- **Empty fields are omitted** — optional data that Yahoo does not publish for a symbol is left out rather than emitted as `null`, `""` or `[]`
 
-## Output per ticker
+## Output per ticker (mode = `tickers`)
 
-- `ticker` — uppercase ticker symbol
-- `summaryUrl` — the ticker's Yahoo Finance page
-- `companyName`, `shortName` — full and short company name
-- `sector`, `industry`, `country` — classification fields
-- `currency`, `exchange`, `quoteType` — quote currency, exchange code, and instrument type (`EQUITY`, `ETF`, `INDEX`, `CURRENCY`, `MUTUALFUND`, `CRYPTOCURRENCY`)
-- `website`, `businessSummary` — company URL and description
-- `marketCap`, `fullTimeEmployees` — company fundamentals
-- `currentPrice`, `previousClose`, `open`, `dayHigh`, `dayLow` — intraday quote
-- `fiftyTwoWeekHigh`, `fiftyTwoWeekLow` — 52-week range
-- `volume`, `averageVolume` — share volume
-- `beta`, `trailingPE`, `forwardPE`, `trailingEps` — valuation ratios
-- `dividendYield`, `dividendRate` — current dividend stats
-- `dayChange`, `dayChangePercent` — derived from current price vs. previous close
-- `history` — OHLCV rows (`date, open, high, low, close, volume, dividends, stock_splits`), plus `historyCount`, when `includeHistory` is on
-- `dividends`, `splits` — `{date, value}` rows, plus their counts, when their respective inputs are on
-- `financials` — nested `{income, balance, cashflow, quarterly?}` blocks by period, when `includeFinancials` is on
-- `news` — up to 25 `{title, url, publisher, publishedAt}` rows, plus `newsCount`, when `includeNews` is on
-- `recommendations` — `{strongBuy, buy, hold, sell, strongSell}` analyst-rating summary, when `includeRecommendations` is on
-- `earningsHistory` — up to 4 quarters of `{quarter, epsActual, epsEstimate, epsDifference, surprisePercent}`, when `includeEarningsHistory` is on
-- `holders` — `{institutional, mutualFund}` arrays, when `includeHolders` is on
-- `calendar` — upcoming earnings/dividend dates and analyst estimates, when `includeEarningsCalendar` is on
-- `analystPriceTargets` — `{current, high, low, mean, median}`, when `includeAnalystPriceTargets` is on
-- `insiderTransactions`, `insiderTransactionCount` — insider transactions (officers/directors/10%-owners) Yahoo currently lists for the ticker, when `includeInsiderTransactions` is on
-- `options`, `optionExpirations` — next-expiration option chain and the next 20 expiry dates, when `includeOptions` is on
-- `sustainability` — ESG scores, when `includeSustainability` is on and Yahoo publishes them for the ticker
-- `error` — present instead of most other fields when the ticker couldn't be fetched (typo, delisted, regional restriction)
-- `scrapedAt` — ISO 8601 UTC timestamp
+Every ticker record includes `recordType: "ticker"`, `ticker`, `summaryUrl`, `sourceUrl`, `scrapedAt`, and the fields below when Yahoo publishes them. Empty values are omitted.
+
+### Identity and quote
+
+- `companyName`, `shortName`, `sector`, `industry`, `country`, `website`, `businessSummary`, `fullTimeEmployees`
+- `currency`, `financialCurrency`, `exchange`, `exchangeFullName`, `market`, `marketState`, `quoteType`, `timezone`
+- `currentPrice`, `previousClose`, `open`, `dayHigh`, `dayLow`, `fiftyTwoWeekHigh`, `fiftyTwoWeekLow`
+- `dayChange`, `dayChangePercent`, `volume`, `averageVolume`, `averageDailyVolume10Day`, `averageDailyVolume3Month`
+- `bid`, `ask`, `bidSize`, `askSize`, `fiftyDayAverage`, `twoHundredDayAverage`
+- `preMarketPrice`, `preMarketChange`, `preMarketChangePercent`, `preMarketTime`, `hasPrePostMarketData`
+- `postMarketPrice`, `postMarketChange`, `postMarketChangePercent`, `postMarketTime` — US-listed equities and ETFs when Yahoo publishes an extended-hours quote
+- `fulldayPrice`, `fulldayChange`, `fulldayChangePercent`, `quoteSource`, `exchangeDataDelayedBy`, `firstTradeDate`
+- `marketCap`, `sharesOutstanding`, `floatShares`, `impliedSharesOutstanding`
+
+### Valuation, profitability and dividends
+
+- `beta`, `trailingPE`, `forwardPE`, `trailingEps`, `epsForward`, `epsCurrentYear`, `priceEpsCurrentYear`, `priceToBook`, `bookValue`
+- `enterpriseValue`, `enterpriseToRevenue`, `enterpriseToEbitda`, `profitMargins`, `operatingMargins`, `grossMargins`, `ebitdaMargins`
+- `returnOnAssets`, `returnOnEquity`, `revenueGrowth`, `earningsGrowth`, `revenuePerShare`
+- `totalCash`, `totalDebt`, `totalCashPerShare`, `freeCashflow`, `operatingCashflow`, `currentRatio`, `quickRatio`, `debtToEquity`, `payoutRatio`
+- `dividendRate`, `dividendYield`, `trailingAnnualDividendRate`, `trailingAnnualDividendYield`, `exDividendDate`, `dividendDate`
+- `fiveYearAvgDividendYield`, `lastDividendValue`, `lastDividendDate`, `lastSplitFactor`, `lastSplitDate`
+- `sharesShort`, `sharesShortPriorMonth`, `shortRatio`, `shortPercentOfFloat`, `sharesPercentSharesOut`, `heldPercentInsiders`, `heldPercentInstitutions`
+- `52WeekChange`, `SandP52WeekChange`, `mostRecentQuarter`, `lastFiscalYearEnd`, `nextFiscalYearEnd`
+- `recommendationKey`, `recommendationMean`, `numberOfAnalystOpinions`, `targetHighPrice`, `targetLowPrice`, `targetMeanPrice`, `targetMedianPrice`
+- `earningsTimestamp`, `earningsTimestampStart`, `earningsTimestampEnd`, `isEarningsDateEstimate`, `earningsCallTimestampStart`, `earningsCallTimestampEnd`, `averageAnalystRating`
+
+### Company profile and risk
+
+- `address1`, `city`, `state`, `zip`, `phone`, `irWebsite`
+- `auditRisk`, `boardRisk`, `compensationRisk`, `shareHolderRightsRisk`, `overallRisk`, `governanceEpochDate`, `compensationAsOfEpochDate`
+- `companyOfficers[]` — `name`, `title`, `age`, `totalPay`, `exercisedValue`, `unexercisedValue`
+- `statistics` — curated key statistics and financial-data ratios
+
+### History and corporate actions (when enabled)
+
+- `history[]` — `date`, `datetime`, `open`, `high`, `low`, `close`, `adjclose`, `volume`, `dividends`, `stock_splits`
+- `historyCount`
+- `dividends[]` — `date`, `value`; `dividendCount`. Dates are actual event dates when Yahoo exposes them, not month-start chart keys
+- `splits[]` — `date`, `value`, `numerator`, `denominator`, `splitRatio`; `splitCount`
+- `capitalGains[]` — when Yahoo publishes a capital-gain event
+
+### Financial statements (when `includeFinancials` is on)
+
+- `financials.income`, `financials.balance`, `financials.cashflow` — each keyed by fiscal period, with statement values in the reporting currency. The curated set covers 122 high-fill Yahoo types, including `EBIT`, `EBITDA`, `Net_Tangible_Assets`, `Beginning_Cash_Position`, `Invested_Capital` and `Tax_Rate_For_Calcs`; the legacy nested shape and underscore labels are unchanged
+- `financials.quarterly.income`, `financials.quarterly.balance`, `financials.quarterly.cashflow` — when `includeQuarterlyFinancials` is on
+- `financials.currency` — reporting currency
+- `financials.periods` — available annual and quarterly period dates
+
+### News, analyst and earnings
+
+- `news[]` — `title`, `url`, `publisher`, `publishedAt`, `type`, `relatedTickers`, `thumbnailUrl`, `summary`, `description` when Yahoo provides them; `newsCount`. The primary feed is Yahoo's Finance Nexus graph with cursor pagination, so `maxNews` can go up to 200; search news and the HTML page remain fallbacks
+- `recommendations` — `strongBuy`, `buy`, `hold`, `sell`, `strongSell`
+- `recommendationTrend[]` — `period`, `strongBuy`, `buy`, `hold`, `sell`, `strongSell`
+- `upgradeDowngradeHistory[]` — `firm`, `fromGrade`, `toGrade`, `action`, `priceTargetAction`, `currentPriceTarget`, `priorPriceTarget`, `gradeDate`
+- `analystPriceTargets` — `current`, `high`, `low`, `mean`, `median`
+- `earningsHistory[]` — `quarter`, `epsActual`, `epsEstimate`, `epsDifference`, `surprisePercent`
+- `earningsDates[]` — `date`, `reportedDate`, `epsEstimate`, `reportedEps`, `surprisePercent`
+- `earningsEstimates` — `earnings[]`, `revenue[]`, `growthEstimates[]`
+- `calendarEvents` — `earningsDate`, `earningsCallDate`, `isEarningsDateEstimate`, `earningsAverage`, `earningsLow`, `earningsHigh`, `revenueAverage`, `revenueLow`, `revenueHigh`, `exDividendDate`, `dividendDate`
+- `calendar` — the same dates and estimates with legacy snake-case keys
+
+### Holders and insiders (when enabled)
+
+- `holders.institutional[]`, `holders.mutualFund[]` — `Date_Reported`, `Holder`, `pctHeld`, `Shares`, `Value`, `pctChange`
+- `holders.major` — `insidersPercentHeld`, `institutionsPercentHeld`, `institutionsFloatPercentHeld`, `institutionsCount`
+- `holders.insiderHolders[]` — `name`, `relation`, `transactionDescription`, `latestTransDate`, `positionDirect`, `positionIndirect`, `valueDirect`
+- `holders.netSharePurchaseActivity` — buy/sell/net counts and shares, insider percentages and institutional net buying
+- `insiderTransactions[]` — `Shares`, `Value`, `URL`, `Text`, `Insider`, `Position`, `Transaction`, `Start_Date`, `Ownership`; `insiderTransactionCount`
+
+### Options (when `includeOptions` is on)
+
+- `optionExpirations[]` — upcoming expiration dates
+- `options` — `expiration`, `calls[]`, `puts[]`, and an underlying `quote`
+- `optionChains[]` — present when more than one expiration is requested
+- Contract fields: `contractSymbol`, `strike`, `currency`, `lastPrice`, `change`, `percentChange`, `volume`, `openInterest`, `bid`, `ask`, `contractSize`, `expiration`, `lastTradeDate`, `impliedVolatility`, `inTheMoney`
+
+### Funds, filings and research extras
+
+- `fundProfile` — `family`, `categoryName`, `legalType`, `annualReportExpenseRatio`, `annualHoldingsTurnover`, `totalNetAssets` (absolute value, not millions), `managerName`, `managerBio`, `inceptionDate` (fund inception when Yahoo publishes it; omitted otherwise)
+- `topHoldings` — `cashPosition`, `stockPosition`, `bondPosition`, `otherPosition`, `preferredPosition`, `convertiblePosition`, `holdings[]`, `equityHoldings`, `bondHoldings`, `otherHoldings`, `bondRatings[]`, `sectorWeightings[]` (rating and sector rows are `{key, value}`; equity sector weights are empty for non-equity funds such as GLD and TLT)
+- `fundPerformance` — `asOfDate`, benchmark fields, period returns, fund averages and `morningStarOverallRating` / `morningStarRiskRating` for mutual funds
+- `secFilings[]` — `date`, `type`, `title`, `edgarUrl`, `exhibits[]`
+- `insights` — technical outlook, key technicals, valuation, research reports and significant developments
+- `relatedSymbols[]` — `symbol`, `score`
+- `requestedTicker` — present when an input alias resolved to a different Yahoo symbol (for example `BRK.B` → `BRK-B`)
+
+## Output: discovery modes
+
+### `searchResult` (mode = `search`)
+
+`recordType`, `ticker`, `sourceUrl`, `scrapedAt`, `name`, `longName`, `exchange`, `exchangeDisplay`, `quoteType`, `typeDisplay`, `sector`, `industry`, `score`, `isYahooFinance`, optional `quote` snapshot.
+
+### `screenerResult` (mode = `screener` or `customScreener`)
+
+`recordType`, `ticker`, `sourceUrl`, `scrapedAt`, `screenerId`, `screenerName`, `rank`, plus quote fields such as `currentPrice`, `previousClose`, `marketCap`, `trailingPE`, `forwardPE`, `dividendYield`, `fiftyTwoWeekHigh`, `fiftyTwoWeekLow`, `volume`, `averageVolume`, `dayChange`, `dayChangePercent`, `quoteType`, `exchange`, `currency`, `marketState`, pre-market/post-market fields and `fullday*` fields. Custom rows also include `region` and `screenerSort`.
+
+### `trendingSymbol` (mode = `trending`)
+
+`recordType`, `ticker`, `sourceUrl`, `scrapedAt`, `region`, `rank`, plus the same quote fields when Yahoo returns them.
+
+### `marketSummary` (mode = `marketSummary`)
+
+`recordType`, `ticker`, `sourceUrl`, `scrapedAt`, `shortName`, `fullExchangeName`, `quoteType`, `marketState`, `currentPrice`, `dayChange`, `dayChangePercent`, `previousClose`, `regularMarketTime`, `typeDisplay`.
+
+### `error`
+
+`recordType: "error"`, `type: "yahoo_finance_error"`, `error`, `ticker`, `reason`, `message`, `sourceUrl`, `scrapedAt`. `error` mirrors the legacy short reason (`no_data`). Invalid or delisted symbols produce this record instead of a partial ticker record.
 
 ## Input
 
 | Field | Type | Default | Description |
 |---|---|---|---|
-| `tickers` | array | – | **Required.** Ticker symbols to fetch. |
-| `startDate` | string | – | Earliest date for historical price data (`YYYY-MM-DD`); defaults to 30 days before today when left empty. |
-| `endDate` | string | – | Latest date for historical price data (`YYYY-MM-DD`); defaults to today when left empty. |
-| `interval` | string | `1d` | `1d`, `5d`, `1wk`, `1mo`, or `3mo`. |
-| `includeHistory` | boolean | `true` | Include daily/weekly/monthly OHLCV candles. |
-| `includeFinancials` | boolean | `false` | Include income statement, balance sheet, and cash flow. |
-| `includeDividends` | boolean | `true` | Include dividend payment history. |
-| `includeSplits` | boolean | `true` | Include stock split history. |
-| `includeNews` | boolean | `true` | Include the latest news headlines (capped at 25). |
-| `includeRecommendations` | boolean | `true` | Include the analyst recommendation breakdown. |
-| `includeHolders` | boolean | `false` | Include institutional and mutual-fund holders (capped at 25 each). |
-| `includeOptions` | boolean | `false` | Include the next-expiration option chain (capped at 50 strikes per side). |
-| `includeEarningsCalendar` | boolean | `true` | Include upcoming earnings/dividend dates and analyst estimates. |
-| `includeAnalystPriceTargets` | boolean | `true` | Include the analyst price-target summary. |
-| `includeInsiderTransactions` | boolean | `false` | Include insider transactions (officers/directors/10%-owners) Yahoo currently lists. |
-| `includeSustainability` | boolean | `false` | Include ESG scores, where Yahoo publishes them. |
-| `includeQuarterlyFinancials` | boolean | `false` | Include quarterly statements under `financials.quarterly`. Only applies when `includeFinancials` is also on. |
-| `includeEarningsHistory` | boolean | `true` | Include the last 4 quarters of EPS actual vs. estimate. |
-| `concurrency` | integer | `4` | Number of tickers processed at once (1–16). |
+| `mode` | string | `tickers` | `tickers` / `search` / `screener` / `customScreener` / `trending` / `marketSummary` |
+| `tickers` | array | – | Symbols or Yahoo quote URLs (mode=tickers). |
+| `searchQuery` | string | – | Company or symbol name (mode=search). |
+| `maxSearchResults` | integer | `10` | Search results to return (1–50). |
+| `screenerId` | string | `day_gainers` | One of 22 Yahoo predefined screeners (mode=screener). |
+| `screenerSort` | string | `intradaymarketcap` | `intradaymarketcap` / `percentchange` / `dayvolume` (mode=customScreener). |
+| `region` | string | `US` | Market region for quotes, search, trending and the custom screener. |
+| `language` | string | `en-US` | Language for names, news and labels. |
+| `range` | string | `1mo` | Chart range when no dates are supplied. |
+| `startDate` | string | – | History start (`YYYY-MM-DD`); overrides `range`. |
+| `endDate` | string | – | History end (`YYYY-MM-DD`); overrides `range`. |
+| `interval` | string | `1d` | `1m` … `3mo`; intraday combinations are range-limited. |
+| `includePrePost` | boolean | `false` | Include extended-hours intraday bars. |
+| `includeHistory` | boolean | `true` | Include OHLCV history. |
+| `includeDividends` | boolean | `true` | Include full dividend history. |
+| `includeSplits` | boolean | `true` | Include split history. |
+| `includeNews` | boolean | `true` | Include ticker news. |
+| `maxNews` | integer | `25` | News items per ticker (1–200). |
+| `includeFinancials` | boolean | `false` | Include annual statements. |
+| `includeQuarterlyFinancials` | boolean | `false` | Add quarterly statements; requires `includeFinancials`. |
+| `includeHolders` | boolean | `false` | Include holder summaries. |
+| `includeInsiders` | boolean | `false` | Include insider transactions and net purchase activity. |
+| `includeOptions` | boolean | `false` | Include option chains. |
+| `optionExpirations` | integer | `1` | Upcoming expirations to fetch (1–25). |
+| `maxOptionContracts` | integer | `50` | Calls and puts per expiration (1–500 each). |
+| `optionContractType` | string | `both` | `both` / `calls` / `puts`. |
+| `minStrike` | number | – | Minimum option strike. |
+| `maxStrike` | number | – | Maximum option strike. |
+| `minVolume` | integer | – | Minimum option volume. |
+| `minOpenInterest` | integer | – | Minimum option open interest. |
+| `minImpliedVolatilityPercent` | number | – | Minimum IV, e.g. `25` = 25%. |
+| `includeRecommendations` | boolean | `true` | Recommendation summary and trend. |
+| `includeUpgradesDowngrades` | boolean | `false` | Analyst rating changes. |
+| `includeAnalystPriceTargets` | boolean | `true` | Price-target summary. |
+| `includeEarningsHistory` | boolean | `true` | Recent EPS actuals vs estimates. |
+| `includeEarningsEstimates` | boolean | `false` | Forward EPS/revenue estimates. |
+| `includeEarningsCalendar` | boolean | `true` | Upcoming earnings and dividend dates. |
+| `includeFundData` | boolean | `false` | ETF/mutual-fund profile, holdings and performance. |
+| `includeSecFilings` | boolean | `false` | Recent SEC filings. |
+| `includeInsights` | boolean | `false` | Technical outlook, reports and developments. |
+| `includeRelatedSymbols` | boolean | `false` | Yahoo related-symbol recommendations. |
+| `maxResults` | integer | `50` | Record cap for discovery modes (1–5000). |
+| `concurrency` | integer | `4` | Tickers processed in parallel (1–16). |
 
-### Example: quick quote and recent history for a watchlist
+### Example: daily watchlist
 
 ```json
 {
-  "tickers": ["AAPL", "MSFT", "GOOGL"],
-  "startDate": "2026-01-01",
-  "endDate": "2026-06-30",
+  "mode": "tickers",
+  "tickers": ["AAPL", "MSFT", "NVDA"],
+  "range": "5d",
   "interval": "1d",
   "includeHistory": true,
-  "includeNews": true
+  "includeNews": false
 }
 ```
 
-### Example: full fundamentals for one company
+### Example: full fundamentals and ownership
 
 ```json
 {
+  "mode": "tickers",
   "tickers": ["AAPL"],
   "includeFinancials": true,
   "includeQuarterlyFinancials": true,
   "includeHolders": true,
-  "includeInsiderTransactions": true
+  "includeInsiders": true,
+  "includeEarningsEstimates": true,
+  "includeSecFilings": true
 }
 ```
 
-### Example: options chain and analyst targets
+### Example: option chain with filters
 
 ```json
 {
+  "mode": "tickers",
   "tickers": ["TSLA"],
   "includeOptions": true,
-  "includeAnalystPriceTargets": true,
-  "includeRecommendations": true
+  "optionExpirations": 3,
+  "maxOptionContracts": 25,
+  "optionContractType": "both",
+  "minStrike": 200,
+  "maxStrike": 500,
+  "minOpenInterest": 100,
+  "minImpliedVolatilityPercent": 20
+}
+```
+
+### Example: ETF research
+
+```json
+{
+  "mode": "tickers",
+  "tickers": ["SPY", "QQQ"],
+  "includeFundData": true,
+  "includeDividends": true,
+  "includeHistory": false
+}
+```
+
+### Example: discover symbols and market movers
+
+```json
+{
+  "mode": "screener",
+  "screenerId": "day_gainers",
+  "maxResults": 25
+}
+```
+
+```json
+{
+  "mode": "customScreener",
+  "region": "JP",
+  "screenerSort": "percentchange",
+  "maxResults": 100
+}
+```
+
+```json
+{
+  "mode": "search",
+  "searchQuery": "electric vehicles",
+  "maxSearchResults": 10
+}
+```
+
+```json
+{
+  "mode": "trending",
+  "region": "GB",
+  "maxResults": 10
 }
 ```
 
 ## Use cases
 
-- **Watchlist monitoring** — pull live quote and fundamentals for every ticker on a schedule
-- **Backtesting research** — bulk historical OHLCV data across an adjustable date range and interval
-- **News tracking** — grab the latest headlines per ticker for keyword-based alerting
-- **Income-portfolio modeling** — historical dividends and splits for yield calculations
-- **Analyst-sentiment tracking** — sample recommendation and price-target data over time
-- **Fundamental analysis** — structured income statement, balance sheet, and cash flow for spreadsheet work
+- **Watchlist monitoring** — schedule a small ticker list for daily quote, pre-market and news snapshots
+- **Backtesting and charting** — export OHLCV bars with adjusted close across 13 intervals and 11 ranges
+- **Fundamental screening** — pull annual and quarterly statements, margins, growth and analyst targets into a warehouse
+- **Options research** — collect multiple expirations and filter by strike, volume, open interest or implied volatility
+- **ETF and fund due diligence** — compare expense ratios, top holdings, sector exposure and trailing returns
+- **Market discovery** — feed screener, search, trending and market-summary rows into alerting or research dashboards
+- **Ownership and insider tracking** — monitor institutional positions, insider holders and net purchase activity
+- **Compliance and filing research** — collect SEC filing links and exhibits for a list of companies
+
+## Known hard limits
+
+These are limits of Yahoo's public data, verified during the revamp; the actor does not fabricate values for them:
+
+- **Options history and source greeks:** only current option chains are served, and there are no source greeks (no delta/gamma/theta/vega in Yahoo's contract payload). Historical chains are unavailable.
+- **US-only options:** option chains exist only for optionable US-listed symbols; no HK/EU/index/FX/crypto chains.
+- **Statements for funds, indices, FX, crypto and futures:** Yahoo has no income, balance-sheet or cash-flow statements for these instrument types. Fund profiles and holdings are the substitute.
+- **ESG/sustainability:** Yahoo retired the ESG modules and page; the field is not emitted.
+- **Predefined screener region:** the predefined endpoint is US-centric and ignores `region`; use `customScreener`.
+- **CJK direct search:** `/v1/finance/search` rejects non-Latin text with HTTP 400; the localized `/v1/finance/lookup` fallback is the supported path and can still return zero documents.
+- **Screener page size:** Yahoo accepts at most 250 rows per request; the actor paginates to reach `maxResults`.
+- **News source cap:** the graph is paginated by cursor and is capped at 200 items per ticker by this actor; the search fallback is smaller.
+- **Trending sparsity:** several regions return only 1–4 symbols upstream.
 
 ## FAQ
 
-**Does this need a proxy or API key?**
-No. Quote and fundamental data is fetched without any account, signup, or API key.
+**Do I need an API key, login, cookies or a proxy?**
+No. The actor reads Yahoo Finance's public web data without an account. It uses no user cookies or API keys, and it works without a proxy by default.
 
-**Can I get pre-market or after-hours prices?**
-No. `currentPrice` and `volume` reflect the regular trading session only; extended-hours quotes aren't currently surfaced.
+**Are quotes real-time?**
+Most Yahoo quotes are delayed, often by about 15 minutes for US equities. The record's `quoteSource`, `exchangeDataDelayedBy` and `marketState` fields tell you what Yahoo reported for that snapshot.
 
-**What tickers are supported?**
-Anything Yahoo Finance recognizes: US equities (`AAPL`, `MSFT`), ETFs (`SPY`, `QQQ`), foreign-suffix tickers (`BP.L` for London, `7203.T` for Tokyo), indices (`^GSPC`, `^DJI`), currency pairs (`EUR=X`), and crypto (`BTC-USD`).
+**Can I get pre-market and after-hours prices?**
+Pre-market fields are included when Yahoo publishes them. `postMarket*` fields (`postMarketPrice`, `postMarketChange`, `postMarketChangePercent`, `postMarketTime`) are mapped from Yahoo's quote summary (with the quote-v7 fields as fallback). Post-market values were verified for US-listed equities and ETFs (12/12) and were absent for non-US listings, indices, FX, crypto and futures (0/18), so treat these fields as US-only. Intraday history can include pre/post-market bars with `includePrePost`.
 
-**How fresh is the data?**
-Quote fields are typically delayed about 15 minutes for US equities, matching Yahoo's free data terms. News is near real-time. Financials refresh within about a day of company filings. Historical candles update after market close.
+**Why are some fields missing for my ticker?**
+Not every instrument type has every data type. Indices, currencies, futures and crypto usually have quotes and charts but no company statements, holders or options. ETFs have fund data instead of company statements. The actor omits a field when Yahoo has no value for it.
 
-**What happens if I enter a delisted or invalid ticker?**
-That record comes back with an `error` field (`"no_data"` for a ticker Yahoo doesn't recognize, or the underlying exception name for a network/fetch failure) and the rest of its fields absent; the run continues normally for the other tickers.
+**How many news items can I get?**
+The actor reads Yahoo's Finance Nexus graph first and paginates its cursor, so `maxNews` supports up to 200 items per symbol (AAPL returned 148, MSFT 132, NVDA 182 and SPY 138 in verification). News works for equities, ETFs, indices, FX and crypto on this path. If the graph returns nothing, the actor falls back to Yahoo's search feed (about 50 items) and then the HTML news page. Results are deduplicated by URL; news can mention related tickers, so use `relatedTickers` when you need to filter relevance.
 
-**Why is the `financials` block sometimes missing?**
-ETFs and indices don't report financial statements, some foreign tickers publish limited statements, and newly-listed companies may not have data yet. The field is simply omitted rather than returned empty.
+**Why is the options chain missing?**
+Options exist only for optionable US-listed symbols. Foreign listings, indices, currencies, futures and crypto do not have a Yahoo option chain. Yahoo exposes only current expirations, not historical chains, and its contract payload contains no delta, gamma, theta or vega. Historical options, source-provided greeks and non-US option chains are confirmed hard limits; the actor does not invent them.
 
-**Why would `sustainability` be missing for a ticker I know has ESG data elsewhere?**
-Yahoo's own ESG coverage is sparse — many tickers simply don't have a score published on Yahoo Finance, even if other sources track one.
+**Why are quarterly statements missing?**
+Quarterly statements require both `includeFinancials` and `includeQuarterlyFinancials`. Operating companies, not funds, indices, FX, crypto or futures, publish them; those instrument types have no Yahoo income/balance/cash-flow statements (a confirmed hard limit). Use `includeFundData` for fund profiles and holdings. Some foreign issuers report only annual periods.
+
+**What does `financials` contain?**
+`financials.income`, `financials.balance` and `financials.cashflow` are keyed by fiscal period. Values are in the reporting currency shown in `financials.currency`; `financials.periods` lists the available dates. Quarterly groups sit under `financials.quarterly`. Item keys keep the legacy underscore labels such as `Total_Revenue`, `Net_Income` and `Operating_Cash_Flow`, so existing spreadsheet and API integrations continue to work.
+
+**Why is `dividendYield` a small number like 0.31?**
+For backward compatibility, `dividendYield` keeps Yahoo's percentage number: `0.31` means 0.31%. The additive `trailingAnnualDividendYield` is a fraction: `0.0031` means the same yield. `heldPercentInsiders` and `heldPercentInstitutions` are fractions; `debtToEquity` is a percentage number.
+
+**Why is the sustainability/ESG field gone?**
+Yahoo retired its ESG endpoints and the sustainability page no longer returns scores. The actor does not advertise or emit a `sustainability` field, and an old task that sends `includeSustainability` continues to run with a logged no-op.
+
+**Can I search in any language?**
+Company names and news localize through the `language` and `region` inputs, and unicode names are preserved in output. Yahoo's `/v1/finance/search` endpoint rejects non-Latin text with HTTP 400 (a confirmed source limit), so for Japanese, Chinese or Korean queries the actor automatically falls back to `/v1/finance/lookup` with the selected language and region. Lookup returned documents for most JA/ZH-Hans/ZH-Hant/KO probes. If it returns none, the run status says so explicitly; try a ticker (`7203.T`), an English name, or another region/language.
+
+**How are fund and option values expressed?**
+Fund positions (`cashPosition`, `stockPosition`, `holdingPercent`) are fractions: `0.0836` means 8.36%. `fundProfile.totalNetAssets` is absolute fund assets (USD for US-listed funds), normalized from Yahoo's raw millions when that is the only value available. Option `impliedVolatility` uses Yahoo's percentage number: `2.0859` means 208.59%, while the `minImpliedVolatilityPercent` input is a percent: `25` means 25%. `marketSummary.dayChangePercent` is also Yahoo's percentage number. `postMarketChangePercent` is normalized to the same percentage-number convention (`0.63` means 0.63%). Statement values are in `financials.currency`.
+
+**Why do predefined screeners return US rows even when I pick another region?**
+Yahoo's predefined screener endpoint is US-centric and ignores the region parameter (confirmed hard limit). Use `mode: "customScreener"` instead: it posts a region operand to Yahoo's custom screener and returned regional rows for 30 of 31 region codes (JP 3,814; IN 8,553; PE 0). The actor paginates in 250-row requests until `maxResults` or source exhaustion. Predefined screeners are unchanged.
+
+**Why does trending return only a few symbols for some regions?**
+Yahoo's trending feed is sparse outside the US. A region with one to three symbols is a genuine upstream result, not an early stop. The run status reports the shortfall, and `mode: "customScreener"` provides a region-wide fallback.
+
+**What happens to a delisted or invalid symbol?**
+The actor emits an explicit `error` record with `reason: "no_data"` and continues with the other symbols. It does not emit a silent partial ticker record. Aliases such as `BRK.B` are resolved to Yahoo's spelling (`BRK-B`) and return data. Rare-symbol HTTP 500 quote pages were not reproduced locally (306 of 306 rare/crypto pages returned 200); the actor still keeps the quote-v7, chart and HTML fallbacks and reports an error rather than fabricating values.
+
+**Why are some fund fields missing?**
+`topHoldings.bondRatings` and `topHoldings.sectorWeightings` are present when Yahoo publishes them; equity sector weights are empty for non-equity funds such as GLD and TLT. `fundProfile.totalNetAssets` is normalized to absolute assets and omitted when Yahoo only returns a zero sentinel; `fundProfile.inceptionDate` comes from Yahoo's fund inception field, not the current manager's start date, and is omitted when unavailable. Morningstar overall/risk ratings are populated for mutual funds but empty for most ETFs, so they are omitted when absent rather than emitted as zero. SEC filings can be attached to one share class only; for example GOOGL's `secFilings` module is empty while GOOG returns filings, so the actor falls back to the sibling class and records `secFilingsSourceSymbol`.
 
 **Is this affiliated with Yahoo?**
-No. This is an independent, third-party actor that reads Yahoo Finance's publicly available data; it isn't affiliated with or endorsed by Yahoo.
+No. This is an independent, third-party actor that reads Yahoo Finance's publicly available data and is not affiliated with or endorsed by Yahoo.

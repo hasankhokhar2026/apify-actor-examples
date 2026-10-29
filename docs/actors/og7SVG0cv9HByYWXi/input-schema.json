@@ -1,0 +1,41 @@
+{
+  "properties": {
+    "enrichDetails": {
+      "default": false,
+      "description": "Optional. When true, fetches each listing's detail page to add financial fields (Cash Flow, Gross Revenue, EBITDA, Real Estate, Established, Employees, FF&E, Rent). Adds 1 HTTP request per listing — slower but more complete. Off by default.",
+      "editor": "checkbox",
+      "prefill": false,
+      "title": "Enrich with detail-page financials",
+      "type": "boolean"
+    },
+    "maxItems": {
+      "default": 50,
+      "description": "Maximum number of business listings to extract.",
+      "editor": "number",
+      "maximum": 1000,
+      "minimum": 1,
+      "prefill": 5,
+      "title": "Max Items",
+      "type": "integer"
+    },
+    "proxy": {
+      "description": "Optional proxy configuration. The actor uses the unprotected mobile subdomain (m.bizbuysell.com) and works without a proxy from any datacenter IP.",
+      "editor": "proxy",
+      "title": "Proxy Configuration (optional)",
+      "type": "object"
+    },
+    "searchUrl": {
+      "description": "BizBuySell URL to scrape. State-level paths (e.g. https://www.bizbuysell.com/california-businesses-for-sale/) and the base /businesses-for-sale/ URL work reliably. Query string filters (?q=, ?pmin=, ?pmax=) and city sub-paths are not honored by the mobile subdomain. URLs are auto-rewritten to m.bizbuysell.com.",
+      "editor": "textfield",
+      "prefill": "https://www.bizbuysell.com/businesses-for-sale/",
+      "title": "BizBuySell URL",
+      "type": "string"
+    }
+  },
+  "required": [
+    "searchUrl"
+  ],
+  "schemaVersion": 1,
+  "title": "BizBuySell Scraper Input",
+  "type": "object"
+}

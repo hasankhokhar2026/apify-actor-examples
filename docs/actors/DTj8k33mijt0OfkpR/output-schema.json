@@ -1,9 +1,9 @@
 {
   "actorOutputSchemaVersion": 1,
-  "description": "Facebook Marketplace listings with price, location, photos, delivery method, seller, and listing status per item.",
+  "description": "One JSON object per Facebook Marketplace listing. Canonical groups: identity and provenance (id, listingUrl, sourceUrl, sourceType, inputIndex, searchQuery, locationQueried, recordType, scrapedAt), core fields (title, description, price, strikethroughPrice, condition, conditionLabel, attributes, categoryId, categoryName, categorySlug, categoryPath), location (locationText, city, state, latitude, longitude, distanceKm when radius filtering had coordinates), delivery and status (deliveryTypes, shippingAvailable, localPickupAvailable, creationTime, createdAt, listingAgeDays, isLive, isSold, isPending, isHidden, listingStatus), seller (seller with optional profileUrl and dealer, sellerDataAvailability), media (primaryPhotoUrl, primaryPhotoUrlOriginal, mediaUrlTemporary, photos, videoUrl, videos), vehicleDetails (including conditional specs, numberOfOwners, isPaidOff), vehicleVin and vehicleVinSource, and quality/access (dataMode, extractionSource, qualityStatus, missingFields, accessState, detailFetchStatus). Facebook field-name aliases such as marketplace_listing_title, listing_price, marketplace_listing_seller, location, delivery_types, creation_time, primary_listing_photo, listingPhotos, listingVideo, and vehicle are kept when present. Private-seller contact, vehicle features/Carfax/plate/website, and permanent video URLs are not available logged out. Empty values are omitted.",
   "properties": {
     "listings": {
-      "description": "Default dataset containing one JSON object per Marketplace listing, including normalized fields and source attribution.",
+      "description": "Default dataset containing one JSON object per Marketplace listing, including normalized canonical fields, legacy Facebook aliases, and source attribution.",
       "template": "{{links.apiDefaultDatasetUrl}}/items",
       "title": "Marketplace Listings Dataset",
       "type": "string"

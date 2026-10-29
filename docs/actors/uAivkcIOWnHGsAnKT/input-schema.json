@@ -30,26 +30,15 @@
         "replies_desc",
         "newest"
       ],
+      "enumTitles": [
+        "Observed order",
+        "Most upvotes",
+        "Most reactions",
+        "Most replies",
+        "Newest first"
+      ],
       "title": "Comment Sort Order",
       "type": "string"
-    },
-    "cookieString": {
-      "description": "Optional browser-exported name=value; name2=value2 header. Parsed locally into authorized session cookies; the raw header is never emitted or logged.",
-      "editor": "textfield",
-      "isSecret": true,
-      "title": "Optional Cookie Header String",
-      "type": "string"
-    },
-    "cookies": {
-      "description": "Optional secret cookies for content the caller is authorized to access.",
-      "editor": "json",
-      "isSecret": true,
-      "items": {
-        "type": "object"
-      },
-      "prefill": [],
-      "title": "Authorized Cookies",
-      "type": "array"
     },
     "dedupeMode": {
       "default": "canonical",
@@ -58,9 +47,20 @@
         "canonical",
         "none"
       ],
+      "enumTitles": [
+        "Canonical (deduplicate by ID/URL)",
+        "None (keep every observed row)"
+      ],
       "prefill": "canonical",
       "title": "Deduplication Mode",
       "type": "string"
+    },
+    "includeAnswerStats": {
+      "default": true,
+      "description": "Emit answer counters, dates, AI flag, effective access and Quora+ preview flags.",
+      "prefill": true,
+      "title": "Include Answer Stats",
+      "type": "boolean"
     },
     "includeAnswerUpvoterEdges": {
       "default": false,
@@ -83,9 +83,16 @@
       "title": "Include Author Snapshot",
       "type": "boolean"
     },
+    "includeCommentReplies": {
+      "default": false,
+      "description": "Include nested repliesConnection rows. Requires includeComments. Comments are robots-sensitive and opt-in; zero-row/blocked results produce a status row.",
+      "prefill": false,
+      "title": "Include Comment Replies",
+      "type": "boolean"
+    },
     "includeComments": {
       "default": false,
-      "description": "Enable bounded visible comment output when the per-answer cap is positive.",
+      "description": "Opt-in comment rows from Quora's public comment-area GraphQL. robots-sensitive; off by default. When enabled and maxCommentsPerAnswer is 0, the documented fallback is 10 per answer.",
       "prefill": false,
       "title": "Include Comment Rows",
       "type": "boolean"
@@ -139,11 +146,32 @@
       "title": "Include Outbound Links",
       "type": "boolean"
     },
+    "includePostStats": {
+      "default": true,
+      "description": "Emit post upvotes/views/shares/comments, effective access and question-summary flag.",
+      "prefill": true,
+      "title": "Include Post Stats",
+      "type": "boolean"
+    },
     "includeProfileEdges": {
       "default": false,
       "description": "Enable explicitly labeled profile follower/following/followed-question/Space/Topic relationship collections. This does not prove a complete list.",
       "prefill": false,
       "title": "Include Profile Relationship Collections",
+      "type": "boolean"
+    },
+    "includeProfileHistory": {
+      "default": false,
+      "description": "Opt into the public profile answer/question tab GraphQL and emit bounded profile_activity rows. robots-sensitive and rate-sensitive; on a 400/403 the run keeps a profile_history_unavailable status row.",
+      "prefill": false,
+      "title": "Include Profile History",
+      "type": "boolean"
+    },
+    "includeProfileStats": {
+      "default": true,
+      "description": "Emit follower/following/answer/question/post/view counts, joined date, credentials and expertise topics for profile rows.",
+      "prefill": true,
+      "title": "Include Profile Stats",
       "type": "boolean"
     },
     "includeQuestion": {
@@ -153,11 +181,25 @@
       "title": "Include Question Rows",
       "type": "boolean"
     },
+    "includeQuestionAudit": {
+      "default": false,
+      "description": "Opt into the public question /log page to fill question_created_at, question_view_count and the asker fields. robots.txt disallows /*/log for generic agents; the actor never includes this in the default prefill.",
+      "prefill": false,
+      "title": "Include Question Audit",
+      "type": "boolean"
+    },
     "includeQuestionFollowerEdges": {
       "default": false,
       "description": "Enable explicitly labeled question follower or want-answer collections. Sensitive identity rows also require the privacy gate.",
       "prefill": false,
       "title": "Include Question Follower Collections",
+      "type": "boolean"
+    },
+    "includeQuoraPlusPreview": {
+      "default": true,
+      "description": "Emit preview-only answers flagged answer_is_quora_plus/answer_text_completeness=preview. The gated remainder is never fetched or presented as full text.",
+      "prefill": true,
+      "title": "Include Quora+ Preview Answers",
       "type": "boolean"
     },
     "includeRawEvidence": {
@@ -183,7 +225,7 @@
     },
     "includeReplyGraph": {
       "default": false,
-      "description": "Enable bounded visible nested comment replies and explicit parent paths; this also enables comment rows. Hidden or unexpanded replies are not inferred.",
+      "description": "Enable comment rows plus one-level nested reply extraction from repliesConnection. Requires includeComments.",
       "prefill": false,
       "title": "Include Reply Graph",
       "type": "boolean"
@@ -209,9 +251,16 @@
       "title": "Include Space Role Edges",
       "type": "boolean"
     },
+    "includeSpaceStats": {
+      "default": true,
+      "description": "Emit Space follower/member/contributor/moderator/admin counts, description, icon and cover.",
+      "prefill": true,
+      "title": "Include Space Stats",
+      "type": "boolean"
+    },
     "includeSpaces": {
       "default": false,
-      "description": "Retain Space rows and feed items where the source route exposes them.",
+      "description": "Retain Space rows and SSR feed items. Explicit spaceUrls enable this automatically.",
       "prefill": false,
       "title": "Include Space Rows",
       "type": "boolean"
@@ -221,6 +270,20 @@
       "description": "Retain explicitly visible target link text and image (to_name, to_image_url) on relationship edges. URLs remain evidence; no target navigation or recursive target scraping is performed.",
       "prefill": false,
       "title": "Include Explicit Target Metadata",
+      "type": "boolean"
+    },
+    "includeTopicFeed": {
+      "default": false,
+      "description": "Opt into the browser topic-feed GraphQL endpoint. robots-sensitive: keep off unless you accept that compliance caveat.",
+      "prefill": false,
+      "title": "Include Topic Feed",
+      "type": "boolean"
+    },
+    "includeTopicStats": {
+      "default": true,
+      "description": "Emit topic follower count and most-viewed authors for topic rows.",
+      "prefill": true,
+      "title": "Include Topic Stats",
       "type": "boolean"
     },
     "includeTopics": {
@@ -280,8 +343,50 @@
         "zh-TW",
         "ru-RU"
       ],
+      "enumTitles": [
+        "Automatic",
+        "English",
+        "Spanish",
+        "French",
+        "German",
+        "Portuguese",
+        "Italian",
+        "Japanese",
+        "Korean",
+        "Hindi",
+        "Indonesian",
+        "Dutch",
+        "Polish",
+        "Turkish",
+        "Vietnamese",
+        "Chinese",
+        "Russian",
+        "English (US)",
+        "English (UK)",
+        "German (Germany)",
+        "French (France)",
+        "Spanish (Spain)",
+        "Portuguese (Brazil)",
+        "Italian (Italy)",
+        "Japanese (Japan)",
+        "Korean (Korea)",
+        "Hindi (India)",
+        "Turkish (Turkey)",
+        "Chinese (Simplified)",
+        "Chinese (Traditional)",
+        "Russian (Russia)"
+      ],
       "title": "Language",
       "type": "string"
+    },
+    "maxAnswerPages": {
+      "default": 0,
+      "description": "Bound QuestionPagedListPaginationQuery pages. Zero derives a bound from maxAnswersPerQuestion.",
+      "maximum": 50,
+      "minimum": 0,
+      "prefill": 0,
+      "title": "Maximum Answer GraphQL Pages",
+      "type": "integer"
     },
     "maxAnswers": {
       "default": 0,
@@ -293,7 +398,7 @@
     },
     "maxAnswersPerQuestion": {
       "default": 10,
-      "description": "Maximum visible answer rows retained from each question page.",
+      "description": "Maximum answer rows retained per question after SSR and GraphQL pagination.",
       "maximum": 500,
       "minimum": 0,
       "prefill": 5,
@@ -302,7 +407,7 @@
     },
     "maxCommentDepth": {
       "default": 20,
-      "description": "Maximum visible nested reply depth when includeReplyGraph is enabled; reaching the bound is not complete history.",
+      "description": "Maximum nested reply depth when includeCommentReplies/includeReplyGraph is enabled.",
       "maximum": 100,
       "minimum": 0,
       "prefill": 20,
@@ -311,7 +416,7 @@
     },
     "maxCommentsPerAnswer": {
       "default": 0,
-      "description": "Maximum visible comment rows retained per answer when enabled.",
+      "description": "Maximum comment rows retained per answer when comments are enabled. Schema default 0 is kept for compatibility; comments-enabled runs treat 0 as 10.",
       "maximum": 500,
       "minimum": 0,
       "prefill": 0,
@@ -376,6 +481,15 @@
       "title": "Maximum Navigation Retries",
       "type": "integer"
     },
+    "maxProfileHistoryPages": {
+      "default": 0,
+      "description": "Bound for each profile history list (answers and questions) when includeProfileHistory is enabled. Zero derives three pages; one page is roughly ten items.",
+      "maximum": 20,
+      "minimum": 0,
+      "prefill": 0,
+      "title": "Maximum Profile History Pages",
+      "type": "integer"
+    },
     "maxQuestions": {
       "default": 25,
       "description": "Maximum question seeds or discovered question pages to process.",
@@ -401,12 +515,30 @@
       "title": "Maximum Answer Related Content",
       "type": "integer"
     },
+    "maxRelatedQuestions": {
+      "default": 20,
+      "description": "Related questions to enqueue per question/topic seed. The page usually exposes 26-35; zero disables related-question discovery.",
+      "maximum": 100,
+      "minimum": 0,
+      "prefill": 0,
+      "title": "Maximum Related Questions",
+      "type": "integer"
+    },
     "maxRelationshipItemsPerCollection": {
       "default": 500,
       "description": "Bound explicit links emitted from each labeled relationship collection. Zero emits no relationship-collection edges and never means an empty collection.",
       "maximum": 5000,
       "minimum": 0,
       "title": "Maximum Relationship Items per Collection",
+      "type": "integer"
+    },
+    "maxRelationshipPages": {
+      "default": 3,
+      "description": "Bound for each public identity-list query (question followers, answer upvoters, profile followers/following, Space roles) after the relationship allowlist and privacy gates. Zero is treated as one page.",
+      "maximum": 20,
+      "minimum": 0,
+      "prefill": 0,
+      "title": "Maximum Identity List Pages",
       "type": "integer"
     },
     "maxScrollAttempts": {
@@ -416,6 +548,52 @@
       "minimum": 0,
       "title": "Maximum Scroll Attempts",
       "type": "integer"
+    },
+    "maxSpaceFeedBundles": {
+      "default": 4,
+      "description": "Bound Space feed bundles read from the SSR multifeed.",
+      "maximum": 20,
+      "minimum": 0,
+      "prefill": 1,
+      "title": "Maximum Space Feed Bundles",
+      "type": "integer"
+    },
+    "maxTopicFeedPages": {
+      "default": 3,
+      "description": "Bound topic-feed GraphQL pages when includeTopicFeed is enabled.",
+      "maximum": 20,
+      "minimum": 0,
+      "prefill": 0,
+      "title": "Maximum Topic Feed Pages",
+      "type": "integer"
+    },
+    "mode": {
+      "default": "auto",
+      "description": "Optional dispatcher. auto detects every supported Quora route; typed modes validate startUrls against that route. Typed seed lists still work without mode.",
+      "editor": "select",
+      "enum": [
+        "auto",
+        "byQuestionUrls",
+        "byAnswerUrls",
+        "byProfileUrls",
+        "byTopicUrls",
+        "bySpaceUrls",
+        "byPostUrls",
+        "search"
+      ],
+      "enumTitles": [
+        "Auto-detect any supported URL",
+        "Questions and answers",
+        "Specific answer permalinks",
+        "Profiles and stats",
+        "Topics and optional feed",
+        "Spaces and feeds",
+        "Standalone posts",
+        "Best-effort search discovery"
+      ],
+      "prefill": "auto",
+      "title": "Mode",
+      "type": "string"
     },
     "onlyNewItems": {
       "default": false,
@@ -443,6 +621,12 @@
         "nested",
         "flat",
         "edges"
+      ],
+      "enumTitles": [
+        "Normalized (one row per entity)",
+        "Nested (answers under questions)",
+        "Flat (entity rows with parent context)",
+        "Edges (relationship rows)"
       ],
       "prefill": "normalized",
       "title": "Output Format",
@@ -489,21 +673,9 @@
       "type": "array"
     },
     "proxyConfiguration": {
-      "default": {
-        "apifyProxyGroups": [
-          "RESIDENTIAL"
-        ],
-        "useApifyProxy": true
-      },
-      "description": "Apify proxy routing. Quora's anti-bot layer blocks the free Datacenter/Automatic tier on roughly half of all real requests (cloud-verified), so this actor always routes through RESIDENTIAL proxies for reliable results regardless of what is selected here — leave this on the default Residential selection unless you need to supply your own proxy URLs.",
+      "description": "Optional proxy override. The actor starts with a direct connection, retries a fresh session on 403/429, then uses Apify AUTO datacenter proxies, and only falls back to RESIDENTIAL as a proven last resort. Leave this unset; a missing proxyConfiguration never stops the run.",
       "editor": "proxy",
-      "prefill": {
-        "apifyProxyGroups": [
-          "RESIDENTIAL"
-        ],
-        "useApifyProxy": true
-      },
-      "title": "Proxy Configuration",
+      "title": "Proxy Configuration (optional)",
       "type": "object"
     },
     "questionUrls": {
@@ -631,24 +803,55 @@
     },
     "scrapeDepth": {
       "default": "detail",
-      "description": "Overview emits page-level summaries without answer/comment/activity/feed expansion; detail preserves the current bounded traversal.",
+      "description": "Overview emits page metadata without answer/comment/feed expansion; detail enables SSR answers plus bounded GraphQL pagination and optional comments/topic feeds.",
       "enum": [
         "overview",
         "detail"
+      ],
+      "enumTitles": [
+        "Overview (page metadata only)",
+        "Detail (answers, comments, feeds)"
       ],
       "prefill": "detail",
       "title": "Scrape Depth",
       "type": "string"
     },
+    "searchDiscovery": {
+      "default": "relatedOnly",
+      "description": "How searchQueries are handled. relatedOnly attempts Quora's public search and otherwise emits search_unavailable; bestEffortIndex queries a public web index for indexed Quora URLs. Native Quora search is never claimed.",
+      "editor": "select",
+      "enum": [
+        "relatedOnly",
+        "bestEffortIndex",
+        "off"
+      ],
+      "enumTitles": [
+        "Related questions only (no third-party engine)",
+        "Best-effort DuckDuckGo index",
+        "Disabled"
+      ],
+      "prefill": "relatedOnly",
+      "title": "Search Discovery",
+      "type": "string"
+    },
     "searchQueries": {
       "default": [],
-      "description": "Native Quora search seeds. Search cards are followed only when their visible URLs are supported.",
+      "description": "Best-effort public-index discovery only. Quora native search is login/Cloudflare-gated and robots-disallowed; related-question expansion on a question URL is the reliable discovery axis.",
       "editor": "stringList",
       "items": {
         "type": "string"
       },
       "title": "Search Queries",
       "type": "array"
+    },
+    "searchResultsPerQuery": {
+      "default": 10,
+      "description": "Maximum indexed URLs to use per search query when searchDiscovery=bestEffortIndex.",
+      "maximum": 50,
+      "minimum": 0,
+      "prefill": 0,
+      "title": "Search Results per Query",
+      "type": "integer"
     },
     "spaceUrls": {
       "default": [],
@@ -672,7 +875,7 @@
     },
     "startUrls": {
       "default": [],
-      "description": "Question, answer, profile, topic, Space, or native search URLs.",
+      "description": "Question, answer, profile, topic, Space, or search URLs. Mixed lists are auto-detected; invalid hosts become status rows instead of failing the run.",
       "editor": "requestListSources",
       "prefill": [
         {

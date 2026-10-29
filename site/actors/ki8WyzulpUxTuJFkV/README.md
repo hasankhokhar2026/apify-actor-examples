@@ -1,127 +1,192 @@
 # Facebook Public Follower & Following Snapshot Tool
 
-Get a snapshot of who follows, is followed by, or is friends with any public Facebook Page or Profile — no login, no cookies, and no proxy required. Each target returns up to 8 real preview rows (name, profile URL, verification badge, location/workplace/school where shown) plus the account's aggregate follower and following counts, straight from Facebook's own logged-out preview.
+Collect who publicly follows a Facebook Page or Profile — and who that Page or Profile follows — without a login, cookies, or proxy setup. The actor reads Facebook's own public collection pages, follows their pagination to the end (or to your row limit), and reports the real collection name, the reported list size, and whether the list was exhausted or cut short.
 
-## Important: Facebook's 8-row preview cap
-
-Facebook does not expose a full follower/following/friends roster to logged-out visitors — only a short preview, and this actor returns **up to 8 rows per target**, regardless of the target's real follower count. This actor always returns exactly what Facebook itself shows on the page: the 8-row preview plus the account's aggregate counts. It never promises — and cannot deliver — a complete roster. If you need every one of a target's 10,000+ followers, no tool (including this one) can honestly provide that without the target's own login session.
+Facebook shows logged-out visitors an 8-row preview on each collection page. This actor does not stop at that preview: it keeps requesting the next public page until the list ends or `maxItems` is reached. Large accounts can still have slices that Facebook does not expose publicly, so `listSize` and `paginationComplete` are reported beside every result.
 
 ## What this actor does
 
-- **Three modes:** `followers`, `following`, `friends` (friends is only meaningful for Profile URLs)
-- **Batch input:** scrape any number of Facebook Page or Profile URLs in a single run (duplicates are processed once)
-- **Structured parsing:** location, workplace, and school pulled out of Facebook's free-text subtitle line where it shows one
-- **Aggregate counts:** follower/following totals, both as Facebook's abbreviated string (e.g. `39M`) and as a parsed integer
-- **Explicit access states:** every target reports whether it returned real results, is private, doesn't exist, or was blocked — a restricted target is never silently mistaken for zero followers
-- **No login, no cookies, no proxy settings** — nothing to configure beyond the URLs and mode
-- Empty fields are omitted, not returned as `null`
+- **Four modes:** `followers`, `following`, `both` (followers + following), and `friends` (a legacy alias that returns Followers — see the FAQ)
+- **Real pagination:** returns more than the 8-row preview, up to `maxItems` (default 50), with per-target and global caps
+- **In-list search:** `searchQuery` uses Facebook's own name filter and paginates through the matches
+- **List transparency:** every target gets a summary with `collectionName`, `listSize`, `hasNextPage`, `paginationComplete`, `pagesFetched`, and `paginationStoppedReason`
+- **Stable identities:** `profileId`, the raw Relay `profileTypename`, and a 1-based `position` on every row
+- **Optional enrichment:** `includeProfileDetails` adds row-level follower/following counts plus About category, email, phone, website, address, work, education, current city, and hometown when Facebook exposes them (two opt-in GraphQL requests per row, with a profile-HTML fallback)
+- **URL forms:** `/people/<name>/<id>/followers|following|friends|both` is rewritten to the working `?sk=` form; `m`/`mobile`/`touch` hosts are normalized to `www`; `mbasic` is rejected as login-gated with a clear status
+- **Batch input:** any number of Page/Profile URLs or bare usernames per run; duplicates and invalid URLs are skipped
+- **No login, no cookies, no proxy setup** — local direct, cloud residential last resort
+- Empty fields are omitted, not returned as `null` or placeholder text
 
 ## Output
 
-Every target produces up to 8 row records plus 1 target summary record. If a target's page can't be downloaded at all, it gets a single error record instead (see below).
+Each target produces follower/following row records plus one target summary record per collection. If a collection cannot be downloaded at all, it produces a `targetError` record for that collection instead.
 
-### Row fields (`recordType`: `follower` / `following` / `friend`)
+### Row fields
 
-- `name` — the follower/following/friend's display name
-- `profileUrl` — direct link to their Facebook profile/Page
-- `imageUrl` — their profile picture URL
-- `isVerified` — `true` if Facebook shows a verification badge on this account
-- `location` — parsed location, when Facebook's subtitle line recognizably shows one (e.g. "Lives in ...", "From ...", or a bare "City, Region")
-- `worksAt` — parsed workplace, when Facebook's subtitle line starts with "Works at ..."
-- `studiedAt` — parsed school, when Facebook's subtitle line starts with "Studied at ..."
-- `subtitleRaw` — the raw, unparsed subtitle text Facebook showed under this row, kept for transparency even when `location`/`worksAt`/`studiedAt` couldn't be confidently parsed
-- `accessState` — the access state of the target this row came from (see below)
-- `sourceUrl` — the exact followers/following/friends page URL that was fetched
-- `targetUrl` — the original Page/Profile URL from your input
-- `scrapedAt` — ISO 8601 timestamp of when this row was scraped
-- `recordType` — `follower`, `following`, or `friend`, matching the selected mode
+- `recordType` — `follower` or `following` for the actual collection; `friend` for the legacy `friends` alias
+- `name` — display name
+- `profileUrl` — direct profile/Page URL when Facebook provides one (omitted when the source returns no URL)
+- `profileId` — Facebook account ID (numeric or `pfbid...`)
+- `profileTypename` — the raw `__typename` Facebook returns on the collection edge. It is `User` for Pages too, so it is not a reliable Page/User discriminator; the actor does not claim a semantic type it cannot verify. (The old `profileType` field was removed for this reason; it always said `User`, including for Pages.)
+- `imageUrl` — profile picture URL
+- `isVerified` — whether Facebook shows a verification badge (`true`/`false`)
+- `position` — 1-based position in the returned collection
+- `collectionName` — the actual collection Facebook served: `Followers` or `Following`
+- `requestedMode` — the mode that produced this row: `followers`, `following`, `both`, or `friends`
+- `isFallback` — `true` only when the requested list was served from a different collection (currently `friends` → Followers)
+- `location` — parsed location when Facebook's subtitle line clearly shows one
+- `worksAt` — parsed workplace when confidently recognizable
+- `studiedAt` — parsed school when confidently recognizable
+- `subtitleRaw` — the raw subtitle text, kept even when it cannot be parsed
+- `profileCategory` — Page/Profile category (only with `includeProfileDetails=true`)
+- `profileDelegateId` — canonical Page/Profile ID from the profile page (only with `includeProfileDetails=true`)
+- `profileFollowersCount` / `profileFollowersCountFormatted` — row-level follower count and Facebook's abbreviated form (only with `includeProfileDetails=true`; omitted when the header query has no social context)
+- `profileFollowingCount` / `profileFollowingCountFormatted` — row-level following count and its abbreviated form (only with `includeProfileDetails=true`)
+- `profileEmail`, `profilePhone`, `profileWebsite`, `profileAddress` — About contact fields when Facebook exposes them (only with `includeProfileDetails=true`)
+- `profileWork`, `profileEducation`, `profileCurrentCity`, `profileHometown` — About text fields when Facebook exposes them (only with `includeProfileDetails=true`)
+- `accessState` — the target's access state (`results` for rows)
+- `sourceUrl` — the exact followers/following URL that was fetched
+- `targetUrl` — the original URL/username from your input
+- `scrapedAt` — ISO 8601 timestamp
 
-### Target summary fields (`recordType`: `targetSummary`)
+### Target summary fields (`recordType: "targetSummary"`)
 
-- `targetUrl` — the original Page/Profile URL from your input
-- `mode` — the mode that was run for this target: `followers`, `following`, or `friends`
-- `accessState` — one of `results` (rows were returned), `empty_valid` (Facebook shows a genuine "no followers/results" message), `private_or_restricted` (target is privacy-restricted), `not_found` (target doesn't exist or isn't reachable), `login_required` (Facebook demanded a login), `checkpoint_or_challenge` (Facebook served a bot-challenge/checkpoint page instead of the target), `schema_failure` (an unrecognized page layout that doesn't match any known state), or `fetch_failed` (only on the error record described below)
-- `returnedCount` — how many preview rows were returned for this target (0-8)
-- `followersCount` — the target's aggregate follower count, as a parsed integer (omitted when the page doesn't show counts, e.g. for blocked or not-found targets)
-- `followersCountFormatted` — the target's aggregate follower count, as Facebook's own abbreviated string (e.g. `39M`)
-- `followingCount` — the target's aggregate following count, as a parsed integer
-- `followingCountFormatted` — the target's aggregate following count, as Facebook's own abbreviated string
-- `scrapedAt` — ISO 8601 timestamp of when this target was scraped
+- `targetUrl` — the original input
+- `mode` — the requested mode
+- `requestedMode` — the requested mode (same as `mode`; kept explicitly for `both` and `friends`)
+- `accessState` — `results`, `empty_valid`, `private_or_restricted`, `not_found`, `login_required`, `checkpoint_or_challenge`, `rate_limited`, or `schema_failure`
+- `returnedCount` — rows actually emitted for this collection (can exceed 8)
+- `followersCount` / `followersCountFormatted` — headline follower count, parsed and as Facebook's abbreviated string
+- `followingCount` / `followingCountFormatted` — headline following count
+- `collectionName` — the actual collection served
+- `listSize` — Facebook's reported size for that collection. It is approximate, not a hard cap; use `hasNextPage` to know whether more remained
+- `hasNextPage` — whether Facebook still reported more rows when the actor stopped
+- `paginationComplete` — `true` when the source was exhausted or genuinely empty; `false` when stopped by `maxItems`, a block, an unavailable/private target, or an error
+- `pagesFetched` — number of pagination pages fetched for this collection
+- `searchQuery` — the applied search filter (omitted when empty)
+- `isFallback` — `true` for the legacy `friends` alias
+- `paginationStoppedReason` — `source_exhausted`, `max_items`, `max_items_per_target`, `rate_limited`, `graphql_error`, `graphql_unavailable`, `no_collection`, or `empty`
+- `scrapedAt` — ISO 8601 timestamp
 - `recordType` — always `targetSummary`
 
-### Error record
+### Target error record (`recordType: "targetError"`)
 
-When every download attempt for a target fails (network errors), the dataset gets one record with `targetUrl`, `mode`, `accessState: "fetch_failed"`, `errorMessage` (the error text) and `scrapedAt`. It has no `recordType` and no rows.
+When every download attempt for a collection fails, the dataset gets one record with `targetUrl`, `mode`, `accessState: "fetch_failed"`, `errorMessage`, and `scrapedAt`. A failed collection never stops the rest of the run.
 
 ## Input
 
 | Field | Type | Default | Description |
 |---|---|---|---|
-| `startUrls` | array | – | One or more Facebook Page or Profile URLs, e.g. `https://www.facebook.com/nike`, `https://www.facebook.com/zuck`, or `https://www.facebook.com/profile.php?id=...` |
-| `mode` | string | `followers` | Which preview list to fetch: `followers`, `following`, or `friends` (Profile URLs only) |
+| `startUrls` | array | – | Facebook Page/Profile URLs, `profile.php?id=...`, `/people/<name>/<id>/` (plus `/followers`, `/following`, `/friends`, or `/both` suffixes), `/p/...`, or bare usernames. URLs ending in `/followers`, `/following`, `/friends`, or `?sk=...` are accepted. `m`/`mobile`/`touch` hosts are normalized to `www`; `mbasic` is rejected as login-gated. Bare usernames are accepted by the actor; the Console URL-list field itself expects a full URL. |
+| `mode` | string | `followers` | `followers`, `following`, `both`, or `friends` (legacy alias → Followers). |
+| `maxItems` | integer | `50` | Total row cap across all targets (1–10,000). The daily prefill uses 8. |
+| `maxItemsPerTarget` | integer | `0` | Optional per-target cap (0 = no cap). |
+| `searchQuery` | string | `""` | Keep accounts whose name contains this text. Empty or one character means no filter. |
+| `includeProfileDetails` | boolean | `false` | Add row-level counts and About category/contact/work/education/current-city/hometown fields. Two opt-in GraphQL requests per row plus a profile-HTML fallback; absent fields are omitted. |
+| `deduplicateRows` | boolean | `false` | Emit each `profileId`/`profileUrl` once across all targets and modes. |
 
-### Example: followers preview for multiple brand Pages
+### Example: followers of a Page
+
+```json
+{
+  "startUrls": [{ "url": "https://www.facebook.com/nike" }],
+  "mode": "followers",
+  "maxItems": 100
+}
+```
+
+### Example: followers and following together
+
+```json
+{
+  "startUrls": [{ "url": "https://www.facebook.com/nike" }],
+  "mode": "both",
+  "maxItems": 40
+}
+```
+
+### Example: search inside a large follower list
+
+```json
+{
+  "startUrls": [{ "url": "https://www.facebook.com/nike" }],
+  "mode": "followers",
+  "searchQuery": "mar",
+  "maxItems": 50
+}
+```
+
+### Example: several targets with a per-target cap and profile enrichment
 
 ```json
 {
   "startUrls": [
     { "url": "https://www.facebook.com/nike" },
-    { "url": "https://www.facebook.com/Starbucks" },
-    { "url": "https://www.facebook.com/BBCNews" }
+    { "url": "https://www.facebook.com/zuck" }
   ],
-  "mode": "followers"
-}
-```
-
-### Example: who a Page is following
-
-```json
-{
-  "startUrls": [{ "url": "https://www.facebook.com/nike" }],
-  "mode": "following"
-}
-```
-
-### Example: a Profile's friends preview
-
-```json
-{
-  "startUrls": [{ "url": "https://www.facebook.com/zuck" }],
-  "mode": "friends"
+  "mode": "followers",
+  "maxItems": 20,
+  "maxItemsPerTarget": 10,
+  "includeProfileDetails": true
 }
 ```
 
 ## Use cases
 
-- **Social media monitoring** — track a competitor Page's follower and following totals over time
-- **Influencer & partnership vetting** — spot-check a Profile's or Page's follower quality and verification status before a partnership
-- **Market research** — sample which brands, media outlets, or public figures a Page follows
-- **Lead enrichment** — pull location/workplace signals surfaced on public follower/friend previews
-- **Audience overlap analysis** — compare the follower previews of multiple related Pages
-- **Compliance & brand safety** — confirm a Page's public-facing follower counts match what's advertised elsewhere
+- **Audience research** — collect and compare the public follower lists of related Pages
+- **Influencer and partnership vetting** — sample follower identities, verification status, and Page categories
+- **Competitive monitoring** — track how a Page's public follower/following lists change between scheduled runs
+- **Lead enrichment** — add stable Facebook profile IDs plus optional row-level counts, category, and contact fields to a public audience list
+- **Brand safety review** — inspect which public accounts a Page follows
+- **Growth analysis** — combine `listSize`, `hasNextPage`, and stable `profileId` values across snapshots
 
 ## FAQ
 
-**Why only 8 results per target?**
-This is a Facebook platform limit on the logged-out preview, not a limitation of this actor. Facebook caps the followers/following/friends preview shown to non-logged-in visitors at 8 rows regardless of the target's true follower count — see "Important" above.
+**Can I get every follower of a very large account?**
+You get every row Facebook exposes to a logged-out visitor, up to your `maxItems`. Facebook sometimes exposes only a slice of a large account's list. The summary tells you the reported `listSize` and whether `hasNextPage` remained `true`, so you can see when the source stopped before the reported total.
 
-**Why is a field missing for some rows?**
-Facebook only shows a location/workplace/school subtitle for some accounts, never all. This actor only includes fields Facebook actually exposes — it never fabricates placeholder values.
+**Why does `returnedCount` differ from `listSize`?**
+`listSize` is Facebook's own reported size for the collection. It can be approximate or stale (a Page may report 576 while 640 rows are still enumerable). `returnedCount` is what the actor actually emitted. Use `hasNextPage` and `paginationComplete` to judge whether more remained.
 
-**Does this work on private profiles?**
-No. A privacy-restricted or blocked target returns no rows, with an `accessState` of `private_or_restricted`, `not_found`, or `checkpoint_or_challenge` depending on exactly how Facebook responds, matching what a logged-out visitor would see in a browser.
+**How is `maxItems` shared in `both` mode?**
+The remaining row budget is split across Followers and Following, so both lists contribute instead of one list consuming the whole cap. Rows left unused by a shorter list flow to the other list. If `maxItemsPerTarget` is reached in the first collection, that collection's rows stop at the cap but the other collection still emits its summary with `returnedCount: 0` and `paginationStoppedReason: "max_items_per_target"` (or `"max_items"` when the global cap was hit). Summary records do not count toward either row cap.
 
-**Do I need a Facebook account, cookies, or a proxy to use this actor?**
-No. It works entirely through Facebook's public, logged-out pages — no login, no cookies, and no proxy configuration needed to get started.
+**What does `friends` mode return?**
+It is a legacy alias. Facebook does not expose a Friends roster to logged-out visitors; the friends tab serves the Followers collection. The actor therefore returns Followers, sets `collectionName: "Followers"`, `isFallback: true`, and `requestedMode: "friends"`. Rows keep `recordType: "friend"` for backward compatibility.
 
-**Can I get a target's full follower list, not just the preview?**
-No. Facebook does not expose a complete roster to logged-out visitors under any circumstances, so no tool — including this one — can honestly deliver more than the 8-row preview without the target's own login session.
+**Do I need a Facebook account, cookies, or a proxy?**
+No. The actor uses Facebook's public, logged-out pages. No login, cookies, or proxy configuration is required. It runs direct locally; on Apify cloud, cloud verification showed direct and AUTO GraphQL both rate-limited, so the actor uses a hardcoded residential last resort for reliable runs. Nothing is configured in the input, and no paid group is a schema default.
 
-**What does `friends` mode return for a Facebook Page?**
-Nothing useful — `friends` is a Profile-only concept on Facebook. Use `friends` mode only with personal Profile URLs.
+**What does `includeProfileDetails` return, and how reliable is it?**
+It adds row-level follower/following counts from Facebook's header query and About category/contact/work/education/current-city/hometown fields from the light About query. In the Phase 6 cookieless probe, counts filled 30/30 row profiles, category 30/30, and at least one contact field 20/30. Coverage is conditional: private/hidden sources, `pfbid` rows that return empty About sections, and accounts without a field will omit it. The actor falls back to the profile HTML and never fabricates a missing value. This mode costs two extra GraphQL requests per row (plus a fallback request when needed), so it is off by default and capped by `maxItems`.
+
+**Why is a location, workplace, or school missing on some rows?**
+Facebook shows a subtitle line for only a minority of accounts (about 18–19% in the live sample). The actor parses it conservatively and always keeps `subtitleRaw`; it never fabricates values. `includeProfileDetails` can add structured About fields for some of the rows whose subtitle is empty.
+
+**What is the difference between `private_or_restricted` and `not_found`?**
+An HTTP 404 is `not_found`. A 200 page with Facebook's "This content isn't available at the moment / owner only shared it" message is `private_or_restricted`. Facebook serves the same 200 page for a private target and a nonexistent vanity, so the actor cannot distinguish those two cases; this is a documented limitation, not a missing retry.
+
+**Why did a run stop with `paginationStoppedReason: "max_items"`?**
+The row cap was reached before the source ended. Increase `maxItems` (or `maxItemsPerTarget`) to collect more, or keep the cap and use the summary's `hasNextPage` to confirm that more existed.
+
+**Why are some profile or image URLs missing?**
+Facebook occasionally returns a row with no profile URL. The row is kept with its `profileId` so you do not lose the account. `imageUrl` values are signed Facebook CDN links with `oh`/`oe` parameters; the observed expiry was about four days, and old links return 403. Rehost them immediately if you need durable images.
+
+**What if a run is rate-limited or only partly complete?**
+Facebook returns GraphQL error code `1675004` when it rate-limits the logged-out collection query. The actor treats that code as `rate_limited` regardless of the message, keeps every row already collected, preserves the preview's `hasNextPage`, and finishes the run with a status message that names the partial targets and the rate limit. On Apify cloud, direct and AUTO GraphQL were both rate-limited in verification, so the actor uses a hardcoded residential last resort; residential is never a schema default or an input field.
 
 **Is this actor affiliated with Facebook or Meta?**
-No. This is an independent, third-party actor that reads Facebook's own publicly accessible pages; it is not affiliated with, endorsed by, or operated by Meta Platforms, Inc.
+No. It is an independent third-party actor that reads publicly accessible Facebook pages. It is not affiliated with, endorsed by, or operated by Meta Platforms, Inc.
 
-**How fresh is the data?**
-Every run fetches the target's live followers/following/friends page at request time — there's no caching, so results reflect what Facebook shows at the moment the actor runs.
+## Limitations (hard limits and honest coverage)
+
+- **8 rows per request.** Facebook caps every public collection response at 8 rows regardless of the requested `count`; more rows require more requests. A 1,000-row run is roughly 125 collection requests. Cursor pagination is the mitigation, not a larger page.
+- **No cookieless Friends roster.** Every logged-out Friends URL form, section ID, and collection ID returned Followers, an empty list, or a login wall. `friends` is a truthful legacy alias for Followers only.
+- **Private vs nonexistent at HTTP 200.** Facebook serves the same "This content isn't available at the moment / owner only shared it" page for both. Only a real HTTP 404 is `not_found`; a 200 page stays `private_or_restricted`. The actor cannot distinguish the two without a 404.
+- **`listSize` is approximate.** It is Facebook's reported collection count, not a stop signal or a promise of enumerable rows. Use `hasNextPage`, `paginationComplete`, and `paginationStoppedReason`.
+- **Image URLs expire.** Facebook CDN links are signed (observed ~4-day expiry); old links return 403. Rehost immediately for durable media.
+- **Subtitles are sparse.** Only about 18–19% of rows expose a subtitle line; missing location/work/school values are source sparsity, not parser loss. The parser is conservative and keeps `subtitleRaw`.
+- **Counts and contact fields are conditional.** `includeProfileDetails` fills what Facebook exposes (30/30 counts and category, 20/30 any contact in the Phase 6 probe) and omits the rest. It never fabricates values.
+- **`mbasic` is login-gated.** The normalizer rejects `mbasic.facebook.com` with a clear status; `m`/`mobile`/`touch` are normalized to `www`.
+- Group members, private lists, and other login-gated surfaces are out of scope.
+- The Console's URL-list editor requires a full URL. Bare usernames are accepted by the actor when supplied through the input JSON or API.

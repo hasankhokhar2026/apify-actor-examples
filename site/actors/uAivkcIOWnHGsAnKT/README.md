@@ -1,133 +1,164 @@
 # Quora Question, Answer & Relationship Dataset Builder
 
-Build a structured Quora dataset from direct links or native Quora search terms. Point it at question, answer, profile, Topic, Space, or Post URLs — or a search phrase — and it returns normalized rows for every entity it finds, with the question → answer → comment chain and author/topic links kept intact. Choose how deep to go, how the rows are shaped, and which relationship data (followers, upvoters, Space roles) to include.
+Build a structured Quora dataset from direct links or best-effort search discovery. Point it at question, answer, profile, Topic, Space, or Post URLs and it returns normalized rows for every entity it finds, with the question → answer → comment chain and author/topic links kept intact. Choose how deep to go, how the rows are shaped, and which relationship or feed data to include.
+
+This is an independent, third-party actor. It is not affiliated with, endorsed by, or licensed by Quora, Inc. No Quora account, login, session cookie, or paid proxy is used or required.
 
 ## What this actor does
 
-- Accepts question, answer, profile, Topic, Space, and Post URLs directly, or a plain Quora search phrase
-- Walks the question → answer → comment chain and keeps the links between them (`entity_edge` rows), so you can rebuild the conversation tree
-- Offers four output shapes via `outputFormat`: `normalized` (separate rows per entity, default), `nested` (answers grouped under their question, comments under their answer), `flat`, and `edges` (relationship rows plus any status rows)
-- Optionally expands follower, following, upvoter, and Space-role relationships for a profile, question, answer, or Space, with a privacy gate for identity-revealing collections
-- Optionally re-scrapes the same inputs later and flags each row as `new`, `changed`, `unchanged`, or `scope_mismatch` against a saved state store
-- Can restrict the returned fields to a smaller allowlist (`outputFields`) while still protecting identity and status fields
-- Reports a `status` row (rather than guessing) whenever a page is blocked, login-gated, or otherwise inaccessible, and a `run_manifest` row summarizing the whole run; both are in the default `resultTypes`, so removing them from that list removes them from the output
-- Leaves empty content fields out of each row rather than filling them with a guess (a few bookkeeping fields, such as `url_redactions`, may still appear as empty lists)
+- Accepts question, answer, profile, Topic, Space, and Post URLs directly, plus best-effort search discovery. Typed seed lists (`questionUrls`, `answerUrls`, `topicUrls`, `spaceUrls`, `profileUrls`, `postUrls`) override route auto-detection.
+- Empty fields are omitted; a missing field means the source did not expose it, never `null` or a sentinel.
+- Parses Quora's server-rendered Relay payloads and double-decodes the `window.ansFrontendGlobals.data.inlineQueryResults` `.push()` strings; it does not depend on CSS classes or DOM selectors for the core fields.
+- Paginates question answers with Quora's public `QuestionPagedListPaginationQuery` cursor, up to `maxAnswersPerQuestion` / `maxAnswers` / `maxAnswerPages`. Every paginated answer is checked against the page question (title/path, `linkedQuestion`, `originalQuestionIfDifferent`, and the answer permalink), so unrelated promoted answers cannot become dataset rows while legitimate merged variants still pass.
+- Paginates comment areas and nested replies through `AllCommentsListQuery` (10+ pages with `after` cursors), with `maxCommentsPerAnswer` as the hard cap; this is opt-in and robots-sensitive.
+- Optionally reads a Topic feed, a Space SSR multifeed, profile statistics, Topic statistics, and Post metrics.
+- Optionally reads the public question `/log` audit for created time, view count, and asker identity (`includeQuestionAudit`), and paginates profile answer/question history (`includeProfileHistory`).
+- Optionally resolves public identity lists for question followers, answer upvoters, profile followers/following, and Space roles through explicitly requested relationship types and the sensitive-data gate.
+- Walks the question → answer → comment chain and keeps the links between them (`entity_edge` rows), so you can rebuild the conversation tree.
+- Offers four output shapes via `outputFormat`: `normalized` (separate rows per entity, default), `nested` (answers grouped under their question, comments under their answer), `flat`, and `edges` (relationship rows plus any status rows).
+- Reports a `status` row (rather than guessing) whenever a page is blocked, login-gated, removed, or otherwise inaccessible, and a `run_manifest` row summarizing the whole run.
+- Leaves empty content fields out of each row rather than filling them with a guess. `0` and `false` are kept as real values.
+- Never emits cookie/credential material. URLs are redacted when `redactSensitiveQueryParams` is on.
 
 ## Output per record
 
 Every row carries `content_type` (`question`, `answer`, `comment`, `profile`, `profile_activity`, `topic`, `topic_post`, `space`, `space_feed_item`, `entity_edge`, `relationship_collection`, `status`, or `run_manifest`), plus shared fields: `record_id`, `title`, `url`, `canonical_url`, `source_url`, `access_state`, `scrape_timestamp`, `requested_depth`, `observed_depth`, `detail_expansion_state`, `output_format`, `matched_input`, `matched_input_kind`, and (when search seeds were used) `source_query`/`source_queries`.
 
-Every row also carries run-context fields describing how it was collected: `source_observations`/`source_observation_count`, `redirect_chain`, `url_redaction_state`/`url_redactions`, `proxy_used`, `proxy_resolution_state`, `session_cookie_count`, `session_input_state`, `session_cookie_expiry_state`, `request_delay_seconds`, `browser_locale`, `requested_language`, `navigation_retries`/`navigation_retry_delays_seconds`, `parser_version` and `parser_strategy`. With `includeFieldEvidence` on (default), rows also get `field_sources` (where each value came from) and `fields_present`.
+Every row also carries run-context fields describing how it was collected: `source_observations`/`source_observation_count`, `redirect_chain`, `url_redaction_state`/`url_redactions`, `proxy_used`, `proxy_path_used`, `proxy_resolution_state`, `session_cookie_count`, `session_input_state`, `session_cookie_expiry_state`, `request_delay_seconds`, `browser_locale`, `requested_language`, `navigation_retries`/`navigation_retry_delays_seconds`, `parser_version` and `parser_strategy`. With `includeFieldEvidence` on (default), rows also get `field_sources` (where each value came from) and `fields_present`.
 
-`access_state` is `public` for normal pages; other values include `login_required`, `cloudflare_challenge`, `not_found`, `removed`, `unavailable`, `quora_plus_or_gated`, `redirected_to_search`/`_topic`/`_space`, `unsupported_url` and `network_error`.
+`access_state` is `public` for normal pages. Other values include `login_required`, `cloudflare_challenge`, `rate_limited`, `not_found`, `removed`, `unavailable`, `quora_plus_or_gated`, `quora_plus_preview`, `redirected_to_search`, `unsupported_url`, `search_unavailable`, `answer_pagination_limited`, `answer_pagination_unavailable`, `comments_unavailable`, `comments_capped`, `topic_feed_unavailable`, `topic_feed_capped`, `space_feed_capped`, `profile_history_limited`, `profile_history_unavailable`, `question_audit_unavailable`, `relationship_identity_unavailable`, `relationship_identity_capped`, `relationship_identities_not_observed`, `state_store_unavailable`, `state_store_uncommitted` and `network_error`.
 
-**Question row** — `question_url`, `question_answer_count` (label) / `question_answer_count_value` (parsed number) / `question_answer_count_scraped` (rows actually collected), `question_created_at`, `question_updated_at`, `question_age_days`/`question_age_state`, `last_answered_at` + `last_answered_at_evidence`, `question_author_name`/`_url`/`_image_url`/`_id`/`_is_verified`/`_is_anonymous`/`_credentials`, `question_image_urls`/`_video_urls`/`_outbound_links` (opt-in), `answer_count`, `answer_limit_reached`, `topics`, `topic_links`.
+**Question row** — `question_url`, `question_id`, `question_answer_count` (label) / `question_answer_count_value` (parsed number) / `question_answer_count_scraped` (rows actually collected), `question_follower_count` / `question_follower_count_value` (when the public payload exposes it), `related_questions` (`qid`, `title`, `url`), `question_created_at`, `question_updated_at`, `question_view_count`, `question_audit_state`, `question_merge_count`, `question_age_days`/`question_age_state`, `last_answered_at` + `last_answered_at_evidence`, `question_author_name`/`_url`/`_image_url`/`_id`/`_is_verified`/`_is_anonymous`/`_credentials` (from a visible author card or the opt-in `/log` audit), `question_image_urls`/`_video_urls`/`_outbound_links` (opt-in), `answer_count`, `answer_limit_reached`, `topics`, `topic_links`.
 
-**Answer row** — `answer_id`, `answer_url`, `answer_text`, `answer_html` (opt-in), `answer_media_urls`/`_image_urls`/`_video_urls`/`_outbound_links` (opt-in), `answer_translation_state`/`_label`, `answer_original_url`, `answer_is_anonymous`, `answer_author_is_verified`, `answer_created_at`/`_updated_at`, `answer_age_days`/`_state`, `answer_visibility`, `answer_text_completeness`, `answer_is_collapsed`, `answer_is_quora_plus`, `answer_is_top_labeled`, `answer_rank`/`_rank_source`, `answer_upvote_count`/`_value`, `answer_comment_count`/`_value`, `answer_view_count`/`_value`, `answer_share_count`/`_value`, `reaction_breakdown` (opt-in), `is_ai_answer`/`ai_label_text`/`ai_label_source`, `related_content`/`_count`/`_observed_count`/`_limit_reached` (opt-in), `answer_jsonld_type`, `author_name`/`_url`/`_image_url`/`_id`/`_credentials`.
+**Answer row** — `answer_id`, `answer_node_id`, `answer_url`, `answer_text`, `answer_html` (opt-in, derived from rich text), `answer_media_urls`/`_image_urls`/`_video_urls`/`_outbound_links` (opt-in), `answer_translation_state`/`_label`, `answer_original_url`, `answer_is_anonymous`, `answer_author_is_verified`, `answer_author_follower_count` (when present), `answer_created_at`/`_updated_at`, `answer_age_days`/`_state`, `answer_visibility`, `answer_text_completeness`, `answer_is_collapsed`, `answer_is_quora_plus`, `answer_access_option`, `answer_effective_access`, `answer_is_top_labeled`, `answer_rank`/`_rank_source`, `answer_upvote_count`/`_value`, `answer_comment_count`/`_value`, `answer_view_count`/`_value`, `answer_share_count`/`_value`, `reaction_breakdown` (opt-in), `is_ai_answer`/`ai_label_text`/`ai_label_source`, `related_content`/`_count`/`_observed_count`/`_limit_reached` (opt-in), `answer_jsonld_type`, `author_name`/`_url`/`_image_url`/`_id`/`_credentials`.
 
-**Comment row** — `comment_id`, `comment_url`, `comment_text`, `comment_author_name`/`_image_url`/`_id`/`_credentials`/`_is_verified`, `comment_is_anonymous`, `comment_timestamp`/`_created_at`, `comment_age_days`/`_state`, `comment_visibility`, `comment_upvote_count`/`_value`, `comment_reaction_count`/`_value`, `comment_reply_count`/`_value`, `comment_reaction_breakdown`, `comment_media_urls`/`_image_urls`/`_video_urls`/`_outbound_links`, `comment_is_top_labeled`, `comment_rank`/`_rank_source`, `comment_sort_order`, `comment_depth`, `comment_depth_limit_reached`, `comment_is_reply`, `parent_comment_id`/`_url`, `comment_reply_path`.
+**Comment row** — `comment_id`, `comment_url`, `comment_text`, `comment_source` (`graphql_comment_area`), `comment_author_name`/`_image_url`/`_id`/`_credentials`/`_is_verified`, `comment_is_anonymous`, `comment_timestamp`/`_created_at`, `comment_age_days`/`_state`, `comment_visibility`, `comment_upvote_count`/`_value`, `comment_reaction_count`/`_value`, `comment_reply_count`/`_value`, `comment_reaction_breakdown`, `comment_media_urls`/`_image_urls`/`_video_urls`/`_outbound_links`, `comment_is_top_labeled`, `comment_rank`/`_rank_source`, `comment_sort_order`, `comment_depth`, `comment_depth_limit_reached`, `comment_is_reply`, `parent_comment_id`/`_url`, `comment_reply_path`, `comment_container_id`, `comment_items_observed_count`/`_emitted_count`, `comment_limit_reached`, `comment_page_limited`.
 
-**Profile row** — `profile_url`, `profile_name`, `profile_bio`, `profile_image_url`, `profile_author_id`, `profile_is_verified`, `profile_is_restricted`, `profile_snapshot_state`.
+**Profile row** — `profile_url`, `profile_name`, `profile_bio`, `profile_image_url`, `profile_author_id`, `profile_is_verified`, `profile_is_restricted`, `profile_account_status`, `profile_is_anonymous`, `profile_is_deceased`, `profile_snapshot_state`, plus `profile_follower_count`, `profile_following_count`, `profile_answer_count`, `profile_question_count`, `profile_post_count`, `profile_total_content_views`, `profile_month_content_views`, `profile_joined_at`, `profile_credential`, `profile_work_credentials`, `profile_school_credentials`, `profile_location_credentials`, `profile_expertise_topics`, `profile_history_limited` when the visible feed is truncated or the opt-in history is capped, and `profile_history_state` (`not_requested`/`observed`/`capped`/`rate_limited`/`unavailable`/`empty`) when history is requested.
 
-**Profile-activity row** — `activity_url`, `author_name`/`_url`/`_image_url`/`_id`/`_credentials`.
+**Profile-activity row** — `activity_url`, `activity_type`, `activity_source`, `activity_question_url`/`_title`/`_id`, `activity_answer_id`, `created_at`, `author_name`/`_url`/`_image_url`/`_id`/`_credentials`.
 
-**Topic row** — `topic_url` plus the shared fields above.
+**Topic row** — `topic_url`, `topic_id`, `topic_follower_count`, `topic_most_viewed_authors` (`uid`, `name`, `url`, `follower_count`, `num_views`, `num_public_most_viewed_answers`, `credential`), `topic_photo_url`, `topic_default_photo_url`, `topic_has_leaderboard`, and `topic_feed_state` (`not_requested`/`observed`/`capped`/`unavailable`).
 
-**Topic-Post row** — `post_url`, `post_title`, `post_body`, `post_media_urls`/`_image_urls`/`_video_urls`/`_outbound_links` (opt-in), `post_author_name`/`_url`/`_image_url`/`_id`/`_credentials`/`_is_verified`/`_is_anonymous`, `post_created_at`/`_updated_at`, `post_age_days`/`_state`, `post_updated_age_days`/`_state`.
+**Topic-Post row** — `post_url`, `post_pid`, `post_node_id`, `post_title` (explicit title or first content line), `post_body`, `post_media_urls`/`_image_urls`/`_video_urls`/`_outbound_links` (opt-in), `post_author_name`/`_url`/`_image_url`/`_id`/`_credentials`/`_is_verified`/`_is_anonymous`/`_follower_count`, `post_question_url`/`_title`, `topic_url`, `post_created_at`/`_updated_at`, `post_age_days`/`_state`, `post_updated_age_days`/`_state`, `post_upvote_count`, `post_view_count`, `post_share_count`, `post_comment_count`, `post_effective_access`, `post_is_question_summary`.
 
-**Space row** — `space_url` plus the shared fields above.
+**Space row** — `space_url`, `space_id`, `space_follower_count`, `space_all_time_followers` (conditional), `space_member_count`, `space_contributor_count`, `space_moderator_count`, `space_admin_count`, `space_description`, `space_icon_url`, `space_cover_url`, `space_item_count`, `space_feed_capped`, `space_ads_skipped`.
 
-**Space feed-item row** — `feed_url`, `feed_type`, `feed_title`, `feed_text` (opt-in), `feed_author_name`/`_url`/`_image_url`/`_id`/`_credentials`/`_is_verified`/`_is_anonymous`, `feed_created_at`, `feed_age_days`/`_state`, `media_urls`/`image_urls`/`video_urls`/`outbound_links`.
+**Space feed-item row** — `feed_url`, `feed_type`, `feed_title`, `feed_text` (opt-in), `feed_post_pid`/`feed_post_node_id` (post stories), `feed_author_name`/`_url`/`_image_url`/`_id`/`_credentials`/`_is_verified`/`_is_anonymous`, `feed_created_at`, `feed_age_days`/`_state`, `feed_upvote_count`, `feed_view_count`, `feed_share_count`, `feed_comment_count`, `feed_effective_access`, `feed_is_ai_answer`, `feed_question_url`/`_title`, `media_urls`/`image_urls`/`video_urls`/`outbound_links` (opt-in).
 
-**Relationship row (`entity_edge`)** — `relationship`, `edge_id`, `from_record_id`/`_content_type`/`_url`/`_id`, `to_record_id`/`_content_type`/`_url`/`_id`/`_name`/`_image_url`, `node_image_url`, `edge_state`, `unresolved_reason`.
+**Relationship row (`entity_edge`)** — `relationship`, `edge_id`, `from_record_id`/`_content_type`/`_url`/`_id`, `to_record_id`/`_content_type`/`_url`/`_id`/`_name`/`_image_url`, `node_image_url`, `edge_state`, `unresolved_reason`, `edge_evidence_field`, `relationship_collection_key`, `collection_total_text`/`_value`.
 
 **Relationship-count row (`relationship_collection`)** — `relationship_collection_key`, `collection_total_text`, `collection_total_value`, `edge_evidence_field`.
 
-**Status row** — `access_state`, `http_status`, `error`, `source_url`, and for pages that failed to load `final_url`, `scrape_duration_ms`, `navigation_attempts`, `navigation_retries`. Run-level status rows (`url: run://quora-dataset-builder`) report a state store that couldn't be read (`state_store_unavailable`) or state that wasn't saved because a source didn't finish (`state_store_uncommitted`).
+**Status row** — `access_state`, `http_status`, `error`, `source_url`, and for pages that failed to load `final_url`, `scrape_duration_ms`, `navigation_attempts`, `navigation_retries`. Run-level status rows (`url: run://quora-dataset-builder`) report a state store that could not be read (`state_store_unavailable`), state that was not saved because a source did not finish (`state_store_uncommitted`), or a run that produced no real rows (`no_records_emitted`).
 
-**Option-dependent fields** — with a `stateStoreId`, entity rows add `event_type` (`new`/`changed`/`unchanged`/`scope_mismatch`), `state_snapshot_hash`, `previous_snapshot_hash`, `state_scope_fingerprint`, `state_store_state`, `only_new_items`, `include_unchanged`. With `includeRawEvidence`, page-level rows add `raw_html_sha256`, `raw_html_bytes`, `raw_evidence_state` and related size/redaction fields, plus `raw_html` when `includeHtml` is also on. In `nested` format, question rows carry `answers` arrays (each answer with its `comments`) and `nested_*` count fields. With `maxItemsPerSource` set, rows add `max_items_per_source` and per-source cap fields.
+**Option-dependent fields** — with a `stateStoreId`, entity rows add `event_type` (`new`/`changed`/`unchanged`/`scope_mismatch`), `state_snapshot_hash`, `previous_snapshot_hash`, `state_scope_fingerprint`, `state_store_state`, `only_new_items`, `include_unchanged`. With `includeRawEvidence`, page-level rows add `raw_html_sha256`, `raw_html_bytes`, `raw_html_truncated`, `raw_html_returned_bytes`, `raw_html_redaction_state`, `raw_html_redactions`, `raw_evidence_state`, `raw_evidence_retention_days`, plus `raw_html` when `includeHtml` is also on and `rawEvidenceRetentionDays` is above zero. In `nested` format, question rows carry `answers` arrays (each answer with its `comments`) and `nested_*` count fields. With `maxItemsPerSource` set, rows add `max_items_per_source` and per-source cap fields.
 
-**Run-manifest row** — one per run, summarizing counts and the settings actually applied: `run_started_at`/`_finished_at`/`_duration_ms`, `records_emitted`, `source_pages_attempted`, `content_type_counts`, `access_state_counts`, `input_accounting`, `requested_result_types`, `requested_output_fields`, `dedupe_mode`, `duplicate_records_suppressed`, `relationship_collection_diagnostic`, and the per-run values of several of your own input settings (language, concurrency, caps) echoed back for reconciliation.
+**Run-manifest row** — one per run, summarizing counts and the settings actually applied: `run_started_at`/`_finished_at`/`_duration_ms`, `records_emitted`, `source_pages_attempted`, `content_type_counts`, `access_state_counts`, `input_accounting`, `requested_result_types`, `requested_output_fields`, `dedupe_mode`, `duplicate_records_suppressed`, `proxy_path_used`, `proxy_resolution_state`, `search_discovery_source`, `search_discovery_hits`, `answer_gql_pages`, `answer_pagination_state`, `answer_pagination_unrelated_suppressed`, `comment_gql_pages`, `topic_feed_pages`, `space_feed_bundles`, `quora_plus_preview_count`, `comment_cap_hit_count`, `topic_feed_cap_hit_count`, `profile_history_pages`, `profile_history_state`, `relationship_identity_pages`, `relationship_identity_requests`, `relationship_identity_states`, `question_audit_state`, `question_audit_attempts`, `legacy_input_notes`, `hard_limits`, `gql_calls`, `query_hashes`, and the per-run values of your own input settings echoed back for reconciliation.
 
-## Trimming rows, depth and sessions
+## Trimming rows, depth, sessions and caps
 
-- **Field allowlist.** `outputFields` keeps only the fields you name, applied after extraction; an empty list returns the full row. Nested projection is supported with bounded dotted paths such as `answers.answer_text` or `answers.comments.comment_text` in `nested` output, and child identity/URL fields stay in place. `content_type`, identity, access/status, depth, timing and parser fields are always protected so a trimmed row can still be traced. `output_projection` on each row reads `full` or `selected`, and the run manifest records the requested fields. `includeFieldEvidence` toggles the `field_sources`/`fields_present` maps.
+- **Field allowlist.** `outputFields` keeps only the fields you name, applied after extraction; an empty list returns the full row. Nested projection is supported with dotted paths such as `answers.answer_text` or `answers.comments.comment_text` in `nested` output. Child identity/URL fields stay in place, and `content_type`, identity, access/status, depth, timing and parser fields are always protected so a trimmed row can still be traced. `output_projection` on each row reads `full` or `selected`, and the run manifest records the requested fields. `includeFieldEvidence` toggles the `field_sources`/`fields_present` maps.
 - **Depth.** `scrapeDepth: "detail"` (default) runs the capped traversal; `overview` emits page-level summaries without answer, comment, profile-activity or Space-feed expansion. Every row reports `requested_depth`, `observed_depth` and `detail_expansion_state`. `bounded` means a configured cap was reached, not that Quora's full history was collected, and blocked pages report `observed_depth: "status"`.
-- **Author credentials.** `question_author_credentials`, `comment_author_credentials`, `post_author_credentials`, `feed_author_credentials` and `author_credentials` are kept only when a credential or tagline is visibly shown in that author's own region of the page. Ambiguous text is dropped, and none of these fields verifies expertise.
-- **Sessions.** Supply structured `cookies` or the secret `cookieString` header (`name=value; name2=value2`). Structured cookies win on duplicate names, malformed pairs are ignored, and the raw header is never emitted or logged. Cookies only open content your account can already see; they are not a bypass guarantee.
-- **Exact field names.** Every output field this actor can emit is listed under [Output per record](#output-per-record) above.
-
-## Fixture-backed examples (synthetic)
-
-Synthetic, trimmed rows showing the output shape; they are not live Quora data. The first is a resolved question-to-topic edge from a run with `maxItemsPerSource` set, the second is the status row for a page that showed a Cloudflare challenge.
-
-```json
-{"content_type":"entity_edge","edge_id":"fixture-edge-1","relationship":"question_has_topic","from_content_type":"question","to_content_type":"topic","edge_state":"resolved","edge_evidence_field":"topic_links","access_state":"public","source_cap":50,"source_items_observed":12,"source_items_emitted":12,"source_cap_reached":false,"field_sources":{"relationship":"derived_relationships","edge_state":"derived_relationships","access_state":"runtime_or_access"}}
-```
-
-```json
-{"content_type":"status","access_state":"cloudflare_challenge","http_status":403,"observed_depth":"status","detail_expansion_state":"blocked","field_sources":{"access_state":"runtime_or_access","http_status":"runtime_or_access"}}
-```
+- **Caps.** `maxAnswersPerQuestion` bounds each question, `maxAnswers` is a global answer cap, `maxAnswerPages` bounds GraphQL pages explicitly, `maxItems` caps entity/status rows before graph/manifest rows, `maxItemsPerSource` caps each source, and `maxGraphEdges` caps relationship rows. When `maxItems`/`maxGraphEdges` is 0 the corresponding cap is off. `maxRelationshipItemsPerCollection` bounds each labeled relationship collection, `maxRelationshipPages` bounds each public identity-list query, and `maxProfileHistoryPages` bounds each profile answer/question list. `answer_pagination_limited` is emitted only when a configured page cap or a GraphQL rate limit stopped pagination; an exhausted source is not reported as a cap.
+- **Comments.** Set `includeComments: true`. When `maxCommentsPerAnswer` is 0, the documented fallback is 10 per answer. The actor calls `AllCommentsListQuery` with `after` cursors and a page size derived from your cap (up to 50), so a 24-comment answer is collected as 10 + 10 + 4 when the server pages at ten. `includeCommentReplies` (or `includeReplyGraph`) expands nested replies up to `maxCommentDepth`; `comment_page_limited` is set only when a cap is actually hit, and a `comments_capped` status row follows. If the paginated query fails, the actor falls back to the first-page loader rather than inventing rows. Comments use Quora's comment-area GraphQL, which `robots.txt` disallows for generic agents: keep this opt-in and review your own compliance posture.
+- **Topic feed.** Set `includeTopicFeed: true` to call the topic page's own public GraphQL feed. `maxTopicFeedPages` bounds pages. This path is also robots-sensitive; keep it opt-in.
+- **Question audit.** `includeQuestionAudit: true` reads the question's public `/log` page for `question_created_at`, `question_view_count`, `question_merge_count`, and the asker name/uid/profile/credential. It retries a transient 403 once, then keeps `question_audit_state: "unavailable"` and a `question_audit_unavailable` status row. `/log` is robots-disallowed for generic agents and is never part of the daily prefill.
+- **Profile history.** `includeProfileHistory: true` paginates `UserProfileAnswersMostRecent_RecentAnswers_Query` and `UserProfileQuestionsList_Questions_Query` and emits bounded `profile_activity` rows. `maxProfileHistoryPages` (default 0 = three pages per list) and `requestDelay` (used as a 1.5–2.5 s GraphQL pace when above zero) bound the work. A cap sets `profile_history_limited`; a 400/403 sets `profile_history_state: "rate_limited"` and a `profile_history_unavailable` status row instead of fabricated rows.
+- **Identity lists.** Identity rows are emitted only when `relationshipTypes` explicitly requests them, the matching family flag is on, and `includeSensitiveRelationshipData` is on for sensitive types. The public GraphQL operations cover profile followers/following people/questions/Spaces/Topics, question followers, answer upvoters, and Space admins/contributors/moderators/followers. `maxRelationshipItemsPerCollection` and `maxRelationshipPages` bound every list; Space role calls run from a `www.quora.com` page context. These lists are robots-sensitive and rate-sensitive; a failure keeps a `relationship_identity_unavailable` or `relationship_identities_not_observed` status row, and a page/item cap adds `relationship_identity_capped`.
+- **Sessions and proxies.** No account, login, cookie, or session secret is used. The transport ladder is direct (`curl_cffi`, fresh session per attempt) → optional user proxy override → Apify AUTO datacenter → RESIDENTIAL only as a hardcoded last resort after the free rungs fail. A missing `proxyConfiguration` never stops the run, and there is no paid default. `proxy_path_used` reports the rung that worked.
+- **Exact field names.** Every output field this actor can emit is listed under [Output per record](#output-per-record) above. Fields whose source is absent on a given page are omitted, not set to null or a sentinel.
 
 ## Complete schema input inventory
 
-This actor has a large, modular input schema — most fields are optional toggles that only matter for a specific record type or feature.
+Every input is optional. The daily prefill uses one public question URL with a small answer cap, comments and feeds off, and no paid proxy.
 
 | Field | Type | Default | Description |
 |---|---|---|---|
-| `startUrls` | array | `[]` | Question, answer, profile, Topic, Space, or Quora search URLs |
-| `searchQueries` | array | `[]` | Plain Quora search terms |
-| `questionUrls` / `answerUrls` / `topicUrls` / `spaceUrls` / `profileUrls` / `postUrls` | array | `[]` | Typed seed lists — use these instead of `startUrls` when you want unambiguous per-type accounting |
-| `scrapeDepth` | string | `detail` | `overview` (page-level summary only: no answers, comments, scrolling or load-more) or `detail` (full traversal) |
-| `resultTypes` | array | `["question", "answer", "comment", "profile", "profile_activity", "topic", "topic_post", "space", "space_feed_item", "entity_edge", "status", "run_manifest"]` | Which `content_type` values to include in the output |
+| `mode` | string | `auto` | `auto` / `byQuestionUrls` / `byAnswerUrls` / `byProfileUrls` / `byTopicUrls` / `bySpaceUrls` / `byPostUrls` / `search`; typed modes validate seed routes |
+| `scrapeDepth` | string | `detail` | `overview` (page-level summary only) or `detail` (full capped traversal) |
+| `startUrls` | array | `[]` | Question, answer, profile, Topic, Space, or Post URLs; mixed lists are auto-detected and invalid hosts become status rows |
+| `searchQueries` | array | `[]` | Best-effort discovery terms; Quora's native search is login/Cloudflare-gated and is never claimed |
+| `questionUrls` | array | `[]` | Typed question seeds |
+| `answerUrls` | array | `[]` | Typed answer-permalink seeds |
+| `topicUrls` | array | `[]` | Typed Topic seeds |
+| `spaceUrls` | array | `[]` | Typed Space seeds; automatically enables Space output |
+| `profileUrls` | array | `[]` | Typed profile seeds |
+| `postUrls` | array | `[]` | Typed standalone Post seeds |
+| `resultTypes` | array | `["question","answer","comment","profile","profile_activity","topic","topic_post","space","space_feed_item","entity_edge","status","run_manifest"]` | Which `content_type` values to include |
 | `outputFormat` | string | `normalized` | `normalized` / `nested` / `flat` / `edges` |
-| `dedupeMode` | string | `canonical` | `canonical` (merge duplicate entities by canonical URL) or `none` |
+| `dedupeMode` | string | `canonical` | `canonical` (merge duplicate entities by canonical URL/ID) or `none` |
 | `onlyNewItems` | boolean | `false` | With `stateStoreId`, suppress rows unchanged since the last run |
 | `includeUnchanged` | boolean | `true` | Keep unchanged rows when `onlyNewItems` is on |
-| `stateStoreId` | string | `""` | Apify key-value store name for incremental re-scraping; required when `onlyNewItems` is on |
+| `stateStoreId` | string | - | Apify key-value store name for incremental re-scraping; required when `onlyNewItems` is on |
 | `outputFields` | array | `[]` | Optional field allowlist for smaller rows; identity/status fields are always kept |
 | `includeFieldEvidence` | boolean | `true` | Include `field_sources`/`fields_present` on each row |
-| `includeUnresolvedEdges` | boolean | `true` | Keep relationship rows whose target couldn't be matched |
-| `relationshipTypes` | array | `[]` | Allowlist of relationship collections to expand (follower, following, want-answers, upvoter, Space role, etc.); identity-revealing types are rejected unless `includeSensitiveRelationshipData` and the matching per-family opt-in are both on |
-| `includeProfileEdges` / `includeQuestionFollowerEdges` / `includeAnswerUpvoterEdges` / `includeSpaceRoleEdges` | boolean | `false` | Per-family opt-ins for the relationship types above |
-| `includeSensitiveRelationshipData` | boolean | `false` | Required alongside the identity-revealing relationship opt-ins (the run stops with an input error otherwise, e.g. for `includeAnswerUpvoterEdges`) |
+| `includeUnresolvedEdges` | boolean | `true` | Keep relationship rows whose target could not be matched |
+| `relationshipTypes` | array | `[]` | Allowlist of labeled relationship collections to expand (follower, following, want-answers, upvoter, Space role); identity-revealing types also need `includeSensitiveRelationshipData` and the matching family opt-in |
+| `includeProfileEdges` | boolean | `false` | Per-family opt-in for profile follower/following/question/space/topic relationships |
+| `includeQuestionFollowerEdges` | boolean | `false` | Per-family opt-in for question follower/want-answer identities (sensitive) |
+| `includeAnswerUpvoterEdges` | boolean | `false` | Per-family opt-in for answer upvoter identities (requires `includeSensitiveRelationshipData`) |
+| `includeSensitiveRelationshipData` | boolean | `false` | Privacy gate required for identity-revealing relationship collections |
 | `includeTargetMetadata` | boolean | `false` | Keep the visible name/image of each relationship target |
-| `includeRelationshipCounts` | boolean | `false` | Emit privacy-preserving member-count rows without identities; also add `relationship_collection` to `resultTypes`, which the default list doesn't include |
-| `includeSpaceContentEdges` | boolean | `true` | Keep Space ↔ post/question membership edges |
-| `maxRelationshipItemsPerCollection` | integer | `500` | Cap per relationship collection |
-| `maxQuestions` | integer | `25` | How many question links discovered from search results, Topics, Spaces or profiles get queued, on top of your own seed URLs (max 1,000) |
-| `maxAnswersPerQuestion` | integer | `10` | Maximum answers kept per question (max 500) |
+| `includeRelationshipCounts` | boolean | `false` | Emit privacy-preserving member-count rows; also add `relationship_collection` to `resultTypes` |
+| `includeSpaceRoleEdges` | boolean | `false` | Keep Space contributor/moderator/admin edges |
+| `includeSpaceContentEdges` | boolean | `true` | Keep Space to post/question membership edges and feed-item membership |
+| `maxRelationshipItemsPerCollection` | integer | `500` | Cap per labeled relationship collection |
+| `maxQuestions` | integer | `25` | How many discovered question links get queued on top of your own seed URLs |
+| `maxAnswersPerQuestion` | integer | `10` | Maximum answer rows kept per question after SSR and GraphQL pagination |
 | `maxAnswers` | integer | `0` | Global answer cap across the whole run (`0` = no cap) |
 | `includeQuestion` | boolean | `true` | Keep question entities in the output |
-| `includeAuthor` | boolean | `true` | Keep author/profile entities in the output |
-| `includeTopics` | boolean | `true` | Keep topic entities in the output |
-| `includeSpaces` | boolean | `false` | Keep Space and Space feed-item rows in the output; switched on automatically when `spaceUrls` is used |
-| `includeComments` | boolean | `false` | Keep comment entities in the output (also needs `maxCommentsPerAnswer` above 0; turned on automatically by `includeReplyGraph`) |
-| `includeAuthorSnapshot` | boolean | `false` | Fetch a bounded profile snapshot for each visible author link |
+| `includeAuthor` | boolean | `true` | Keep author/profile entities and author fields in the output |
+| `includeAuthorSnapshot` | boolean | `false` | Fetch a bounded profile snapshot for each visible answer author |
+| `includeTopics` | boolean | `true` | Keep topic entities and topic links |
+| `includeSpaces` | boolean | `false` | Keep Space and Space feed-item rows; switched on automatically when a Space URL is used in `startUrls` or `spaceUrls` |
+| `includeComments` | boolean | `false` | Opt-in comment rows with `AllCommentsListQuery` cursor pagination; robots-sensitive |
 | `includeEngagementBreakdown` | boolean | `true` | Include per-reaction breakdowns alongside aggregate counts |
-| `includeRelatedContent` / `maxRelatedContent` | boolean / integer | `false` / `20` | Collect an answer's "related" links, capped per answer |
+| `includeRelatedContent` | boolean | `false` | Collect explicitly attached answer related-content links when Quora's public payload exposes them; otherwise they are omitted |
+| `maxRelatedContent` | integer | `20` | Bound related-content links per answer when enabled; zero emits no related-content items |
 | `topCommentsOnly` | boolean | `false` | Keep only comments explicitly labeled Top/Most helpful |
 | `commentSortOrder` | string | `observed` | `observed` / `upvotes_desc` / `reactions_desc` / `replies_desc` / `newest` |
-| `includeReplyGraph` / `maxCommentDepth` | boolean / integer | `false` / `20` | Keep nested comment replies, bounded by depth |
+| `includeReplyGraph` | boolean | `false` | Compatibility alias that enables comments and nested replies |
 | `includeMedia` | boolean | `false` | Include image/video URL fields where available |
 | `includeFeedText` | boolean | `false` | Include visible text on Space feed cards |
-| `includeOutboundLinks` | boolean | `false` | Include non-Quora links found on a page |
-| `includeEntityGraph` | boolean | `false` | Emit relationship rows even when `entity_edge` isn't in `resultTypes` |
-| `maxCommentsPerAnswer` | integer | `0` | Comments kept per answer; at `0` no comments are collected even when `includeComments` is on |
-| `maxItems` | integer | `0` | Cap on entity/status rows before graph/manifest rows (`0` = no cap, max 5,000) |
-| `maxGraphEdges` | integer | `5000` | Cap on relationship rows |
-| `maxScrollAttempts` | integer | `5` | Scroll attempts per page while loading more content |
+| `includeOutboundLinks` | boolean | `false` | Include non-Quora links found in rich text |
+| `includeEntityGraph` | boolean | `false` | Emit relationship rows even when `entity_edge` is not in `resultTypes` |
+| `maxCommentsPerAnswer` | integer | `0` | Comments kept per answer; when comments are on and this is 0, the fallback is 10; the cap is the pagination limit, not a page size |
+| `maxCommentDepth` | integer | `20` | Maximum nested reply depth when replies are enabled; 0 disables replies |
+| `maxItems` | integer | `0` | Cap on entity/status rows before graph and manifest rows (`0` = no cap) |
+| `maxGraphEdges` | integer | `5000` | Cap on relationship rows (`0` = no edges) |
+| `maxScrollAttempts` | integer | `5` | Scroll attempts per page in detail mode |
 | `maxLoadMoreAttempts` | integer | `0` | "Load more" button clicks per page |
-| `includeRawEvidence` / `includeHtml` / `maxHtmlBytes` | boolean / boolean / integer | `false` / `false` / `100000` | Attach a document hash and optionally bounded raw HTML for auditing |
+| `includeRawEvidence` | boolean | `false` | Attach a document hash and size/redaction metadata for auditing |
+| `includeHtml` | boolean | `false` | Retain bounded raw HTML on page-level rows and derived answer HTML |
+| `maxHtmlBytes` | integer | `100000` | Upper bound for retained or derived HTML |
 | `requestDelay` | number | `1` | Delay in seconds between page batches |
-| `maxConcurrency` | integer | `1` | Pages processed in parallel (values above 3 are treated as 3) |
+| `maxConcurrency` | integer | `1` | Independent seeds processed in parallel (values above 3 are treated as 3) |
 | `maxNavigationRetries` | integer | `2` | Retries after a failed page load (max 3) |
-| `language` | string | `auto` | Browser language hint (`en`, `es`, `fr`, …) |
-| `cookies` / `cookieString` | array / string | – | Optional session cookies for content you're authorized to view |
-| `proxyConfiguration` | object | residential proxy | Proxy routing; residential is used by default, and leaving this empty or turning the proxy off still uses residential. Only an explicit proxy group or your own proxy URLs override it |
-| `redactSensitiveQueryParams` | boolean | `true` | Strip credential-like query values from emitted URLs |
-| `rawEvidenceRetentionDays` / `maxRawEvidenceBytes` | integer | `30` / `100000` | Retention label (at most 30 days) and size bound reported for raw HTML evidence, when enabled |
+| `language` | string | `auto` | Browser language hint (`en`, `es`, `fr`, ...); not a translation guarantee |
+| `proxyConfiguration` | object | - | Optional proxy override. The free ladder runs first; there is no paid default |
+| `redactSensitiveQueryParams` | boolean | `true` | Redact credential-like query values and fragment credentials from emitted URLs/HTML |
+| `rawEvidenceRetentionDays` | integer | `30` | Retention label for raw HTML evidence; 0 keeps metadata only |
+| `maxRawEvidenceBytes` | integer | `100000` | Size bound for raw HTML evidence |
 | `maxItemsPerSource` | integer | `0` | Cap on records from each individual source URL/query (`0` = no cap) |
+| `searchDiscovery` | string | `relatedOnly` | `relatedOnly` (related questions only) / `bestEffortIndex` (third-party index) / `off` |
+| `maxRelatedQuestions` | integer | `20` | Related questions enqueued per question seed |
+| `searchResultsPerQuery` | integer | `10` | Maximum best-effort index results per query |
+| `maxAnswerPages` | integer | `0` | Explicit answer GraphQL page cap; 0 derives from `maxAnswersPerQuestion` |
+| `maxTopicFeedPages` | integer | `3` | Topic-feed GraphQL page cap when `includeTopicFeed` is on (minimum one page) |
+| `maxSpaceFeedBundles` | integer | `4` | Space feed bundles read from the SSR multifeed |
+| `includeCommentReplies` | boolean | `false` | Expand nested `repliesConnection` comment replies |
+| `includeQuoraPlusPreview` | boolean | `true` | Emit Quora+ preview answers with preview flags; when false, omit them |
+| `includeProfileStats` | boolean | `true` | Emit profile follower/following/answer/question/post/view/joined/credential fields |
+| `includeTopicStats` | boolean | `true` | Emit Topic follower count and most-viewed authors |
+| `includeSpaceStats` | boolean | `true` | Emit Space counters, description, icon and cover |
+| `includePostStats` | boolean | `true` | Emit Post counters, effective access and question-summary flag |
+| `includeAnswerStats` | boolean | `true` | Emit answer counters, dates, AI flag and effective access |
+| `includeTopicFeed` | boolean | `false` | Browser GraphQL Topic feed; opt-in and robots-sensitive |
+| `includeQuestionAudit` | boolean | `false` | Read the public question `/log` for created time, view count, merge count, and asker identity; robots-sensitive opt-in |
+| `includeProfileHistory` | boolean | `false` | Paginate the public profile answer/question tabs into bounded `profile_activity` rows; robots- and rate-sensitive opt-in |
+| `maxProfileHistoryPages` | integer | `0` | Cap per profile history list; 0 derives three pages (about 30 items per list) |
+| `maxRelationshipPages` | integer | `3` | Cap per public identity-list query after the relationship allowlist and privacy gates |
 
 ## Example inputs
 
@@ -142,11 +173,12 @@ This actor has a large, modular input schema — most fields are optional toggle
 }
 ```
 
-### Example: search seeds, compact nested output
+### Example: best-effort search discovery, compact nested output
 
 ```json
 {
   "searchQueries": ["machine learning career advice"],
+  "searchDiscovery": "relatedOnly",
   "maxQuestions": 10,
   "outputFormat": "nested",
   "maxAnswersPerQuestion": 5
@@ -180,31 +212,45 @@ This actor has a large, modular input schema — most fields are optional toggle
 - **Content research** — pull full question-answer-comment threads on a topic for analysis
 - **Community monitoring** — re-scrape the same questions on a schedule and keep only rows flagged `new`/`changed`
 - **Knowledge graph building** — use `outputFormat: "edges"` to load the question/answer/topic relationship graph into a graph database
-- **Influencer and expert tracking** — follow a profile's answers and, with relationship counts enabled, its follower totals
-- **Space analysis** — collect a Quora Space's feed and contributor structure
+- **Influencer and expert tracking** — follow a profile's visible answers and its public follower/following/content statistics
+- **Space analysis** — collect a Quora Space's feed, metrics and contributor counts
 
 ## FAQ
 
 **Do I need a Quora account?**
-No. Public Quora pages are read without login. Supplying `cookies`/`cookieString` loads pages as your own logged-in session, so only content your account can already see becomes available.
+No. Direct public question, answer, profile, Topic, Space, and Post pages are read without login. The actor never asks for, stores, or emits cookies or session secrets.
 
 **Why did I get a `status` row instead of question/answer data?**
-Quora showed a login wall, Cloudflare challenge, or a removed/redirected page for that URL. The actor reports this honestly as a `status` row instead of guessing at data that wasn't there.
+Quora showed a login wall, Cloudflare challenge, a removed page, or an unsupported redirect for that URL. The actor reports this honestly as a `status` row instead of guessing at data that was not there. A run with zero real rows also gets a `no_records_emitted` status row and a non-success status message.
 
 **Why do I sometimes get fewer answers than `maxAnswersPerQuestion`?**
-Quora's logged-out view can cap how many answers it renders per question, independent of your settings — especially on very high-traffic questions. This is a real ceiling on the source page, not a bug in the actor.
+The actor reads the server-rendered answers, filters out answers whose question is provably unrelated, then paginates the public GraphQL cursor up to your cap. If the question genuinely has fewer answers, the cursor stops; you get the answers that were observable and no `answer_pagination_limited` row, because the source was exhausted rather than capped. `answer_pagination_limited` appears only when `maxAnswerPages`/your cap stopped a non-exhausted source or Quora rate-limited a pagination request, and the page's known `answerCount` is not already satisfied; a non-rate GraphQL failure uses `answer_pagination_unavailable`. Neither case fabricates an answer.
 
-**What's the difference between the four `outputFormat` values?**
-`normalized` keeps every entity as its own row (the default). `nested` groups each question's answers (and each answer's comments) underneath it; rows without a matching parent stay at the top level. `flat` is like `normalized`, except that answer rows also get `question_title` and comment rows get `answer_url`. `edges` returns the relationship rows between entities plus any status rows, so a blocked source still shows up.
+**How do I get question created time, view count, or the asker?**
+Set `includeQuestionAudit: true`. The actor reads the public `/<question>/log` page (robots-sensitive, opt-in) and fills `question_created_at`, `question_view_count`, `question_merge_count`, and the `question_author_*` fields. Without it, those fields are omitted rather than guessed. A blocked `/log` leaves `question_audit_state: "unavailable"` and a status row.
 
-**Can I get a Quora account's followers or who they follow?**
-Only the Followers list currently returns identities (via `includeProfileEdges` + `includeSensitiveRelationshipData`); other relationship types (Following, Upvoters, Space roles) currently return accurate counts but not individual identities yet.
+**How do I get more than the three visible profile history items?**
+Set `includeProfileHistory: true`. The actor paginates the public answer/question tab connections into `profile_activity` rows, bounded by `maxProfileHistoryPages` and paced by `requestDelay`. This GraphQL path is robots- and rate-sensitive; a 400/403 leaves a `profile_history_unavailable` status row and no fabricated rows.
+
+**What is the difference between the four `outputFormat` values?**
+`normalized` keeps every entity as its own row (the default). `nested` groups each question's answers (and each answer's comments) underneath it; rows without a matching parent stay at the top level with an orphan reason. `flat` is like `normalized`, except answer rows also get question context and comment rows get `answer_url`. `edges` returns the relationship rows between entities plus any status rows.
+
+**Can I get a Quora account's followers, question followers, answer upvoters, or Space roles?**
+Yes, as explicit opt-ins. Request the relationship type in `relationshipTypes`, turn on the matching family flag (`includeProfileEdges`, `includeQuestionFollowerEdges`, `includeAnswerUpvoterEdges`, or `includeSpaceRoleEdges`), and set `includeSensitiveRelationshipData: true` for follower/upvoter/want-answer types. The actor then calls the public identity-list GraphQL operations, paginates up to `maxRelationshipPages`, and emits only identities whose profile/question/Space/Topic URLs it observed. It may also use visible DOM links as a fallback. These paths are robots- and rate-sensitive; failures produce `relationship_identity_unavailable` or `relationship_identities_not_observed` status rows. It never invents identities.
 
 **What does the incremental re-scrape (`onlyNewItems`) actually compare?**
-It hashes each entity's content and compares it to the previous run stored under `stateStoreId`, tagging each row `new`, `changed`, `unchanged`, or `scope_mismatch` (the previous run used different settings). Rows are only dropped when `onlyNewItems` is on and `includeUnchanged` is off. Status and manifest rows are never dropped by this setting. If any requested source didn't finish, the new state isn't saved and a `state_store_uncommitted` status row tells you so.
+It hashes each entity's semantic content and compares it to the previous run stored under `stateStoreId`, tagging each row `new`, `changed`, `unchanged`, or `scope_mismatch` (the previous run used different settings). Rows are only dropped when `onlyNewItems` is on and `includeUnchanged` is off. Status and manifest rows are never dropped by this setting. If any requested source did not finish, the new state is not saved and a `state_store_uncommitted` status row tells you so.
 
 **Why are some text/media fields missing even with `includeMedia`/`includeHtml` on?**
-Those fields are only populated when Quora's page actually renders that content for the entity in question — the toggles request the data, they don't guarantee every entity has it.
+Those fields are only populated when Quora's public payload actually contains that content for the entity in question. The toggles request the data; they do not guarantee every entity has it.
+
+**Is search native Quora search?**
+No. Quora's native `/search?q=` is login/Cloudflare-gated for logged-out clients and is disallowed by `robots.txt`. `searchQueries` uses related-question discovery by default and an optional third-party best-effort index; if no public results are discoverable it emits a `search_unavailable` status row.
+
+**What are the hard limitations?**
+Native Quora search is not available cookielessly: `/search?q=` redirects and the public search GraphQL returns no connection. Quora+ `smart_distribution` answers may be preview/truncated; they are flagged `answer_is_quora_plus` and their observed completeness is reported, and no gated remainder is fabricated. Space all-time views/upvotes/comments are private (tested across ten diverse Spaces), Topic description and question count are absent, and question description is absent. Space `allTimeFollowers` is emitted as `space_all_time_followers` only when the payload carries it (not every Space does).
+
+Question created/view/asker, full profile history, comment/reply pagination, and identity lists are technically available through public pages/GraphQL but are **robots-sensitive and/or rate-sensitive opt-ins**; they are off by default and not part of the daily prefill. Be aware that `robots.txt` for generic agents disallows `/` broadly, including `/*_POST`, `/*/log`, `/*/followers`, `/*/following`, and `/*/comments`; product/legal review decides whether to enable those opt-ins. Quora URLs are valid in a browser, but plain HTTP clients can receive a Cloudflare 403 on HEAD/GET; the actor fetches them with TLS impersonation.
 
 **Is this affiliated with Quora?**
-No. This is an independent, third-party actor that reads Quora's public pages; it isn't affiliated with or endorsed by Quora, Inc.
+No. This is an independent, third-party actor that reads public Quora pages; it is not affiliated with or endorsed by Quora, Inc. You are responsible for how you use the data.
