@@ -1,0 +1,133 @@
+{
+  "description": "Scrape Freelancer.com project pages from direct project URLs, search queries, category browse, or user profiles.",
+  "properties": {
+    "autoEscalateOnBlock": {
+      "default": true,
+      "description": "When a fetch returns 403/429/empty, automatically retry that single URL through residential Apify proxy.",
+      "prefill": true,
+      "title": "Auto-escalate on block",
+      "type": "boolean"
+    },
+    "categoryUrls": {
+      "default": [],
+      "description": "Freelancer listing URLs such as https://www.freelancer.com/jobs/python/.",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Category URLs",
+      "type": "array"
+    },
+    "maxItems": {
+      "default": 25,
+      "description": "Hard cap on emitted Freelancer projects.",
+      "maximum": 500,
+      "minimum": 1,
+      "prefill": 25,
+      "title": "Max items",
+      "type": "integer"
+    },
+    "minBidCount": {
+      "default": 0,
+      "description": "Drop projects with fewer than N bids. 0 keeps everything.",
+      "maximum": 1000,
+      "minimum": 0,
+      "prefill": 0,
+      "title": "Minimum bid count",
+      "type": "integer"
+    },
+    "projectType": {
+      "default": "any",
+      "description": "Restrict scraped projects to either fixed-price or hourly. `any` (default) keeps both.",
+      "editor": "select",
+      "enum": [
+        "any",
+        "fixed",
+        "hourly"
+      ],
+      "enumTitles": [
+        "Any (fixed price + hourly)",
+        "Fixed-price only",
+        "Hourly only"
+      ],
+      "prefill": "any",
+      "title": "Project type filter",
+      "type": "string"
+    },
+    "projectUrls": {
+      "default": [
+        "https://www.freelancer.com/projects/python/cricket-prediction-rewards-bot"
+      ],
+      "description": "Direct Freelancer project URLs, such as https://www.freelancer.com/projects/python/demo-project.",
+      "editor": "stringList",
+      "prefill": [
+        "https://www.freelancer.com/projects/python/cricket-prediction-rewards-bot"
+      ],
+      "title": "Project URLs",
+      "type": "array"
+    },
+    "proxyConfiguration": {
+      "default": {},
+      "description": "Optional Apify proxy configuration. Only applied when `useProxy` is enabled.",
+      "editor": "proxy",
+      "prefill": {},
+      "title": "Proxy configuration (advanced)",
+      "type": "object"
+    },
+    "searchPages": {
+      "default": 1,
+      "description": "Number of pages to crawl per search query / category / user URL.",
+      "maximum": 10,
+      "minimum": 1,
+      "prefill": 1,
+      "title": "Search pages per query",
+      "type": "integer"
+    },
+    "searchQueries": {
+      "default": [],
+      "description": "Keywords to convert into Freelancer job listing pages, such as `python`, `react`, or `nodejs`.",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Search queries",
+      "type": "array"
+    },
+    "sortBy": {
+      "default": "latest",
+      "description": "Sort order applied when crawling search query or category URLs. `latest` is Freelancer's default.",
+      "editor": "select",
+      "enum": [
+        "latest",
+        "lowest_budget",
+        "highest_budget",
+        "lowest_bids",
+        "highest_bids"
+      ],
+      "enumTitles": [
+        "Newest first",
+        "Lowest budget first",
+        "Highest budget first",
+        "Lowest bid count first",
+        "Highest bid count first"
+      ],
+      "prefill": "latest",
+      "title": "Sort order (search/category)",
+      "type": "string"
+    },
+    "useProxy": {
+      "default": false,
+      "description": "Route HTTP requests through Apify proxy. Freelancer.com is normally reachable without it; enable this only if you see empty pages.",
+      "prefill": false,
+      "title": "Use Apify proxy",
+      "type": "boolean"
+    },
+    "userUrls": {
+      "default": [],
+      "description": "Freelancer user/employer profile URLs, e.g. https://www.freelancer.com/u/username. The actor scrapes the public projects posted by that user.",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "User profile URLs",
+      "type": "array"
+    }
+  },
+  "schemaVersion": 1,
+  "title": "Freelancer Scraper Input",
+  "type": "object"
+}
