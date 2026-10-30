@@ -1,0 +1,143 @@
+# ESPN Live Scores, Schedules & Game Odds Scraper
+
+ESPN tracks live and finished games across basketball, football, baseball, hockey and soccer, but reading that data out of its site means picking the right league and date one at a time. This actor pulls it for any combination of leagues and dates in one run, and can add per-game leaders, betting odds, attendance and headlines on request.
+
+## What this actor does
+
+- **Covers 16 leagues** across five sports, in any combination, in a single run
+- **Five date modes** — today, yesterday, tomorrow, a single date, or a 30-day-max range — resolved in the timezone you choose
+- **Reports live game state** — status, in-progress clock/period text, and final scores
+- **Optional per-game enrichment** — top performers, betting odds, attendance and recap headlines, one extra request per game
+- Fields ESPN doesn't publish for a given game (such as `venue` or `broadcasts`) are left out of that record rather than sent empty
+
+## Output per game
+
+Fields ESPN doesn't provide for a given game are omitted; a few appear only when `fetchDetails` is enabled, noted below.
+
+- `gameId` — ESPN event ID
+- `league` — league code, e.g. `nba`
+- `sport` — sport, e.g. `basketball`
+- `status` — `scheduled`, `in_progress`, `final`, `postponed` or `cancelled` (a delayed game stays `scheduled`; check `statusDetail` for the word "Delayed")
+- `statusDetail` — human-readable detail, e.g. `Q3 4:23`, `Final`, `7:30 PM ET`
+- `date` — ISO 8601 UTC kickoff time
+- `dateLocal` — kickoff time in the timezone you requested
+- `name` — full game name, e.g. `Boston Celtics at Los Angeles Lakers`
+- `shortName` — abbreviated matchup, e.g. `BOS @ LAL`
+- `homeTeam`, `awayTeam` — each an object with `id`, `name`, `abbreviation`, `score` and `logo`
+- `venue` — object with `name`, `city`, `state` and `country`
+- `broadcasts` — TV/streaming channels, e.g. `["ESPN", "ABC"]`
+- `leaders` — top performers as `{home: [...], away: [...]}`, each entry with `name`, `position`, `stat` and `value` (`fetchDetails: true`)
+- `odds` — pre-game betting line as `{provider, details, overUnder, spread}` (`fetchDetails: true`)
+- `attendance` — reported attendance (`fetchDetails: true`)
+- `headline` — recap or preview headline (`fetchDetails: true`)
+- `gameNotes` — notable notes such as records or milestones (`fetchDetails: true`)
+- `scrapedAt` — ISO 8601 UTC scrape timestamp
+
+If a specific league/date combination fails to fetch, the actor emits a diagnostic record instead, with `inputLeague`, `inputDate`, `error` and `scrapedAt`.
+
+If the whole run can't return any games — no valid league was given, the requested dates had no games, the date input was invalid, or an unexpected error occurred — it writes a single record with `type: "espn_game_blocked"`, a `reason` code, a human-readable `message`, and `scrapedAt`, instead of any game fields.
+
+## Supported leagues
+
+| Code | League | Sport |
+|---|---|---|
+| `nba` | NBA | Basketball |
+| `nfl` | NFL | Football |
+| `mlb` | MLB | Baseball |
+| `nhl` | NHL | Hockey |
+| `mls` | MLS | Soccer |
+| `wnba` | WNBA | Basketball |
+| `ncaam` | NCAA Men's Basketball | Basketball |
+| `ncaaw` | NCAA Women's Basketball | Basketball |
+| `ncaaf` | NCAA Football | Football |
+| `epl` | English Premier League | Soccer |
+| `laliga` | La Liga | Soccer |
+| `ucl` | UEFA Champions League | Soccer |
+| `bundesliga` | Bundesliga | Soccer |
+| `seriea` | Serie A | Soccer |
+| `ligue1` | Ligue 1 | Soccer |
+| `ligamx` | Liga MX | Soccer |
+
+## Input
+
+| Field | Type | Default | Description |
+|---|---|---|---|
+| `leagues` | array | `["nba"]` | One or more league codes from the table above. |
+| `dateMode` | string | `today` | `today`, `yesterday`, `tomorrow`, `single` or `range`. |
+| `date` | string | – | `YYYYMMDD`, required when `dateMode` is `single`. |
+| `startDate` | string | – | `YYYYMMDD`, required when `dateMode` is `range`. |
+| `endDate` | string | – | `YYYYMMDD`, required when `dateMode` is `range`. Max span: 30 days. |
+| `timezone` | string | `UTC` | IANA timezone (e.g. `America/New_York`) for `dateLocal` and for resolving `today`/`yesterday`/`tomorrow`. |
+| `fetchDetails` | boolean | `false` | Adds leaders, odds, attendance and headlines per game; one extra request per game. |
+| `maxItems` | integer | `100` | Cap on total records returned across all leagues and dates (1–10,000). |
+
+### Example: today's NBA and NFL games
+
+```json
+{
+    "leagues": ["nba", "nfl"],
+    "dateMode": "today",
+    "timezone": "America/New_York",
+    "maxItems": 100
+}
+```
+
+### Example: yesterday's final scores with odds and leaders
+
+```json
+{
+    "leagues": ["nba"],
+    "dateMode": "yesterday",
+    "fetchDetails": true,
+    "maxItems": 50
+}
+```
+
+### Example: a week of Premier League fixtures
+
+```json
+{
+    "leagues": ["epl"],
+    "dateMode": "range",
+    "startDate": "20260101",
+    "endDate": "20260107",
+    "maxItems": 200
+}
+```
+
+## Use cases
+
+- **Live score boards** — pull today's games across several leagues at once for a dashboard
+- **Daily recap automation** — fetch yesterday's final scores with `fetchDetails` to get headlines and top performers
+- **Historical results archiving** — walk 30-day ranges to build a season-by-season results archive
+- **Betting-line tracking** — capture pre-game odds alongside final scores for closing-line comparisons
+- **Broadcast research** — see which channels are carrying which games, league by league
+
+## FAQ
+
+**Do I need an ESPN account or API key?**
+No. This scraper uses ESPN's public JSON API which is freely accessible without any login or authentication.
+
+**Is a proxy required?**
+No. ESPN's public API has no bot protection. This scraper works out of the box on Apify cloud without any proxy configuration.
+
+**How do I get yesterday's NBA scores?**
+Set `leagues` to `["nba"]` and `dateMode` to `yesterday`. All final scores from the previous day will be in the dataset.
+
+**How do I get scores for multiple leagues at once?**
+Add multiple codes to the `leagues` array, e.g. `["nba", "nfl", "epl"]`. Each league and date combination is fetched independently.
+
+**What does the `score` field look like for a scheduled game?**
+The `score` field on `homeTeam` and `awayTeam` will be `0` for games that haven't started yet. Check the `status` field: a value of `"scheduled"` means the game has not begun.
+
+**What is the maximum date range?**
+30 days. Requesting a range larger than 30 days will return an error. For historical bulk data, run multiple 30-day range requests.
+
+**How often is the data updated?**
+The actor fetches data live from ESPN's API at run time. For real-time in-game scores, schedule the actor to run every few minutes using Apify's scheduler.
+
+**What leagues are available for soccer?**
+MLS (`mls`), English Premier League (`epl`), La Liga (`laliga`), UEFA Champions League (`ucl`), Bundesliga (`bundesliga`), Serie A (`seriea`), Ligue 1 (`ligue1`), and Liga MX (`ligamx`).
+
+**Is this affiliated with ESPN?**
+No, this is an independent, third-party actor that reads ESPN's public game data. It is not affiliated with or endorsed by ESPN, Inc.

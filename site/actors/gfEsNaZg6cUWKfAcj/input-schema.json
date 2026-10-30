@@ -1,0 +1,82 @@
+{
+  "properties": {
+    "date": {
+      "description": "Required when dateMode is 'single'. Format: YYYYMMDD — e.g. 20240115.",
+      "editor": "textfield",
+      "title": "Date (YYYYMMDD)",
+      "type": "string"
+    },
+    "dateMode": {
+      "default": "today",
+      "description": "Which date(s) to fetch. 'today', 'yesterday', 'tomorrow' use the timezone field. 'single' requires the date field. 'range' requires startDate and endDate (max 30 days).",
+      "editor": "select",
+      "enum": [
+        "today",
+        "yesterday",
+        "tomorrow",
+        "single",
+        "range"
+      ],
+      "enumTitles": [
+        "Today",
+        "Yesterday",
+        "Tomorrow",
+        "Single date",
+        "Date range"
+      ],
+      "prefill": "today",
+      "title": "Date Mode",
+      "type": "string"
+    },
+    "endDate": {
+      "description": "Required when dateMode is 'range'. Format: YYYYMMDD. Maximum span is 30 days.",
+      "editor": "textfield",
+      "title": "End Date (YYYYMMDD)",
+      "type": "string"
+    },
+    "fetchDetails": {
+      "default": false,
+      "description": "Fetch per-game detail: leaders, odds, attendance, headlines. Makes one extra request per game.",
+      "editor": "checkbox",
+      "title": "Fetch Game Details",
+      "type": "boolean"
+    },
+    "leagues": {
+      "default": [
+        "nba"
+      ],
+      "description": "One or more league codes to scrape. Supported: nba, nfl, mlb, nhl, mls, wnba, ncaam, ncaaw, ncaaf, epl, laliga, ucl, bundesliga, seriea, ligue1, ligamx.",
+      "editor": "stringList",
+      "prefill": [
+        "nba"
+      ],
+      "title": "Leagues",
+      "type": "array"
+    },
+    "maxItems": {
+      "default": 100,
+      "description": "Maximum total game records to return across all leagues and dates.",
+      "editor": "number",
+      "maximum": 10000,
+      "minimum": 1,
+      "title": "Max Items",
+      "type": "integer"
+    },
+    "startDate": {
+      "description": "Required when dateMode is 'range'. Format: YYYYMMDD.",
+      "editor": "textfield",
+      "title": "Start Date (YYYYMMDD)",
+      "type": "string"
+    },
+    "timezone": {
+      "default": "UTC",
+      "description": "IANA timezone used for the dateLocal field and for resolving today/yesterday/tomorrow. E.g. America/New_York, Europe/London.",
+      "editor": "textfield",
+      "title": "Timezone",
+      "type": "string"
+    }
+  },
+  "schemaVersion": 1,
+  "title": "ESPN Scores & Schedules Input",
+  "type": "object"
+}

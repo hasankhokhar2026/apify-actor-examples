@@ -1,0 +1,110 @@
+{
+  "actorSpecification": 1,
+  "description": "One record per game, with league, status, score, venue, broadcasts and optional leaders, odds, attendance and headline.",
+  "fields": {},
+  "title": "ESPN Live Scores, Schedules & Game Odds Scraper Output",
+  "views": {
+    "overview": {
+      "display": {
+        "component": "table",
+        "properties": {
+          "attendance": {
+            "format": "number",
+            "label": "Attendance"
+          },
+          "awayTeam": {
+            "format": "object",
+            "label": "Away"
+          },
+          "broadcasts": {
+            "format": "array",
+            "label": "Broadcasts"
+          },
+          "date": {
+            "format": "text",
+            "label": "Date (UTC)"
+          },
+          "dateLocal": {
+            "format": "text",
+            "label": "Date (Local)"
+          },
+          "gameId": {
+            "format": "text",
+            "label": "Game ID"
+          },
+          "gameNotes": {
+            "format": "array",
+            "label": "Game Notes"
+          },
+          "headline": {
+            "format": "text",
+            "label": "Headline"
+          },
+          "homeTeam": {
+            "format": "object",
+            "label": "Home"
+          },
+          "leaders": {
+            "format": "object",
+            "label": "Leaders"
+          },
+          "league": {
+            "format": "text",
+            "label": "League"
+          },
+          "odds": {
+            "format": "object",
+            "label": "Odds"
+          },
+          "scrapedAt": {
+            "format": "text",
+            "label": "Scraped At"
+          },
+          "shortName": {
+            "format": "text",
+            "label": "Matchup"
+          },
+          "sport": {
+            "format": "text",
+            "label": "Sport"
+          },
+          "status": {
+            "format": "text",
+            "label": "Status"
+          },
+          "statusDetail": {
+            "format": "text",
+            "label": "Detail"
+          },
+          "venue": {
+            "format": "object",
+            "label": "Venue"
+          }
+        }
+      },
+      "title": "Game Results",
+      "transformation": {
+        "fields": [
+          "gameId",
+          "league",
+          "sport",
+          "status",
+          "statusDetail",
+          "date",
+          "dateLocal",
+          "shortName",
+          "homeTeam",
+          "awayTeam",
+          "venue",
+          "broadcasts",
+          "attendance",
+          "odds",
+          "headline",
+          "leaders",
+          "gameNotes",
+          "scrapedAt"
+        ]
+      }
+    }
+  }
+}
