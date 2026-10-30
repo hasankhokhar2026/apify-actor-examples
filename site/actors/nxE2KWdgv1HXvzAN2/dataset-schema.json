@@ -1,0 +1,161 @@
+{
+  "actorSpecification": 1,
+  "fields": {
+    "avatarUrl": {
+      "description": "URL of the account's profile avatar image",
+      "title": "Avatar URL",
+      "type": "string"
+    },
+    "bio": {
+      "description": "Profile biography/signature text",
+      "title": "Bio",
+      "type": "string"
+    },
+    "displayName": {
+      "description": "Display name (nickname) of this account",
+      "title": "Display Name",
+      "type": "string"
+    },
+    "followerCount": {
+      "description": "Number of followers this account has (from statsV2)",
+      "title": "Follower Count",
+      "type": "integer"
+    },
+    "followingCount": {
+      "description": "Number of accounts this account follows (from statsV2)",
+      "title": "Following Count",
+      "type": "integer"
+    },
+    "heartCount": {
+      "description": "Total likes/hearts received across all videos (from statsV2 only — statsV1 heart overflows for large creators)",
+      "title": "Heart Count",
+      "type": "integer"
+    },
+    "isOrganization": {
+      "description": "Whether TikTok classifies this account as an organization",
+      "title": "Is Organization",
+      "type": "boolean"
+    },
+    "listType": {
+      "description": "Either 'followers' or 'following'",
+      "title": "List Type",
+      "type": "string"
+    },
+    "privateAccount": {
+      "description": "Whether this account is set to private",
+      "title": "Private Account",
+      "type": "boolean"
+    },
+    "scrapedAt": {
+      "description": "ISO 8601 UTC datetime when this row was generated",
+      "title": "Scraped At",
+      "type": "string"
+    },
+    "secUid": {
+      "description": "TikTok secure user identifier used for API calls",
+      "title": "Secure UID",
+      "type": "string"
+    },
+    "sourceUserId": {
+      "description": "TikTok user ID of the profile whose list was scraped",
+      "title": "Source User ID",
+      "type": "string"
+    },
+    "sourceUsername": {
+      "description": "The @username of the profile whose followers/following list was scraped",
+      "title": "Source Username",
+      "type": "string"
+    },
+    "userId": {
+      "description": "TikTok user ID of this account",
+      "title": "User ID",
+      "type": "string"
+    },
+    "username": {
+      "description": "TikTok @username (uniqueId) of this account",
+      "title": "Username",
+      "type": "string"
+    },
+    "verified": {
+      "description": "Whether this account has a TikTok verified badge",
+      "title": "Verified",
+      "type": "boolean"
+    },
+    "videoCount": {
+      "description": "Number of public videos posted by this account (from statsV2)",
+      "title": "Video Count",
+      "type": "integer"
+    }
+  },
+  "title": "TikTok Followers & Following",
+  "views": {
+    "overview": {
+      "description": "TikTok user accounts from a profile's followers or following list, with engagement stats.",
+      "display": {
+        "component": "table",
+        "properties": {
+          "displayName": {
+            "format": "text",
+            "label": "Display Name"
+          },
+          "followerCount": {
+            "format": "number",
+            "label": "Followers"
+          },
+          "followingCount": {
+            "format": "number",
+            "label": "Following"
+          },
+          "heartCount": {
+            "format": "number",
+            "label": "Total Likes"
+          },
+          "listType": {
+            "format": "text",
+            "label": "List Type"
+          },
+          "scrapedAt": {
+            "format": "text",
+            "label": "Scraped At"
+          },
+          "sourceUsername": {
+            "format": "text",
+            "label": "Source Profile"
+          },
+          "userId": {
+            "format": "text",
+            "label": "User ID"
+          },
+          "username": {
+            "format": "text",
+            "label": "Username"
+          },
+          "verified": {
+            "format": "boolean",
+            "label": "Verified"
+          },
+          "videoCount": {
+            "format": "number",
+            "label": "Videos"
+          }
+        }
+      },
+      "title": "Users Overview",
+      "transformation": {
+        "fields": [
+          "sourceUsername",
+          "listType",
+          "userId",
+          "username",
+          "displayName",
+          "verified",
+          "followerCount",
+          "followingCount",
+          "heartCount",
+          "videoCount",
+          "scrapedAt"
+        ]
+      }
+    }
+  }
+}

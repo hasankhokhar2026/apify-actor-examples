@@ -1,0 +1,71 @@
+{
+  "description": "Scrape the followers or following list for TikTok profiles. Input usernames or profile URLs.",
+  "properties": {
+    "includeStats": {
+      "default": true,
+      "description": "Include follower/following/heart/video counts from statsV2 for each user in the output.",
+      "prefill": true,
+      "title": "Include User Stats",
+      "type": "boolean"
+    },
+    "listType": {
+      "default": "following",
+      "description": "Choose whether to scrape followers, following, or both lists for each profile. NOTE: 'followers' requires a sessionCookie — without it TikTok's API returns a generic list, not the account's real followers. 'following' works without a cookie.",
+      "editor": "select",
+      "enum": [
+        "followers",
+        "following",
+        "both"
+      ],
+      "enumTitles": [
+        "Followers only (requires sessionCookie)",
+        "Following only",
+        "Both (followers needs sessionCookie)"
+      ],
+      "prefill": "following",
+      "title": "List Type",
+      "type": "string"
+    },
+    "maxUsersPerProfile": {
+      "default": 100,
+      "description": "Maximum number of follower or following users to fetch per profile.",
+      "maximum": 5000,
+      "minimum": 1,
+      "prefill": 30,
+      "title": "Max Users Per Profile",
+      "type": "integer"
+    },
+    "profileUrls": {
+      "description": "TikTok profile URLs as alternative or additional input. E.g. https://www.tiktok.com/@natgeo",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "title": "Profile URLs",
+      "type": "array"
+    },
+    "sessionCookie": {
+      "description": "Value of the TikTok `sessionid` cookie. **Required to scrape followers** — without it, TikTok's API ignores the target account and returns a generic regional list. Not needed for 'following' mode. To obtain: install Cookie-Editor extension → log into TikTok → click Cookie-Editor → find 'sessionid' → copy its Value.",
+      "editor": "textfield",
+      "isSecret": true,
+      "title": "TikTok Session Cookie (required for followers list)",
+      "type": "string"
+    },
+    "usernames": {
+      "description": "TikTok usernames (with or without @) to fetch followers/following for.",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "prefill": [
+        "natgeo"
+      ],
+      "title": "Usernames",
+      "type": "array"
+    }
+  },
+  "required": [],
+  "schemaVersion": 1,
+  "title": "TikTok Followers/Following Scraper Input",
+  "type": "object"
+}
