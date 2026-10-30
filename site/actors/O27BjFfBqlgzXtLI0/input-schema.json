@@ -1,0 +1,65 @@
+{
+  "properties": {
+    "bitmoji": {
+      "default": "enable",
+      "description": "Whether to include the user's Bitmoji avatar in the snapcode image.",
+      "editor": "select",
+      "enum": [
+        "enable",
+        "disable"
+      ],
+      "enumTitles": [
+        "Enable (includes Bitmoji avatar if set)",
+        "Disable (ghost icon only)"
+      ],
+      "prefill": "enable",
+      "title": "Bitmoji Avatar",
+      "type": "string"
+    },
+    "downloadToStorage": {
+      "default": false,
+      "description": "Download the snapcode image to Apify Key-Value Store and include a persistent URL in output",
+      "title": "Save to Key-Value Store",
+      "type": "boolean"
+    },
+    "format": {
+      "default": "SVG",
+      "description": "Image format of the snapcode to download: SVG (vector, recommended) or PNG (raster).",
+      "editor": "select",
+      "enum": [
+        "SVG",
+        "PNG"
+      ],
+      "enumTitles": [
+        "SVG (vector, ~68KB, recommended)",
+        "PNG (raster, ~25KB)"
+      ],
+      "prefill": "SVG",
+      "title": "Image Format",
+      "type": "string"
+    },
+    "proxyConfiguration": {
+      "description": "Optional proxy configuration for requests.",
+      "editor": "proxy",
+      "nullable": true,
+      "title": "Proxy Configuration",
+      "type": "object"
+    },
+    "usernames": {
+      "description": "Snapchat usernames to fetch snapcodes for",
+      "editor": "stringList",
+      "prefill": [
+        "brentrivera",
+        "selenagomez"
+      ],
+      "title": "Usernames",
+      "type": "array"
+    }
+  },
+  "required": [
+    "usernames"
+  ],
+  "schemaVersion": 1,
+  "title": "Snapchat Snapcode Scraper",
+  "type": "object"
+}
