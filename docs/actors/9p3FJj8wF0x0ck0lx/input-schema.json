@@ -1,0 +1,103 @@
+{
+  "description": "Scrape product listings or details from Flipkart by search query, category URL, or direct product URLs.",
+  "properties": {
+    "categoryUrl": {
+      "description": "Full Flipkart category or browse URL, e.g. https://www.flipkart.com/laptops/pr?sid=6bo%2Cb5g (mode=byCategory)",
+      "editor": "textfield",
+      "title": "Category URL",
+      "type": "string"
+    },
+    "maxItems": {
+      "default": 20,
+      "description": "Maximum number of products to scrape (1–500).",
+      "maximum": 500,
+      "minimum": 1,
+      "prefill": 20,
+      "title": "Max Items",
+      "type": "integer"
+    },
+    "maxPrice": {
+      "description": "Maximum price filter in Indian Rupees.",
+      "maximum": 10000000,
+      "minimum": 0,
+      "title": "Maximum Price (INR)",
+      "type": "integer"
+    },
+    "minPrice": {
+      "description": "Minimum price filter in Indian Rupees.",
+      "maximum": 10000000,
+      "minimum": 0,
+      "title": "Minimum Price (INR)",
+      "type": "integer"
+    },
+    "minRating": {
+      "description": "Minimum product rating (1.0–5.0). Leave empty for no filter.",
+      "maximum": 5,
+      "minimum": 1,
+      "title": "Minimum Rating",
+      "type": "number"
+    },
+    "mode": {
+      "default": "search",
+      "description": "How to find products on Flipkart.",
+      "editor": "select",
+      "enum": [
+        "search",
+        "byCategory",
+        "byUrl"
+      ],
+      "enumTitles": [
+        "Search products by keyword",
+        "Browse a category URL",
+        "Fetch specific product URLs"
+      ],
+      "prefill": "search",
+      "title": "Mode",
+      "type": "string"
+    },
+    "searchQuery": {
+      "description": "Keyword(s) to search on Flipkart. (mode=search)",
+      "editor": "textfield",
+      "prefill": "laptop",
+      "title": "Search Query",
+      "type": "string"
+    },
+    "sortBy": {
+      "default": "relevance",
+      "description": "Sort order for search/category results.",
+      "editor": "select",
+      "enum": [
+        "relevance",
+        "price_asc",
+        "price_desc",
+        "popularity",
+        "newest",
+        "rating"
+      ],
+      "enumTitles": [
+        "Relevance",
+        "Price: Low to High",
+        "Price: High to Low",
+        "Popularity",
+        "Newest first",
+        "Highest rated"
+      ],
+      "prefill": "relevance",
+      "title": "Sort By",
+      "type": "string"
+    },
+    "startUrls": {
+      "description": "List of Flipkart product URLs to scrape, e.g. https://www.flipkart.com/product-name/p/itm... (mode=byUrl)",
+      "editor": "requestListSources",
+      "prefill": [],
+      "title": "Start URLs",
+      "type": "array"
+    }
+  },
+  "required": [
+    "mode"
+  ],
+  "schemaVersion": 1,
+  "title": "Flipkart Scraper Input",
+  "type": "object"
+}
