@@ -1,0 +1,117 @@
+{
+  "actorOutputSchemaVersion": 1,
+  "description": "One record per subreddit post that passes your filters, with score, comments, flair, gilded/crosspost counts and media hints.",
+  "properties": {
+    "author": {
+      "description": "Username of the post author",
+      "template": "{{author}}",
+      "title": "Author",
+      "type": "string"
+    },
+    "content": {
+      "description": "Text content of self posts (first 1000 characters). Null for link posts.",
+      "template": "{{content}}",
+      "title": "Content",
+      "type": "string"
+    },
+    "created_at": {
+      "description": "ISO 8601 formatted datetime when the post was created",
+      "template": "{{created_at}}",
+      "title": "Created At",
+      "type": "string"
+    },
+    "created_utc": {
+      "description": "Unix timestamp when the post was created",
+      "template": "{{created_utc}}",
+      "title": "Created UTC",
+      "type": "string"
+    },
+    "is_nsfw": {
+      "description": "Whether the post is marked as NSFW",
+      "template": "{{is_nsfw}}",
+      "title": "Is NSFW",
+      "type": "string"
+    },
+    "is_stickied": {
+      "description": "Whether the post is stickied/pinned",
+      "template": "{{is_stickied}}",
+      "title": "Is Stickied",
+      "type": "string"
+    },
+    "link_flair": {
+      "description": "Post flair/tag text (if any)",
+      "template": "{{link_flair}}",
+      "title": "Link Flair",
+      "type": "string"
+    },
+    "num_comments": {
+      "description": "Total number of comments on the post",
+      "template": "{{num_comments}}",
+      "title": "Number of Comments",
+      "type": "string"
+    },
+    "old_reddit_url": {
+      "description": "Permalink to the post on old.reddit.com",
+      "template": "{{old_reddit_url}}",
+      "title": "Old Reddit URL",
+      "type": "string"
+    },
+    "post_id": {
+      "description": "Unique post identifier",
+      "template": "{{post_id}}",
+      "title": "Post ID",
+      "type": "string"
+    },
+    "post_name": {
+      "description": "Full post name in Reddit format (e.g., t3_abc123)",
+      "template": "{{post_name}}",
+      "title": "Post Name",
+      "type": "string"
+    },
+    "score": {
+      "description": "Post score (upvotes minus downvotes)",
+      "template": "{{score}}",
+      "title": "Score",
+      "type": "string"
+    },
+    "subreddit": {
+      "description": "Name of the subreddit (e.g., python)",
+      "template": "{{subreddit}}",
+      "title": "Subreddit",
+      "type": "string"
+    },
+    "subreddit_prefixed": {
+      "description": "Subreddit name with r/ prefix (e.g., r/python)",
+      "template": "{{subreddit_prefixed}}",
+      "title": "Subreddit Prefixed",
+      "type": "string"
+    },
+    "thumbnail_url": {
+      "description": "URL of the post thumbnail image (if any)",
+      "template": "{{thumbnail_url}}",
+      "title": "Thumbnail URL",
+      "type": "string"
+    },
+    "title": {
+      "description": "Post title",
+      "template": "{{title}}",
+      "title": "Title",
+      "type": "string"
+    },
+    "url": {
+      "description": "Permalink to the post on reddit.com",
+      "template": "{{url}}",
+      "title": "URL",
+      "type": "string"
+    }
+  },
+  "required": [
+    "subreddit",
+    "post_id",
+    "title",
+    "url"
+  ],
+  "schemaVersion": 1,
+  "title": "Reddit Subreddit Post Filter & Moderation Scraper Output",
+  "type": "object"
+}

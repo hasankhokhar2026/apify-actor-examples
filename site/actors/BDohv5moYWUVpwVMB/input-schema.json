@@ -1,0 +1,133 @@
+{
+  "description": "Scrape posts from Reddit subreddits with advanced filters. Pro adds: keywordFilter, minScore, maxAgeDays, excludeStickied, excludeNsfw, authorBlocklist, domainAllowlist/Blocklist.",
+  "properties": {
+    "authorBlocklist": {
+      "default": [],
+      "description": "Drop posts by these usernames (case-insensitive).",
+      "editor": "stringList",
+      "title": "Author blocklist",
+      "type": "array"
+    },
+    "domainAllowlist": {
+      "default": [],
+      "description": "If set, only emit posts whose link domain is in this list (e.g. `[\"github.com\", \"arxiv.org\"]`). Self-posts pass.",
+      "editor": "stringList",
+      "title": "Domain allowlist",
+      "type": "array"
+    },
+    "domainBlocklist": {
+      "default": [],
+      "description": "Drop posts whose link domain is in this list.",
+      "editor": "stringList",
+      "title": "Domain blocklist",
+      "type": "array"
+    },
+    "excludeNsfw": {
+      "default": false,
+      "description": "Drop NSFW posts.",
+      "title": "Exclude NSFW",
+      "type": "boolean"
+    },
+    "excludeOriginalContent": {
+      "default": false,
+      "description": "Drop posts marked as Original Content.",
+      "title": "Exclude OC posts",
+      "type": "boolean"
+    },
+    "excludeStickied": {
+      "default": false,
+      "description": "Drop pinned/stickied posts (typically mod announcements).",
+      "title": "Exclude stickied posts",
+      "type": "boolean"
+    },
+    "keywordFilter": {
+      "description": "Only emit posts whose title or content contains this substring (case-insensitive).",
+      "editor": "textfield",
+      "title": "Keyword filter (substring)",
+      "type": "string"
+    },
+    "maxAgeDays": {
+      "description": "Drop posts older than N days.",
+      "maximum": 36500,
+      "minimum": 1,
+      "title": "Max post age in days (filter)",
+      "type": "integer"
+    },
+    "maxPosts": {
+      "default": 25,
+      "description": "Max posts per subreddit.",
+      "maximum": 1000,
+      "minimum": 1,
+      "title": "Max posts per subreddit",
+      "type": "integer"
+    },
+    "minScore": {
+      "description": "Drop posts with score below this number.",
+      "maximum": 10000000,
+      "minimum": -10000,
+      "title": "Min score (filter)",
+      "type": "integer"
+    },
+    "sort": {
+      "default": "hot",
+      "description": "How to sort posts in the subreddit.",
+      "enum": [
+        "hot",
+        "new",
+        "top",
+        "rising",
+        "controversial"
+      ],
+      "enumTitles": [
+        "Hot",
+        "New",
+        "Top",
+        "Rising",
+        "Controversial"
+      ],
+      "title": "Sort posts by",
+      "type": "string"
+    },
+    "subreddits": {
+      "description": "List of subreddit names without `r/` prefix.",
+      "editor": "stringList",
+      "example": [
+        "python",
+        "programming"
+      ],
+      "prefill": [
+        "python"
+      ],
+      "title": "Subreddits",
+      "type": "array"
+    },
+    "timeFilter": {
+      "default": "day",
+      "description": "Time range for `top` or `controversial` sorts.",
+      "enum": [
+        "hour",
+        "day",
+        "week",
+        "month",
+        "year",
+        "all"
+      ],
+      "enumTitles": [
+        "Past Hour",
+        "Past Day",
+        "Past Week",
+        "Past Month",
+        "Past Year",
+        "All Time"
+      ],
+      "title": "Time filter (top/controversial)",
+      "type": "string"
+    }
+  },
+  "required": [
+    "subreddits"
+  ],
+  "schemaVersion": 1,
+  "title": "Reddit Scraper Pro Input",
+  "type": "object"
+}
