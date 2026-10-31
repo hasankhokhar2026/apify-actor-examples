@@ -1,0 +1,77 @@
+{
+  "properties": {
+    "companyUrls": {
+      "description": "LinkedIn company page URLs or slugs. Accepts: https://www.linkedin.com/company/apple/, https://www.linkedin.com/company/apple/about/, or just the slug: apple",
+      "editor": "stringList",
+      "prefill": [
+        "https://www.linkedin.com/company/hubspot/"
+      ],
+      "title": "Company URLs",
+      "type": "array"
+    },
+    "cookie": {
+      "description": "Your LinkedIn session cookie. Accepts either: (1) the li_at value from browser DevTools Application Cookies, or (2) full cookies JSON array exported from an extension like EditThisCookie.",
+      "editor": "textarea",
+      "isSecret": true,
+      "title": "LinkedIn Cookie",
+      "type": "string"
+    },
+    "includeAffiliates": {
+      "default": false,
+      "description": "Also emit one record per affiliated company referenced by each input company.",
+      "editor": "checkbox",
+      "title": "Include affiliated companies",
+      "type": "boolean"
+    },
+    "includeFundingDetails": {
+      "default": true,
+      "description": "Extract Crunchbase funding info (total raised, last round, lead investors) from the LinkedIn page when available. Adds small fetch time.",
+      "editor": "checkbox",
+      "title": "Include funding details",
+      "type": "boolean"
+    },
+    "includeShowcases": {
+      "default": false,
+      "description": "Also emit one record per LinkedIn showcase page referenced by each input company.",
+      "editor": "checkbox",
+      "title": "Include showcase pages",
+      "type": "boolean"
+    },
+    "language": {
+      "default": "en",
+      "description": "Language code used for Accept-Language and the LinkedIn lang cookie.",
+      "editor": "select",
+      "enum": [
+        "en",
+        "es",
+        "fr",
+        "de",
+        "pt",
+        "it"
+      ],
+      "enumTitles": [
+        "English",
+        "Spanish",
+        "French",
+        "German",
+        "Portuguese",
+        "Italian"
+      ],
+      "title": "Language",
+      "type": "string"
+    },
+    "proxyConfiguration": {
+      "description": "Optional Apify proxy configuration. Residential proxy recommended for best results.",
+      "editor": "proxy",
+      "title": "Proxy Configuration",
+      "type": "object"
+    }
+  },
+  "required": [
+    "companyUrls",
+    "cookie"
+  ],
+  "schemaVersion": 1,
+  "title": "LinkedIn Company Info Scraper Input",
+  "type": "object"
+}
