@@ -1,0 +1,101 @@
+{
+  "description": "Scrape tech company profiles from BuiltIn.com — get company info, industries, headcount, benefits, and open jobs.",
+  "properties": {
+    "companyUrls": {
+      "default": [],
+      "description": "BuiltIn company URLs (e.g. `https://builtin.com/company/stripe`) or company names (e.g. `Stripe`). Slugs like `stripe` also accepted.",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Company URLs or names (mode=byCompany)",
+      "type": "array"
+    },
+    "includeProfile": {
+      "default": false,
+      "description": "If true, fetch each company's full profile page for additional details. Slower but more complete.",
+      "prefill": false,
+      "title": "Fetch full company profile",
+      "type": "boolean"
+    },
+    "location": {
+      "default": "",
+      "description": "Filter companies by US city/market. Leave empty for all US companies. Note: `national` uses the same builtin.com listing as \"All US\" (BuiltIn has no separate national-remote listing) — combine with `officeType: remote` to get remote-only companies.",
+      "editor": "select",
+      "enum": [
+        "",
+        "chicago",
+        "colorado",
+        "boston",
+        "seattle",
+        "austin",
+        "atlanta",
+        "los-angeles",
+        "national"
+      ],
+      "enumTitles": [
+        "All US (builtin.com)",
+        "Chicago (builtinchicago.com)",
+        "Colorado (builtincolorado.com)",
+        "Boston (builtinboston.com)",
+        "Seattle (builtinseattle.com)",
+        "Austin (builtinaustin.com)",
+        "Atlanta (builtinatlanta.com)",
+        "Los Angeles (builtinla.com)",
+        "National (same listing as All US — builtin.com)"
+      ],
+      "prefill": "",
+      "title": "Location (mode=browse)",
+      "type": "string"
+    },
+    "maxItems": {
+      "default": 50,
+      "description": "Hard cap on total records emitted.",
+      "maximum": 500,
+      "minimum": 1,
+      "prefill": 20,
+      "title": "Max items",
+      "type": "integer"
+    },
+    "mode": {
+      "default": "browse",
+      "description": "What to scrape. `browse` lists companies from the BuiltIn directory. `byCompany` fetches specific company profiles by name or BuiltIn URL.",
+      "editor": "select",
+      "enum": [
+        "browse",
+        "byCompany"
+      ],
+      "enumTitles": [
+        "Browse — list companies from BuiltIn directory",
+        "By Company — fetch specific company profiles"
+      ],
+      "prefill": "browse",
+      "title": "Mode",
+      "type": "string"
+    },
+    "officeType": {
+      "default": "",
+      "description": "Filter by work arrangement.",
+      "editor": "select",
+      "enum": [
+        "",
+        "hybrid",
+        "on-site",
+        "remote"
+      ],
+      "enumTitles": [
+        "All types",
+        "Hybrid",
+        "On-site",
+        "Fully Remote"
+      ],
+      "prefill": "",
+      "title": "Office type",
+      "type": "string"
+    }
+  },
+  "required": [
+    "mode"
+  ],
+  "schemaVersion": 1,
+  "title": "BuiltIn Scraper Input",
+  "type": "object"
+}

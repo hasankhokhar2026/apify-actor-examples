@@ -12,45 +12,12 @@
       "title": "Board URLs",
       "type": "array"
     },
-    "boards": {
-      "default": [],
-      "description": "Compatibility alias for Board URLs.",
-      "editor": "stringList",
-      "items": {
-        "type": "string"
-      },
-      "prefill": [],
-      "title": "Board URLs (compatibility alias)",
-      "type": "array"
-    },
     "commerceOnly": {
       "default": false,
       "description": "Keep only Pins with source-backed product or shopping metadata.",
       "prefill": false,
       "title": "Shoppable Pins only",
       "type": "boolean"
-    },
-    "cookies": {
-      "description": "Optional Cookie Editor JSON export. The actor works without cookies; never share this secret publicly.",
-      "editor": "json",
-      "isSecret": true,
-      "title": "Optional Pinterest cookies",
-      "type": "array"
-    },
-    "cookiesJson": {
-      "description": "Compatibility alias for pasting a Cookie Editor JSON export.",
-      "editor": "textarea",
-      "isSecret": true,
-      "title": "Optional cookies JSON (alias)",
-      "type": "string"
-    },
-    "endPage": {
-      "default": 0,
-      "description": "Maximum number of pages to paginate through. Set to 0 for unlimited.",
-      "maximum": 2000,
-      "minimum": 0,
-      "title": "End Page",
-      "type": "integer"
     },
     "enrichDetails": {
       "default": false,
@@ -73,6 +40,13 @@
       "title": "Images only",
       "type": "boolean"
     },
+    "includeCommentReplies": {
+      "default": false,
+      "description": "When comments are collected, also fetch depth-one replies for comments that report replies. Adds one request per parent comment.",
+      "prefill": false,
+      "title": "Include comment replies",
+      "type": "boolean"
+    },
     "includeComments": {
       "default": false,
       "description": "When enabled, add one real comment/activity row for each collected Pin. Pinterest's public cookieless comment path is used automatically.",
@@ -91,6 +65,16 @@
       "title": "Search words",
       "type": "array"
     },
+    "maxCommentReplies": {
+      "default": 10,
+      "description": "Upper bound on replies fetched for each top-level comment.",
+      "editor": "number",
+      "maximum": 200,
+      "minimum": 1,
+      "prefill": 10,
+      "title": "Max replies per comment",
+      "type": "integer"
+    },
     "maxComments": {
       "default": 10,
       "description": "Maximum public comment/activity rows to add per Pin when comments are enabled.",
@@ -102,7 +86,7 @@
     },
     "maxItems": {
       "default": 50,
-      "description": "Maximum number of items to scrape. Set to 0 for unlimited.",
+      "description": "Maximum number of Pins/source records to collect. Comment rows are additional and are capped per Pin by maxComments. Set to 0 for unlimited.",
       "maximum": 20000,
       "minimum": 0,
       "title": "Max Items",
@@ -141,11 +125,14 @@
         "comments",
         "searchPins",
         "searchVideos",
+        "searchUsers",
+        "searchBoards",
         "userProfile",
         "userPins",
         "userBoards",
         "boardDetail",
         "boardPins",
+        "ideas",
         "search"
       ],
       "enumTitles": [
@@ -154,11 +141,14 @@
         "Comments for Pins",
         "Search Pins",
         "Search video Pins",
+        "Search people",
+        "Search boards",
         "Profile details",
         "Pins created by a person",
         "Boards owned by a person",
         "Board details",
         "Pins inside a board",
+        "Ideas feed (list only)",
         "Search Pins (legacy)"
       ],
       "prefill": "auto",
@@ -176,45 +166,18 @@
       "title": "Pin URLs or IDs",
       "type": "array"
     },
-    "pinterestUrls": {
-      "default": [],
-      "description": "Compatibility alias for Pin URLs or IDs.",
-      "editor": "stringList",
-      "items": {
-        "type": "string"
-      },
-      "prefill": [],
-      "title": "Pin URLs or IDs (compatibility alias)",
-      "type": "array"
-    },
-    "profiles": {
-      "default": [],
-      "description": "Compatibility alias for Pinterest usernames.",
-      "editor": "stringList",
-      "items": {
-        "type": "string"
-      },
-      "prefill": [],
-      "title": "Profile names or links (compatibility alias)",
-      "type": "array"
-    },
-    "proxy": {
-      "description": "Optional proxy settings. Not required — works without proxy from datacenter IPs.",
-      "editor": "proxy",
-      "title": "Proxy Configuration",
-      "type": "object"
-    },
-    "proxyConfiguration": {
-      "description": "Compatibility alias for proxy. Direct public Pin/profile pages also work without a proxy.",
-      "editor": "proxy",
-      "title": "Proxy configuration (alias)",
-      "type": "object"
-    },
     "requireOutboundLink": {
       "default": false,
       "description": "Keep only Pins with a public destination link supplied by Pinterest.",
       "prefill": false,
       "title": "Require destination link",
+      "type": "boolean"
+    },
+    "resolveNumericIds": {
+      "default": true,
+      "description": "Creator feeds sometimes return encrypted Pin IDs that Pinterest will not open. When enabled, the actor follows the creator's public RSS feed (or the numeric user-pins feed) to recover openable numeric Pin IDs. Disable it to keep only the IDs the feed itself returns.",
+      "prefill": true,
+      "title": "Resolve numeric Pin IDs from creator RSS",
       "type": "boolean"
     },
     "search": {
@@ -223,17 +186,6 @@
       "prefill": "cats",
       "title": "Search Query",
       "type": "string"
-    },
-    "searchTerms": {
-      "default": [],
-      "description": "Compatibility alias for Search words.",
-      "editor": "stringList",
-      "items": {
-        "type": "string"
-      },
-      "prefill": [],
-      "title": "Search words (compatibility alias)",
-      "type": "array"
     },
     "startUrls": {
       "description": "List of Pinterest URLs to scrape. Supports pin URLs, user profile URLs, board URLs, and search URLs.",

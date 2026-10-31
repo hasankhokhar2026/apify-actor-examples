@@ -1,11 +1,17 @@
 {
   "actorOutputSchemaVersion": 1,
-  "description": "Dataset of Google Images search results with full-resolution image URLs, dimensions, thumbnails, and source page details.",
+  "description": "One dataset row per image with original/thumbnail provenance, dimensions when stated, source page metadata, stable image ID and a labelled engine. Per-query completeness telemetry is in the SUMMARY key-value record.",
   "properties": {
     "images": {
-      "description": "Dataset containing all scraped Google Images search results.",
+      "description": "Dataset containing all scraped image rows. Every row states its engine and whether imageUrl is an original, a thumbnail or a crawler-only URL.",
       "template": "{{links.apiDefaultDatasetUrl}}/items",
       "title": "Scraped Images",
+      "type": "string"
+    },
+    "summary": {
+      "description": "Per-run and per-query resultsRequested, resultsReturned, pagesFetched, stopReason and fallbackAttempts.",
+      "template": "{{links.apiDefaultKeyValueStoreUrl}}/records/SUMMARY",
+      "title": "Completeness summary",
       "type": "string"
     }
   },

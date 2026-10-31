@@ -1,30 +1,121 @@
 {
   "properties": {
+    "checkCatchAll": {
+      "default": false,
+      "description": "Probe a random address to detect catch-all domains. Implies SMTP probing. Deep depth already includes it.",
+      "editor": "checkbox",
+      "prefill": false,
+      "title": "Detect Catch-all Domains",
+      "type": "boolean"
+    },
+    "checkSmtp": {
+      "default": false,
+      "description": "Run the best-effort SMTP mailbox probe even at basic or standard depth. Deep depth already includes it.",
+      "editor": "checkbox",
+      "prefill": false,
+      "title": "Check SMTP Mailbox",
+      "type": "boolean"
+    },
     "concurrency": {
       "default": 10,
-      "description": "Number of emails to verify in parallel. Higher values are faster but may trigger rate limits on SMTP servers.",
+      "description": "How many addresses are checked in parallel. Higher is faster, but mail servers may rate-limit SMTP probes.",
       "editor": "number",
       "maximum": 50,
       "minimum": 1,
+      "prefill": 10,
       "title": "Concurrency",
       "type": "integer"
     },
+    "datasetEmailField": {
+      "default": "email",
+      "description": "Column name that holds the email address when datasetId is set.",
+      "editor": "textfield",
+      "prefill": "email",
+      "title": "Dataset email field",
+      "type": "string"
+    },
+    "datasetId": {
+      "description": "Optional Apify dataset ID. The actor reads one email per item from datasetEmailField, verifies those addresses, and can carry the original columns into each record.",
+      "editor": "textfield",
+      "title": "Read emails from an existing dataset",
+      "type": "string"
+    },
     "emails": {
-      "description": "List of email addresses to verify",
+      "description": "One email address per item. You can paste a list here or use the text box below; if both are filled, the actor verifies both. Duplicates are removed case-insensitively.",
       "editor": "stringList",
       "items": {
         "type": "string"
       },
       "prefill": [
-        "test@gmail.com",
-        "invalid@nonexistent-domain-xyz123.com"
+        "test@gmail.com"
       ],
       "title": "Email Addresses",
       "type": "array"
     },
+    "emailsText": {
+      "description": "Paste a list separated by new lines, commas, semicolons or spaces. Useful for CSV exports and email lists.",
+      "editor": "textarea",
+      "title": "Email Addresses (text)",
+      "type": "string"
+    },
+    "includeDomainHealth": {
+      "default": true,
+      "description": "Add SPF, DMARC policy and common DKIM selector findings for each domain at standard or deep depth.",
+      "editor": "checkbox",
+      "prefill": true,
+      "title": "Include Domain Health",
+      "type": "boolean"
+    },
+    "includeSourceFields": {
+      "default": false,
+      "description": "When reading from a dataset, include the original row in sourceData so you can join the verification result back to your CRM export.",
+      "prefill": false,
+      "title": "Carry source dataset columns",
+      "type": "boolean"
+    },
+    "maxEmails": {
+      "default": 10000,
+      "description": "Upper bound on unique addresses to verify in one run. Anything beyond this is skipped and reported in the run summary.",
+      "editor": "number",
+      "maximum": 100000,
+      "minimum": 1,
+      "prefill": 10000,
+      "title": "Maximum Emails",
+      "type": "integer"
+    },
+    "maxEmailsPerDomain": {
+      "default": 100,
+      "description": "Cap on addresses verified for the same domain. Extra addresses get an 'unknown' record explaining the cap instead of hammering one mail server.",
+      "editor": "number",
+      "maximum": 10000,
+      "minimum": 1,
+      "prefill": 100,
+      "title": "Maximum Emails per Domain",
+      "type": "integer"
+    },
+    "maxRetries": {
+      "default": 2,
+      "description": "Extra attempts for temporary DNS, connection and SMTP 4xx failures, using exponential backoff.",
+      "editor": "number",
+      "maximum": 5,
+      "minimum": 0,
+      "prefill": 2,
+      "title": "Max Retries",
+      "type": "integer"
+    },
+    "smtpTimeout": {
+      "default": 10,
+      "description": "Connect and response timeout for each SMTP probe. Use a lower value for fast scans and a higher value for slow mail servers.",
+      "editor": "number",
+      "maximum": 60,
+      "minimum": 1,
+      "prefill": 10,
+      "title": "SMTP Timeout (seconds)",
+      "type": "number"
+    },
     "verificationDepth": {
       "default": "standard",
-      "description": "How thoroughly to verify each email. Basic: syntax + MX only. Standard: adds disposable, role-based, and free provider checks. Deep: adds SMTP mailbox verification and catch-all detection.",
+      "description": "Basic checks syntax, MX records and the A/AAAA fallback. Standard adds disposable, role-based, free-provider and domain-health checks. Deep adds a best-effort SMTP mailbox probe and catch-all detection.",
       "editor": "select",
       "enum": [
         "basic",
@@ -32,17 +123,15 @@
         "deep"
       ],
       "enumTitles": [
-        "Basic (Syntax + MX)",
-        "Standard (+ Disposable, Role, Free Provider)",
-        "Deep (+ SMTP Verification, Catch-all)"
+        "Basic (syntax + MX)",
+        "Standard (+ disposable, role, free provider, domain health)",
+        "Deep (+ SMTP mailbox probe and catch-all)"
       ],
+      "prefill": "basic",
       "title": "Verification Depth",
       "type": "string"
     }
   },
-  "required": [
-    "emails"
-  ],
   "schemaVersion": 1,
   "title": "Email Verifier Input",
   "type": "object"

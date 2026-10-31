@@ -2,7 +2,7 @@
   "properties": {
     "country": {
       "default": "US",
-      "description": "Target Etsy market. Sets the proxy exit country, browser locale, and search URL prefix so results match the selected region (currency, ranking, availability).",
+      "description": "Target Etsy market. Sets the market URL locale and request language, so prices and ranking match the selected region (for example Germany returns EUR and Japan returns JPY).",
       "editor": "select",
       "enum": [
         "US",
@@ -17,51 +17,107 @@
         "JP"
       ],
       "enumTitles": [
-        "United States (default)",
-        "Germany (Etsy.de — EUR)",
-        "United Kingdom (Etsy.co.uk — GBP)",
-        "France (fr — EUR)",
-        "Australia (au — AUD)",
-        "Canada (ca — CAD)",
-        "Italy (it — EUR)",
-        "Spain (es — EUR)",
-        "Netherlands (nl — EUR)",
-        "Japan (jp — JPY)"
+        "United States (USD)",
+        "Germany (EUR)",
+        "United Kingdom (GBP)",
+        "France (EUR)",
+        "Australia (AUD)",
+        "Canada (CAD)",
+        "Italy (EUR)",
+        "Spain (EUR)",
+        "Netherlands (EUR)",
+        "Japan (JPY)"
       ],
       "prefill": "US",
       "title": "Country / Market",
       "type": "string"
     },
+    "freeShippingOnly": {
+      "default": false,
+      "description": "Use Etsy's free-shipping market filter.",
+      "prefill": false,
+      "title": "Free shipping only",
+      "type": "boolean"
+    },
     "includeDetails": {
       "default": false,
-      "description": "When enabled, attempts to visit each product page for additional details. Note: Etsy's anti-bot may block product page access in some sessions.",
-      "title": "Include Product Details",
+      "description": "Attempts to open each listing page for description, materials, tags, variations, images, and seller details. Etsy often blocks listing pages with DataDome. When that happens, rows are still returned with detailsStatus set to 'blocked' and the unavailable detail fields omitted; they are never filled with placeholders.",
+      "prefill": false,
+      "title": "Include Listing Details",
       "type": "boolean"
     },
     "maxItems": {
       "default": 100,
-      "description": "Maximum number of items to extract per URL or search query.",
+      "description": "Maximum number of listings to collect per URL or search query. A keyword market exposes at most 25 pages (about 200 listings); category URLs can expose more pages. Larger values return what Etsy exposes and report a partial result instead of pretending the request was complete.",
       "editor": "number",
       "maximum": 1000,
       "minimum": 1,
-      "prefill": 10,
+      "prefill": 1,
       "title": "Max Items",
       "type": "integer"
     },
+    "maxPrice": {
+      "default": 0,
+      "description": "Drop listings above this price in the selected market currency. 0 disables the upper bound.",
+      "editor": "number",
+      "maximum": 1000000,
+      "minimum": 0,
+      "prefill": 0,
+      "title": "Maximum price",
+      "type": "number"
+    },
+    "minPrice": {
+      "default": 0,
+      "description": "Drop listings below this price in the selected market currency. Etsy does not expose a reliable server-side price filter on market pages, so this is applied to fetched cards. 0 disables the lower bound.",
+      "editor": "number",
+      "maximum": 1000000,
+      "minimum": 0,
+      "prefill": 0,
+      "title": "Minimum price",
+      "type": "number"
+    },
     "searchQueries": {
-      "description": "Keywords to search on Etsy. Each query generates a separate search.",
+      "description": "Keywords to search on Etsy. Each query is mapped to Etsy's market page (https://www.etsy.com/market/<slug>), the route that works without a browser or login. If Etsy redirects a keyword to a category page, the actor follows that category route. Each query is scraped as a separate task.",
       "editor": "stringList",
+      "prefill": [
+        "handmade jewelry"
+      ],
       "title": "Search Queries",
       "type": "array"
     },
-    "startUrls": {
-      "description": "Etsy URLs to scrape. Supports search results, shop pages, and category pages.",
-      "editor": "requestListSources",
-      "prefill": [
-        {
-          "url": "https://www.etsy.com/search?q=handmade+jewelry"
-        }
+    "sortBy": {
+      "default": "",
+      "description": "Server-side Etsy ordering for market and category pages.",
+      "editor": "select",
+      "enum": [
+        "",
+        "most_relevant",
+        "price_asc",
+        "price_desc",
+        "date_desc",
+        "highest_reviews"
       ],
+      "enumTitles": [
+        "Most relevant",
+        "Price: low to high",
+        "Price: high to low",
+        "Newest",
+        "Most reviewed"
+      ],
+      "prefill": "",
+      "title": "Sort results by",
+      "type": "string"
+    },
+    "starSellerOnly": {
+      "default": false,
+      "description": "Use Etsy's Star Seller market filter.",
+      "prefill": false,
+      "title": "Star Seller only",
+      "type": "boolean"
+    },
+    "startUrls": {
+      "description": "Etsy market URLs such as https://www.etsy.com/market/handmade_jewelry are the reliable route. Category URLs such as https://www.etsy.com/c/jewelry also work and expose more cards per page. Legacy /search?q= URLs are converted to the matching market URL automatically. Shop and individual listing URLs are usually blocked by Etsy's DataDome protection; they are accepted for backward compatibility and reported as blocked instead of silently returning nothing.",
+      "editor": "requestListSources",
       "title": "Etsy URLs",
       "type": "array"
     }

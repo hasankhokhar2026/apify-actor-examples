@@ -6,6 +6,18 @@
       "display": {
         "component": "table",
         "properties": {
+          "aRecordFallback": {
+            "format": "boolean",
+            "label": "A/AAAA Fallback"
+          },
+          "catchAllConfidence": {
+            "format": "number",
+            "label": "Catch-all Confidence"
+          },
+          "catchAllMethod": {
+            "format": "text",
+            "label": "Catch-all Method"
+          },
           "checks": {
             "format": "object",
             "label": "Checks"
@@ -14,17 +26,73 @@
             "format": "number",
             "label": "Confidence"
           },
+          "didYouMean": {
+            "format": "text",
+            "label": "Did You Mean"
+          },
+          "domainExists": {
+            "format": "boolean",
+            "label": "Domain Exists"
+          },
+          "domainHealth": {
+            "format": "object",
+            "label": "Domain Health"
+          },
           "email": {
             "format": "text",
             "label": "Email"
+          },
+          "isAlias": {
+            "format": "boolean",
+            "label": "Alias"
           },
           "mxHost": {
             "format": "text",
             "label": "MX Host"
           },
+          "mxProvider": {
+            "format": "text",
+            "label": "MX Provider"
+          },
+          "mxRecords": {
+            "format": "array",
+            "label": "MX Records"
+          },
+          "normalizedEmail": {
+            "format": "text",
+            "label": "Normalized Email"
+          },
+          "plusTag": {
+            "format": "boolean",
+            "label": "Plus Tag"
+          },
           "reason": {
             "format": "text",
             "label": "Reason"
+          },
+          "recommendedAction": {
+            "format": "text",
+            "label": "Action"
+          },
+          "riskLevel": {
+            "format": "text",
+            "label": "Risk"
+          },
+          "smtpAttempted": {
+            "format": "boolean",
+            "label": "SMTP Attempted"
+          },
+          "smtpCode": {
+            "format": "number",
+            "label": "SMTP Code"
+          },
+          "smtpMessage": {
+            "format": "text",
+            "label": "SMTP Message"
+          },
+          "smtpVerifiable": {
+            "format": "boolean",
+            "label": "SMTP Verifiable"
           },
           "verdict": {
             "format": "text",
@@ -40,10 +108,28 @@
       "transformation": {
         "fields": [
           "email",
+          "normalizedEmail",
+          "sourceData",
           "verdict",
           "confidence",
+          "riskLevel",
+          "recommendedAction",
           "checks",
           "mxHost",
+          "mxRecords",
+          "mxProvider",
+          "aRecordFallback",
+          "domainExists",
+          "isAlias",
+          "plusTag",
+          "didYouMean",
+          "smtpAttempted",
+          "smtpVerifiable",
+          "smtpCode",
+          "smtpMessage",
+          "catchAllConfidence",
+          "catchAllMethod",
+          "domainHealth",
           "reason",
           "verifiedAt"
         ]
@@ -57,25 +143,33 @@
             "format": "number",
             "label": "Confidence"
           },
+          "didYouMean": {
+            "format": "text",
+            "label": "Did You Mean"
+          },
           "email": {
             "format": "text",
             "label": "Email"
           },
-          "mxHost": {
+          "mxProvider": {
             "format": "text",
-            "label": "MX Host"
+            "label": "MX Provider"
           },
           "reason": {
             "format": "text",
             "label": "Reason"
           },
+          "recommendedAction": {
+            "format": "text",
+            "label": "Action"
+          },
+          "riskLevel": {
+            "format": "text",
+            "label": "Risk"
+          },
           "verdict": {
             "format": "text",
             "label": "Verdict"
-          },
-          "verifiedAt": {
-            "format": "text",
-            "label": "Verified At"
           }
         }
       },
@@ -85,9 +179,11 @@
           "email",
           "verdict",
           "confidence",
-          "mxHost",
-          "reason",
-          "verifiedAt"
+          "riskLevel",
+          "recommendedAction",
+          "mxProvider",
+          "didYouMean",
+          "reason"
         ]
       }
     }

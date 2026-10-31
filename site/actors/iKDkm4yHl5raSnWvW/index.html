@@ -1,49 +1,1197 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src &#x27;self&#x27;; script-src &#x27;self&#x27; &#x27;sha256-6keeBhCW1HT3BuuEV0tz2eXX5ivSxApP3j6V6C88sLU=&#x27;; style-src &#x27;self&#x27;; img-src &#x27;self&#x27; https: data:; base-uri &#x27;self&#x27;; form-action &#x27;self&#x27;; object-src &#x27;none&#x27;"><title>Google Image Search Results &amp; Metadata Scraper | Nimbryxo Studio</title><meta name="description" content="Run a Google Images search and get back full-resolution image URLs with dimensions, thumbnails, source page titles, and the web page each image came from."><meta name="robots" content="index,follow"><link rel="canonical" href="https://hasankhokhar2026.github.io/apify-actor-examples/actors/iKDkm4yHl5raSnWvW/"><meta property="og:title" content="Google Image Search Results &amp; Metadata Scraper | Nimbryxo Studio"><meta property="og:description" content="Run a Google Images search and get back full-resolution image URLs with dimensions, thumbnails, source page titles, and the web page each image came from."><meta property="og:type" content="website"><meta property="og:url" content="https://hasankhokhar2026.github.io/apify-actor-examples/actors/iKDkm4yHl5raSnWvW/"><meta property="og:site_name" content="Nimbryxo Studio"><meta name="twitter:card" content="summary"><link rel="icon" href="/apify-actor-examples/assets/mark.svg?v=2d20f9dc334a" type="image/svg+xml"><link rel="stylesheet" href="/apify-actor-examples/assets/site.css?v=39545fd4a399"><link rel="stylesheet" href="/apify-actor-examples/assets/brand.css?v=eb0f935ade25"><link rel="alternate" type="application/rss+xml" title="Nimbryxo Studio guides" href="/apify-actor-examples/feed.xml"><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization","name":"Nimbryxo Studio","url":"https://hasankhokhar2026.github.io/apify-actor-examples/","sameAs":["https://apify.com/nimbryxo-studio"]},{"@type":"WebSite","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#website","name":"Nimbryxo Studio","url":"https://hasankhokhar2026.github.io/apify-actor-examples/","publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"inLanguage":"en"},{"@type":"WebPage","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/iKDkm4yHl5raSnWvW/#webpage","name":"Google Image Search Results & Metadata Scraper","description":"Run a Google Images search and get back full-resolution image URLs with dimensions, thumbnails, source page titles, and the web page each image came from.","url":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/iKDkm4yHl5raSnWvW/","isPartOf":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#website"},"publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"inLanguage":"en","mainEntity":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/iKDkm4yHl5raSnWvW/#article"},"breadcrumb":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/iKDkm4yHl5raSnWvW/#breadcrumb"}},{"@type":"TechArticle","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/iKDkm4yHl5raSnWvW/#article","headline":"Google Image Search Results & Metadata Scraper","name":"Google Image Search Results & Metadata Scraper","description":"Run a Google Images search and get back full-resolution image URLs with dimensions, thumbnails, source page titles, and the web page each image came from.","url":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/iKDkm4yHl5raSnWvW/","author":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"mainEntityOfPage":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/iKDkm4yHl5raSnWvW/#webpage"},"inLanguage":"en"},{"@type":"BreadcrumbList","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/iKDkm4yHl5raSnWvW/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Nimbryxo Studio","item":"https://hasankhokhar2026.github.io/apify-actor-examples/"},{"@type":"ListItem","position":2,"name":"Actors","item":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/"},{"@type":"ListItem","position":3,"name":"Google Image Search Results & Metadata Scraper","item":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/iKDkm4yHl5raSnWvW/"}]}]}</script><script src="/apify-actor-examples/assets/site.js?v=7cabac48dd31" defer></script></head><body class="theme-studio"><a href="#main" class="skip-link">Skip to content</a><header><div class="inner"><a href="/apify-actor-examples/" class="brand"><img src="/apify-actor-examples/assets/mark.svg?v=2d20f9dc334a" alt="" width="29" height="29">Nimbryxo Studio</a><nav aria-label="Main navigation"><a href="/apify-actor-examples/actors/" aria-current="page">Actors</a><a href="/apify-actor-examples/guides/">Guides</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></nav></div></header><main id="main"><div class="doc-layout"><aside class="contents" aria-label="On this page"><strong>Contents</strong><a href="#overview">Overview</a><a href="#published-readme">Published README</a><a href="#input-schema">Input schema</a><a href="#output-schema">Output schema</a><a href="#dataset-schema">Dataset schema</a><a href="#python-quickstart">Python quickstart</a></aside><article class="prose"><div class="breadcrumb"><a href="/apify-actor-examples/actors/">Actors</a><span>/</span><span>Google Image Search Results &amp; Metadata Scraper</span></div><section id="overview"><h1 class="doc-title">Google Image Search Results &amp; Metadata Scraper</h1><p class="lede">Run a Google Images search and get back full-resolution image URLs with dimensions, thumbnails, source page titles, and the web page each image came from.</p><div class="actions"><a class="button" href="https://apify.com/nimbryxo-studio/google-image-search-results-and-metadata-scraper">Open on Apify</a><a class="text-link" href="https://github.com/hasankhokhar2026/apify-actor-examples/blob/main/docs/actors/iKDkm4yHl5raSnWvW/README.md">GitHub source</a></div></section><section class="schema-section" id="input-schema"><h2>Input schema</h2><p>Input fields, types, required flags, descriptions, defaults, and prefills come from the published definition. Prefill examples are distinct from defaults.</p><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>query</code></td><td>string</td><td>required</td><td>Image search query (e.g., &quot;Alfons Mucha&quot;, &quot;sunset landscape&quot;, &quot;cats&quot;)</td></tr><tr><td><code>maxResults</code></td><td>integer</td><td>optional</td><td>Maximum number of image results to extract</td></tr><tr><td><code>proxyConfiguration</code></td><td>object</td><td>optional</td><td>Residential proxy is required — Google blocks image scraping from datacenter IPs.</td></tr></tbody></table></div><p><a href="input-schema.json">Download the published input schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src &#x27;self&#x27;; script-src &#x27;self&#x27; &#x27;sha256-6keeBhCW1HT3BuuEV0tz2eXX5ivSxApP3j6V6C88sLU=&#x27;; style-src &#x27;self&#x27;; img-src &#x27;self&#x27; https: data:; base-uri &#x27;self&#x27;; form-action &#x27;self&#x27;; object-src &#x27;none&#x27;"><title>Google Image Search Results &amp; Metadata Scraper | Nimbryxo Studio</title><meta name="description" content="Run a Google Images search and get back full-resolution image URLs with dimensions, thumbnails, source page titles, and the web page each image came from."><meta name="robots" content="index,follow"><link rel="canonical" href="https://hasankhokhar2026.github.io/apify-actor-examples/actors/iKDkm4yHl5raSnWvW/"><meta property="og:title" content="Google Image Search Results &amp; Metadata Scraper | Nimbryxo Studio"><meta property="og:description" content="Run a Google Images search and get back full-resolution image URLs with dimensions, thumbnails, source page titles, and the web page each image came from."><meta property="og:type" content="website"><meta property="og:url" content="https://hasankhokhar2026.github.io/apify-actor-examples/actors/iKDkm4yHl5raSnWvW/"><meta property="og:site_name" content="Nimbryxo Studio"><meta name="twitter:card" content="summary"><link rel="icon" href="/apify-actor-examples/assets/mark.svg?v=2d20f9dc334a" type="image/svg+xml"><link rel="stylesheet" href="/apify-actor-examples/assets/site.css?v=39545fd4a399"><link rel="stylesheet" href="/apify-actor-examples/assets/brand.css?v=eb0f935ade25"><link rel="alternate" type="application/rss+xml" title="Nimbryxo Studio guides" href="/apify-actor-examples/feed.xml"><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization","name":"Nimbryxo Studio","url":"https://hasankhokhar2026.github.io/apify-actor-examples/","sameAs":["https://apify.com/nimbryxo-studio"]},{"@type":"WebSite","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#website","name":"Nimbryxo Studio","url":"https://hasankhokhar2026.github.io/apify-actor-examples/","publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"inLanguage":"en"},{"@type":"WebPage","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/iKDkm4yHl5raSnWvW/#webpage","name":"Google Image Search Results & Metadata Scraper","description":"Run a Google Images search and get back full-resolution image URLs with dimensions, thumbnails, source page titles, and the web page each image came from.","url":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/iKDkm4yHl5raSnWvW/","isPartOf":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#website"},"publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"inLanguage":"en","mainEntity":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/iKDkm4yHl5raSnWvW/#article"},"breadcrumb":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/iKDkm4yHl5raSnWvW/#breadcrumb"}},{"@type":"TechArticle","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/iKDkm4yHl5raSnWvW/#article","headline":"Google Image Search Results & Metadata Scraper","name":"Google Image Search Results & Metadata Scraper","description":"Run a Google Images search and get back full-resolution image URLs with dimensions, thumbnails, source page titles, and the web page each image came from.","url":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/iKDkm4yHl5raSnWvW/","author":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"mainEntityOfPage":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/iKDkm4yHl5raSnWvW/#webpage"},"inLanguage":"en"},{"@type":"BreadcrumbList","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/iKDkm4yHl5raSnWvW/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Nimbryxo Studio","item":"https://hasankhokhar2026.github.io/apify-actor-examples/"},{"@type":"ListItem","position":2,"name":"Actors","item":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/"},{"@type":"ListItem","position":3,"name":"Google Image Search Results & Metadata Scraper","item":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/iKDkm4yHl5raSnWvW/"}]}]}</script><script src="/apify-actor-examples/assets/site.js?v=7cabac48dd31" defer></script></head><body class="theme-studio"><a href="#main" class="skip-link">Skip to content</a><header><div class="inner"><a href="/apify-actor-examples/" class="brand"><img src="/apify-actor-examples/assets/mark.svg?v=2d20f9dc334a" alt="" width="29" height="29">Nimbryxo Studio</a><nav aria-label="Main navigation"><a href="/apify-actor-examples/actors/" aria-current="page">Actors</a><a href="/apify-actor-examples/guides/">Guides</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></nav></div></header><main id="main"><div class="doc-layout"><aside class="contents" aria-label="On this page"><strong>Contents</strong><a href="#overview">Overview</a><a href="#published-readme">Published README</a><a href="#input-schema">Input schema</a><a href="#output-schema">Output schema</a><a href="#dataset-schema">Dataset schema</a><a href="#python-quickstart">Python quickstart</a></aside><article class="prose"><div class="breadcrumb"><a href="/apify-actor-examples/actors/">Actors</a><span>/</span><span>Google Image Search Results &amp; Metadata Scraper</span></div><section id="overview"><h1 class="doc-title">Google Image Search Results &amp; Metadata Scraper</h1><p class="lede">Run a Google Images search and get back full-resolution image URLs with dimensions, thumbnails, source page titles, and the web page each image came from.</p><div class="actions"><a class="button" href="https://apify.com/nimbryxo-studio/google-image-search-results-and-metadata-scraper">Open on Apify</a><a class="text-link" href="https://github.com/hasankhokhar2026/apify-actor-examples/blob/main/docs/actors/iKDkm4yHl5raSnWvW/README.md">GitHub source</a></div></section><section class="schema-section" id="input-schema"><h2>Input schema</h2><p>Input fields, types, required flags, descriptions, defaults, and prefills come from the published definition. Prefill examples are distinct from defaults.</p><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>queries</code></td><td>array</td><td>optional</td><td>One or more image search queries. Each query is searched independently. Google operators such as site:, quoted phrases and -exclusions are passed through. The legacy single `query` key is still accepted by the actor code.</td></tr><tr><td><code>maxResults</code></td><td>integer</td><td>optional</td><td>Maximum number of image rows to return for each query. Google Images usually runs out around 300-400 results for a query; this is a ceiling, not a guarantee.</td></tr><tr><td><code>minWidth</code></td><td>integer</td><td>optional</td><td>Drop images narrower than this many pixels. Rows without published dimensions are dropped when this is set. 0 disables the filter.</td></tr></tbody></table></div><details><summary>Show all input fields</summary><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>queries</code></td><td>array</td><td>optional</td><td>One or more image search queries. Each query is searched independently. Google operators such as site:, quoted phrases and -exclusions are passed through. The legacy single `query` key is still accepted by the actor code.</td></tr><tr><td><code>maxResults</code></td><td>integer</td><td>optional</td><td>Maximum number of image rows to return for each query. Google Images usually runs out around 300-400 results for a query; this is a ceiling, not a guarantee.</td></tr><tr><td><code>minWidth</code></td><td>integer</td><td>optional</td><td>Drop images narrower than this many pixels. Rows without published dimensions are dropped when this is set. 0 disables the filter.</td></tr><tr><td><code>minHeight</code></td><td>integer</td><td>optional</td><td>Drop images shorter than this many pixels. Rows without published dimensions are dropped when this is set. 0 disables the filter.</td></tr><tr><td><code>country</code></td><td>string</td><td>optional</td><td>Two-letter country used for Google&#x27;s gl parameter (and Bing&#x27;s cc parameter). Local sites rank higher in local results.</td></tr><tr><td><code>language</code></td><td>string</td><td>optional</td><td>Interface and result language used for Google&#x27;s hl parameter (and Bing&#x27;s setlang parameter).</td></tr><tr><td><code>safeSearch</code></td><td>string</td><td>optional</td><td>Google SafeSearch level. &#x27;active&#x27; filters explicit images; &#x27;off&#x27; does not.</td></tr><tr><td><code>imageSize</code></td><td>string</td><td>optional</td><td>Google Images size filter. The MP values are minimum megapixels. Bing fallback applies the nearest size category and enforces the exact MP floor locally when dimensions are known.</td></tr><tr><td><code>imageColor</code></td><td>string</td><td>optional</td><td>Google Images color filter. &#x27;black_and_white&#x27; is grayscale; &#x27;transparent&#x27; looks for a transparent background.</td></tr><tr><td><code>imageType</code></td><td>string</td><td>optional</td><td>Google Images type filter: photographs, faces, clip art, line drawings or animated images.</td></tr><tr><td><code>fileType</code></td><td>string</td><td>optional</td><td>Only images in this format. Google applies this server-side; Bing fallback applies it to the image URL extension locally.</td></tr><tr><td><code>timeRange</code></td><td>string</td><td>optional</td><td>Only images Google found within this period. Bing fallback maps &#x27;hour&#x27; to its 24-hour window.</td></tr><tr><td><code>usageRights</code></td><td>string</td><td>optional</td><td>Google&#x27;s usage-rights labels. These are Google&#x27;s labels, not a legal guarantee; check the licence on the source page before reuse.</td></tr><tr><td><code>googleOnly</code></td><td>boolean</td><td>optional</td><td>When true, a failed or empty Google search fails that query with a clear status instead of using another engine. The default is false so legacy saved tasks keep working; set this true for a strict Google-only contract.</td></tr><tr><td><code>enableFallback</code></td><td>boolean</td><td>optional</td><td>When googleOnly is false, allow labelled Bing Images and then DuckDuckGo Images. Every fallback row carries engine, isFallback=true and fallbackReason.</td></tr></tbody></table></div></details><p><a href="input-schema.json">Download the published input schema</a></p><details><summary>View complete JSON</summary><pre><code>{
   &quot;properties&quot;: {
+    &quot;country&quot;: {
+      &quot;default&quot;: &quot;US&quot;,
+      &quot;description&quot;: &quot;Two-letter country used for Google&#x27;s gl parameter (and Bing&#x27;s cc parameter). Local sites rank higher in local results.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;US&quot;,
+        &quot;GB&quot;,
+        &quot;CA&quot;,
+        &quot;AU&quot;,
+        &quot;DE&quot;,
+        &quot;FR&quot;,
+        &quot;ES&quot;,
+        &quot;IT&quot;,
+        &quot;NL&quot;,
+        &quot;BR&quot;,
+        &quot;MX&quot;,
+        &quot;IN&quot;,
+        &quot;JP&quot;,
+        &quot;KR&quot;,
+        &quot;CN&quot;,
+        &quot;SG&quot;,
+        &quot;AE&quot;,
+        &quot;ZA&quot;,
+        &quot;PL&quot;,
+        &quot;TR&quot;,
+        &quot;ID&quot;,
+        &quot;PK&quot;,
+        &quot;PH&quot;,
+        &quot;MY&quot;,
+        &quot;TH&quot;,
+        &quot;VN&quot;,
+        &quot;SE&quot;,
+        &quot;NO&quot;,
+        &quot;DK&quot;,
+        &quot;FI&quot;,
+        &quot;IE&quot;,
+        &quot;NZ&quot;,
+        &quot;CH&quot;,
+        &quot;AT&quot;,
+        &quot;BE&quot;,
+        &quot;PT&quot;,
+        &quot;GR&quot;,
+        &quot;CZ&quot;,
+        &quot;RO&quot;,
+        &quot;HU&quot;,
+        &quot;UA&quot;,
+        &quot;RU&quot;,
+        &quot;SA&quot;,
+        &quot;EG&quot;,
+        &quot;NG&quot;,
+        &quot;KE&quot;,
+        &quot;AR&quot;,
+        &quot;CL&quot;,
+        &quot;CO&quot;,
+        &quot;PE&quot;,
+        &quot;IL&quot;,
+        &quot;AF&quot;,
+        &quot;AL&quot;,
+        &quot;DZ&quot;,
+        &quot;AS&quot;,
+        &quot;AD&quot;,
+        &quot;AO&quot;,
+        &quot;AI&quot;,
+        &quot;AQ&quot;,
+        &quot;AG&quot;,
+        &quot;AM&quot;,
+        &quot;AW&quot;,
+        &quot;AC&quot;,
+        &quot;AZ&quot;,
+        &quot;BS&quot;,
+        &quot;BH&quot;,
+        &quot;BD&quot;,
+        &quot;BB&quot;,
+        &quot;BY&quot;,
+        &quot;BZ&quot;,
+        &quot;BJ&quot;,
+        &quot;BM&quot;,
+        &quot;BT&quot;,
+        &quot;BO&quot;,
+        &quot;BA&quot;,
+        &quot;BW&quot;,
+        &quot;BV&quot;,
+        &quot;IO&quot;,
+        &quot;VG&quot;,
+        &quot;BN&quot;,
+        &quot;BG&quot;,
+        &quot;BF&quot;,
+        &quot;BI&quot;,
+        &quot;KH&quot;,
+        &quot;CM&quot;,
+        &quot;IC&quot;,
+        &quot;CV&quot;,
+        &quot;BQ&quot;,
+        &quot;KY&quot;,
+        &quot;CF&quot;,
+        &quot;EA&quot;,
+        &quot;TD&quot;,
+        &quot;CX&quot;,
+        &quot;CP&quot;,
+        &quot;CC&quot;,
+        &quot;KM&quot;,
+        &quot;CG&quot;,
+        &quot;CD&quot;,
+        &quot;CK&quot;,
+        &quot;CR&quot;,
+        &quot;HR&quot;,
+        &quot;CU&quot;,
+        &quot;CW&quot;,
+        &quot;CY&quot;,
+        &quot;CI&quot;,
+        &quot;DG&quot;,
+        &quot;DJ&quot;,
+        &quot;DM&quot;,
+        &quot;DO&quot;,
+        &quot;EC&quot;,
+        &quot;SV&quot;,
+        &quot;GQ&quot;,
+        &quot;ER&quot;,
+        &quot;EE&quot;,
+        &quot;SZ&quot;,
+        &quot;ET&quot;,
+        &quot;EU&quot;,
+        &quot;EZ&quot;,
+        &quot;FK&quot;,
+        &quot;FO&quot;,
+        &quot;FJ&quot;,
+        &quot;GF&quot;,
+        &quot;PF&quot;,
+        &quot;TF&quot;,
+        &quot;GA&quot;,
+        &quot;GM&quot;,
+        &quot;GE&quot;,
+        &quot;GH&quot;,
+        &quot;GI&quot;,
+        &quot;GL&quot;,
+        &quot;GD&quot;,
+        &quot;GP&quot;,
+        &quot;GU&quot;,
+        &quot;GT&quot;,
+        &quot;GG&quot;,
+        &quot;GN&quot;,
+        &quot;GW&quot;,
+        &quot;GY&quot;,
+        &quot;HT&quot;,
+        &quot;HM&quot;,
+        &quot;HN&quot;,
+        &quot;HK&quot;,
+        &quot;IS&quot;,
+        &quot;IR&quot;,
+        &quot;IQ&quot;,
+        &quot;IM&quot;,
+        &quot;JM&quot;,
+        &quot;JE&quot;,
+        &quot;JO&quot;,
+        &quot;KZ&quot;,
+        &quot;KI&quot;,
+        &quot;XK&quot;,
+        &quot;KW&quot;,
+        &quot;KG&quot;,
+        &quot;LA&quot;,
+        &quot;LV&quot;,
+        &quot;LB&quot;,
+        &quot;LS&quot;,
+        &quot;LR&quot;,
+        &quot;LY&quot;,
+        &quot;LI&quot;,
+        &quot;LT&quot;,
+        &quot;LU&quot;,
+        &quot;MO&quot;,
+        &quot;MG&quot;,
+        &quot;MW&quot;,
+        &quot;MV&quot;,
+        &quot;ML&quot;,
+        &quot;MT&quot;,
+        &quot;MH&quot;,
+        &quot;MQ&quot;,
+        &quot;MR&quot;,
+        &quot;MU&quot;,
+        &quot;YT&quot;,
+        &quot;FM&quot;,
+        &quot;MD&quot;,
+        &quot;MC&quot;,
+        &quot;MN&quot;,
+        &quot;ME&quot;,
+        &quot;MS&quot;,
+        &quot;MA&quot;,
+        &quot;MZ&quot;,
+        &quot;MM&quot;,
+        &quot;NA&quot;,
+        &quot;NR&quot;,
+        &quot;NP&quot;,
+        &quot;NC&quot;,
+        &quot;NI&quot;,
+        &quot;NE&quot;,
+        &quot;NU&quot;,
+        &quot;NF&quot;,
+        &quot;KP&quot;,
+        &quot;MK&quot;,
+        &quot;MP&quot;,
+        &quot;OM&quot;,
+        &quot;QO&quot;,
+        &quot;PW&quot;,
+        &quot;PS&quot;,
+        &quot;PA&quot;,
+        &quot;PG&quot;,
+        &quot;PY&quot;,
+        &quot;PN&quot;,
+        &quot;XA&quot;,
+        &quot;XB&quot;,
+        &quot;PR&quot;,
+        &quot;QA&quot;,
+        &quot;RW&quot;,
+        &quot;RE&quot;,
+        &quot;WS&quot;,
+        &quot;SM&quot;,
+        &quot;CQ&quot;,
+        &quot;SN&quot;,
+        &quot;RS&quot;,
+        &quot;SC&quot;,
+        &quot;SL&quot;,
+        &quot;SX&quot;,
+        &quot;SK&quot;,
+        &quot;SI&quot;,
+        &quot;SB&quot;,
+        &quot;SO&quot;,
+        &quot;GS&quot;,
+        &quot;SS&quot;,
+        &quot;LK&quot;,
+        &quot;BL&quot;,
+        &quot;SH&quot;,
+        &quot;KN&quot;,
+        &quot;LC&quot;,
+        &quot;MF&quot;,
+        &quot;PM&quot;,
+        &quot;VC&quot;,
+        &quot;SD&quot;,
+        &quot;SR&quot;,
+        &quot;SJ&quot;,
+        &quot;SY&quot;,
+        &quot;ST&quot;,
+        &quot;TW&quot;,
+        &quot;TJ&quot;,
+        &quot;TZ&quot;,
+        &quot;TL&quot;,
+        &quot;TG&quot;,
+        &quot;TK&quot;,
+        &quot;TO&quot;,
+        &quot;TT&quot;,
+        &quot;TA&quot;,
+        &quot;TN&quot;,
+        &quot;TM&quot;,
+        &quot;TC&quot;,
+        &quot;TV&quot;,
+        &quot;UM&quot;,
+        &quot;VI&quot;,
+        &quot;UG&quot;,
+        &quot;UN&quot;,
+        &quot;ZZ&quot;,
+        &quot;UY&quot;,
+        &quot;UZ&quot;,
+        &quot;VU&quot;,
+        &quot;VA&quot;,
+        &quot;VE&quot;,
+        &quot;WF&quot;,
+        &quot;EH&quot;,
+        &quot;YE&quot;,
+        &quot;ZM&quot;,
+        &quot;ZW&quot;,
+        &quot;AX&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;United States&quot;,
+        &quot;United Kingdom&quot;,
+        &quot;Canada&quot;,
+        &quot;Australia&quot;,
+        &quot;Germany&quot;,
+        &quot;France&quot;,
+        &quot;Spain&quot;,
+        &quot;Italy&quot;,
+        &quot;Netherlands&quot;,
+        &quot;Brazil&quot;,
+        &quot;Mexico&quot;,
+        &quot;India&quot;,
+        &quot;Japan&quot;,
+        &quot;South Korea&quot;,
+        &quot;China&quot;,
+        &quot;Singapore&quot;,
+        &quot;United Arab Emirates&quot;,
+        &quot;South Africa&quot;,
+        &quot;Poland&quot;,
+        &quot;Türkiye&quot;,
+        &quot;Indonesia&quot;,
+        &quot;Pakistan&quot;,
+        &quot;Philippines&quot;,
+        &quot;Malaysia&quot;,
+        &quot;Thailand&quot;,
+        &quot;Vietnam&quot;,
+        &quot;Sweden&quot;,
+        &quot;Norway&quot;,
+        &quot;Denmark&quot;,
+        &quot;Finland&quot;,
+        &quot;Ireland&quot;,
+        &quot;New Zealand&quot;,
+        &quot;Switzerland&quot;,
+        &quot;Austria&quot;,
+        &quot;Belgium&quot;,
+        &quot;Portugal&quot;,
+        &quot;Greece&quot;,
+        &quot;Czechia&quot;,
+        &quot;Romania&quot;,
+        &quot;Hungary&quot;,
+        &quot;Ukraine&quot;,
+        &quot;Russia&quot;,
+        &quot;Saudi Arabia&quot;,
+        &quot;Egypt&quot;,
+        &quot;Nigeria&quot;,
+        &quot;Kenya&quot;,
+        &quot;Argentina&quot;,
+        &quot;Chile&quot;,
+        &quot;Colombia&quot;,
+        &quot;Peru&quot;,
+        &quot;Israel&quot;,
+        &quot;Afghanistan&quot;,
+        &quot;Albania&quot;,
+        &quot;Algeria&quot;,
+        &quot;American Samoa&quot;,
+        &quot;Andorra&quot;,
+        &quot;Angola&quot;,
+        &quot;Anguilla&quot;,
+        &quot;Antarctica&quot;,
+        &quot;Antigua &amp; Barbuda&quot;,
+        &quot;Armenia&quot;,
+        &quot;Aruba&quot;,
+        &quot;Ascension Island&quot;,
+        &quot;Azerbaijan&quot;,
+        &quot;Bahamas&quot;,
+        &quot;Bahrain&quot;,
+        &quot;Bangladesh&quot;,
+        &quot;Barbados&quot;,
+        &quot;Belarus&quot;,
+        &quot;Belize&quot;,
+        &quot;Benin&quot;,
+        &quot;Bermuda&quot;,
+        &quot;Bhutan&quot;,
+        &quot;Bolivia&quot;,
+        &quot;Bosnia &amp; Herzegovina&quot;,
+        &quot;Botswana&quot;,
+        &quot;Bouvet Island&quot;,
+        &quot;British Indian Ocean Territory&quot;,
+        &quot;British Virgin Islands&quot;,
+        &quot;Brunei&quot;,
+        &quot;Bulgaria&quot;,
+        &quot;Burkina Faso&quot;,
+        &quot;Burundi&quot;,
+        &quot;Cambodia&quot;,
+        &quot;Cameroon&quot;,
+        &quot;Canary Islands&quot;,
+        &quot;Cape Verde&quot;,
+        &quot;Caribbean Netherlands&quot;,
+        &quot;Cayman Islands&quot;,
+        &quot;Central African Republic&quot;,
+        &quot;Ceuta &amp; Melilla&quot;,
+        &quot;Chad&quot;,
+        &quot;Christmas Island&quot;,
+        &quot;Clipperton Island&quot;,
+        &quot;Cocos (Keeling) Islands&quot;,
+        &quot;Comoros&quot;,
+        &quot;Congo - Brazzaville&quot;,
+        &quot;Congo - Kinshasa&quot;,
+        &quot;Cook Islands&quot;,
+        &quot;Costa Rica&quot;,
+        &quot;Croatia&quot;,
+        &quot;Cuba&quot;,
+        &quot;Curaçao&quot;,
+        &quot;Cyprus&quot;,
+        &quot;Côte d’Ivoire&quot;,
+        &quot;Diego Garcia&quot;,
+        &quot;Djibouti&quot;,
+        &quot;Dominica&quot;,
+        &quot;Dominican Republic&quot;,
+        &quot;Ecuador&quot;,
+        &quot;El Salvador&quot;,
+        &quot;Equatorial Guinea&quot;,
+        &quot;Eritrea&quot;,
+        &quot;Estonia&quot;,
+        &quot;Eswatini&quot;,
+        &quot;Ethiopia&quot;,
+        &quot;European Union&quot;,
+        &quot;Eurozone&quot;,
+        &quot;Falkland Islands&quot;,
+        &quot;Faroe Islands&quot;,
+        &quot;Fiji&quot;,
+        &quot;French Guiana&quot;,
+        &quot;French Polynesia&quot;,
+        &quot;French Southern Territories&quot;,
+        &quot;Gabon&quot;,
+        &quot;Gambia&quot;,
+        &quot;Georgia&quot;,
+        &quot;Ghana&quot;,
+        &quot;Gibraltar&quot;,
+        &quot;Greenland&quot;,
+        &quot;Grenada&quot;,
+        &quot;Guadeloupe&quot;,
+        &quot;Guam&quot;,
+        &quot;Guatemala&quot;,
+        &quot;Guernsey&quot;,
+        &quot;Guinea&quot;,
+        &quot;Guinea-Bissau&quot;,
+        &quot;Guyana&quot;,
+        &quot;Haiti&quot;,
+        &quot;Heard &amp; McDonald Islands&quot;,
+        &quot;Honduras&quot;,
+        &quot;Hong Kong SAR China&quot;,
+        &quot;Iceland&quot;,
+        &quot;Iran&quot;,
+        &quot;Iraq&quot;,
+        &quot;Isle of Man&quot;,
+        &quot;Jamaica&quot;,
+        &quot;Jersey&quot;,
+        &quot;Jordan&quot;,
+        &quot;Kazakhstan&quot;,
+        &quot;Kiribati&quot;,
+        &quot;Kosovo&quot;,
+        &quot;Kuwait&quot;,
+        &quot;Kyrgyzstan&quot;,
+        &quot;Laos&quot;,
+        &quot;Latvia&quot;,
+        &quot;Lebanon&quot;,
+        &quot;Lesotho&quot;,
+        &quot;Liberia&quot;,
+        &quot;Libya&quot;,
+        &quot;Liechtenstein&quot;,
+        &quot;Lithuania&quot;,
+        &quot;Luxembourg&quot;,
+        &quot;Macao SAR China&quot;,
+        &quot;Madagascar&quot;,
+        &quot;Malawi&quot;,
+        &quot;Maldives&quot;,
+        &quot;Mali&quot;,
+        &quot;Malta&quot;,
+        &quot;Marshall Islands&quot;,
+        &quot;Martinique&quot;,
+        &quot;Mauritania&quot;,
+        &quot;Mauritius&quot;,
+        &quot;Mayotte&quot;,
+        &quot;Micronesia&quot;,
+        &quot;Moldova&quot;,
+        &quot;Monaco&quot;,
+        &quot;Mongolia&quot;,
+        &quot;Montenegro&quot;,
+        &quot;Montserrat&quot;,
+        &quot;Morocco&quot;,
+        &quot;Mozambique&quot;,
+        &quot;Myanmar (Burma)&quot;,
+        &quot;Namibia&quot;,
+        &quot;Nauru&quot;,
+        &quot;Nepal&quot;,
+        &quot;New Caledonia&quot;,
+        &quot;Nicaragua&quot;,
+        &quot;Niger&quot;,
+        &quot;Niue&quot;,
+        &quot;Norfolk Island&quot;,
+        &quot;North Korea&quot;,
+        &quot;North Macedonia&quot;,
+        &quot;Northern Mariana Islands&quot;,
+        &quot;Oman&quot;,
+        &quot;Outlying Oceania&quot;,
+        &quot;Palau&quot;,
+        &quot;Palestinian Territories&quot;,
+        &quot;Panama&quot;,
+        &quot;Papua New Guinea&quot;,
+        &quot;Paraguay&quot;,
+        &quot;Pitcairn Islands&quot;,
+        &quot;Pseudo-Accents&quot;,
+        &quot;Pseudo-Bidi&quot;,
+        &quot;Puerto Rico&quot;,
+        &quot;Qatar&quot;,
+        &quot;Rwanda&quot;,
+        &quot;Réunion&quot;,
+        &quot;Samoa&quot;,
+        &quot;San Marino&quot;,
+        &quot;Sark&quot;,
+        &quot;Senegal&quot;,
+        &quot;Serbia&quot;,
+        &quot;Seychelles&quot;,
+        &quot;Sierra Leone&quot;,
+        &quot;Sint Maarten&quot;,
+        &quot;Slovakia&quot;,
+        &quot;Slovenia&quot;,
+        &quot;Solomon Islands&quot;,
+        &quot;Somalia&quot;,
+        &quot;South Georgia &amp; South Sandwich Islands&quot;,
+        &quot;South Sudan&quot;,
+        &quot;Sri Lanka&quot;,
+        &quot;St. Barthélemy&quot;,
+        &quot;St. Helena&quot;,
+        &quot;St. Kitts &amp; Nevis&quot;,
+        &quot;St. Lucia&quot;,
+        &quot;St. Martin&quot;,
+        &quot;St. Pierre &amp; Miquelon&quot;,
+        &quot;St. Vincent &amp; Grenadines&quot;,
+        &quot;Sudan&quot;,
+        &quot;Suriname&quot;,
+        &quot;Svalbard &amp; Jan Mayen&quot;,
+        &quot;Syria&quot;,
+        &quot;São Tomé &amp; Príncipe&quot;,
+        &quot;Taiwan&quot;,
+        &quot;Tajikistan&quot;,
+        &quot;Tanzania&quot;,
+        &quot;Timor-Leste&quot;,
+        &quot;Togo&quot;,
+        &quot;Tokelau&quot;,
+        &quot;Tonga&quot;,
+        &quot;Trinidad &amp; Tobago&quot;,
+        &quot;Tristan da Cunha&quot;,
+        &quot;Tunisia&quot;,
+        &quot;Turkmenistan&quot;,
+        &quot;Turks &amp; Caicos Islands&quot;,
+        &quot;Tuvalu&quot;,
+        &quot;U.S. Outlying Islands&quot;,
+        &quot;U.S. Virgin Islands&quot;,
+        &quot;Uganda&quot;,
+        &quot;United Nations&quot;,
+        &quot;Unknown Region&quot;,
+        &quot;Uruguay&quot;,
+        &quot;Uzbekistan&quot;,
+        &quot;Vanuatu&quot;,
+        &quot;Vatican City&quot;,
+        &quot;Venezuela&quot;,
+        &quot;Wallis &amp; Futuna&quot;,
+        &quot;Western Sahara&quot;,
+        &quot;Yemen&quot;,
+        &quot;Zambia&quot;,
+        &quot;Zimbabwe&quot;,
+        &quot;Åland Islands&quot;
+      ],
+      &quot;prefill&quot;: &quot;US&quot;,
+      &quot;title&quot;: &quot;Country&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;enableFallback&quot;: {
+      &quot;default&quot;: true,
+      &quot;description&quot;: &quot;When googleOnly is false, allow labelled Bing Images and then DuckDuckGo Images. Every fallback row carries engine, isFallback=true and fallbackReason.&quot;,
+      &quot;prefill&quot;: true,
+      &quot;title&quot;: &quot;Enable labelled fallback&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;fileType&quot;: {
+      &quot;default&quot;: &quot;&quot;,
+      &quot;description&quot;: &quot;Only images in this format. Google applies this server-side; Bing fallback applies it to the image URL extension locally.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;&quot;,
+        &quot;jpg&quot;,
+        &quot;png&quot;,
+        &quot;gif&quot;,
+        &quot;bmp&quot;,
+        &quot;svg&quot;,
+        &quot;webp&quot;,
+        &quot;ico&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;Any format&quot;,
+        &quot;JPEG&quot;,
+        &quot;PNG&quot;,
+        &quot;GIF&quot;,
+        &quot;BMP&quot;,
+        &quot;SVG&quot;,
+        &quot;WebP&quot;,
+        &quot;ICO&quot;
+      ],
+      &quot;prefill&quot;: &quot;&quot;,
+      &quot;title&quot;: &quot;File type&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;googleOnly&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;When true, a failed or empty Google search fails that query with a clear status instead of using another engine. The default is false so legacy saved tasks keep working; set this true for a strict Google-only contract.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Google only&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;imageColor&quot;: {
+      &quot;default&quot;: &quot;&quot;,
+      &quot;description&quot;: &quot;Google Images color filter. &#x27;black_and_white&#x27; is grayscale; &#x27;transparent&#x27; looks for a transparent background.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;&quot;,
+        &quot;color&quot;,
+        &quot;black_and_white&quot;,
+        &quot;transparent&quot;,
+        &quot;red&quot;,
+        &quot;orange&quot;,
+        &quot;yellow&quot;,
+        &quot;green&quot;,
+        &quot;teal&quot;,
+        &quot;blue&quot;,
+        &quot;purple&quot;,
+        &quot;pink&quot;,
+        &quot;white&quot;,
+        &quot;gray&quot;,
+        &quot;black&quot;,
+        &quot;brown&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;Any color&quot;,
+        &quot;Full color&quot;,
+        &quot;Black and white&quot;,
+        &quot;Transparent&quot;,
+        &quot;Red&quot;,
+        &quot;Orange&quot;,
+        &quot;Yellow&quot;,
+        &quot;Green&quot;,
+        &quot;Teal&quot;,
+        &quot;Blue&quot;,
+        &quot;Purple&quot;,
+        &quot;Pink&quot;,
+        &quot;White&quot;,
+        &quot;Gray&quot;,
+        &quot;Black&quot;,
+        &quot;Brown&quot;
+      ],
+      &quot;prefill&quot;: &quot;&quot;,
+      &quot;title&quot;: &quot;Image color&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;imageSize&quot;: {
+      &quot;default&quot;: &quot;&quot;,
+      &quot;description&quot;: &quot;Google Images size filter. The MP values are minimum megapixels. Bing fallback applies the nearest size category and enforces the exact MP floor locally when dimensions are known.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;&quot;,
+        &quot;large&quot;,
+        &quot;medium&quot;,
+        &quot;icon&quot;,
+        &quot;2mp&quot;,
+        &quot;4mp&quot;,
+        &quot;8mp&quot;,
+        &quot;12mp&quot;,
+        &quot;20mp&quot;,
+        &quot;40mp&quot;,
+        &quot;70mp&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;Any size&quot;,
+        &quot;Large&quot;,
+        &quot;Medium&quot;,
+        &quot;Icon&quot;,
+        &quot;2 MP or larger&quot;,
+        &quot;4 MP or larger&quot;,
+        &quot;8 MP or larger&quot;,
+        &quot;12 MP or larger&quot;,
+        &quot;20 MP or larger&quot;,
+        &quot;40 MP or larger&quot;,
+        &quot;70 MP or larger&quot;
+      ],
+      &quot;prefill&quot;: &quot;&quot;,
+      &quot;title&quot;: &quot;Image size&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;imageType&quot;: {
+      &quot;default&quot;: &quot;&quot;,
+      &quot;description&quot;: &quot;Google Images type filter: photographs, faces, clip art, line drawings or animated images.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;&quot;,
+        &quot;photo&quot;,
+        &quot;face&quot;,
+        &quot;clipart&quot;,
+        &quot;lineart&quot;,
+        &quot;animated&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;Any type&quot;,
+        &quot;Photo&quot;,
+        &quot;Face&quot;,
+        &quot;Clip art&quot;,
+        &quot;Line drawing&quot;,
+        &quot;Animated&quot;
+      ],
+      &quot;prefill&quot;: &quot;&quot;,
+      &quot;title&quot;: &quot;Image type&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;language&quot;: {
+      &quot;default&quot;: &quot;en&quot;,
+      &quot;description&quot;: &quot;Interface and result language used for Google&#x27;s hl parameter (and Bing&#x27;s setlang parameter).&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;en&quot;,
+        &quot;es&quot;,
+        &quot;de&quot;,
+        &quot;fr&quot;,
+        &quot;pt&quot;,
+        &quot;pt-BR&quot;,
+        &quot;it&quot;,
+        &quot;nl&quot;,
+        &quot;pl&quot;,
+        &quot;ru&quot;,
+        &quot;uk&quot;,
+        &quot;tr&quot;,
+        &quot;ar&quot;,
+        &quot;hi&quot;,
+        &quot;ur&quot;,
+        &quot;bn&quot;,
+        &quot;id&quot;,
+        &quot;ms&quot;,
+        &quot;th&quot;,
+        &quot;vi&quot;,
+        &quot;ja&quot;,
+        &quot;ko&quot;,
+        &quot;zh-CN&quot;,
+        &quot;zh-TW&quot;,
+        &quot;ab&quot;,
+        &quot;aa&quot;,
+        &quot;af&quot;,
+        &quot;ak&quot;,
+        &quot;sq&quot;,
+        &quot;am&quot;,
+        &quot;an&quot;,
+        &quot;hy&quot;,
+        &quot;as&quot;,
+        &quot;av&quot;,
+        &quot;ae&quot;,
+        &quot;ay&quot;,
+        &quot;az&quot;,
+        &quot;bm&quot;,
+        &quot;ba&quot;,
+        &quot;eu&quot;,
+        &quot;be&quot;,
+        &quot;bi&quot;,
+        &quot;bs&quot;,
+        &quot;br&quot;,
+        &quot;bg&quot;,
+        &quot;my&quot;,
+        &quot;ca&quot;,
+        &quot;ch&quot;,
+        &quot;ce&quot;,
+        &quot;zh&quot;,
+        &quot;cu&quot;,
+        &quot;cv&quot;,
+        &quot;kw&quot;,
+        &quot;co&quot;,
+        &quot;cr&quot;,
+        &quot;hr&quot;,
+        &quot;cs&quot;,
+        &quot;da&quot;,
+        &quot;dv&quot;,
+        &quot;dz&quot;,
+        &quot;eo&quot;,
+        &quot;et&quot;,
+        &quot;ee&quot;,
+        &quot;fo&quot;,
+        &quot;fj&quot;,
+        &quot;fi&quot;,
+        &quot;ff&quot;,
+        &quot;gl&quot;,
+        &quot;lg&quot;,
+        &quot;ka&quot;,
+        &quot;el&quot;,
+        &quot;gn&quot;,
+        &quot;gu&quot;,
+        &quot;ht&quot;,
+        &quot;ha&quot;,
+        &quot;he&quot;,
+        &quot;hz&quot;,
+        &quot;ho&quot;,
+        &quot;hu&quot;,
+        &quot;is&quot;,
+        &quot;io&quot;,
+        &quot;ig&quot;,
+        &quot;ia&quot;,
+        &quot;ie&quot;,
+        &quot;iu&quot;,
+        &quot;ik&quot;,
+        &quot;ga&quot;,
+        &quot;jv&quot;,
+        &quot;kl&quot;,
+        &quot;kn&quot;,
+        &quot;kr&quot;,
+        &quot;ks&quot;,
+        &quot;kk&quot;,
+        &quot;km&quot;,
+        &quot;ki&quot;,
+        &quot;rw&quot;,
+        &quot;kv&quot;,
+        &quot;kg&quot;,
+        &quot;kj&quot;,
+        &quot;ku&quot;,
+        &quot;ky&quot;,
+        &quot;lo&quot;,
+        &quot;la&quot;,
+        &quot;lv&quot;,
+        &quot;li&quot;,
+        &quot;ln&quot;,
+        &quot;lt&quot;,
+        &quot;lu&quot;,
+        &quot;lb&quot;,
+        &quot;mk&quot;,
+        &quot;mg&quot;,
+        &quot;ml&quot;,
+        &quot;mt&quot;,
+        &quot;gv&quot;,
+        &quot;mr&quot;,
+        &quot;mh&quot;,
+        &quot;mn&quot;,
+        &quot;mi&quot;,
+        &quot;na&quot;,
+        &quot;nv&quot;,
+        &quot;ng&quot;,
+        &quot;ne&quot;,
+        &quot;nd&quot;,
+        &quot;se&quot;,
+        &quot;no&quot;,
+        &quot;nb&quot;,
+        &quot;nn&quot;,
+        &quot;ny&quot;,
+        &quot;oc&quot;,
+        &quot;or&quot;,
+        &quot;oj&quot;,
+        &quot;om&quot;,
+        &quot;os&quot;,
+        &quot;pi&quot;,
+        &quot;ps&quot;,
+        &quot;fa&quot;,
+        &quot;pa&quot;,
+        &quot;qu&quot;,
+        &quot;ro&quot;,
+        &quot;rm&quot;,
+        &quot;rn&quot;,
+        &quot;sm&quot;,
+        &quot;sg&quot;,
+        &quot;sa&quot;,
+        &quot;sc&quot;,
+        &quot;gd&quot;,
+        &quot;sr&quot;,
+        &quot;sh&quot;,
+        &quot;sn&quot;,
+        &quot;ii&quot;,
+        &quot;sd&quot;,
+        &quot;si&quot;,
+        &quot;sk&quot;,
+        &quot;sl&quot;,
+        &quot;so&quot;,
+        &quot;nr&quot;,
+        &quot;st&quot;,
+        &quot;su&quot;,
+        &quot;sw&quot;,
+        &quot;ss&quot;,
+        &quot;sv&quot;,
+        &quot;tl&quot;,
+        &quot;ty&quot;,
+        &quot;tg&quot;,
+        &quot;ta&quot;,
+        &quot;tt&quot;,
+        &quot;te&quot;,
+        &quot;bo&quot;,
+        &quot;ti&quot;,
+        &quot;to&quot;,
+        &quot;ts&quot;,
+        &quot;tn&quot;,
+        &quot;tk&quot;,
+        &quot;tw&quot;,
+        &quot;ug&quot;,
+        &quot;uz&quot;,
+        &quot;ve&quot;,
+        &quot;vo&quot;,
+        &quot;wa&quot;,
+        &quot;cy&quot;,
+        &quot;fy&quot;,
+        &quot;wo&quot;,
+        &quot;xh&quot;,
+        &quot;yi&quot;,
+        &quot;yo&quot;,
+        &quot;za&quot;,
+        &quot;zu&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;English&quot;,
+        &quot;Spanish&quot;,
+        &quot;German&quot;,
+        &quot;French&quot;,
+        &quot;Portuguese&quot;,
+        &quot;Portuguese (Brazil)&quot;,
+        &quot;Italian&quot;,
+        &quot;Dutch&quot;,
+        &quot;Polish&quot;,
+        &quot;Russian&quot;,
+        &quot;Ukrainian&quot;,
+        &quot;Turkish&quot;,
+        &quot;Arabic&quot;,
+        &quot;Hindi&quot;,
+        &quot;Urdu&quot;,
+        &quot;Bangla&quot;,
+        &quot;Indonesian&quot;,
+        &quot;Malay&quot;,
+        &quot;Thai&quot;,
+        &quot;Vietnamese&quot;,
+        &quot;Japanese&quot;,
+        &quot;Korean&quot;,
+        &quot;Chinese (Simplified)&quot;,
+        &quot;Chinese (Traditional)&quot;,
+        &quot;Abkhazian&quot;,
+        &quot;Afar&quot;,
+        &quot;Afrikaans&quot;,
+        &quot;Akan&quot;,
+        &quot;Albanian&quot;,
+        &quot;Amharic&quot;,
+        &quot;Aragonese&quot;,
+        &quot;Armenian&quot;,
+        &quot;Assamese&quot;,
+        &quot;Avaric&quot;,
+        &quot;Avestan&quot;,
+        &quot;Aymara&quot;,
+        &quot;Azerbaijani&quot;,
+        &quot;Bambara&quot;,
+        &quot;Bashkir&quot;,
+        &quot;Basque&quot;,
+        &quot;Belarusian&quot;,
+        &quot;Bislama&quot;,
+        &quot;Bosnian&quot;,
+        &quot;Breton&quot;,
+        &quot;Bulgarian&quot;,
+        &quot;Burmese&quot;,
+        &quot;Catalan&quot;,
+        &quot;Chamorro&quot;,
+        &quot;Chechen&quot;,
+        &quot;Chinese&quot;,
+        &quot;Church Slavic&quot;,
+        &quot;Chuvash&quot;,
+        &quot;Cornish&quot;,
+        &quot;Corsican&quot;,
+        &quot;Cree&quot;,
+        &quot;Croatian&quot;,
+        &quot;Czech&quot;,
+        &quot;Danish&quot;,
+        &quot;Divehi&quot;,
+        &quot;Dzongkha&quot;,
+        &quot;Esperanto&quot;,
+        &quot;Estonian&quot;,
+        &quot;Ewe&quot;,
+        &quot;Faroese&quot;,
+        &quot;Fijian&quot;,
+        &quot;Finnish&quot;,
+        &quot;Fula&quot;,
+        &quot;Galician&quot;,
+        &quot;Ganda&quot;,
+        &quot;Georgian&quot;,
+        &quot;Greek&quot;,
+        &quot;Guarani&quot;,
+        &quot;Gujarati&quot;,
+        &quot;Haitian Creole&quot;,
+        &quot;Hausa&quot;,
+        &quot;Hebrew&quot;,
+        &quot;Herero&quot;,
+        &quot;Hiri Motu&quot;,
+        &quot;Hungarian&quot;,
+        &quot;Icelandic&quot;,
+        &quot;Ido&quot;,
+        &quot;Igbo&quot;,
+        &quot;Interlingua&quot;,
+        &quot;Interlingue&quot;,
+        &quot;Inuktitut&quot;,
+        &quot;Inupiaq&quot;,
+        &quot;Irish&quot;,
+        &quot;Javanese&quot;,
+        &quot;Kalaallisut&quot;,
+        &quot;Kannada&quot;,
+        &quot;Kanuri&quot;,
+        &quot;Kashmiri&quot;,
+        &quot;Kazakh&quot;,
+        &quot;Khmer&quot;,
+        &quot;Kikuyu&quot;,
+        &quot;Kinyarwanda&quot;,
+        &quot;Komi&quot;,
+        &quot;Kongo&quot;,
+        &quot;Kuanyama&quot;,
+        &quot;Kurdish&quot;,
+        &quot;Kyrgyz&quot;,
+        &quot;Lao&quot;,
+        &quot;Latin&quot;,
+        &quot;Latvian&quot;,
+        &quot;Limburgish&quot;,
+        &quot;Lingala&quot;,
+        &quot;Lithuanian&quot;,
+        &quot;Luba-Katanga&quot;,
+        &quot;Luxembourgish&quot;,
+        &quot;Macedonian&quot;,
+        &quot;Malagasy&quot;,
+        &quot;Malayalam&quot;,
+        &quot;Maltese&quot;,
+        &quot;Manx&quot;,
+        &quot;Marathi&quot;,
+        &quot;Marshallese&quot;,
+        &quot;Mongolian&quot;,
+        &quot;Māori&quot;,
+        &quot;Nauru&quot;,
+        &quot;Navajo&quot;,
+        &quot;Ndonga&quot;,
+        &quot;Nepali&quot;,
+        &quot;North Ndebele&quot;,
+        &quot;Northern Sami&quot;,
+        &quot;Norwegian&quot;,
+        &quot;Norwegian Bokmål&quot;,
+        &quot;Norwegian Nynorsk&quot;,
+        &quot;Nyanja&quot;,
+        &quot;Occitan&quot;,
+        &quot;Odia&quot;,
+        &quot;Ojibwa&quot;,
+        &quot;Oromo&quot;,
+        &quot;Ossetic&quot;,
+        &quot;Pali&quot;,
+        &quot;Pashto&quot;,
+        &quot;Persian&quot;,
+        &quot;Punjabi&quot;,
+        &quot;Quechua&quot;,
+        &quot;Romanian&quot;,
+        &quot;Romansh&quot;,
+        &quot;Rundi&quot;,
+        &quot;Samoan&quot;,
+        &quot;Sango&quot;,
+        &quot;Sanskrit&quot;,
+        &quot;Sardinian&quot;,
+        &quot;Scottish Gaelic&quot;,
+        &quot;Serbian&quot;,
+        &quot;Serbo-Croatian&quot;,
+        &quot;Shona&quot;,
+        &quot;Sichuan Yi&quot;,
+        &quot;Sindhi&quot;,
+        &quot;Sinhala&quot;,
+        &quot;Slovak&quot;,
+        &quot;Slovenian&quot;,
+        &quot;Somali&quot;,
+        &quot;South Ndebele&quot;,
+        &quot;Southern Sotho&quot;,
+        &quot;Sundanese&quot;,
+        &quot;Swahili&quot;,
+        &quot;Swati&quot;,
+        &quot;Swedish&quot;,
+        &quot;Tagalog&quot;,
+        &quot;Tahitian&quot;,
+        &quot;Tajik&quot;,
+        &quot;Tamil&quot;,
+        &quot;Tatar&quot;,
+        &quot;Telugu&quot;,
+        &quot;Tibetan&quot;,
+        &quot;Tigrinya&quot;,
+        &quot;Tongan&quot;,
+        &quot;Tsonga&quot;,
+        &quot;Tswana&quot;,
+        &quot;Turkmen&quot;,
+        &quot;Twi&quot;,
+        &quot;Uyghur&quot;,
+        &quot;Uzbek&quot;,
+        &quot;Venda&quot;,
+        &quot;Volapük&quot;,
+        &quot;Walloon&quot;,
+        &quot;Welsh&quot;,
+        &quot;Western Frisian&quot;,
+        &quot;Wolof&quot;,
+        &quot;Xhosa&quot;,
+        &quot;Yiddish&quot;,
+        &quot;Yoruba&quot;,
+        &quot;Zhuang&quot;,
+        &quot;Zulu&quot;
+      ],
+      &quot;prefill&quot;: &quot;en&quot;,
+      &quot;title&quot;: &quot;Language&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
     &quot;maxResults&quot;: {
       &quot;default&quot;: 100,
-      &quot;description&quot;: &quot;Maximum number of image results to extract&quot;,
+      &quot;description&quot;: &quot;Maximum number of image rows to return for each query. Google Images usually runs out around 300-400 results for a query; this is a ceiling, not a guarantee.&quot;,
       &quot;maximum&quot;: 500,
       &quot;minimum&quot;: 1,
-      &quot;prefill&quot;: 10,
-      &quot;title&quot;: &quot;Max Results&quot;,
+      &quot;prefill&quot;: 3,
+      &quot;title&quot;: &quot;Max results per query&quot;,
       &quot;type&quot;: &quot;integer&quot;
     },
-    &quot;proxyConfiguration&quot;: {
-      &quot;description&quot;: &quot;Residential proxy is required — Google blocks image scraping from datacenter IPs.&quot;,
-      &quot;editor&quot;: &quot;proxy&quot;,
-      &quot;prefill&quot;: {
-        &quot;apifyProxyGroups&quot;: [
-          &quot;RESIDENTIAL&quot;
-        ],
-        &quot;useApifyProxy&quot;: true
-      },
-      &quot;title&quot;: &quot;Proxy Configuration&quot;,
-      &quot;type&quot;: &quot;object&quot;
+    &quot;minHeight&quot;: {
+      &quot;default&quot;: 0,
+      &quot;description&quot;: &quot;Drop images shorter than this many pixels. Rows without published dimensions are dropped when this is set. 0 disables the filter.&quot;,
+      &quot;maximum&quot;: 10000,
+      &quot;minimum&quot;: 0,
+      &quot;prefill&quot;: 0,
+      &quot;title&quot;: &quot;Minimum image height&quot;,
+      &quot;type&quot;: &quot;integer&quot;
     },
-    &quot;query&quot;: {
-      &quot;description&quot;: &quot;Image search query (e.g., \&quot;Alfons Mucha\&quot;, \&quot;sunset landscape\&quot;, \&quot;cats\&quot;)&quot;,
-      &quot;editor&quot;: &quot;textfield&quot;,
-      &quot;prefill&quot;: &quot;Alfons Mucha&quot;,
-      &quot;title&quot;: &quot;Search Query&quot;,
+    &quot;minWidth&quot;: {
+      &quot;default&quot;: 0,
+      &quot;description&quot;: &quot;Drop images narrower than this many pixels. Rows without published dimensions are dropped when this is set. 0 disables the filter.&quot;,
+      &quot;maximum&quot;: 10000,
+      &quot;minimum&quot;: 0,
+      &quot;prefill&quot;: 0,
+      &quot;title&quot;: &quot;Minimum image width&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;queries&quot;: {
+      &quot;description&quot;: &quot;One or more image search queries. Each query is searched independently. Google operators such as site:, quoted phrases and -exclusions are passed through. The legacy single `query` key is still accepted by the actor code.&quot;,
+      &quot;editor&quot;: &quot;stringList&quot;,
+      &quot;items&quot;: {
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;maxItems&quot;: 50,
+      &quot;minItems&quot;: 1,
+      &quot;prefill&quot;: [
+        &quot;Alfons Mucha&quot;
+      ],
+      &quot;title&quot;: &quot;Search queries&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;safeSearch&quot;: {
+      &quot;default&quot;: &quot;active&quot;,
+      &quot;description&quot;: &quot;Google SafeSearch level. &#x27;active&#x27; filters explicit images; &#x27;off&#x27; does not.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;active&quot;,
+        &quot;off&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;Filter explicit results (active)&quot;,
+        &quot;Do not filter (off)&quot;
+      ],
+      &quot;prefill&quot;: &quot;active&quot;,
+      &quot;title&quot;: &quot;Safe search&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;timeRange&quot;: {
+      &quot;default&quot;: &quot;&quot;,
+      &quot;description&quot;: &quot;Only images Google found within this period. Bing fallback maps &#x27;hour&#x27; to its 24-hour window.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;&quot;,
+        &quot;hour&quot;,
+        &quot;day&quot;,
+        &quot;week&quot;,
+        &quot;month&quot;,
+        &quot;year&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;Any time&quot;,
+        &quot;Past hour&quot;,
+        &quot;Past 24 hours&quot;,
+        &quot;Past week&quot;,
+        &quot;Past month&quot;,
+        &quot;Past year&quot;
+      ],
+      &quot;prefill&quot;: &quot;&quot;,
+      &quot;title&quot;: &quot;Time range&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;usageRights&quot;: {
+      &quot;default&quot;: &quot;&quot;,
+      &quot;description&quot;: &quot;Google&#x27;s usage-rights labels. These are Google&#x27;s labels, not a legal guarantee; check the licence on the source page before reuse.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;&quot;,
+        &quot;free_to_use_or_share&quot;,
+        &quot;free_to_use_or_share_commercially&quot;,
+        &quot;free_to_use_share_or_modify&quot;,
+        &quot;free_to_use_share_or_modify_commercially&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;Any usage rights&quot;,
+        &quot;Free to use or share&quot;,
+        &quot;Free to use or share, even commercially&quot;,
+        &quot;Free to use, share or modify&quot;,
+        &quot;Free to use, share or modify, even commercially&quot;
+      ],
+      &quot;prefill&quot;: &quot;&quot;,
+      &quot;title&quot;: &quot;Usage rights&quot;,
       &quot;type&quot;: &quot;string&quot;
     }
   },
-  &quot;required&quot;: [
-    &quot;query&quot;
-  ],
   &quot;schemaVersion&quot;: 1,
   &quot;title&quot;: &quot;Google Images Scraper Input&quot;,
   &quot;type&quot;: &quot;object&quot;
 }
-</code></pre></details></section><section class="schema-section" id="output-schema"><h2>Output schema</h2><p>Published result links and storage locations. This schema is not an exhaustive contract for every field in a dataset record.</p><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>images</code></td><td>string</td><td>optional</td><td>Dataset containing all scraped Google Images search results.</td></tr></tbody></table></div><p><a href="output-schema.json">Download the published output schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+</code></pre></details></section><section class="schema-section" id="output-schema"><h2>Output schema</h2><p>Published result links and storage locations. This schema is not an exhaustive contract for every field in a dataset record.</p><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>images</code></td><td>string</td><td>optional</td><td>Dataset containing all scraped image rows. Every row states its engine and whether imageUrl is an original, a thumbnail or a crawler-only URL.</td></tr><tr><td><code>summary</code></td><td>string</td><td>optional</td><td>Per-run and per-query resultsRequested, resultsReturned, pagesFetched, stopReason and fallbackAttempts.</td></tr></tbody></table></div><p><a href="output-schema.json">Download the published output schema</a></p><details><summary>View complete JSON</summary><pre><code>{
   &quot;actorOutputSchemaVersion&quot;: 1,
-  &quot;description&quot;: &quot;Dataset of Google Images search results with full-resolution image URLs, dimensions, thumbnails, and source page details.&quot;,
+  &quot;description&quot;: &quot;One dataset row per image with original/thumbnail provenance, dimensions when stated, source page metadata, stable image ID and a labelled engine. Per-query completeness telemetry is in the SUMMARY key-value record.&quot;,
   &quot;properties&quot;: {
     &quot;images&quot;: {
-      &quot;description&quot;: &quot;Dataset containing all scraped Google Images search results.&quot;,
+      &quot;description&quot;: &quot;Dataset containing all scraped image rows. Every row states its engine and whether imageUrl is an original, a thumbnail or a crawler-only URL.&quot;,
       &quot;template&quot;: &quot;{{links.apiDefaultDatasetUrl}}/items&quot;,
       &quot;title&quot;: &quot;Scraped Images&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;summary&quot;: {
+      &quot;description&quot;: &quot;Per-run and per-query resultsRequested, resultsReturned, pagesFetched, stopReason and fallbackAttempts.&quot;,
+      &quot;template&quot;: &quot;{{links.apiDefaultKeyValueStoreUrl}}/records/SUMMARY&quot;,
+      &quot;title&quot;: &quot;Completeness summary&quot;,
       &quot;type&quot;: &quot;string&quot;
     }
   },
@@ -54,51 +1202,152 @@
   &quot;actorSpecification&quot;: 1,
   &quot;fields&quot;: {
     &quot;properties&quot;: {
+      &quot;aspectRatio&quot;: {
+        &quot;description&quot;: &quot;width divided by height, rounded to three decimals&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;number&quot;
+      },
       &quot;contentUrl&quot;: {
         &quot;description&quot;: &quot;URL of the web page containing the image&quot;,
         &quot;nullable&quot;: true,
         &quot;type&quot;: &quot;string&quot;
       },
+      &quot;engine&quot;: {
+        &quot;description&quot;: &quot;The engine that actually produced this row&quot;,
+        &quot;enum&quot;: [
+          &quot;google&quot;,
+          &quot;bing&quot;,
+          &quot;duckduckgo&quot;,
+          &quot;unknown&quot;
+        ],
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;fallbackReason&quot;: {
+        &quot;description&quot;: &quot;Why fallback was used, e.g. google_captcha&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;fetchedAt&quot;: {
+        &quot;description&quot;: &quot;ISO-8601 UTC timestamp when the query was fetched&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;fileFormat&quot;: {
+        &quot;description&quot;: &quot;Image format derived from the URL extension, when known&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;googleUrl&quot;: {
+        &quot;description&quot;: &quot;Google imgres reference URL, when the row came from Google&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;hasOriginal&quot;: {
+        &quot;description&quot;: &quot;True when imageUrl is an original source-site URL&quot;,
+        &quot;type&quot;: &quot;boolean&quot;
+      },
       &quot;imageHeight&quot;: {
-        &quot;description&quot;: &quot;Height of the full-resolution image in pixels&quot;,
+        &quot;description&quot;: &quot;Original image height in pixels, when the engine states it&quot;,
         &quot;nullable&quot;: true,
         &quot;type&quot;: &quot;integer&quot;
       },
+      &quot;imageId&quot;: {
+        &quot;description&quot;: &quot;Stable ID derived from the image URL or Google result key&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;string&quot;
+      },
       &quot;imageUrl&quot;: {
-        &quot;description&quot;: &quot;Direct URL to the full-resolution image&quot;,
+        &quot;description&quot;: &quot;Best available image URL; inspect imageUrlType to see whether it is the original or a thumbnail&quot;,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;imageUrlType&quot;: {
+        &quot;description&quot;: &quot;Whether imageUrl is the source original, an engine thumbnail, a crawler-only URL, or unknown&quot;,
+        &quot;enum&quot;: [
+          &quot;original&quot;,
+          &quot;thumbnail&quot;,
+          &quot;crawler_only&quot;,
+          &quot;unknown&quot;
+        ],
         &quot;type&quot;: &quot;string&quot;
       },
       &quot;imageWidth&quot;: {
-        &quot;description&quot;: &quot;Width of the full-resolution image in pixels&quot;,
+        &quot;description&quot;: &quot;Original image width in pixels, when the engine states it&quot;,
         &quot;nullable&quot;: true,
         &quot;type&quot;: &quot;integer&quot;
       },
-      &quot;origin&quot;: {
-        &quot;description&quot;: &quot;The domain of the website where the image originates&quot;,
+      &quot;isCrawlerOnly&quot;: {
+        &quot;description&quot;: &quot;True when imageUrl is hosted or cached by a search engine rather than the source site&quot;,
+        &quot;type&quot;: &quot;boolean&quot;
+      },
+      &quot;isFallback&quot;: {
+        &quot;description&quot;: &quot;True when the row came from a fallback engine rather than Google&quot;,
+        &quot;type&quot;: &quot;boolean&quot;
+      },
+      &quot;orientation&quot;: {
+        &quot;description&quot;: &quot;landscape, portrait or square, derived from the stated dimensions&quot;,
         &quot;nullable&quot;: true,
         &quot;type&quot;: &quot;string&quot;
       },
+      &quot;origin&quot;: {
+        &quot;description&quot;: &quot;Legacy field: domain of the source page, or of the image host when no page is known&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;page&quot;: {
+        &quot;description&quot;: &quot;Result page or scroll batch the row was read from&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;integer&quot;
+      },
+      &quot;position&quot;: {
+        &quot;description&quot;: &quot;1-based rank within the query&#x27;s returned rows&quot;,
+        &quot;type&quot;: &quot;integer&quot;
+      },
       &quot;query&quot;: {
-        &quot;description&quot;: &quot;The search query used&quot;,
+        &quot;description&quot;: &quot;The search query that produced this row&quot;,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;retrievalMethod&quot;: {
+        &quot;description&quot;: &quot;How the row was read, e.g. google_dom_sidepanel or bing_async_html&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;searchUrl&quot;: {
+        &quot;description&quot;: &quot;The search URL used for this query&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;siteName&quot;: {
+        &quot;description&quot;: &quot;Site name the engine displays, or the source domain when no display name is available&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;sourceDomain&quot;: {
+        &quot;description&quot;: &quot;Hostname of the source page containing the image&quot;,
+        &quot;nullable&quot;: true,
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;sourcePageTitle&quot;: {
+        &quot;description&quot;: &quot;Title of the source page containing the image&quot;,
+        &quot;nullable&quot;: true,
         &quot;type&quot;: &quot;string&quot;
       },
       &quot;thumbnailHeight&quot;: {
-        &quot;description&quot;: &quot;Height of the thumbnail in pixels&quot;,
+        &quot;description&quot;: &quot;Thumbnail height in pixels, when the engine states it&quot;,
         &quot;nullable&quot;: true,
         &quot;type&quot;: &quot;integer&quot;
       },
       &quot;thumbnailUrl&quot;: {
-        &quot;description&quot;: &quot;URL of the Google-cached thumbnail image&quot;,
+        &quot;description&quot;: &quot;URL of the engine&#x27;s cached thumbnail&quot;,
         &quot;nullable&quot;: true,
         &quot;type&quot;: &quot;string&quot;
       },
       &quot;thumbnailWidth&quot;: {
-        &quot;description&quot;: &quot;Width of the thumbnail in pixels&quot;,
+        &quot;description&quot;: &quot;Thumbnail width in pixels, when the engine states it&quot;,
         &quot;nullable&quot;: true,
         &quot;type&quot;: &quot;integer&quot;
       },
       &quot;title&quot;: {
-        &quot;description&quot;: &quot;The page title of the website containing the image&quot;,
+        &quot;description&quot;: &quot;Page title shown for the image, when it is not a generic placeholder&quot;,
         &quot;nullable&quot;: true,
         &quot;type&quot;: &quot;string&quot;
       }
@@ -107,72 +1356,14 @@
   },
   &quot;title&quot;: &quot;Google Images&quot;,
   &quot;views&quot;: {
-    &quot;detailed&quot;: {
-      &quot;display&quot;: {
-        &quot;component&quot;: &quot;table&quot;,
-        &quot;properties&quot;: {
-          &quot;contentUrl&quot;: {
-            &quot;format&quot;: &quot;text&quot;,
-            &quot;label&quot;: &quot;Content URL&quot;
-          },
-          &quot;imageHeight&quot;: {
-            &quot;format&quot;: &quot;number&quot;,
-            &quot;label&quot;: &quot;Height&quot;
-          },
-          &quot;imageUrl&quot;: {
-            &quot;format&quot;: &quot;text&quot;,
-            &quot;label&quot;: &quot;Image URL&quot;
-          },
-          &quot;imageWidth&quot;: {
-            &quot;format&quot;: &quot;number&quot;,
-            &quot;label&quot;: &quot;Width&quot;
-          },
-          &quot;origin&quot;: {
-            &quot;format&quot;: &quot;text&quot;,
-            &quot;label&quot;: &quot;Origin&quot;
-          },
-          &quot;query&quot;: {
-            &quot;format&quot;: &quot;text&quot;,
-            &quot;label&quot;: &quot;Query&quot;
-          },
-          &quot;thumbnailHeight&quot;: {
-            &quot;format&quot;: &quot;number&quot;,
-            &quot;label&quot;: &quot;Thumb Height&quot;
-          },
-          &quot;thumbnailUrl&quot;: {
-            &quot;format&quot;: &quot;text&quot;,
-            &quot;label&quot;: &quot;Thumbnail URL&quot;
-          },
-          &quot;thumbnailWidth&quot;: {
-            &quot;format&quot;: &quot;number&quot;,
-            &quot;label&quot;: &quot;Thumb Width&quot;
-          },
-          &quot;title&quot;: {
-            &quot;format&quot;: &quot;text&quot;,
-            &quot;label&quot;: &quot;Page Title&quot;
-          }
-        }
-      },
-      &quot;title&quot;: &quot;Detailed Results&quot;,
-      &quot;transformation&quot;: {
-        &quot;fields&quot;: [
-          &quot;query&quot;,
-          &quot;title&quot;,
-          &quot;origin&quot;,
-          &quot;imageUrl&quot;,
-          &quot;imageWidth&quot;,
-          &quot;imageHeight&quot;,
-          &quot;thumbnailUrl&quot;,
-          &quot;thumbnailWidth&quot;,
-          &quot;thumbnailHeight&quot;,
-          &quot;contentUrl&quot;
-        ]
-      }
-    },
     &quot;overview&quot;: {
       &quot;display&quot;: {
         &quot;component&quot;: &quot;table&quot;,
         &quot;properties&quot;: {
+          &quot;engine&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Engine&quot;
+          },
           &quot;imageHeight&quot;: {
             &quot;format&quot;: &quot;number&quot;,
             &quot;label&quot;: &quot;Height&quot;
@@ -181,21 +1372,29 @@
             &quot;format&quot;: &quot;text&quot;,
             &quot;label&quot;: &quot;Image URL&quot;
           },
+          &quot;imageUrlType&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;URL type&quot;
+          },
           &quot;imageWidth&quot;: {
             &quot;format&quot;: &quot;number&quot;,
             &quot;label&quot;: &quot;Width&quot;
           },
-          &quot;origin&quot;: {
-            &quot;format&quot;: &quot;text&quot;,
-            &quot;label&quot;: &quot;Origin&quot;
+          &quot;position&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Position&quot;
           },
           &quot;query&quot;: {
             &quot;format&quot;: &quot;text&quot;,
             &quot;label&quot;: &quot;Query&quot;
           },
+          &quot;sourceDomain&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Source domain&quot;
+          },
           &quot;title&quot;: {
             &quot;format&quot;: &quot;text&quot;,
-            &quot;label&quot;: &quot;Page Title&quot;
+            &quot;label&quot;: &quot;Title&quot;
           }
         }
       },
@@ -203,39 +1402,235 @@
       &quot;transformation&quot;: {
         &quot;fields&quot;: [
           &quot;query&quot;,
+          &quot;position&quot;,
+          &quot;engine&quot;,
+          &quot;imageUrlType&quot;,
           &quot;title&quot;,
-          &quot;origin&quot;,
+          &quot;sourceDomain&quot;,
           &quot;imageUrl&quot;,
           &quot;imageWidth&quot;,
           &quot;imageHeight&quot;
+        ]
+      }
+    },
+    &quot;provenance&quot;: {
+      &quot;display&quot;: {
+        &quot;component&quot;: &quot;table&quot;,
+        &quot;properties&quot;: {
+          &quot;engine&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Engine&quot;
+          },
+          &quot;fallbackReason&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Fallback reason&quot;
+          },
+          &quot;fetchedAt&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Fetched at&quot;
+          },
+          &quot;hasOriginal&quot;: {
+            &quot;format&quot;: &quot;boolean&quot;,
+            &quot;label&quot;: &quot;Has original&quot;
+          },
+          &quot;imageId&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Image ID&quot;
+          },
+          &quot;imageUrlType&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;URL type&quot;
+          },
+          &quot;isCrawlerOnly&quot;: {
+            &quot;format&quot;: &quot;boolean&quot;,
+            &quot;label&quot;: &quot;Crawler only&quot;
+          },
+          &quot;isFallback&quot;: {
+            &quot;format&quot;: &quot;boolean&quot;,
+            &quot;label&quot;: &quot;Fallback&quot;
+          },
+          &quot;page&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Page&quot;
+          },
+          &quot;position&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Position&quot;
+          },
+          &quot;query&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Query&quot;
+          },
+          &quot;retrievalMethod&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Method&quot;
+          },
+          &quot;searchUrl&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Search URL&quot;
+          }
+        }
+      },
+      &quot;title&quot;: &quot;Provenance&quot;,
+      &quot;transformation&quot;: {
+        &quot;fields&quot;: [
+          &quot;query&quot;,
+          &quot;position&quot;,
+          &quot;page&quot;,
+          &quot;engine&quot;,
+          &quot;retrievalMethod&quot;,
+          &quot;isFallback&quot;,
+          &quot;fallbackReason&quot;,
+          &quot;imageId&quot;,
+          &quot;imageUrlType&quot;,
+          &quot;isCrawlerOnly&quot;,
+          &quot;hasOriginal&quot;,
+          &quot;searchUrl&quot;,
+          &quot;fetchedAt&quot;
         ]
       }
     }
   }
 }
 </code></pre></details></section><section class="schema-section" id="key-value-schema"><h2>Key-value schema</h2><p>Published key-value store definitions, when provided by this build.</p><p>This definition is not present in the default published build. See the published README for available documentation.</p></section><section id="published-readme"><h2>Published README</h2><details><summary>Read the full published documentation</summary><h2 id="readme-google-image-search-results-metadata-scraper">Google Image Search Results &amp; Metadata Scraper</h2>
-<p>Run a Google Images search for any query and get back structured results: the full-resolution image URL and dimensions, a thumbnail with its own dimensions, the source page's title, and the web page the image came from. Useful for building image datasets, tracking brand visuals, or researching what images rank for a keyword.</p>
+<p>Search Google Images for one or many queries and get one row per image, with an honest label on what each URL actually is. Google is tried first. If Google blocks or returns nothing, the default path returns explicitly labelled Bing/DuckDuckGo rows; set <code>googleOnly=true</code> for a strict Google-only contract that fails instead.</p>
 <h2 id="readme-what-this-actor-does">What this actor does</h2>
 <ul>
-<li>Searches Google Images for a single query and collects matching image results</li>
-<li>Returns both the full-resolution image URL and the Google-cached thumbnail, each with width/height</li>
-<li>Captures the source page's title and domain alongside the content page URL</li>
-<li>Scrolls Google's results to collect up to 500 images for a single query, stopping early when Google stops loading new ones</li>
-<li>If Google can't be loaded after several attempts, the same query is run on DuckDuckGo Images and then Bing Images instead, returning the same fields (records don't say which engine they came from)</li>
+<li>Runs one or more Google Images queries in a single run.</li>
+<li>Exposes Google's own size, colour, type, file-type, time and usage-rights filters, plus country, language and SafeSearch.</li>
+<li>Captures the original image URL when Google exposes it, and tells you when it only has a thumbnail (<code>imageUrlType</code>, <code>isCrawlerOnly</code>, <code>hasOriginal</code>).</li>
+<li>Records the source page, source domain, site name, result position and page/scroll batch.</li>
+<li>Gives every row a stable <code>imageId</code> derived from the image URL or Google's result key.</li>
+<li>Writes a <code>SUMMARY</code> key-value record with per-query <code>resultsRequested</code>, <code>resultsReturned</code>, <code>pagesFetched</code>, <code>stopReason</code> and <code>fallbackAttempts</code>.</li>
 </ul>
-<h2 id="readme-output-per-image-result">Output per image result</h2>
-<p>Every record has the same keys. When a value isn't available it comes back as <code>0</code> (dimensions) or an empty string rather than being dropped.</p>
+<h2 id="readme-google-first-with-labelled-fallback">Google-first with labelled fallback</h2>
+<p>The default contract is <strong>labelled fallback</strong>: <code>googleOnly</code> is <code>false</code> and <code>enableFallback</code> is <code>true</code>. Google is always tried first. If Google is blocked or has no results, the actor tries Bing Images (plain HTTP) and DuckDuckGo Images, in that order. Every fallback row carries:</p>
 <ul>
-<li><code>query</code> — the search query used</li>
-<li><code>imageUrl</code> — direct URL to the full-resolution image</li>
-<li><code>imageWidth</code>, <code>imageHeight</code> — full-resolution image dimensions in pixels</li>
-<li><code>thumbnailUrl</code> — URL of the search engine's cached thumbnail</li>
-<li><code>thumbnailWidth</code>, <code>thumbnailHeight</code> — thumbnail dimensions in pixels</li>
-<li><code>title</code> — page title of the website containing the image</li>
-<li><code>origin</code> — domain of the website hosting the image</li>
-<li><code>contentUrl</code> — URL of the web page containing the image</li>
+<li><code>engine</code> - <code>bing</code>, <code>duckduckgo</code>, or <code>google</code></li>
+<li><code>isFallback</code> - <code>true</code> for every fallback row</li>
+<li><code>fallbackReason</code> - why Google was not used, e.g. <code>google_captcha</code></li>
 </ul>
+<p>Fallback is never silent and never changes the <code>engine</code> value. A Bing row is always labelled Bing.</p>
+<p>For a strict Google-only run, set <code>googleOnly=true</code> and <code>enableFallback=false</code>. If Google is blocked or has no results, the run fails with an explicit status instead of returning another engine.</p>
+<h2 id="readme-output-fields">Output fields</h2>
+<p>Every row keeps the legacy field names and adds provenance and completeness fields. Empty optional values are omitted; <code>null</code> and sentinel values are never written.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>query</code></td>
+<td>Query that produced the row</td>
+</tr>
+<tr>
+<td><code>position</code></td>
+<td>1-based rank within the query's returned rows</td>
+</tr>
+<tr>
+<td><code>page</code></td>
+<td>Result page or scroll batch the row was read from</td>
+</tr>
+<tr>
+<td><code>engine</code></td>
+<td><code>google</code>, <code>bing</code>, <code>duckduckgo</code> or <code>unknown</code></td>
+</tr>
+<tr>
+<td><code>retrievalMethod</code></td>
+<td>How the row was read, e.g. <code>google_dom_sidepanel</code>, <code>google_dom_thumbnail</code>, <code>bing_async_html</code></td>
+</tr>
+<tr>
+<td><code>isFallback</code></td>
+<td><code>true</code> when the row came from a fallback engine</td>
+</tr>
+<tr>
+<td><code>fallbackReason</code></td>
+<td>Why fallback was used</td>
+</tr>
+<tr>
+<td><code>searchUrl</code></td>
+<td>Search URL used for this query</td>
+</tr>
+<tr>
+<td><code>fetchedAt</code></td>
+<td>ISO-8601 UTC fetch timestamp</td>
+</tr>
+<tr>
+<td><code>imageId</code></td>
+<td>Stable ID derived from the image URL or Google result key</td>
+</tr>
+<tr>
+<td><code>imageUrl</code></td>
+<td>Best available image URL</td>
+</tr>
+<tr>
+<td><code>imageUrlType</code></td>
+<td><code>original</code>, <code>thumbnail</code>, <code>crawler_only</code> or <code>unknown</code></td>
+</tr>
+<tr>
+<td><code>isCrawlerOnly</code></td>
+<td><code>true</code> when <code>imageUrl</code> is a search-engine cached/thumbnail URL</td>
+</tr>
+<tr>
+<td><code>hasOriginal</code></td>
+<td><code>true</code> when <code>imageUrl</code> is the source site's original</td>
+</tr>
+<tr>
+<td><code>imageWidth</code>, <code>imageHeight</code></td>
+<td>Original dimensions, only when the engine states them</td>
+</tr>
+<tr>
+<td><code>aspectRatio</code>, <code>orientation</code></td>
+<td>Derived from the stated dimensions</td>
+</tr>
+<tr>
+<td><code>fileFormat</code></td>
+<td>Format from the URL extension, when known</td>
+</tr>
+<tr>
+<td><code>thumbnailUrl</code></td>
+<td>Engine-cached thumbnail</td>
+</tr>
+<tr>
+<td><code>thumbnailWidth</code>, <code>thumbnailHeight</code></td>
+<td>Thumbnail dimensions, when stated</td>
+</tr>
+<tr>
+<td><code>title</code></td>
+<td>Page title shown for the image, when it is not a generic placeholder</td>
+</tr>
+<tr>
+<td><code>sourcePageTitle</code></td>
+<td>Title of the source page</td>
+</tr>
+<tr>
+<td><code>origin</code></td>
+<td>Legacy source domain field</td>
+</tr>
+<tr>
+<td><code>sourceDomain</code></td>
+<td>Hostname of the source page</td>
+</tr>
+<tr>
+<td><code>siteName</code></td>
+<td>Site name shown by the engine, or the source domain</td>
+</tr>
+<tr>
+<td><code>contentUrl</code></td>
+<td>Page containing the image</td>
+</tr>
+<tr>
+<td><code>googleUrl</code></td>
+<td>Google imgres reference URL, when applicable</td>
+</tr>
+</tbody>
+</table></div>
+<p><code>imageUrl</code> is the best URL available, not a promise that it is the original. Check <code>imageUrlType</code> or <code>hasOriginal</code> before treating it as full resolution.</p>
 <h2 id="readme-input">Input</h2>
+<p>At least one <code>queries</code> entry (or the legacy <code>query</code> string) is required. Apify's validator cannot express &quot;one of&quot;, so the actor fails clearly when neither is present.</p>
 <div class="table-wrap"><table>
 <thead>
 <tr>
@@ -247,64 +1642,153 @@
 </thead>
 <tbody>
 <tr>
-<td><code>query</code></td>
-<td>string</td>
-<td>–</td>
-<td><strong>Required.</strong> Image search query, e.g. <code>&quot;sunset landscape&quot;</code>, <code>&quot;product packaging design&quot;</code></td>
+<td><code>queries</code></td>
+<td>array</td>
+<td>-</td>
+<td>One or more image search queries. The legacy <code>query</code> string is still accepted in code.</td>
 </tr>
 <tr>
 <td><code>maxResults</code></td>
 <td>integer</td>
 <td><code>100</code></td>
-<td>Maximum number of image results to extract (1–500)</td>
+<td>Maximum rows per query, 1-500. This is a ceiling, not a guarantee.</td>
 </tr>
 <tr>
-<td><code>proxyConfiguration</code></td>
-<td>object</td>
-<td>–</td>
-<td>Proxy configuration. Not enforced, but a residential proxy (the prefilled setting) is strongly recommended because Google blocks image searches from data-center IPs; without one, results are more likely to come from the fallback engines</td>
+<td><code>minWidth</code></td>
+<td>integer</td>
+<td><code>0</code></td>
+<td>Drop images narrower than this many pixels; 0 disables. Rows without dimensions are dropped when set.</td>
+</tr>
+<tr>
+<td><code>minHeight</code></td>
+<td>integer</td>
+<td><code>0</code></td>
+<td>Drop images shorter than this many pixels; 0 disables.</td>
+</tr>
+<tr>
+<td><code>country</code></td>
+<td>select</td>
+<td><code>US</code></td>
+<td>Two-letter country code for Google <code>gl</code> / Bing <code>cc</code></td>
+</tr>
+<tr>
+<td><code>language</code></td>
+<td>select</td>
+<td><code>en</code></td>
+<td>Language code for Google <code>hl</code> / Bing <code>setlang</code></td>
+</tr>
+<tr>
+<td><code>safeSearch</code></td>
+<td>select</td>
+<td><code>active</code></td>
+<td><code>active</code> or <code>off</code></td>
+</tr>
+<tr>
+<td><code>imageSize</code></td>
+<td>select</td>
+<td>any</td>
+<td><code>large</code>, <code>medium</code>, <code>icon</code>, or a minimum megapixel bucket from <code>2mp</code> to <code>70mp</code></td>
+</tr>
+<tr>
+<td><code>imageColor</code></td>
+<td>select</td>
+<td>any</td>
+<td>Full colour, black and white, transparent, or a specific colour</td>
+</tr>
+<tr>
+<td><code>imageType</code></td>
+<td>select</td>
+<td>any</td>
+<td>Photo, face, clip art, line drawing, animated</td>
+</tr>
+<tr>
+<td><code>fileType</code></td>
+<td>select</td>
+<td>any</td>
+<td>JPEG, PNG, GIF, BMP, SVG, WebP, ICO</td>
+</tr>
+<tr>
+<td><code>timeRange</code></td>
+<td>select</td>
+<td>any</td>
+<td>Past hour, day, week, month or year</td>
+</tr>
+<tr>
+<td><code>usageRights</code></td>
+<td>select</td>
+<td>any</td>
+<td>Google's four usage-rights labels</td>
+</tr>
+<tr>
+<td><code>googleOnly</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Fail clearly instead of using fallback</td>
+</tr>
+<tr>
+<td><code>enableFallback</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td>Allow labelled Bing/DuckDuckGo fallback when <code>googleOnly</code> is false</td>
 </tr>
 </tbody>
 </table></div>
-<h3 id="readme-example-default-query">Example: default query</h3>
+<p>The legacy <code>query</code> and <code>maxResultsPerQuery</code> keys are read in code for saved tasks. There is no proxy field in the schema; the actor never requires a user-supplied proxy or API key.</p>
+<h2 id="readme-example-input">Example input</h2>
+<p>Strict Google-only query:</p>
 <pre><code class="language-json">{
-  &quot;query&quot;: &quot;Alfons Mucha&quot;,
-  &quot;maxResults&quot;: 50
+  &quot;queries&quot;: [&quot;Alfons Mucha&quot;],
+  &quot;maxResults&quot;: 20,
+  &quot;country&quot;: &quot;US&quot;,
+  &quot;language&quot;: &quot;en&quot;,
+  &quot;googleOnly&quot;: true
 }
 </code></pre>
-<h3 id="readme-example-larger-result-set-for-a-product-search">Example: larger result set for a product search</h3>
+<p>Labelled fallback allowed, with filters:</p>
 <pre><code class="language-json">{
-  &quot;query&quot;: &quot;modern architecture&quot;,
-  &quot;maxResults&quot;: 300
+  &quot;queries&quot;: [&quot;sunset landscape&quot;, &quot;modern architecture&quot;],
+  &quot;maxResults&quot;: 100,
+  &quot;country&quot;: &quot;DE&quot;,
+  &quot;language&quot;: &quot;de&quot;,
+  &quot;imageSize&quot;: &quot;large&quot;,
+  &quot;imageColor&quot;: &quot;blue&quot;,
+  &quot;imageType&quot;: &quot;photo&quot;,
+  &quot;safeSearch&quot;: &quot;active&quot;,
+  &quot;googleOnly&quot;: false,
+  &quot;enableFallback&quot;: true
 }
 </code></pre>
-<h3 id="readme-example-non-latin-script-query">Example: non-Latin script query</h3>
-<pre><code class="language-json">{
-  &quot;query&quot;: &quot;桜 日本庭園&quot;,
-  &quot;maxResults&quot;: 100
-}
-</code></pre>
-<h2 id="readme-use-cases">Use cases</h2>
+<h2 id="readme-how-to-read-a-run">How to read a run</h2>
 <ul>
-<li><strong>Image dataset building</strong> — collect images for research, analysis, or model training</li>
-<li><strong>Brand monitoring</strong> — track how a brand's visuals appear across the web</li>
-<li><strong>Competitor research</strong> — survey competitor product photography and marketing imagery</li>
-<li><strong>Content curation</strong> — source images for blogs, presentations, or social posts</li>
-<li><strong>Visual SEO research</strong> — see which pages and domains rank images for a keyword</li>
+<li>A row with <code>engine: &quot;google&quot;</code> and <code>imageUrlType: &quot;original&quot;</code> is a source-site image URL.</li>
+<li>A row with <code>engine: &quot;google&quot;</code> and <code>imageUrlType: &quot;thumbnail&quot;</code> is Google's cached thumbnail; the original was not exposed for that card.</li>
+<li>A row with <code>engine: &quot;bing&quot;</code> is a labelled fallback row. Bing exposes original image URLs and source pages directly.</li>
+<li>The <code>SUMMARY</code> key-value record tells you how many rows were requested and returned per query, how many pages were read, why reading stopped, and which fallback engines were attempted.</li>
+</ul>
+<h2 id="readme-limits-and-honest-notes">Limits and honest notes</h2>
+<ul>
+<li>Google Images typically runs out at roughly 300-400 results per query. Asking for 500 returns what Google has.</li>
+<li>Google sometimes exposes only thumbnails in the results DOM. The actor labels those rows <code>thumbnail</code> rather than pretending they are originals. It attempts the side panel for up to 20 cards per query to recover originals.</li>
+<li>A Google CAPTCHA or &quot;unusual traffic&quot; page is reported as <code>google_captcha</code>, not as zero results.</li>
+<li><code>fileType</code> is applied by Google server-side. On Bing fallback it is applied to the image URL extension locally, so URLs without a recognisable extension are excluded when this filter is set.</li>
+<li>Bing's time filter has no &quot;past hour&quot; bucket; the <code>hour</code> option uses Bing's 24-hour window on fallback.</li>
+<li>The DuckDuckGo fallback reads its first image JSON batch only; it is a last resort after Bing. It has no size, colour, type, time or usage-rights facet, so it is skipped when one of those filters is set instead of returning rows that violate the filter.</li>
+<li><code>minWidth</code> and <code>minHeight</code> are applied to every engine. Rows with no published dimensions are dropped when either bound is set.</li>
+<li><code>dominantColor</code> and <code>relatedSearches</code> come from Bing's response. Google does not expose a reliable dominant colour in its search metadata; file size is not shipped because it would require downloading or probing every image.</li>
+<li>Usage-rights labels come from the search engine. They are not a legal guarantee; check the licence on <code>contentUrl</code> before reuse. Bing's licence buckets do not match Google's four labels one-to-one, so fallback rows use the nearest Bing bucket.</li>
+<li>New fields are additive. Existing field names (<code>query</code>, <code>imageUrl</code>, <code>imageWidth</code>, <code>imageHeight</code>, <code>thumbnailUrl</code>, <code>thumbnailWidth</code>, <code>thumbnailHeight</code>, <code>title</code>, <code>origin</code>, <code>contentUrl</code>) are preserved.</li>
 </ul>
 <h2 id="readme-faq">FAQ</h2>
-<p><strong>How many images can I scrape per query?</strong>
-Up to 500. The default is 100. Google keeps loading images as the page scrolls, so raising <code>maxResults</code> usually gets more, until Google runs out for that query. If the run had to fall back to DuckDuckGo, only its first batch of results is collected, so expect fewer.</p>
-<p><strong>Does it support non-English queries?</strong>
-Yes. Use any language, including non-Latin scripts like Japanese, Chinese, Korean, or Arabic.</p>
-<p><strong>Can I run multiple queries?</strong>
-Each run searches one <code>query</code>. Run the actor again with a different query to cover additional searches, or trigger multiple runs in parallel from your own workflow.</p>
-<p><strong>Why should I use a residential proxy?</strong>
-Google blocks image searches from data-center IP ranges. With the prefilled residential proxy, Google results are much more likely; without it the run may end up on the DuckDuckGo or Bing fallback, or return nothing.</p>
-<p><strong>Why are <code>imageWidth</code>/<code>imageHeight</code> sometimes 0?</strong>
-The search engine doesn't expose full-resolution dimensions for every result; when a dimension isn't available, the actor reports <code>0</code> rather than guessing. Likewise <code>title</code> or <code>origin</code> can be an empty string.</p>
-<p><strong>What if every engine fails?</strong>
-The dataset stays empty and the run finishes with a &quot;Scraped 0 images&quot; status.</p>
+<p><strong>Why did a Google-only run fail?</strong>
+Google returned a CAPTCHA, an error page, or no results. In Google-only mode that is a real failure and is reported as one. Set <code>googleOnly</code> to <code>false</code> and <code>enableFallback</code> to <code>true</code> if you want labelled Bing/DuckDuckGo rows instead.</p>
+<p><strong>Why is <code>imageUrlType</code> sometimes <code>thumbnail</code>?</strong>
+The results page did not expose the source image URL for that card. The actor will not label a Google thumbnail as an original.</p>
+<p><strong>Why are dimensions missing on some rows?</strong>
+The engine did not state them. The actor omits the field rather than writing <code>0</code> or guessing.</p>
+<p><strong>Does this download images?</strong>
+No. It returns URLs and metadata. Fetch the image files yourself.</p>
 <p><strong>Is this affiliated with Google?</strong>
-No. This is an independent, third-party actor that reads Google's public image search results; it isn't affiliated with or endorsed by Google.</p>
-</details></section><section id="python-quickstart"><h2>Python quickstart</h2><p>Use a schema-derived input and the Python standard library to start a run. An Apify account and token are required for execution.</p><p><a href="/apify-actor-examples/guides/iKDkm4yHl5raSnWvW/">Open the step-by-step Python guide →</a></p></section><p class="source-note">Source build <code>fVjJeOete5myGNCX7</code>. Documentation is regenerated from the default published build; private drafts are not included.</p></article></div></main><footer class="footer"><strong>Nimbryxo Studio</strong><div class="footer-links"><a href="/apify-actor-examples/topics/">Topics</a><a href="/apify-actor-examples/sources/">Documentation sources</a><a href="https://apify.com/nimbryxo-studio">Apify</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></div></footer></body></html>
+No. It reads public image search results as an independent third-party tool.</p>
+<p><strong>Can I use the same input as before?</strong>
+Yes for the common case: a saved task with <code>query</code> and <code>maxResults</code> still runs because the legacy keys are mapped in code. Batch users should move to <code>queries</code> and <code>maxResults</code> (per query).</p>
+</details></section><section id="python-quickstart"><h2>Python quickstart</h2><p>Use a schema-derived input and the Python standard library to start a run. An Apify account and token are required for execution.</p><p><a href="/apify-actor-examples/guides/iKDkm4yHl5raSnWvW/">Open the step-by-step Python guide →</a></p></section><p class="source-note">Source build <code>cKnlChhWEIvPfT67X</code>. Documentation is regenerated from the default published build; private drafts are not included.</p></article></div></main><footer class="footer"><strong>Nimbryxo Studio</strong><div class="footer-links"><a href="/apify-actor-examples/topics/">Topics</a><a href="/apify-actor-examples/sources/">Documentation sources</a><a href="https://apify.com/nimbryxo-studio">Apify</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></div></footer></body></html>

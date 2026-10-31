@@ -2,51 +2,152 @@
   "actorSpecification": 1,
   "fields": {
     "properties": {
+      "aspectRatio": {
+        "description": "width divided by height, rounded to three decimals",
+        "nullable": true,
+        "type": "number"
+      },
       "contentUrl": {
         "description": "URL of the web page containing the image",
         "nullable": true,
         "type": "string"
       },
+      "engine": {
+        "description": "The engine that actually produced this row",
+        "enum": [
+          "google",
+          "bing",
+          "duckduckgo",
+          "unknown"
+        ],
+        "type": "string"
+      },
+      "fallbackReason": {
+        "description": "Why fallback was used, e.g. google_captcha",
+        "nullable": true,
+        "type": "string"
+      },
+      "fetchedAt": {
+        "description": "ISO-8601 UTC timestamp when the query was fetched",
+        "nullable": true,
+        "type": "string"
+      },
+      "fileFormat": {
+        "description": "Image format derived from the URL extension, when known",
+        "nullable": true,
+        "type": "string"
+      },
+      "googleUrl": {
+        "description": "Google imgres reference URL, when the row came from Google",
+        "nullable": true,
+        "type": "string"
+      },
+      "hasOriginal": {
+        "description": "True when imageUrl is an original source-site URL",
+        "type": "boolean"
+      },
       "imageHeight": {
-        "description": "Height of the full-resolution image in pixels",
+        "description": "Original image height in pixels, when the engine states it",
         "nullable": true,
         "type": "integer"
       },
+      "imageId": {
+        "description": "Stable ID derived from the image URL or Google result key",
+        "nullable": true,
+        "type": "string"
+      },
       "imageUrl": {
-        "description": "Direct URL to the full-resolution image",
+        "description": "Best available image URL; inspect imageUrlType to see whether it is the original or a thumbnail",
+        "type": "string"
+      },
+      "imageUrlType": {
+        "description": "Whether imageUrl is the source original, an engine thumbnail, a crawler-only URL, or unknown",
+        "enum": [
+          "original",
+          "thumbnail",
+          "crawler_only",
+          "unknown"
+        ],
         "type": "string"
       },
       "imageWidth": {
-        "description": "Width of the full-resolution image in pixels",
+        "description": "Original image width in pixels, when the engine states it",
         "nullable": true,
         "type": "integer"
       },
-      "origin": {
-        "description": "The domain of the website where the image originates",
+      "isCrawlerOnly": {
+        "description": "True when imageUrl is hosted or cached by a search engine rather than the source site",
+        "type": "boolean"
+      },
+      "isFallback": {
+        "description": "True when the row came from a fallback engine rather than Google",
+        "type": "boolean"
+      },
+      "orientation": {
+        "description": "landscape, portrait or square, derived from the stated dimensions",
         "nullable": true,
         "type": "string"
       },
+      "origin": {
+        "description": "Legacy field: domain of the source page, or of the image host when no page is known",
+        "nullable": true,
+        "type": "string"
+      },
+      "page": {
+        "description": "Result page or scroll batch the row was read from",
+        "nullable": true,
+        "type": "integer"
+      },
+      "position": {
+        "description": "1-based rank within the query's returned rows",
+        "type": "integer"
+      },
       "query": {
-        "description": "The search query used",
+        "description": "The search query that produced this row",
+        "type": "string"
+      },
+      "retrievalMethod": {
+        "description": "How the row was read, e.g. google_dom_sidepanel or bing_async_html",
+        "nullable": true,
+        "type": "string"
+      },
+      "searchUrl": {
+        "description": "The search URL used for this query",
+        "nullable": true,
+        "type": "string"
+      },
+      "siteName": {
+        "description": "Site name the engine displays, or the source domain when no display name is available",
+        "nullable": true,
+        "type": "string"
+      },
+      "sourceDomain": {
+        "description": "Hostname of the source page containing the image",
+        "nullable": true,
+        "type": "string"
+      },
+      "sourcePageTitle": {
+        "description": "Title of the source page containing the image",
+        "nullable": true,
         "type": "string"
       },
       "thumbnailHeight": {
-        "description": "Height of the thumbnail in pixels",
+        "description": "Thumbnail height in pixels, when the engine states it",
         "nullable": true,
         "type": "integer"
       },
       "thumbnailUrl": {
-        "description": "URL of the Google-cached thumbnail image",
+        "description": "URL of the engine's cached thumbnail",
         "nullable": true,
         "type": "string"
       },
       "thumbnailWidth": {
-        "description": "Width of the thumbnail in pixels",
+        "description": "Thumbnail width in pixels, when the engine states it",
         "nullable": true,
         "type": "integer"
       },
       "title": {
-        "description": "The page title of the website containing the image",
+        "description": "Page title shown for the image, when it is not a generic placeholder",
         "nullable": true,
         "type": "string"
       }
@@ -55,72 +156,14 @@
   },
   "title": "Google Images",
   "views": {
-    "detailed": {
-      "display": {
-        "component": "table",
-        "properties": {
-          "contentUrl": {
-            "format": "text",
-            "label": "Content URL"
-          },
-          "imageHeight": {
-            "format": "number",
-            "label": "Height"
-          },
-          "imageUrl": {
-            "format": "text",
-            "label": "Image URL"
-          },
-          "imageWidth": {
-            "format": "number",
-            "label": "Width"
-          },
-          "origin": {
-            "format": "text",
-            "label": "Origin"
-          },
-          "query": {
-            "format": "text",
-            "label": "Query"
-          },
-          "thumbnailHeight": {
-            "format": "number",
-            "label": "Thumb Height"
-          },
-          "thumbnailUrl": {
-            "format": "text",
-            "label": "Thumbnail URL"
-          },
-          "thumbnailWidth": {
-            "format": "number",
-            "label": "Thumb Width"
-          },
-          "title": {
-            "format": "text",
-            "label": "Page Title"
-          }
-        }
-      },
-      "title": "Detailed Results",
-      "transformation": {
-        "fields": [
-          "query",
-          "title",
-          "origin",
-          "imageUrl",
-          "imageWidth",
-          "imageHeight",
-          "thumbnailUrl",
-          "thumbnailWidth",
-          "thumbnailHeight",
-          "contentUrl"
-        ]
-      }
-    },
     "overview": {
       "display": {
         "component": "table",
         "properties": {
+          "engine": {
+            "format": "text",
+            "label": "Engine"
+          },
           "imageHeight": {
             "format": "number",
             "label": "Height"
@@ -129,21 +172,29 @@
             "format": "text",
             "label": "Image URL"
           },
+          "imageUrlType": {
+            "format": "text",
+            "label": "URL type"
+          },
           "imageWidth": {
             "format": "number",
             "label": "Width"
           },
-          "origin": {
-            "format": "text",
-            "label": "Origin"
+          "position": {
+            "format": "number",
+            "label": "Position"
           },
           "query": {
             "format": "text",
             "label": "Query"
           },
+          "sourceDomain": {
+            "format": "text",
+            "label": "Source domain"
+          },
           "title": {
             "format": "text",
-            "label": "Page Title"
+            "label": "Title"
           }
         }
       },
@@ -151,11 +202,91 @@
       "transformation": {
         "fields": [
           "query",
+          "position",
+          "engine",
+          "imageUrlType",
           "title",
-          "origin",
+          "sourceDomain",
           "imageUrl",
           "imageWidth",
           "imageHeight"
+        ]
+      }
+    },
+    "provenance": {
+      "display": {
+        "component": "table",
+        "properties": {
+          "engine": {
+            "format": "text",
+            "label": "Engine"
+          },
+          "fallbackReason": {
+            "format": "text",
+            "label": "Fallback reason"
+          },
+          "fetchedAt": {
+            "format": "text",
+            "label": "Fetched at"
+          },
+          "hasOriginal": {
+            "format": "boolean",
+            "label": "Has original"
+          },
+          "imageId": {
+            "format": "text",
+            "label": "Image ID"
+          },
+          "imageUrlType": {
+            "format": "text",
+            "label": "URL type"
+          },
+          "isCrawlerOnly": {
+            "format": "boolean",
+            "label": "Crawler only"
+          },
+          "isFallback": {
+            "format": "boolean",
+            "label": "Fallback"
+          },
+          "page": {
+            "format": "number",
+            "label": "Page"
+          },
+          "position": {
+            "format": "number",
+            "label": "Position"
+          },
+          "query": {
+            "format": "text",
+            "label": "Query"
+          },
+          "retrievalMethod": {
+            "format": "text",
+            "label": "Method"
+          },
+          "searchUrl": {
+            "format": "text",
+            "label": "Search URL"
+          }
+        }
+      },
+      "title": "Provenance",
+      "transformation": {
+        "fields": [
+          "query",
+          "position",
+          "page",
+          "engine",
+          "retrievalMethod",
+          "isFallback",
+          "fallbackReason",
+          "imageId",
+          "imageUrlType",
+          "isCrawlerOnly",
+          "hasOriginal",
+          "searchUrl",
+          "fetchedAt"
         ]
       }
     }

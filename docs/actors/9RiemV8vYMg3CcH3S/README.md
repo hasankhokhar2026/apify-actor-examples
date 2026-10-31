@@ -4,93 +4,162 @@
 
 # Bulk Email Deliverability & SMTP Verification
 
-Feed this actor a list of email addresses and it checks each one's real deliverability — not just whether it's formatted correctly, but whether its domain can receive mail, whether it's a disposable or role-based address, and, at the deepest setting, whether the mailbox itself actually exists.
+Paste an email list and get one clean record per address: syntax, MX and A/AAAA routing, disposable and role-based detection, typo suggestions, SPF/DMARC/DKIM findings, a best-effort SMTP mailbox probe, catch-all detection, a risk level and a recommended next action.
 
-## What this actor does
+Use it to clean a CRM export, screen sign-up addresses, scrub a lead list before outreach or periodically re-check stored contacts. No API keys, cookies or third-party verification service are required.
 
-- Validates email syntax and confirms the domain has valid MX (mail-exchange) records.
-- Flags disposable/temporary email domains (matched against a bundled disposable-domain list) and role-based addresses such as `admin@`, `info@` or `support@`.
-- Identifies addresses on common free consumer providers such as Gmail, Yahoo or Outlook (matched against a built-in list of domains).
-- At the deepest verification setting, connects to the mail server to check whether the specific mailbox exists and whether the domain accepts any address at all (catch-all).
-- Returns one record per unique address (duplicates are removed case-insensitively) with a verdict and a confidence score. Checks that were skipped at your chosen depth, or that came back inconclusive, are `null` inside `checks` rather than a guessed true/false.
+## What it checks
+
+- **Syntax and normalization** - catches malformed addresses and returns the normalized form plus the local part and domain.
+- **Domain routing** - MX records sorted by priority, the primary mail host, the mail provider, and an A/AAAA fallback when a domain publishes no MX record. A null MX record (`0 .`) is treated as "does not accept email", not as a deliverability win.
+- **Typo suggestions** - flags likely mistakes such as `gmial.com`, `hotmail.con` or `outlok.com` with a corrected address in `didYouMean`.
+- **Disposable, role and free providers** - separate flags for throwaway domains, shared addresses such as `admin@` or `support@`, and consumer providers such as Gmail or Outlook.
+- **Alias signals** - `plusTag` for `+tag` subaddressing and `isAlias` for plus tags and Gmail dot aliases.
+- **Domain health** - whether SPF and DMARC records exist, the DMARC policy, and which common DKIM selectors publish a usable key.
+- **SMTP mailbox probe** - a best-effort `RCPT TO` check against the domain's mail server with the raw code and message.
+- **Catch-all detection** - tests a random address at the domain and reports how confident the result is.
+- **Risk and action** - a `riskLevel` (`low`, `medium`, `high`) and a `recommendedAction` (`send`, `send_with_caution`, `verify_manually`, `remove`).
+- **Batch summary** - a key-value store record named `SUMMARY` with totals, truncation and per-domain cap counts. It is separate from the dataset, so one dataset row still means one unique email address.
 
 ## Output per email
 
-| Field | Description |
-|---|---|
-| `email` | The normalized email address that was checked (the trimmed input as typed when the syntax check fails). |
-| `verdict` | `valid`, `invalid`, `risky`, `disposable`, or `unknown`. |
-| `confidence` | Confidence score from 0 to 100 for the verdict. |
-| `checks.syntax` | Whether the address is correctly formatted. |
-| `checks.mxRecord` | Whether the domain has valid mail-exchange records. |
-| `checks.smtp` | `true` if the mail server accepted the mailbox, `false` if it answered "mailbox not found". `null` unless `verificationDepth` is `deep`, and also `null` in deep mode when the server's answer was inconclusive (timeout, temporary rejection, policy block). |
-| `checks.disposable` | Whether the domain is a known disposable/temporary provider. `null` at `basic` depth. |
-| `checks.roleBased` | Whether the address is a shared role address (e.g. `support@`). `null` at `basic` depth. |
-| `checks.freeProvider` | Whether the domain is a free consumer email provider. `null` at `basic` depth. |
-| `checks.catchAll` | Whether the domain accepted mail for a made-up test address at that domain. `null` unless `verificationDepth` is `deep`, or when that test was inconclusive. |
-| `mxHost` | The domain's highest-priority mail server hostname; `null` when the syntax check failed or no MX record was found. |
-| `reason` | Human-readable explanation for a non-valid verdict; `null` when the verdict is `valid`. |
-| `verifiedAt` | ISO 8601 UTC timestamp of when the email was checked. |
+| Field | Type | Description |
+|---|---|---|
+| `email` | string | The normalized address, or the trimmed input when syntax fails. |
+| `normalizedEmail` | string | Normalized address (domain lowercased, IDN converted) when syntax passes. |
+| `localPart` | string | The part before `@`. |
+| `domain` | string | The domain that was checked. |
+| `verdict` | string | `valid`, `invalid`, `risky`, `disposable` or `unknown`. |
+| `confidence` | number | 0-100 confidence score for the verdict. |
+| `checks` | object | Only checks that actually ran: `syntax`, `mxRecord`, `aRecord`, `smtp`, `disposable`, `roleBased`, `freeProvider`, `catchAll`. |
+| `mxHost` | string | Highest-priority mail host. |
+| `mxRecords` | array | MX records as `{host, priority}` objects, sorted by priority. |
+| `mxProvider` | string | Recognized provider such as Google, Microsoft, Proton, Zoho or Fastmail. |
+| `aRecordFallback` | boolean | `true` when there is no MX record and mail routing falls back to A/AAAA. |
+| `domainExists` | boolean | Whether DNS shows the domain exists. |
+| `didYouMean` | string | Suggested correction for a likely typo in the domain. |
+| `isAlias` | boolean | `true` for plus-tag subaddressing or a Gmail dot alias. |
+| `plusTag` | boolean | `true` when the local part contains `+`. |
+| `domainHealth` | object | `spf` and `dmarc` booleans, `dmarcPolicy` when published, and `dkimSelectors` for common selectors with a usable key. |
+| `smtpAttempted` | boolean | `true` when an SMTP probe was attempted. |
+| `smtpVerifiable` | boolean | `true` when the server returned a mailbox-level RCPT response. |
+| `smtpCode` | number | Raw SMTP response code from the mailbox probe. |
+| `smtpMessage` | string | Raw SMTP response text (trimmed). |
+| `checks.catchAll` | boolean | Whether the domain accepted a random address. |
+| `catchAllConfidence` | number | 0-100 confidence in the catch-all result. A random-address acceptance scores 60 because some servers accept first and bounce later. |
+| `catchAllMethod` | string | Method used for catch-all detection (`smtp-random-recipient`). |
+| `riskLevel` | string | `low`, `medium` or `high`. |
+| `recommendedAction` | string | `send`, `send_with_caution`, `verify_manually` or `remove`. |
+| `reason` | string | Plain-language explanation when the verdict is not a clean `valid`. |
+| `verifiedAt` | string | ISO 8601 UTC timestamp. |
 
-If an unexpected error interrupts the check of one address, that address still gets a record: `verdict` is `unknown`, `confidence` is `0`, every `checks` value, `mxHost` and `verifiedAt` are `null`, and `reason` starts with `Verification error:`. When the syntax check fails, the remaining `checks` values are `null`; when no MX record is found, the disposable, role, free-provider, SMTP and catch-all checks stay `null`.
+Fields that were not measured are omitted, not set to `null`. A false boolean is kept because it is a real answer.
 
 ## Input
 
+At least one of `emails`, `emailsText`, or `datasetId` is required. Apify's input-schema validator does not support `anyOf`, so this is enforced by the actor with a clear failure message.
+
 | Field | Type | Default | Description |
 |---|---|---|---|
-| `emails` | List of strings | – | Email addresses to verify. Required. |
-| `verificationDepth` | String (select) | `standard` | `basic` (syntax + MX only), `standard` (adds disposable/role-based/free-provider checks), or `deep` (adds mailbox-level SMTP verification and catch-all detection). |
-| `concurrency` | Integer | `10` | Number of emails verified in parallel (1–50). |
+| `emails` | array of strings | - | Email addresses, one per item. |
+| `emailsText` | string | - | The same list as text, separated by new lines, commas, semicolons or spaces. |
+| `datasetId` | string | - | Optional existing dataset ID to read emails from. The dataset must be readable by the run. |
+| `datasetEmailField` | string | `email` | Column name that holds the address when `datasetId` is used. |
+| `includeSourceFields` | boolean | `false` | Carry the original dataset row in `sourceData`. |
+| `verificationDepth` | select | `standard` | `basic`, `standard` or `deep`. |
+| `concurrency` | integer | `10` | Parallel checks (1-50). |
+| `maxEmails` | integer | `10000` | Upper bound on unique addresses per run (1-100000). |
+| `maxEmailsPerDomain` | integer | `100` | Cap per domain; extra addresses get an explanatory `unknown` record. |
+| `smtpTimeout` | number | `10` | Per-probe SMTP timeout in seconds (1-60). |
+| `maxRetries` | integer | `2` | Extra attempts for temporary DNS, connection and SMTP 4xx failures (0-5). |
+| `checkSmtp` | boolean | `false` | Run SMTP probing at basic or standard depth. |
+| `checkCatchAll` | boolean | `false` | Detect catch-all domains; implies SMTP probing. |
+| `includeDomainHealth` | boolean | `true` | Add SPF, DMARC and common DKIM selector findings at standard or deep depth. |
 
-### Example: quick syntax and MX check
+`emails` and `emailsText` are combined, then duplicates are removed case-insensitively. If both are empty the run fails with a clear message.
+
+### Example: clean a pasted list
 
 ```json
 {
-  "emails": ["user@example.com", "test@gmail.com"],
-  "verificationDepth": "basic"
+  "emailsText": "alice@company.com, bob@gmial.com\ncarol@mailinator.com",
+  "verificationDepth": "standard"
 }
 ```
 
-### Example: standard list-cleaning pass
-
-```json
-{
-  "emails": ["user@example.com", "admin@tempmail.com", "sales@company.org"],
-  "verificationDepth": "standard",
-  "concurrency": 20
-}
-```
-
-### Example: maximum-accuracy deep check
+### Example: deep check for a short list
 
 ```json
 {
   "emails": ["prospect@target-company.com"],
   "verificationDepth": "deep",
-  "concurrency": 5
+  "checkSmtp": true,
+  "checkCatchAll": true,
+  "smtpTimeout": 15
 }
 ```
 
-## Use cases
+### Example: large list with a per-domain cap
 
-- **List cleaning** — strip disposable and undeliverable addresses from a mailing list before a campaign.
-- **Sign-up form validation** — batch-check addresses collected through a form to catch typos and throwaway domains.
-- **Sales list hygiene** — verify prospect emails scraped or purchased elsewhere before outreach.
-- **Bounce-rate reduction** — screen a list ahead of sending to avoid hitting invalid mailboxes.
-- **CRM data quality** — periodically re-check stored contact emails for ones that have gone stale.
+```json
+{
+  "emailsText": "...",
+  "verificationDepth": "basic",
+  "maxEmails": 50000,
+  "maxEmailsPerDomain": 50,
+  "concurrency": 30
+}
+```
+
+## How to read the verdict
+
+- `valid` - syntax and domain routing are sound. If SMTP was enabled and answered, the mailbox was accepted. Without SMTP, this means the domain can receive mail, not that the individual mailbox exists.
+- `invalid` - broken syntax, a non-existent domain, a null MX record, no MX/A routing, or a definitive mailbox rejection such as SMTP 550.
+- `disposable` - the domain is on a bundled disposable-domain list.
+- `risky` - the domain accepts random addresses (catch-all), so an accepted mailbox proves little.
+- `unknown` - the run could not decide. The `reason` field says why, and no guess is made in either direction.
+
+## SMTP is best-effort, by design
+
+Port 25 is not guaranteed to be open from every network, and many large providers block probe traffic based on the sender IP's reputation, missing reverse DNS or greylisting. When the probe cannot reach the server or the server refuses the probe itself:
+
+- `smtpAttempted` stays `true`.
+- `smtpVerifiable` is `false`.
+- `checks.smtp` is omitted.
+- The verdict is `unknown` when SMTP was the deciding check.
+
+An unreachable server is never turned into `valid` or `invalid`. This is deliberate: a blocked probe says nothing about the mailbox. If you need mailbox-level certainty for a list, run `deep` from a network with a reputable sending IP and expect some providers to remain unverifiable.
+
+Catch-all detection has the same honest limit: a server that accepts every address at SMTP time may still bounce later. That is why `catchAllConfidence` is 60 for an accepted random address, and the verdict becomes `risky` rather than a confident catch-all claim.
+
+## Domain health coverage
+
+SPF and DMARC are read from public DNS TXT records. DKIM is checked only on a small set of common selectors (`google`, `selector1`, `selector2`, `default`, `k1`, `s1`, `dkim`, `mail`). A missing `dkimSelectors` field means none of those selectors published a usable key; it does not prove the domain has no DKIM at all, because many domains use custom selectors. Domains with a wildcard TXT record are skipped for DKIM rather than reported as a false match.
+
+## Batch behavior and limits
+
+- Records are pushed in batches while the run is still working, so a long list does not sit entirely in memory.
+- A per-domain semaphore limits how many SMTP connections hit one mail server at once.
+- `maxEmails` truncates the input and the count is reported in the `SUMMARY` record and status message.
+- `maxEmailsPerDomain` does not silently drop addresses: each skipped address gets an `unknown` record with a reason.
+- No summary row is added to the dataset, so one row still means one unique email address.
 
 ## FAQ
 
-**How accurate is the verification?** `standard` depth catches syntax errors, missing MX records, disposable domains and role-based addresses. `deep` mode adds a mailbox-level SMTP check, but many mail servers rate-limit, greylist or refuse such checks. When that happens `checks.smtp` is `null`, and an address on a domain with MX records is still reported as `valid` with partial confidence, so a `valid` verdict on its own doesn't prove the mailbox exists.
+**Is a `valid` verdict a guarantee that the mailbox exists?** No. At `standard` depth it means the address is well-formed and the domain can receive mail. Only a completed SMTP probe can speak to the mailbox, and even then a provider may accept and bounce later.
 
-**When is an address marked "risky"?** In `deep` mode the actor also asks the domain's mail server about a made-up address. If the server accepts that too, the domain is treated as catch-all: an accepted mailbox there proves little, so the verdict becomes `risky` and the confidence drops.
+**Why did a Gmail address come back `unknown` in deep mode?** Gmail and several other large providers reject probe traffic from many IP ranges. The actor reports that honestly instead of calling the address valid or invalid.
 
-**What does an "unknown" verdict mean?** It appears when the check of that address hit an unexpected error. The `reason` field carries the error text and the `checks` values are `null`. A blocked or timed-out SMTP check does not produce `unknown`; see the accuracy answer above.
+**Why is `checks.smtp` missing instead of `false`?** `false` means the server explicitly rejected the mailbox. A missing value means the probe did not produce a mailbox-level answer (blocked port, policy rejection, timeout or temporary response).
 
-**Why are some `checks` fields `null`?** Each verification depth only runs a subset of checks, and checking stops early once an address fails syntax or has no MX record. Checks that weren't run, or whose answer was inconclusive, come back as `null` rather than a guessed value.
+**What does `catchAllConfidence: 60` mean?** The domain accepted a random address. That is evidence of catch-all or accept-then-bounce behavior, but it is not proof that every address is deliverable.
 
-**What counts as a role-based address?** Addresses like `admin@`, `info@`, or `support@` that are typically shared by a team rather than belonging to one person — these tend to have higher bounce and lower engagement rates.
+**Can I use this for very large lists?** Yes. Keep `concurrency` moderate, set `maxEmailsPerDomain` to protect individual mail servers, and use `basic` or `standard` depth unless mailbox-level probing is required.
 
-**Can I verify large batches?** Yes. Raise `concurrency` (up to 50) to speed up large lists. Records are written to the dataset once every address has been checked, so the dataset stays empty until the run is nearly finished.
+**Can I use a CSV or an existing dataset?** Paste the email column into `emailsText`, or set `datasetId` to a dataset that the actor can read (attach it to the run or make it readable by ID) and choose `datasetEmailField`. Turn on `includeSourceFields` to carry the original row into `sourceData`.
 
-**Does this rely on any third-party verification service?** No. MX and SMTP checks query DNS and the domain's own mail servers directly, and the disposable, role and free-provider checks use lists bundled with the actor.
+**What are the remaining limits?** Outbound port 25 is unavailable from Apify cloud workers, so deep SMTP probes usually return `unknown`; 587/465 require authentication and are not a workaround. Provider reputation blocks, catch-all versus accept-then-bounce, catch-all mailbox resolution, arbitrary DKIM selectors, and A/AAAA parking domains cannot be resolved definitively without sending mail. Domain age is not shipped because RDAP has no service for several TLDs. These limits are reported honestly rather than converted into false verdicts.
+
+**Where is the batch summary?** Open the run's key-value store and read the record named `SUMMARY`. It contains input counts, truncation, per-domain cap counts, verdict totals and SMTP counters. No extra row is added to the dataset.
+
+**Does it need credentials?** No. MX, A/AAAA, SPF, DMARC, DKIM and SMTP checks all use public DNS and the recipient's own mail server. No account, API key or cookie is used.

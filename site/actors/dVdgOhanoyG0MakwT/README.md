@@ -1,95 +1,148 @@
 # Website Contact Page Email & Phone Crawler
 
-Finding a company's contact details usually means hunting through a homepage, an About page, and a Contact page by hand. This actor does that hunting for you: give it a list of websites and it crawls each one, visiting contact, about, team and imprint-style pages first, and returns the public emails, phone numbers, and social profile links it finds in a single record per site.
+Turn a list of company websites into one clean contact record per site. The actor crawls the homepage plus contact, about, team, support and imprint-style pages, then extracts public emails, normalised phone numbers, social profiles, the company name, postal address and contact forms — with the page each value came from.
+
+It starts with explicit `mailto:`/`tel:` links, then reads visible text, then JSON-LD and microdata, and finally decodes common obfuscation such as `[at]`/`[dot]`, HTML entities, full-width characters and Cloudflare email protection. Inline script bundles are never scanned, so analytics keys and image filenames do not end up in your dataset.
 
 ## What this actor does
 
-- Starts at each input URL and follows links on the same host name, up to a page limit you set
-- Queues links whose address contains words like `contact`, `about`, `team`, `kontakt`, `contacto`, `imprint` or `impressum` ahead of other internal links
-- Collects email addresses and phone numbers from the page source and from `mailto:`/`tel:` links
-- Keeps the first profile link it sees per social platform (Facebook, Instagram, LinkedIn, Twitter/X, YouTube, TikTok, GitHub, Pinterest)
-- Skips placeholder emails, noreply addresses, image/file-name lookalikes and social share/intent links
-- `contactPageUrl` is omitted when no contact page is found; `emails`, `phones` and `socialLinks` are always present and can be empty lists/objects
+- Crawls the registrable domain, so `www.example.com`, `example.com` and `shop.example.com` are treated as one site
+- Prioritises contact, about, team, support, imprint and legal-notice pages in English, German, French, Spanish, Italian, Portuguese and Dutch
+- Discovers unlinked contact pages from `robots.txt` sitemap entries and `sitemap.xml`
+- Extracts emails from `mailto:` links, visible text, JSON-LD, microdata, Cloudflare `data-cfemail` / `/cdn-cgi/l/email-protection`, and common obfuscated forms
+- Normalises phone numbers to E.164 with country and line type, using the website's country domain or your `defaultCountry`
+- Suppresses dates, prices, VAT/company-registry numbers, opening hours, fax labels and placeholder numbers
+- Keeps up to 19 social platforms, filtering share buttons, login pages and generic platform links
+- Renders up to two pages in a headless browser only when plain HTML contains no email or phone, blocking images, fonts and media
+- Omits empty fields instead of writing `null`, `""`, `[]` or `{}`
 
 ## Output per website
 
-- `type` — always `website_contacts` (missing on invalid-URL rows)
-- `websiteUrl` — the crawled URL, with `https://` added when you left the scheme out
-- `emails` — sorted, lowercase list of unique email addresses found (may be empty)
-- `phones` — sorted list of unique phone numbers, as written on the site (may be empty)
-- `socialLinks` — object keyed by `facebook`, `instagram`, `linkedin`, `twitter`, `youtube`, `tiktok`, `github`, `pinterest` with the first profile URL found for each (may be empty)
-- `contactPageUrl` — the first internal link whose address contains "contact", when one exists
-- `pagesCrawled` — number of pages successfully fetched for this site
-- `crawledAt` — ISO 8601 timestamp of when the crawl finished
-- `error` — only on failed sites: `"Could not fetch any pages from this URL"` when nothing could be fetched, or `"invalid URL"` when the input can't be read as a web address. These rows still carry `websiteUrl`, `pagesCrawled: 0`, `crawledAt` and empty `emails`, `phones` and `socialLinks`
+One dataset item per input website. Fields are omitted when empty.
+
+| Field | Description |
+|---|---|
+| `type` | Always `website_contacts`. |
+| `websiteUrl` | The normalised input URL. |
+| `status` | `success` when an email, phone, social profile or contact form was found; `no_contacts` when pages loaded but none was found; `failed` when nothing could be fetched. |
+| `failureReason` | On failed rows: `invalid_url`, `blocked`, `no_pages_fetched` or `crawl_error`. |
+| `error` | Human-readable explanation on failed rows. |
+| `companyName` | Organisation name from JSON-LD, `og:site_name`, the page title or microdata. |
+| `companyNameSource` | `jsonld`, `og_site_name`, `title` or `microdata`. |
+| `emails` | Sorted unique email addresses. |
+| `primaryEmail` | Best role address on the site's own domain, preferring `contact`, `info`, `hello`, `sales`, `support`. |
+| `roleEmails` | Addresses such as `info@`, `sales@`, `support@`. |
+| `namedEmails` | Personal addresses such as `jane.smith@`. |
+| `emailDetails` | Per address: `email`, `type`, `sourceUrl`, `method`, `confidence`. |
+| `phones` | Sorted unique E.164 numbers. |
+| `primaryPhone` | Best number for the site's country, preferring fixed lines over mobiles. |
+| `phoneDetails` | Per number: `phone`, `raw`, `country`, `type`, `sourceUrl`, `method`, `confidence`. |
+| `socialLinks` | Object keyed by platform with one profile URL per platform. |
+| `socialProfiles` | Every profile: `platform`, `url`, `sourceUrl`, `method`. |
+| `address` | Postal address from the site's own organisation JSON-LD/microdata: `streetAddress`, `addressLocality`, `addressRegion`, `postalCode`, `addressCountry`. |
+| `contactPageUrl` | Highest-scoring contact-like page found. |
+| `contactForms` | Up to five contact forms: `actionUrl`, `method`, `fieldCount`, `sourceUrl`. |
+| `pagesCrawled` | Successfully fetched HTML pages. |
+| `pagesCrawledUrls` | URLs of those pages. |
+| `maxDepthReached` | Deepest link level reached from the start page. |
+| `skippedByRobots` | URLs skipped because `robots.txt` disallowed them. |
+| `browserUsed` | `true` when the JavaScript fallback rendered a page. |
+| `crawledAt` | ISO 8601 UTC timestamp. |
+
+`emailDetails` and `phoneDetails` carry provenance: the exact page and the extraction method (`mailto`, `tel`, `visible_text`, `jsonld`, `microdata`, `cfemail`, `obfuscated`) plus a confidence score from 0.75 to 0.98.
 
 ## Input
 
 | Field | Type | Default | Description |
 |---|---|---|---|
-| `urls` | array | – | Websites to scan. Required. Duplicates are skipped; `https://` is added when missing. |
-| `maxPagesPerSite` | integer | `20` | Maximum pages to fetch per site (1–200). |
-| `maxConcurrency` | integer | `5` | Pages fetched in parallel per site (1–20). Sites themselves are processed one after another. |
-| `requestTimeoutSecs` | integer | `15` | Per-page request timeout, in seconds (5–60). |
-| `useProxy` | boolean | `false` | Route requests through a residential proxy, for sites that refuse direct requests. |
-| `smartPrioritise` | boolean | `true` | Also try the common paths `/contact`, `/contact-us`, `/about` and `/about-us` even when the homepage doesn't link to them. Contact-style links found on the page are queued first either way. |
+| `urls` | array | – | Websites to scan. Required. Bare domains are accepted. |
+| `maxPagesPerSite` | integer | `20` | Pages fetched per site (1–200). |
+| `maxConcurrency` | integer | `5` | Pages fetched in parallel per site (1–20). |
+| `maxSitesConcurrency` | integer | `3` | Websites scanned in parallel (1–10). |
+| `requestTimeoutSecs` | integer | `15` | Per-page timeout in seconds (5–60). |
+| `defaultCountry` | select | auto | ISO 3166-1 alpha-2 country used for phone numbers without an international prefix. Empty means infer from the domain ending. |
+| `useProxy` | boolean | `false` | Start with the Apify proxy ladder instead of direct requests. The actor retries blocked requests through the ladder automatically either way. |
+| `smartPrioritise` | boolean | `true` | Try common contact/about/team/imprint paths first. |
+| `respectRobotsTxt` | boolean | `true` | Skip pages disallowed by `robots.txt`. |
+| `useSitemap` | boolean | `true` | Discover contact pages from sitemaps. |
+| `renderFallback` | boolean | `true` | Render up to two pages in a headless browser when plain HTML has no email or phone. |
+| `onlyWithContacts` | boolean | `false` | Drop records with no email, phone, social profile or contact form. |
+| `includeNamedEmails` | boolean | `true` | Keep personal addresses; turn off to keep only role addresses. |
 
 ### Example: scan a single company site
 
 ```json
 {
   "urls": ["https://apify.com"],
-  "maxPagesPerSite": 20
+  "maxPagesPerSite": 10,
+  "defaultCountry": "US"
 }
 ```
 
-### Example: broader crawl through a proxy
+### Example: several sites, only rows with contacts
 
 ```json
 {
-  "urls": ["https://example-business.com"],
-  "maxPagesPerSite": 50,
+  "urls": ["company-a.com", "https://company-b.co.uk", "https://company-c.de"],
+  "maxPagesPerSite": 15,
+  "onlyWithContacts": true,
+  "includeNamedEmails": false
+}
+```
+
+### Example: a JavaScript-heavy site through the proxy ladder
+
+```json
+{
+  "urls": ["https://example-spa.com"],
+  "maxPagesPerSite": 8,
+  "renderFallback": true,
   "useProxy": true
-}
-```
-
-### Example: quick pass over several sites
-
-```json
-{
-  "urls": ["https://company-a.com", "https://company-b.com", "company-c.com"],
-  "maxPagesPerSite": 5,
-  "smartPrioritise": true
 }
 ```
 
 ## Use cases
 
-- **Sales outreach** — turn a list of target company websites into emails and phone numbers to contact
-- **Lead enrichment** — fill in missing email, phone, or social links for existing company records
-- **Partnership scouting** — find the right contact page and social presence before reaching out
-- **Directory building** — seed a business directory with the contact details each company publishes on its own site
-- **Social presence checks** — see which social platforms a company links to from its website
+- **Sales outreach** — turn a list of target company websites into verified emails and phone numbers.
+- **Lead enrichment** — fill missing email, phone, address or social links in an existing CRM export.
+- **Partnership scouting** — find the right contact page and social presence before reaching out.
+- **Directory building** — seed a business directory with the contact details each company publishes itself.
+- **Vendor research** — compare how a set of suppliers presents contact channels.
 
 ## FAQ
 
-**Do I need a proxy to use this actor?**
-No, leave `useProxy` off by default. Turn it on only for sites that refuse direct requests.
+**Do I need a proxy?**
+No. Direct requests work for most sites. When a site blocks the datacenter IP, the actor retries through the Apify proxy ladder automatically; `useProxy` only makes it start there.
 
-**Does this render JavaScript-heavy pages?**
-No. It reads the HTML each page returns, including `mailto:` and `tel:` links. Content that only appears after client-side rendering won't be captured.
+**Does this render JavaScript?**
+Only when needed. If plain HTML has no email or phone, the actor renders up to two pages (usually the homepage and the best contact page) in a headless browser, with images, fonts and media blocked. Content that requires a login, a captcha solve, or several clicks is not reached.
 
 **Why are some emails excluded?**
-Placeholder domains (like `example.com` or `yourdomain.com`), noreply-style addresses, strings that end in an image or font file extension, and addresses on a few large tech and asset domains (such as `google.com`, `apple.com`, `microsoft.com`, `sentry.io`) are dropped, because they usually come from embedded code rather than the site's own contacts.
+Placeholder domains (`example.com`, `yourdomain.com`), noreply-style addresses, image/font filename lookalikes, sentry/analytics addresses and addresses on asset CDNs are dropped. Inline script bundles are never scanned.
 
-**Which phone numbers are picked up?**
-Every `tel:` link, plus numbers in the page that are written in international format with a leading `+`. Numbers need 7–20 digits. They are kept as written on the site, so the same number in two formats can appear twice.
+**Why is a phone number missing?**
+A number must be a valid, dialable number with 7–15 digits. Dates, prices, VAT and registry numbers, opening hours, fax labels and repeated-digit placeholders are rejected. National-format numbers need either a country-code domain or `defaultCountry`; otherwise only international `+` numbers are accepted.
 
-**Why is `socialLinks` missing a platform I know the company uses?**
-Only links present in the crawled pages' HTML are included. Share buttons, intent links and generic platform pages are skipped, and only the first link per platform is kept.
+**Why are some phone numbers not in the format shown on the site?**
+`phones` and `phoneDetails[].phone` are E.164 (`+49374222388`). The original text is kept in `phoneDetails[].raw`.
+
+**Why is `socialLinks` missing a platform?**
+Only profiles linked from crawled pages or declared in JSON-LD `sameAs` are included. Share buttons, intent links, login pages and generic platform pages are skipped.
 
 **Why did a site return fewer pages than `maxPagesPerSite`?**
-The actor only follows links on the same host name as the input URL (`www.example.com` and `example.com` count as different hosts) and stops when it runs out of new links. Pages that don't return HTML or answer with an error are not counted.
+The crawl stops when it runs out of same-site links, reaches `maxPagesPerSite`, or hits robots.txt restrictions. Non-HTML responses and error pages are not counted.
 
-**Is this affiliated with any of the social platforms it checks?**
-No. This is an independent, third-party actor that reads publicly available website content; it isn't affiliated with Facebook, Instagram, LinkedIn, or any other platform it links to.
+**Why can an output URL return 403?**
+A site that blocked the crawler may still be recovered through the browser fallback, while the same URL returns 403 to a clean HTTP client. Some social platforms return 400/403 to non-browser clients. These are anti-bot responses, not broken URLs; the record states how the page was reached with `browserUsed`/`proxyUsed`.
+
+**Is this affiliated with any social platform?**
+No. This is an independent, third-party actor that reads publicly available website content.
+
+## Limitations
+
+- Contact forms are detected, not submitted; the actor does not send messages.
+- Emails shown only inside images or a logged-in area cannot be extracted. A 30-site OCR trial found zero true image-only contacts and produced false positives, so OCR is intentionally not shipped.
+- Some sites serve a Cloudflare/Akamai/AWS WAF challenge to every datacenter and proxy IP; those rows are returned as `failed` with `failureReason: "blocked"` rather than guessed. The browser fallback tries direct first, then AUTO, then RESIDENTIAL only after a real block.
+- The JavaScript fallback is capped at two pages per site; a 20-site trial showed a 2.4× runtime increase for almost no additional contacts, so this is a deliberate design limit.
+- Pages larger than 5 MB are still downloaded in full before being skipped. Streaming the first 5 MB is a possible future optimization, not a shipped guarantee. Sitemap discovery is capped at three sitemaps, five sitemap-index children and twenty contact-like URLs; `.xml.gz` sitemaps are decompressed. Emails carry `ownDomain` and `domainType` (`own`, `free_provider`, `third_party`) so legal-page regulator/partner addresses can be filtered.
+- A company with several branches may publish several addresses; `address` uses the organisation's own JSON-LD address and omits branch `Place` entries when an organisation address exists.

@@ -1,13 +1,20 @@
 {
   "actorOutputSchemaVersion": 1,
-  "description": "Verification results for each email address with verdict, confidence score, and detailed checks.",
+  "description": "One record per unique email address with verdict, confidence, checks that actually ran, MX and provider details, typo suggestion, alias flags, SMTP response details, catch-all confidence, domain health and a recommended next action.",
   "properties": {
     "results": {
-      "description": "Dataset containing verification results for each email address",
+      "description": "Dataset containing one verification record per unique email address, with only the fields that were actually measured.",
       "template": "{{links.apiDefaultDatasetUrl}}/items",
       "title": "Email Verification Results",
       "type": "string"
+    },
+    "summary": {
+      "description": "Key-value store record named SUMMARY with input, truncation, per-domain cap and verdict totals for the run.",
+      "template": "{{links.apiDefaultKeyValueStoreUrl}}/records/SUMMARY",
+      "title": "Batch Summary",
+      "type": "string"
     }
   },
-  "title": "Bulk Email Deliverability & SMTP Verification Output"
+  "title": "Bulk Email Deliverability & SMTP Verification Output",
+  "type": "object"
 }

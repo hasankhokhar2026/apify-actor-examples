@@ -1,90 +1,154 @@
 # Google Image Search Results & Metadata Scraper
 
-Run a Google Images search for any query and get back structured results: the full-resolution image URL and dimensions, a thumbnail with its own dimensions, the source page's title, and the web page the image came from. Useful for building image datasets, tracking brand visuals, or researching what images rank for a keyword.
+Search Google Images for one or many queries and get one row per image, with an honest label on what each URL actually is. Google is tried first. If Google blocks or returns nothing, the default path returns explicitly labelled Bing/DuckDuckGo rows; set `googleOnly=true` for a strict Google-only contract that fails instead.
 
 ## What this actor does
 
-- Searches Google Images for a single query and collects matching image results
-- Returns both the full-resolution image URL and the Google-cached thumbnail, each with width/height
-- Captures the source page's title and domain alongside the content page URL
-- Scrolls Google's results to collect up to 500 images for a single query, stopping early when Google stops loading new ones
-- If Google can't be loaded after several attempts, the same query is run on DuckDuckGo Images and then Bing Images instead, returning the same fields (records don't say which engine they came from)
+- Runs one or more Google Images queries in a single run.
+- Exposes Google's own size, colour, type, file-type, time and usage-rights filters, plus country, language and SafeSearch.
+- Captures the original image URL when Google exposes it, and tells you when it only has a thumbnail (`imageUrlType`, `isCrawlerOnly`, `hasOriginal`).
+- Records the source page, source domain, site name, result position and page/scroll batch.
+- Gives every row a stable `imageId` derived from the image URL or Google's result key.
+- Writes a `SUMMARY` key-value record with per-query `resultsRequested`, `resultsReturned`, `pagesFetched`, `stopReason` and `fallbackAttempts`.
 
-## Output per image result
+## Google-first with labelled fallback
 
-Every record has the same keys. When a value isn't available it comes back as `0` (dimensions) or an empty string rather than being dropped.
+The default contract is **labelled fallback**: `googleOnly` is `false` and `enableFallback` is `true`. Google is always tried first. If Google is blocked or has no results, the actor tries Bing Images (plain HTTP) and DuckDuckGo Images, in that order. Every fallback row carries:
 
-- `query` — the search query used
-- `imageUrl` — direct URL to the full-resolution image
-- `imageWidth`, `imageHeight` — full-resolution image dimensions in pixels
-- `thumbnailUrl` — URL of the search engine's cached thumbnail
-- `thumbnailWidth`, `thumbnailHeight` — thumbnail dimensions in pixels
-- `title` — page title of the website containing the image
-- `origin` — domain of the website hosting the image
-- `contentUrl` — URL of the web page containing the image
+- `engine` - `bing`, `duckduckgo`, or `google`
+- `isFallback` - `true` for every fallback row
+- `fallbackReason` - why Google was not used, e.g. `google_captcha`
+
+Fallback is never silent and never changes the `engine` value. A Bing row is always labelled Bing.
+
+For a strict Google-only run, set `googleOnly=true` and `enableFallback=false`. If Google is blocked or has no results, the run fails with an explicit status instead of returning another engine.
+
+## Output fields
+
+Every row keeps the legacy field names and adds provenance and completeness fields. Empty optional values are omitted; `null` and sentinel values are never written.
+
+| Field | Meaning |
+|---|---|
+| `query` | Query that produced the row |
+| `position` | 1-based rank within the query's returned rows |
+| `page` | Result page or scroll batch the row was read from |
+| `engine` | `google`, `bing`, `duckduckgo` or `unknown` |
+| `retrievalMethod` | How the row was read, e.g. `google_dom_sidepanel`, `google_dom_thumbnail`, `bing_async_html` |
+| `isFallback` | `true` when the row came from a fallback engine |
+| `fallbackReason` | Why fallback was used |
+| `searchUrl` | Search URL used for this query |
+| `fetchedAt` | ISO-8601 UTC fetch timestamp |
+| `imageId` | Stable ID derived from the image URL or Google result key |
+| `imageUrl` | Best available image URL |
+| `imageUrlType` | `original`, `thumbnail`, `crawler_only` or `unknown` |
+| `isCrawlerOnly` | `true` when `imageUrl` is a search-engine cached/thumbnail URL |
+| `hasOriginal` | `true` when `imageUrl` is the source site's original |
+| `imageWidth`, `imageHeight` | Original dimensions, only when the engine states them |
+| `aspectRatio`, `orientation` | Derived from the stated dimensions |
+| `fileFormat` | Format from the URL extension, when known |
+| `thumbnailUrl` | Engine-cached thumbnail |
+| `thumbnailWidth`, `thumbnailHeight` | Thumbnail dimensions, when stated |
+| `title` | Page title shown for the image, when it is not a generic placeholder |
+| `sourcePageTitle` | Title of the source page |
+| `origin` | Legacy source domain field |
+| `sourceDomain` | Hostname of the source page |
+| `siteName` | Site name shown by the engine, or the source domain |
+| `contentUrl` | Page containing the image |
+| `googleUrl` | Google imgres reference URL, when applicable |
+
+`imageUrl` is the best URL available, not a promise that it is the original. Check `imageUrlType` or `hasOriginal` before treating it as full resolution.
 
 ## Input
 
+At least one `queries` entry (or the legacy `query` string) is required. Apify's validator cannot express "one of", so the actor fails clearly when neither is present.
+
 | Field | Type | Default | Description |
 |---|---|---|---|
-| `query` | string | – | **Required.** Image search query, e.g. `"sunset landscape"`, `"product packaging design"` |
-| `maxResults` | integer | `100` | Maximum number of image results to extract (1–500) |
-| `proxyConfiguration` | object | – | Proxy configuration. Not enforced, but a residential proxy (the prefilled setting) is strongly recommended because Google blocks image searches from data-center IPs; without one, results are more likely to come from the fallback engines |
+| `queries` | array | - | One or more image search queries. The legacy `query` string is still accepted in code. |
+| `maxResults` | integer | `100` | Maximum rows per query, 1-500. This is a ceiling, not a guarantee. |
+| `minWidth` | integer | `0` | Drop images narrower than this many pixels; 0 disables. Rows without dimensions are dropped when set. |
+| `minHeight` | integer | `0` | Drop images shorter than this many pixels; 0 disables. |
+| `country` | select | `US` | Two-letter country code for Google `gl` / Bing `cc` |
+| `language` | select | `en` | Language code for Google `hl` / Bing `setlang` |
+| `safeSearch` | select | `active` | `active` or `off` |
+| `imageSize` | select | any | `large`, `medium`, `icon`, or a minimum megapixel bucket from `2mp` to `70mp` |
+| `imageColor` | select | any | Full colour, black and white, transparent, or a specific colour |
+| `imageType` | select | any | Photo, face, clip art, line drawing, animated |
+| `fileType` | select | any | JPEG, PNG, GIF, BMP, SVG, WebP, ICO |
+| `timeRange` | select | any | Past hour, day, week, month or year |
+| `usageRights` | select | any | Google's four usage-rights labels |
+| `googleOnly` | boolean | `false` | Fail clearly instead of using fallback |
+| `enableFallback` | boolean | `true` | Allow labelled Bing/DuckDuckGo fallback when `googleOnly` is false |
 
-### Example: default query
+The legacy `query` and `maxResultsPerQuery` keys are read in code for saved tasks. There is no proxy field in the schema; the actor never requires a user-supplied proxy or API key.
 
-```json
-{
-  "query": "Alfons Mucha",
-  "maxResults": 50
-}
-```
+## Example input
 
-### Example: larger result set for a product search
-
-```json
-{
-  "query": "modern architecture",
-  "maxResults": 300
-}
-```
-
-### Example: non-Latin script query
+Strict Google-only query:
 
 ```json
 {
-  "query": "桜 日本庭園",
-  "maxResults": 100
+  "queries": ["Alfons Mucha"],
+  "maxResults": 20,
+  "country": "US",
+  "language": "en",
+  "googleOnly": true
 }
 ```
 
-## Use cases
+Labelled fallback allowed, with filters:
 
-- **Image dataset building** — collect images for research, analysis, or model training
-- **Brand monitoring** — track how a brand's visuals appear across the web
-- **Competitor research** — survey competitor product photography and marketing imagery
-- **Content curation** — source images for blogs, presentations, or social posts
-- **Visual SEO research** — see which pages and domains rank images for a keyword
+```json
+{
+  "queries": ["sunset landscape", "modern architecture"],
+  "maxResults": 100,
+  "country": "DE",
+  "language": "de",
+  "imageSize": "large",
+  "imageColor": "blue",
+  "imageType": "photo",
+  "safeSearch": "active",
+  "googleOnly": false,
+  "enableFallback": true
+}
+```
+
+## How to read a run
+
+- A row with `engine: "google"` and `imageUrlType: "original"` is a source-site image URL.
+- A row with `engine: "google"` and `imageUrlType: "thumbnail"` is Google's cached thumbnail; the original was not exposed for that card.
+- A row with `engine: "bing"` is a labelled fallback row. Bing exposes original image URLs and source pages directly.
+- The `SUMMARY` key-value record tells you how many rows were requested and returned per query, how many pages were read, why reading stopped, and which fallback engines were attempted.
+
+## Limits and honest notes
+
+- Google Images typically runs out at roughly 300-400 results per query. Asking for 500 returns what Google has.
+- Google sometimes exposes only thumbnails in the results DOM. The actor labels those rows `thumbnail` rather than pretending they are originals. It attempts the side panel for up to 20 cards per query to recover originals.
+- A Google CAPTCHA or "unusual traffic" page is reported as `google_captcha`, not as zero results.
+- `fileType` is applied by Google server-side. On Bing fallback it is applied to the image URL extension locally, so URLs without a recognisable extension are excluded when this filter is set.
+- Bing's time filter has no "past hour" bucket; the `hour` option uses Bing's 24-hour window on fallback.
+- The DuckDuckGo fallback reads its first image JSON batch only; it is a last resort after Bing. It has no size, colour, type, time or usage-rights facet, so it is skipped when one of those filters is set instead of returning rows that violate the filter.
+- `minWidth` and `minHeight` are applied to every engine. Rows with no published dimensions are dropped when either bound is set.
+- `dominantColor` and `relatedSearches` come from Bing's response. Google does not expose a reliable dominant colour in its search metadata; file size is not shipped because it would require downloading or probing every image.
+- Usage-rights labels come from the search engine. They are not a legal guarantee; check the licence on `contentUrl` before reuse. Bing's licence buckets do not match Google's four labels one-to-one, so fallback rows use the nearest Bing bucket.
+- New fields are additive. Existing field names (`query`, `imageUrl`, `imageWidth`, `imageHeight`, `thumbnailUrl`, `thumbnailWidth`, `thumbnailHeight`, `title`, `origin`, `contentUrl`) are preserved.
 
 ## FAQ
 
-**How many images can I scrape per query?**
-Up to 500. The default is 100. Google keeps loading images as the page scrolls, so raising `maxResults` usually gets more, until Google runs out for that query. If the run had to fall back to DuckDuckGo, only its first batch of results is collected, so expect fewer.
+**Why did a Google-only run fail?**
+Google returned a CAPTCHA, an error page, or no results. In Google-only mode that is a real failure and is reported as one. Set `googleOnly` to `false` and `enableFallback` to `true` if you want labelled Bing/DuckDuckGo rows instead.
 
-**Does it support non-English queries?**
-Yes. Use any language, including non-Latin scripts like Japanese, Chinese, Korean, or Arabic.
+**Why is `imageUrlType` sometimes `thumbnail`?**
+The results page did not expose the source image URL for that card. The actor will not label a Google thumbnail as an original.
 
-**Can I run multiple queries?**
-Each run searches one `query`. Run the actor again with a different query to cover additional searches, or trigger multiple runs in parallel from your own workflow.
+**Why are dimensions missing on some rows?**
+The engine did not state them. The actor omits the field rather than writing `0` or guessing.
 
-**Why should I use a residential proxy?**
-Google blocks image searches from data-center IP ranges. With the prefilled residential proxy, Google results are much more likely; without it the run may end up on the DuckDuckGo or Bing fallback, or return nothing.
-
-**Why are `imageWidth`/`imageHeight` sometimes 0?**
-The search engine doesn't expose full-resolution dimensions for every result; when a dimension isn't available, the actor reports `0` rather than guessing. Likewise `title` or `origin` can be an empty string.
-
-**What if every engine fails?**
-The dataset stays empty and the run finishes with a "Scraped 0 images" status.
+**Does this download images?**
+No. It returns URLs and metadata. Fetch the image files yourself.
 
 **Is this affiliated with Google?**
-No. This is an independent, third-party actor that reads Google's public image search results; it isn't affiliated with or endorsed by Google.
+No. It reads public image search results as an independent third-party tool.
+
+**Can I use the same input as before?**
+Yes for the common case: a saved task with `query` and `maxResults` still runs because the legacy keys are mapped in code. Batch users should move to `queries` and `maxResults` (per query).

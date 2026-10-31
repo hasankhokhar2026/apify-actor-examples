@@ -1,58 +1,84 @@
 # Etsy Product Listings & Shop Research Scraper
 
-Pull product listings straight off Etsy — search results for any keyword, a category page, or a single seller's shop — without logging in. Point the actor at URLs or just type search terms, pick a regional market, and get structured rows with prices, ratings, seller badges, and (optionally) full listing detail pages.
+Collect Etsy listing data from Etsy's keyword market pages without a login, API key, or proxy setup. Give the actor a keyword or a market URL, choose one of ten regional markets, and get structured rows for pricing research, assortment tracking, and shop comparisons.
 
-## What this actor does
+## How it works
 
-- Accepts Etsy search URLs, listing URLs, shop URLs, and category or market URLs, or plain keyword queries
-- Returns price, original price, discount, rating, review count, and shop info for each listing card
-- Detects Star Seller, Free Shipping, Bestseller, Etsy's Pick, and sponsored-ad badges on each card
-- Optionally opens each listing page to add description, materials, tags, variations, and seller location/rating
-- Runs keyword searches in one of ten Etsy regional markets so currency, language, and ranking match the selected country
-- Numbers each row with its `position` in the collected result set and stamps a `scrapedAt` timestamp
-- Card fields Etsy's page doesn't expose for a given listing (e.g. `shopId` on a shop page, or `originalPrice` on a full-price item) come back as an empty string rather than being left out of the record; detail fields from `includeDetails` are simply left off when missing
+Etsy's keyword market pages (`https://www.etsy.com/market/<slug>`) are the most reliable public route. The actor converts every search query into that route, reads the page's JSON-LD `ItemList` and listing cards, and follows pages until it reaches your limit or the source ends. When Etsy redirects a keyword to a category page, the actor follows the redirect with a fresh request instead of treating the redirect as a dead end.
 
-## Output per listing
+Category URLs such as `https://www.etsy.com/c/jewelry` are also supported directly and normally expose about 64 cards per page. Legacy `/search?q=` URLs are converted to the equivalent market URL. Shop and individual listing URLs are accepted for backward compatibility, but Etsy protects those with DataDome; the actor reports them as blocked instead of returning an empty result.
 
-- `listingId` — numeric Etsy listing ID
-- `shopId` — numeric Etsy shop ID; usually empty outside search-result cards
-- `url` — listing page URL
-- `title` — listing title
-- `price`, `originalPrice`, `currency`, `discountPercent` — pricing; `originalPrice`/`discountPercent` are empty strings except on sale items
-- `imageUrl` — primary listing image
-- `shopName`, `shopUrl` — seller shop name and URL
-- `rating`, `reviewCount` — listing rating and review count; often empty on shop/category cards
-- `badges` — object of true/false flags: `starSeller`, `freeShipping`, `bestseller`, `etsyChoice` (Etsy's Pick), `ad`
-- `position` — the row's position in the collected result set for that URL/query
-- `scrapedAt` — ISO 8601 timestamp of collection
+## What you get per listing
 
-### Additional fields when `includeDetails` is enabled (and for listing URLs)
+Card-level fields:
 
-These are added only for listings whose page could be opened; if Etsy starts blocking listing pages, enrichment stops and the remaining rows keep just the card fields. A listing URL in `startUrls` always returns one row with these fields (badges are all `false` there, since they come from search cards).
+- `listingId` - numeric Etsy listing ID
+- `url` - listing page URL
+- `title` - listing title
+- `price`, `originalPrice` - plain decimal strings (no thousands separators)
+- `priceValue`, `originalPriceValue` - numeric values for calculations
+- `currency` - Etsy's display label or symbol (`USD`, `EUR`, `GBP`, `JPY`, `AU$`, `CA$`)
+- `currencyCode` - ISO 4217 code (`USD`, `EUR`, `GBP`, `JPY`, `AUD`, `CAD`, ...)
+- `discountPercent` - discount as a string, kept for compatibility
+- `discountPercentValue` - discount as an integer percentage
+- `imageUrl` - primary card image
+- `imageCount` - number of images exposed in the card (usually 1)
+- `shopId` - Etsy shop ID when the card exposes it
+- `shopName`, `shopUrl` - shop name and URL (from the page's brand data or shop link)
+- `rating`, `reviewCount` - shop-level rating and review count when the card shows them
+- `shopRating`, `shopReviewCount` - numeric shop-level copies of the same values
+- `ratingScope` - `shop` when the supplied rating is shop-level
+- `listingRating`, `listingReviewCount` - listing-level rating only when the page's structured data supplies `aggregateRating` (usually it does not)
+- `availability` - stock status from the page's structured data
+- `badges` - compatibility object with `starSeller`, `freeShipping`, `bestseller`, `etsyChoice`, `ad`
+- `isAd` - present and `true` for sponsored cards (omitted for organic cards)
+- `freeShipping`, `starSeller`, `bestseller`, `etsyChoice` - present and `true` when the badge is visible
+- `hasVariations` - present and `true` when variations are visible
+- `page` - source market or category page number
+- `position` - row position within the task's collected results
+- `sourceQuery` - keyword or slug that produced the row
+- `sourceUrl` - exact market or category page URL the row came from
+- `recordType` - `listing` for card records
+- `scrapedAt` - ISO 8601 collection timestamp
 
-- `description` — full listing description
-- `category` — Etsy category breadcrumb
-- `images` — array of all listing image URLs
-- `variations` — array of selectable options (size, color, material, etc.)
-- `materials` — materials text as listed by the seller
-- `listedDate` — date the listing was posted
-- `availability` — stock status
-- `sellerName`, `sellerRating`, `sellerReviewCount`, `sellerLocation` — shop-level seller details
-- `tags` — array of the listing's search tags
+Fields the page does not expose are omitted rather than emitted as empty strings, nulls, or placeholders. `isAd`, badge flags, and `hasVariations` are only present when true; absence means the page did not show that signal. `rating` is a shop-level rating on market cards, which is why `ratingScope` is `shop`.
+
+### When `includeDetails` is enabled
+
+The actor attempts to open each listing page and add:
+
+- `description`, `category`, `materials`, `listedDate`, `availability`
+- `images` - all listing image URLs
+- `variations` - selectable options
+- `tags` - listing tags
+- `sellerName`, `sellerRating`, `sellerReviewCount`, `sellerLocation`
+- `listingRating`, `listingReviewCount` - listing-level rating when the listing page supplies it
+- `detailsStatus` - `enriched`, `blocked`, `not_found`, `partial`, or `no_url`
+
+Etsy frequently blocks listing pages with DataDome. When that happens, the row keeps its card data, `detailsStatus` is `blocked`, and no detail fields are invented. A circuit breaker stops detail attempts after three consecutive blocks so a site-wide block cannot stall the run.
 
 ## Input
 
+At least one of `startUrls` or `searchQueries` is required for a normal run. A truly empty input uses the documented `handmade jewelry` fallback for the scheduled test. Apify's validator cannot express "one of", so the actor enforces it.
+
 | Field | Type | Default | Description |
 |---|---|---|---|
-| `startUrls` | array | – | Etsy search, listing, shop, or category URLs to scrape |
-| `searchQueries` | array | – | Keywords to search on Etsy; each query runs as a separate search |
-| `maxItems` | integer | `100` | Maximum items to extract per URL or query (1–1,000) |
-| `includeDetails` | boolean | `false` | Visit each listing page found on search, shop, or category pages for description, materials, variations, and seller detail |
-| `country` | string | `US` | Target Etsy market (`US`, `DE`, `GB`, `FR`, `AU`, `CA`, `IT`, `ES`, `NL`, `JP`). Keyword searches run on that market's site; URLs in `startUrls` keep the market they point to |
+| `startUrls` | array | - | Etsy market URLs are reliable; `/c/` category URLs work and return more cards per page. Legacy `/search?q=` URLs are converted to market URLs. Shop URLs use the 10-item public RSS feed; listing URLs are reported as blocked. |
+| `searchQueries` | array | - | Keywords mapped to Etsy market pages, with automatic category follow when Etsy redirects. Each query is a separate task. |
+| `maxItems` | integer | `100` | Maximum rows per URL or query (1-1,000). Keyword markets cap at 25 pages; categories can go deeper. |
+| `includeDetails` | boolean | `false` | Attempt listing-page enrichment and report `detailsStatus` honestly. |
+| `sortBy` | select | any | `most_relevant`, `price_asc`, `price_desc`, `date_desc`, `highest_reviews`. |
+| `minPrice` | number | - | Lower price bound in the market currency. Etsy `min` is used server-side and a local safeguard follows. |
+| `maxPrice` | number | - | Upper price bound in the market currency. |
+| `freeShippingOnly` | boolean | `false` | Use Etsy's `free_shipping=1` market filter. |
+| `starSellerOnly` | boolean | `false` | Use Etsy's `is_star_seller=1` market filter. |
+| `country` | string | `US` | Market locale: `US`, `DE`, `GB`, `FR`, `AU`, `CA`, `IT`, `ES`, `NL`, `JP`. |
 
-At least one of `startUrls` or `searchQueries` must be provided.
+If no input is supplied, the actor uses `handmade jewelry` as a safe fallback so a scheduled test run still produces data. At least one of `startUrls` or `searchQueries` is normally provided.
 
-### Example: keyword search in the default US market
+### Examples
+
+Keyword search in the default US market:
 
 ```json
 {
@@ -61,65 +87,77 @@ At least one of `startUrls` or `searchQueries` must be provided.
 }
 ```
 
-### Example: a shop's catalog with details
+Multi-page collection in Germany:
 
 ```json
 {
-  "startUrls": [{ "url": "https://www.etsy.com/shop/GlassHouseDesignsUS" }],
-  "maxItems": 200,
-  "includeDetails": true
+  "searchQueries": ["keramik tasse"],
+  "country": "DE",
+  "maxItems": 120
 }
 ```
 
-### Example: category search targeting the UK market
+Direct market URL:
 
 ```json
 {
-  "startUrls": [{ "url": "https://www.etsy.com/c/jewelry-and-accessories" }],
-  "country": "GB",
-  "maxItems": 100
+  "startUrls": [{ "url": "https://www.etsy.com/uk/market/wedding_ring" }],
+  "maxItems": 80
 }
 ```
 
-### Example: multiple keyword queries across stores
+Category URL with 64 cards per page:
 
 ```json
 {
-  "searchQueries": ["personalized gifts", "wedding favors", "vintage rings"],
-  "maxItems": 30
+  "startUrls": [{ "url": "https://www.etsy.com/c/jewelry/necklaces" }],
+  "maxItems": 200
 }
 ```
 
-## Use cases
+Details requested, with honest fallback:
 
-- **Product research** — survey pricing, discounts, and bestseller badges for a niche before listing a competing product
-- **Market monitoring** — track a shop's catalog and prices over time across multiple regional markets
-- **Trend discovery** — run broad keyword searches to see which styles and materials are trending
-- **Competitor analysis** — pull a competitor shop's listings with descriptions, materials, and tags
-- **Price comparison tools** — feed listing prices and currencies into a comparison or alert service
+```json
+{
+  "searchQueries": ["personalized necklace"],
+  "includeDetails": true,
+  "maxItems": 20
+}
+```
+
+## Pagination, deduplication, and limits
+
+- Pages are followed until `maxItems` is reached, no new listing IDs appear for two consecutive pages, or Etsy's explicit `max_page_exceeded` marker is hit.
+- A short page is not treated as the end. Etsy market pages normally show about eight cards, and category pages about 64; the old "fewer than 64 cards means stop" shortcut would have stopped after page one.
+- Rows are deduplicated by listing ID across pages and across tasks; sponsored cards can repeat.
+- Etsy serves at most 25 market pages per query (roughly 200 listings). Larger `maxItems` values return what exists and set a partial status message instead of pretending the request was complete.
+- Category pages can be deeper, but DataDome may rate-limit very deep or rapid page walks. The actor retries, then reports a partial result with the reason.
+- Some keywords have no market page, return 404, or redirect to a category page. The actor tries alternate slug spellings, follows a working category redirect, and reports the specific reason for any task that still fails.
 
 ## FAQ
 
-**Does this need an Etsy account or API key?**
-No. It scrapes publicly visible listing pages and requires no login or API credentials.
+**Do I need an Etsy account, API key, or proxy?**
+No. The actor reads public market pages and works without credentials or proxy configuration. It chooses its proxy automatically and only after a direct request is blocked.
 
-**What's the difference between search results and shop/category pages?**
-All three return the same listing fields. Search results additionally expose `rating`, `reviewCount`, and sponsored-ad badges that aren't always present on shop or category cards.
+**Why do I sometimes get fewer rows than `maxItems`?**
+Etsy's market route exposes up to 25 pages per query. The actor reports the ceiling and returns the available rows. Shop RSS is limited to 10 recent items. Category pages can go deeper but may rate-limit.
 
-**How do I get more than one page of results?**
-Raise `maxItems` beyond a single search page. The actor follows further result pages, and for keyword searches it can also add listings from other sort orders (newest, price, top-reviewed) and price bands to reach your target, so later rows aren't strictly in relevance order. Duplicates are removed by listing ID.
+**Which filters and sorts work?**
+`sortBy`, `freeShippingOnly`, `starSellerOnly`, `minPrice` and `maxPrice` are supported. Sorting and the two badges are server-side; price bounds use Etsy's `min`/`max` parameters and a local safeguard. Views, favorites, carts and bought-in-last-24h are not present on market/category pages; listing pages expose some of them only through a browser, so they are not shipped.
 
-**Why are `originalPrice` and `discountPercent` missing on most listings?**
-Those fields are only populated for listings currently on sale. Full-price items omit them.
+**What happens with shop and listing URLs?**
+Shop URLs use Etsy's public shop RSS feed, which returns the 10 most recent listings with title, description, image and price. It is honest about being a recent-items feed and does not paginate. Listing detail pages remain DataDome-blocked for plain HTTP; browser/proxy enrichment is not used in production because it is slow and unreliable. Keyword market pages and `/c/` category pages are the reliable bulk routes.
 
-**What does `includeDetails` add?**
-It visits each listing's own page to add description, category, images, materials, tags, variations, listing date, availability, and seller-level name/rating/location — fields that search, shop, and category cards don't expose. It makes runs slower, and if Etsy blocks listing pages partway through, later rows come back without these fields.
+**Why is `ratingScope` set to `shop`?**
+The rating shown on an Etsy listing card is the shop's aggregate rating. This was verified by finding the same shop's separate listings carrying an identical rating and review count. Listing-level ratings are only claimed through `listingRating` when structured data on the page supplies them, or through `includeDetails` when the listing page is readable.
 
-**Can I target a market other than the US?**
-Yes, set `country` to any of the ten supported markets for keyword searches; it changes the currency, site language, and which listings rank first. For pasted URLs, use the market-specific URL itself (for example `https://www.etsy.com/de/search?q=...`).
+**Why are some shop names or ratings missing?**
+Etsy's card markup does not always expose a shop name or rating. The actor fills them from the page's JSON-LD brand and visible rating controls, and omits them when the page genuinely does not show them. Missing fields are never replaced with placeholders.
 
-**Can I scrape a single product page directly?**
-Yes — put the listing URL in `startUrls`. You get one row with the detail fields for that listing whether or not `includeDetails` is on.
+**Are prices strings or numbers?**
+Both are provided. `price` and `originalPrice` remain decimal strings for backward compatibility; `priceValue` and `originalPriceValue` are numeric for calculations.
+
+**Why do output listing/shop URLs return 403?** Etsy's DataDome protection blocks clean clients even for URLs the actor collected from public market/RSS pages. The URLs are valid for a browser; this is an Etsy anti-bot caveat, not a broken URL. Image URLs were verified HTTP 200.
 
 **Is this affiliated with Etsy?**
-No. This is an independent, third-party actor that reads Etsy's public pages; it isn't affiliated with or endorsed by Etsy, Inc.
+No. This is an independent third-party actor that reads publicly visible pages and is not affiliated with or endorsed by Etsy, Inc.
