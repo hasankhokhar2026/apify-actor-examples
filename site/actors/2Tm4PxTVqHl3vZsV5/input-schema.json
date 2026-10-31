@@ -1,0 +1,330 @@
+{
+  "description": "Scrape Pinterest pins, boards, and user profiles. No login needed.",
+  "properties": {
+    "boardUrls": {
+      "default": [
+        "https://www.pinterest.com/nasa/ceres/"
+      ],
+      "description": "Public board links or `username/board-name` paths, for example `https://www.pinterest.com/nasa/ceres/`.",
+      "editor": "stringList",
+      "prefill": [
+        "https://www.pinterest.com/nasa/ceres/"
+      ],
+      "title": "Board URLs",
+      "type": "array"
+    },
+    "commerceOnly": {
+      "default": false,
+      "description": "Pro filter: when true, return only product/shoppable pins. Equivalent to Pinterest's native 'Products' filter (commerce_only=true).",
+      "prefill": false,
+      "title": "Commerce only (shoppable pins)",
+      "type": "boolean"
+    },
+    "cookies": {
+      "description": "Optional Cookie Editor JSON export. All public modes work without cookies; never share this secret publicly.",
+      "editor": "json",
+      "isSecret": true,
+      "title": "Optional Pinterest cookies",
+      "type": "array"
+    },
+    "cookiesJson": {
+      "description": "Compatibility alias for pasting a Cookie Editor JSON export.",
+      "editor": "textarea",
+      "isSecret": true,
+      "title": "Optional cookies JSON (alias)",
+      "type": "string"
+    },
+    "enrichPinDetails": {
+      "default": false,
+      "description": "For `userPins` and `boardPins`, visit each public Pin detail page for detail-only fields. Slower but more complete.",
+      "prefill": false,
+      "title": "Enrich collection Pins",
+      "type": "boolean"
+    },
+    "excludeAds": {
+      "default": false,
+      "description": "Drop promoted/sponsored pins.",
+      "prefill": false,
+      "title": "Exclude promoted/ads (Pro filter)",
+      "type": "boolean"
+    },
+    "ideaSlugs": {
+      "default": [],
+      "description": "Idea topic path pairs such as `beauty/935541271955`. Used when `mode=ideas`.",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Idea topic paths",
+      "type": "array"
+    },
+    "ideaUrls": {
+      "default": [
+        "https://www.pinterest.com/ideas/beauty/935541271955/"
+      ],
+      "description": "Public Pinterest idea-topic links, for example `https://www.pinterest.com/ideas/beauty/935541271955/`.",
+      "editor": "stringList",
+      "prefill": [
+        "https://www.pinterest.com/ideas/beauty/935541271955/"
+      ],
+      "title": "Idea topic URLs",
+      "type": "array"
+    },
+    "imageOnly": {
+      "default": false,
+      "description": "Drop video pins, keep image pins only.",
+      "prefill": false,
+      "title": "Image-only (Pro filter)",
+      "type": "boolean"
+    },
+    "includeComments": {
+      "default": false,
+      "description": "Add real comment/activity rows for collected Pins. Pinterest's public cookieless path is used automatically.",
+      "prefill": false,
+      "title": "Include Pin comments",
+      "type": "boolean"
+    },
+    "keywords": {
+      "default": [
+        "minimalist home office"
+      ],
+      "description": "Words or phrases for search modes, for example `minimalist home office`.",
+      "editor": "stringList",
+      "prefill": [
+        "minimalist home office"
+      ],
+      "title": "Search words",
+      "type": "array"
+    },
+    "language": {
+      "default": "en",
+      "description": "Pinterest UI language (affects ranked search results).",
+      "editor": "select",
+      "enum": [
+        "en",
+        "es",
+        "fr",
+        "de",
+        "it",
+        "pt",
+        "ja",
+        "ko",
+        "ar",
+        "hi",
+        "id",
+        "th",
+        "vi",
+        "nl",
+        "pl",
+        "tr",
+        "ru",
+        "cs",
+        "da",
+        "el",
+        "fi",
+        "hu",
+        "no",
+        "ro",
+        "sv",
+        "uk",
+        "zh",
+        "bn",
+        "ms",
+        "fil"
+      ],
+      "enumTitles": [
+        "English",
+        "Spanish",
+        "French",
+        "German",
+        "Italian",
+        "Portuguese",
+        "Japanese",
+        "Korean",
+        "Arabic",
+        "Hindi",
+        "Indonesian",
+        "Thai",
+        "Vietnamese",
+        "Dutch",
+        "Polish",
+        "Turkish",
+        "Russian",
+        "Czech",
+        "Danish",
+        "Greek",
+        "Finnish",
+        "Hungarian",
+        "Norwegian",
+        "Romanian",
+        "Swedish",
+        "Ukrainian",
+        "Chinese",
+        "Bengali",
+        "Malay",
+        "Filipino"
+      ],
+      "prefill": "en",
+      "title": "Language",
+      "type": "string"
+    },
+    "limit": {
+      "default": 10,
+      "description": "Compatibility alias for maxComments.",
+      "maximum": 20000,
+      "minimum": 1,
+      "prefill": 10,
+      "title": "Maximum comments per Pin (alias)",
+      "type": "integer"
+    },
+    "maxComments": {
+      "default": 10,
+      "description": "Maximum public comment/activity rows per Pin when comments are enabled or mode=comments.",
+      "maximum": 20000,
+      "minimum": 1,
+      "prefill": 10,
+      "title": "Maximum comments per Pin",
+      "type": "integer"
+    },
+    "maxItems": {
+      "default": 50,
+      "description": "Maximum rows returned across all supplied inputs.",
+      "maximum": 20000,
+      "minimum": 1,
+      "prefill": 1,
+      "title": "Max items",
+      "type": "integer"
+    },
+    "maxPages": {
+      "default": 10,
+      "description": "Maximum search result pages to walk per keyword or board (1 page ≈ 25 pins). Default 10.",
+      "editor": "number",
+      "maximum": 2000,
+      "minimum": 1,
+      "prefill": 10,
+      "title": "Max pages",
+      "type": "integer"
+    },
+    "minCreatorFollowers": {
+      "description": "Keep Pins whose public creator follower count reaches N. Unknown counts are retained.",
+      "maximum": 1000000000,
+      "minimum": 0,
+      "title": "Min creator followers",
+      "type": "integer"
+    },
+    "minSaves": {
+      "description": "Keep Pins whose Pinterest save count is at least N. Pins without a published count are retained as unknown.",
+      "maximum": 10000000,
+      "minimum": 0,
+      "title": "Min saves (Pro filter)",
+      "type": "integer"
+    },
+    "mode": {
+      "default": "pinDetail",
+      "description": "Choose the Pinterest use case. The legacy `search` value remains accepted for existing users.",
+      "editor": "select",
+      "enum": [
+        "auto",
+        "pinDetail",
+        "comments",
+        "searchPins",
+        "searchVideos",
+        "searchUsers",
+        "searchBoards",
+        "userProfile",
+        "userPins",
+        "userBoards",
+        "boardDetail",
+        "boardPins",
+        "ideas",
+        "search"
+      ],
+      "enumTitles": [
+        "Auto-detect mixed Pinterest URLs",
+        "Pin details by URL",
+        "Comments and Pin activity by URL",
+        "Search Pins",
+        "Search video Pins",
+        "Search people",
+        "Search boards",
+        "Public profile details",
+        "Pins created by a person",
+        "Boards owned by a person",
+        "Board details",
+        "Pins inside a board",
+        "Idea topic details",
+        "Search Pins (legacy alias)"
+      ],
+      "prefill": "pinDetail",
+      "title": "What to collect",
+      "type": "string"
+    },
+    "pinUrls": {
+      "default": [
+        "https://www.pinterest.com/pin/142567144448888376/"
+      ],
+      "description": "Public Pinterest pin links or numeric IDs (used when mode=`pinDetail`).",
+      "editor": "stringList",
+      "prefill": [
+        "https://www.pinterest.com/pin/142567144448888376/"
+      ],
+      "title": "Pin URLs",
+      "type": "array"
+    },
+    "proxyConfiguration": {
+      "description": "Optional Apify proxy settings. Public direct-pin pages do not require login; some feed surfaces may be withheld from datacenter traffic.",
+      "editor": "proxy",
+      "title": "Optional proxy",
+      "type": "object"
+    },
+    "requireOutboundLink": {
+      "default": false,
+      "description": "For Pin results, keep only Pins with a public destination URL supplied by Pinterest.",
+      "prefill": false,
+      "title": "Require destination link",
+      "type": "boolean"
+    },
+    "startUrls": {
+      "default": [],
+      "description": "Mixed public Pinterest links for mode=`auto`. Each unambiguous Pin, profile, board, idea, or search link is routed to the matching collector; unsupported section links are skipped.",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Pinterest URLs (auto-detect)",
+      "type": "array"
+    },
+    "urls": {
+      "default": [],
+      "description": "Compatibility alias for pinUrls, useful with mode=comments.",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "prefill": [],
+      "title": "Pin URLs (comments alias)",
+      "type": "array"
+    },
+    "usernames": {
+      "default": [
+        "nasa"
+      ],
+      "description": "Pinterest usernames, @usernames, or public profile links.",
+      "editor": "stringList",
+      "prefill": [
+        "nasa"
+      ],
+      "title": "Pinterest usernames",
+      "type": "array"
+    },
+    "verifiedOnly": {
+      "default": false,
+      "description": "Keep only rows where Pinterest explicitly reports a verified creator or profile.",
+      "prefill": false,
+      "title": "Verified accounts only",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "mode"
+  ],
+  "schemaVersion": 1,
+  "title": "Pinterest Scraper Pro Input",
+  "type": "object"
+}
