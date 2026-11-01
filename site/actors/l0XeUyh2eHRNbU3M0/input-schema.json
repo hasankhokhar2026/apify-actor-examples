@@ -1,0 +1,59 @@
+{
+  "description": "Search IndiaMart for products or suppliers by keyword. Optionally filter by state or city.",
+  "properties": {
+    "city": {
+      "description": "Filter to a specific Indian city (e.g. 'Mumbai', 'Ahmedabad', 'Surat').",
+      "editor": "textfield",
+      "title": "Filter by city",
+      "type": "string"
+    },
+    "keyword": {
+      "default": "cotton fabric",
+      "description": "Product or supplier keyword (e.g. 'cotton fabric', 'industrial pump').",
+      "editor": "textfield",
+      "prefill": "cotton fabric",
+      "title": "Search keyword",
+      "type": "string"
+    },
+    "maxItems": {
+      "default": 20,
+      "description": "Maximum number of records to return.",
+      "maximum": 500,
+      "minimum": 1,
+      "prefill": 20,
+      "title": "Max items",
+      "type": "integer"
+    },
+    "mode": {
+      "default": "searchProducts",
+      "description": "What to search for on IndiaMart.",
+      "editor": "select",
+      "enum": [
+        "searchProducts",
+        "searchSuppliers",
+        "categoryBrowse"
+      ],
+      "enumTitles": [
+        "Search Products by keyword",
+        "Search Suppliers by keyword",
+        "Browse by category"
+      ],
+      "prefill": "searchProducts",
+      "title": "Mode",
+      "type": "string"
+    },
+    "state": {
+      "description": "Filter to a specific Indian state (e.g. 'Maharashtra', 'Gujarat', 'Tamil Nadu').",
+      "editor": "textfield",
+      "title": "Filter by state",
+      "type": "string"
+    }
+  },
+  "required": [
+    "mode",
+    "keyword"
+  ],
+  "schemaVersion": 1,
+  "title": "IndiaMart Scraper Input",
+  "type": "object"
+}

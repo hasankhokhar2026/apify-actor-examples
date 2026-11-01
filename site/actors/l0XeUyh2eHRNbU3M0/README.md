@@ -1,0 +1,88 @@
+# IndiaMART B2B Product Listings by City & State
+
+Search [IndiaMART](https://www.indiamart.com), India's largest B2B marketplace, for products by keyword and narrow results to a specific Indian state or city. Get pricing, minimum order quantity, supplier name and location, rating, and response rate for every matching listing — no login required.
+
+## What this actor does
+
+- Searches IndiaMART's product listings by free-text keyword
+- Optionally restricts results to a specific Indian state and/or city
+- Caps the number of records returned per run
+- Reads the supplier's name, location, rating, and response rate directly off each listing
+- Empty fields are omitted from each record
+
+## Output per record
+
+- `recordType` — always `product`
+- `productId` — IndiaMART product identifier
+- `title` — product name
+- `price` — listed price (INR, with unit where shown)
+- `minOrder` — minimum order quantity
+- `supplier` — supplier/company name
+- `supplierCity`, `supplierState` — supplier's location
+- `imageUrl` — product image URL
+- `productUrl` — IndiaMART listing URL
+- `rating` — supplier star rating
+- `responseRate` — supplier response rate (%)
+- `scrapedAt` — UTC timestamp of collection
+
+## Input
+
+| Field | Type | Default | Description |
+|---|---|---|---|
+| `mode` | string | `searchProducts` | `searchProducts`, `searchSuppliers`, or `categoryBrowse` — all three currently search IndiaMART's product index using `keyword` |
+| `keyword` | string | `cotton fabric` | Product keyword to search for |
+| `state` | string | – | Restrict results to an Indian state (e.g. `Maharashtra`, `Gujarat`) |
+| `city` | string | – | Restrict results to an Indian city (e.g. `Mumbai`, `Surat`) |
+| `maxItems` | integer | `20` | Maximum records to return (1–500) |
+
+### Example: basic keyword search
+
+```json
+{
+    "mode": "searchProducts",
+    "keyword": "cotton fabric",
+    "maxItems": 20
+}
+```
+
+### Example: keyword search narrowed to a manufacturing hub
+
+```json
+{
+    "mode": "searchProducts",
+    "keyword": "industrial pump",
+    "state": "Gujarat",
+    "city": "Surat",
+    "maxItems": 50
+}
+```
+
+## Use cases
+
+- **India sourcing** — find manufacturers for textiles, engineering goods, chemicals, or food products
+- **Supplier shortlisting** — filter returned listings by rating and response rate before reaching out
+- **Regional sourcing** — target known manufacturing hubs by state or city (e.g. Surat for textiles, Coimbatore for machinery)
+- **Price benchmarking** — compare listed prices and MOQs for the same product keyword across suppliers
+
+## FAQ
+
+**What's the difference between the three `mode` options?**
+All three currently query IndiaMART's product search index using `keyword` and return the same product-style record shape; `state`/`city` filtering and `maxItems` apply the same way regardless of which mode is selected.
+
+**What does `responseRate` mean?**
+The percentage of buyer inquiries the supplier has responded to, as shown on IndiaMART's own listing — a quick signal of how active a supplier is.
+
+**Can I filter by Indian state or city?**
+Yes — set `state` and/or `city` (e.g. `Gujarat` and `Surat`) to keep only listings from suppliers based there.
+
+**Are prices in Indian Rupees?**
+Yes. IndiaMART is India-focused and displays prices in INR.
+
+**Does this require an IndiaMART account?**
+No. Only publicly visible listing data is read; no login is needed.
+
+**Why is `price` or `rating` missing on some listings?**
+Not every IndiaMART listing publishes a price or has accumulated a rating yet — those fields are omitted rather than filled with a placeholder.
+
+**Is this affiliated with IndiaMART?**
+No. This is an independent actor that reads IndiaMART's public search pages and is not operated or endorsed by IndiaMART.
