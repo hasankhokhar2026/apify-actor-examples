@@ -1,0 +1,281 @@
+{
+  "description": "Search Bluesky posts, fetch user timelines, look up profiles, search accounts, fetch a custom feed, hydrate a post and its replies, batch-hydrate posts, list followers / follows, list likes, expand a Bluesky post URL, and discover popular feed generators. All endpoints are public — no login required.",
+  "properties": {
+    "actor": {
+      "description": "Bluesky handle (e.g. `bsky.app`, `jay.bsky.team`) or full DID (`did:plc:...`). Used by profile / follows / followers / actorLikes modes.",
+      "editor": "textfield",
+      "prefill": "bsky.app",
+      "title": "Handle or DID (mode=profile / follows / followers / getActorLikes)",
+      "type": "string"
+    },
+    "excludeReplies": {
+      "default": false,
+      "description": "Drop posts that are replies to another post.",
+      "prefill": false,
+      "title": "Exclude replies",
+      "type": "boolean"
+    },
+    "excludeReposts": {
+      "default": false,
+      "description": "Drop posts that are reposts of someone else's post.",
+      "prefill": false,
+      "title": "Exclude reposts",
+      "type": "boolean"
+    },
+    "feedPreset": {
+      "description": "Built-in Bluesky feed preset. Overrides `feedUri` if both are set.",
+      "editor": "select",
+      "enum": [
+        "whats-hot",
+        "discover",
+        "mutuals",
+        "bsky-team",
+        "hot-classic",
+        "popular-with-friends",
+        "for-you",
+        "news",
+        "trending-videos",
+        "quiet-posters"
+      ],
+      "enumTitles": [
+        "What's Hot",
+        "Discover",
+        "Mutuals",
+        "Bluesky Team",
+        "Hot Classic",
+        "Popular With Friends",
+        "For You",
+        "Verified News",
+        "Trending Videos",
+        "Quiet Posters"
+      ],
+      "title": "Feed preset (mode=feed)",
+      "type": "string"
+    },
+    "feedUri": {
+      "description": "Full AT URI of a feed generator (`at://did:plc:.../app.bsky.feed.generator/<rkey>`). Use this for community feeds not in the preset list.",
+      "editor": "textfield",
+      "title": "Custom feed AT URI (mode=feed)",
+      "type": "string"
+    },
+    "fromUser": {
+      "description": "Restrict search to posts authored by this handle (or DID).",
+      "editor": "textfield",
+      "title": "From user (mode=search)",
+      "type": "string"
+    },
+    "language": {
+      "description": "ISO 639-1 language code. Drops posts not in this language. Empty = no filter.",
+      "editor": "select",
+      "enum": [
+        "",
+        "en",
+        "es",
+        "pt",
+        "ja",
+        "de",
+        "fr",
+        "zh",
+        "ko",
+        "it",
+        "nl",
+        "pl",
+        "ru",
+        "tr",
+        "ar",
+        "hi",
+        "sv",
+        "cs",
+        "fi",
+        "no",
+        "da",
+        "el",
+        "he",
+        "hu",
+        "id",
+        "ro",
+        "sk",
+        "sl",
+        "th",
+        "uk",
+        "vi"
+      ],
+      "enumTitles": [
+        "(no filter)",
+        "English (en)",
+        "Spanish (es)",
+        "Portuguese (pt)",
+        "Japanese (ja)",
+        "German (de)",
+        "French (fr)",
+        "Chinese (zh)",
+        "Korean (ko)",
+        "Italian (it)",
+        "Dutch (nl)",
+        "Polish (pl)",
+        "Russian (ru)",
+        "Turkish (tr)",
+        "Arabic (ar)",
+        "Hindi (hi)",
+        "Swedish (sv)",
+        "Czech (cs)",
+        "Finnish (fi)",
+        "Norwegian (no)",
+        "Danish (da)",
+        "Greek (el)",
+        "Hebrew (he)",
+        "Hungarian (hu)",
+        "Indonesian (id)",
+        "Romanian (ro)",
+        "Slovak (sk)",
+        "Slovenian (sl)",
+        "Thai (th)",
+        "Ukrainian (uk)",
+        "Vietnamese (vi)"
+      ],
+      "title": "Language filter",
+      "type": "string"
+    },
+    "listUri": {
+      "description": "AT URI of a Bluesky list (`at://did:plc:.../app.bsky.graph.list/<rkey>`).",
+      "editor": "textfield",
+      "title": "List AT URI (mode=getList)",
+      "type": "string"
+    },
+    "maxItems": {
+      "default": 40,
+      "description": "Hard cap on emitted records.",
+      "maximum": 5000,
+      "minimum": 1,
+      "prefill": 40,
+      "title": "Max items",
+      "type": "integer"
+    },
+    "mediaOnly": {
+      "default": false,
+      "description": "Only emit posts that have at least one image / video / external embed.",
+      "prefill": false,
+      "title": "Media only",
+      "type": "boolean"
+    },
+    "minLikes": {
+      "description": "Drop posts with fewer than this many likes.",
+      "maximum": 10000000,
+      "minimum": 0,
+      "title": "Min likes",
+      "type": "integer"
+    },
+    "minReposts": {
+      "description": "Drop posts with fewer than this many reposts.",
+      "maximum": 10000000,
+      "minimum": 0,
+      "title": "Min reposts",
+      "type": "integer"
+    },
+    "mode": {
+      "default": "search",
+      "description": "What to fetch.",
+      "editor": "select",
+      "enum": [
+        "search",
+        "profile",
+        "actorSearch",
+        "feed",
+        "postThread",
+        "urlFetch",
+        "getPosts",
+        "follows",
+        "followers",
+        "getLikes",
+        "getActorLikes",
+        "getList",
+        "getStarterPack",
+        "feedGeneratorsDiscovery"
+      ],
+      "enumTitles": [
+        "Search posts — keyword / hashtag full-text search",
+        "Profile — user metadata + recent posts",
+        "Actor search — find users by query",
+        "Feed — pull a custom Bluesky feed (preset or AT URI)",
+        "Post thread — single post + reply tree (uri)",
+        "URL fetch — expand bsky.app post URLs to records",
+        "Get posts — batch-hydrate up to 25 AT URIs",
+        "Follows — accounts a user follows",
+        "Followers — accounts following a user",
+        "Get likes — accounts that liked a post",
+        "Actor likes — posts a user liked",
+        "Get list — members of a Bluesky list",
+        "Starter pack — accounts in a starter pack",
+        "Feed generators discovery — popular custom feeds"
+      ],
+      "prefill": "search",
+      "title": "Mode",
+      "type": "string"
+    },
+    "postUri": {
+      "description": "Full AT URI of the post (`at://did:plc:.../app.bsky.feed.post/<rkey>`).",
+      "editor": "textfield",
+      "title": "Post AT URI (mode=postThread / getLikes)",
+      "type": "string"
+    },
+    "postUris": {
+      "description": "Up to 25 AT URIs to batch-hydrate. Each must be `at://did:plc:.../app.bsky.feed.post/<rkey>`.",
+      "editor": "stringList",
+      "title": "Post AT URIs (mode=getPosts)",
+      "type": "array"
+    },
+    "postUrls": {
+      "description": "Public bsky.app post URLs to expand, e.g. `https://bsky.app/profile/bsky.app/post/3kxxxx`.",
+      "editor": "stringList",
+      "title": "Post URLs (mode=urlFetch)",
+      "type": "array"
+    },
+    "searchQuery": {
+      "default": "bluesky",
+      "description": "Keyword, hashtag (with `#`), or full-text query. Bluesky supports its standard search operators: `from:user`, `since:YYYY-MM-DD`, `lang:en`, etc.",
+      "editor": "textfield",
+      "prefill": "bluesky",
+      "title": "Search query (mode=search / actorSearch)",
+      "type": "string"
+    },
+    "searchSort": {
+      "default": "top",
+      "description": "Sort order for `mode=search`. `top` ranks by engagement; `latest` ranks by recency.",
+      "editor": "select",
+      "enum": [
+        "top",
+        "latest"
+      ],
+      "enumTitles": [
+        "Top — engagement-weighted",
+        "Latest — newest first"
+      ],
+      "title": "Search sort (mode=search)",
+      "type": "string"
+    },
+    "since": {
+      "description": "Earliest post date as `YYYY-MM-DD`. Bluesky search recency-weights its index; use the explicit `since:` filter for strict date bounds.",
+      "editor": "textfield",
+      "title": "Since (mode=search)",
+      "type": "string"
+    },
+    "starterPackUri": {
+      "description": "AT URI of a Bluesky starter pack (`at://did:plc:.../app.bsky.graph.starterpack/<rkey>`).",
+      "editor": "textfield",
+      "title": "Starter Pack AT URI (mode=getStarterPack)",
+      "type": "string"
+    },
+    "until": {
+      "description": "Latest post date as `YYYY-MM-DD`.",
+      "editor": "textfield",
+      "title": "Until (mode=search)",
+      "type": "string"
+    }
+  },
+  "required": [
+    "mode"
+  ],
+  "schemaVersion": 1,
+  "title": "Bluesky Scraper Input",
+  "type": "object"
+}
