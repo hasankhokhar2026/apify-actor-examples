@@ -4,108 +4,174 @@
 
 # Eventbrite Event Finder with Venue Geocoordinates
 
-Browse Eventbrite's public listing pages by city, category, or a direct browse URL and get a flat, structured row for every event — venue address, geocoordinates, cover image, organizer and ticket link included.
+Find public Eventbrite events by browse URL, keyword, city, country, category, format, date window, price, or online/in-person status. Each event record includes local and UTC times, venue address and geocoordinates, images, taxonomy, organizer profile, ticket pricing and availability, and — with `includeDetails` — descriptions, ticket classes, refunds, age restrictions, and series data.
+
+The actor is cookieless: no account, login, user cookie, or proxy setup is required. It reads only publicly accessible Eventbrite pages and never visits checkout.
 
 ## What this actor does
 
-- Reads public Eventbrite "browse" pages (built from a location slug and category slug, or pasted as URLs) and pages through them until `maxItems` is reached or a page comes back with fewer than 10 events
-- Resolves each event's venue into a street address, city, region, country, postal code and latitude/longitude
-- Collects the event's cover image at every resolution Eventbrite publishes, from the uncropped master down to the display thumbnail
-- Splits each event's tags into its Eventbrite category, format (e.g. Concert, Workshop), and organizer-chosen keyword tags
-- Returns every field on every record: when Eventbrite doesn't publish a value, the field holds an empty string, `false`, an empty array, or `0` for the coordinates, instead of being left out
+- **Flexible discovery:** start from Eventbrite browse, event, or organizer URLs, or search by keyword, city, region, place ID, and country.
+- **Precise filters:** exact Eventbrite categories and formats, date presets or a custom date range, free/paid, in-person/online, and relevance or date ordering.
+- **Venue detail:** full street address, city, region, country, postal code, geocoordinates, and the Eventbrite place hierarchy.
+- **Optional enrichment:** ticket prices, availability and sales status, organizer profile and social links, series counts, and full descriptions, refunds, FAQs, age limits, and door times.
+- **Empty fields are omitted:** records never contain `null`, blank strings, empty lists or objects, `0,0` coordinates, or NaN.
 
 ## Output per event
 
-| Field | Description |
-|---|---|
-| `id` | Eventbrite event ID |
-| `name` | Event name |
-| `summary` | Short summary, truncated to 1000 characters |
-| `url` | Event page URL |
-| `ticketsUrl` | Direct checkout URL |
-| `startDate` / `startTime` | Event start date (`YYYY-MM-DD`) and time |
-| `endDate` / `endTime` | Event end date and time |
-| `timezone` | IANA timezone of the event (e.g. `America/New_York`) |
-| `isOnline` | `true` if the event is a virtual/online event |
-| `isCancelled` | `true` if Eventbrite marks the event cancelled |
-| `venueName` | Primary venue name |
-| `venueAddress` | Full display address of the venue |
-| `venueCity` / `venueRegion` / `venueCountry` / `venuePostalCode` | Venue address components |
-| `latitude` / `longitude` | Venue geocoordinates; both are `0` when Eventbrite gives no venue location (for example online events) |
-| `imageUrl` | Highest-resolution cover image Eventbrite serves for the event |
-| `gallery` | Every image variant Eventbrite exposes for the cover (master, large, medium, small, thumbnail), in descending quality |
-| `category` | Eventbrite category, e.g. "Music" or "Business" |
-| `format` | Event format, e.g. "Concert" or "Workshop" |
-| `tags` | Organizer-assigned keyword tags |
-| `primaryOrganizerId` | Organizer's Eventbrite ID |
-| `ticketsBy` | Ticket provider name |
-| `language` | Listing language code |
-| `scrapedAt` | ISO 8601 timestamp of when the run started (the same on every record of a run) |
+Records are **omit-empty**. If Eventbrite does not supply a value, that field is absent. Real `false` and `0` values are kept, so `isFree: false` and a free `priceMin: 0` are preserved.
+
+- `id`, `eid`, `recordType`, `sourceUrl` — event identity and provenance; `recordType` is always `event`.
+- `name`, `summary`, `url`, `ticketsUrl` — event title, short summary (capped at 1,000 characters), canonical page URL, and stored checkout URL.
+- `startDate`, `startTime`, `endDate`, `endTime`, `timezone` — local dates, local `HH:MM` times, and the IANA timezone.
+- `startUtc`, `endUtc`, `durationInMinutes` — ISO 8601 UTC timestamps and duration; duration requires `includeDetails`.
+- `isOnline`, `isCancelled`, `isProtected`, `status`, `publishedAt`, `createdAt`, `changedAt`, `privacySetting`, `isListed`, `isShareable`, `locationType` — status and visibility flags.
+- `venueName`, `venueAddress`, `venueAddressLine1`, `venueAddressLine2`, `venueCity`, `venueRegion`, `venueCountry`, `venuePostalCode`, `latitude`, `longitude` — venue name and full postal address with geocoordinates.
+- `locationHierarchy[]` — Eventbrite place hierarchy, with `type` and `name` for each level.
+- `imageUrl`, `gallery[]`, `imageSizesLarge` — primary image, image gallery in descending quality, and the large variant when it is not already in the gallery.
+- `category`, `categoryId`, `subcategory`, `subcategoryId`, `format`, `formatId`, `tags[]` — taxonomy display names and IDs; `tags` holds organizer keyword tags.
+- `primaryOrganizerId`, `organizerName`, `organizerUrl`, `organizerFollowers`, `organizerSummary`, `organizerWebsite`, `organizerTwitter`, `organizerFacebook`, `organizerInstagram`, `organizerX`, `organizerTikTok`, `organizerImageUrl` — organizer profile and social links.
+- `organizerTotalEvents`, `organizerHostingYears`, `organizerAttendeesHosted`, `organizerVerified`, `organizerUpcomingTotal` — organizer metrics; `organizerMode` only.
+- `isFree`, `isSoldOut`, `hasAvailableTickets`, `hasBogoTickets`, `priceMin`, `priceMax`, `priceCurrency`, `priceDisplay`, `salesStatus`, `salesStartUtc`, `salesEndUtc`, `salesMessage`, `waitlistAvailable`, `ticketsBy` — ticket pricing, availability, and sales windows.
+- `ticketClasses[]` — ticket classes with `id`, `name`, `description`, `price`, `fee`, `tax`, `currency`, `isFree`, `includeFee`, `deliveryMethods[]`, `hasPdfTicket`, `minQuantity`, `maxQuantity`, `onSaleStatus`, `category`, and `salesChannels[]`; requires `includeDetails`.
+- `descriptionHtml`, `ageRestriction`, `doorTime`, `refundPolicy`, `faqs[]`, `inventoryType`, `isReservedSeating`, `facebookEventId` — detail-page enrichment; requires `includeDetails`. `refundPolicy` includes `policyType`, `isRefundAllowed`, `validDays`, and `refundRequestOrganizer`; each FAQ has `question` and `answer`.
+- `seriesId`, `isSeries`, `numChildren` — series membership and, when expanded from a parent event URL, the exact number of child events.
+- `urgencySignals[]`, `language`, `scrapedAt` — Eventbrite demand messages, listing language, and the UTC timestamp when the run started.
+
+Dates are local to the event; UTC fields use ISO 8601 with `Z`. Prices are decimal major units with an ISO 4217 currency, including zero-decimal currencies such as JPY and three-decimal currencies such as KWD. Image URLs are signed Eventbrite CDN links and are left unchanged.
 
 ## Input
 
+No field is required. With an empty input, the actor browses all United States events and returns up to 50 records.
+
 | Field | Type | Default | Description |
 |---|---|---|---|
-| `startUrls` | array | – | Eventbrite browse URLs (e.g. `https://www.eventbrite.com/d/ny--new-york/all-events/`). Any filters already in the URL are kept. URLs that aren't on an Eventbrite domain are ignored. When at least one URL is given, `location` and `category` are not used. |
-| `location` | string | – | City/region slug used when no `startUrls` are given, e.g. `ny--new-york`, `ca--san-francisco`, `united-states`, `online`. Defaults to `united-states` when left blank. |
-| `category` | string | – | Category slug, e.g. `music`, `business`, `food-and-drink`, `sports`. Combined with `location`; without it, all events are browsed. |
-| `maxItems` | integer | `50` | Maximum number of events to return across all URLs (1–500). Events listed under several URLs are returned once. |
+| `startUrls` | array of `{url}` | `[]` (prefill: US all-events) | Eventbrite browse (`/d/...`), event (`/e/...`), or organizer (`/o/...`) URLs. Plain URL strings and `{"url": ...}` objects are both accepted. When set, this wins over the filter fields. |
+| `location` | string | – | Legacy city/region slug used when `startUrls` and `locations` are empty, e.g. `ny--new-york` or `united-states`. Blank means `united-states`. |
+| `category` | string | – | Legacy category slug. Used alone, it runs as a keyword query for backward compatibility. Use `categories` for exact taxonomy filtering. |
+| `maxItems` | integer | `50` (prefill `3`) | Maximum unique events across all queries, 1–10,000. |
+| `keywords` | array of strings | `[]` | Keyword queries. Each value runs as a separate slice and results are deduplicated by event ID. |
+| `locations` | array of strings | `[]` | City, region, or place IDs, e.g. `ny--new-york`, `london`, or `85977539`. Multiple values run separately and are deduplicated. |
+| `country` | select | `any` | ISO country filter, combined with locations when possible. |
+| `categories` | array of strings | `[]` | Exact Eventbrite category names or IDs. Unknown values are skipped with a warning. |
+| `format` | select | `any` | Exact Eventbrite format. |
+| `datePreset` | select | `any` | `any`, `today`, `tomorrow`, `this_week`, `this_weekend`, `next_week`, `this_month`, `next_month`, or `custom`. |
+| `dateFrom` | date | – | Start date in `YYYY-MM-DD`; used only with `datePreset=custom`. |
+| `dateTo` | date | – | End date in `YYYY-MM-DD`; used only with `datePreset=custom`. |
+| `priceFilter` | select | `any` | `any`, `free`, or `paid`. |
+| `eventType` | select | `any` | `any`, `in_person`, or `online`. |
+| `sort` | select | `relevance` | `relevance` keeps Eventbrite's default order. `date` is experimental and ascending only. |
+| `organizerMode` | boolean | `false` | Adds organizer metrics and social links from the organizer page. Organizer URLs imply it. Records stay event records. |
+| `includeDetails` | boolean | `false` | Adds description, ticket classes, refunds, age, door time, duration, inventory flags, exact series counts, and the conditional Facebook event ID. Slower than the default run. |
+| `useSitemap` | boolean | `false` | For runs above 1,000 only. Reads Eventbrite's event sitemaps and matches events instead of splitting search queries. Filters are applied after collection. Ignored with `startUrls` or `maxItems` ≤ 1,000. |
+| `proxyConfiguration` | object | – | Optional. The actor works without a proxy; an Apify `AUTO` proxy is supported. Never required. |
 
-### Example: search by city and category
+### Example: browse all upcoming US events
 
 ```json
 {
-  "location": "ny--new-york",
-  "category": "music",
-  "maxItems": 100
-}
-```
-
-### Example: browse online events directly
-
-```json
-{
-  "startUrls": ["https://www.eventbrite.com/d/online/business/"],
+  "startUrls": [
+    { "url": "https://www.eventbrite.com/d/united-states/all-events/" }
+  ],
   "maxItems": 50
 }
 ```
 
-### Example: paste a pre-filtered browse URL
+### Example: keyword search in a city
 
 ```json
 {
-  "startUrls": ["https://www.eventbrite.com/d/united-kingdom--london/food-and-drink/"],
+  "keywords": ["jazz"],
+  "locations": ["ny--new-york"],
+  "maxItems": 100
+}
+```
+
+### Example: exact category, format, and custom date range
+
+```json
+{
+  "locations": ["london"],
+  "country": "GB",
+  "categories": ["Music"],
+  "format": "Concert or Performance",
+  "datePreset": "custom",
+  "dateFrom": "2026-12-01",
+  "dateTo": "2026-12-31",
   "maxItems": 200
+}
+```
+
+### Example: direct event URL with full details
+
+```json
+{
+  "startUrls": [
+    { "url": "https://www.eventbrite.com/e/example-event-tickets-127257012149" }
+  ],
+  "includeDetails": true,
+  "maxItems": 1
 }
 ```
 
 ## Use cases
 
-- **Event marketing research** — track what competitors in your category and city are promoting
-- **Venue analytics** — group events by `venueName` and coordinates to see which venues are most active
-- **Calendar and city-guide aggregation** — pull current listings into a local events calendar
-- **Organizer lead generation** — identify active event organizers in a target region
-- **Travel planning** — see what's happening in a destination city on specific dates
+- **Event discovery sites and local guides** — build city, category, or date-focused event calendars.
+- **Venue and travel planning** — map events by address and geocoordinates for visitors and transportation teams.
+- **Market and competitive research** — compare event calendars, pricing, formats, and organizers across markets.
+- **Sponsorship and vendor prospecting** — find events and organizers that match a target audience or industry.
+- **Newsletters and local media** — pull upcoming events for weekly roundups and community listings.
+- **Civic and academic research** — study public event activity by place, category, price, and date.
+
+## Limitations
+
+- **1,000 events per query is a server-side cap.** Any single search query stops at 1,000 unique events. Leaving `useSitemap` off splits large runs by date, category, price, and online coverage. Setting `useSitemap=true` with `maxItems` above 1,000 scans the event sitemap (about 201,000 event IDs) for broader reach.
+- **Some values are not public.** Eventbrite does not expose attendee counts, public save counts, event capacity, ticket-class capacity, organizer email, or organizer phone. These fields are omitted rather than estimated.
+- **`facebookEventId` is conditional.** It appears only when Eventbrite supplies a value, which is uncommon, and requires `includeDetails=true`.
+- **`sort=date` is experimental and ascending only.** Descending order is not available.
+- **Some prices are unavailable.** Pay-what-you-want and similar events may have no fixed price; those fields are omitted rather than set to `0`.
+- **Detail fields require opt-in.** Full descriptions, refunds, age restrictions, door times, ticket classes, and the Facebook event ID require `includeDetails=true`.
+- **No login-only or cross-platform data.** The actor does not collect private events, attendee lists, or events from other ticketing platforms.
+- **Regional domains may redirect.** Non-US event URLs can resolve to a regional Eventbrite domain; `url` and `sourceUrl` reflect the final page.
+- **Sitemap filtering is best-effort.** The sitemap does not carry filter metadata, so keyword and location matching after sitemap discovery is approximate.
+
+## Robots and terms of use
+
+This actor reads public event, venue, organizer, and sitemap pages and never accesses Eventbrite checkout. Eventbrite's `robots.txt` and Terms of Service, including their rules on automated access, may restrict some collection methods. Review those rules and any applicable law before running the actor, and use the data responsibly. You are responsible for confirming that your use complies with Eventbrite's terms.
 
 ## FAQ
 
-**Do I need to log in or provide a proxy?**
-No. The actor reads Eventbrite's public browse pages directly; no account, cookies, or proxy configuration is needed.
+### Do I need to log in or provide a proxy?
 
-**How do I target a specific city?**
-Use the location slug Eventbrite uses in its own URLs, such as `ny--new-york`, `ca--san-francisco`, `tx--austin`, `united-kingdom`, or `online` for virtual-only events. You can also paste any Eventbrite browse URL straight into `startUrls`.
+No. The actor needs no account, login, cookie, or proxy. A proxy is optional.
 
-**Why are some fields empty strings instead of missing?**
-Every event record always contains the full set of fields; when Eventbrite doesn't publish a value (for example, no format tag or no venue for an online event), the field is returned as an empty string, `false`, an empty array, or `0` (for `latitude`/`longitude`) rather than being left out. Treat `0, 0` coordinates as "unknown".
+### Why are some fields missing?
 
-**Does this include both free and paid events?**
-The actor doesn't filter by price, so it returns whatever the browse page lists. Ticket prices are not part of the output; use `ticketsUrl` to check them.
+Records are omit-empty by design. A missing field means Eventbrite did not provide that value for that event. Unknown booleans and prices are never invented.
 
-**How current is the data?**
-Browse pages reflect Eventbrite's live listings, so newly published or updated events show up on the next run.
+### Why did I get fewer than `maxItems` results?
 
-**Is this affiliated with Eventbrite?**
-No. This actor independently reads Eventbrite's public pages and is not affiliated with, endorsed by, or sponsored by Eventbrite.
+The source may have run out of matching events, a single query may have reached the 1,000-event cap, or Eventbrite may have temporarily limited the run. The run's status message reports the reason and the number of unique events found.
 
-**Why might I get fewer events than `maxItems`?**
-If a location/category combination has fewer live events than requested, or the browse pages run out before `maxItems` is reached, the actor returns everything it found instead of padding the output.
+### How do I get descriptions, ticket classes, refunds, and FAQs?
+
+Set `includeDetails=true`. This adds the event detail data, including ticket classes, refund policy, age restriction, door time, duration, and FAQs. The Facebook event ID remains absent unless Eventbrite supplies it.
+
+### Does `sort=date` work everywhere?
+
+It works when the actor uses Eventbrite's search results, which happens automatically when this option is set. Only ascending order is supported, and events on the same day may not be ordered by time.
+
+### How do I collect more than 1,000 events?
+
+Leave `useSitemap` off to split the work by date, category, price, and online coverage, or set `maxItems` above 1,000 and enable `useSitemap` to scan Eventbrite's event sitemap.
+
+### What is the difference between a category and an organizer tag?
+
+`categories` uses Eventbrite's official category taxonomy. `tags` in the output contains organizer-defined keyword tags, which are free-form and may vary between events.
+
+### Are venue coordinates always present?
+
+No. Coordinates are included only when Eventbrite provides a valid latitude and longitude. Missing or invalid values, including `0,0`, are omitted.
+
+### Is this actor affiliated with Eventbrite?
+
+No. This is an independent third-party actor and is not endorsed by or affiliated with Eventbrite.

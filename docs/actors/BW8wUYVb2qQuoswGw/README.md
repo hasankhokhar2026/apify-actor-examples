@@ -4,250 +4,248 @@
 
 # Zillow For-Sale, Rent & Sold Listing Extractor
 
-Enter a city, state, or ZIP code and choose active listings, rentals, or recently sold homes — this actor turns Zillow's own search results into structured property records. Search results give price, size and location; with detail scraping on, each listing also gets nearby schools, tax history, price history, agent details and property features.
+Scrape **Zillow** for active for-sale, rental and recently sold listings. Search by city, ZIP, neighborhood, county or state, paste property, building or search URLs, or look up properties by ZPID and street address. Apply Zillow's own price, size, property-type, amenity and rental filters, then enrich each record with detail data such as tax history, schools, MLS attribution, open houses, photos, floor plans and listing flags when Zillow exposes them.
+
+This actor is independent and is not affiliated with Zillow. It reads publicly visible pages and requires no login, cookie or proxy configuration.
 
 ## What this actor does
 
-- Searches any US city, state, or ZIP code across three modes: for sale (`BUY`), for rent (`RENT`), or recently sold (`SOLD`)
-- Returns core listing data from search results — price, Zestimate, rent Zestimate, beds, baths, square footage, lot size, address and coordinates
-- Optionally opens each property's detail page for year built, HOA fee, agent, full description, all photos, nearby schools, price history, tax history, and property features
-- Accepts direct Zillow property or search-page URLs alongside or instead of a location search; a property that appears in several searches is returned once
-- Fields a listing doesn't have (e.g. no HOA fee, no Zestimate) are left out of the record rather than returned empty
+- **Three search modes:** active for-sale (`BUY`), rental (`RENT`) and recently sold (`SOLD`) listings by location.
+- **Flexible lookups:** property detail URLs, `/apartments/` building URLs, Zillow search URLs, ZPIDs and full street addresses.
+- **Deep filters:** price, beds, baths, square footage, lot size, year built, HOA, parking, property type, days on Zillow, sort order, listing flags, keyword, amenities and rent-only filters.
+- **Rich detail:** tax history, schools, RESO features, price history, MLS data, open houses, photos, virtual tours, building floor plans and walk/transit/bike scores.
+- **Empty fields are omitted** — records contain only populated values, and duplicate properties are merged by ZPID and canonical URL.
 
 ## Output per property
 
-Each property produces one record. Fields with no available data are left out automatically. Fields marked *detail* only appear when `scrapeDetails` is on and the property's detail page could be read; if a detail page fails, the record keeps its search-result data (for a direct property URL that can be just `url` and `zpid`).
+Each property or rental building produces one record. Fields with no available data are omitted, never emitted as `null`, `N/A`, `-` or an empty container. Meaningful zero and false values are kept.
 
-### Core property data
-
-| Field | Type | Description |
-|-------|------|-------------|
-| url | String | Property detail URL on Zillow.com |
-| zpid | Number | Zillow property ID (a text ID for some apartment-building listings) |
-| status | String | Listing status as Zillow reports it (e.g., FOR_SALE, FOR_RENT, RECENTLY_SOLD) |
-| price | Number | Current listing price |
-| zestimate | Number | Zillow's estimated market value |
-| rentZestimate | Number | Zillow's estimated monthly rent value |
-| beds | Number | Number of bedrooms |
-| baths | Number | Number of bathrooms |
-| sqft | Number | Living area in square feet |
-| lotSize | String | Lot size (e.g., "8,000 sqft") |
-| yearBuilt | Number | Year the property was constructed (*detail*) |
-| propertyType | String | Property type (e.g., SINGLE_FAMILY, CONDO, TOWNHOUSE; BUILDING for apartment buildings) |
-| stories | Number | Number of stories (*detail*) |
-| parking | String | Parking details (e.g., "2 garage spaces") (*detail*) |
-| hoaFee | Number | Monthly HOA fee (*detail*) |
-| pricePerSqft | Number | Price per square foot (*detail*) |
-| daysOnZillow | Number | Days the property has been listed on Zillow |
-
-### Location
+### Core fields
 
 | Field | Type | Description |
-|-------|------|-------------|
-| address | String | Street address |
-| city | String | City name |
-| state | String | State code (e.g., "TX") |
-| zipCode | String | ZIP code |
-| latitude | Number | Latitude coordinate |
-| longitude | Number | Longitude coordinate |
+|---|---|---|
+| `url` | String | Absolute Zillow detail URL. |
+| `zpid` | Number or String | Numeric for properties; string for buildings. |
+| `status` | String | Listing status such as `FOR_SALE`, `FOR_RENT`, `RECENTLY_SOLD` or `SOLD`. |
+| `price` | Integer | Listing price; never zero. For sold records, the sold price when disclosed. |
+| `zestimate` | Integer | Zillow estimated value. |
+| `rentZestimate` | Integer | Zillow estimated monthly rent. |
+| `beds` | Integer | Bedrooms. |
+| `baths` | Number | Bathrooms. |
+| `sqft` | Integer | Living area in square feet. |
+| `lotSize` | String | Formatted lot size, for example `1,846 sqft` or `0.27 acres`. |
+| `yearBuilt` | Integer | Construction year. |
+| `propertyType` | String | `SINGLE_FAMILY`, `CONDO`, `TOWNHOUSE`, `BUILDING`, etc. |
+| `stories` | Integer | Stories when Zillow provides them. |
+| `parking` | String | Parking features or capacity. |
+| `address`, `city`, `state`, `zipCode` | String | Address components. |
+| `latitude`, `longitude` | Number | Coordinates. |
+| `daysOnZillow` | Integer | Days on Zillow. |
+| `brokerName`, `agentName`, `agentPhone` | String | Listing attribution. |
+| `description` | String | Property or building description. |
+| `photos` | Array | Absolute photo URLs. |
+| `priceHistory` | Array | Price events with `date`, `event`, `price`, `pricePerSqft`, `priceChangeRate` and `source`. |
+| `taxHistory` | Array | Tax records with `year`, `taxPaid`, `value`, `taxIncreaseRate` and `valueIncreaseRate`. |
+| `schools` | Array | Assigned schools preferred; each entry keeps `name`, `level`, `type`, `grades`, `distance` and `rating`. |
+| `features` | Object | Expanded RESO facts: heating, cooling, appliances, flooring, basement, parking, pool, views, construction, lot and similar details when present. |
+| `hoaFee` | Number | Monthly HOA fee. |
+| `pricePerSqft` | Number | Price per square foot. |
+| `scrapedAt` | String | ISO timestamp; always present. |
 
-### Agent and broker
+### Additive fields
 
 | Field | Type | Description |
-|-------|------|-------------|
-| brokerName | String | Brokerage company name |
-| agentName | String | Listing agent name (*detail*) |
-| agentPhone | String | Listing agent phone number (*detail*) |
+|---|---|---|
+| `soldPrice` | Integer | Sold price when the market discloses it. |
+| `lastSoldPrice` | Integer | Most recent recorded sold price from the property payload. |
+| `dateSold` | String | ISO sold date. |
+| `taxAssessedValue` | Integer | Tax assessed value. |
+| `taxAnnualAmount` | Integer | Annual property tax amount. |
+| `parcelId` | String | County parcel or assessor ID, preserving leading zeros. |
+| `builderName` | String | Home builder or developer when exposed. |
+| `agentEmail` | String | Listing agent email when Zillow exposes it. |
+| `propertyTaxRate` | Number | Percentage tax rate (`1.75` means 1.75%). |
+| `priceChange` | Integer | Signed price change. |
+| `priceChangeDate` | String | ISO date of the last price change. |
+| `openHouse` | Array | Entries with `startTime`, `endTime` and optional `description`. |
+| `mlsName`, `mlsId` | String | MLS attribution. |
+| `photoCount` | Integer | Number of photos. |
+| `virtualTour` | String | Virtual tour or 3D home URL. |
+| `homeInsights` | Array | Insight phrases. |
+| `neighborhood`, `county` | String | Location context. |
+| `garageSpaces` | Integer | Garage capacity. |
+| `unit` | String | Unit number. |
+| `has3DModel` | Boolean | Whether a 3D model is available. |
+| `listingFlags` | Object | `isForSaleByOwner`, `isForeclosure`, `isAuction`, `isNewConstruction`, `isPending`, `isListedByOwner`, `isComingSoon`, `isBankOwned`. |
+| `building` | Object | Rental-building detail; see below. |
 
-### Rich data (from detail pages, when `scrapeDetails` is on)
+### Building object
 
 | Field | Type | Description |
-|-------|------|-------------|
-| description | String | Full property description text (in search-only results for apartment buildings, this holds the building name) |
-| photos | Array | Photo URLs for the listing (search results carry only the main photo) |
-| priceHistory | Array | Price change events — date, event type, price, price per sqft, source |
-| taxHistory | Array | Tax records — year, tax paid, assessed value, change rate |
-| schools | Array | Nearby schools — name, level, grades, distance, rating, type |
-| features | Object | Property features — heating, cooling, flooring, roofing, pool, fireplace, construction, and more |
-| scrapedAt | String | ISO timestamp when data was collected (always present) |
+|---|---|---|
+| `building.name` | String | Building name. |
+| `building.type` | String | Building type. |
+| `building.phone` | String | Leasing phone number. |
+| `building.agentName` | String | Leasing contact name. |
+| `building.availabilityCount` | Integer | Number of available units. |
+| `building.rentRange` | Object | `min` and `max` monthly rent. |
+| `building.floorPlans` | Array | Available units; see below. |
+| `building.walkScore` | Integer | Walk Score. |
+| `building.transitScore` | Integer | Transit score. |
+| `building.bikeScore` | Integer | Bike score. |
+| `building.amenities` | Array | Building and community amenities. |
+| `building.petPolicy` | String | Pet policy. |
+| `building.specialOffers` | Array | Leasing specials. |
+| `building.neighborhoodDescription` | String | Neighborhood overview. |
 
-### Sample output
-
-```json
-{
-    "url": "https://www.zillow.com/homedetails/46-Kingwood-Greens-Dr-Kingwood-TX-77339/28065573_zpid/",
-    "zpid": 28065573,
-    "status": "FOR_SALE",
-    "price": 318000,
-    "zestimate": 325000,
-    "rentZestimate": 2400,
-    "beds": 5,
-    "baths": 4,
-    "sqft": 5526,
-    "lotSize": "22,346 sqft",
-    "yearBuilt": 2000,
-    "propertyType": "SINGLE_FAMILY",
-    "stories": 2,
-    "parking": "3 garage spaces",
-    "hoaFee": 150,
-    "pricePerSqft": 58,
-    "daysOnZillow": 14,
-    "address": "46 Kingwood Greens Dr",
-    "city": "Kingwood",
-    "state": "TX",
-    "zipCode": "77339",
-    "latitude": 30.033194,
-    "longitude": -95.180402,
-    "brokerName": "REALHome Services and Solutions, Inc.",
-    "agentName": "Lori Brown",
-    "agentPhone": "(979) 255-0702",
-    "description": "Spacious 5 bedroom home in Kingwood with pool and 3-car garage. Updated kitchen, hardwood floors throughout, and large backyard with mature trees...",
-    "photos": [
-        "https://photos.zillowstatic.com/fp/example1.jpg",
-        "https://photos.zillowstatic.com/fp/example2.jpg"
-    ],
-    "priceHistory": [
-        {
-            "date": "2026-03-01",
-            "event": "Listed",
-            "price": 318000,
-            "pricePerSqft": 58,
-            "priceChangeRate": 0,
-            "source": "HAR"
-        },
-        {
-            "date": "2002-01-03",
-            "event": "Sold",
-            "price": 215000,
-            "pricePerSqft": 39,
-            "priceChangeRate": 0,
-            "source": "Public Record"
-        }
-    ],
-    "taxHistory": [
-        {
-            "year": 2025,
-            "taxPaid": 8500,
-            "value": 310000,
-            "taxIncreaseRate": 0.02,
-            "valueIncreaseRate": 0.03
-        }
-    ],
-    "schools": [
-        {
-            "name": "Kingwood Park High School",
-            "level": "High",
-            "grades": "9-12",
-            "distance": 1.2,
-            "rating": 7,
-            "type": "public"
-        }
-    ],
-    "features": {
-        "heating": ["Central"],
-        "cooling": ["Central Air"],
-        "flooring": ["Hardwood", "Tile"],
-        "roofType": "Composition",
-        "poolFeatures": ["In Ground"],
-        "parkingFeatures": ["Attached Garage"]
-    },
-    "scrapedAt": "2026-03-25T12:00:00.000000+00:00"
-}
-```
+Each `building.floorPlans` entry can include `floorPlanName`, `unitNumber`, `beds`, `baths`, `sqft`, `price`, `baseRent`, `availableFrom`, `leaseTerm`, `deposit` and `fees` (`min` and `max`).
 
 ## Input
 
+All inputs are optional individually, but at least one source is required: `search`, `startUrls`, `zpids` or `addresses`.
+
 | Field | Type | Default | Description |
-|-------|------|---------|-------------|
-| `search` | String | – | City and state (or ZIP) to search (e.g., "Houston, TX", "Miami, FL"). |
-| `mode` | Select | `BUY` | `BUY` (for sale), `RENT` (for rent), or `SOLD` (recently sold). Applies to `search` only; search-page URLs keep their own filters. |
-| `maxItems` | Integer | `50` | Max properties for the whole run (1–500), including direct property URLs. |
-| `endPage` | Integer | `5` | Max result pages per search (1–20). Each page returns up to 40 properties. |
-| `scrapeDetails` | Boolean | `true` | Fetch full detail pages for enriched data (schools, history, features, etc.). Disable for faster runs. |
-| `startUrls` | URL List | – | Direct Zillow property detail URLs (`/homedetails/`, `_zpid`, `/apartments/`) or search page URLs. |
+|---|---|---|---|
+| `search` | String | – | City, ZIP, neighborhood, county or state to search. Prefill: `Houston, TX`. |
+| `mode` | Select | `BUY` | `BUY`, `RENT` or `SOLD`. Applies to `search` and bare location URLs. |
+| `maxItems` | Integer | `50` (prefill `3`) | Maximum records for the whole run (1-5000), across all sources. |
+| `endPage` | Integer | `5` (prefill `1`) | Maximum search pages per task (1-24). Zillow returns up to 41 listings per page. |
+| `startUrls` | URL list | `[]` | Property detail URLs, `/apartments/` building URLs or Zillow search-page URLs. Search URLs keep their own filters and mode. |
+| `zpids` | String list | – | ZPID values or URLs containing `_zpid`. Each is resolved to its detail page. |
+| `addresses` | String list | – | Full street addresses, for example `1306 Castle Ct, Houston, TX 77006`. |
+| `priceMin` | Integer | – | Minimum listing price in US dollars. |
+| `priceMax` | Integer | – | Maximum listing price in US dollars. |
+| `bedsMin` | Select | `any` | Minimum bedrooms: `any`, `1`, `2`, `3`, `4`, `5`. |
+| `bathsMin` | Select | `any` | Minimum bathrooms: `any`, `1`, `1.5`, `2`, `2.5`, `3`, `4`, `5`. |
+| `sqftMin` | Integer | – | Minimum living area in square feet. |
+| `sqftMax` | Integer | – | Maximum living area in square feet. |
+| `lotSizeMin` | Select | `any` | Minimum lot size: `any`, `2000`, `5000`, `10890`, `21780`, `43560`, `87120` square feet. |
+| `lotSizeMax` | Select | `any` | Maximum lot size: `any`, `2000`, `5000`, `10890`, `21780`, `43560`, `87120` square feet. |
+| `yearBuiltMin` | Integer | – | Earliest construction year. |
+| `yearBuiltMax` | Integer | – | Latest construction year. |
+| `hoaMax` | Integer | – | Maximum monthly HOA fee. |
+| `parkingSpotsMin` | Integer | – | Minimum parking spots (1-10). |
+| `propertyTypes` | Multi-select | – | `house`, `condo`, `townhouse`, `multiFamily`, `manufactured`, `lotLand`, `apartment`. Empty means all homes. |
+| `daysOnZillow` | Select | `any` | `any`, `1`, `7`, `14`, `30`, `90`, `180`, `365`, `730`, `1095` days. |
+| `sortBy` | Select | `relevance` | `relevance`, `priceLow`, `priceHigh`, `newest`, `zestimate`, `zestimateLow`. RENT relevance uses Zillow's priority order. |
+| `fsboOnly` | Boolean | `false` | Only for-sale-by-owner listings. |
+| `foreclosureOnly` | Boolean | `false` | Only foreclosure listings. |
+| `auctionOnly` | Boolean | `false` | Only auction listings. |
+| `newConstructionOnly` | Boolean | `false` | Only new-construction listings. |
+| `includePending` | Boolean | `false` | Add pending and under-contract listings to active results. |
+| `openHouseOnly` | Boolean | `false` | Only listings with an open house. |
+| `priceReducedOnly` | Boolean | `false` | Only listings with a price reduction. |
+| `keyword` | String | – | Free-text keyword, for example `pool`. |
+| `amenities` | Multi-select | – | `pool`, `garage`, `airConditioning`, `waterfront`, `cityView`, `threeDHome`, `age55Plus`, `singleStory`, `basementFinished`, `basementUnfinished`, `waterView`, `mountainView`, `parkView`. |
+| `rentalFilters` | Multi-select | – | Rent-only: `pets`, `furnished`, `parking`, `inUnitLaundry`, `shortTerm`, `noPets`, `byOwner`, `incomeRestricted`, `studentHousing`, `onlyRentalSeniorHousingType`, `hasFitnessCenter`, `hasDishwasher`, `onlyRentalInstantTourAvailable`, `hasAcceptingBackupOffers`. |
+| `scrapeDetails` | Boolean | `true` (prefill `false`) | Enrich search results with detail data. Explicit URLs, ZPIDs and addresses are always enriched. |
 
-**Note:** at least one of `search` or `startUrls` must be provided.
+Inverted ranges (`priceMin > priceMax`, `sqftMin > sqftMax`, `yearBuiltMin > yearBuiltMax`, `lotSizeMin > lotSizeMax`) are ignored with a status note instead of failing the run. Rental filters are ignored outside `RENT` mode.
 
-### Example: buy properties
+### Example: buy search with filters
 
 ```json
 {
-    "search": "Houston, TX",
-    "mode": "BUY",
-    "maxItems": 50,
-    "scrapeDetails": true
+  "search": "Houston, TX",
+  "mode": "BUY",
+  "maxItems": 100,
+  "endPage": 5,
+  "priceMin": 500000,
+  "priceMax": 800000,
+  "bedsMin": "3",
+  "bathsMin": "2",
+  "amenities": ["pool"],
+  "daysOnZillow": "30",
+  "sortBy": "newest",
+  "scrapeDetails": true
 }
 ```
 
-### Example: rental search
+### Example: pet-friendly rentals with rental filters
 
 ```json
 {
-    "search": "Miami, FL",
-    "mode": "RENT",
-    "maxItems": 25
+  "search": "Miami, FL",
+  "mode": "RENT",
+  "maxItems": 50,
+  "rentalFilters": ["pets", "parking", "furnished"],
+  "scrapeDetails": false
 }
 ```
 
-### Example: recently sold
+### Example: recently sold comps
 
 ```json
 {
-    "search": "Denver, CO",
-    "mode": "SOLD",
-    "maxItems": 30,
-    "endPage": 3
+  "search": "Miami, FL",
+  "mode": "SOLD",
+  "maxItems": 50,
+  "endPage": 2,
+  "scrapeDetails": true
 }
 ```
 
-### Example: direct property URL
+### Example: direct property, building and ZPID lookups
 
 ```json
 {
-    "startUrls": [
-        { "url": "https://www.zillow.com/homedetails/123-Main-St-Houston-TX-77001/12345678_zpid/" }
-    ],
-    "scrapeDetails": true
+  "startUrls": [
+    {"url": "https://www.zillow.com/homedetails/1306-Castle-Ct-Houston-TX-77006/126296894_zpid/"},
+    {"url": "https://www.zillow.com/apartments/houston-tx/the-briscoe-river-oaks/5Xhrvw/"}
+  ],
+  "zpids": ["126296894"],
+  "addresses": ["1306 Castle Ct, Houston, TX 77006"],
+  "maxItems": 10
 }
 ```
 
 ## Use cases
 
-- **Investment analysis** — compare listing prices, Zestimates, and price history to spot undervalued properties
-- **Market research** — track listing and sold prices, and days on market, across neighborhoods
-- **Rental analysis** — compare rental prices and rent Zestimates by location
-- **School district research** — find properties near top-rated schools with distance and rating data
-- **Agent and broker research** — identify which agents and brokerages are active in a target market
-- **Price trend monitoring** — track price reductions, relists, and final sale prices for market timing
+- **Real estate investors** — pull for-sale, pending and price-reduced listings with tax, HOA and price-history context for deal screening.
+- **Real estate agents and brokers** — track new construction, open houses, FSBO and auction inventory in target neighborhoods.
+- **Property managers and landlords** — compare rental inventory, amenities, pet policies and floor-plan pricing in a market.
+- **Appraisers and analysts** — collect recently sold comps with sold dates, assessed values and school assignments for valuation work.
+- **Proptech and data teams** — feed normalized Zillow listing, tax and building data into CRMs, dashboards and valuation models.
+- **Relocation and home-search services** — build filtered shortlists by price, commute-relevant location, schools and amenities.
 
 ## FAQ
 
-**Do I need to configure a proxy?**
-No. There are no proxy settings to fill in.
+### Do I need a proxy, cookie or API key?
 
-**What is the difference between BUY, RENT, and SOLD modes?**
-BUY searches active for-sale listings, RENT searches rental apartments and homes, and SOLD searches recently sold properties. The mode only changes which Zillow search is run; the record fields are the same.
+No. The actor reads publicly visible Zillow pages, chooses a working connection automatically and requires no credential or proxy setup.
 
-**What is a Zestimate?**
-A Zestimate is Zillow's proprietary estimated market value for a property. The rent Zestimate is a similar estimate for what a property could rent for monthly. Both are included in the output when available.
+### What is the difference between BUY, RENT and SOLD?
 
-**How many properties can I scrape per run?**
-Up to 500 properties per run. Each search page returns up to 40 listings, and you can configure up to 20 pages per search. A search stops early when Zillow returns a page with fewer than 40 listings.
+`BUY` searches active for-sale listings, `RENT` searches rentals, and `SOLD` searches recently sold listings. The mode applies to `search` and bare location URLs; pasted search URLs keep their own mode and filters.
 
-**Why are some fields missing from certain properties?**
-Not all Zillow listings have complete data — some may lack a Zestimate, tax history, school data, or an HOA fee depending on the property and location. Those fields are simply left out rather than returned empty.
+### How many listings can one search return?
 
-**What happens if I set `scrapeDetails` to false?**
-Runs finish significantly faster. You still get core listing data (price, beds, baths, sqft, address, Zestimate where shown) from search results, but not year built, HOA fee, agent details, schools, tax history, price history, full descriptions, or property features. Direct property URLs return only `url` and `zpid` in this case.
+Zillow's search exposes at most about 975 unique listings per query, across 24 pages of 41 rows. When `maxItems` is above 975 and Zillow reports more results, the actor splits the search into smaller price bands — and for rentals, by monthly payment, beds and days on Zillow — so it can keep collecting listings. Searches at or below that ceiling return the listings Zillow exposes directly.
 
-**Can I search a specific ZIP code or neighborhood?**
-Yes. Enter it in `search` using formats like "77339" (ZIP code), "Kingwood, TX" (neighborhood and state), or any location Zillow recognizes.
+### Why is `soldPrice` missing for some sold listings?
 
-**Can I scrape specific Zillow URLs directly?**
-Yes. Paste any Zillow property detail or search results page URL into `startUrls`, combined with or instead of a location search. Search-page URLs are read with their own filters and paged with `endPage`; property URLs are added after the search results until `maxItems` is reached.
+Some markets, including Houston, are non-disclosure markets, and Zillow does not publish a sold price there. The record keeps the sold date and status, and the actor never invents a price from Zestimate or price history.
 
-**How current is the data?**
-The actor reads live data from Zillow.com at the time of each run. Every record includes a `scrapedAt` timestamp so you know exactly when it was collected.
+### Why are tax history, schools or HOA details missing on some records?
 
-**Is this affiliated with Zillow?**
-No. It is an independent tool that reads publicly visible Zillow pages.
+Zillow only publishes those details for some listings and markets. When a value is absent it is omitted from the record rather than filled from another field. Tax-history years are reported as calendar years.
+
+### Can I paste a Zillow search URL?
+
+Yes. The actor reads the URL's search state and keeps its filters. If the URL points to page N, the actor starts from page 1 and pages forward up to `endPage`.
+
+### Can I use a `/b/` building URL?
+
+Zillow blocks `/b/` building URLs for public access. Use the `/apartments/` URL for the same building instead; `/b/` URLs are skipped with a status note.
+
+### How current is the data?
+
+Every record is read live at run time and includes a `scrapedAt` timestamp. Zillow's result count and ordering can drift between requests, so duplicates are removed within each run.
+
+### Are zero values removed?
+
+No. Meaningful zero values such as `beds: 0` for a studio and false listing flags are kept. Only empty, null, sentinel and non-finite values are removed.
+
+### Are building reviews included?
+
+No. Zillow does not expose building reviews on public building pages, so the actor does not emit them. Building details, floor plans, amenities and scores are included when available.

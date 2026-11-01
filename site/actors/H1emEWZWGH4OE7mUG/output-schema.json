@@ -1,13 +1,43 @@
 {
   "actorOutputSchemaVersion": 1,
-  "description": "Wellfound startup job listings with title, compensation, remote status, locations and linked company profile.",
+  "description": "Wellfound startup jobs plus startup-directory company records with descriptions, structured salary and equity, remote data, visa/relocation, ATS source, company signals, client-side filters and optional only-new monitoring.",
   "properties": {
-    "jobs": {
-      "description": "Dataset containing all scraped Wellfound job listings.",
+    "companies": {
+      "description": "Company size, stage, funding, badges, founders, socials and perks view.",
+      "template": "{{links.apiDefaultDatasetUrl}}/items?view=companies",
+      "title": "Company profiles",
+      "type": "string"
+    },
+    "dataset": {
+      "description": "Default dataset with one row per job or company.",
       "template": "{{links.apiDefaultDatasetUrl}}/items",
-      "title": "Wellfound job listings",
+      "title": "All Wellfound items",
+      "type": "string"
+    },
+    "jobs": {
+      "description": "Job, location, remote, salary and company-summary view.",
+      "template": "{{links.apiDefaultDatasetUrl}}/items?view=jobs",
+      "title": "Jobs",
+      "type": "string"
+    },
+    "remote": {
+      "description": "Remote jobs with accepted remote locations and salary.",
+      "template": "{{links.apiDefaultDatasetUrl}}/items?view=remote",
+      "title": "Remote jobs",
+      "type": "string"
+    },
+    "salary": {
+      "description": "Compensation, salary and equity view.",
+      "template": "{{links.apiDefaultDatasetUrl}}/items?view=salary",
+      "title": "Salary and equity",
+      "type": "string"
+    },
+    "startups": {
+      "description": "Company records from companies mode with descriptions, size, stage, badges, job counts and HQ.",
+      "template": "{{links.apiDefaultDatasetUrl}}/items?view=startups",
+      "title": "Startup directory",
       "type": "string"
     }
   },
-  "title": "Wellfound Startup Jobs Finder with Pay & Remote Filters Output"
+  "title": "Wellfound Startup Jobs and Companies with Pay & Remote Filters Output"
 }

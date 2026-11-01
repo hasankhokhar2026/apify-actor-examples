@@ -1,0 +1,102 @@
+{
+  "description": "Scrape top-performing TikTok ads from the Creative Center. Filter by country, period, industry, and objective.",
+  "properties": {
+    "country": {
+      "default": "US",
+      "description": "ISO 2-letter country code (e.g. US, GB, DE). Leave empty for all countries.",
+      "editor": "textfield",
+      "prefill": "US",
+      "title": "Country",
+      "type": "string"
+    },
+    "industry": {
+      "description": "Industry filter key from the filters API (e.g. label_14104000000). Leave empty for all industries.",
+      "editor": "textfield",
+      "title": "Industry",
+      "type": "string"
+    },
+    "language": {
+      "description": "Language code (e.g. en, es, ar). Leave empty for all languages.",
+      "editor": "textfield",
+      "title": "Language",
+      "type": "string"
+    },
+    "maxItems": {
+      "default": 30,
+      "description": "Maximum number of ads to collect",
+      "maximum": 500,
+      "minimum": 0,
+      "prefill": 5,
+      "title": "Maximum Ads",
+      "type": "integer"
+    },
+    "objective": {
+      "default": "",
+      "description": "Campaign objective to filter by",
+      "editor": "select",
+      "enum": [
+        "",
+        "campaign_objective_conversion",
+        "campaign_objective_video_views",
+        "campaign_objective_traffic",
+        "campaign_objective_app_installs",
+        "campaign_objective_reach",
+        "campaign_objective_lead_generation",
+        "campaign_objective_product_sales"
+      ],
+      "enumTitles": [
+        "All Objectives",
+        "Conversion",
+        "Video Views",
+        "Traffic",
+        "App Installs",
+        "Reach",
+        "Lead Generation",
+        "Product Sales"
+      ],
+      "prefill": "",
+      "title": "Ad Objective",
+      "type": "string"
+    },
+    "orderBy": {
+      "default": "for_you",
+      "description": "How to rank the top ads",
+      "editor": "select",
+      "enum": [
+        "for_you",
+        "ctr",
+        "like"
+      ],
+      "enumTitles": [
+        "Recommended (For You)",
+        "Click-Through Rate (CTR)",
+        "Likes"
+      ],
+      "prefill": "for_you",
+      "title": "Sort Order",
+      "type": "string"
+    },
+    "period": {
+      "default": "30",
+      "description": "Time period for the top ads ranking",
+      "editor": "select",
+      "enum": [
+        "7",
+        "30",
+        "180"
+      ],
+      "enumTitles": [
+        "Last 7 days",
+        "Last 30 days",
+        "Last 180 days"
+      ],
+      "prefill": "30",
+      "title": "Time Period (Days)",
+      "type": "string"
+    }
+  },
+  "required": [],
+  "schemaVersion": 1,
+  "title": "TikTok Top Ads Scraper Input",
+  "type": "object"
+}

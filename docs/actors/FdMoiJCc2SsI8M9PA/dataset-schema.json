@@ -1,81 +1,427 @@
 {
   "actorSpecification": 1,
+  "description": "Event records are omit-empty: fields without a source value are absent, never null, blank, or 0,0 coordinates. Some fields are conditional on includeDetails or organizerMode.",
   "fields": {
     "properties": {
+      "ageRestriction": {
+        "description": "Age restriction; requires includeDetails",
+        "type": "string"
+      },
       "category": {
-        "description": "Primary Eventbrite category",
+        "description": "Eventbrite category display name",
+        "type": "string"
+      },
+      "categoryId": {
+        "description": "Eventbrite category ID",
+        "type": "string"
+      },
+      "changedAt": {
+        "description": "Last changed timestamp (ISO 8601 UTC); requires includeDetails",
+        "type": "string"
+      },
+      "createdAt": {
+        "description": "Creation timestamp (ISO 8601 UTC); requires includeDetails",
+        "type": "string"
+      },
+      "descriptionHtml": {
+        "description": "Full description HTML; requires includeDetails",
+        "type": "string"
+      },
+      "doorTime": {
+        "description": "Door time; requires includeDetails",
+        "type": "string"
+      },
+      "durationInMinutes": {
+        "description": "Duration in minutes; requires includeDetails",
+        "type": "integer"
+      },
+      "eid": {
+        "description": "Short Eventbrite eID when supplied",
         "type": "string"
       },
       "endDate": {
-        "description": "End date (YYYY-MM-DD)",
+        "description": "End date (YYYY-MM-DD, local)",
         "type": "string"
       },
       "endTime": {
-        "description": "End time (HH:MM)",
+        "description": "End time (HH:MM, local)",
         "type": "string"
       },
+      "endUtc": {
+        "description": "End timestamp in ISO 8601 UTC with Z",
+        "type": "string"
+      },
+      "facebookEventId": {
+        "description": "Conditional Facebook event ID from the event API; omitted when null (about 2% fill)",
+        "type": "string"
+      },
+      "faqs": {
+        "description": "Event FAQs; requires includeDetails",
+        "items": {
+          "properties": {
+            "answer": {
+              "type": "string"
+            },
+            "question": {
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "type": "array"
+      },
       "format": {
-        "description": "Event format (Concert, Conference, Workshop, etc.)",
+        "description": "Event format display name",
+        "type": "string"
+      },
+      "formatId": {
+        "description": "Eventbrite format ID",
         "type": "string"
       },
       "gallery": {
-        "description": "All event images at highest available CDN resolution",
+        "description": "Event image URLs in descending quality: master, large, medium, small, display",
+        "items": {
+          "type": "string"
+        },
         "type": "array"
+      },
+      "hasAvailableTickets": {
+        "description": "Whether tickets are available",
+        "type": "boolean"
+      },
+      "hasBogoTickets": {
+        "description": "Whether BOGO tickets are offered",
+        "type": "boolean"
       },
       "id": {
         "description": "Eventbrite event ID",
         "type": "string"
       },
+      "imageSizesLarge": {
+        "description": "Large image variant only when it adds a URL not already present in gallery",
+        "type": "string"
+      },
       "imageUrl": {
-        "description": "Event cover image URL — highest-resolution variant (CDN serves up to 2160px wide)",
+        "description": "Highest-resolution cover image; signed CDN URL, never rewritten",
+        "type": "string"
+      },
+      "inventoryType": {
+        "description": "Inventory type, e.g. limited; requires includeDetails",
         "type": "string"
       },
       "isCancelled": {
-        "description": "Whether the event is cancelled",
+        "description": "Whether Eventbrite marks the event cancelled; omitted when unknown",
+        "type": "boolean"
+      },
+      "isFree": {
+        "description": "Whether the event is free; known false is kept",
+        "type": "boolean"
+      },
+      "isListed": {
+        "description": "Whether the event is listed",
         "type": "boolean"
       },
       "isOnline": {
-        "description": "Whether it's an online event",
+        "description": "Whether the event is online",
+        "type": "boolean"
+      },
+      "isProtected": {
+        "description": "Whether the event is protected",
+        "type": "boolean"
+      },
+      "isReservedSeating": {
+        "description": "Whether the event has reserved seating; requires includeDetails",
+        "type": "boolean"
+      },
+      "isSeries": {
+        "description": "Whether the event belongs to a series",
+        "type": "boolean"
+      },
+      "isShareable": {
+        "description": "Whether the event is shareable",
+        "type": "boolean"
+      },
+      "isSoldOut": {
+        "description": "Whether the event is sold out",
         "type": "boolean"
       },
       "language": {
-        "description": "Event language code",
+        "description": "Listing language code",
         "type": "string"
       },
       "latitude": {
-        "description": "Latitude",
+        "description": "Venue latitude; omitted unless valid and not part of 0,0",
         "type": "number"
       },
+      "locationHierarchy": {
+        "description": "Eventbrite place hierarchy (continent, country, region, county, locality, neighbourhood)",
+        "items": {
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "type": {
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "type": "array"
+      },
+      "locationType": {
+        "description": "in_person, online, or another source value; requires includeDetails",
+        "type": "string"
+      },
       "longitude": {
-        "description": "Longitude",
+        "description": "Venue longitude; omitted unless valid and not part of 0,0",
         "type": "number"
       },
       "name": {
         "description": "Event name",
         "type": "string"
       },
+      "numChildren": {
+        "description": "Exact series object_count from the series API when expanded; otherwise the source count when greater than one",
+        "type": "integer"
+      },
+      "organizerAttendeesHosted": {
+        "description": "Organizer attendees hosted as displayed; organizerMode only",
+        "type": "string"
+      },
+      "organizerFacebook": {
+        "description": "Organizer Facebook page",
+        "type": "string"
+      },
+      "organizerFollowers": {
+        "description": "Numeric follower count from hydration",
+        "type": "integer"
+      },
+      "organizerHostingYears": {
+        "description": "Organizer hosting tenure as displayed; organizerMode only",
+        "type": "string"
+      },
+      "organizerImageUrl": {
+        "description": "Organizer profile image URL",
+        "type": "string"
+      },
+      "organizerInstagram": {
+        "description": "Organizer Instagram profile or ID",
+        "type": "string"
+      },
+      "organizerName": {
+        "description": "Organizer name",
+        "type": "string"
+      },
+      "organizerSummary": {
+        "description": "Organizer summary or bio",
+        "type": "string"
+      },
+      "organizerTikTok": {
+        "description": "Organizer TikTok profile URL",
+        "type": "string"
+      },
+      "organizerTotalEvents": {
+        "description": "Organizer total events; organizerMode only",
+        "type": "integer"
+      },
+      "organizerTwitter": {
+        "description": "Organizer Twitter/X handle or URL from hydration",
+        "type": "string"
+      },
+      "organizerUpcomingTotal": {
+        "description": "Organizer upcoming-event count; organizerMode only",
+        "type": "integer"
+      },
+      "organizerUrl": {
+        "description": "Organizer profile URL",
+        "type": "string"
+      },
+      "organizerVerified": {
+        "description": "Organizer verified flag; organizerMode only",
+        "type": "boolean"
+      },
+      "organizerWebsite": {
+        "description": "Organizer website",
+        "type": "string"
+      },
+      "organizerX": {
+        "description": "Organizer X profile URL",
+        "type": "string"
+      },
+      "priceCurrency": {
+        "description": "ISO 4217 currency code",
+        "type": "string"
+      },
+      "priceDisplay": {
+        "description": "Eventbrite price display string",
+        "type": "string"
+      },
+      "priceMax": {
+        "description": "Maximum ticket price in major units",
+        "type": "number"
+      },
+      "priceMin": {
+        "description": "Minimum ticket price in major units; omitted when the source has no fixed price",
+        "type": "number"
+      },
       "primaryOrganizerId": {
         "description": "Organizer ID",
         "type": "string"
       },
+      "privacySetting": {
+        "description": "Eventbrite privacy setting",
+        "type": "string"
+      },
+      "publishedAt": {
+        "description": "Published timestamp (ISO 8601 UTC)",
+        "type": "string"
+      },
+      "recordType": {
+        "description": "Always event",
+        "type": "string"
+      },
+      "refundPolicy": {
+        "description": "Refund policy; requires includeDetails",
+        "properties": {
+          "isRefundAllowed": {
+            "type": "boolean"
+          },
+          "policyType": {
+            "type": "string"
+          },
+          "refundRequestOrganizer": {
+            "type": "boolean"
+          },
+          "validDays": {
+            "type": "integer"
+          }
+        },
+        "type": "object"
+      },
+      "salesEndUtc": {
+        "description": "Sales end timestamp (ISO 8601 UTC)",
+        "type": "string"
+      },
+      "salesMessage": {
+        "description": "Sales message when Eventbrite supplies one",
+        "type": "string"
+      },
+      "salesStartUtc": {
+        "description": "Sales start timestamp (ISO 8601 UTC)",
+        "type": "string"
+      },
+      "salesStatus": {
+        "description": "Sales status, e.g. on_sale, sales_ended, sold_out",
+        "type": "string"
+      },
       "scrapedAt": {
-        "description": "ISO 8601 scrape timestamp",
+        "description": "ISO 8601 UTC timestamp of when the run started; the same on every record",
+        "type": "string"
+      },
+      "seriesId": {
+        "description": "Series ID for series children and parents",
+        "type": "string"
+      },
+      "sourceUrl": {
+        "description": "Canonical event page URL used as provenance",
         "type": "string"
       },
       "startDate": {
-        "description": "Start date (YYYY-MM-DD)",
+        "description": "Start date (YYYY-MM-DD, local to the event)",
         "type": "string"
       },
       "startTime": {
-        "description": "Start time (HH:MM)",
+        "description": "Start time (HH:MM, local)",
+        "type": "string"
+      },
+      "startUtc": {
+        "description": "Start timestamp in ISO 8601 UTC with Z",
+        "type": "string"
+      },
+      "status": {
+        "description": "Eventbrite status, e.g. live or completed",
+        "type": "string"
+      },
+      "subcategory": {
+        "description": "Eventbrite subcategory display name",
+        "type": "string"
+      },
+      "subcategoryId": {
+        "description": "Eventbrite subcategory ID",
         "type": "string"
       },
       "summary": {
-        "description": "Short summary",
+        "description": "Short summary, truncated to 1,000 characters",
         "type": "string"
       },
       "tags": {
-        "description": "Organizer tags / keywords",
+        "description": "Organizer keyword tags",
+        "items": {
+          "type": "string"
+        },
+        "type": "array"
+      },
+      "ticketClasses": {
+        "description": "Ticket classes; requires includeDetails",
+        "items": {
+          "properties": {
+            "category": {
+              "type": "string"
+            },
+            "currency": {
+              "type": "string"
+            },
+            "deliveryMethods": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "description": {
+              "type": "string"
+            },
+            "fee": {
+              "type": "number"
+            },
+            "hasPdfTicket": {
+              "type": "boolean"
+            },
+            "id": {
+              "type": "string"
+            },
+            "includeFee": {
+              "type": "boolean"
+            },
+            "isFree": {
+              "type": "boolean"
+            },
+            "maxQuantity": {
+              "type": "integer"
+            },
+            "minQuantity": {
+              "type": "integer"
+            },
+            "name": {
+              "type": "string"
+            },
+            "onSaleStatus": {
+              "type": "string"
+            },
+            "price": {
+              "type": "number"
+            },
+            "salesChannels": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "tax": {
+              "type": "number"
+            }
+          },
+          "type": "object"
+        },
         "type": "array"
       },
       "ticketsBy": {
@@ -83,19 +429,34 @@
         "type": "string"
       },
       "ticketsUrl": {
-        "description": "Direct checkout URL",
+        "description": "Eventbrite checkout URL; stored only and never fetched",
         "type": "string"
       },
       "timezone": {
-        "description": "IANA timezone (America/New_York)",
+        "description": "IANA timezone (e.g. America/New_York)",
         "type": "string"
       },
+      "urgencySignals": {
+        "description": "Eventbrite urgency messages from browse/search",
+        "items": {
+          "type": "string"
+        },
+        "type": "array"
+      },
       "url": {
-        "description": "Event page URL",
+        "description": "Canonical event page URL (regional TLD when Eventbrite redirects)",
         "type": "string"
       },
       "venueAddress": {
-        "description": "Full street address",
+        "description": "Full display address",
+        "type": "string"
+      },
+      "venueAddressLine1": {
+        "description": "Venue street address line 1",
+        "type": "string"
+      },
+      "venueAddressLine2": {
+        "description": "Venue street address line 2",
         "type": "string"
       },
       "venueCity": {
@@ -111,12 +472,16 @@
         "type": "string"
       },
       "venuePostalCode": {
-        "description": "Postal code",
+        "description": "Venue postal code",
         "type": "string"
       },
       "venueRegion": {
         "description": "Venue state/region",
         "type": "string"
+      },
+      "waitlistAvailable": {
+        "description": "Whether a waitlist is available; requires includeDetails",
+        "type": "boolean"
       }
     },
     "type": "object"
@@ -139,13 +504,13 @@
             "format": "text",
             "label": "End Time"
           },
+          "endUtc": {
+            "format": "text",
+            "label": "End UTC"
+          },
           "format": {
             "format": "text",
             "label": "Format"
-          },
-          "gallery": {
-            "format": "array",
-            "label": "Gallery"
           },
           "id": {
             "format": "text",
@@ -154,6 +519,14 @@
           "imageUrl": {
             "format": "link",
             "label": "Image"
+          },
+          "isCancelled": {
+            "format": "boolean",
+            "label": "Cancelled"
+          },
+          "isFree": {
+            "format": "boolean",
+            "label": "Free"
           },
           "isOnline": {
             "format": "boolean",
@@ -171,6 +544,30 @@
             "format": "text",
             "label": "Name"
           },
+          "organizerName": {
+            "format": "text",
+            "label": "Organizer"
+          },
+          "priceCurrency": {
+            "format": "text",
+            "label": "Currency"
+          },
+          "priceMax": {
+            "format": "number",
+            "label": "Price Max"
+          },
+          "priceMin": {
+            "format": "number",
+            "label": "Price Min"
+          },
+          "primaryOrganizerId": {
+            "format": "text",
+            "label": "Organizer ID"
+          },
+          "salesStatus": {
+            "format": "text",
+            "label": "Sales"
+          },
           "scrapedAt": {
             "format": "text",
             "label": "Scraped At"
@@ -183,13 +580,13 @@
             "format": "text",
             "label": "Start Time"
           },
+          "startUtc": {
+            "format": "text",
+            "label": "Start UTC"
+          },
           "summary": {
             "format": "text",
             "label": "Summary"
-          },
-          "tags": {
-            "format": "array",
-            "label": "Tags"
           },
           "ticketsUrl": {
             "format": "link",
@@ -240,7 +637,10 @@
           "endDate",
           "endTime",
           "timezone",
+          "startUtc",
+          "endUtc",
           "isOnline",
+          "isCancelled",
           "venueName",
           "venueAddress",
           "venueCity",
@@ -251,12 +651,79 @@
           "longitude",
           "category",
           "format",
-          "tags",
+          "primaryOrganizerId",
+          "organizerName",
+          "isFree",
+          "priceMin",
+          "priceMax",
+          "priceCurrency",
+          "salesStatus",
           "imageUrl",
-          "gallery",
           "url",
           "ticketsUrl",
           "scrapedAt"
+        ]
+      }
+    },
+    "organizer": {
+      "display": {
+        "component": "table",
+        "properties": {
+          "name": {
+            "format": "text",
+            "label": "Event"
+          },
+          "organizerFollowers": {
+            "format": "number",
+            "label": "Followers"
+          },
+          "organizerInstagram": {
+            "format": "text",
+            "label": "Instagram"
+          },
+          "organizerName": {
+            "format": "text",
+            "label": "Organizer"
+          },
+          "organizerTotalEvents": {
+            "format": "number",
+            "label": "Total Events"
+          },
+          "organizerUpcomingTotal": {
+            "format": "number",
+            "label": "Upcoming"
+          },
+          "organizerUrl": {
+            "format": "link",
+            "label": "Organizer URL"
+          },
+          "organizerWebsite": {
+            "format": "link",
+            "label": "Website"
+          },
+          "startDate": {
+            "format": "text",
+            "label": "Date"
+          },
+          "url": {
+            "format": "link",
+            "label": "Event URL"
+          }
+        }
+      },
+      "title": "Organizer View",
+      "transformation": {
+        "fields": [
+          "name",
+          "startDate",
+          "organizerName",
+          "organizerFollowers",
+          "organizerUrl",
+          "organizerWebsite",
+          "organizerInstagram",
+          "organizerTotalEvents",
+          "organizerUpcomingTotal",
+          "url"
         ]
       }
     },
@@ -267,6 +734,10 @@
           "category": {
             "format": "text",
             "label": "Category"
+          },
+          "isFree": {
+            "format": "boolean",
+            "label": "Free"
           },
           "name": {
             "format": "text",
@@ -308,6 +779,7 @@
           "venueCity",
           "venueRegion",
           "category",
+          "isFree",
           "url"
         ]
       }

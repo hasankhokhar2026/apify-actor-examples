@@ -1,86 +1,89 @@
 # AutoScout24 Car Search Across 9 European Markets
 
-Search AutoScout24's used and new car listings across nine European country domains, with the same filters (make, price, mileage, power, body type and more) AutoScout24's own search uses, or fetch full detail records for specific listing URLs.
+Collect new and used car listings from **AutoScout24** across Germany, Austria, Belgium, France, Italy, the Netherlands, Poland, Spain and Switzerland. Search by make, model, price, year, mileage, fuel, transmission, body style, power, equipment, seller type and more; replay saved search or dealer URLs; resolve listing IDs; and enrich records with detail-page and dealer-profile data. No login, cookies, API key or proxy is required.
 
 ## What this actor does
 
-- Searches AutoScout24 by make, model, year, price, mileage, fuel type, transmission, body type, power, doors/seats and seller type, in any of nine country markets
-- Fetches full detail records — including body type, color, doors and seats — for specific listing URLs you already have
-- Normalizes fuel type and transmission into the same English values on every country domain
-- Returns up to 20 photo URLs per listing
-- Omits any field a listing doesn't carry rather than returning a null or placeholder value
+- **Five modes:** `searchCars`, `getCarDetails`, `searchByUrl`, `dealerInventory`, `listingIds`
+- **40+ search filters:** make, model, keyword, price, year, mileage, fuel, transmission, condition, body, power, doors, seats, colour, drivetrain, equipment, emission class, previous owners, listing age, VAT, damage, ZIP radius, seller type and sort
+- **Nine markets in one actor:** Germany, Austria, Belgium, France, Italy, the Netherlands, Poland, Spain and Switzerland, or `country: "all"` to search every market with duplicate-free results
+- **Goes past AutoScout24's 4,000-results-per-query ceiling** by splitting broad searches across registration years and price bands, up to 10,000 listings per run
+- **Optional detail and dealer enrichment:** vehicle history, equipment, price evaluation, view/favourite counters, dealer email, VAT/UID, address, opening hours, ratings and up to 10 reviews; **Empty fields are omitted**
 
 ## Output per listing
 
-| Field | Description |
-|---|---|
-| `id` | Unique listing UUID |
-| `make` / `model` / `variant` | Manufacturer, model name and trim/variant |
-| `year` | First registration year |
-| `condition` | `new` or `used` |
-| `mileageKm` | Mileage in kilometres |
-| `priceEur` | Listed price as a number. It is taken as shown on the chosen country site without currency conversion, so on a site that lists prices in another currency (such as Switzerland) the figure is in that currency |
-| `fuelType` | `petrol`, `diesel`, `electric`, `hybrid`, `lpg`, `cng`, `hydrogen` or `ethanol` |
-| `transmission` | `automatic`, `manual` or `semi-automatic` |
-| `bodyType` | Body type (e.g. Saloon, SUV) — in practice only on `getCarDetails` records |
-| `bodyColor` | Exterior color — in practice only on `getCarDetails` records |
-| `powerKw` / `powerHp` | Engine power in kW and HP |
-| `displacement` | Engine displacement in cc |
-| `driveTrain` | Drive train (RWD, FWD, 4WD) |
-| `cylinders` | Number of cylinders |
-| `doors` / `seats` | Door and seat counts — in practice only on `getCarDetails` records |
-| `firstRegistration` | First registration date |
-| `fuelConsumption` | Published WLTP fuel consumption |
-| `co2EmissionsGkm` | CO2 emissions in g/km |
-| `location` | "City, Country" summary |
-| `city` | City name |
-| `countryCode` | Country code, e.g. DE, AT |
-| `zip` | Postal code |
-| `sellerType` | Dealer or Private |
-| `sellerName` | Seller/dealer company name |
-| `sellerContact` | Named contact person at the seller, when published |
-| `sellerId` | Seller's AutoScout24 ID |
-| `sellerRatingStars` | Dealer rating out of 5 |
-| `sellerRatingCount` | Number of ratings behind that score |
-| `photos` | Up to 20 photo URLs |
-| `listingUrl` | Full listing URL |
-| `sourceUrl` | Same as `listingUrl` |
-| `modelGroup` | Manufacturer's broader model family/group, when published |
-| `paintType` | Paint finish (e.g. metallic), when published |
-| `crossReferenceId` | Legacy numeric AutoScout24 listing ID |
-| `upholstery` / `upholsteryColor` | Interior upholstery material and color — populated on `getCarDetails` records only |
-| `gears` | Number of gears — populated on `getCarDetails` records only |
-| `hsnTsn` | German HSN/TSN type-approval numbers, when published — populated on `getCarDetails` records only |
-| `description` | Seller's free-text listing description — populated on `getCarDetails` records only |
-| `isDeliverable` | Whether the seller offers delivery — populated on `getCarDetails` records only |
-| `isNew` | Boolean new/used flag from the detail page, alongside `condition` — populated on `getCarDetails` records only |
-| `recordType` | Always `"carListing"` |
-| `scrapedAt` | UTC ISO timestamp of when the record was scraped |
+One row per unique listing. Values are read from the search card, the detail page and the dealer profile when those sources publish them. Empty values are removed at every depth, while meaningful `false` flags are kept.
+
+- **Identity and lifecycle:** `id`, `idType`, `dedupeKey`, `crossReferenceId`, `title`, `status`, `offerType`, `condition`, `isNew`, `isDeliverable`, `recordType`, `scrapedAt`
+- **Listing metadata and source:** `listingUrl`, `sourceUrl`, `description`, `createdAt`, `lastModifiedAt`, `searchPosition`, `adTier`, `marketplace`, `language`, `currency`, `source`
+- **Vehicle:** `make`, `model`, `modelGroup`, `variant`, `vehicleType`, `vin`, `bodyType`, `bodyColor`, `paintType`, `driveTrain`, `transmission`, `fuelType`, `fuelCode`, `cylinders`, `doors`, `seats`, `gears`, `mileageKm`, `displacement`, `powerKw`, `powerHp`, `upholstery`, `upholsteryColor`, `interiorColor`, `hsnTsn`
+- **Registration and efficiency:** `firstRegistration`, `firstRegistrationDate`, `year`, `fuelConsumption`, `consumptionCombined`, `co2EmissionsGkm`, `co2Emission`, `emissionStandard`, `energyLabel`, `wltpValues`, `wltp`
+- **Price:** `priceEur`, `priceAmount`, `priceCurrency`, `priceRaw`, `priceFormatted`, `priceMedian`, `priceEvaluation`, `priceEvaluationCategory`, `priceEvaluationRanges`, `netPrice`, `vatRate`, `taxDeductible`, `negotiable`, `onRequestOnly`, `listPrice`, `leasingRate`, `dealerPrice`
+- **EV, dimensions, availability and warranty:** `batteryCapacityKwh`, `electricRangeKm`, `chargingPowerKw`, `fastChargingPowerKw`, `fastChargingTime0To80Min`, `chargingTime0To100Min`, `powerConsumptionKwh100km`, `electricMotorHp`, `combustionEngineHp`, `directImport`, `warrantyAvailable`, `warranty`, `availabilityType`, `availableNow`, `dimensions`, `weightKg`, `payloadKg`, `towingCapacityKg`
+- **Location:** `location`, `city`, `countryCode`, `zip`, `street`, `region`, `latitude`, `longitude`, `coordinates`
+- **Seller and dealer:** `sellerType`, `sellerTypeRaw`, `sellerName`, `sellerContact`, `sellerId`, `sellerPhone`, `sellerPhones`, `sellerEmail`, `sellerVatId`, `sellerWebsite`, `sellerDealerUrl`, `sellerAddress`, `sellerImprint`, `sellerOpeningHours`, `sellerGooglePlace`, `sellerReviews`, `sellerReviewCount`, `sellerRatingStars`, `sellerRatingCount`
+- **Media:** `photos`, `imageCount`, `headerImage`, `has360`, `videoUrl`, `whatsapp`
+- **History, inspection and equipment:** `features`, `equipment`, `previousOwners`, `accidentFree`, `fullServiceHistory`, `nonSmoking`, `newInspection`, `lastInspectionDate`, `inspectionPassed`, `carfaxUrl`, `mileageHistoryUrl`, `vehicleReport`, `certificationNumber`
+- **Engagement and enrichment flags:** `viewCount`, `favoriteCount`, `detailEnriched`, `sellerEnriched`
+
+`priceEur` is used for every euro market, including Poland. Swiss records use `priceAmount` with `priceCurrency: "CHF"`. `photos` contains up to 20 absolute image URLs, while `imageCount` reports the full count before that cap.
 
 ## Input
 
 | Field | Type | Default | Description |
 |---|---|---|---|
-| `mode` | string (required) | searchCars | `searchCars` runs a filtered search; `getCarDetails` fetches specific listing URLs |
-| `make` | string | – | Car brand from the list (32 makes), e.g. BMW, Volkswagen, Mercedes-Benz. Leave blank for any make. |
-| `model` | string | – | Model name as AutoScout24 spells it in its URLs, e.g. "x5", "golf", "a4" (spaces become hyphens). Only used together with `make` |
-| `yearFrom` / `yearTo` | integer | – | First registration year range (1900–2026) |
-| `priceFrom` / `priceTo` | integer | – | Price range in EUR (0–10,000,000) |
-| `mileageMax` | integer | – | Maximum mileage in kilometres (0–2,000,000) |
-| `fuelType` | string | (any) | petrol, diesel, electric, hybrid, hydrogen, lpg, cng |
-| `transmission` | string | (any) | automatic, manual, semi-automatic |
-| `country` | string | `de` | Country site: de, at, be, fr, it, nl, pl, es, ch |
-| `condition` | string | `""` (any) | New (`N`) or Used (`U`); search only |
-| `bodyType` | string | (any) | Small car, Convertible/Cabrio, Coupe, SUV/Off-road/Pickup, Estate/Kombi, Sedan/Limousine, Van/Minibus, Panel van/Transporter, Other |
-| `powerFrom` / `powerTo` | integer | – | Engine power range (0–2000), in the unit set by `powerUnit` |
-| `powerUnit` | string | kw | Unit for `powerFrom`/`powerTo`: kw or hp |
-| `doorsFrom` / `doorsTo` | integer | – | Door count range (2–7) |
-| `seatsFrom` / `seatsTo` | integer | – | Seat count range (1–12) |
-| `sellerType` | string | (any) | dealer or private |
-| `listingUrls` | array | – | AutoScout24 listing URLs to fetch — used in `getCarDetails` mode |
-| `maxItems` | integer | `100` | Maximum number of listings to return (1–1000; a single search stops at 400, see FAQ) |
+| `mode` | string | `searchCars` | `searchCars` filters listings, `getCarDetails` fetches listing URLs, `searchByUrl` replays search URLs, `dealerInventory` reads dealer stock, `listingIds` resolves IDs or URLs. |
+| `make` | string | – | Manufacturer from a curated list of common European makes. Leave empty to search every make. |
+| `model` | string | – | Model name such as `3 Series`, `Golf` or `A4`. Leave empty for all models. |
+| `searchQuery` | string | – | Free-text keyword applied to the search, such as `panoramic` or `quattro`. |
+| `yearFrom` | integer | – | Earliest first-registration year (1900–2026). |
+| `yearTo` | integer | – | Latest first-registration year (1900–2026). |
+| `priceFrom` | integer | – | Minimum price in the market currency (0–10,000,000). |
+| `priceTo` | integer | – | Maximum price in the market currency (0–10,000,000). |
+| `mileageMax` | integer | – | Maximum mileage in kilometres (0–2,000,000). |
+| `fuelType` | string | – | Petrol, diesel, electric, hybrid, plug-in hybrid petrol/diesel, CNG, LPG, ethanol, hydrogen or other. `hybrid` covers all hybrids and plug-in hybrids. |
+| `transmission` | string | – | Automatic, manual or semi-automatic. |
+| `country` | string | `de` | `de`, `at`, `be`, `fr`, `it`, `nl`, `pl`, `es`, `ch`, or `all` for every market. Belgium follows the Dutch-language feed; Switzerland prices in CHF; the international `.com` site is available only through `searchByUrl`. |
+| `condition` | string | – | New, used, young used, oldtimer, demonstrator or other. |
+| `bodyType` | string | – | Small car, convertible/cabrio, coupe, SUV/off-road/pickup, estate/kombi, sedan/limousine, other, van/minibus or panel van/transporter. |
+| `vehicleType` | string | `car` | Cars, motorcycles, caravans, campers/motorhomes, transporters/vans, utility vehicles or trucks. Switzerland supports cars, motorcycles, campers, utility vehicles and trucks. |
+| `drivetrain` | string | – | All-wheel, front-wheel or rear-wheel drive. |
+| `bodyColor` | string | – | Exterior colour. |
+| `interiorColor` | string | – | Interior colour. |
+| `upholstery` | string | – | Alcantara, cloth, full leather, partial leather, vinyl or other. |
+| `equipment` | array | – | AutoScout24 equipment IDs to require, using the IDs shown by the site. |
+| `emissionStandard` | string | – | Emission-standard code as used by AutoScout24 (Euro 1–6 and codes 7–11). |
+| `previousOwnersMax` | string | – | Any, 1, 2, 3, or 4 or more previous owners. |
+| `listedWithinDays` | string | – | Any, today, or 1–7 or 14 days since the listing was created. |
+| `powerFrom` | integer | – | Minimum engine power in the unit selected by `powerUnit` (0–2,000). |
+| `powerTo` | integer | – | Maximum engine power in the unit selected by `powerUnit` (0–2,000). |
+| `powerUnit` | string | `kw` | `kw` or `hp` (PS). AutoScout24 applies the bounds in kW. |
+| `doorsFrom` | integer | – | Minimum number of doors (2–7). |
+| `doorsTo` | integer | – | Maximum number of doors (2–7). |
+| `seatsFrom` | integer | – | Minimum number of seats (1–12). |
+| `seatsTo` | integer | – | Maximum number of seats (1–12). |
+| `rangeFromKm` | integer | – | Minimum electric range in kilometres (0–2,000). Switzerland applies it to the whole search; other markets apply it to records that publish a range. |
+| `engineSizeFromCc` | integer | – | Minimum engine displacement in cc (0–10,000). |
+| `engineSizeToCc` | integer | – | Maximum engine displacement in cc (0–10,000). |
+| `vatDeductibleOnly` | boolean | `false` | Return only VAT-deductible listings. Applies to the eight local markets; Switzerland has no equivalent filter. |
+| `damagedListings` | string | `exclude` | `exclude`, `include` or `only`. |
+| `zipCode` | string | – | Postal code used for the radius filter and for distance sorting. |
+| `radiusKm` | string | `50` | Radius around the postal code: 0, 10, 20, 50, 100, 150, 200, 250, 300 or 400 km. |
+| `sellerType` | string | – | Any, dealer or private seller. |
+| `sortBy` | string | `standard` | Standard, price, mileage, first-registration year, listing age or distance. Distance requires `zipCode`. |
+| `sortOrder` | string | `asc` | Ascending or descending. |
+| `startPage` | integer | `1` | First result page, 1-based (1–100,000). Most markets return 200 listings per page; Switzerland returns 20. |
+| `endPage` | integer | – | Last result page, inclusive (1–100,000). Clamped to the last page the market allows. |
+| `listingUrls` | array | – | Listing URLs, absolute or market-relative, for `getCarDetails`. |
+| `searchUrls` | array of URLs | – | AutoScout24 search URLs for `searchByUrl`. Filters in the URL are replayed; page, size and tracking parameters are ignored. A country parameter on a `.com` URL is kept. |
+| `dealerUrls` | array of URLs | – | Dealer or dealer-stock pages for `dealerInventory`. |
+| `dealerIds` | array | – | Dealer customer IDs or Swiss seller IDs for `dealerInventory`. |
+| `listingIds` | array | – | Listing UUIDs, Swiss numeric IDs or full listing URLs for `listingIds`. |
+| `includeDetails` | boolean | `false` | Fetch each listing's detail page for extra vehicle, equipment, history, price-evaluation and engagement fields. Failures keep the search record. |
+| `includeSellerProfile` | boolean | `false` | Fetch the dealer profile once per seller for contact details, VAT/UID, address, opening hours, ratings and up to 10 reviews. Failures keep the listing. |
+| `maxItems` | integer | `100` | Maximum listings to return (1–10,000). Searches above 4,000 results are split automatically. |
 
-### Example: filtered diesel BMW search in Germany
+### Example: German diesel SUV search
 
 ```json
 {
@@ -101,60 +104,91 @@ Search AutoScout24's used and new car listings across nine European country doma
 }
 ```
 
-### Example: broad search in another market
+### Example: Swiss EV search with detail enrichment
 
 ```json
 {
   "mode": "searchCars",
-  "country": "nl",
+  "country": "ch",
   "fuelType": "electric",
+  "rangeFromKm": 400,
+  "sortBy": "price",
+  "sortOrder": "asc",
+  "maxItems": 20,
+  "includeDetails": true
+}
+```
+
+### Example: detail enrichment in search mode
+
+```json
+{
+  "mode": "searchCars",
+  "make": "Audi",
+  "country": "de",
+  "maxItems": 20,
+  "includeDetails": true,
+  "includeSellerProfile": true
+}
+```
+
+### Example: replay a search URL
+
+```json
+{
+  "mode": "searchByUrl",
+  "searchUrls": ["https://www.autoscout24.de/lst/bmw/320?fregfrom=2020&pricefrom=10000&sort=price&desc=0"],
   "maxItems": 100
 }
 ```
 
-### Example: fetch specific listings
-
-```json
-{
-  "mode": "getCarDetails",
-  "listingUrls": ["https://www.autoscout24.de/offers/bmw-318d-fa84e6e3"]
-}
-```
-
-### Filter notes
-
-- `bodyType`, `doorsFrom`/`doorsTo`, and `seatsFrom`/`seatsTo` narrow the search server-side, but AutoScout24's search-result data doesn't carry body type, doors or seats on individual listings — those output fields only populate when you fetch the listing with `getCarDetails`.
-- `powerFrom`/`powerTo`/`powerUnit` and `sellerType` are applied server-side and match the `powerKw`/`powerHp`/`sellerType` output fields on every record.
-- Exterior color is not a filterable search parameter on AutoScout24; `bodyColor` is still available as an output field on `getCarDetails` records.
-- The price, year, mileage, fuel, transmission, power, doors, seats, body type and seller filters are also checked against each record, including in `getCarDetails` mode. A listing is only dropped when it has the value and it falls outside your filter; listings missing that value are kept.
-
 ## Use cases
 
-- **Price and spec comparison** — pull listings for a make/model across markets to compare pricing and mileage
-- **Dealer inventory monitoring** — track a dealer's stock over time using `sellerId` and `sellerName`
-- **Lead sourcing for buyers** — filter by budget, power range and seller type to shortlist cars worth contacting
-- **Market research** — compare fuel type and body type mix between countries
-- **Listing enrichment** — pass previously collected listing URLs through `getCarDetails` to fill in doors, seats, body type and color
+- **Dealerships and marketplaces** — monitor competing stock, asking prices and listing age across nearby markets
+- **Vehicle valuation and residual-value models** — build comparable sets by make, model, year, mileage, equipment and condition
+- **EV and fleet research** — compare electric range, battery capacity, charging power and consumption across nine markets
+- **Procurement and sourcing** — find dealer stock by region, VAT status, seller type and damage status
+- **Automotive data platforms** — enrich catalogues with dealer contacts, VAT/UID, geodata, photos and vehicle history
+- **Academic and market research** — study used-car supply, pricing and specification trends across Europe
 
 ## FAQ
 
-**Which countries are supported?**
-Germany (de), Austria (at), Belgium (be), France (fr), Italy (it), Netherlands (nl), Poland (pl), Spain (es) and Switzerland (ch), each on its own AutoScout24 domain.
+### Which AutoScout24 markets are supported?
 
-**Is the Switzerland market as reliable as the others?**
-autoscout24.ch has occasionally returned a blocked response to non-browser requests; this is specific to that one country domain and doesn't affect the other eight markets. If a `country: "ch"` run comes back empty, retry later or use a different country.
+Germany, Austria, Belgium, France, Italy, the Netherlands, Poland, Spain and Switzerland. Use `country: "all"` to search every market with duplicates removed. Prices are in EUR everywhere except Switzerland, which uses CHF. Belgium follows AutoScout24's Dutch-language feed.
 
-**How many listings can one search return?**
-The actor reads at most 20 result pages of 20 listings, so one search returns up to 400 listings even if `maxItems` is higher. Use make, model, price bands or other filters to split a broad search into several narrower runs.
+### What happens when a search has more than 4,000 results?
 
-**Can I search without make or model?**
-Yes — leaving both blank returns listings for the chosen country with whatever other filters you've set.
+AutoScout24 exposes at most 4,000 listings per search (20 pages at 200 listings each). The actor splits a broader search by first-registration year and then by price band, removes duplicates, and continues until `maxItems` is reached, up to 10,000 listings. Listings with an unknown or "price on request" value cannot be bucketed and are fetched separately.
 
-**Do I need an AutoScout24 account or a proxy?**
-No. All data comes from AutoScout24's public search and listing pages; there are no login, API key or proxy inputs.
+### Why are some fields missing from a record?
 
-**Why are some fields, like `bodyType` or `doors`, missing from search results?**
-AutoScout24's search-result data doesn't include those details on every listing; they are filled in automatically when you fetch the same listing through `getCarDetails`.
+AutoScout24 does not publish every attribute for every listing. Empty fields are omitted instead of being sent as `null`. VIN is rarely exposed, previous-owner counts appear for only part of the inventory, and battery-health or charging-plug fields are not published. Detail and dealer enrichment improve fill rates but cannot create data the source does not have.
 
-**Is this affiliated with AutoScout24?**
-No. This actor reads AutoScout24's public pages and is not affiliated with, endorsed by, or sponsored by AutoScout24.
+### Do I need a login, cookie, API key or proxy?
+
+No. The actor reads publicly available AutoScout24 listings anonymously. Set the input and run it.
+
+### Are Swiss prices converted to EUR?
+
+No. Swiss records use `priceAmount` with `priceCurrency: "CHF"`. Euro-market records, including Poland, use `priceEur`. No CHF value is labelled as EUR.
+
+### What does the seller profile add?
+
+When the dealer publishes them: website, email, VAT/UID, phone numbers, postal address, contact name, opening hours, imprint, rating stars and count, and up to 10 recent reviews. It is off by default and only adds data when available.
+
+### Can I search only damaged cars or only VAT-deductible cars?
+
+Yes. Set `damagedListings` to `exclude`, `include` or `only`. Set `vatDeductibleOnly` to `true` for VAT-deductible listings in the eight local markets; Switzerland has no equivalent filter and skips it.
+
+### Why does distance sorting require a ZIP code?
+
+AutoScout24 needs an origin point to calculate distance. Provide `zipCode` (and optionally `radiusKm`) when using `sortBy: "distance"`; otherwise choose another sort.
+
+### How current is the data?
+
+Every run reads live listings. Runs are stateless and there is no incremental or "new listings only" mode, so result ordering can shift slightly between runs. Use `listingIds` or listing URLs when you need an exact record.
+
+### Is this actor affiliated with AutoScout24?
+
+No. This is an independent third-party actor that collects publicly available AutoScout24 listings.

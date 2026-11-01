@@ -1,69 +1,159 @@
 {
-  "description": "Scrape TikTok's Explore/Trending feed. Choose specific category IDs or enable auto-discovery to find all available categories.",
+  "description": "Collect the public TikTok Explore feed with no login or cookies. All=120 is the default; 123 is accepted as a legacy alias. Optional country selection, filters, only-new monitoring, transcript text, post-detail enrichment and Key-Value Store media rehosting are additive.",
   "properties": {
     "autoDiscoverCategories": {
       "default": false,
-      "description": "When enabled, navigates to TikTok's Explore page and clicks each category tab to discover all available category IDs from the live UI. Discovered categories are added to the categories list.",
+      "description": "When true, an empty or All-only selection expands to all 21 verified Explore categories. If specific categories are selected, the missing categories are appended.",
       "prefill": false,
-      "title": "Auto-Discover Categories",
+      "title": "Auto-Discover All Categories",
       "type": "boolean"
     },
     "categories": {
       "default": [
-        {
-          "id": 123,
-          "name": "All"
-        }
+        "All"
       ],
-      "description": "Category IDs to explore. The 'All' category (id=123) is always available. Use autoDiscoverCategories=true to find additional category IDs from the live TikTok UI.",
+      "description": "Categories to collect. Accepts names, numeric IDs, or legacy {id,name} objects. All=120; topics 100-119: Anime & Comics, Shows, Beauty Care, Games, Comedy, Daily Life, Family, Relationship, Drama, Outfit, Lipsync, Food, Sports, Animals, Society, Cars, Education, Fitness & Health, Technology, Singing & Dancing. 123 is accepted as a legacy alias for All. 121/122 (empty upstream) and 124+ (invalid upstream) are skipped with a warning.",
       "editor": "json",
-      "items": {
-        "properties": {
-          "id": {
-            "description": "Numeric TikTok category type ID (e.g. 123 for All)",
-            "title": "Category ID",
-            "type": "integer"
-          },
-          "name": {
-            "description": "Human-readable category label (e.g. All, Entertainment, Sports)",
-            "title": "Category Name",
-            "type": "string"
-          }
-        },
-        "type": "object"
-      },
       "prefill": [
-        {
-          "id": 123,
-          "name": "All"
-        }
+        "All"
       ],
       "title": "Categories",
       "type": "array"
     },
     "categoryId": {
-      "description": "Shorthand: a single integer category ID. Maps to categories=[{id: N}]. Use 123 for All.",
-      "title": "Category ID (shorthand)",
+      "description": "Legacy shorthand for one category. It replaces the categories list. 100-120 are accepted; 123 maps to 120; other values are skipped with a warning.",
+      "maximum": 100000,
+      "minimum": 1,
+      "title": "Category ID (legacy shorthand)",
       "type": "integer"
     },
+    "countries": {
+      "default": [],
+      "description": "Optional ISO 3166-1 alpha-2 markets. Empty means the actor's current egress and no proxy. Each selected country uses a per-country Apify proxy (AUTO first, residential only after a proven block). The feed follows the egress IP, not a query parameter.",
+      "editor": "stringList",
+      "items": {
+        "pattern": "^[A-Za-z]{2}$",
+        "type": "string"
+      },
+      "maxItems": 10,
+      "prefill": [],
+      "title": "Countries / Markets",
+      "type": "array"
+    },
+    "country": {
+      "default": "",
+      "description": "Single-country shorthand. Ignored when countries is non-empty.",
+      "editor": "textfield",
+      "pattern": "^([A-Za-z]{2})?$",
+      "title": "Country (shorthand)",
+      "type": "string"
+    },
+    "includePostDetails": {
+      "default": false,
+      "description": "Fetch the public post detail page for each selected post (bounded to the emitted maxItems) and merge locationCreated plus poi/imagePost when the feed omitted them. Detail requests are fail-soft: a 403, stub page or parse failure keeps the original post. Adds one page request per emitted row.",
+      "prefill": false,
+      "title": "Include Post Details",
+      "type": "boolean"
+    },
+    "includeTranscripts": {
+      "default": false,
+      "description": "Fetch subtitle WebVTT URLs and add subtitles[].text. Subtitle metadata is always returned when available; text is opt-in and fail-soft.",
+      "prefill": false,
+      "title": "Include Transcript Text",
+      "type": "boolean"
+    },
     "maxItems": {
-      "description": "Alias for maxItemsPerCategory. If both are set, maxItemsPerCategory takes precedence.",
-      "maximum": 500,
+      "description": "Legacy alias for maxItemsPerCategory. It is used when maxItemsPerCategory is absent or exactly the default 3; an explicitly non-default maxItemsPerCategory wins.",
+      "maximum": 1000,
       "minimum": 1,
-      "title": "Max Items (alias)",
+      "title": "Max Items (legacy alias)",
       "type": "integer"
     },
     "maxItemsPerCategory": {
-      "default": 50,
-      "description": "Maximum number of trending posts to collect per category.",
-      "maximum": 500,
+      "default": 3,
+      "description": "Hard cap on emitted posts per category. The cap is applied before any page is pushed, so a 30-item page never overshoots. The default is 3 because media rehosting is on by default and adds one browser page plus several HTTP media fetches per emitted post.",
+      "maximum": 1000,
       "minimum": 1,
-      "prefill": 10,
+      "prefill": 3,
       "title": "Max Items Per Category",
       "type": "integer"
+    },
+    "minComments": {
+      "default": 0,
+      "description": "Drop posts with fewer comments. Missing stats fail a positive threshold.",
+      "maximum": 1000000000000,
+      "minimum": 0,
+      "prefill": 0,
+      "title": "Minimum Comments",
+      "type": "integer"
+    },
+    "minLikes": {
+      "default": 0,
+      "description": "Drop posts with fewer likes. Missing stats fail a positive threshold.",
+      "maximum": 1000000000000,
+      "minimum": 0,
+      "prefill": 0,
+      "title": "Minimum Likes",
+      "type": "integer"
+    },
+    "minShares": {
+      "default": 0,
+      "description": "Drop posts with fewer shares. Missing stats fail a positive threshold.",
+      "maximum": 1000000000000,
+      "minimum": 0,
+      "prefill": 0,
+      "title": "Minimum Shares",
+      "type": "integer"
+    },
+    "minViews": {
+      "default": 0,
+      "description": "Drop posts with fewer playCount views. Missing stats fail a positive threshold.",
+      "maximum": 1000000000000,
+      "minimum": 0,
+      "prefill": 0,
+      "title": "Minimum Views",
+      "type": "integer"
+    },
+    "onlyNew": {
+      "default": false,
+      "description": "Emit only posts that were not present in the named state store. State is read and written only when this is true.",
+      "prefill": false,
+      "title": "Only New Posts",
+      "type": "boolean"
+    },
+    "postedWithin": {
+      "default": "any",
+      "description": "Client-side filter on createTime relative to the run start.",
+      "enum": [
+        "any",
+        "24h",
+        "7d",
+        "30d",
+        "90d"
+      ],
+      "prefill": "any",
+      "title": "Posted Within",
+      "type": "string"
+    },
+    "rehostVideo": {
+      "default": true,
+      "description": "Open each emitted post with Playwright to capture the real video/mp4 response, then HTTP-fetch the signed cover, originCover, dynamicCover, zoomCover, avatar, music, slideshow image and subtitle files. Every captured payload is stored in the run's default key-value store and the original signed URL is kept as a <field>Original value plus in mediaSources. video.playUrl and video.downloadUrl use tiktok-video-{postId}.mp4; other media use typed tiktok-{kind}-{postId}-... keys. Rehosting is fail-soft per field and never drops a post. It adds one browser page plus several media fetches per emitted record and increases run time and KV storage use; keep maxItemsPerCategory small.",
+      "prefill": false,
+      "title": "Rehost Media in Key-Value Store",
+      "type": "boolean"
+    },
+    "stateKey": {
+      "default": "",
+      "description": "Optional key-value store key for onlyNew. When empty, a deterministic key is derived from categories, countries and filters.",
+      "editor": "textfield",
+      "maxLength": 200,
+      "title": "Only-New State Key",
+      "type": "string"
     }
   },
-  "required": [],
+  "required": [
+    "categories"
+  ],
   "schemaVersion": 1,
   "title": "TikTok Explore/Trending Scraper Input",
   "type": "object"

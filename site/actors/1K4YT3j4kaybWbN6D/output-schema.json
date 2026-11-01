@@ -1,9 +1,9 @@
 {
   "actorOutputSchemaVersion": 1,
-  "description": "Car listings from AutoScout24 — make, model, year, price, mileage, specs, seller info, photos, and location.",
+  "description": "Car listings from AutoScout24 with identity, vehicle, price, consumption, location, dealer profile (email, VAT/UID, reviews, address, opening hours), EV/charging, engagement counters, media, equipment/history, and enrichment metadata. Fields that the source does not publish are omitted; CHF prices use priceAmount + priceCurrency=CHF and all other markets use EUR.",
   "properties": {
     "carListings": {
-      "description": "Dataset containing all scraped car listings.",
+      "description": "Dataset of car listing records (recordType=carListing). One row per unique listing UUID or Swiss numeric id.",
       "template": "{{links.apiDefaultDatasetUrl}}/items",
       "title": "Car listings",
       "type": "string"

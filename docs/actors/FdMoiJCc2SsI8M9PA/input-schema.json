@@ -1,34 +1,290 @@
 {
   "properties": {
+    "categories": {
+      "default": [],
+      "description": "Exact EventbriteCategory filters. Accepts display names, numeric IDs, or EventbriteCategory/<id>. Captured catalog: Business & Professional (101), Science & Technology (102), Music (103), Film, Media & Entertainment (104), Performing & Visual Arts (105), Fashion & Beauty (106), Health & Wellness (107), Sports & Fitness (108), Travel & Outdoor (109), Food & Drink (110), Charity & Causes (111), Community & Culture (113), Religion & Spirituality (114), Family & Education (115), Seasonal & Holiday (116), Home & Lifestyle (117), Auto, Boat & Air (118), Hobbies & Special Interest (119), School Activities (120), Other (199). Unknown values are skipped with a warning.",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "title": "Exact categories",
+      "type": "array"
+    },
     "category": {
-      "description": "Category slug for the search (e.g., 'music', 'business', 'food-and-drink', 'sports'). Combined with location.",
+      "description": "Legacy category slug such as music, business, food-and-drink, sports. Kept for backward compatibility: when used alone it runs as a keyword query, matching the old category URL behaviour. Use 'categories' for exact taxonomy filtering.",
       "editor": "textfield",
-      "title": "Category (optional)",
+      "title": "Category (legacy keyword)",
       "type": "string"
     },
-    "location": {
-      "description": "City/region slug to use when no startUrls are provided. Format: 'ny--new-york', 'ca--san-francisco', 'united-states', 'online'.",
-      "editor": "textfield",
-      "title": "Location (optional)",
+    "country": {
+      "default": "any",
+      "description": "Country filter. Combined with locations when possible; use any to leave it open.",
+      "editor": "select",
+      "enum": [
+        "any",
+        "US",
+        "GB",
+        "DE",
+        "CA",
+        "AU",
+        "FR",
+        "ES",
+        "IT",
+        "NL",
+        "IE",
+        "NZ",
+        "IN",
+        "BR",
+        "MX",
+        "JP",
+        "SG",
+        "ZA",
+        "AE"
+      ],
+      "enumTitles": [
+        "Any country",
+        "United States",
+        "United Kingdom",
+        "Germany",
+        "Canada",
+        "Australia",
+        "France",
+        "Spain",
+        "Italy",
+        "Netherlands",
+        "Ireland",
+        "New Zealand",
+        "India",
+        "Brazil",
+        "Mexico",
+        "Japan",
+        "Singapore",
+        "South Africa",
+        "United Arab Emirates"
+      ],
+      "title": "Country",
       "type": "string"
+    },
+    "dateFrom": {
+      "description": "Start date (YYYY-MM-DD). Used only with datePreset=custom.",
+      "editor": "datepicker",
+      "title": "Date from",
+      "type": "string"
+    },
+    "datePreset": {
+      "default": "any",
+      "description": "Date window. today and tomorrow use the browse page; the other presets use the search API. custom requires dateFrom and dateTo.",
+      "editor": "select",
+      "enum": [
+        "any",
+        "today",
+        "tomorrow",
+        "this_week",
+        "this_weekend",
+        "next_week",
+        "this_month",
+        "next_month",
+        "custom"
+      ],
+      "enumTitles": [
+        "Any date",
+        "Today",
+        "Tomorrow",
+        "This week",
+        "This weekend",
+        "Next week",
+        "This month",
+        "Next month",
+        "Custom range"
+      ],
+      "title": "Date preset",
+      "type": "string"
+    },
+    "dateTo": {
+      "description": "End date (YYYY-MM-DD). Used only with datePreset=custom.",
+      "editor": "datepicker",
+      "title": "Date to",
+      "type": "string"
+    },
+    "eventType": {
+      "default": "any",
+      "description": "Any, in-person, or online. Online uses online_events_only without a place filter; in-person removes online events client-side.",
+      "editor": "select",
+      "enum": [
+        "any",
+        "in_person",
+        "online"
+      ],
+      "enumTitles": [
+        "Any type",
+        "In person",
+        "Online"
+      ],
+      "title": "Event type",
+      "type": "string"
+    },
+    "format": {
+      "default": "any",
+      "description": "Exact EventbriteFormat filter. Accepts the display name or an EventbriteFormat/<id> value.",
+      "editor": "select",
+      "enum": [
+        "any",
+        "Conference",
+        "Seminar or Talk",
+        "Tradeshow, Consumer Show, or Expo",
+        "Convention",
+        "Festival or Fair",
+        "Concert or Performance",
+        "Screening",
+        "Dinner or Gala",
+        "Class, Training, or Workshop",
+        "Meeting or Networking Event",
+        "Party or Social Gathering",
+        "Tournament",
+        "Game or Competition",
+        "Tour",
+        "Attraction",
+        "Appearance or Signing",
+        "Other"
+      ],
+      "enumTitles": [
+        "Any format",
+        "Conference",
+        "Seminar or Talk",
+        "Tradeshow, Consumer Show, or Expo",
+        "Convention",
+        "Festival or Fair",
+        "Concert or Performance",
+        "Screening",
+        "Dinner or Gala",
+        "Class, Training, or Workshop",
+        "Meeting or Networking Event",
+        "Party or Social Gathering",
+        "Tournament",
+        "Game or Competition",
+        "Tour",
+        "Attraction",
+        "Appearance or Signing",
+        "Other"
+      ],
+      "title": "Format",
+      "type": "string"
+    },
+    "includeDetails": {
+      "default": false,
+      "description": "Fetch the event detail page and public event API for description, ticket classes, refunds, age, door time, UTC times, duration, series counts, and the conditional Facebook event ID. Adds one or two requests per event.",
+      "prefill": false,
+      "title": "Include details",
+      "type": "boolean"
+    },
+    "keywords": {
+      "default": [],
+      "description": "Keyword queries (q). Each value is a separate query slice; results are deduplicated by event ID.",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "title": "Keywords",
+      "type": "array"
+    },
+    "location": {
+      "description": "Legacy city/region slug used when startUrls and locations are empty, e.g. ny--new-york, ca--san-francisco, united-states, online. Blank defaults to united-states.",
+      "editor": "textfield",
+      "title": "Location (legacy)",
+      "type": "string"
+    },
+    "locations": {
+      "default": [],
+      "description": "City, region, or place IDs, e.g. ny--new-york, london, united-kingdom--london, 85977539. Multiple locations run as separate queries and are deduplicated.",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "title": "Locations",
+      "type": "array"
     },
     "maxItems": {
       "default": 50,
-      "description": "Maximum number of events to return.",
-      "maximum": 500,
+      "description": "Maximum number of unique events to return across all queries. The source caps each query at 1,000 events; above 1,000 the actor splits by date, category, price, and online coverage, or scans the event sitemap when useSitemap is enabled.",
+      "maximum": 10000,
       "minimum": 1,
-      "prefill": 5,
+      "prefill": 3,
       "title": "Max Items",
       "type": "integer"
     },
+    "organizerMode": {
+      "default": false,
+      "description": "Add organizer profile metrics and social links from the organizer page. Also implied by organizer URLs in startUrls. Records stay event records.",
+      "prefill": false,
+      "title": "Organizer mode",
+      "type": "boolean"
+    },
+    "priceFilter": {
+      "default": "any",
+      "description": "Free or paid events. Uses the search API's price filter and is checked again client-side.",
+      "editor": "select",
+      "enum": [
+        "any",
+        "free",
+        "paid"
+      ],
+      "enumTitles": [
+        "Any price",
+        "Free only",
+        "Paid only"
+      ],
+      "title": "Price",
+      "type": "string"
+    },
+    "proxyConfiguration": {
+      "description": "Optional. Never required. The actor works from a datacenter IP by default; an AUTO proxy is supported. No residential proxy or login is used.",
+      "editor": "proxy",
+      "title": "Proxy configuration",
+      "type": "object"
+    },
+    "sort": {
+      "default": "relevance",
+      "description": "Relevance keeps Eventbrite's default order. date is experimental and ascending only: it sends event_search.sort=date and forces the search API path. Ordering is by start date; same-day times may vary. Descending order is not supported.",
+      "editor": "select",
+      "enum": [
+        "relevance",
+        "date"
+      ],
+      "enumTitles": [
+        "Relevance (default)",
+        "Date (experimental, ascending)"
+      ],
+      "title": "Sort",
+      "type": "string"
+    },
     "startUrls": {
-      "description": "Eventbrite browse URLs (e.g., https://www.eventbrite.com/d/ny--new-york/all-events/). Any filters in the URL are preserved.",
-      "editor": "stringList",
+      "default": [],
+      "description": "Eventbrite browse URLs (e.g. https://www.eventbrite.com/d/ny--new-york/all-events/), direct event URLs (/e/...), or organizer URLs (/o/...). Accepts URL strings and {\"url\": ...} objects. When set, this wins over the filter fields.",
+      "editor": "requestListSources",
+      "items": {
+        "properties": {
+          "url": {
+            "description": "Page URL to scrape.",
+            "title": "URL",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
       "prefill": [
-        "https://www.eventbrite.com/d/united-states/all-events/"
+        {
+          "url": "https://www.eventbrite.com/d/united-states/all-events/"
+        }
       ],
       "title": "Start URLs",
       "type": "array"
+    },
+    "useSitemap": {
+      "default": false,
+      "description": "Only for runs above 1,000. Scan Eventbrite's event sitemaps (about 201,000 event IDs) and hydrate in batches instead of splitting search queries. Filters are applied client-side. Ignored with startUrls or maxItems <= 1,000.",
+      "prefill": false,
+      "title": "Broad sitemap discovery",
+      "type": "boolean"
     }
   },
   "required": [],

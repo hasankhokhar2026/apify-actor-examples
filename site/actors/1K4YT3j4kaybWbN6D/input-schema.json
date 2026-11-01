@@ -1,9 +1,50 @@
 {
-  "description": "Search European car listings on AutoScout24, or fetch specific car details by URL.",
+  "description": "Search AutoScout24 across 8 HTML markets plus the Swiss API, fetch detail pages, follow search/dealer URLs, or resolve listing IDs.",
   "properties": {
+    "bodyColor": {
+      "default": "",
+      "description": "Exterior colour filter.",
+      "editor": "select",
+      "enum": [
+        "",
+        "black",
+        "blue",
+        "brown",
+        "beige",
+        "gold",
+        "green",
+        "grey",
+        "orange",
+        "red",
+        "silver",
+        "white",
+        "yellow",
+        "purple",
+        "other"
+      ],
+      "enumTitles": [
+        "Any",
+        "Black",
+        "Blue",
+        "Brown",
+        "Beige",
+        "Gold",
+        "Green",
+        "Grey",
+        "Orange",
+        "Red",
+        "Silver",
+        "White",
+        "Yellow",
+        "Purple",
+        "Other"
+      ],
+      "title": "Exterior Colour",
+      "type": "string"
+    },
     "bodyType": {
       "default": "",
-      "description": "Vehicle body type filter (mode=searchCars).",
+      "description": "Vehicle body type filter.",
       "editor": "select",
       "enum": [
         "",
@@ -13,9 +54,9 @@
         "4",
         "5",
         "6",
+        "7",
         "12",
-        "13",
-        "7"
+        "13"
       ],
       "enumTitles": [
         "Any",
@@ -25,33 +66,41 @@
         "SUV / Off-road / Pickup",
         "Estate / Kombi",
         "Sedan / Limousine",
+        "Other",
         "Van / Minibus",
-        "Panel van / Transporter",
-        "Other"
+        "Panel van / Transporter"
       ],
       "title": "Body Type",
       "type": "string"
     },
     "condition": {
       "default": "",
-      "description": "Vehicle condition.",
+      "description": "Vehicle condition. N=new, U=used, J=young used, O=oldtimer, D=demonstrator, S=other. Sent as `offer`, never `ustate`.",
       "editor": "select",
       "enum": [
         "",
         "N",
-        "U"
+        "U",
+        "J",
+        "O",
+        "D",
+        "S"
       ],
       "enumTitles": [
         "Any",
         "New",
-        "Used"
+        "Used",
+        "Young used",
+        "Oldtimer",
+        "Demonstrator",
+        "Other"
       ],
       "title": "Condition",
       "type": "string"
     },
     "country": {
       "default": "de",
-      "description": "Country marketplace to search in.",
+      "description": "Market to search. 'all' loops the 8 HTML markets plus Switzerland. '.com' is URL-only and is not part of 'all'.",
       "editor": "select",
       "enum": [
         "de",
@@ -62,7 +111,8 @@
         "nl",
         "pl",
         "es",
-        "ch"
+        "ch",
+        "all"
       ],
       "enumTitles": [
         "Germany",
@@ -73,11 +123,41 @@
         "Netherlands",
         "Poland",
         "Spain",
-        "Switzerland"
+        "Switzerland (API)",
+        "All 9 markets"
       ],
       "prefill": "de",
       "title": "Country",
       "type": "string"
+    },
+    "damagedListings": {
+      "default": "exclude",
+      "description": "Whether to exclude, include, or return only damaged listings.",
+      "editor": "select",
+      "enum": [
+        "exclude",
+        "include",
+        "only"
+      ],
+      "enumTitles": [
+        "Exclude damaged",
+        "Include damaged",
+        "Damaged only"
+      ],
+      "title": "Damaged Listings",
+      "type": "string"
+    },
+    "dealerIds": {
+      "description": "HTML dealer customer IDs (cid) or Swiss seller IDs. Used by dealerInventory.",
+      "editor": "stringList",
+      "title": "Dealer IDs",
+      "type": "array"
+    },
+    "dealerUrls": {
+      "description": "AutoScout24 dealer/stock URLs. The actor reads the dealer page and, when possible, follows its stock search.",
+      "editor": "requestListSources",
+      "title": "Dealer URLs (mode=dealerInventory)",
+      "type": "array"
     },
     "doorsFrom": {
       "description": "Minimum number of doors.",
@@ -93,9 +173,90 @@
       "title": "Doors To",
       "type": "integer"
     },
+    "drivetrain": {
+      "default": "",
+      "description": "Drivetrain filter (HTML `dtrain`, CH equivalent).",
+      "editor": "select",
+      "enum": [
+        "",
+        "awd",
+        "fwd",
+        "rwd"
+      ],
+      "enumTitles": [
+        "Any",
+        "All-wheel drive",
+        "Front-wheel drive",
+        "Rear-wheel drive"
+      ],
+      "title": "Drivetrain",
+      "type": "string"
+    },
+    "emissionStandard": {
+      "default": "",
+      "description": "Emission standard code 1-11 (HTML `emclass`).",
+      "editor": "select",
+      "enum": [
+        "",
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "10",
+        "11"
+      ],
+      "enumTitles": [
+        "Any",
+        "Euro 1",
+        "Euro 2",
+        "Euro 3",
+        "Euro 4",
+        "Euro 5",
+        "Euro 6",
+        "7",
+        "8",
+        "9",
+        "10",
+        "11"
+      ],
+      "title": "Emission Standard",
+      "type": "string"
+    },
+    "endPage": {
+      "description": "Last result page (inclusive). Clamped to the server's maximum page.",
+      "maximum": 100000,
+      "minimum": 1,
+      "title": "End Page",
+      "type": "integer"
+    },
+    "engineSizeFromCc": {
+      "description": "Minimum engine displacement in cc (HTML `ccmfrom`, CH `cubicCapacityFrom`).",
+      "maximum": 10000,
+      "minimum": 0,
+      "title": "Engine Size From (cc)",
+      "type": "integer"
+    },
+    "engineSizeToCc": {
+      "description": "Maximum engine displacement in cc (HTML `ccmto`, CH `cubicCapacityTo`).",
+      "maximum": 10000,
+      "minimum": 0,
+      "title": "Engine Size To (cc)",
+      "type": "integer"
+    },
+    "equipment": {
+      "description": "AutoScout24 equipment taxonomy IDs passed as `eq` (HTML) or `equipmentSearchAttributes` (CH).",
+      "editor": "stringList",
+      "title": "Equipment IDs",
+      "type": "array"
+    },
     "fuelType": {
       "default": "",
-      "description": "Fuel type filter.",
+      "description": "Fuel type filter. 'hybrid' matches all hybrid and plug-in hybrid listings.",
       "editor": "select",
       "enum": [
         "",
@@ -103,25 +264,125 @@
         "diesel",
         "electric",
         "hybrid",
-        "hydrogen",
+        "plug-in-hybrid-petrol",
+        "plug-in-hybrid-diesel",
+        "cng",
         "lpg",
-        "cng"
+        "ethanol",
+        "hydrogen",
+        "other"
       ],
       "enumTitles": [
         "Any",
         "Petrol",
         "Diesel",
         "Electric",
-        "Hybrid",
-        "Hydrogen",
+        "Hybrid (all)",
+        "Plug-in hybrid petrol",
+        "Plug-in hybrid diesel",
+        "CNG",
         "LPG",
-        "CNG"
+        "Ethanol",
+        "Hydrogen",
+        "Other"
       ],
       "title": "Fuel Type",
       "type": "string"
     },
+    "includeDetails": {
+      "default": false,
+      "description": "Fetch each listing's detail page (or CH detail + equipment) to fill body, colour, doors, seats, equipment, history, VAT, seller, GPS, price evaluation, view/favourite counters, mileage-history URL, Carfax (with partner-integration fallback) and created date. Failures keep the search card.",
+      "prefill": false,
+      "title": "Include Detail Enrichment",
+      "type": "boolean"
+    },
+    "includeSellerProfile": {
+      "default": false,
+      "description": "Fetch the dealer/seller profile once per seller from `dealerInfoPage` for website, email, VAT/UID, phones, address, contact name, opening hours, imprint, ratings and up to 10 reviews. No extra request is made when this option is off; failures do not drop the listing.",
+      "prefill": false,
+      "title": "Include Seller Profile",
+      "type": "boolean"
+    },
+    "interiorColor": {
+      "default": "",
+      "description": "Interior colour filter.",
+      "editor": "select",
+      "enum": [
+        "",
+        "black",
+        "blue",
+        "brown",
+        "beige",
+        "gold",
+        "green",
+        "grey",
+        "orange",
+        "red",
+        "silver",
+        "white",
+        "yellow",
+        "purple",
+        "other"
+      ],
+      "enumTitles": [
+        "Any",
+        "Black",
+        "Blue",
+        "Brown",
+        "Beige",
+        "Gold",
+        "Green",
+        "Grey",
+        "Orange",
+        "Red",
+        "Silver",
+        "White",
+        "Yellow",
+        "Purple",
+        "Other"
+      ],
+      "title": "Interior Colour",
+      "type": "string"
+    },
+    "listedWithinDays": {
+      "default": "",
+      "description": "Only listings created within this many days (HTML `adage`).",
+      "editor": "select",
+      "enum": [
+        "",
+        "0",
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "14"
+      ],
+      "enumTitles": [
+        "Any",
+        "Today",
+        "1 day",
+        "2 days",
+        "3 days",
+        "4 days",
+        "5 days",
+        "6 days",
+        "7 days",
+        "14 days"
+      ],
+      "title": "Listed Within (days)",
+      "type": "string"
+    },
+    "listingIds": {
+      "description": "UUIDs, Swiss numeric IDs, or full listing URLs.",
+      "editor": "stringList",
+      "title": "Listing IDs (mode=listingIds)",
+      "type": "array"
+    },
     "listingUrls": {
-      "description": "AutoScout24 car listing URLs to fetch details for.",
+      "description": "AutoScout24 detail URLs (absolute or market-relative) to fetch details for.",
       "editor": "stringList",
       "title": "Listing URLs (mode=getCarDetails)",
       "type": "array"
@@ -205,10 +466,10 @@
     },
     "maxItems": {
       "default": 100,
-      "description": "Maximum number of car listings to return. Default (100) covers a typical single-page-plus scrape for real usage; the platform's automated daily test run uses the lower prefill (5) so it finishes in well under a minute and reliably confirms the actor still works, without wasting run time/quota on every scheduled check.",
-      "maximum": 1000,
+      "description": "Maximum listings to return. Values above the 4,000/query ceiling use year/price slicing; the hard maximum is 10,000. Prefill uses 3 so scheduled checks stay fast.",
+      "maximum": 10000,
       "minimum": 1,
-      "prefill": 5,
+      "prefill": 3,
       "title": "Max Items",
       "type": "integer"
     },
@@ -221,15 +482,21 @@
     },
     "mode": {
       "default": "searchCars",
-      "description": "What to do: search for cars or fetch specific listing details.",
+      "description": "What to do: search by filters, fetch listing URLs, replay search URLs, read dealer inventory, or resolve listing IDs.",
       "editor": "select",
       "enum": [
         "searchCars",
-        "getCarDetails"
+        "getCarDetails",
+        "searchByUrl",
+        "dealerInventory",
+        "listingIds"
       ],
       "enumTitles": [
         "Search cars by filters",
-        "Get car details by listing URLs"
+        "Get car details by listing URLs",
+        "Search using AutoScout24 search URLs",
+        "Dealer inventory",
+        "Resolve listing IDs"
       ],
       "prefill": "searchCars",
       "title": "Mode",
@@ -242,14 +509,14 @@
       "type": "string"
     },
     "powerFrom": {
-      "description": "Minimum engine power (unit set by Power Unit below).",
+      "description": "Minimum engine power in the unit set by Power Unit. HP is converted to kW before the request.",
       "maximum": 2000,
       "minimum": 0,
       "title": "Power From",
       "type": "integer"
     },
     "powerTo": {
-      "description": "Maximum engine power (unit set by Power Unit below).",
+      "description": "Maximum engine power in the unit set by Power Unit. HP is converted to kW before the request.",
       "maximum": 2000,
       "minimum": 0,
       "title": "Power To",
@@ -257,7 +524,7 @@
     },
     "powerUnit": {
       "default": "kw",
-      "description": "Unit for Power From / Power To.",
+      "description": "Unit for Power From / Power To. Bounds are always sent to AutoScout24 in kW.",
       "editor": "select",
       "enum": [
         "kw",
@@ -271,19 +538,90 @@
       "title": "Power Unit",
       "type": "string"
     },
+    "previousOwnersMax": {
+      "default": "",
+      "description": "Maximum previous owners (HTML `prevownersid`).",
+      "editor": "select",
+      "enum": [
+        "",
+        "1",
+        "2",
+        "3",
+        "4+"
+      ],
+      "enumTitles": [
+        "Any",
+        "1",
+        "2",
+        "3",
+        "4 or more"
+      ],
+      "title": "Previous Owners (max)",
+      "type": "string"
+    },
     "priceFrom": {
-      "description": "Minimum price in EUR.",
+      "description": "Minimum price in the selected market's currency (EUR everywhere except Switzerland, which uses CHF).",
       "maximum": 10000000,
       "minimum": 0,
-      "title": "Price From (EUR)",
+      "title": "Price From",
       "type": "integer"
     },
     "priceTo": {
-      "description": "Maximum price in EUR.",
+      "description": "Maximum price in the selected market's currency.",
       "maximum": 10000000,
       "minimum": 0,
-      "title": "Price To (EUR)",
+      "title": "Price To",
       "type": "integer"
+    },
+    "radiusKm": {
+      "default": "50",
+      "description": "Radius around the ZIP/postal code.",
+      "editor": "select",
+      "enum": [
+        "0",
+        "10",
+        "20",
+        "50",
+        "100",
+        "150",
+        "200",
+        "250",
+        "300",
+        "400"
+      ],
+      "enumTitles": [
+        "0 km",
+        "10 km",
+        "20 km",
+        "50 km",
+        "100 km",
+        "150 km",
+        "200 km",
+        "250 km",
+        "300 km",
+        "400 km"
+      ],
+      "title": "Radius (km)",
+      "type": "string"
+    },
+    "rangeFromKm": {
+      "description": "Minimum electric range. CH applies it server-side; HTML applies it when a detail record carries a range.",
+      "maximum": 2000,
+      "minimum": 0,
+      "title": "Electric Range From (km)",
+      "type": "integer"
+    },
+    "searchQuery": {
+      "description": "Free-text keyword applied to the search (e.g. panoramic, quattro).",
+      "editor": "textfield",
+      "title": "Keyword",
+      "type": "string"
+    },
+    "searchUrls": {
+      "description": "AutoScout24 search URLs. Their filters are parsed and replayed; page/size/tracking params are dropped. A user-supplied `cy` on a `.com` URL is preserved because it selects the real country feed there; `/lst-moto` paths switch to motorcycles.",
+      "editor": "requestListSources",
+      "title": "Search URLs (mode=searchByUrl)",
+      "type": "array"
     },
     "seatsFrom": {
       "description": "Minimum number of seats.",
@@ -316,6 +654,52 @@
       "title": "Seller Type",
       "type": "string"
     },
+    "sortBy": {
+      "default": "standard",
+      "description": "Result ordering. `distance` requires zipCode; `power` and `make` are not exposed because they are unreliable or empty.",
+      "editor": "select",
+      "enum": [
+        "standard",
+        "price",
+        "mileage",
+        "year",
+        "age",
+        "distance"
+      ],
+      "enumTitles": [
+        "Standard",
+        "Price",
+        "Mileage",
+        "First registration year",
+        "Listing age",
+        "Distance"
+      ],
+      "title": "Sort By",
+      "type": "string"
+    },
+    "sortOrder": {
+      "default": "asc",
+      "description": "Ascending or descending.",
+      "editor": "select",
+      "enum": [
+        "asc",
+        "desc"
+      ],
+      "enumTitles": [
+        "Ascending",
+        "Descending"
+      ],
+      "title": "Sort Order",
+      "type": "string"
+    },
+    "startPage": {
+      "default": 1,
+      "description": "First result page (1-based, 200 listings per page).",
+      "maximum": 100000,
+      "minimum": 1,
+      "title": "Start Page",
+      "type": "integer"
+    },
     "transmission": {
       "default": "",
       "description": "Transmission type filter.",
@@ -335,19 +719,82 @@
       "title": "Transmission",
       "type": "string"
     },
+    "upholstery": {
+      "default": "",
+      "description": "Interior upholstery filter.",
+      "editor": "select",
+      "enum": [
+        "",
+        "alcantara",
+        "cloth",
+        "full-leather",
+        "partial-leather",
+        "vinyl",
+        "other"
+      ],
+      "enumTitles": [
+        "Any",
+        "Alcantara",
+        "Cloth",
+        "Full leather",
+        "Partial leather",
+        "Vinyl",
+        "Other"
+      ],
+      "title": "Upholstery",
+      "type": "string"
+    },
+    "vatDeductibleOnly": {
+      "default": false,
+      "description": "Only VAT-deductible listings (HTML `vatded=true`). CH has no equivalent filter.",
+      "prefill": false,
+      "title": "VAT Deductible Only",
+      "type": "boolean"
+    },
+    "vehicleType": {
+      "default": "car",
+      "description": "Vehicle category. HTML sends `atype` (C/B/N/X) and uses `/lst-moto`, `/lst-caravan` or `/lst-transporter` for motorcycles, campers and utility vehicles; Switzerland sends the plural `vehicleCategories` field with car/motorcycle/camper/utility/truck.",
+      "editor": "select",
+      "enum": [
+        "car",
+        "motorcycle",
+        "caravan",
+        "camper",
+        "transporter",
+        "utility",
+        "truck"
+      ],
+      "enumTitles": [
+        "Cars",
+        "Motorcycles",
+        "Caravans",
+        "Campers / motorhomes",
+        "Transporters / vans",
+        "Utility vehicles",
+        "Trucks"
+      ],
+      "title": "Vehicle Category",
+      "type": "string"
+    },
     "yearFrom": {
-      "description": "Minimum first registration year.",
+      "description": "Minimum first registration year (1900-2026).",
       "maximum": 2026,
       "minimum": 1900,
       "title": "Year From",
       "type": "integer"
     },
     "yearTo": {
-      "description": "Maximum first registration year.",
+      "description": "Maximum first registration year (1900-2026).",
       "maximum": 2026,
       "minimum": 1900,
       "title": "Year To",
       "type": "integer"
+    },
+    "zipCode": {
+      "description": "Postal code for the radius filter (HTML `zip`; CH geo lookup).",
+      "editor": "textfield",
+      "title": "ZIP / Postal Code",
+      "type": "string"
     }
   },
   "required": [

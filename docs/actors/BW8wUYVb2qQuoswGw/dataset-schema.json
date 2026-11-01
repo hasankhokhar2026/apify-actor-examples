@@ -3,7 +3,12 @@
   "fields": {
     "properties": {
       "address": {
-        "description": "Full street address",
+        "description": "Street address",
+        "type": "string"
+      },
+      "agentEmail": {
+        "description": "Listing agent email when Zillow exposes it",
+        "nullable": true,
         "type": "string"
       },
       "agentName": {
@@ -12,7 +17,7 @@
         "type": "string"
       },
       "agentPhone": {
-        "description": "Agent phone number",
+        "description": "Listing agent phone number",
         "nullable": true,
         "type": "string"
       },
@@ -27,12 +32,84 @@
         "type": "integer"
       },
       "brokerName": {
-        "description": "Listing broker name",
+        "description": "Listing broker or brokerage name",
         "nullable": true,
         "type": "string"
       },
+      "builderName": {
+        "description": "Home builder or developer name",
+        "nullable": true,
+        "type": "string"
+      },
+      "building": {
+        "description": "Rental building detail",
+        "nullable": true,
+        "properties": {
+          "agentName": {
+            "type": "string"
+          },
+          "amenities": {
+            "type": "array"
+          },
+          "availabilityCount": {
+            "type": "integer"
+          },
+          "bikeScore": {
+            "type": "integer"
+          },
+          "floorPlans": {
+            "type": "array"
+          },
+          "name": {
+            "type": "string"
+          },
+          "neighborhoodDescription": {
+            "type": "string"
+          },
+          "petPolicy": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          },
+          "rentRange": {
+            "properties": {
+              "max": {
+                "type": "integer"
+              },
+              "min": {
+                "type": "integer"
+              }
+            },
+            "type": "object"
+          },
+          "specialOffers": {
+            "type": "array"
+          },
+          "transitScore": {
+            "type": "integer"
+          },
+          "type": {
+            "type": "string"
+          },
+          "walkScore": {
+            "type": "integer"
+          }
+        },
+        "type": "object"
+      },
       "city": {
         "description": "City",
+        "type": "string"
+      },
+      "county": {
+        "description": "County name",
+        "nullable": true,
+        "type": "string"
+      },
+      "dateSold": {
+        "description": "ISO date when the property sold",
+        "nullable": true,
         "type": "string"
       },
       "daysOnZillow": {
@@ -41,24 +118,75 @@
         "type": "integer"
       },
       "description": {
-        "description": "Property description text",
+        "description": "Property or building description",
         "nullable": true,
         "type": "string"
       },
       "features": {
-        "description": "Property features (heating, cooling, etc.)",
+        "description": "Expanded RESO facts such as heating, cooling, appliances, basement, views, parking and construction details",
         "nullable": true,
         "type": "object"
+      },
+      "garageSpaces": {
+        "description": "Garage parking capacity",
+        "nullable": true,
+        "type": "integer"
+      },
+      "has3DModel": {
+        "description": "Whether a 3D home model is available",
+        "nullable": true,
+        "type": "boolean"
       },
       "hoaFee": {
         "description": "Monthly HOA fee",
         "nullable": true,
         "type": "number"
       },
+      "homeInsights": {
+        "description": "Home insight phrases",
+        "nullable": true,
+        "type": "array"
+      },
+      "lastSoldPrice": {
+        "description": "Most recent recorded sold price from the property payload",
+        "nullable": true,
+        "type": "integer"
+      },
       "latitude": {
         "description": "GPS latitude",
         "nullable": true,
         "type": "number"
+      },
+      "listingFlags": {
+        "description": "Listing segment flags",
+        "nullable": true,
+        "properties": {
+          "isAuction": {
+            "type": "boolean"
+          },
+          "isBankOwned": {
+            "type": "boolean"
+          },
+          "isComingSoon": {
+            "type": "boolean"
+          },
+          "isForSaleByOwner": {
+            "type": "boolean"
+          },
+          "isForeclosure": {
+            "type": "boolean"
+          },
+          "isListedByOwner": {
+            "type": "boolean"
+          },
+          "isNewConstruction": {
+            "type": "boolean"
+          },
+          "isPending": {
+            "type": "boolean"
+          }
+        },
+        "type": "object"
       },
       "longitude": {
         "description": "GPS longitude",
@@ -66,27 +194,67 @@
         "type": "number"
       },
       "lotSize": {
-        "description": "Lot size",
+        "description": "Formatted lot size, for example '8,000 sqft' or '0.25 acres'",
+        "nullable": true,
+        "type": "string"
+      },
+      "mlsId": {
+        "description": "MLS listing ID",
+        "nullable": true,
+        "type": "string"
+      },
+      "mlsName": {
+        "description": "MLS name",
+        "nullable": true,
+        "type": "string"
+      },
+      "neighborhood": {
+        "description": "Neighborhood name",
+        "nullable": true,
+        "type": "string"
+      },
+      "openHouse": {
+        "description": "Open house entries with startTime and endTime",
+        "nullable": true,
+        "type": "array"
+      },
+      "parcelId": {
+        "description": "County parcel or assessor ID, including leading zeros",
         "nullable": true,
         "type": "string"
       },
       "parking": {
-        "description": "Parking information",
+        "description": "Parking features or capacity",
         "nullable": true,
         "type": "string"
       },
+      "photoCount": {
+        "description": "Number of listing photos",
+        "nullable": true,
+        "type": "integer"
+      },
       "photos": {
-        "description": "Photo URLs",
+        "description": "Absolute photo URLs",
         "nullable": true,
         "type": "array"
       },
       "price": {
-        "description": "Listing price in USD",
+        "description": "Listing price in USD; never zero",
         "nullable": true,
         "type": "integer"
       },
+      "priceChange": {
+        "description": "Signed price change amount",
+        "nullable": true,
+        "type": "integer"
+      },
+      "priceChangeDate": {
+        "description": "ISO date of the last price change",
+        "nullable": true,
+        "type": "string"
+      },
       "priceHistory": {
-        "description": "Price change history",
+        "description": "Price change history entries",
         "nullable": true,
         "type": "array"
       },
@@ -95,24 +263,34 @@
         "nullable": true,
         "type": "number"
       },
+      "propertyTaxRate": {
+        "description": "Property tax rate as a percentage (1.75 = 1.75%)",
+        "nullable": true,
+        "type": "number"
+      },
       "propertyType": {
-        "description": "Property type (SINGLE_FAMILY, CONDO, etc.)",
+        "description": "Property type (SINGLE_FAMILY, CONDO, TOWNHOUSE, BUILDING, etc.)",
         "nullable": true,
         "type": "string"
       },
       "rentZestimate": {
-        "description": "Zillow estimated rent",
+        "description": "Zillow estimated monthly rent",
         "nullable": true,
         "type": "integer"
       },
       "schools": {
-        "description": "Nearby schools with ratings",
+        "description": "Assigned schools with name, level, type, grades, distance and rating",
         "nullable": true,
         "type": "array"
       },
       "scrapedAt": {
-        "description": "ISO timestamp when data was scraped",
+        "description": "ISO timestamp when the record was collected",
         "type": "string"
+      },
+      "soldPrice": {
+        "description": "Sold price when the market discloses it",
+        "nullable": true,
+        "type": "integer"
       },
       "sqft": {
         "description": "Living area in square feet",
@@ -124,21 +302,41 @@
         "type": "string"
       },
       "status": {
-        "description": "Listing status (FOR_SALE, FOR_RENT, SOLD, etc.)",
+        "description": "Listing status (FOR_SALE, FOR_RENT, RECENTLY_SOLD, SOLD, etc.)",
         "type": "string"
       },
       "stories": {
-        "description": "Number of stories",
+        "description": "Number of stories when the source provides it",
+        "nullable": true,
+        "type": "integer"
+      },
+      "taxAnnualAmount": {
+        "description": "Annual property tax amount",
+        "nullable": true,
+        "type": "integer"
+      },
+      "taxAssessedValue": {
+        "description": "Tax assessed value",
         "nullable": true,
         "type": "integer"
       },
       "taxHistory": {
-        "description": "Tax assessment history",
+        "description": "Tax assessment history; year is the UTC calendar year derived from Zillow's epoch-millisecond timestamp",
         "nullable": true,
         "type": "array"
       },
+      "unit": {
+        "description": "Unit number",
+        "nullable": true,
+        "type": "string"
+      },
       "url": {
-        "description": "Zillow property detail page URL",
+        "description": "Absolute Zillow property or building detail page URL",
+        "type": "string"
+      },
+      "virtualTour": {
+        "description": "Virtual tour or 3D home URL",
+        "nullable": true,
         "type": "string"
       },
       "yearBuilt": {
@@ -163,6 +361,73 @@
   },
   "title": "Zillow Properties",
   "views": {
+    "detail": {
+      "display": {
+        "component": "table",
+        "properties": {
+          "builderName": {
+            "format": "text",
+            "label": "Builder"
+          },
+          "building.name": {
+            "format": "text",
+            "label": "Building"
+          },
+          "mlsId": {
+            "format": "text",
+            "label": "MLS ID"
+          },
+          "mlsName": {
+            "format": "text",
+            "label": "MLS"
+          },
+          "openHouse": {
+            "format": "text",
+            "label": "Open House"
+          },
+          "parcelId": {
+            "format": "text",
+            "label": "Parcel ID"
+          },
+          "photoCount": {
+            "format": "number",
+            "label": "Photos"
+          },
+          "priceChange": {
+            "format": "number",
+            "label": "Price Change"
+          },
+          "propertyTaxRate": {
+            "format": "number",
+            "label": "Tax Rate %"
+          },
+          "taxAnnualAmount": {
+            "format": "number",
+            "label": "Annual Tax"
+          },
+          "taxAssessedValue": {
+            "format": "number",
+            "label": "Tax Assessed"
+          }
+        }
+      },
+      "title": "Detail",
+      "transformation": {
+        "fields": [
+          "taxAssessedValue",
+          "taxAnnualAmount",
+          "propertyTaxRate",
+          "parcelId",
+          "builderName",
+          "mlsName",
+          "mlsId",
+          "priceChange",
+          "openHouse",
+          "photoCount",
+          "building.name"
+        ]
+      }
+    },
     "overview": {
       "display": {
         "component": "table",
@@ -179,6 +444,10 @@
             "format": "number",
             "label": "Beds"
           },
+          "daysOnZillow": {
+            "format": "number",
+            "label": "Days"
+          },
           "price": {
             "format": "number",
             "label": "Price"
@@ -186,6 +455,10 @@
           "propertyType": {
             "format": "text",
             "label": "Type"
+          },
+          "soldPrice": {
+            "format": "number",
+            "label": "Sold Price"
           },
           "sqft": {
             "format": "number",
@@ -198,10 +471,6 @@
           "url": {
             "format": "link",
             "label": "URL"
-          },
-          "yearBuilt": {
-            "format": "number",
-            "label": "Year Built"
           }
         }
       },
@@ -210,12 +479,13 @@
         "fields": [
           "address",
           "price",
+          "soldPrice",
           "beds",
           "baths",
           "sqft",
           "propertyType",
           "status",
-          "yearBuilt",
+          "daysOnZillow",
           "url"
         ]
       }

@@ -1,8 +1,18 @@
 {
   "actorSpecification": 1,
   "fields": {
+    "adFlags": {
+      "description": "adAuthorization, brandOrganicType, adLabelVersion, aigcLabelType, moderationAigcLabelType and isAiGenerated; empty subkeys are omitted",
+      "title": "Ad / AI Flags",
+      "type": "object"
+    },
+    "ageHours": {
+      "description": "(run start - createTime) / 3600, 2 decimals",
+      "title": "Age Hours",
+      "type": "number"
+    },
     "author": {
-      "description": "Author profile snapshot (id, username, displayName, verified, followerCount, avatarUrl)",
+      "description": "Author profile snapshot; includes commentSetting, duetSetting, stitchSetting, downloadSetting and isEmbedBanned when present. avatarUrl uses a KV URL after rehosting and avatarUrlOriginal keeps the signed source.",
       "title": "Author",
       "type": "object"
     },
@@ -12,12 +22,12 @@
       "type": "string"
     },
     "categoryId": {
-      "description": "TikTok's numeric category type ID (e.g. 123 for 'All')",
+      "description": "Requested category ID. All is 120; legacy 123 inputs are normalized to 120.",
       "title": "Category ID",
       "type": "integer"
     },
     "categoryName": {
-      "description": "Human-readable category name (e.g. 'All', 'Entertainment', 'Sports')",
+      "description": "Canonical requested category name (e.g. All, Sports, Technology)",
       "title": "Category Name",
       "type": "string"
     },
@@ -46,9 +56,19 @@
       "title": "Duet Enabled",
       "type": "boolean"
     },
+    "engagementRate": {
+      "description": "(likes + comments + shares + collects) / plays, 6 decimals. Omitted when playCount is zero or missing.",
+      "title": "Engagement Rate",
+      "type": "number"
+    },
     "feedType": {
       "description": "Always 'explore' for rows from this actor",
       "title": "Feed Type",
+      "type": "string"
+    },
+    "firstSeen": {
+      "description": "Present only for onlyNew runs: ISO timestamp when the post first entered the state store",
+      "title": "First Seen",
       "type": "string"
     },
     "hashtags": {
@@ -57,14 +77,34 @@
       "type": "array"
     },
     "images": {
-      "description": "Slideshow images for photo posts (postType='slideshow')",
+      "description": "Slideshow images for photo posts (postType='slideshow'). With rehosting, urlList becomes a single KV image URL and urlListOriginal keeps the signed candidate list.",
       "title": "Images",
       "type": "array"
     },
     "isAd": {
-      "description": "Whether the post is a paid advertisement",
+      "description": "Whether the post is marked as an advertisement",
       "title": "Is Ad",
       "type": "boolean"
+    },
+    "isNew": {
+      "description": "Present only for onlyNew runs; true for posts emitted during this run",
+      "title": "Is New",
+      "type": "boolean"
+    },
+    "itemCategoryId": {
+      "description": "The item's own CategoryType. Explore feeds are mixed, so this can differ from categoryId.",
+      "title": "Item Category ID",
+      "type": "integer"
+    },
+    "itemCategoryName": {
+      "description": "Canonical name for itemCategoryId",
+      "title": "Item Category Name",
+      "type": "string"
+    },
+    "lastSeen": {
+      "description": "Present only for onlyNew runs: ISO timestamp for this observation",
+      "title": "Last Seen",
+      "type": "string"
     },
     "likeCount": {
       "description": "Number of likes (from statsV2)",
@@ -72,12 +112,42 @@
       "type": "integer"
     },
     "locationCreated": {
-      "description": "Country code where the post was created",
-      "title": "Location Created",
+      "description": "Declared for backward compatibility. The Explore item payload does not contain it; it is emitted only when includePostDetails=true and the post detail page supplies a value.",
+      "title": "Location Created (legacy)",
       "type": "string"
     },
+    "marketRegion": {
+      "description": "Selected ISO country, or the actual region detected from the Explore page state when no country was requested. Never guessed.",
+      "title": "Market Region",
+      "type": "string"
+    },
+    "mediaExpiresAt": {
+      "description": "Per-asset ISO 8601 expiries: video, cover, avatar, music, subtitles",
+      "title": "Media Expiries",
+      "type": "object"
+    },
+    "mediaRehosted": {
+      "description": "True when the video bytes were stored in the default Key-Value Store, or, for a post without video, when at least one other signed media field was stored. False when no media field succeeded; the original signed URLs remain.",
+      "title": "Media Rehosted",
+      "type": "boolean"
+    },
+    "mediaRehostedAll": {
+      "description": "True when every attempted media field was stored in the Key-Value Store. False when any field failed or was skipped.",
+      "title": "All Media Rehosted",
+      "type": "boolean"
+    },
+    "mediaRehostedFields": {
+      "description": "Boolean per-field success map derived from rehostStatusByField.",
+      "title": "Media Rehosted Fields",
+      "type": "object"
+    },
+    "mediaSources": {
+      "description": "Original signed URL or URL list for every rehosted field. Rehosted fields also keep a matching <field>Original value.",
+      "title": "Media Sources",
+      "type": "object"
+    },
     "mediaUrlExpiresAt": {
-      "description": "ISO 8601 UTC timestamp when signed media URLs expire",
+      "description": "Earliest ISO 8601 UTC expiry across the original signed video, cover, avatar, music and subtitle URLs. It remains the source expiry after rehosting; KV URLs do not use it.",
       "title": "Media URL Expires At",
       "type": "string"
     },
@@ -87,13 +157,28 @@
       "type": "array"
     },
     "music": {
-      "description": "Sound/music used in the post (id, title, authorName, duration, album)",
+      "description": "Sound/music used in the post (id, title, authorName, duration, album, playUrl, coverUrl). After rehosting, playUrl and coverUrl use KV URLs and playUrlOriginal/coverUrlOriginal keep the signed sources.",
       "title": "Music",
+      "type": "object"
+    },
+    "place": {
+      "description": "POI object when present: id, name, address, city, province, country, countryCode, category, typeName. No latitude/longitude is invented.",
+      "title": "Place / POI",
       "type": "object"
     },
     "playCount": {
       "description": "Number of video plays",
       "title": "Play Count",
+      "type": "integer"
+    },
+    "playsPerHour": {
+      "description": "playCount / ageHours, 1 decimal. Omitted when ageHours is not positive.",
+      "title": "Plays Per Hour",
+      "type": "number"
+    },
+    "position": {
+      "description": "0-based emitted order within the market/category after filters and dedupe",
+      "title": "Position",
       "type": "integer"
     },
     "postId": {
@@ -111,10 +196,35 @@
       "title": "Post URL",
       "type": "string"
     },
+    "rank": {
+      "description": "1-based emitted order within the market/category after filters and dedupe",
+      "title": "Rank",
+      "type": "integer"
+    },
+    "recordType": {
+      "description": "Always 'explorePost'",
+      "title": "Record Type",
+      "type": "string"
+    },
+    "rehostStatus": {
+      "description": "Record-level outcome: ok, partial, no_media_fields, no_post_url, missing_post_id, no_video_response, navigation_failed, playwright_unavailable, browser_unavailable, body_unavailable, empty_body, invalid_content_type, not_mp4, not_vtt, http_<status>, network_error, capture_error, kv_error, or kv_url_error. Failures keep the original URLs and never drop the record.",
+      "title": "Rehost Status",
+      "type": "string"
+    },
+    "rehostStatusByField": {
+      "description": "Per-field status keyed by output path, for example video.playUrl, video.cover, video.zoomCover.240, music.playUrl, author.avatarUrl, images[0].urlList and subtitles[0].url. Values are ok or a fail-soft status.",
+      "title": "Rehost Status By Field",
+      "type": "object"
+    },
     "repostCount": {
       "description": "Number of reposts",
       "title": "Repost Count",
       "type": "integer"
+    },
+    "scrapedAt": {
+      "description": "ISO 8601 UTC timestamp of the run start",
+      "title": "Scraped At",
+      "type": "string"
     },
     "shareCount": {
       "description": "Number of shares",
@@ -126,10 +236,20 @@
       "title": "Share Enabled",
       "type": "boolean"
     },
+    "sourceUrl": {
+      "description": "Provenance alias for postUrl",
+      "title": "Source URL",
+      "type": "string"
+    },
     "stitchEnabled": {
       "description": "Whether stitching is allowed on this post",
       "title": "Stitch Enabled",
       "type": "boolean"
+    },
+    "subtitles": {
+      "description": "Subtitle metadata from subtitleInfos, or video.claInfo.captionInfos when subtitleInfos is absent. text is added only with includeTranscripts=true. With rehosting, url is a KV VTT URL and urlOriginal keeps the signed source.",
+      "title": "Subtitles",
+      "type": "array"
     },
     "textLanguage": {
       "description": "Language code of the caption",
@@ -137,7 +257,7 @@
       "type": "string"
     },
     "video": {
-      "description": "Video metadata (width, height, duration, playUrl, cover, zoomCover)",
+      "description": "Video metadata. With rehostVideo=true, playUrl, downloadUrl, cover, originCover, dynamicCover and zoomCover are stable Key-Value Store URLs, each with a matching <field>Original value and a mediaSources entry. sourcePlayUrl keeps the original signed play URL, and sourceDownloadUrl keeps a distinct signed download URL. Without rehosting, playUrl prefers the working www.tiktok.com/aweme/v1/play/ carrier and downloadUrl falls back to it.",
       "title": "Video",
       "type": "object"
     }
@@ -148,6 +268,10 @@
       "display": {
         "component": "table",
         "properties": {
+          "ageHours": {
+            "format": "number",
+            "label": "Age (hours)"
+          },
           "caption": {
             "format": "text",
             "label": "Caption"
@@ -160,25 +284,45 @@
             "format": "text",
             "label": "Category"
           },
-          "commentCount": {
-            "format": "number",
-            "label": "Comments"
-          },
           "createdAt": {
             "format": "text",
             "label": "Created At"
+          },
+          "engagementRate": {
+            "format": "number",
+            "label": "Engagement Rate"
           },
           "feedType": {
             "format": "text",
             "label": "Feed Type"
           },
+          "itemCategoryName": {
+            "format": "text",
+            "label": "Item Category"
+          },
           "likeCount": {
             "format": "number",
             "label": "Likes"
           },
+          "marketRegion": {
+            "format": "text",
+            "label": "Market"
+          },
+          "mediaRehosted": {
+            "format": "text",
+            "label": "Media Rehosted"
+          },
+          "mediaRehostedAll": {
+            "format": "text",
+            "label": "All Media Rehosted"
+          },
           "playCount": {
             "format": "number",
             "label": "Plays"
+          },
+          "playsPerHour": {
+            "format": "number",
+            "label": "Plays / Hour"
           },
           "postId": {
             "format": "text",
@@ -187,22 +331,38 @@
           "postUrl": {
             "format": "link",
             "label": "Post URL"
+          },
+          "rank": {
+            "format": "number",
+            "label": "Rank"
+          },
+          "rehostStatus": {
+            "format": "text",
+            "label": "Rehost Status"
           }
         }
       },
       "title": "Overview",
       "transformation": {
         "fields": [
+          "rank",
+          "marketRegion",
           "categoryName",
           "categoryId",
+          "itemCategoryName",
           "feedType",
           "postId",
           "caption",
-          "likeCount",
           "playCount",
-          "commentCount",
+          "likeCount",
+          "engagementRate",
+          "ageHours",
+          "playsPerHour",
           "createdAt",
-          "postUrl"
+          "postUrl",
+          "mediaRehosted",
+          "mediaRehostedAll",
+          "rehostStatus"
         ]
       }
     }

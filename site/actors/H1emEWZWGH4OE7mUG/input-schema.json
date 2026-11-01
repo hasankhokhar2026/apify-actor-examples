@@ -1,20 +1,53 @@
 {
   "properties": {
     "companyCategories": {
-      "description": "Filter companies by category (e.g. 'saas', 'fintech'). Case-insensitive substring match on startup name/slug.",
+      "description": "Match Wellfound market, industry and company-type tags or the company high concept. This is not a company-name filter; use includeCompanies for names. Requires enrichDetails=true.",
       "editor": "stringList",
-      "title": "Company Category Filter",
+      "title": "Company Categories",
       "type": "array"
     },
+    "companySizes": {
+      "description": "Keep jobs or companies whose company size matches one of these values, for example 11-50, 51-200 or SIZE_51_200. Rows without a size are dropped and counted.",
+      "editor": "stringList",
+      "title": "Company Sizes",
+      "type": "array"
+    },
+    "companyStages": {
+      "description": "Keep jobs or companies whose stage matches one of these values, for example seed, early-stage, growth-stage or scale-stage. Rows without a stage are dropped and counted.",
+      "editor": "stringList",
+      "title": "Company Stages",
+      "type": "array"
+    },
+    "enrichDetails": {
+      "default": true,
+      "description": "Fetch plain and autoOpen detail pages for selected jobs to add description HTML, structured salary/equity, visa/relocation, skills, company funding, founders, socials and benefits. Direct job URLs are always enriched. Default true; the saved prefill turns it off to keep scheduled runs fast.",
+      "prefill": false,
+      "title": "Enrich Job Details",
+      "type": "boolean"
+    },
+    "equityOnly": {
+      "default": false,
+      "description": "Keep jobs that explicitly offer equity; jobs that say No equity or do not mention equity are dropped.",
+      "prefill": false,
+      "title": "Equity Only",
+      "type": "boolean"
+    },
     "excludeCompanies": {
-      "description": "Block-list of company names/slugs (case-insensitive).",
+      "description": "Drop jobs whose company name or slug contains one of these values. Exclusions win over includeCompanies.",
       "editor": "stringList",
       "title": "Exclude Companies",
       "type": "array"
     },
+    "expandSimilar": {
+      "default": false,
+      "description": "Add related jobs from the autoOpen detail page similarJobs edges, bounded by similarDepth and similarLimit. Only applies to job modes.",
+      "prefill": false,
+      "title": "Expand Similar Jobs",
+      "type": "boolean"
+    },
     "experience": {
       "default": "any",
-      "description": "Filter by experience level (matches on job title/description keywords).",
+      "description": "Best-effort filter: title keywords first, then yearsExperienceMin (0-2 junior, 3-4 mid, 5+ senior). Unknown jobs are kept and counted.",
       "editor": "select",
       "enum": [
         "any",
@@ -34,26 +67,27 @@
       "type": "string"
     },
     "includeCompanies": {
-      "description": "Allow-list of company names/slugs (case-insensitive).",
+      "description": "Only keep jobs whose company name or slug contains one of these values (case-insensitive).",
       "editor": "stringList",
       "title": "Include Companies",
       "type": "array"
     },
     "includeNoSalary": {
       "default": true,
-      "description": "When false, jobs with no compensation field are filtered out.",
+      "description": "Only applies when minSalary or maxSalary is set. When false, jobs with no parsed salary are dropped.",
+      "prefill": true,
       "title": "Include Jobs Without Salary Data",
       "type": "boolean"
     },
     "jobTitle": {
-      "description": "Client-side filter: only jobs whose title contains this phrase (case-insensitive).",
+      "description": "Only keep jobs whose title contains this phrase (case-insensitive).",
       "editor": "textfield",
       "title": "Job Title Filter",
       "type": "string"
     },
     "jobType": {
       "default": "any",
-      "description": "Filter by employment type (matches on job metadata/description).",
+      "description": "Exact structured job type from Wellfound. Jobs with a missing/unknown type are dropped when a specific type is selected.",
       "editor": "select",
       "enum": [
         "any",
@@ -73,54 +107,186 @@
       "type": "string"
     },
     "keyword": {
-      "description": "Client-side keyword filter across title + company + location (case-insensitive).",
+      "description": "Only keep jobs matching this text across title, company, locations, compensation and description (case-insensitive).",
       "editor": "textfield",
       "title": "Keyword",
       "type": "string"
     },
     "location": {
-      "description": "Client-side location filter (case-insensitive match on any location name).",
+      "description": "Used as a server-side /location/{location} or /role/l/{role}/{location} path when it is a clean city slug or name, and always as a case-insensitive client filter over locations and accepted remote locations.",
       "editor": "textfield",
-      "title": "Location Filter",
+      "title": "Location",
       "type": "string"
+    },
+    "maxEquity": {
+      "default": 0,
+      "description": "Keep jobs whose equity range bottom is at or below this percentage. 0 = unlimited.",
+      "editor": "number",
+      "maximum": 100,
+      "minimum": 0,
+      "title": "Maximum Equity",
+      "type": "number"
     },
     "maxItems": {
       "default": 50,
-      "description": "Maximum jobs returned after filtering.",
+      "description": "Maximum jobs or companies pushed after all filters and sorting.",
       "editor": "number",
-      "maximum": 500,
+      "maximum": 10000,
       "minimum": 1,
-      "prefill": 5,
+      "prefill": 3,
       "title": "Max Items",
       "type": "integer"
     },
     "maxSalary": {
       "default": 0,
-      "description": "Maximum annual compensation. 0 = unlimited.",
+      "description": "Keep jobs whose salary range bottom is at or below this amount. 0 = unlimited. This is the documented range-start semantics.",
       "editor": "number",
-      "maximum": 1000000,
+      "maximum": 10000000,
       "minimum": 0,
-      "title": "Maximum Salary (USD/year)",
+      "title": "Maximum Salary",
+      "type": "integer"
+    },
+    "minCompanyFunding": {
+      "default": 0,
+      "description": "Keep jobs whose parsed total funding is at or above this amount. Requires detail enrichment; unknown funding is dropped. 0 = off.",
+      "editor": "number",
+      "maximum": 10000000000,
+      "minimum": 0,
+      "title": "Minimum Company Funding",
+      "type": "integer"
+    },
+    "minEquity": {
+      "default": 0,
+      "description": "Keep jobs whose equity range top is at or above this percentage. Jobs without equity data are dropped. 0 = off.",
+      "editor": "number",
+      "maximum": 100,
+      "minimum": 0,
+      "title": "Minimum Equity",
+      "type": "number"
+    },
+    "minOpenJobs": {
+      "default": 0,
+      "description": "Keep rows whose company open-job count is at or above this value. Requires detail enrichment for jobs; unknown counts are dropped. 0 = off.",
+      "editor": "number",
+      "maximum": 100000,
+      "minimum": 0,
+      "title": "Minimum Open Jobs",
       "type": "integer"
     },
     "minSalary": {
       "default": 0,
-      "description": "Minimum annual compensation parsed from job compensation field.",
+      "description": "Keep jobs whose salary range top is at or above this amount. Currency is the job's listed currency; no FX conversion. 0 = off.",
       "editor": "number",
-      "maximum": 1000000,
+      "maximum": 10000000,
       "minimum": 0,
-      "title": "Minimum Salary (USD/year)",
+      "title": "Minimum Salary",
+      "type": "integer"
+    },
+    "mode": {
+      "default": "auto",
+      "description": "Auto uses startUrls when provided, otherwise role/location search. Search ignores startUrls. Scrape URLs requires at least one start URL. Companies reads the /startups directory.",
+      "editor": "select",
+      "enum": [
+        "auto",
+        "search",
+        "startUrls",
+        "companies"
+      ],
+      "enumTitles": [
+        "Auto",
+        "Search by role/location",
+        "Scrape URLs",
+        "Companies / startups"
+      ],
+      "prefill": "auto",
+      "title": "Scraping Mode",
+      "type": "string"
+    },
+    "onlyNew": {
+      "default": false,
+      "description": "Push only jobs or companies whose IDs have not been seen for this stateKey. Requires stateKey.",
+      "prefill": false,
+      "title": "Only New Items",
+      "type": "boolean"
+    },
+    "pageLimit": {
+      "default": 0,
+      "description": "0 fetches every page up to pageCount. N fetches the first N pages. An explicit ?page=N start URL fetches only that page.",
+      "editor": "number",
+      "maximum": 500,
+      "minimum": 0,
+      "title": "Page Limit",
+      "type": "integer"
+    },
+    "postedWithinDays": {
+      "default": 0,
+      "description": "Keep jobs posted within the last N days. Jobs without a parsed posted date are dropped and counted. 0 = off.",
+      "editor": "number",
+      "maximum": 3650,
+      "minimum": 0,
+      "title": "Posted Within Days",
       "type": "integer"
     },
     "remoteOnly": {
       "default": false,
-      "description": "Return only jobs flagged as remote.",
+      "description": "Search /remote or /role/r/{role} and keep only jobs flagged as remote.",
+      "prefill": false,
       "title": "Remote Only",
       "type": "boolean"
     },
+    "remoteWfhFlexible": {
+      "default": false,
+      "description": "Keep jobs whose remote configuration explicitly reports work-from-home flexibility. Requires detail enrichment; unknown values are dropped.",
+      "prefill": false,
+      "title": "Remote / WFH Flexible",
+      "type": "boolean"
+    },
+    "role": {
+      "description": "Wellfound role slug for search mode, for example software-engineer, product-manager, designer or machine-learning-engineer.",
+      "editor": "textfield",
+      "title": "Role",
+      "type": "string"
+    },
+    "salaryCurrency": {
+      "default": "any",
+      "description": "Filter parsed salaries by currency. No FX conversion is performed.",
+      "editor": "select",
+      "enum": [
+        "any",
+        "USD",
+        "CAD",
+        "INR"
+      ],
+      "enumTitles": [
+        "Any currency",
+        "USD",
+        "CAD",
+        "INR"
+      ],
+      "title": "Salary Currency",
+      "type": "string"
+    },
+    "similarDepth": {
+      "default": 1,
+      "description": "1 emits the similar jobs embedded in the enriched page. 2-3 follow additional autoOpen pages within similarLimit.",
+      "editor": "number",
+      "maximum": 3,
+      "minimum": 1,
+      "title": "Similar Depth",
+      "type": "integer"
+    },
+    "similarLimit": {
+      "default": 10,
+      "description": "Maximum additional similar jobs emitted per run, also bounded by maxItems.",
+      "editor": "number",
+      "maximum": 100,
+      "minimum": 1,
+      "title": "Similar Limit",
+      "type": "integer"
+    },
     "sort": {
       "default": "none",
-      "description": "Sort by posted date (when available).",
+      "description": "none keeps first-seen source order. newest/oldest sort the whole run by parsed posted date; jobs without a date are last.",
       "editor": "select",
       "enum": [
         "newest",
@@ -136,15 +302,51 @@
       "type": "string"
     },
     "startUrls": {
-      "description": "Wellfound URLs. Default is https://wellfound.com/jobs. Supports ?remote=true and other query params. /role/l/ deep-filter URLs require residential proxy (escalated automatically).",
-      "editor": "stringList",
+      "default": [],
+      "description": "Jobs: /jobs, /role/{role}, /role/l/{role}/{location}, /role/r/{role}, /location/{location}, /remote, /jobs/{id}-{slug} and /job-collections/{slug}. Companies: /startups, /startups/location/{location} and /startups/industry/{industry}. Company profile and login URLs are rejected.",
+      "editor": "requestListSources",
+      "items": {
+        "properties": {
+          "url": {
+            "description": "Page URL to scrape.",
+            "title": "URL",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
       "prefill": [
-        "https://wellfound.com/jobs"
+        {
+          "url": "https://wellfound.com/jobs"
+        }
       ],
       "title": "Start URLs",
       "type": "array"
+    },
+    "stateKey": {
+      "description": "Persistent key in the wellfound-monitor key-value store used to remember seen job/company IDs between runs. Changing it starts a fresh history.",
+      "editor": "textfield",
+      "title": "State Key",
+      "type": "string"
+    },
+    "visaSponsorshipOnly": {
+      "default": false,
+      "description": "Keep jobs whose detail page says visa sponsorship is available. Requires detail enrichment; unknown values are dropped.",
+      "prefill": false,
+      "title": "Visa Sponsorship Only",
+      "type": "boolean"
+    },
+    "ycOnly": {
+      "default": false,
+      "description": "Keep rows where the YC Funded badge is present.",
+      "prefill": false,
+      "title": "YC Funded Only",
+      "type": "boolean"
     }
   },
+  "required": [
+    "mode"
+  ],
   "schemaVersion": 1,
   "title": "Wellfound Jobs Scraper Input",
   "type": "object"

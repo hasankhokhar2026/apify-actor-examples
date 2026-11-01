@@ -1,23 +1,1142 @@
 {
   "actorSpecification": 1,
+  "description": "One record per car listing from 8 HTML AutoScout24 markets and the Swiss API, with optional detail and seller enrichment.",
+  "fields": {
+    "properties": {
+      "accidentFree": {
+        "description": "Whether the source says accident-free",
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "adTier": {
+        "description": "AutoScout24 ad tier (sort/ad disambiguation)",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "availabilityType": {
+        "description": "CH availability type",
+        "type": [
+          "integer",
+          "null"
+        ]
+      },
+      "availableNow": {
+        "description": "Whether the listing is available now",
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "batteryCapacityKwh": {
+        "description": "Battery capacity in kWh",
+        "type": [
+          "number",
+          "null"
+        ]
+      },
+      "bodyColor": {
+        "description": "Exterior colour",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "bodyType": {
+        "description": "Body type",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "carfaxUrl": {
+        "description": "Carfax / vehicle report URL",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "certificationNumber": {
+        "description": "CH certification number",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "chargingPowerKw": {
+        "description": "Charging power in kW",
+        "type": [
+          "number",
+          "null"
+        ]
+      },
+      "chargingTime0To100Min": {
+        "description": "CH charge time 0-100% in minutes",
+        "type": [
+          "number",
+          "null"
+        ]
+      },
+      "city": {
+        "description": "City",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "co2Emission": {
+        "description": "Numeric CO2 value",
+        "type": [
+          "number",
+          "null"
+        ]
+      },
+      "co2EmissionsGkm": {
+        "description": "CO2 emissions with unit",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "combustionEngineHp": {
+        "description": "CH combustion engine power in HP",
+        "type": [
+          "integer",
+          "null"
+        ]
+      },
+      "condition": {
+        "description": "new, used, demonstrator, oldtimer or other",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "consumptionCombined": {
+        "description": "Combined consumption value",
+        "type": [
+          "number",
+          "null"
+        ]
+      },
+      "coordinates": {
+        "description": "Latitude/longitude object",
+        "type": [
+          "object",
+          "null"
+        ]
+      },
+      "countryCode": {
+        "description": "Country code",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "createdAt": {
+        "description": "ISO listing creation time",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "crossReferenceId": {
+        "description": "Legacy AutoScout24 cross-reference id",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "currency": {
+        "description": "Market currency",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "cylinders": {
+        "description": "Number of cylinders",
+        "type": [
+          "integer",
+          "null"
+        ]
+      },
+      "dealerPrice": {
+        "description": "Dealer-network price when published separately",
+        "type": [
+          "integer",
+          "null"
+        ]
+      },
+      "dedupeKey": {
+        "description": "idType:id dedupe key",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "description": {
+        "description": "Plain-text description",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "detailEnriched": {
+        "description": "True when detail data was merged",
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "dimensions": {
+        "description": "Length/width/height in mm",
+        "type": [
+          "object",
+          "null"
+        ]
+      },
+      "directImport": {
+        "description": "CH direct-import flag",
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "displacement": {
+        "description": "Engine displacement in cc",
+        "type": [
+          "integer",
+          "null"
+        ]
+      },
+      "doors": {
+        "description": "Number of doors",
+        "type": [
+          "integer",
+          "null"
+        ]
+      },
+      "driveTrain": {
+        "description": "Drivetrain (awd/fwd/rwd or source label)",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "electricMotorHp": {
+        "description": "CH electric motor power in HP",
+        "type": [
+          "integer",
+          "null"
+        ]
+      },
+      "electricRangeKm": {
+        "description": "Electric range in km",
+        "type": [
+          "integer",
+          "null"
+        ]
+      },
+      "emissionStandard": {
+        "description": "Emission standard",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "energyLabel": {
+        "description": "CH energy label",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "equipment": {
+        "description": "Equipment grouped by category",
+        "type": [
+          "object",
+          "null"
+        ]
+      },
+      "fastChargingPowerKw": {
+        "description": "CH fast-charging power in kW",
+        "type": [
+          "number",
+          "null"
+        ]
+      },
+      "fastChargingTime0To80Min": {
+        "description": "CH fast-charge time 0-80% in minutes",
+        "type": [
+          "number",
+          "null"
+        ]
+      },
+      "favoriteCount": {
+        "description": "HTML detail favourite counter",
+        "type": [
+          "integer",
+          "null"
+        ]
+      },
+      "features": {
+        "description": "Flat equipment list",
+        "items": {
+          "type": "string"
+        },
+        "type": [
+          "array",
+          "null"
+        ]
+      },
+      "firstRegistration": {
+        "description": "First-registration date as published",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "firstRegistrationDate": {
+        "description": "ISO first-registration date",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "fuelCode": {
+        "description": "Raw source fuel code",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "fuelConsumption": {
+        "description": "Published fuel consumption",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "fuelType": {
+        "description": "Canonical fuel type",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "fullServiceHistory": {
+        "description": "Full service history flag",
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "gears": {
+        "description": "Number of gears",
+        "type": [
+          "integer",
+          "null"
+        ]
+      },
+      "has360": {
+        "description": "Whether 360 content exists",
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "headerImage": {
+        "description": "Header image URL",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "hsnTsn": {
+        "description": "German HSN/TSN codes",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "id": {
+        "description": "Listing UUID (HTML) or numeric id (CH API)",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "idType": {
+        "description": "uuid or chId",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "imageCount": {
+        "description": "Full photo count before the 20 cap",
+        "type": [
+          "integer",
+          "null"
+        ]
+      },
+      "inspectionPassed": {
+        "description": "CH inspection flag",
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "interiorColor": {
+        "description": "CH interior colour",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "isDeliverable": {
+        "description": "Whether delivery is offered",
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "isNew": {
+        "description": "Source new/used flag",
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "language": {
+        "description": "Market language",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "lastInspectionDate": {
+        "description": "Last inspection date",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "lastModifiedAt": {
+        "description": "ISO listing modification time",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "latitude": {
+        "description": "Latitude",
+        "type": [
+          "number",
+          "null"
+        ]
+      },
+      "leasingRate": {
+        "description": "CH leasing rate when split from listPrice",
+        "type": [
+          "number",
+          "null"
+        ]
+      },
+      "listPrice": {
+        "description": "CH list price when the search price is a leasing rate",
+        "type": [
+          "number",
+          "null"
+        ]
+      },
+      "listingUrl": {
+        "description": "Absolute listing URL",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "location": {
+        "description": "City, country summary",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "longitude": {
+        "description": "Longitude",
+        "type": [
+          "number",
+          "null"
+        ]
+      },
+      "make": {
+        "description": "Car make",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "marketplace": {
+        "description": "Market key (de/at/be/fr/it/nl/pl/es/ch)",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "mileageHistoryUrl": {
+        "description": "Mileage-history report URL when published",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "mileageKm": {
+        "description": "Mileage in kilometres",
+        "type": [
+          "integer",
+          "null"
+        ]
+      },
+      "model": {
+        "description": "Car model",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "modelGroup": {
+        "description": "Model group / family",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "negotiable": {
+        "description": "Whether the price is negotiable",
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "netPrice": {
+        "description": "Net price when the seller publishes it",
+        "type": [
+          "integer",
+          "null"
+        ]
+      },
+      "newInspection": {
+        "description": "New inspection flag",
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "nonSmoking": {
+        "description": "Non-smoking flag",
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "offerType": {
+        "description": "Raw HTML offer code (N/U/J/O/D/S)",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "onRequestOnly": {
+        "description": "Price on request / POA sentinel",
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "paintType": {
+        "description": "Paint finish",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "payloadKg": {
+        "description": "Payload in kg",
+        "type": [
+          "integer",
+          "null"
+        ]
+      },
+      "photos": {
+        "description": "Up to 20 absolute photo URLs",
+        "items": {
+          "type": "string"
+        },
+        "type": [
+          "array",
+          "null"
+        ]
+      },
+      "powerConsumptionKwh100km": {
+        "description": "CH electric consumption in kWh/100 km",
+        "type": [
+          "number",
+          "null"
+        ]
+      },
+      "powerHp": {
+        "description": "Power in HP/PS",
+        "type": [
+          "integer",
+          "null"
+        ]
+      },
+      "powerKw": {
+        "description": "Power in kW",
+        "type": [
+          "integer",
+          "null"
+        ]
+      },
+      "previousOwners": {
+        "description": "Number of previous owners",
+        "type": [
+          "integer",
+          "null"
+        ]
+      },
+      "priceAmount": {
+        "description": "Price in priceCurrency (CHF for the Swiss market)",
+        "type": [
+          "number",
+          "null"
+        ]
+      },
+      "priceCurrency": {
+        "description": "Currency code for priceAmount",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "priceEur": {
+        "description": "Price in EUR for EUR markets",
+        "type": [
+          "integer",
+          "null"
+        ]
+      },
+      "priceEvaluation": {
+        "description": "AutoScout24 price-evaluation category",
+        "type": [
+          "integer",
+          "null"
+        ]
+      },
+      "priceEvaluationCategory": {
+        "description": "AutoScout24 price-evaluation category",
+        "type": [
+          "integer",
+          "null"
+        ]
+      },
+      "priceEvaluationRanges": {
+        "description": "Price-evaluation ranges",
+        "items": {
+          "type": "object"
+        },
+        "type": [
+          "array",
+          "null"
+        ]
+      },
+      "priceFormatted": {
+        "description": "Source-formatted price",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "priceMedian": {
+        "description": "AutoScout24 price-evaluation median",
+        "type": [
+          "integer",
+          "null"
+        ]
+      },
+      "priceRaw": {
+        "description": "Numeric source price",
+        "type": [
+          "integer",
+          "null"
+        ]
+      },
+      "recordType": {
+        "description": "Always carListing",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "region": {
+        "description": "Region when published",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "scrapedAt": {
+        "description": "UTC ISO scrape timestamp",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "searchPosition": {
+        "description": "Position in the result page",
+        "type": [
+          "integer",
+          "null"
+        ]
+      },
+      "seats": {
+        "description": "Number of seats",
+        "type": [
+          "integer",
+          "null"
+        ]
+      },
+      "sellerAddress": {
+        "description": "Dealer postal address when published",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "sellerContact": {
+        "description": "Named contact when published",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "sellerDealerUrl": {
+        "description": "AutoScout24 dealer page",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "sellerEmail": {
+        "description": "Dealer email from the profile or imprint",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "sellerEnriched": {
+        "description": "True when a seller profile was merged",
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "sellerGooglePlace": {
+        "description": "Google place rating object",
+        "type": [
+          "object",
+          "null"
+        ]
+      },
+      "sellerId": {
+        "description": "Seller id",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "sellerImprint": {
+        "description": "Dealer imprint text when published",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "sellerName": {
+        "description": "Seller/dealer name",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "sellerOpeningHours": {
+        "description": "Opening hours when published",
+        "type": [
+          "object",
+          "array",
+          "null"
+        ]
+      },
+      "sellerPhone": {
+        "description": "First published phone number",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "sellerPhones": {
+        "description": "Published phone numbers",
+        "items": {
+          "type": "string"
+        },
+        "type": [
+          "array",
+          "null"
+        ]
+      },
+      "sellerRatingCount": {
+        "description": "Number of ratings",
+        "type": [
+          "integer",
+          "null"
+        ]
+      },
+      "sellerRatingStars": {
+        "description": "Seller rating out of 5",
+        "type": [
+          "number",
+          "null"
+        ]
+      },
+      "sellerReviewCount": {
+        "description": "Number of seller reviews",
+        "type": [
+          "integer",
+          "null"
+        ]
+      },
+      "sellerReviews": {
+        "description": "Up to 10 seller reviews when published",
+        "items": {
+          "type": "object"
+        },
+        "type": [
+          "array",
+          "null"
+        ]
+      },
+      "sellerType": {
+        "description": "Canonical dealer or private",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "sellerTypeRaw": {
+        "description": "Raw source seller type",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "sellerVatId": {
+        "description": "Dealer VAT/UID number from the profile or imprint",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "sellerWebsite": {
+        "description": "Seller website when published",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "source": {
+        "description": "html or chApi",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "sourceUrl": {
+        "description": "Source listing URL",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "status": {
+        "description": "Listing status from the detail payload",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "street": {
+        "description": "Street address when published",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "taxDeductible": {
+        "description": "Whether VAT is deductible",
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "title": {
+        "description": "Listing title",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "towingCapacityKg": {
+        "description": "Braked towing capacity in kg",
+        "type": [
+          "integer",
+          "null"
+        ]
+      },
+      "transmission": {
+        "description": "automatic, manual or semi-automatic",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "upholstery": {
+        "description": "Upholstery material",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "upholsteryColor": {
+        "description": "Upholstery/interior colour",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "variant": {
+        "description": "Trim, variant or version",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "vatRate": {
+        "description": "VAT rate when published",
+        "type": [
+          "number",
+          "null"
+        ]
+      },
+      "vehicleReport": {
+        "description": "Vehicle report object",
+        "type": [
+          "object",
+          "null"
+        ]
+      },
+      "vehicleType": {
+        "description": "Source vehicle type/category",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "videoUrl": {
+        "description": "Video URL when published",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "viewCount": {
+        "description": "HTML detail interaction/view counter",
+        "type": [
+          "integer",
+          "null"
+        ]
+      },
+      "vin": {
+        "description": "VIN only when the source exposes it",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "warranty": {
+        "description": "Warranty details when published",
+        "type": [
+          "string",
+          "object",
+          "null"
+        ]
+      },
+      "warrantyAvailable": {
+        "description": "CH warrantyExists flag",
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "weightKg": {
+        "description": "Weight in kg",
+        "type": [
+          "integer",
+          "null"
+        ]
+      },
+      "whatsapp": {
+        "description": "WhatsApp number when published",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "wltp": {
+        "description": "Raw WLTP object when published",
+        "type": [
+          "object",
+          "null"
+        ]
+      },
+      "wltpValues": {
+        "description": "WLTP display values",
+        "items": {
+          "type": "string"
+        },
+        "type": [
+          "array",
+          "null"
+        ]
+      },
+      "year": {
+        "description": "First-registration year (1900-2026)",
+        "type": [
+          "integer",
+          "null"
+        ]
+      },
+      "zip": {
+        "description": "Postal code",
+        "type": [
+          "string",
+          "null"
+        ]
+      }
+    },
+    "type": "object"
+  },
+  "title": "AutoScout24 car listings",
   "views": {
     "overview": {
       "display": {
         "component": "table",
-        "properties": {}
+        "properties": {
+          "city": {
+            "format": "text",
+            "label": "City"
+          },
+          "countryCode": {
+            "format": "text",
+            "label": "Country"
+          },
+          "createdAt": {
+            "format": "text",
+            "label": "Created"
+          },
+          "fuelType": {
+            "format": "text",
+            "label": "Fuel"
+          },
+          "id": {
+            "format": "text",
+            "label": "ID"
+          },
+          "listingUrl": {
+            "format": "link",
+            "label": "Listing URL"
+          },
+          "make": {
+            "format": "text",
+            "label": "Make"
+          },
+          "mileageKm": {
+            "format": "number",
+            "label": "Mileage (km)"
+          },
+          "model": {
+            "format": "text",
+            "label": "Model"
+          },
+          "priceAmount": {
+            "format": "number",
+            "label": "Price"
+          },
+          "priceCurrency": {
+            "format": "text",
+            "label": "Currency"
+          },
+          "priceEur": {
+            "format": "number",
+            "label": "Price (EUR)"
+          },
+          "sellerName": {
+            "format": "text",
+            "label": "Seller"
+          },
+          "sellerType": {
+            "format": "text",
+            "label": "Seller type"
+          },
+          "title": {
+            "format": "text",
+            "label": "Title"
+          },
+          "transmission": {
+            "format": "text",
+            "label": "Transmission"
+          },
+          "year": {
+            "format": "number",
+            "label": "Year"
+          }
+        }
       },
       "title": "Car Listings",
       "transformation": {
         "fields": [
+          "id",
+          "title",
           "make",
           "model",
           "year",
           "priceEur",
+          "priceAmount",
+          "priceCurrency",
           "mileageKm",
           "fuelType",
           "transmission",
-          "location",
-          "listingUrl"
+          "sellerName",
+          "sellerType",
+          "city",
+          "countryCode",
+          "listingUrl",
+          "createdAt"
         ]
       }
     }

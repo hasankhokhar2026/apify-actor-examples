@@ -1,0 +1,167 @@
+{
+  "actorSpecification": 1,
+  "fields": {
+    "adId": {
+      "description": "Unique ad ID from TikTok Creative Center",
+      "title": "Ad ID",
+      "type": "string"
+    },
+    "adTitle": {
+      "description": "Ad creative title",
+      "title": "Ad Title",
+      "type": "string"
+    },
+    "adUrl": {
+      "description": "Direct link to the ad in TikTok Creative Center",
+      "title": "Ad URL",
+      "type": "string"
+    },
+    "brandName": {
+      "description": "Advertiser/brand name",
+      "title": "Brand Name",
+      "type": "string"
+    },
+    "cost": {
+      "description": "Relative cost tier (0 = low, higher = more spend)",
+      "title": "Cost Tier",
+      "type": "integer"
+    },
+    "ctr": {
+      "description": "Click-through rate",
+      "title": "CTR",
+      "type": "number"
+    },
+    "industryKey": {
+      "description": "Industry category key (e.g. label_14104000000)",
+      "title": "Industry Key",
+      "type": "string"
+    },
+    "isSearch": {
+      "description": "Whether this is a search placement ad",
+      "title": "Is Search Ad",
+      "type": "boolean"
+    },
+    "like": {
+      "description": "Number of likes on the ad",
+      "title": "Likes",
+      "type": "integer"
+    },
+    "objectiveKey": {
+      "description": "Campaign objective key (e.g. campaign_objective_conversion)",
+      "title": "Objective Key",
+      "type": "string"
+    },
+    "observedCountry": {
+      "description": "Country filter applied (ISO code or 'all')",
+      "title": "Observed Country",
+      "type": "string"
+    },
+    "observedPeriod": {
+      "description": "Time period in days (7, 30, or 180)",
+      "title": "Observed Period",
+      "type": "integer"
+    },
+    "scrapedAt": {
+      "description": "ISO 8601 timestamp when this ad was scraped",
+      "title": "Scraped At",
+      "type": "string"
+    },
+    "videoCoverUrl": {
+      "description": "URL of the ad video thumbnail/cover image",
+      "title": "Video Cover URL",
+      "type": "string"
+    },
+    "videoDuration": {
+      "description": "Video duration in seconds",
+      "title": "Video Duration",
+      "type": "number"
+    },
+    "videoHeight": {
+      "description": "Video height in pixels",
+      "title": "Video Height",
+      "type": "integer"
+    },
+    "videoId": {
+      "description": "TikTok video ID for this ad creative",
+      "title": "Video ID",
+      "type": "string"
+    },
+    "videoUrls": {
+      "description": "Video URLs by resolution (e.g. {720p: url, 1080p: url})",
+      "title": "Video URLs",
+      "type": "object"
+    },
+    "videoWidth": {
+      "description": "Video width in pixels",
+      "title": "Video Width",
+      "type": "integer"
+    }
+  },
+  "title": "TikTok Top Ads",
+  "views": {
+    "overview": {
+      "display": {
+        "component": "table",
+        "properties": {
+          "adId": {
+            "format": "text",
+            "label": "Ad ID"
+          },
+          "adTitle": {
+            "format": "text",
+            "label": "Ad Title"
+          },
+          "adUrl": {
+            "format": "link",
+            "label": "Ad URL"
+          },
+          "brandName": {
+            "format": "text",
+            "label": "Brand"
+          },
+          "ctr": {
+            "format": "number",
+            "label": "CTR"
+          },
+          "industryKey": {
+            "format": "text",
+            "label": "Industry"
+          },
+          "like": {
+            "format": "number",
+            "label": "Likes"
+          },
+          "observedCountry": {
+            "format": "text",
+            "label": "Country"
+          },
+          "scrapedAt": {
+            "format": "text",
+            "label": "Scraped At"
+          },
+          "videoDuration": {
+            "format": "number",
+            "label": "Duration (s)"
+          }
+        }
+      },
+      "title": "TikTok Top Ads",
+      "transformation": {
+        "fields": [
+          "adId",
+          "adTitle",
+          "brandName",
+          "ctr",
+          "like",
+          "videoDuration",
+          "industryKey",
+          "objectiveKey",
+          "observedCountry",
+          "observedPeriod",
+          "scrapedAt",
+          "adUrl"
+        ]
+      }
+    }
+  }
+}

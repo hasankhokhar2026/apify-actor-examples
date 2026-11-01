@@ -1,8 +1,9 @@
 {
   "actorOutputSchemaVersion": 1,
-  "description": "Eventbrite events with dates, venue address and geocoordinates, cover images, category, organizer and ticket link.",
+  "description": "Omit-empty Eventbrite event records with dates, UTC times, venue address and geocoordinates, images, taxonomy, organizer profile, ticket price and availability, and optional detail fields.",
   "properties": {
     "events": {
+      "description": "Dataset of event records. Fields without a source value are omitted, never null or blank; 0,0 coordinates are never emitted.",
       "template": "{{links.apiDefaultDatasetUrl}}/items",
       "title": "Eventbrite Events",
       "type": "string"

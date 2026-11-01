@@ -1,1 +1,856 @@
-null
+{
+  "actorSpecification": 1,
+  "description": "One row per Wellfound job or startup-directory company with search metadata, structured compensation, remote details, detail-page enrichment, company signals and optional monitoring timestamps.",
+  "fields": {
+    "properties": {
+      "acceptedRemoteLocations": {
+        "description": "Locations from which remote work is accepted.",
+        "type": "array"
+      },
+      "applyUrl": {
+        "description": "Wellfound job URL used for applying; no external ATS URL is exposed.",
+        "type": "string"
+      },
+      "atsSource": {
+        "description": "Raw ATS integration string when exposed.",
+        "type": "string"
+      },
+      "autoPosted": {
+        "description": "Whether the job was automatically posted.",
+        "type": "boolean"
+      },
+      "badges": {
+        "description": "Additional Wellfound company badge labels.",
+        "type": "array"
+      },
+      "benefits": {
+        "description": "Job benefits from JSON-LD.",
+        "type": "array"
+      },
+      "companyActivelyHiring": {
+        "description": "Actively Hiring badge flag.",
+        "type": "boolean"
+      },
+      "companyAtGlance": {
+        "description": "Plain-text company summary from autoOpen detail.",
+        "type": "string"
+      },
+      "companyBlog": {
+        "description": "Company blog URL.",
+        "type": "string"
+      },
+      "companyDescription": {
+        "description": "Plain-text startup description from the /startups directory when available.",
+        "type": "string"
+      },
+      "companyFacebook": {
+        "description": "Company Facebook URL.",
+        "type": "string"
+      },
+      "companyFounders": {
+        "description": "Founder names with titles and locations when shown on the job detail page.",
+        "type": "array"
+      },
+      "companyFundingRounds": {
+        "description": "Number of funding rounds.",
+        "type": "integer"
+      },
+      "companyFundingText": {
+        "description": "Raw funding amount text from the detail company section.",
+        "type": "string"
+      },
+      "companyFundingTotal": {
+        "description": "Numeric total raised amount when exposed.",
+        "type": "number"
+      },
+      "companyGrowingFast": {
+        "description": "Growing fast badge flag.",
+        "type": "boolean"
+      },
+      "companyHighConcept": {
+        "description": "Startup one-line high concept.",
+        "type": "string"
+      },
+      "companyHq": {
+        "description": "Company headquarters when exposed.",
+        "type": "string"
+      },
+      "companyId": {
+        "description": "Wellfound startup ID.",
+        "type": "string"
+      },
+      "companyIndustry": {
+        "description": "Industry string from JSON-LD.",
+        "type": "string"
+      },
+      "companyIndustryTags": {
+        "description": "Market/industry tags from autoOpen detail.",
+        "type": "array"
+      },
+      "companyJobCounts": {
+        "description": "Open-job counts by role, location, job type and source, with a total when exposed.",
+        "type": "object"
+      },
+      "companyLinkedIn": {
+        "description": "Company LinkedIn URL.",
+        "type": "string"
+      },
+      "companyLogo": {
+        "description": "Startup logo URL.",
+        "type": "string"
+      },
+      "companyName": {
+        "description": "Startup name.",
+        "type": "string"
+      },
+      "companyOpenJobsCount": {
+        "description": "Number of open jobs listed by the company.",
+        "type": "integer"
+      },
+      "companyProductHunt": {
+        "description": "Company Product Hunt URL.",
+        "type": "string"
+      },
+      "companySize": {
+        "description": "Human-readable company size, such as 51-200.",
+        "type": "string"
+      },
+      "companySizeCode": {
+        "description": "Raw Wellfound company size code.",
+        "type": "string"
+      },
+      "companySlug": {
+        "description": "Startup URL slug.",
+        "type": "string"
+      },
+      "companyStage": {
+        "description": "Company stage from badges or the detail company section.",
+        "type": "string"
+      },
+      "companyTopInvestors": {
+        "description": "Top Investors badge flag. This is a boolean, not investor names.",
+        "type": "boolean"
+      },
+      "companyTwitter": {
+        "description": "Company Twitter/X URL.",
+        "type": "string"
+      },
+      "companyTypeTags": {
+        "description": "Company-type tags from autoOpen detail.",
+        "type": "array"
+      },
+      "companyUrl": {
+        "description": "Wellfound company profile URL (not fetched by the actor).",
+        "type": "string"
+      },
+      "companyValuation1B": {
+        "description": "Valuation $1B+ badge flag.",
+        "type": "boolean"
+      },
+      "companyWebsite": {
+        "description": "Company website URL.",
+        "type": "string"
+      },
+      "companyYcFunded": {
+        "description": "YC Funded badge flag.",
+        "type": "boolean"
+      },
+      "compensation": {
+        "description": "Raw compensation string as published by Wellfound.",
+        "type": "string"
+      },
+      "description": {
+        "description": "Job description text or markdown from the listing, with detail fallback.",
+        "type": "string"
+      },
+      "descriptionHtml": {
+        "description": "Full HTML job description from the detail page.",
+        "type": "string"
+      },
+      "directApply": {
+        "description": "Whether the application is direct on Wellfound.",
+        "type": "boolean"
+      },
+      "equityMax": {
+        "description": "Maximum equity percentage.",
+        "type": "number"
+      },
+      "equityMin": {
+        "description": "Minimum equity percentage.",
+        "type": "number"
+      },
+      "equityOffered": {
+        "description": "True when an equity percentage is present, false when the source says No equity.",
+        "type": "boolean"
+      },
+      "firstSeenAt": {
+        "description": "ISO-8601 timestamp when the job or company ID was first recorded for this stateKey.",
+        "type": "string"
+      },
+      "isNew": {
+        "description": "True when the job or company ID was absent from the stateKey history before this run.",
+        "type": "boolean"
+      },
+      "jobId": {
+        "description": "Wellfound job listing ID.",
+        "type": "string"
+      },
+      "jobType": {
+        "description": "Normalized employment type, such as full-time or internship.",
+        "type": "string"
+      },
+      "jobUrl": {
+        "description": "Canonical Wellfound job URL.",
+        "type": "string"
+      },
+      "lastRespondedAt": {
+        "description": "ISO-8601 timestamp of the recruiter's latest response activity.",
+        "type": "string"
+      },
+      "lastSeenAt": {
+        "description": "ISO-8601 timestamp when the job or company ID was last matched for this stateKey.",
+        "type": "string"
+      },
+      "locations": {
+        "description": "Job location names.",
+        "type": "array"
+      },
+      "perks": {
+        "description": "Company perks and culture benefits.",
+        "type": "array"
+      },
+      "postedAt": {
+        "description": "Legacy raw posting value, usually epoch seconds as a string.",
+        "type": "string"
+      },
+      "postedAtIso": {
+        "description": "ISO-8601 posting date.",
+        "type": "string"
+      },
+      "primaryRoleTitle": {
+        "description": "Wellfound primary role title.",
+        "type": "string"
+      },
+      "relocationAllowed": {
+        "description": "Whether relocation is allowed.",
+        "type": "boolean"
+      },
+      "relocationAssistance": {
+        "description": "Whether relocation assistance is provided.",
+        "type": "boolean"
+      },
+      "remote": {
+        "description": "Wellfound remote flag, authoritative over remoteKind.",
+        "type": "boolean"
+      },
+      "remoteKind": {
+        "description": "Remote configuration kind, such as REMOTE, ONSITE or ONSITE_OR_REMOTE.",
+        "type": "string"
+      },
+      "remoteWfhFlexible": {
+        "description": "Whether the remote configuration explicitly reports WFH flexibility.",
+        "type": "boolean"
+      },
+      "reposted": {
+        "description": "Whether the job was reposted.",
+        "type": "boolean"
+      },
+      "salaryCurrency": {
+        "description": "Salary currency: USD, CAD or INR.",
+        "type": "string"
+      },
+      "salaryMax": {
+        "description": "Parsed maximum annual salary in the listed currency.",
+        "type": "integer"
+      },
+      "salaryMin": {
+        "description": "Parsed minimum annual salary in the listed currency.",
+        "type": "integer"
+      },
+      "salaryPeriod": {
+        "description": "Salary period, usually YEAR.",
+        "type": "string"
+      },
+      "scrapedAt": {
+        "description": "ISO-8601 timestamp when the record was built.",
+        "type": "string"
+      },
+      "skills": {
+        "description": "Skill tags from the autoOpen detail page.",
+        "type": "array"
+      },
+      "slug": {
+        "description": "Job URL slug.",
+        "type": "string"
+      },
+      "source": {
+        "description": "Application source: ATS or PLATFORM.",
+        "type": "string"
+      },
+      "title": {
+        "description": "Job title.",
+        "type": "string"
+      },
+      "type": {
+        "description": "Always wellfound_job.",
+        "type": "string"
+      },
+      "visaSponsorship": {
+        "description": "Whether visa sponsorship is available.",
+        "type": "boolean"
+      },
+      "yearsExperienceMin": {
+        "description": "Minimum years of experience when exposed.",
+        "type": "integer"
+      }
+    },
+    "type": "object"
+  },
+  "title": "Wellfound startup jobs and companies",
+  "views": {
+    "companies": {
+      "description": "Company identity, funding, badges, founders, socials and perks.",
+      "display": {
+        "component": "table",
+        "properties": {
+          "companyActivelyHiring": {
+            "format": "boolean",
+            "label": "Actively hiring"
+          },
+          "companyAtGlance": {
+            "format": "text",
+            "label": "At a glance"
+          },
+          "companyBlog": {
+            "format": "link",
+            "label": "Blog"
+          },
+          "companyFacebook": {
+            "format": "link",
+            "label": "Facebook"
+          },
+          "companyFounders": {
+            "format": "array",
+            "label": "Founders"
+          },
+          "companyFundingRounds": {
+            "format": "number",
+            "label": "Rounds"
+          },
+          "companyFundingText": {
+            "format": "text",
+            "label": "Funding text"
+          },
+          "companyFundingTotal": {
+            "format": "number",
+            "label": "Funding total"
+          },
+          "companyGrowingFast": {
+            "format": "boolean",
+            "label": "Growing fast"
+          },
+          "companyHighConcept": {
+            "format": "text",
+            "label": "High concept"
+          },
+          "companyHq": {
+            "format": "text",
+            "label": "HQ"
+          },
+          "companyId": {
+            "format": "text",
+            "label": "Company ID"
+          },
+          "companyIndustry": {
+            "format": "text",
+            "label": "Industry"
+          },
+          "companyIndustryTags": {
+            "format": "array",
+            "label": "Industry tags"
+          },
+          "companyLinkedIn": {
+            "format": "link",
+            "label": "LinkedIn"
+          },
+          "companyLogo": {
+            "format": "link",
+            "label": "Logo"
+          },
+          "companyName": {
+            "format": "text",
+            "label": "Company"
+          },
+          "companyOpenJobsCount": {
+            "format": "number",
+            "label": "Open jobs"
+          },
+          "companyProductHunt": {
+            "format": "link",
+            "label": "Product Hunt"
+          },
+          "companySize": {
+            "format": "text",
+            "label": "Size"
+          },
+          "companySizeCode": {
+            "format": "text",
+            "label": "Size code"
+          },
+          "companySlug": {
+            "format": "text",
+            "label": "Slug"
+          },
+          "companyStage": {
+            "format": "text",
+            "label": "Stage"
+          },
+          "companyTopInvestors": {
+            "format": "boolean",
+            "label": "Top investors"
+          },
+          "companyTwitter": {
+            "format": "link",
+            "label": "Twitter"
+          },
+          "companyTypeTags": {
+            "format": "array",
+            "label": "Type tags"
+          },
+          "companyUrl": {
+            "format": "link",
+            "label": "Wellfound URL"
+          },
+          "companyValuation1B": {
+            "format": "boolean",
+            "label": "Valuation $1B+"
+          },
+          "companyWebsite": {
+            "format": "link",
+            "label": "Website"
+          },
+          "companyYcFunded": {
+            "format": "boolean",
+            "label": "YC funded"
+          },
+          "perks": {
+            "format": "array",
+            "label": "Perks"
+          }
+        }
+      },
+      "title": "Company profiles",
+      "transformation": {
+        "fields": [
+          "type",
+          "companyId",
+          "companyName",
+          "companySlug",
+          "companyUrl",
+          "companyLogo",
+          "companyHighConcept",
+          "companyDescription",
+          "companySize",
+          "companySizeCode",
+          "companyStage",
+          "companyFundingTotal",
+          "companyFundingText",
+          "companyFundingRounds",
+          "companyYcFunded",
+          "companyGrowingFast",
+          "companyActivelyHiring",
+          "companyValuation1B",
+          "companyTopInvestors",
+          "companyJobCounts",
+          "companyIndustry",
+          "companyIndustryTags",
+          "companyTypeTags",
+          "companyHq",
+          "companyWebsite",
+          "companyLinkedIn",
+          "companyTwitter",
+          "companyFacebook",
+          "companyBlog",
+          "companyProductHunt",
+          "companyOpenJobsCount",
+          "companyAtGlance",
+          "companyFounders",
+          "perks"
+        ]
+      }
+    },
+    "jobs": {
+      "description": "Core job, location, remote, salary and company summary.",
+      "display": {
+        "component": "table",
+        "properties": {
+          "companyName": {
+            "format": "text",
+            "label": "Company"
+          },
+          "companySize": {
+            "format": "text",
+            "label": "Company size"
+          },
+          "companyStage": {
+            "format": "text",
+            "label": "Stage"
+          },
+          "companyYcFunded": {
+            "format": "boolean",
+            "label": "YC funded"
+          },
+          "equityMax": {
+            "format": "number",
+            "label": "Equity max"
+          },
+          "equityMin": {
+            "format": "number",
+            "label": "Equity min"
+          },
+          "jobId": {
+            "format": "text",
+            "label": "Job ID"
+          },
+          "jobType": {
+            "format": "text",
+            "label": "Job type"
+          },
+          "jobUrl": {
+            "format": "link",
+            "label": "Job URL"
+          },
+          "locations": {
+            "format": "array",
+            "label": "Locations"
+          },
+          "postedAtIso": {
+            "format": "text",
+            "label": "Posted"
+          },
+          "remote": {
+            "format": "boolean",
+            "label": "Remote"
+          },
+          "remoteKind": {
+            "format": "text",
+            "label": "Remote kind"
+          },
+          "salaryCurrency": {
+            "format": "text",
+            "label": "Currency"
+          },
+          "salaryMax": {
+            "format": "number",
+            "label": "Salary max"
+          },
+          "salaryMin": {
+            "format": "number",
+            "label": "Salary min"
+          },
+          "salaryPeriod": {
+            "format": "text",
+            "label": "Period"
+          },
+          "title": {
+            "format": "text",
+            "label": "Title"
+          }
+        }
+      },
+      "title": "Jobs",
+      "transformation": {
+        "fields": [
+          "jobId",
+          "title",
+          "companyName",
+          "jobUrl",
+          "jobType",
+          "remote",
+          "remoteKind",
+          "locations",
+          "salaryMin",
+          "salaryMax",
+          "salaryCurrency",
+          "salaryPeriod",
+          "equityMin",
+          "equityMax",
+          "postedAtIso",
+          "companyStage",
+          "companySize",
+          "companyYcFunded"
+        ]
+      }
+    },
+    "remote": {
+      "description": "Remote jobs and accepted remote locations.",
+      "display": {
+        "component": "table",
+        "properties": {
+          "acceptedRemoteLocations": {
+            "format": "array",
+            "label": "Accepted remote locations"
+          },
+          "companyName": {
+            "format": "text",
+            "label": "Company"
+          },
+          "jobId": {
+            "format": "text",
+            "label": "Job ID"
+          },
+          "jobUrl": {
+            "format": "link",
+            "label": "Job URL"
+          },
+          "locations": {
+            "format": "array",
+            "label": "Locations"
+          },
+          "postedAtIso": {
+            "format": "text",
+            "label": "Posted"
+          },
+          "remote": {
+            "format": "boolean",
+            "label": "Remote"
+          },
+          "remoteKind": {
+            "format": "text",
+            "label": "Remote kind"
+          },
+          "salaryCurrency": {
+            "format": "text",
+            "label": "Currency"
+          },
+          "salaryMax": {
+            "format": "number",
+            "label": "Salary max"
+          },
+          "salaryMin": {
+            "format": "number",
+            "label": "Salary min"
+          },
+          "title": {
+            "format": "text",
+            "label": "Title"
+          }
+        }
+      },
+      "title": "Remote jobs",
+      "transformation": {
+        "fields": [
+          "jobId",
+          "title",
+          "companyName",
+          "jobUrl",
+          "remote",
+          "remoteKind",
+          "locations",
+          "acceptedRemoteLocations",
+          "salaryMin",
+          "salaryMax",
+          "salaryCurrency",
+          "postedAtIso"
+        ]
+      }
+    },
+    "salary": {
+      "description": "Raw and structured compensation.",
+      "display": {
+        "component": "table",
+        "properties": {
+          "companyName": {
+            "format": "text",
+            "label": "Company"
+          },
+          "compensation": {
+            "format": "text",
+            "label": "Compensation"
+          },
+          "equityMax": {
+            "format": "number",
+            "label": "Equity max"
+          },
+          "equityMin": {
+            "format": "number",
+            "label": "Equity min"
+          },
+          "equityOffered": {
+            "format": "boolean",
+            "label": "Equity offered"
+          },
+          "jobId": {
+            "format": "text",
+            "label": "Job ID"
+          },
+          "jobUrl": {
+            "format": "link",
+            "label": "Job URL"
+          },
+          "postedAtIso": {
+            "format": "text",
+            "label": "Posted"
+          },
+          "salaryCurrency": {
+            "format": "text",
+            "label": "Currency"
+          },
+          "salaryMax": {
+            "format": "number",
+            "label": "Salary max"
+          },
+          "salaryMin": {
+            "format": "number",
+            "label": "Salary min"
+          },
+          "salaryPeriod": {
+            "format": "text",
+            "label": "Period"
+          },
+          "title": {
+            "format": "text",
+            "label": "Title"
+          }
+        }
+      },
+      "title": "Salary and equity",
+      "transformation": {
+        "fields": [
+          "jobId",
+          "title",
+          "companyName",
+          "jobUrl",
+          "compensation",
+          "salaryMin",
+          "salaryMax",
+          "salaryCurrency",
+          "salaryPeriod",
+          "equityMin",
+          "equityMax",
+          "equityOffered",
+          "postedAtIso"
+        ]
+      }
+    },
+    "startups": {
+      "description": "Company records from /startups with size, stage, description, badges, job counts, industry tags and HQ.",
+      "display": {
+        "component": "table",
+        "properties": {
+          "companyActivelyHiring": {
+            "format": "boolean",
+            "label": "Actively hiring"
+          },
+          "companyDescription": {
+            "format": "text",
+            "label": "Description"
+          },
+          "companyGrowingFast": {
+            "format": "boolean",
+            "label": "Growing fast"
+          },
+          "companyHighConcept": {
+            "format": "text",
+            "label": "High concept"
+          },
+          "companyHq": {
+            "format": "text",
+            "label": "HQ"
+          },
+          "companyId": {
+            "format": "text",
+            "label": "Company ID"
+          },
+          "companyIndustryTags": {
+            "format": "array",
+            "label": "Industry tags"
+          },
+          "companyJobCounts": {
+            "format": "text",
+            "label": "Job counts"
+          },
+          "companyLogo": {
+            "format": "link",
+            "label": "Logo"
+          },
+          "companyName": {
+            "format": "text",
+            "label": "Company"
+          },
+          "companyOpenJobsCount": {
+            "format": "number",
+            "label": "Open jobs"
+          },
+          "companySize": {
+            "format": "text",
+            "label": "Size"
+          },
+          "companySlug": {
+            "format": "text",
+            "label": "Slug"
+          },
+          "companyStage": {
+            "format": "text",
+            "label": "Stage"
+          },
+          "companyUrl": {
+            "format": "link",
+            "label": "Wellfound URL"
+          },
+          "companyWebsite": {
+            "format": "link",
+            "label": "Website"
+          },
+          "companyYcFunded": {
+            "format": "boolean",
+            "label": "YC funded"
+          },
+          "firstSeenAt": {
+            "format": "text",
+            "label": "First seen"
+          },
+          "lastSeenAt": {
+            "format": "text",
+            "label": "Last seen"
+          },
+          "type": {
+            "format": "text",
+            "label": "Record type"
+          }
+        }
+      },
+      "title": "Startup directory",
+      "transformation": {
+        "fields": [
+          "type",
+          "companyId",
+          "companyName",
+          "companySlug",
+          "companyUrl",
+          "companyLogo",
+          "companyHighConcept",
+          "companyDescription",
+          "companySize",
+          "companySizeCode",
+          "companyStage",
+          "badges",
+          "companyYcFunded",
+          "companyGrowingFast",
+          "companyActivelyHiring",
+          "companyValuation1B",
+          "companyTopInvestors",
+          "companyJobCounts",
+          "companyOpenJobsCount",
+          "companyIndustryTags",
+          "companyTypeTags",
+          "companyHq",
+          "companyWebsite",
+          "firstSeenAt",
+          "lastSeenAt",
+          "scrapedAt"
+        ]
+      }
+    }
+  }
+}
