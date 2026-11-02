@@ -2,29 +2,122 @@
   "actorSpecification": 1,
   "fields": {
     "properties": {
+      "breadcrumb": {
+        "description": "Path crumbs Bing shows under the title",
+        "items": {
+          "type": "string"
+        },
+        "type": "array"
+      },
+      "channel": {
+        "description": "Video channel or uploader",
+        "type": "string"
+      },
+      "dateText": {
+        "description": "Date exactly as Bing printed it",
+        "type": "string"
+      },
       "description": {
-        "description": "Result snippet/description",
+        "description": "Snippet or description",
         "type": "string"
       },
       "displayUrl": {
-        "description": "Displayed URL text",
-        "nullable": true,
+        "description": "URL or domain Bing displays",
+        "type": "string"
+      },
+      "duration": {
+        "description": "Video duration as printed by Bing",
+        "type": "string"
+      },
+      "height": {
+        "description": "Original image height",
+        "type": "integer"
+      },
+      "imageId": {
+        "description": "Bing image identifier",
+        "type": "string"
+      },
+      "imageUrl": {
+        "description": "Original image URL",
+        "type": "string"
+      },
+      "market": {
+        "description": "Bing market used for the query",
+        "type": "string"
+      },
+      "page": {
+        "description": "Result page number",
+        "type": "integer"
+      },
+      "platform": {
+        "description": "Video platform, e.g. YouTube or TikTok",
         "type": "string"
       },
       "position": {
-        "description": "Position in results (1-based)",
+        "description": "1-based rank within the query",
         "type": "integer"
       },
       "query": {
-        "description": "Search query used",
+        "description": "Search query that produced this record",
+        "type": "string"
+      },
+      "rank": {
+        "description": "Alias of position",
+        "type": "integer"
+      },
+      "recordType": {
+        "description": "webResult, newsArticle, imageResult, videoResult or autocompleteSuggestion",
+        "type": "string"
+      },
+      "resultType": {
+        "description": "web, news, image, video or autocomplete",
+        "type": "string"
+      },
+      "richSnippet": {
+        "description": "Rich snippet text shown with a web result",
         "type": "string"
       },
       "scrapedAt": {
-        "description": "ISO 8601 scrape timestamp",
+        "description": "ISO 8601 UTC scrape timestamp",
         "type": "string"
       },
       "searchUrl": {
-        "description": "Bing search URL used",
+        "description": "Bing page or endpoint that produced this record",
+        "type": "string"
+      },
+      "siteName": {
+        "description": "Site name shown by Bing",
+        "type": "string"
+      },
+      "sitelinks": {
+        "description": "Sitelinks shown under a web result",
+        "items": {
+          "properties": {
+            "title": {
+              "type": "string"
+            },
+            "url": {
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "type": "array"
+      },
+      "snippet": {
+        "description": "Alias of description",
+        "type": "string"
+      },
+      "source": {
+        "description": "News publisher or author shown by Bing",
+        "type": "string"
+      },
+      "suggestion": {
+        "description": "Autocomplete suggestion",
+        "type": "string"
+      },
+      "thumbnailUrl": {
+        "description": "Bing-hosted thumbnail URL",
         "type": "string"
       },
       "title": {
@@ -32,13 +125,25 @@
         "type": "string"
       },
       "url": {
-        "description": "Result URL",
+        "description": "Destination URL (Bing redirects decoded)",
         "type": "string"
+      },
+      "videoId": {
+        "description": "Bing video identifier",
+        "type": "string"
+      },
+      "views": {
+        "description": "View count as printed by Bing",
+        "type": "string"
+      },
+      "width": {
+        "description": "Original image width",
+        "type": "integer"
       }
     },
     "type": "object"
   },
-  "title": "Bing Search Results",
+  "title": "Bing Results",
   "views": {
     "overview": {
       "display": {
@@ -56,6 +161,10 @@
             "format": "text",
             "label": "Query"
           },
+          "resultType": {
+            "format": "text",
+            "label": "Type"
+          },
           "title": {
             "format": "text",
             "label": "Title"
@@ -66,10 +175,11 @@
           }
         }
       },
-      "title": "Results",
+      "title": "Bing results",
       "transformation": {
         "fields": [
           "query",
+          "resultType",
           "position",
           "title",
           "url",

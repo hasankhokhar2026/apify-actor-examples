@@ -1,18 +1,80 @@
 {
-  "description": "Search Naver Blog posts, fetch posts from a specific blog, or get full post details.",
+  "description": "Search Naver Blog posts by one or more keywords, fetch every post from a blog, or get full post details for a list of URLs.",
   "properties": {
-    "blogId": {
-      "description": "Naver blog user ID (e.g. `hello_world123` from blog.naver.com/hello_world123). Required for mode=blogPosts.",
+    "blogIds": {
+      "default": [],
+      "description": "Naver blog IDs or blog URLs (mode=blogPosts). Accepts `hello_world123`, `@hello_world123`, or `https://blog.naver.com/hello_world123`.",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Blog IDs",
+      "type": "array"
+    },
+    "categoryNo": {
+      "default": 0,
+      "description": "Naver blog category number to restrict a blog archive; 0 means all categories (mode=blogPosts).",
+      "maximum": 999999999,
+      "minimum": 0,
+      "prefill": 0,
+      "title": "Category number",
+      "type": "integer"
+    },
+    "dateFrom": {
+      "description": "Start date in YYYY-MM-DD format (KST). Used when publishedWithin=custom (mode=search).",
       "editor": "textfield",
-      "title": "Blog ID",
+      "title": "Date from",
       "type": "string"
+    },
+    "dateTo": {
+      "description": "End date in YYYY-MM-DD format (KST). Used when publishedWithin=custom (mode=search).",
+      "editor": "textfield",
+      "title": "Date to",
+      "type": "string"
+    },
+    "includeComments": {
+      "default": false,
+      "description": "Add the comment count and comment threads up to maxComments (default 100), including replies when Naver returns them. Implies includeContent=true and adds requests per post.",
+      "prefill": false,
+      "title": "Include comments",
+      "type": "boolean"
+    },
+    "includeContent": {
+      "default": true,
+      "description": "Fetch each post page for full text, exact publish time, images, tags, category, and places. Turn off for faster list-level records.",
+      "prefill": false,
+      "title": "Include full content",
+      "type": "boolean"
+    },
+    "includeHtml": {
+      "default": false,
+      "description": "Add the post body as HTML in contentHtml. Implies includeContent=true.",
+      "prefill": false,
+      "title": "Include content HTML",
+      "type": "boolean"
+    },
+    "maxComments": {
+      "default": 100,
+      "description": "Maximum comments to return per post when includeComments is on. Fetched in pages of 100; commentCount still reports the full total.",
+      "maximum": 1000,
+      "minimum": 1,
+      "prefill": 100,
+      "title": "Max comments per post",
+      "type": "integer"
+    },
+    "maxConcurrency": {
+      "default": 3,
+      "description": "Parallel post-page requests when content enrichment is enabled.",
+      "maximum": 10,
+      "minimum": 1,
+      "prefill": 3,
+      "title": "Max concurrency",
+      "type": "integer"
     },
     "maxItems": {
       "default": 20,
-      "description": "Hard cap on emitted records.",
-      "maximum": 1000,
+      "description": "Hard cap on emitted records across all queries, blogs, or URLs.",
+      "maximum": 10000,
       "minimum": 1,
-      "prefill": 20,
+      "prefill": 3,
       "title": "Max items",
       "type": "integer"
     },
@@ -36,34 +98,68 @@
     },
     "postUrls": {
       "default": [],
-      "description": "List of Naver blog post URLs to fetch in detail (e.g. https://blog.naver.com/userid/123456789).",
+      "description": "Naver blog post URLs to fetch in detail (mode=postDetails). Accepts desktop, mobile, PostView, and bare `blogId/logNo` forms.",
       "editor": "stringList",
       "prefill": [],
-      "title": "Post URLs (mode=postDetails)",
+      "title": "Post URLs",
       "type": "array"
     },
-    "query": {
-      "default": "travel Korea",
-      "description": "Keyword or phrase to search across all Naver blog posts (mode=search).",
-      "editor": "textfield",
-      "prefill": "travel Korea",
-      "title": "Search query",
+    "publishedWithin": {
+      "default": "all",
+      "description": "Limit keyword search results by publish period (mode=search). Choose Custom to use dateFrom and dateTo.",
+      "editor": "select",
+      "enum": [
+        "all",
+        "1h",
+        "1d",
+        "1w",
+        "1m",
+        "3m",
+        "6m",
+        "1y",
+        "custom"
+      ],
+      "enumTitles": [
+        "Any time",
+        "Last hour",
+        "Last 24 hours",
+        "Last week",
+        "Last month",
+        "Last 3 months",
+        "Last 6 months",
+        "Last year",
+        "Custom range"
+      ],
+      "prefill": "all",
+      "title": "Published within",
       "type": "string"
+    },
+    "searchQueries": {
+      "default": [
+        "제주도 여행"
+      ],
+      "description": "One or more Korean or English keywords to search across Naver Blog (mode=search). Each query is searched up to Naver's 1,000-result limit.",
+      "editor": "stringList",
+      "prefill": [
+        "제주도 여행"
+      ],
+      "title": "Search queries",
+      "type": "array"
     },
     "sortBy": {
       "default": "sim",
-      "description": "Sort order for search results.",
+      "description": "Sort order for keyword search (mode=search).",
       "editor": "select",
       "enum": [
         "sim",
         "date"
       ],
       "enumTitles": [
-        "Relevance (sim)",
-        "Newest first (date)"
+        "Relevance",
+        "Newest first"
       ],
       "prefill": "sim",
-      "title": "Sort by (mode=search)",
+      "title": "Sort by",
       "type": "string"
     }
   },

@@ -1,113 +1,364 @@
 {
-  "description": "Scrape trending and popular YouTube videos by category. Supports Gaming, News, Music, Movies, and Now Trending sections with regional market targeting.",
+  "description": "Read YouTube Charts or category hubs for one or more countries, with optional exact video details.",
   "properties": {
-    "category": {
-      "default": "gaming",
-      "description": "Which YouTube trending section to scrape. 'Gaming', 'News', and 'Music' work without authentication. 'Now' (main trending feed) and 'Movies' are auth-gated for cookieless requests and automatically use a clearly labeled public search fallback instead of returning nothing.",
+    "categories": {
+      "default": [
+        "gaming"
+      ],
+      "description": "One or more category pages. Gaming trending and Gaming live return up to 50 videos. News reads the selected news sections. Sports, Learning and Courses are editorial category feeds.",
       "editor": "select",
-      "enum": [
-        "now",
-        "gaming",
-        "music",
-        "movies",
-        "news"
+      "items": {
+        "enum": [
+          "gaming",
+          "gamingLive",
+          "news",
+          "sports",
+          "learning",
+          "courses"
+        ],
+        "enumTitles": [
+          "Gaming trending",
+          "Gaming live",
+          "News",
+          "Sports",
+          "Learning",
+          "Courses"
+        ],
+        "type": "string"
+      },
+      "minItems": 1,
+      "prefill": [
+        "gaming"
       ],
-      "enumTitles": [
-        "Now Trending",
-        "Gaming",
-        "Music",
-        "Movies",
-        "News"
+      "title": "Category hubs (mode=hubs)",
+      "type": "array",
+      "uniqueItems": true
+    },
+    "charts": {
+      "default": [
+        "trendingVideos"
       ],
-      "prefill": "gaming",
-      "title": "Category",
+      "description": "One or more YouTube charts. Trending music videos is the official replacement for the retired general Trending page. Top songs and top artists are weekly; Shorts songs is daily or weekly. Music and Shorts charts include rank movement and optional history.",
+      "editor": "select",
+      "items": {
+        "enum": [
+          "trendingVideos",
+          "topVideos",
+          "topSongs",
+          "topArtists",
+          "shortsSongs",
+          "movieTrailers",
+          "podcasts"
+        ],
+        "enumTitles": [
+          "Trending music videos (current)",
+          "Top music videos (daily or weekly)",
+          "Top songs (weekly)",
+          "Top artists (weekly)",
+          "Top songs in Shorts (daily or weekly)",
+          "Trending movie trailers (current)",
+          "Podcast shows (weekly)"
+        ],
+        "type": "string"
+      },
+      "minItems": 1,
+      "prefill": [
+        "trendingVideos"
+      ],
+      "title": "Charts (mode=charts)",
+      "type": "array",
+      "uniqueItems": true
+    },
+    "countries": {
+      "default": [
+        "US"
+      ],
+      "description": "One or more markets. The 68 YouTube Charts markets are supported; 'global' is supported only for charts that publish a global ranking (top videos, top songs, top artists, Shorts songs).",
+      "editor": "select",
+      "items": {
+        "enum": [
+          "AR",
+          "AU",
+          "AT",
+          "BE",
+          "BO",
+          "BR",
+          "CA",
+          "CL",
+          "CO",
+          "CR",
+          "CZ",
+          "DK",
+          "DO",
+          "EC",
+          "EG",
+          "SV",
+          "EE",
+          "FI",
+          "FR",
+          "DE",
+          "GT",
+          "HN",
+          "HK",
+          "HU",
+          "IS",
+          "IN",
+          "ID",
+          "IE",
+          "IL",
+          "IT",
+          "JP",
+          "KE",
+          "LU",
+          "MY",
+          "MX",
+          "NL",
+          "NZ",
+          "NI",
+          "NG",
+          "NO",
+          "PA",
+          "PY",
+          "PE",
+          "PH",
+          "PL",
+          "PT",
+          "RO",
+          "RU",
+          "SA",
+          "RS",
+          "SG",
+          "ZA",
+          "KR",
+          "ES",
+          "SE",
+          "CH",
+          "TW",
+          "TZ",
+          "TH",
+          "TR",
+          "UG",
+          "UA",
+          "AE",
+          "GB",
+          "US",
+          "UY",
+          "VN",
+          "ZW",
+          "global"
+        ],
+        "enumTitles": [
+          "Argentina",
+          "Australia",
+          "Austria",
+          "Belgium",
+          "Bolivia",
+          "Brazil",
+          "Canada",
+          "Chile",
+          "Colombia",
+          "Costa Rica",
+          "Czechia",
+          "Denmark",
+          "Dominican Republic",
+          "Ecuador",
+          "Egypt",
+          "El Salvador",
+          "Estonia",
+          "Finland",
+          "France",
+          "Germany",
+          "Guatemala",
+          "Honduras",
+          "Hong Kong",
+          "Hungary",
+          "Iceland",
+          "India",
+          "Indonesia",
+          "Ireland",
+          "Israel",
+          "Italy",
+          "Japan",
+          "Kenya",
+          "Luxembourg",
+          "Malaysia",
+          "Mexico",
+          "Netherlands",
+          "New Zealand",
+          "Nicaragua",
+          "Nigeria",
+          "Norway",
+          "Panama",
+          "Paraguay",
+          "Peru",
+          "Philippines",
+          "Poland",
+          "Portugal",
+          "Romania",
+          "Russia",
+          "Saudi Arabia",
+          "Serbia",
+          "Singapore",
+          "South Africa",
+          "South Korea",
+          "Spain",
+          "Sweden",
+          "Switzerland",
+          "Taiwan",
+          "Tanzania",
+          "Thailand",
+          "Turkey",
+          "Uganda",
+          "Ukraine",
+          "United Arab Emirates",
+          "United Kingdom",
+          "United States",
+          "Uruguay",
+          "Vietnam",
+          "Zimbabwe",
+          "Global"
+        ],
+        "type": "string"
+      },
+      "minItems": 1,
+      "prefill": [
+        "US"
+      ],
+      "title": "Countries",
+      "type": "array",
+      "uniqueItems": true
+    },
+    "date": {
+      "default": "",
+      "description": "Historical chart date in YYYY-MM-DD format. Leave empty for the latest chart. Supported by Top music videos, Top songs, Top artists and Shorts songs; current-only charts ignore it.",
+      "editor": "textfield",
+      "prefill": "",
+      "title": "Chart date (mode=charts)",
       "type": "string"
     },
-    "market": {
-      "default": "US",
-      "description": "Country/region for localized trending results. Sets the gl URL parameter to target the correct regional trending feed.",
-      "editor": "select",
-      "enum": [
-        "US",
-        "GB",
-        "CA",
-        "AU",
-        "DE",
-        "FR",
-        "JP",
-        "KR",
-        "BR",
-        "IN",
-        "MX",
-        "IT",
-        "ES",
-        "NL",
-        "PL",
-        "RU",
-        "SE",
-        "NO",
-        "DK",
-        "FI",
-        "ZA",
-        "SG",
-        "HK",
-        "TW",
-        "ID",
-        "MY",
-        "TH",
-        "PH",
-        "AR",
-        "CO",
-        "CL"
-      ],
-      "enumTitles": [
-        "United States",
-        "United Kingdom",
-        "Canada",
-        "Australia",
-        "Germany",
-        "France",
-        "Japan",
-        "South Korea",
-        "Brazil",
-        "India",
-        "Mexico",
-        "Italy",
-        "Spain",
-        "Netherlands",
-        "Poland",
-        "Russia",
-        "Sweden",
-        "Norway",
-        "Denmark",
-        "Finland",
-        "South Africa",
-        "Singapore",
-        "Hong Kong",
-        "Taiwan",
-        "Indonesia",
-        "Malaysia",
-        "Thailand",
-        "Philippines",
-        "Argentina",
-        "Colombia",
-        "Chile"
-      ],
-      "title": "Market / Region",
-      "type": "string"
+    "includeVideoDetails": {
+      "default": true,
+      "description": "Fetch exact lifetime views, likes, upload dates and descriptions for every video. YouTube category, tags, Shorts eligibility and family-safe flags are filled when YouTube's player response is available and may be omitted on some cloud IPs. Adds one or more detail requests per video.",
+      "prefill": false,
+      "title": "Include exact video details",
+      "type": "boolean"
     },
-    "maxResults": {
-      "default": 50,
-      "description": "Maximum number of trending videos to return. YouTube Gaming typically surfaces 200-400 videos across all shelf sections.",
-      "maximum": 200,
+    "maxConcurrency": {
+      "default": 5,
+      "description": "How many exact-detail requests may run in parallel.",
+      "maximum": 10,
       "minimum": 1,
-      "prefill": 20,
-      "title": "Max Results",
+      "prefill": 3,
+      "title": "Detail concurrency",
       "type": "integer"
+    },
+    "maxItems": {
+      "default": 100,
+      "description": "Total data rows to return across all charts, categories and countries.",
+      "maximum": 10000,
+      "minimum": 1,
+      "prefill": 3,
+      "title": "Max items",
+      "type": "integer"
+    },
+    "maxItemsPerChart": {
+      "default": 100,
+      "description": "Rows to take from each chart/country or category/country combination. Source ceilings still apply.",
+      "maximum": 100,
+      "minimum": 1,
+      "prefill": 3,
+      "title": "Max items per chart or feed",
+      "type": "integer"
+    },
+    "mode": {
+      "default": "charts",
+      "description": "What to read. 'charts' uses YouTube's official music, trailer and podcast charts. 'hubs' uses YouTube's category pages such as Gaming trending, News, Sports, Learning and Courses.",
+      "editor": "select",
+      "enum": [
+        "charts",
+        "hubs"
+      ],
+      "enumTitles": [
+        "YouTube Charts",
+        "Category hubs"
+      ],
+      "prefill": "charts",
+      "title": "Mode",
+      "type": "string"
+    },
+    "monitorName": {
+      "default": "default",
+      "description": "Separate only-new histories by monitor name.",
+      "editor": "textfield",
+      "prefill": "default",
+      "title": "Monitor name",
+      "type": "string"
+    },
+    "newsSections": {
+      "default": [
+        "top"
+      ],
+      "description": "Which News tabs to read. 'Top stories' is the main /news page; the other sections are direct news-destination feeds. Available sections vary by country.",
+      "editor": "select",
+      "items": {
+        "enum": [
+          "top",
+          "sports",
+          "entertainment",
+          "business",
+          "world",
+          "national",
+          "health",
+          "technology"
+        ],
+        "enumTitles": [
+          "Top stories",
+          "Sports",
+          "Entertainment",
+          "Business",
+          "World",
+          "National",
+          "Health",
+          "Technology"
+        ],
+        "type": "string"
+      },
+      "minItems": 1,
+      "prefill": [
+        "top"
+      ],
+      "title": "News sections (mode=hubs, categories includes news)",
+      "type": "array",
+      "uniqueItems": true
+    },
+    "onlyNew": {
+      "default": false,
+      "description": "Skip rows already emitted by a previous run with the same monitor name.",
+      "prefill": false,
+      "title": "Only new items",
+      "type": "boolean"
+    },
+    "period": {
+      "default": "daily",
+      "description": "Daily or weekly ranking. Weekly-only charts automatically use weekly. Current-only charts such as Trending music videos and Trending movie trailers ignore this setting.",
+      "editor": "select",
+      "enum": [
+        "daily",
+        "weekly"
+      ],
+      "enumTitles": [
+        "Daily",
+        "Weekly"
+      ],
+      "prefill": "daily",
+      "title": "Chart period (mode=charts)",
+      "type": "string"
     }
   },
-  "required": [],
+  "required": [
+    "mode"
+  ],
   "schemaVersion": 1,
-  "title": "YouTube Trending Scraper Input",
+  "title": "YouTube Trending Feed Extractor Input",
   "type": "object"
 }

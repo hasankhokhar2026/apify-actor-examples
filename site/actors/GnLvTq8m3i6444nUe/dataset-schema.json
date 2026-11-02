@@ -5,9 +5,9 @@
       "display": {
         "component": "table",
         "properties": {
-          "badges": {
+          "artistId": {
             "format": "text",
-            "label": "Badges"
+            "label": "Artist ID"
           },
           "category": {
             "format": "text",
@@ -29,6 +29,30 @@
             "format": "link",
             "label": "Channel URL"
           },
+          "chartDate": {
+            "format": "text",
+            "label": "Chart Date"
+          },
+          "chartPeriod": {
+            "format": "text",
+            "label": "Period"
+          },
+          "chartType": {
+            "format": "text",
+            "label": "Chart"
+          },
+          "chartViewCount": {
+            "format": "number",
+            "label": "Chart Views"
+          },
+          "commentCount": {
+            "format": "number",
+            "label": "Comments"
+          },
+          "countryCode": {
+            "format": "text",
+            "label": "Country"
+          },
           "durationSeconds": {
             "format": "number",
             "label": "Duration (s)"
@@ -37,25 +61,33 @@
             "format": "text",
             "label": "Duration"
           },
-          "fallbackQuery": {
-            "format": "text",
-            "label": "Fallback Query"
-          },
           "isLive": {
             "format": "boolean",
             "label": "Live"
+          },
+          "isShortsEligible": {
+            "format": "boolean",
+            "label": "Shorts Eligible"
           },
           "isVerified": {
             "format": "boolean",
             "label": "Verified"
           },
+          "likeCount": {
+            "format": "number",
+            "label": "Likes"
+          },
           "market": {
             "format": "text",
             "label": "Market"
           },
+          "message": {
+            "format": "text",
+            "label": "Message"
+          },
           "playlistId": {
             "format": "text",
-            "label": "Playlist/Album ID"
+            "label": "Playlist ID"
           },
           "position": {
             "format": "number",
@@ -69,13 +101,37 @@
             "format": "text",
             "label": "Published"
           },
+          "rankSource": {
+            "format": "text",
+            "label": "Rank Source"
+          },
+          "recordType": {
+            "format": "text",
+            "label": "Record"
+          },
           "scrapedAt": {
             "format": "text",
             "label": "Scraped At"
           },
-          "sourceType": {
+          "sourceName": {
             "format": "text",
             "label": "Source"
+          },
+          "sourceType": {
+            "format": "text",
+            "label": "Source Type"
+          },
+          "status": {
+            "format": "text",
+            "label": "Status"
+          },
+          "subscriberCount": {
+            "format": "number",
+            "label": "Subscribers"
+          },
+          "subscriberCountText": {
+            "format": "text",
+            "label": "Subscribers Text"
           },
           "thumbnailUrl": {
             "format": "link",
@@ -84,6 +140,10 @@
           "title": {
             "format": "text",
             "label": "Title"
+          },
+          "trackId": {
+            "format": "text",
+            "label": "Track ID"
           },
           "type": {
             "format": "text",
@@ -99,11 +159,15 @@
           },
           "viewCount": {
             "format": "number",
-            "label": "Views"
+            "label": "Lifetime Views"
           },
           "viewCountText": {
             "format": "text",
             "label": "Views Text"
+          },
+          "viewsPerHour": {
+            "format": "number",
+            "label": "Views / Hour"
           }
         }
       },
@@ -111,8 +175,11 @@
       "transformation": {
         "fields": [
           "position",
+          "recordType",
           "type",
           "videoId",
+          "trackId",
+          "artistId",
           "playlistId",
           "title",
           "url",
@@ -120,20 +187,62 @@
           "channelId",
           "channelUrl",
           "channelHandle",
+          "channelAvatarUrl",
           "isVerified",
           "viewCount",
           "viewCountText",
+          "likeCount",
+          "commentCount",
+          "subscriberCount",
+          "subscriberCountText",
+          "chartViewCount",
           "publishedTimeText",
           "publishedDate",
           "durationText",
           "durationSeconds",
           "thumbnailUrl",
+          "thumbnails",
           "badges",
           "isLive",
+          "liveStatus",
+          "scheduledStartTime",
+          "isShortsEligible",
+          "isFamilySafe",
+          "viewsPerHour",
+          "description",
+          "keywords",
+          "youtubeCategory",
+          "artists",
+          "songwriters",
+          "producers",
+          "label",
+          "releaseDate",
+          "primaryGenre",
+          "numEpisodes",
+          "lastUpdatedDate",
+          "previousPosition",
+          "rankChange",
+          "periodsOnChart",
+          "viewsChangePercent",
+          "isNewEntry",
+          "chartDate",
+          "chartType",
+          "chartPeriod",
+          "period",
+          "date",
+          "countryCode",
+          "countryName",
           "category",
           "market",
           "sourceType",
+          "sourceName",
+          "sourceUrl",
+          "rankSource",
           "fallbackQuery",
+          "status",
+          "message",
+          "mode",
+          "resultCount",
           "scrapedAt"
         ]
       }
@@ -142,33 +251,33 @@
       "display": {
         "component": "table",
         "properties": {
-          "category": {
-            "format": "text",
-            "label": "Category"
-          },
           "channelName": {
             "format": "text",
             "label": "Channel"
           },
-          "fallbackQuery": {
+          "chartType": {
             "format": "text",
-            "label": "Fallback Query"
+            "label": "Chart"
           },
-          "isLive": {
-            "format": "boolean",
-            "label": "Live"
+          "chartViewCount": {
+            "format": "number",
+            "label": "Chart Views"
           },
-          "market": {
+          "countryCode": {
             "format": "text",
-            "label": "Market"
+            "label": "Country"
           },
           "position": {
             "format": "number",
             "label": "#"
           },
-          "sourceType": {
+          "sourceName": {
             "format": "text",
             "label": "Source"
+          },
+          "status": {
+            "format": "text",
+            "label": "Status"
           },
           "title": {
             "format": "text",
@@ -182,13 +291,9 @@
             "format": "link",
             "label": "URL"
           },
-          "videoId": {
-            "format": "text",
-            "label": "Video ID"
-          },
-          "viewCountText": {
-            "format": "text",
-            "label": "Views"
+          "viewCount": {
+            "format": "number",
+            "label": "Lifetime Views"
           }
         }
       },
@@ -196,17 +301,16 @@
       "transformation": {
         "fields": [
           "position",
-          "type",
-          "videoId",
+          "sourceName",
           "title",
-          "url",
           "channelName",
-          "viewCountText",
-          "isLive",
-          "category",
-          "market",
-          "sourceType",
-          "fallbackQuery"
+          "chartViewCount",
+          "viewCount",
+          "countryCode",
+          "chartType",
+          "type",
+          "url",
+          "status"
         ]
       }
     }

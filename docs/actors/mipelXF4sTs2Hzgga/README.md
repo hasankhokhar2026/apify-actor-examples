@@ -4,109 +4,194 @@
 
 # X Trends Lookup by Country, City & WOEID
 
-Get ranked trending topics from X (Twitter) for any country or city, or for every location X serves in one run — no login, no cookies, no API key. Each trend comes back with its rank, type, a ready-made search link, and the approximate post volume when X publishes it.
+Get the ranked trending topics on X (Twitter) for any country, city, ISO country code, slug or WOEID — or list every place X publishes trends for. Each trend row carries its rank, type, ready-made search link, and the country and parent place where it is trending. No login, cookies or API key needed.
 
 ## What this actor does
 
-- Looks up trends for a list of locations by name, common alias, or numeric WOEID
-- Collects trends for every location X serves (around 467 countries and cities) in a single run when asked
-- Keeps each trend's rank, name and type — hashtag, cashtag, or topic
-- Builds a ready-made X search link for every trend
-- Omits any field that has no value for a given row rather than returning a null or placeholder
+- **Two modes:** `trends` for the current ranked list of any place, `locations` for the full catalog X publishes trends for
+- **Finds places by any common form:** all 467 catalog places, 62 ISO country codes, URL slugs, friendly aliases and numeric WOEIDs
+- **Adds context:** country, country code, place type and parent country or metro on every trend row
+- **Compares markets:** `locationCount`, `locationsTrendingIn` and `bestRank` show where the same trend appears, with an optional merge
+- **Filters:** remove hashtags, keep only trends containing your keywords, and cap each place at 1–50 trends
+- **Empty fields are omitted** rather than returned as `null` or placeholders
 
-## Output per row
+## Output per trend (`mode = trends`)
 
-Every row carries a `type` of `trend` or `status`.
+- `type: "trend"`
+- `location` — the place you asked for; the WOEID is appended when two places share a name
+- `woeid` — X's numeric place identifier
+- `country`, `countryCode` — the country the place belongs to (omitted for Worldwide)
+- `placeType` — `Country`, `Town`, `Supername` or `Unknown`
+- `parentWoeid`, `parentLocation` — the country or metro that contains the place (omitted for Worldwide)
+- `rank` — position in the place's trending list (1 = top)
+- `trend` — the trend text, hashtag or cashtag
+- `trendType` — `hashtag`, `cashtag` or `topic`
+- `isHashtag`, `isCashtag` — boolean helpers for filtering
+- `query` — the decoded X search query behind the trend
+- `searchUrl`, `trendUrl` — ready-made search link on x.com
+- `locationCount` — number of requested places where this trend appears
+- `locationsTrendingIn` — those places, in the order you requested them
+- `bestRank` — the best (lowest) rank the trend reached across those places
+- `promoted` — kept for compatibility; X's public trends endpoint never marks trends as promoted
+- `asOf` — the timestamp X returns with that place's list; it can advance on each call
+- `collectedAt` — when this row was collected (the completion time of that place's request)
 
-| Field | Description |
-|---|---|
-| `type` | `trend` for a trending topic, `status` for a problem or summary row |
-| `location` | The location you asked for, with its WOEID appended when two places share a name |
-| `woeid` | X's numeric location identifier |
-| `country` / `countryCode` | Country name and ISO code X reports for the location, when available |
-| `placeType` | X's place type, e.g. Country, Town, or Metro |
-| `rank` | Position in the trending list (1 = top trend) |
-| `trend` | Trend name, hashtag, or cashtag |
-| `trendType` | hashtag, cashtag, or topic |
-| `searchUrl` / `trendUrl` | Ready-made X search link for the trend |
-| `tweetVolume` | Approximate number of posts using the trend, only when X publishes it |
-| `promoted` | Whether the trend is a promoted one |
-| `asOf` | When X calculated this trending list |
-| `collectedAt` | When this row was collected |
+`tweetVolume` is not part of the output because X's public trends endpoint stopped publishing post counts for trends. No volume is invented or zero-filled.
 
-Status rows carry a `status` value (such as `unknownLocation`, `notAvailable`, or `rateLimited`) and a human-readable `message`, plus `didYouMean` suggestions for likely typos. When collecting every location, problems are also summarized into one `collectionSummary` row with `trendCount`, `locationsWithTrends`, `locationsTotal`, `locationsWithoutTrends`, `notAvailableLocations`, and `failedLocations`.
+## Output per location (`mode = locations`)
+
+- `type: "location"`
+- `location` — the place name; the WOEID is appended when names repeat
+- `woeid` — X's numeric place identifier
+- `country`, `countryCode` — the country the place belongs to (omitted for Worldwide)
+- `placeType` — `Country`, `Town`, `Supername` or `Unknown`
+- `parentWoeid`, `parentLocation` — the containing country or metro (omitted for Worldwide)
+- `collectedAt` — when this row was collected
+
+## Output: status rows
+
+A run can also contain rows with `type: "status"`:
+
+- `unknownLocation` — the place was not recognized; `didYouMean` suggests close matches
+- `ambiguousLocation` — several places share the name; `candidates` lists each one with its country and WOEID
+- `notAvailable` — X does not serve trends for that place
+- `noTrends` — X returned an empty list for that place
+- `noMatchingTrends` — trends existed, but your keyword filter removed them all
+- `rateLimited` / `error` — the request could not be completed; retrying usually helps
+- `collectionSummary` — one summary row in all-locations runs with `trendCount`, `locationsWithTrends`, `locationsTotal`, `locationsWithoutTrends`, `notAvailableLocations` and `failedLocations`
+
+In `allLocations` mode the run emits one `collectionSummary` row instead of one `noTrends` row per empty place. The summary's `locationsWithoutTrends` count and `locationsTotal` tell you how many places had no trends.
 
 ## Input
 
 | Field | Type | Default | Description |
 |---|---|---|---|
-| `locations` | array of strings | – | Countries or cities to get trends for — names, aliases (USA, UK, NYC), or numeric WOEIDs. Put "all" to collect every location. |
-| `allLocations` | boolean | false | Collect trends for every location X serves (around 467 countries and cities); ignores `locations` when on |
-| `includeTweetVolume` | boolean | true | Include the approximate post volume for a trend, when X publishes it |
-| `includeSearchUrls` | boolean | true | Include a ready-made X search link for every trend |
-| `maxTrendsPerLocation` | integer | 50 | How many ranked trends to keep per location (1-50) |
-| `proxyConfiguration` | object | – | Optional proxy override, useful for large or repeated runs |
+| `mode` | string | `trends` | `trends` to collect the current ranked list, `locations` to list every place X supports |
+| `locations` | array of strings | `["Worldwide"]` | Places to collect (mode=trends). Names, ISO codes, slugs, aliases and WOEIDs are accepted. Put `all` to collect every place |
+| `allLocations` | boolean | `false` | Collect every place X serves (currently 467); ignores `locations` when on |
+| `maxTrendsPerLocation` | integer | `50` | Trends to keep per place (1–50); X publishes at most 50 |
+| `excludeHashtags` | boolean | `false` | Skip trends that start with `#` |
+| `trendNameContains` | array of strings | `[]` | Keep only trends whose name contains at least one of these words (case-insensitive) |
+| `dedupeAcrossLocations` | boolean | `false` | Keep one row per trend across all requested places, with every place and the best rank |
+| `includeSearchUrls` | boolean | `true` | Add `searchUrl` and `trendUrl` to each trend |
+| `placeTypeFilter` | string | `all` | For mode=locations: `all`, `country`, `town`, `worldwide` or `unknown` |
+| `proxyConfiguration` | object | – | Optional proxy override for very large or repeated runs |
 
-### Example: a handful of countries
+## Examples
+
+### Example: three countries
 
 ```json
 {
-  "locations": ["United States", "United Kingdom", "Japan"],
+  "mode": "trends",
+  "locations": ["United States", "GB", "Japan"],
   "maxTrendsPerLocation": 20
 }
 ```
 
-### Example: cities and a WOEID together
+### Example: cities, a slug and a WOEID
 
 ```json
 {
-  "locations": ["London", "New York", "Dubai", "23424977"],
-  "includeTweetVolume": true
+  "mode": "trends",
+  "locations": ["London", "sao-paulo", "Barcelona, ES", "23424977"],
+  "excludeHashtags": true
 }
 ```
 
-### Example: every location in one run
+### Example: brand monitoring across markets
 
 ```json
 {
+  "mode": "trends",
+  "locations": ["United States", "United Kingdom", "Canada", "Australia"],
+  "trendNameContains": ["tesla", "spacex"],
+  "dedupeAcrossLocations": true,
+  "maxTrendsPerLocation": 50
+}
+```
+
+### Example: list every place, countries only
+
+```json
+{
+  "mode": "locations",
+  "placeTypeFilter": "country"
+}
+```
+
+### Example: every place in one run
+
+```json
+{
+  "mode": "trends",
   "allLocations": true,
   "maxTrendsPerLocation": 50
 }
 ```
 
+This requests up to 50 trends for each of the 467 places (about 21,700 rows in a full run). Lower `maxTrendsPerLocation` if you only need a sample from each place.
+
 ## Use cases
 
-- **Social listening** — track what's breaking out in any market, hour by hour
-- **Newsroom monitoring** — spot emerging stories by city or country early
-- **Content scheduling** — plan posts around live trends using the ready-made search links
-- **Cross-country comparison** — compare trending topics across markets to study regional interest
-- **Automated reporting** — capture timestamped trend snapshots for recurring client or team reports
+- **Social listening** — follow what is breaking out in one city or across several markets
+- **Newsroom monitoring** — spot emerging stories by place before they reach national coverage
+- **Brand and campaign tracking** — filter trends by keyword and see which markets pick them up
+- **Content planning** — use the ready-made search links to explore a trend on X
+- **Market comparison** — compare ranked trends across countries without running separate jobs
+- **Location discovery** — export the full 467-place catalog with country, place type and parent place
+
+## Limitations
+
+- **No tweet volume.** X's public trends endpoint stopped publishing post counts for trends, so no `tweetVolume` is returned and none is estimated.
+- **No history.** X's public trends endpoint returns only the current ranked list. Schedule the actor and keep the datasets if you need a time series.
+- **At most 50 trends per place.** X caps each place at 50 and does not paginate. Request more places for broader coverage.
+- **No category filter.** X's public trends response has no News/Sports/Entertainment category. Use `trendNameContains` to keep the topics you care about, or `excludeHashtags`.
+- **Some places return no trends.** A few places have an empty list at any moment; the actor emits a `noTrends` row. A very small number are not served at all (`notAvailable`). In `allLocations` mode those places are counted in the `collectionSummary` row instead of getting a per-place row.
+- **X may repeat a trend inside one place.** When X returns the same trend twice in a place's top 50, the actor keeps one row at the better rank.
+- **Search links may ask you to log in.** `searchUrl` and `trendUrl` are the canonical x.com search links. X shows its login wall to logged-out browsers, but the links open search for signed-in users.
+- **Current snapshot only.** `asOf` is the timestamp X returns with the list; it can advance on every call even when the trends did not change. `collectedAt` is the completion time of that place's request, so one long run has different values per place.
 
 ## FAQ
 
-**Do I need an X/Twitter account?**
-No. This actor works without login, cookies, or an API key.
+**Do I need an X account, cookies or an API key?**
+No. The actor reads X's public trending data and works without login, cookies or an API key.
 
-**How many locations can I get trends for?**
-X currently serves trends for around 467 countries and cities; `allLocations` covers every one of them in a single run.
+**How many places can I request?**
+X currently publishes trends for 467 places: 62 countries, about 400 cities and towns, one worldwide entry and two places with an unknown type. Use `allLocations` or `locations: ["all"]` for every one in a single run.
 
-**Can I look up a city instead of a country?**
-Yes — major cities like London, New York, Tokyo, Dubai, and Sydney work by name, as do countries worldwide. For a location not in the friendly list, paste its numeric WOEID, or run `allLocations` and filter the results by `location` afterward.
+**How do I enter a city?**
+Use the city name (`London`, `Tokyo`, `Sao Paulo`), its slug (`sao-paulo`) or its numeric WOEID. Country codes such as `US`, `GB`, `DE` and `JP` also work.
 
-**How do I use a WOEID?**
-Paste the number directly into `locations`. Rows for a WOEID you entered are still labeled with the place name X returns, so the dataset stays readable.
+**Why does `Barcelona` return an ambiguous-location row?**
+X lists more than one place called Barcelona. Add the country code, for example `Barcelona, ES`, or use the WOEID shown in the `candidates` list. Bare `Singapore` returns the country entry; use its WOEID to get the city entry.
 
-**Why is `tweetVolume` missing on some rows?**
-X only publishes a post-volume figure for a subset of trends. When X doesn't provide one, the field is left out rather than showing a misleading number.
+**Why is there no `tweetVolume` field?**
+X's public trends endpoint stopped publishing post counts for trends. The actor does not estimate, infer or zero-fill a number, because any such value would be misleading.
 
-**What does a `status` row mean?**
-It means the location wasn't recognized, X temporarily limited the request, or X doesn't serve trends for that location at all (China, for example). The `message` field explains what happened so a run never fails silently.
+**What does `locationCount` tell me?**
+It is the number of requested places where that trend appears. `locationsTrendingIn` names them and `bestRank` gives the lowest rank across them. With `dedupeAcrossLocations` enabled, those places are merged into one row.
 
-**How big is a full `allLocations` run?**
-It can return roughly 22,000 rows (around 467 locations times up to 50 trends each), plus one `collectionSummary` row reporting how many locations succeeded, failed, aren't served by X, or returned no trends.
+**Why does a place return no trends?**
+Some places have an empty trending list at that moment. The run continues and emits a `noTrends` row instead of failing. A few places are not served by X at all and return `notAvailable`. In `allLocations` mode, empty places are counted in the single `collectionSummary` row rather than emitted as separate rows.
+
+**Why do I see fewer than 50 trends for a place?**
+X's list can be shorter than 50, and it occasionally repeats a trend. The actor removes within-place repeats, so a list of 50 entries can produce fewer than 50 unique rows.
 
 **How fresh is the data?**
-X recalculates trends continuously; the `asOf` field tells you exactly when X computed the list for each location.
+X recalculates trends continuously. `asOf` is the timestamp X returns with each place's list. `collectedAt` is the completion time of that place's request, so in a long all-locations run the last places have later `collectedAt` values than the first.
+
+**Can I get more than 50 trends for one place?**
+No. X's public endpoint returns at most 50 trends per place and has no pagination. Request several places to widen coverage.
+
+**Why is there no News/Sports/Entertainment category filter?**
+X's public trends response does not include a category. The actor does not invent one. Use `trendNameContains` for the topics you care about, or `excludeHashtags`.
+
+**Why do the search links ask me to log in?**
+X shows a login wall to logged-out browsers. The links are still the canonical x.com search URLs and open search for signed-in users.
+
+**Can I get historical trends?**
+No. The public trends surface exposes only the current snapshot; the actor does not claim history.
 
 **Is this affiliated with X?**
-No. This actor reads X's publicly visible trending data and is not affiliated with, endorsed by, or sponsored by X Corp.
+No. This is an independent actor that reads publicly visible trending data and is not affiliated with, endorsed by or sponsored by X Corp.

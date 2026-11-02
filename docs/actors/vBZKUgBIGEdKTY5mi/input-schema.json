@@ -1,14 +1,39 @@
 {
+  "description": "Choose how to find jobs: paste one or more Workday careers-site URLs (mode=careerSite), name a tenant and its site (mode=tenant), or paste direct job URLs (mode=jobDetail). One of startUrls or tenant + site is required. Then filter by keyword, location, job family, posting date or remote work.",
   "properties": {
-    "locations": {
-      "description": "Optional list of Workday location UUIDs (the facet values shown in the Workday location filter). Values from the facets response: facets[].values[].id.",
+    "includeJobFamily": {
+      "default": true,
+      "description": "Add each job's family or category (for example Engineering or Sales). This uses the site's own Job Category filter and is skipped automatically when a site has no such filter.",
+      "editor": "checkbox",
+      "prefill": false,
+      "title": "Include Job Family",
+      "type": "boolean"
+    },
+    "jobFamilies": {
+      "default": [],
+      "description": "Optional job families or categories to keep, for example 'Engineering', 'Sales' or 'Finance'. Names come from the site's own Job Category filter; IDs are also accepted.",
       "editor": "stringList",
-      "title": "Location Facet IDs",
+      "items": {
+        "type": "string"
+      },
+      "prefill": [],
+      "title": "Job Families",
+      "type": "array"
+    },
+    "locations": {
+      "default": [],
+      "description": "Optional locations to keep. Use names such as 'United States', 'New York', 'Remote' or 'US, CA, Santa Clara'; the actor matches them against the site's own location filters. Facet IDs are also accepted.",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "prefill": [],
+      "title": "Locations",
       "type": "array"
     },
     "maxItems": {
-      "default": 3,
-      "description": "Maximum number of jobs to return.",
+      "default": 50,
+      "description": "Maximum number of jobs to save across all URLs. Jobs are returned in URL order, so a large first site can use the whole cap.",
       "editor": "number",
       "maximum": 10000,
       "minimum": 1,
@@ -16,61 +41,138 @@
       "title": "Max Items",
       "type": "integer"
     },
-    "postedAt": {
-      "description": "Optional cutoff. Accepts an ISO date (2026-04-01) or a relative string like '7 days' / '30 days'. Jobs posted before the cutoff are skipped when startDate or postedOn can be parsed.",
+    "mode": {
+      "default": "careerSite",
+      "description": "How to find jobs. 'Scrape career site URLs' accepts careers pages or job URLs. 'Scrape a tenant by name' uses tenant + site. 'Scrape specific job URLs' requires /job/... URLs in startUrls.",
+      "editor": "select",
+      "enum": [
+        "careerSite",
+        "tenant",
+        "jobDetail"
+      ],
+      "enumTitles": [
+        "Scrape career site URLs",
+        "Scrape a tenant by name",
+        "Scrape specific job URLs"
+      ],
+      "prefill": "careerSite",
+      "title": "Mode",
+      "type": "string"
+    },
+    "postedAfter": {
+      "description": "Optional exact cutoff date in YYYY-MM-DD form. When both Posted Within and Posted After are set, the stricter cutoff wins.",
       "editor": "textfield",
-      "title": "Posted At Cutoff",
+      "title": "Posted After",
+      "type": "string"
+    },
+    "postedWithin": {
+      "default": "any",
+      "description": "Keep jobs posted within this window. 'Any time' applies no date filter. Use Posted After for an exact cutoff date.",
+      "editor": "select",
+      "enum": [
+        "any",
+        "1 day",
+        "3 days",
+        "7 days",
+        "14 days",
+        "30 days",
+        "60 days",
+        "90 days"
+      ],
+      "enumTitles": [
+        "Any time",
+        "Last 24 hours",
+        "Last 3 days",
+        "Last 7 days",
+        "Last 14 days",
+        "Last 30 days",
+        "Last 60 days",
+        "Last 90 days"
+      ],
+      "prefill": "any",
+      "title": "Posted Within",
       "type": "string"
     },
     "proxyConfiguration": {
       "default": {
-        "useApifyProxy": true
+        "useApifyProxy": false
       },
-      "description": "Apify proxy (datacenter is enough — Workday's public API accepts datacenter IPs cleanly).",
+      "description": "Optional. The actor works without a proxy and chooses a working connection automatically; change this only if you need a specific proxy setup.",
       "editor": "proxy",
       "prefill": {
-        "useApifyProxy": true
+        "useApifyProxy": false
       },
       "title": "Proxy Configuration",
       "type": "object"
     },
+    "region": {
+      "default": "auto",
+      "description": "Workday data-center region. Leave 'auto' to detect it, or set wd1, wd3, wd5, wd12, wd103, and similar when you already know it (mode=tenant).",
+      "editor": "textfield",
+      "prefill": "auto",
+      "title": "Workday Region",
+      "type": "string"
+    },
+    "remoteOnly": {
+      "default": false,
+      "description": "Keep only postings the employer explicitly marks as remote. Hybrid and onsite postings are excluded. This turns on full detail fetching.",
+      "editor": "checkbox",
+      "prefill": false,
+      "title": "Remote Jobs Only",
+      "type": "boolean"
+    },
     "scrapeDetails": {
       "default": true,
-      "description": "Fetch each job's detail endpoint for the full HTML description, timeType, country, canApply, etc. Turn off for listing-only, faster runs.",
+      "description": "Fetch each posting's public job page for the full description, exact posting date, employment type, work model and every location. Turn off for a fast listing-only run (title, location, requisition ID, posting label and URL). Direct job URLs always fetch details because a listing has no record for them.",
       "editor": "checkbox",
-      "prefill": true,
-      "title": "Scrape Job Details",
+      "prefill": false,
+      "title": "Include Full Job Details",
       "type": "boolean"
     },
     "searchText": {
-      "description": "Optional full-text keyword filter passed as searchText on the Workday API (e.g. 'engineer', 'marketing').",
+      "description": "Optional keyword passed to the site's own job search, for example 'engineer' or 'marketing'. Workday searches titles and descriptions.",
       "editor": "textfield",
       "title": "Search Keyword",
       "type": "string"
     },
-    "startAt": {
-      "description": "Optional ISO date (2026-05-01) or relative '14 days'. Skips jobs whose startDate is before the cutoff.",
+    "site": {
+      "description": "Optional career site identifier shown in the URL after the tenant host, for example 'NVIDIAExternalCareerSite' or 'External_Career_Site' (mode=tenant). It is case-sensitive. Leave blank to discover the tenant's first public site automatically.",
       "editor": "textfield",
-      "title": "Start Date Cutoff",
+      "title": "Career Site ID",
+      "type": "string"
+    },
+    "startDateFrom": {
+      "description": "Optional YYYY-MM-DD cutoff for the role's start date. Only applies when the posting publishes a start date. This turns on full detail fetching.",
+      "editor": "textfield",
+      "title": "Start Date From",
       "type": "string"
     },
     "startUrls": {
       "default": [
         "https://salesforce.wd12.myworkdayjobs.com/External_Career_Site"
       ],
-      "description": "Public Workday careers-site URLs to scrape. Accepts tenant career pages (e.g. https://salesforce.wd12.myworkdayjobs.com/External_Career_Site) or direct job URLs that contain /job/...",
+      "description": "Public Workday careers-site or job URLs (mode=careerSite or jobDetail). Paste the URL from your browser; both myworkdayjobs.com and myworkdaysite.com are supported. In careerSite mode a careers URL scrapes the site's jobs and a /job/... URL scrapes that single posting; in jobDetail mode use a /job/... URL.",
       "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
       "prefill": [
         "https://salesforce.wd12.myworkdayjobs.com/External_Career_Site"
       ],
       "title": "Workday Careers URLs",
       "type": "array"
+    },
+    "tenant": {
+      "description": "Workday tenant name, for example 'nvidia' or 'capitalone' (mode=tenant). You can also paste the full careers URL here or use 'tenant/site'. When the site ID is omitted, the actor finds the tenant's first public site automatically.",
+      "editor": "textfield",
+      "title": "Tenant",
+      "type": "string"
     }
   },
   "required": [
-    "startUrls"
+    "mode"
   ],
   "schemaVersion": 1,
-  "title": "Workday Jobs Scraper Input",
+  "title": "Workday Careers Site Job Listings Extractor Input",
   "type": "object"
 }

@@ -1,47 +1,238 @@
 {
+  "description": "Search Bing's web, news, image, video and autocomplete surfaces for one or more queries.",
   "properties": {
+    "dateRange": {
+      "default": "anyTime",
+      "description": "Keep results published inside this window when Bing prints a date for them. Results without a printed date are kept.",
+      "editor": "select",
+      "enum": [
+        "anyTime",
+        "past24Hours",
+        "pastWeek",
+        "pastMonth",
+        "pastYear"
+      ],
+      "enumTitles": [
+        "Any time",
+        "Past 24 hours",
+        "Past week",
+        "Past month",
+        "Past year"
+      ],
+      "prefill": "anyTime",
+      "title": "Published within",
+      "type": "string"
+    },
+    "imageSize": {
+      "default": "any",
+      "description": "Prefer small, medium or large images. The choice is applied through Bing's image-size filter.",
+      "editor": "select",
+      "enum": [
+        "any",
+        "small",
+        "medium",
+        "large"
+      ],
+      "enumTitles": [
+        "Any size",
+        "Small",
+        "Medium",
+        "Large"
+      ],
+      "prefill": "any",
+      "title": "Image size (mode=imageSearch)",
+      "type": "string"
+    },
     "market": {
       "default": "en-US",
-      "description": "Bing market code for localized results (e.g., 'en-US', 'fr-FR', 'de-DE').",
-      "editor": "textfield",
+      "description": "The Bing market and language to search in. Results, interface language and ranking can differ by market.",
+      "editor": "select",
+      "enum": [
+        "en-US",
+        "en-GB",
+        "en-AU",
+        "en-CA",
+        "en-IN",
+        "en-ID",
+        "en-MY",
+        "en-NZ",
+        "en-PH",
+        "en-ZA",
+        "es-AR",
+        "es-CL",
+        "es-ES",
+        "es-MX",
+        "es-US",
+        "pt-BR",
+        "fr-FR",
+        "fr-BE",
+        "fr-CA",
+        "fr-CH",
+        "de-DE",
+        "de-AT",
+        "de-CH",
+        "it-IT",
+        "nl-NL",
+        "nl-BE",
+        "da-DK",
+        "fi-FI",
+        "no-NO",
+        "sv-SE",
+        "pl-PL",
+        "tr-TR",
+        "ru-RU",
+        "ja-JP",
+        "ko-KR",
+        "zh-CN",
+        "zh-HK",
+        "zh-TW"
+      ],
+      "enumTitles": [
+        "English (United States)",
+        "English (United Kingdom)",
+        "English (Australia)",
+        "English (Canada)",
+        "English (India)",
+        "English (Indonesia)",
+        "English (Malaysia)",
+        "English (New Zealand)",
+        "English (Philippines)",
+        "English (South Africa)",
+        "Spanish (Argentina)",
+        "Spanish (Chile)",
+        "Spanish (Spain)",
+        "Spanish (Mexico)",
+        "Spanish (United States)",
+        "Portuguese (Brazil)",
+        "French (France)",
+        "French (Belgium)",
+        "French (Canada)",
+        "French (Switzerland)",
+        "German (Germany)",
+        "German (Austria)",
+        "German (Switzerland)",
+        "Italian (Italy)",
+        "Dutch (Netherlands)",
+        "Dutch (Belgium)",
+        "Danish (Denmark)",
+        "Finnish (Finland)",
+        "Norwegian (Norway)",
+        "Swedish (Sweden)",
+        "Polish (Poland)",
+        "Turkish (Türkiye)",
+        "Russian (Russia)",
+        "Japanese (Japan)",
+        "Korean (South Korea)",
+        "Chinese (China)",
+        "Chinese (Hong Kong)",
+        "Chinese (Taiwan)"
+      ],
       "prefill": "en-US",
-      "title": "Market / Language",
+      "title": "Market",
       "type": "string"
     },
     "maxResultsPerQuery": {
       "default": 10,
-      "description": "Maximum number of results per query.",
-      "maximum": 100,
+      "description": "Maximum records to collect for each query, across result pages. Bing may return fewer when its own list ends.",
+      "maximum": 250,
       "minimum": 1,
-      "prefill": 5,
-      "title": "Max Results Per Query",
+      "prefill": 3,
+      "title": "Results per query",
       "type": "integer"
     },
-    "proxyConfiguration": {
-      "default": {
-        "useApifyProxy": false
-      },
-      "description": "Proxy config. Works without proxy by default.",
-      "editor": "proxy",
-      "title": "Proxy Configuration",
-      "type": "object"
+    "mode": {
+      "default": "webSearch",
+      "description": "Which Bing surface to collect. Web returns organic web results; News, Images and Videos return that vertical; Autocomplete returns query suggestions.",
+      "editor": "select",
+      "enum": [
+        "webSearch",
+        "newsSearch",
+        "imageSearch",
+        "videoSearch",
+        "autocomplete"
+      ],
+      "enumTitles": [
+        "Web results",
+        "News articles",
+        "Images",
+        "Videos",
+        "Autocomplete suggestions"
+      ],
+      "prefill": "webSearch",
+      "title": "Result type",
+      "type": "string"
+    },
+    "newsSort": {
+      "default": "relevance",
+      "description": "Order news articles by Bing's relevance or newest first.",
+      "editor": "select",
+      "enum": [
+        "relevance",
+        "mostRecent"
+      ],
+      "enumTitles": [
+        "Relevance",
+        "Newest first"
+      ],
+      "prefill": "relevance",
+      "title": "News order (mode=newsSearch)",
+      "type": "string"
     },
     "queries": {
-      "description": "List of search queries to look up on Bing.",
+      "description": "One or more searches, exactly as you would type them into Bing. Quotes and search operators work. Repeat queries are searched once.",
       "editor": "stringList",
       "items": {
         "type": "string"
       },
+      "maxItems": 100,
       "minItems": 1,
       "prefill": [
-        "food in NYC"
+        "best coffee shops seattle"
       ],
-      "title": "Search Queries",
+      "title": "Search queries",
       "type": "array"
+    },
+    "safeSearch": {
+      "default": "moderate",
+      "description": "Bing's adult-content filter. Moderate is Bing's own default; Strict removes adult pages and images; Off keeps everything Bing returns.",
+      "editor": "select",
+      "enum": [
+        "moderate",
+        "strict",
+        "off"
+      ],
+      "enumTitles": [
+        "Moderate (Bing default)",
+        "Strict",
+        "Off"
+      ],
+      "prefill": "moderate",
+      "title": "SafeSearch",
+      "type": "string"
+    },
+    "videoDuration": {
+      "default": "any",
+      "description": "Keep short (under 5 minutes), medium (5–20 minutes) or long (over 20 minutes) videos.",
+      "editor": "select",
+      "enum": [
+        "any",
+        "short",
+        "medium",
+        "long"
+      ],
+      "enumTitles": [
+        "Any length",
+        "Short (under 5 minutes)",
+        "Medium (5–20 minutes)",
+        "Long (over 20 minutes)"
+      ],
+      "prefill": "any",
+      "title": "Video length (mode=videoSearch)",
+      "type": "string"
     }
   },
   "required": [
-    "queries"
+    "mode"
   ],
   "schemaVersion": 1,
   "title": "Bing Search Scraper Input",

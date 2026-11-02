@@ -1,87 +1,195 @@
-# Bing Organic Search Results Scraper
+# Bing Search Results, News & Media Scraper
 
-Bing still powers a meaningful share of desktop search traffic, and its ranking often diverges from Google's. This actor submits your keywords to Bing and returns the organic result list — title, URL, display URL and snippet — in the order Bing ranked them, for whichever market and language you choose.
+Bing's results are not a copy of Google's: the ranking, the sites that win, and the snippets and dates shown all differ. This actor turns a list of searches into clean, ranked rows from five Bing surfaces — web results, news, images, videos and autocomplete — in the market and language your audience uses. Destination links are decoded from Bing's tracking wrapper, so every URL is ready to use.
 
 ## What this actor does
 
-- **Runs a batch of search queries** in one job and tags every result row with the query that produced it
-- **Preserves rank order** — each result carries a `position` so you can track movement over time
-- **Localizes results** to any Bing market/language code, not just English
-- **Paginates automatically** up to your requested result count per query
+- **Five result types in one run:** organic web results, news articles, images, videos and autocomplete suggestions.
+- **Many searches at once:** send a list of queries and every row is tagged with the query that produced it.
+- **Rank and page on every row:** follow Bing's own "next page" links and keep a stable position, so rank tracking and page-level analysis work out of the box.
+- **Localized results:** 38 Bing markets, from `en-US` and `en-GB` to `ja-JP`, `pt-BR` and `zh-TW`.
+- **Useful filters:** SafeSearch, publication window, image size, video length and newest-first news ordering.
+- **Clean links and clean data:** Bing redirect links are decoded, duplicate URLs and off-topic web rows are removed, and empty fields are omitted rather than written as `null`.
 
 ## Output per result
 
-- `query` — the search query that produced this result
-- `position` — 1-based rank of the result within its query
-- `title` — result title as shown on the Bing SERP
-- `url` — destination URL of the result
-- `displayUrl` — the URL text Bing displays under the title, or an empty string if that result card doesn't show one
-- `description` — result snippet/description text, or an empty string if that result card doesn't show one
-- `searchUrl` — the Bing search URL used to fetch this result page
-- `scrapedAt` — ISO 8601 timestamp of when the result was scraped
+Every row contains the query, its `position` (also available as `rank`), the `page` it came from, the `market`, the `resultType` (`web`, `news`, `image`, `video` or `autocomplete`), the matching `recordType` (`webResult`, `newsArticle`, `imageResult`, `videoResult` or `autocompleteSuggestion`) and the exact Bing `searchUrl` used, plus `scrapedAt` in UTC ISO format.
+
+### Web results (`mode = webSearch`)
+
+- `title`, `url`, `displayUrl`, `description` (also available as `snippet`)
+- `siteName` — the site name Bing displays
+- `breadcrumb` — the path crumbs Bing shows under the title, when present
+- `dateText` — the date exactly as Bing printed it, when present
+- `sitelinks` — additional links Bing shows under a result, when present
+- `richSnippet` — extra fact text Bing shows with a result, when present
+
+### News articles (`mode = newsSearch`)
+
+- `title`, `url`, `displayUrl`, `description` / `snippet`
+- `source` — the publisher or author Bing credits
+- `dateText` — how long ago the story was published, as Bing shows it
+- `imageUrl` and `thumbnailUrl` — article image, when Bing supplies one
+
+### Images (`mode = imageSearch`)
+
+- `title`, `description` / `snippet`
+- `imageUrl` — the original image
+- `thumbnailUrl` — Bing's hosted thumbnail
+- `url` and `displayUrl` — the page the image appears on
+- `width`, `height`, `imageId`
+
+### Videos (`mode = videoSearch`)
+
+- `title`, `url`, `displayUrl`
+- `thumbnailUrl`, `duration`, `views`
+- `dateText`, `platform`, `channel`, `videoId`
+
+### Autocomplete (`mode = autocomplete`)
+
+- `suggestion`, `title` (same text), `position` / `rank`
 
 ## Input
 
 | Field | Type | Default | Description |
 |---|---|---|---|
-| `queries` | array | – | List of search queries to look up on Bing. |
-| `maxResultsPerQuery` | integer | `10` | Maximum results to return per query (1–100), fetched via automatic pagination. |
-| `market` | string | `en-US` | Bing market/language code for localized results (e.g. `fr-FR`, `de-DE`, `ja-JP`). |
-| `proxyConfiguration` | object | `{"useApifyProxy": false}` | Proxy configuration; every run currently connects through an Apify proxy regardless of this setting. |
+| `mode` | string | `webSearch` | `webSearch`, `newsSearch`, `imageSearch`, `videoSearch` or `autocomplete` |
+| `queries` | array | – | One or more searches, exactly as you would type them into Bing. Required; up to 100 per run. |
+| `maxResultsPerQuery` | integer | `10` | Maximum rows per query, across pages (1–250). |
+| `market` | string | `en-US` | Bing market and language. 38 markets are listed in the dropdown. |
+| `safeSearch` | string | `moderate` | `moderate`, `strict` or `off`. |
+| `dateRange` | string | `anyTime` | `anyTime`, `past24Hours`, `pastWeek`, `pastMonth` or `pastYear`. Rows without a printed date are kept. |
+| `imageSize` | string | `any` | Image mode only: `any`, `small`, `medium` or `large`, applied through Bing's image-size filter. |
+| `videoDuration` | string | `any` | Video mode only: `any`, `short` (under 5 min), `medium` (5–20 min) or `long` (over 20 min). |
+| `newsSort` | string | `relevance` | News mode only: `relevance` or `mostRecent`. |
 
-### Example: multi-query SEO check
+### Example: organic web results for several keywords
 
 ```json
 {
-    "queries": ["best restaurants NYC", "python web frameworks"],
-    "maxResultsPerQuery": 20,
-    "market": "en-US"
+  "mode": "webSearch",
+  "queries": [
+    "best coffee shops seattle",
+    "python web frameworks",
+    "cheap flights to rome"
+  ],
+  "maxResultsPerQuery": 30,
+  "market": "en-US",
+  "safeSearch": "moderate",
+  "dateRange": "anyTime"
 }
 ```
 
-### Example: localized market
+### Example: recent news in a local market
 
 ```json
 {
-    "queries": ["meilleurs restaurants Paris"],
-    "maxResultsPerQuery": 30,
-    "market": "fr-FR"
+  "mode": "newsSearch",
+  "queries": ["electric vehicles", "renewable energy"],
+  "maxResultsPerQuery": 40,
+  "market": "de-DE",
+  "safeSearch": "moderate",
+  "dateRange": "pastWeek",
+  "newsSort": "mostRecent"
 }
 ```
 
-### Example: single query, top results only
+### Example: large product images
 
 ```json
 {
-    "queries": ["apify alternatives"],
-    "maxResultsPerQuery": 10
+  "mode": "imageSearch",
+  "queries": ["mechanical keyboard", "standing desk"],
+  "maxResultsPerQuery": 100,
+  "market": "en-GB",
+  "safeSearch": "strict",
+  "imageSize": "large"
+}
+```
+
+### Example: short videos and autocomplete
+
+```json
+{
+  "mode": "videoSearch",
+  "queries": ["sourdough tutorial"],
+  "maxResultsPerQuery": 50,
+  "market": "en-US",
+  "videoDuration": "short"
+}
+```
+
+```json
+{
+  "mode": "autocomplete",
+  "queries": ["mechanical keyboard"],
+  "maxResultsPerQuery": 10,
+  "market": "en-US"
 }
 ```
 
 ## Use cases
 
-- **Rank tracking** — monitor where your site lands on Bing for target keywords over time
-- **Competitor analysis** — see which domains occupy the top Bing positions for an industry term
-- **Content gap research** — pull the top-ranking titles and snippets for a topic to spot content gaps
-- **Cross-market comparisons** — run the same keyword across several `market` codes to see how rankings differ by country/language
-- **Lead sourcing** — search niche business terms and collect the resulting URLs and snippets in bulk
+- **Bing rank tracking** — record where your pages and competitors appear for a keyword set, with the page number and displayed URL.
+- **Cross-market SEO research** — compare the same query in the US, UK, Germany, Japan and Brazil without changing your browser settings.
+- **News monitoring** — collect recent headlines, publishers, dates and images for a topic or brand.
+- **Image and video research** — build a media list with original image URLs, dimensions, durations and channels.
+- **Content gap analysis** — see which titles, snippets, breadcrumbs and dates Bing rewards for a topic.
+- **Keyword expansion** — use Bing autocomplete to discover the phrases searchers actually type.
 
 ## FAQ
 
-**Do I need a proxy to run this?**
-No manual setup is needed — every run automatically connects through an Apify-managed proxy for reliable access; the `proxyConfiguration` field does not currently change that.
+### Do I need a proxy, cookie or API key?
 
-**Which market codes are supported?**
-Any Bing market/language code, such as `en-US`, `en-GB`, `fr-FR`, `de-DE`, `es-ES`, `it-IT`, `ja-JP`, `pt-BR`, `zh-CN`, `ko-KR`, `nl-NL`, `ru-RU` or `ar-SA`.
+No. The actor works without any account, login, cookie or proxy setup, and chooses a working connection to Bing automatically.
 
-**How many results can one query return?**
-Up to 100 per query, fetched across multiple result pages automatically — you don't need to manage pagination yourself.
+### How many results can one query return?
 
-**Does this include ads, People Also Ask, or other Bing SERP widgets?**
-No, this actor returns organic results only — title, URL, display URL and snippet for each ranked position.
+You can request up to 250 rows per query. Bing decides how deep its own list goes: news, images and videos usually paginate further than web results, and some web queries stop after the first page. The actor reports fewer rows honestly instead of inventing positions.
 
-**Will results differ if I change the market code for the same query?**
-Yes. Bing serves different ranked results, and sometimes different language content, depending on the market/language code you set.
+### Why did I get fewer rows than I requested?
 
-**Is this affiliated with Microsoft or Bing?**
-No, this is an independent, third-party actor that queries Bing's public search results. It is not affiliated with or endorsed by Microsoft.
+Bing's own result list can end, repeat a page, or return fewer organic results for a narrow query or a strict filter. The actor stops when Bing stops producing new URLs. Every run ends with a single `Run summary:` log line that names each query that came back short, with the number of rows it did return, and the same text is set as the run's final status message.
+
+### What happens when Bing answers a query with results for a different query?
+
+Bing occasionally serves a cached page for an unrelated search. The actor checks every web result against the words of your query and drops rows that answer something else. If no row passes, the query is reported as having no usable results.
+
+### How does the actor connect to Bing?
+
+It tries a direct browser-like request first, then a simple client profile, then Apify's free datacenter proxy automatically. You do not configure a proxy or supply credentials. If every route is blocked for a query, the actor reports that query as having no usable results instead of saving a decoy page.
+
+### Which markets are supported?
+
+The dropdown lists 38 Bing markets. Bing can serve some markets differently depending on where the run executes; if a market returns no usable page, try `en-US` or a nearby market.
+
+### How do the date filters work?
+
+The actor asks Bing for the selected window and also checks the date printed on each result. A result with no printed date is kept, because there is nothing to compare. News dates are shown as relative times (for example, "4 hours ago"), exactly as Bing prints them.
+
+### Does this include ads, People Also Ask or the AI answer?
+
+No. The actor returns organic results and the media and autocomplete surfaces listed above. Sponsored placements and interactive SERP widgets are not included, so ranking positions are organic positions.
+
+### Are image and video URLs ready to use?
+
+Image results include both the original image URL and a Bing-hosted thumbnail; video rows include the video page URL and a thumbnail. Original media can be hotlink-protected by its host, so use the thumbnail when you need a reliable preview.
+
+### Are duplicate URLs removed?
+
+Yes, duplicates are removed within each query. If Bing repeats a page, the repeat is skipped and the actor moves on or stops when no new URLs remain.
+
+### Is this affiliated with Microsoft or Bing?
+
+No. This is an independent tool that reads publicly available Bing result pages. It is not affiliated with or endorsed by Microsoft.
+
+## Limitations
+
+- **Web pagination can stop early.** Bing sometimes serves the same web page again instead of the next page. The actor detects the repeat, tries the other free connection routes, and reports the shortfall. News, images and videos generally paginate further.
+- **One query can be blank while another works.** On a shared datacenter connection Bing sometimes answers a valid query with a decoy page or no results. The actor retries every free route and reports that query instead of saving unrelated rows; rerun later or try another query/market.
+- **Web relevance is word-based, not semantic.** With a multi-word query, Bing can return a nearby topic and a row that matches one word (for example a Tokyo tourism page for "Tokyo weather") can still appear. The actor drops rows that match no query word and reports zero-result queries; it does not re-rank by meaning.
+- **Bing changes its layout.** Sitelinks, rich facts and printed dates appear only when Bing shows them. Fields the source does not provide are omitted, never guessed.
+- **Rankings move.** Bing reorders results between visits and between markets. Treat a run as a snapshot, not a permanent ranking.
+- **News recency tops out at 30 days on Bing's side.** For news, `pastYear` behaves like the last 30 days; rows with no printed date are kept.
+- **Autocomplete suggestions are capped by Bing.** One query usually returns about 12-25 suggestions even when `maxResultsPerQuery` is higher.
+- **`maxResultsPerQuery` is a cap, not a promise.** The source decides how many unique rows exist for a query. The run log ends with a `Run summary:` line naming every query that returned fewer rows, and the same summary is set as the run's final status message.

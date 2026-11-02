@@ -1,0 +1,115 @@
+{
+  "description": "Take full-page screenshots of websites as PNG or PDF. Configure viewport, wait conditions, scrolling, and element hiding.",
+  "properties": {
+    "delay": {
+      "default": 0,
+      "description": "Milliseconds to wait after the page loads before taking the screenshot. Useful for pages with animations or lazy-loaded content.",
+      "maximum": 3600000,
+      "minimum": 0,
+      "prefill": 0,
+      "title": "Delay Before Screenshot (ms)",
+      "type": "integer"
+    },
+    "delayAfterScrolling": {
+      "default": 2500,
+      "description": "Milliseconds to wait after scrolling to bottom. Only applies when Scroll to Bottom is enabled and Wait for Network Idle After Scroll is disabled.",
+      "maximum": 3600000,
+      "minimum": 0,
+      "title": "Delay After Scrolling (ms)",
+      "type": "integer"
+    },
+    "format": {
+      "default": "png",
+      "description": "Screenshot output format. PNG captures a full-page image. PDF generates a printable document.",
+      "editor": "select",
+      "enum": [
+        "png",
+        "pdf"
+      ],
+      "enumTitles": [
+        "PNG Image",
+        "PDF Document"
+      ],
+      "title": "Output Format",
+      "type": "string"
+    },
+    "proxyConfiguration": {
+      "description": "Optional proxy settings. The actor works without proxy for most websites.",
+      "editor": "proxy",
+      "sectionCaption": "Advanced Settings",
+      "title": "Proxy Configuration",
+      "type": "object"
+    },
+    "scrollToBottom": {
+      "default": false,
+      "description": "Scroll to the bottom of the page before taking the screenshot. Triggers lazy-loaded images and infinite scroll content.",
+      "sectionCaption": "Scrolling",
+      "title": "Scroll to Bottom",
+      "type": "boolean"
+    },
+    "selectorsToHide": {
+      "description": "Comma-separated CSS selectors of elements to hide before taking the screenshot. Example: '.cookie-banner, #popup, .ads'",
+      "editor": "textarea",
+      "title": "CSS Selectors to Hide",
+      "type": "string"
+    },
+    "urls": {
+      "description": "List of web page URLs to capture as screenshots.",
+      "editor": "requestListSources",
+      "prefill": [
+        {
+          "url": "https://www.apify.com/"
+        }
+      ],
+      "title": "URLs to Screenshot",
+      "type": "array"
+    },
+    "viewportWidth": {
+      "default": 1280,
+      "description": "Browser viewport width in pixels. Height is fixed at 1080px.",
+      "maximum": 3840,
+      "minimum": 100,
+      "prefill": 1280,
+      "title": "Viewport Width (px)",
+      "type": "integer"
+    },
+    "waitUntil": {
+      "default": "load",
+      "description": "When to consider the page loaded before taking the screenshot.",
+      "editor": "select",
+      "enum": [
+        "load",
+        "domcontentloaded",
+        "networkidle"
+      ],
+      "enumTitles": [
+        "Page is opened (load)",
+        "Content is loaded (DOM)",
+        "Network is idle"
+      ],
+      "prefill": "load",
+      "title": "Wait Until",
+      "type": "string"
+    },
+    "waitUntilNetworkIdleAfterScroll": {
+      "default": false,
+      "description": "After scrolling, wait until no network requests are made for 500ms. Ensures all lazy-loaded content finishes loading. Overrides Delay After Scrolling.",
+      "title": "Wait for Network Idle After Scroll",
+      "type": "boolean"
+    },
+    "waitUntilNetworkIdleAfterScrollTimeout": {
+      "default": 30000,
+      "description": "Maximum time to wait for network idle after scrolling. Only applies when Wait for Network Idle After Scroll is enabled.",
+      "maximum": 3600000,
+      "minimum": 1000,
+      "title": "Network Idle After Scroll Timeout (ms)",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "urls"
+  ],
+  "schemaVersion": 1,
+  "title": "Screenshot URL Input",
+  "type": "object"
+}

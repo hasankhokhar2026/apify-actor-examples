@@ -1,11 +1,25 @@
 {
-  "description": "Get the trending topics of any country or city on X (Twitter). No login or cookies needed.",
+  "description": "Get the ranked trending topics of any country or city on X, or list every place X publishes trends for. No login, cookies or API key needed.",
   "properties": {
     "allLocations": {
       "default": false,
-      "description": "Collect trends for every location X serves (currently 467 countries and cities, up to 50 trends each). When enabled, the Locations list is ignored. Tip: you can also put \"all\" in the Locations list.",
+      "description": "Collect trends for every place X serves (currently 467 countries and cities, up to 50 trends each). When enabled, the Locations list is ignored.",
       "prefill": false,
       "title": "All available locations",
+      "type": "boolean"
+    },
+    "dedupeAcrossLocations": {
+      "default": false,
+      "description": "When the same trend appears in several requested locations, keep one row with all locations and the best rank instead of one row per location.",
+      "prefill": false,
+      "title": "Merge repeated trends across locations",
+      "type": "boolean"
+    },
+    "excludeHashtags": {
+      "default": false,
+      "description": "Skip trends that start with #. X applies this filter before returning the list.",
+      "prefill": false,
+      "title": "Exclude hashtags",
       "type": "boolean"
     },
     "includeSearchUrls": {
@@ -15,21 +29,17 @@
       "title": "Include search links",
       "type": "boolean"
     },
-    "includeTweetVolume": {
-      "default": true,
-      "description": "Include the approximate number of posts using each trend when X publishes it. X often omits it, so the field is present only when available.",
-      "prefill": true,
-      "title": "Include approximate post volume",
-      "type": "boolean"
-    },
     "locations": {
-      "description": "Countries or cities to get trends for. Examples: Worldwide, United States, United Kingdom, Canada, Australia, India, Pakistan, Japan, South Korea, Germany, France, Brazil, London, New York, Tokyo, Paris, Dubai, Karachi, Sydney. You can also paste a numeric WOEID such as 23424977.",
+      "default": [
+        "Worldwide"
+      ],
+      "description": "Countries, cities, country codes, slugs or WOEIDs (mode=trends). Examples: Worldwide, United States, US, United Kingdom, GB, London, Tokyo, sao-paulo, 23424977. Put \"all\" to collect every location. Add a country after a comma when two places share a name, for example \"Barcelona, ES\".",
       "editor": "stringList",
       "example": [
         "United States",
-        "Pakistan",
-        "Japan",
+        "GB",
         "London",
+        "sao-paulo",
         "23424977"
       ],
       "prefill": [
@@ -43,21 +53,69 @@
       "description": "How many ranked trends to keep for each location. X publishes up to 50.",
       "maximum": 50,
       "minimum": 1,
-      "prefill": 50,
+      "prefill": 3,
       "title": "Maximum trends per location",
       "type": "integer"
     },
+    "mode": {
+      "default": "trends",
+      "description": "Choose whether to collect the current trends or list the places X publishes trends for.",
+      "editor": "select",
+      "enum": [
+        "trends",
+        "locations"
+      ],
+      "enumTitles": [
+        "Trends now by location",
+        "List all available locations"
+      ],
+      "prefill": "trends",
+      "title": "Mode",
+      "type": "string"
+    },
+    "placeTypeFilter": {
+      "default": "all",
+      "description": "Limit the location list to countries, cities and towns, the worldwide entry, or X's unknown place type.",
+      "editor": "select",
+      "enum": [
+        "all",
+        "country",
+        "town",
+        "worldwide",
+        "unknown"
+      ],
+      "enumTitles": [
+        "All places",
+        "Countries",
+        "Cities and towns",
+        "Worldwide",
+        "Unknown place type"
+      ],
+      "prefill": "all",
+      "title": "Place type (mode=locations)",
+      "type": "string"
+    },
     "proxyConfiguration": {
-      "description": "Optional. Use a proxy if you plan large or repeated runs.",
+      "description": "Optional. Use a proxy if you plan very large or repeated runs.",
       "editor": "proxy",
       "sectionCaption": "Advanced",
       "sectionDescription": "Optional settings for large or repeated runs.",
       "title": "Proxy configuration",
       "type": "object"
+    },
+    "trendNameContains": {
+      "default": [],
+      "description": "Optional case-insensitive keyword filter. A trend is kept when its name contains at least one of these words. Useful for brand or topic monitoring.",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Only trends containing these words",
+      "type": "array"
     }
   },
-  "required": [],
+  "required": [
+    "mode"
+  ],
   "schemaVersion": 1,
-  "title": "Twitter (X) Trends Scraper",
+  "title": "X Trends by Location",
   "type": "object"
 }
