@@ -1,0 +1,69 @@
+{
+  "properties": {
+    "maxResults": {
+      "default": 25,
+      "description": "Maximum records to return (each page = 10 records).",
+      "editor": "number",
+      "maximum": 1000,
+      "minimum": 1,
+      "prefill": 5,
+      "title": "Max Results",
+      "type": "integer"
+    },
+    "minShipments": {
+      "default": 0,
+      "description": "Exclude companies with fewer than this many lifetime shipments.",
+      "editor": "number",
+      "minimum": 0,
+      "title": "Minimum Shipments",
+      "type": "integer"
+    },
+    "mostRecentShipment": {
+      "default": "any",
+      "description": "Only include companies with a shipment within this window.",
+      "editor": "select",
+      "enum": [
+        "any",
+        "6mo",
+        "12mo"
+      ],
+      "enumTitles": [
+        "Any Time",
+        "Last 6 Months",
+        "Last 12 Months"
+      ],
+      "title": "Most Recent Shipment Within",
+      "type": "string"
+    },
+    "query": {
+      "description": "Company name, supplier name, trademark, or product keyword.",
+      "editor": "textfield",
+      "prefill": "apple",
+      "title": "Query",
+      "type": "string"
+    },
+    "type": {
+      "default": "any",
+      "description": "Filter results by record type.",
+      "editor": "select",
+      "enum": [
+        "any",
+        "company",
+        "supplier"
+      ],
+      "enumTitles": [
+        "Any",
+        "Company (Importer)",
+        "Supplier (Exporter)"
+      ],
+      "title": "Result Type",
+      "type": "string"
+    }
+  },
+  "required": [
+    "query"
+  ],
+  "schemaVersion": 1,
+  "title": "ImportYeti Scraper Input",
+  "type": "object"
+}
