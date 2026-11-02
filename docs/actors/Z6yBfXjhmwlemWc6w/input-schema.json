@@ -1,0 +1,54 @@
+{
+  "description": "Search US importers and global suppliers using ImportYeti.com's public trade database.",
+  "properties": {
+    "maxItems": {
+      "default": 20,
+      "description": "Maximum number of results to return.",
+      "maximum": 500,
+      "minimum": 1,
+      "prefill": 20,
+      "title": "Max Items",
+      "type": "integer"
+    },
+    "mode": {
+      "default": "searchImporters",
+      "description": "What to search for.",
+      "editor": "select",
+      "enum": [
+        "searchImporters",
+        "searchSuppliers"
+      ],
+      "enumTitles": [
+        "Search US Importers (by company name or product)",
+        "Search Global Suppliers (by company name)"
+      ],
+      "prefill": "searchImporters",
+      "title": "Mode",
+      "type": "string"
+    },
+    "proxyConfiguration": {
+      "description": "Proxy settings. ImportYeti enforces a 25-request-per-IP limit, so proxy is required on Apify cloud to avoid rate-limiting.",
+      "editor": "proxy",
+      "prefill": {
+        "useApifyProxy": true
+      },
+      "title": "Proxy Configuration",
+      "type": "object"
+    },
+    "query": {
+      "default": "electronics",
+      "description": "Company name or product keyword to search for.",
+      "editor": "textfield",
+      "prefill": "electronics",
+      "title": "Search Query",
+      "type": "string"
+    }
+  },
+  "required": [
+    "mode",
+    "query"
+  ],
+  "schemaVersion": 1,
+  "title": "ImportYeti US Trade & Supplier Data Scraper Input",
+  "type": "object"
+}
