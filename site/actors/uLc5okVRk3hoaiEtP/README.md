@@ -1,0 +1,110 @@
+# Ashby Job Board Compensation & Openings Scraper
+
+Scrape public **Ashby job boards** for any company that hires on `jobs.ashbyhq.com`. Get every open role with title, department, team, location, remote status, salary / compensation ranges, apply links, and full job descriptions. HTTP-only via the public Ashby posting API — **no login, no API key, no proxy.**
+
+## What this actor does
+
+- **Two modes:** `byOrg` (all jobs across one or more companies) and `jobDetail` (a single job by ID)
+- **Multi-company:** pass many org slugs in one run (e.g. `Ramp`, `Notion`, `Linear`)
+- **Compensation included:** salary ranges, equity / commission summaries, and per-tier breakdowns when the company publishes them
+- **Filters:** department, location, remote-only
+- **Empty fields are omitted** — every record contains only fields that actually have data
+
+## Output per job
+
+- `id` — Ashby job posting UUID
+- `title`
+- `department`, `team`
+- `employmentType` — `FullTime`, `Contract`, `Intern`, `Temporary`
+- `location` — primary location string
+- `isRemote` — boolean
+- `workplaceType` — `Remote`, `Hybrid`, `OnSite`
+- `secondaryLocations[]` — additional location strings
+- `compensationSummary` — human-readable pay summary (e.g. `$147K – $262K • Offers Equity`)
+- `salarySummary` — base salary range (e.g. `$147K - $262K`)
+- `compensationTiers[]` — structured pay tiers with components (type, interval, currency, min/max)
+- `publishedAt` — ISO timestamp
+- `jobUrl` — public posting URL
+- `applyUrl` — application URL
+- `descriptionPlain` — full plain-text job description
+- `organization` — the company slug
+- `recordType: "job"`, `scrapedAt`
+
+If an org slug or job ID doesn't resolve, that item produces an error record instead: `recordType: "error"`, `error` (e.g. `org_not_found`, `job_not_found`, `invalid_org_slug`), `message`, `input` (the value that failed), `sourceUrl`, and `scrapedAt`.
+
+## Input
+
+| Field | Type | Default | Description |
+|---|---|---|---|
+| `mode` | string | `byOrg` | `byOrg` / `jobDetail` |
+| `orgSlugs` | array | `["Ramp"]` | Company slugs (mode=byOrg) |
+| `orgSlug` | string | – | Single company slug (mode=jobDetail) |
+| `jobId` | string | – | Job posting UUID (mode=jobDetail) |
+| `department` | string | – | Keep only jobs whose department contains this text |
+| `location` | string | – | Keep only jobs whose location contains this text |
+| `isRemoteOnly` | bool | `false` | Keep only remote jobs |
+| `maxItems` | int | `100` | Hard cap on emitted records (1–2000) |
+
+### Example: all jobs at one company
+
+```json
+{
+  "mode": "byOrg",
+  "orgSlugs": ["Ramp"]
+}
+```
+
+### Example: engineering roles across several companies
+
+```json
+{
+  "mode": "byOrg",
+  "orgSlugs": ["Ramp", "Notion", "Linear"],
+  "department": "Engineering",
+  "maxItems": 500
+}
+```
+
+### Example: remote-only jobs
+
+```json
+{
+  "mode": "byOrg",
+  "orgSlugs": ["Notion"],
+  "isRemoteOnly": true
+}
+```
+
+### Example: a single job by ID
+
+```json
+{
+  "mode": "jobDetail",
+  "orgSlug": "Ramp",
+  "jobId": "09a9381c-677b-40a5-9ff1-027bd4302c13"
+}
+```
+
+## Use cases
+
+- **Job aggregators** — ingest fresh openings from hundreds of Ashby-powered companies
+- **Recruiting intelligence** — track which teams a competitor is hiring for and where
+- **Compensation benchmarking** — collect published salary ranges by role and location
+- **Talent sourcing** — build a live feed of remote or location-specific roles
+- **Market research** — monitor hiring velocity and departmental growth over time
+
+## FAQ
+
+**What is Ashby?**  Ashby is an applicant-tracking and recruiting platform. Many startups and scale-ups host their public careers page on `jobs.ashbyhq.com/{company}`. This actor reads the same public job data those pages are built from.
+
+**How do I find a company's slug?**  It's the path segment in the board URL. For `https://jobs.ashbyhq.com/Ramp`, the slug is `Ramp`. You can paste the full URL too — the actor extracts the slug for you.
+
+**Do I need an API key or login?**  No. The Ashby posting API is public. No auth, no cookies, no proxy required.
+
+**Why do some jobs have no salary?**  Companies choose whether to publish compensation. When they don't, the `compensationSummary` / `salarySummary` / `compensationTiers` fields are simply omitted.
+
+**Can I get a specific job's full description?**  Yes — use `jobDetail` mode with the `orgSlug` and `jobId`, or read `descriptionPlain` from any `byOrg` result.
+
+**What happens if a company slug doesn't exist?**  The actor emits a typed `error` record (`recordType: "error"`) for that slug and continues with the rest — one bad slug never fails the whole run.
+
+**How fresh is the data?**  Live. Every run reads each company's current public job board directly.

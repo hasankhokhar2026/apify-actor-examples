@@ -1,0 +1,79 @@
+{
+  "description": "List all jobs across one or more Ashby job boards, or fetch a single job by ID.",
+  "properties": {
+    "department": {
+      "description": "Keep only jobs whose department contains this text (case-insensitive), e.g. `Engineering`, `Sales`, `Design`. Applies in mode=byOrg.",
+      "editor": "textfield",
+      "title": "Filter by department",
+      "type": "string"
+    },
+    "isRemoteOnly": {
+      "default": false,
+      "description": "Keep only jobs flagged as remote. Applies in mode=byOrg.",
+      "prefill": false,
+      "title": "Remote jobs only",
+      "type": "boolean"
+    },
+    "jobId": {
+      "description": "The Ashby job posting UUID, e.g. `09a9381c-677b-40a5-9ff1-027bd4302c13`. Found in a job URL: `https://jobs.ashbyhq.com/{org}/{jobId}`.",
+      "editor": "textfield",
+      "title": "Job ID (mode=jobDetail)",
+      "type": "string"
+    },
+    "location": {
+      "description": "Keep only jobs whose primary or secondary location contains this text (case-insensitive), e.g. `New York`, `Remote`, `London`. Applies in mode=byOrg.",
+      "editor": "textfield",
+      "title": "Filter by location",
+      "type": "string"
+    },
+    "maxItems": {
+      "default": 100,
+      "description": "Hard cap on the number of job records emitted.",
+      "maximum": 2000,
+      "minimum": 1,
+      "prefill": 100,
+      "title": "Max items",
+      "type": "integer"
+    },
+    "mode": {
+      "default": "byOrg",
+      "description": "What to scrape.",
+      "editor": "select",
+      "enum": [
+        "byOrg",
+        "jobDetail"
+      ],
+      "enumTitles": [
+        "List all jobs across organizations",
+        "Fetch a single job by ID"
+      ],
+      "prefill": "byOrg",
+      "title": "Mode",
+      "type": "string"
+    },
+    "orgSlug": {
+      "description": "Single Ashby company slug that owns the job (e.g. `Ramp`).",
+      "editor": "textfield",
+      "title": "Organization slug (mode=jobDetail)",
+      "type": "string"
+    },
+    "orgSlugs": {
+      "default": [
+        "Ramp"
+      ],
+      "description": "One or more Ashby company slugs, e.g. `Ramp`, `Notion`, `Linear`. You can also paste a full board URL like `https://jobs.ashbyhq.com/Ramp` and the slug is extracted automatically.",
+      "editor": "stringList",
+      "prefill": [
+        "Ramp"
+      ],
+      "title": "Organization slugs (mode=byOrg)",
+      "type": "array"
+    }
+  },
+  "required": [
+    "mode"
+  ],
+  "schemaVersion": 1,
+  "title": "Ashby Jobs Scraper Input",
+  "type": "object"
+}
