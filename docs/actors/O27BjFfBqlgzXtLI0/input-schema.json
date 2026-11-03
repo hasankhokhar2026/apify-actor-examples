@@ -1,65 +1,83 @@
 {
+  "description": "Fetch Snapcode images for one or more Snapchat usernames, read public profile metadata, or do both in a single run.",
   "properties": {
-    "bitmoji": {
-      "default": "enable",
-      "description": "Whether to include the user's Bitmoji avatar in the snapcode image.",
-      "editor": "select",
-      "enum": [
-        "enable",
-        "disable"
-      ],
-      "enumTitles": [
-        "Enable (includes Bitmoji avatar if set)",
-        "Disable (ghost icon only)"
-      ],
-      "prefill": "enable",
-      "title": "Bitmoji Avatar",
-      "type": "string"
-    },
     "downloadToStorage": {
       "default": false,
-      "description": "Download the snapcode image to Apify Key-Value Store and include a persistent URL in output",
-      "title": "Save to Key-Value Store",
+      "description": "Save each fetched Snapcode image to Apify key-value store and add a persistent URL to the record. Only applies to modes that fetch images.",
+      "prefill": false,
+      "title": "Save images to key-value store",
       "type": "boolean"
     },
     "format": {
       "default": "SVG",
-      "description": "Image format of the snapcode to download: SVG (vector, recommended) or PNG (raster).",
+      "description": "Snapcode image format (used in mode=snapcode and mode=full).",
       "editor": "select",
       "enum": [
         "SVG",
         "PNG"
       ],
       "enumTitles": [
-        "SVG (vector, ~68KB, recommended)",
-        "PNG (raster, ~25KB)"
+        "SVG (vector, recommended)",
+        "PNG (raster)"
       ],
       "prefill": "SVG",
-      "title": "Image Format",
+      "title": "Image format",
       "type": "string"
     },
-    "proxyConfiguration": {
-      "description": "Optional proxy configuration for requests.",
-      "editor": "proxy",
-      "nullable": true,
-      "title": "Proxy Configuration",
-      "type": "object"
+    "imageSize": {
+      "default": 320,
+      "description": "Square image size in pixels (used in mode=snapcode and mode=full), from 32 to 1000. Values above 1000 are capped by Snapchat.",
+      "maximum": 1000,
+      "minimum": 32,
+      "prefill": 320,
+      "title": "Image size (pixels)",
+      "type": "integer"
+    },
+    "maxItems": {
+      "default": 1000,
+      "description": "Maximum number of records to save from this run.",
+      "maximum": 5000,
+      "minimum": 1,
+      "prefill": 1,
+      "title": "Maximum records",
+      "type": "integer"
+    },
+    "mode": {
+      "default": "snapcode",
+      "description": "Snapcode image only, public profile metadata only, or both.",
+      "editor": "select",
+      "enum": [
+        "snapcode",
+        "profile",
+        "full"
+      ],
+      "enumTitles": [
+        "Snapcode image",
+        "Public profile metadata",
+        "Snapcode image + profile metadata"
+      ],
+      "prefill": "snapcode",
+      "title": "What to collect",
+      "type": "string"
     },
     "usernames": {
-      "description": "Snapchat usernames to fetch snapcodes for",
+      "description": "Snapchat usernames, @handles, or profile links. Examples: brentrivera, @brentrivera, https://www.snapchat.com/add/brentrivera, https://www.snapchat.com/@brentrivera.",
       "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
       "prefill": [
-        "brentrivera",
-        "selenagomez"
+        "brentrivera"
       ],
-      "title": "Usernames",
+      "title": "Usernames or profile links",
       "type": "array"
     }
   },
   "required": [
+    "mode",
     "usernames"
   ],
   "schemaVersion": 1,
-  "title": "Snapchat Snapcode Scraper",
+  "title": "Snapchat Snapcode & Public Profile Scraper",
   "type": "object"
 }

@@ -1,42 +1,145 @@
 {
-  "description": "Scrape Freelancer.com project pages from direct project URLs, search queries, category browse, or user profiles.",
+  "description": "Collect Freelancer.com projects by keyword, category or direct project URL/id, with fixed/hourly budgets, skills, languages, bids, employer details and dates.",
   "properties": {
-    "autoEscalateOnBlock": {
-      "default": true,
-      "description": "When a fetch returns 403/429/empty, automatically retry that single URL through residential Apify proxy.",
-      "prefill": true,
-      "title": "Auto-escalate on block",
-      "type": "boolean"
+    "budgetMax": {
+      "default": 0,
+      "description": "Maximum fixed budget or hourly rate in USD. Use 0 for no maximum. When projectType=any, the range is applied to both types.",
+      "maximum": 10000000,
+      "minimum": 0,
+      "prefill": 0,
+      "title": "Maximum budget (USD)",
+      "type": "integer"
+    },
+    "budgetMin": {
+      "default": 0,
+      "description": "Minimum fixed budget or hourly rate in USD. Use 0 for no minimum. When projectType=any, the range is applied to both types.",
+      "maximum": 10000000,
+      "minimum": 0,
+      "prefill": 0,
+      "title": "Minimum budget (USD)",
+      "type": "integer"
     },
     "categoryUrls": {
       "default": [],
-      "description": "Freelancer listing URLs such as https://www.freelancer.com/jobs/python/.",
+      "description": "Freelancer /jobs/<skill>/ URLs or skill slugs used in mode=byCategory, e.g. https://www.freelancer.com/jobs/python/ or `website-design`.",
       "editor": "stringList",
       "prefill": [],
-      "title": "Category URLs",
+      "title": "Category or skill URLs",
       "type": "array"
     },
-    "maxItems": {
-      "default": 25,
-      "description": "Hard cap on emitted Freelancer projects.",
-      "maximum": 500,
+    "includeBids": {
+      "default": false,
+      "description": "Fetch individual bids with bidder identity, amount, delivery period and proposal text. Adds one request per project.",
+      "prefill": false,
+      "title": "Fetch bid lists",
+      "type": "boolean"
+    },
+    "includeClosed": {
+      "default": false,
+      "description": "Also search closed projects in search/category modes. Direct project URLs and ids always work for closed projects.",
+      "prefill": false,
+      "title": "Include closed projects",
+      "type": "boolean"
+    },
+    "includeDetails": {
+      "default": true,
+      "description": "Fetch the public project page for employer country/rating/reviews, verification flags, page title and posting text. Adds one request per project.",
+      "prefill": false,
+      "title": "Fetch project details",
+      "type": "boolean"
+    },
+    "languages": {
+      "default": [],
+      "description": "ISO 639-1 language codes, e.g. `en`, `de`, `hi`, `es`.",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Project languages",
+      "type": "array"
+    },
+    "maxBidCount": {
+      "default": 0,
+      "description": "Only keep projects with at most this many bids. Use 0 for no maximum.",
+      "maximum": 1000000,
+      "minimum": 0,
+      "prefill": 0,
+      "title": "Maximum bid count",
+      "type": "integer"
+    },
+    "maxBidsPerProject": {
+      "default": 20,
+      "description": "How many individual bids to return per project when `includeBids` is enabled.",
+      "maximum": 1000,
       "minimum": 1,
-      "prefill": 25,
+      "prefill": 1,
+      "title": "Max bids per project",
+      "type": "integer"
+    },
+    "maxItems": {
+      "default": 50,
+      "description": "Hard cap on emitted project records.",
+      "maximum": 10000,
+      "minimum": 1,
+      "prefill": 3,
       "title": "Max items",
+      "type": "integer"
+    },
+    "maxPages": {
+      "default": 5,
+      "description": "Maximum listing pages to request. Each page contains up to 99 projects.",
+      "maximum": 100,
+      "minimum": 1,
+      "prefill": 1,
+      "title": "Max pages",
       "type": "integer"
     },
     "minBidCount": {
       "default": 0,
-      "description": "Drop projects with fewer than N bids. 0 keeps everything.",
-      "maximum": 1000,
+      "description": "Only keep projects with at least this many bids. Use 0 for no minimum.",
+      "maximum": 1000000,
       "minimum": 0,
       "prefill": 0,
       "title": "Minimum bid count",
       "type": "integer"
     },
+    "mode": {
+      "default": "auto",
+      "description": "How to find projects. `auto` detects the mode from the fields you fill in, `search` uses a keyword, `byProject` uses project URLs/ids, and `byCategory` browses a skill/category page.",
+      "editor": "select",
+      "enum": [
+        "auto",
+        "search",
+        "byProject",
+        "byCategory"
+      ],
+      "enumTitles": [
+        "Auto-detect from inputs",
+        "Search by keyword",
+        "Fetch specific projects",
+        "Browse a category or skill"
+      ],
+      "prefill": "search",
+      "title": "Mode",
+      "type": "string"
+    },
+    "postedAfter": {
+      "default": "",
+      "description": "Only keep projects posted on or after this date. ISO date or datetime, e.g. `2026-01-01` or `2026-01-01T12:00:00Z`.",
+      "editor": "textfield",
+      "prefill": "",
+      "title": "Posted after",
+      "type": "string"
+    },
+    "postedBefore": {
+      "default": "",
+      "description": "Only keep projects posted on or before this date. ISO date or datetime, e.g. `2026-12-31` or `2026-12-31T23:59:59Z`.",
+      "editor": "textfield",
+      "prefill": "",
+      "title": "Posted before",
+      "type": "string"
+    },
     "projectType": {
       "default": "any",
-      "description": "Restrict scraped projects to either fixed-price or hourly. `any` (default) keeps both.",
+      "description": "Keep fixed-price projects, hourly projects, or both.",
       "editor": "select",
       "enum": [
         "any",
@@ -44,57 +147,45 @@
         "hourly"
       ],
       "enumTitles": [
-        "Any (fixed price + hourly)",
-        "Fixed-price only",
-        "Hourly only"
+        "Any type",
+        "Fixed-price projects",
+        "Hourly projects"
       ],
       "prefill": "any",
-      "title": "Project type filter",
+      "title": "Project type",
       "type": "string"
     },
     "projectUrls": {
-      "default": [
-        "https://www.freelancer.com/projects/python/cricket-prediction-rewards-bot"
-      ],
-      "description": "Direct Freelancer project URLs, such as https://www.freelancer.com/projects/python/demo-project.",
-      "editor": "stringList",
-      "prefill": [
-        "https://www.freelancer.com/projects/python/cricket-prediction-rewards-bot"
-      ],
-      "title": "Project URLs",
-      "type": "array"
-    },
-    "proxyConfiguration": {
-      "default": {},
-      "description": "Optional Apify proxy configuration. Only applied when `useProxy` is enabled.",
-      "editor": "proxy",
-      "prefill": {},
-      "title": "Proxy configuration (advanced)",
-      "type": "object"
-    },
-    "searchPages": {
-      "default": 1,
-      "description": "Number of pages to crawl per search query / category / user URL.",
-      "maximum": 10,
-      "minimum": 1,
-      "prefill": 1,
-      "title": "Search pages per query",
-      "type": "integer"
-    },
-    "searchQueries": {
       "default": [],
-      "description": "Keywords to convert into Freelancer job listing pages, such as `python`, `react`, or `nodejs`.",
+      "description": "Full Freelancer project URLs, paths or numeric project ids used in mode=byProject, e.g. https://www.freelancer.com/projects/python/my-project or 40425363.",
       "editor": "stringList",
       "prefill": [],
-      "title": "Search queries",
+      "title": "Project URLs or ids",
+      "type": "array"
+    },
+    "query": {
+      "default": "python",
+      "description": "Keyword used in mode=search, e.g. `python`, `logo design`, `data entry`. Required for search mode.",
+      "editor": "textfield",
+      "prefill": "python",
+      "title": "Search keyword",
+      "type": "string"
+    },
+    "skills": {
+      "default": [],
+      "description": "Skill names, slugs or numeric ids to narrow the search, e.g. `Python`, `website-design` or `13`.",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Skills",
       "type": "array"
     },
     "sortBy": {
       "default": "latest",
-      "description": "Sort order applied when crawling search query or category URLs. `latest` is Freelancer's default.",
+      "description": "Order of search/category results. Ending-soon and budget sorts are applied to the collected candidate pool.",
       "editor": "select",
       "enum": [
         "latest",
+        "ending_soon",
         "lowest_budget",
         "highest_budget",
         "lowest_bids",
@@ -102,32 +193,21 @@
       ],
       "enumTitles": [
         "Newest first",
+        "Ending soon",
         "Lowest budget first",
         "Highest budget first",
         "Lowest bid count first",
         "Highest bid count first"
       ],
       "prefill": "latest",
-      "title": "Sort order (search/category)",
+      "title": "Sort results",
       "type": "string"
-    },
-    "useProxy": {
-      "default": false,
-      "description": "Route HTTP requests through Apify proxy. Freelancer.com is normally reachable without it; enable this only if you see empty pages.",
-      "prefill": false,
-      "title": "Use Apify proxy",
-      "type": "boolean"
-    },
-    "userUrls": {
-      "default": [],
-      "description": "Freelancer user/employer profile URLs, e.g. https://www.freelancer.com/u/username. The actor scrapes the public projects posted by that user.",
-      "editor": "stringList",
-      "prefill": [],
-      "title": "User profile URLs",
-      "type": "array"
     }
   },
+  "required": [
+    "mode"
+  ],
   "schemaVersion": 1,
-  "title": "Freelancer Scraper Input",
+  "title": "Freelancer Project Scraper Input",
   "type": "object"
 }

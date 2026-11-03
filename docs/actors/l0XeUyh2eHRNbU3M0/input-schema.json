@@ -1,15 +1,39 @@
 {
-  "description": "Search IndiaMart for products or suppliers by keyword. Optionally filter by state or city.",
+  "description": "Search IndiaMART products, browse a category, or look up public product and supplier pages. Filter by Indian city or state.",
   "properties": {
-    "city": {
-      "description": "Filter to a specific Indian city (e.g. 'Mumbai', 'Ahmedabad', 'Surat').",
+    "category": {
+      "default": "",
+      "description": "IndiaMART category slug or category URL, e.g. 'cotton-fabric' or 'https://dir.indiamart.com/impcat/cotton-fabric.html'. Required for mode=browseCategory.",
       "editor": "textfield",
-      "title": "Filter by city",
+      "prefill": "",
+      "title": "Category slug or URL",
       "type": "string"
+    },
+    "city": {
+      "default": "",
+      "description": "Keep only suppliers in this Indian city, e.g. 'Surat', 'Mumbai', 'Jaipur'. Works with searchProducts and browseCategory.",
+      "editor": "textfield",
+      "prefill": "",
+      "title": "City",
+      "type": "string"
+    },
+    "enrichWithProductDetails": {
+      "default": false,
+      "description": "Open each product page to add description, full specifications, MOQ, contact number, GST, IEC and company details. Adds one request per product.",
+      "prefill": false,
+      "title": "Enrich products with detail pages",
+      "type": "boolean"
+    },
+    "expandRelatedCategories": {
+      "default": true,
+      "description": "When a keyword or category has too few listings, also collect IndiaMART's related product categories. Results are de-duplicated.",
+      "prefill": false,
+      "title": "Expand into related categories",
+      "type": "boolean"
     },
     "keyword": {
       "default": "cotton fabric",
-      "description": "Product or supplier keyword (e.g. 'cotton fabric', 'industrial pump').",
+      "description": "Product or material keyword, e.g. 'cotton fabric', 'industrial pump', 'basmati rice'. Required for mode=searchProducts.",
       "editor": "textfield",
       "prefill": "cotton fabric",
       "title": "Search keyword",
@@ -17,43 +41,184 @@
     },
     "maxItems": {
       "default": 20,
-      "description": "Maximum number of records to return.",
-      "maximum": 500,
+      "description": "Maximum number of records to return across all keywords and inputs.",
+      "maximum": 1000,
       "minimum": 1,
-      "prefill": 20,
-      "title": "Max items",
+      "prefill": 3,
+      "title": "Maximum records",
       "type": "integer"
+    },
+    "maxPrice": {
+      "default": 0,
+      "description": "Drop listings priced above this amount. Use 0 for no maximum.",
+      "maximum": 100000000,
+      "minimum": 0,
+      "prefill": 0,
+      "title": "Maximum price (INR)",
+      "type": "integer"
+    },
+    "minPrice": {
+      "default": 0,
+      "description": "Drop listings priced below this amount. Use 0 for no minimum.",
+      "maximum": 100000000,
+      "minimum": 0,
+      "prefill": 0,
+      "title": "Minimum price (INR)",
+      "type": "integer"
+    },
+    "minRating": {
+      "default": 0,
+      "description": "Drop suppliers rated below this star rating (0 to 5). Use 0 for no minimum.",
+      "maximum": 5,
+      "minimum": 0,
+      "prefill": 0,
+      "title": "Minimum supplier rating",
+      "type": "number"
     },
     "mode": {
       "default": "searchProducts",
-      "description": "What to search for on IndiaMart.",
+      "description": "Choose what to collect from IndiaMART.",
       "editor": "select",
       "enum": [
         "searchProducts",
-        "searchSuppliers",
-        "categoryBrowse"
+        "browseCategory",
+        "productDetails",
+        "supplierProfile",
+        "categoryBrowse",
+        "searchSuppliers"
       ],
       "enumTitles": [
-        "Search Products by keyword",
-        "Search Suppliers by keyword",
-        "Browse by category"
+        "Search products by keyword",
+        "Browse a product category",
+        "Look up product URLs or IDs",
+        "Look up supplier profiles",
+        "Browse a category (legacy name)",
+        "Search products by keyword (legacy name)"
       ],
       "prefill": "searchProducts",
       "title": "Mode",
       "type": "string"
     },
+    "productUrls": {
+      "default": [],
+      "description": "IndiaMART product URLs or numeric product IDs. Used only for mode=productDetails.",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "prefill": [],
+      "title": "Product URLs or IDs",
+      "type": "array"
+    },
     "state": {
-      "description": "Filter to a specific Indian state (e.g. 'Maharashtra', 'Gujarat', 'Tamil Nadu').",
-      "editor": "textfield",
-      "title": "Filter by state",
+      "default": "",
+      "description": "Keep only suppliers in this Indian state or union territory. Leave empty for all of India.",
+      "editor": "select",
+      "enum": [
+        "",
+        "Andhra Pradesh",
+        "Arunachal Pradesh",
+        "Assam",
+        "Bihar",
+        "Chhattisgarh",
+        "Goa",
+        "Gujarat",
+        "Haryana",
+        "Himachal Pradesh",
+        "Jharkhand",
+        "Karnataka",
+        "Kerala",
+        "Madhya Pradesh",
+        "Maharashtra",
+        "Manipur",
+        "Meghalaya",
+        "Mizoram",
+        "Nagaland",
+        "Odisha",
+        "Punjab",
+        "Rajasthan",
+        "Sikkim",
+        "Tamil Nadu",
+        "Telangana",
+        "Tripura",
+        "Uttar Pradesh",
+        "Uttarakhand",
+        "West Bengal",
+        "Andaman and Nicobar Islands",
+        "Chandigarh",
+        "Dadra and Nagar Haveli and Daman and Diu",
+        "Delhi",
+        "Jammu and Kashmir",
+        "Ladakh",
+        "Lakshadweep",
+        "Puducherry"
+      ],
+      "enumTitles": [
+        "All states and union territories",
+        "Andhra Pradesh",
+        "Arunachal Pradesh",
+        "Assam",
+        "Bihar",
+        "Chhattisgarh",
+        "Goa",
+        "Gujarat",
+        "Haryana",
+        "Himachal Pradesh",
+        "Jharkhand",
+        "Karnataka",
+        "Kerala",
+        "Madhya Pradesh",
+        "Maharashtra",
+        "Manipur",
+        "Meghalaya",
+        "Mizoram",
+        "Nagaland",
+        "Odisha",
+        "Punjab",
+        "Rajasthan",
+        "Sikkim",
+        "Tamil Nadu",
+        "Telangana",
+        "Tripura",
+        "Uttar Pradesh",
+        "Uttarakhand",
+        "West Bengal",
+        "Andaman and Nicobar Islands",
+        "Chandigarh",
+        "Dadra and Nagar Haveli and Daman and Diu",
+        "Delhi",
+        "Jammu and Kashmir",
+        "Ladakh",
+        "Lakshadweep",
+        "Puducherry"
+      ],
+      "prefill": "",
+      "title": "State or union territory",
       "type": "string"
+    },
+    "supplierUrls": {
+      "default": [],
+      "description": "IndiaMART supplier profile URLs, company IDs, or company aliases. Used only for mode=supplierProfile.",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "prefill": [],
+      "title": "Supplier URLs or company IDs",
+      "type": "array"
+    },
+    "verifiedSuppliersOnly": {
+      "default": false,
+      "description": "Keep only suppliers with an IndiaMART verification signal such as TrustSEAL, verified exporter or verified GST.",
+      "prefill": false,
+      "title": "Verified suppliers only",
+      "type": "boolean"
     }
   },
   "required": [
-    "mode",
-    "keyword"
+    "mode"
   ],
   "schemaVersion": 1,
-  "title": "IndiaMart Scraper Input",
+  "title": "IndiaMART B2B Product & Supplier Scraper Input",
   "type": "object"
 }

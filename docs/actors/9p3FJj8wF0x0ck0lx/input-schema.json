@@ -1,19 +1,62 @@
 {
-  "description": "Scrape product listings or details from Flipkart by search query, category URL, or direct product URLs.",
+  "description": "Scrape Flipkart products by keyword, category URL, product URL or product ID. Add full product details, variants, offers, seller, specifications and reviews.",
   "properties": {
+    "brand": {
+      "description": "Only products from this brand, e.g. Samsung. Use the exact brand name shown on Flipkart.",
+      "editor": "textfield",
+      "title": "Brand",
+      "type": "string"
+    },
     "categoryUrl": {
       "description": "Full Flipkart category or browse URL, e.g. https://www.flipkart.com/laptops/pr?sid=6bo%2Cb5g (mode=byCategory)",
       "editor": "textfield",
       "title": "Category URL",
       "type": "string"
     },
+    "certifiedBuyersOnly": {
+      "default": false,
+      "description": "Only reviews marked as certified buyer.",
+      "prefill": false,
+      "title": "Certified Buyers Only",
+      "type": "boolean"
+    },
+    "fAssuredOnly": {
+      "default": false,
+      "description": "Only products marked Flipkart Assured.",
+      "prefill": false,
+      "title": "Flipkart Assured Only",
+      "type": "boolean"
+    },
+    "includeDetails": {
+      "default": true,
+      "description": "Open each product page for specifications, variants, offers, seller, images and warranty. Product URLs and IDs always return full details.",
+      "prefill": false,
+      "title": "Include Full Product Details",
+      "type": "boolean"
+    },
+    "includeReviews": {
+      "default": false,
+      "description": "Add buyer review records for each product.",
+      "prefill": false,
+      "title": "Include Reviews",
+      "type": "boolean"
+    },
     "maxItems": {
-      "default": 20,
-      "description": "Maximum number of products to scrape (1–500).",
+      "default": 50,
+      "description": "Maximum number of products to scrape (1-500).",
       "maximum": 500,
       "minimum": 1,
-      "prefill": 20,
+      "prefill": 3,
       "title": "Max Items",
+      "type": "integer"
+    },
+    "maxPages": {
+      "default": 30,
+      "description": "Maximum search/category result pages to read (1-30).",
+      "maximum": 30,
+      "minimum": 1,
+      "prefill": 1,
+      "title": "Max Pages",
       "type": "integer"
     },
     "maxPrice": {
@@ -23,6 +66,39 @@
       "title": "Maximum Price (INR)",
       "type": "integer"
     },
+    "maxReviewsPerProduct": {
+      "default": 20,
+      "description": "Maximum reviews to collect per product when reviews are enabled.",
+      "maximum": 200,
+      "minimum": 0,
+      "prefill": 0,
+      "title": "Max Reviews per Product",
+      "type": "integer"
+    },
+    "minDiscount": {
+      "default": "0",
+      "description": "Only products with at least this discount percentage.",
+      "editor": "select",
+      "enum": [
+        "0",
+        "10",
+        "20",
+        "30",
+        "40",
+        "50"
+      ],
+      "enumTitles": [
+        "Any",
+        "10% or more",
+        "20% or more",
+        "30% or more",
+        "40% or more",
+        "50% or more"
+      ],
+      "prefill": "0",
+      "title": "Minimum Discount",
+      "type": "string"
+    },
     "minPrice": {
       "description": "Minimum price filter in Indian Rupees.",
       "maximum": 10000000,
@@ -31,7 +107,7 @@
       "type": "integer"
     },
     "minRating": {
-      "description": "Minimum product rating (1.0–5.0). Leave empty for no filter.",
+      "description": "Minimum product rating (1.0-5.0).",
       "maximum": 5,
       "minimum": 1,
       "title": "Minimum Rating",
@@ -49,10 +125,38 @@
       "enumTitles": [
         "Search products by keyword",
         "Browse a category URL",
-        "Fetch specific product URLs"
+        "Fetch specific product URLs or IDs"
       ],
       "prefill": "search",
       "title": "Mode",
+      "type": "string"
+    },
+    "productIds": {
+      "default": [],
+      "description": "Flipkart product IDs (the pid from a URL) or product URLs. (mode=byUrl)",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Product IDs",
+      "type": "array"
+    },
+    "reviewsSort": {
+      "default": "MOST_HELPFUL",
+      "description": "Order of buyer reviews.",
+      "editor": "select",
+      "enum": [
+        "MOST_HELPFUL",
+        "MOST_RECENT",
+        "POSITIVE_FIRST",
+        "NEGATIVE_FIRST"
+      ],
+      "enumTitles": [
+        "Most helpful",
+        "Most recent",
+        "Positive first",
+        "Negative first"
+      ],
+      "prefill": "MOST_HELPFUL",
+      "title": "Reviews Sort",
       "type": "string"
     },
     "searchQuery": {
@@ -68,29 +172,38 @@
       "editor": "select",
       "enum": [
         "relevance",
+        "popularity",
         "price_asc",
         "price_desc",
-        "popularity",
-        "newest",
-        "rating"
+        "recency_desc"
       ],
       "enumTitles": [
         "Relevance",
+        "Popularity",
         "Price: Low to High",
         "Price: High to Low",
-        "Popularity",
-        "Newest first",
-        "Highest rated"
+        "Newest first"
       ],
       "prefill": "relevance",
       "title": "Sort By",
       "type": "string"
     },
     "startUrls": {
-      "description": "List of Flipkart product URLs to scrape, e.g. https://www.flipkart.com/product-name/p/itm... (mode=byUrl)",
+      "default": [],
+      "description": "Flipkart product URLs. (mode=byUrl)",
       "editor": "requestListSources",
+      "items": {
+        "properties": {
+          "url": {
+            "description": "Flipkart product URL.",
+            "title": "URL",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
       "prefill": [],
-      "title": "Start URLs",
+      "title": "Product URLs",
       "type": "array"
     }
   },

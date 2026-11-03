@@ -4,37 +4,67 @@
 
 # Flipkart Product Price & Specs Scraper
 
-Flipkart lists price, MRP, discount and a short spec summary on nearly every product card and detail page, but that data is locked inside the page markup. This actor pulls it out as structured records — whether you start from a keyword search, a category page, or a list of product links you already have — with no API key or login step.
+Flipkart is India's largest marketplace, and almost every product page carries the details a price tracker, catalog team or brand analyst needs: the current selling price, the struck-through MRP, the discount, the rating breakdown, the full specification table, the seller behind the listing, the variants and the buyer reviews. This actor turns that public data into clean JSON — from a keyword search, a category page, a list of product links, or bare product IDs. No login, cookies or API key.
 
 ## What this actor does
 
-- **Three modes:** `search` (keyword search), `byCategory` (browse category URL), `byUrl` (fetch specific product URLs)
-- **Filters:** price range (min/max in INR), minimum rating
-- **Sort options:** relevance, price low-to-high, price high-to-low, popularity, newest, highest rated
-- **Rich pricing data:** sale price, original MRP, discount percentage, currency (INR)
-- **Pagination:** automatically pages through results up to your `maxItems` limit
-- **Empty fields are omitted** — only populated fields appear in output records
+- **Three modes:** keyword search, category/browse URL, and product URLs or IDs.
+- **Filters:** price range in INR, minimum rating, brand, minimum discount and Flipkart Assured.
+- **Full detail enrichment:** specifications, highlights, description, warranty, manufacturer/importer details, gallery, variants, offers and seller scores.
+- **Optional reviews:** rating, title, text, author, date, certified-buyer flag, location, helpful votes, photos and the variant reviewed.
+- **Pagination with de-duplication:** walks search/category pages up to your `maxItems`, skips repeated sponsored cards.
+- **Empty fields are omitted** — only populated fields appear in output records.
 
 ## Output per product
 
-- `productId` — Flipkart product PID identifier
-- `itemId` — Flipkart internal item identifier
-- `title` — full product title as shown on Flipkart
-- `subtitle` — secondary descriptive line shown under the title, when Flipkart provides one
-- `url` — full URL to the product listing
-- `brand` — brand name (extracted from title)
-- `price` — current sale price in INR
-- `originalPrice` — original MRP in INR (when discounted)
-- `discountPercent` — discount percentage off original price (when > 0)
-- `currency` — always `INR`
-- `rating` — average product rating (1.0–5.0)
-- `reviewCount` — total number of ratings
-- `keySpecs` — array of key product specifications (processor, RAM, storage, etc.)
-- `imageUrl` — main product image (400×400, HTTPS)
-- `availability` — product availability status
-- `seller` — seller name (when available)
-- `recordType` — always `product`
-- `scrapedAt` — UTC timestamp of when the record was scraped
+- `productId` — Flipkart product ID (`pid`)
+- `itemId` — Flipkart internal item ID, when the listing card provides it
+- `listingId` — listing (seller offer) ID
+- `title`, `subtitle` — product name and variant line
+- `url` — product URL
+- `brand`, `color`
+- `price` — current selling price in INR
+- `originalPrice` — MRP when it is higher than the selling price
+- `discountPercent`, `discountAmount`
+- `bestOfferPrice` — effective price after a bank/exchange offer, when Flipkart shows one
+- `specialPrice` — true when Flipkart flags a special/best price
+- `currency` — `INR`
+- `rating`, `ratingCount`, `reviewCount`
+- `ratingHistogram` — counts for 1 to 5 stars
+- `aspectRatings` — ratings for battery, design, performance and similar aspects
+- `keySpecs` — short spec bullets from the product card or highlights
+- `imageUrl`, `images[]` — main image and full gallery
+- `availability`, `inStock`
+- `isFlipkartAssured`
+- `offers[]` — bank, exchange and coupon offers with type, title, subtitle and discount text
+- `offerCount`
+- `seller` — seller name
+- `sellerId`, `sellerRating`, `sellerTenure`, `sellerProductsSold`, `sellerQualityScore`, `sellerSpeedScore`, `sellerAbout`, `sellerProductQuality`, `sellerServiceQuality`
+- `specifications` — grouped specification table (for example `General`, `Display and Audio Features`, `Dimensions`)
+- `highlights[]`, `description`, `warranty`
+- `manufacturerInfo` — country of origin, manufacturer, importer, packer and generic name when published
+- `variants[]` — colour and size options with label, product ID, URL, image, stock state and selected flag
+- `breadcrumb[]`, `category`, `subCategory`, `superCategory`, `vertical`
+- `questionCount`, `answerCount`
+- `codAvailable`, `returnPolicy`, `noCostEmi`
+- `sourceUrl` — product URL for product/ID runs and the search/category page URL for listing runs
+- `sourceQuery`, `searchRank` — search/category runs only
+- `recordType: "product"`, `scrapedAt`
+
+## Output per review
+
+Review records appear when **Include Reviews** is on (`recordType: "review"`):
+
+- `productId`, `reviewId`
+- `rating`, `title`, `text`
+- `author`, `created`, `certifiedBuyer`
+- `location` — city and state
+- `helpfulCount`, `upvotes`, `downvotes`
+- `totalCount` — combined upvotes and downvotes as Flipkart reports them (not a review total)
+- `images[]` — photos attached to the review
+- `productAttributes[]` — the variant the reviewer bought (colour, size, storage, etc.)
+- `reviewUrl`, `reviewPageUrl`
+- `recordType: "review"`, `scrapedAt`
 
 ## Input
 
@@ -42,15 +72,25 @@ Flipkart lists price, MRP, discount and a short spec summary on nearly every pro
 |---|---|---|---|
 | `mode` | string | `search` | `search` / `byCategory` / `byUrl` |
 | `searchQuery` | string | – | Keyword search query (mode=search) |
-| `categoryUrl` | string | – | Flipkart category URL, e.g. `https://www.flipkart.com/laptops/pr?sid=6bo%2Cb5g` (mode=byCategory) |
-| `startUrls` | array | – | List of Flipkart product URLs (mode=byUrl) |
-| `sortBy` | string | `relevance` | Sort order: `relevance`, `price_asc`, `price_desc`, `popularity`, `newest`, `rating` |
-| `minPrice` | integer | – | Minimum price filter in INR |
-| `maxPrice` | integer | – | Maximum price filter in INR |
-| `minRating` | number | – | Minimum product rating (1.0–5.0) |
-| `maxItems` | integer | `20` | Maximum products to return (1–500) |
+| `categoryUrl` | string | – | Flipkart category or browse URL (mode=byCategory) |
+| `startUrls` | array | `[]` | Product URLs (mode=byUrl) |
+| `productIds` | array | `[]` | Product IDs or product URLs (mode=byUrl) |
+| `sortBy` | string | `relevance` | `relevance`, `popularity`, `price_asc`, `price_desc`, `recency_desc` |
+| `minPrice` | integer | – | Minimum price in INR |
+| `maxPrice` | integer | – | Maximum price in INR |
+| `minRating` | number | – | Minimum rating (1.0–5.0) |
+| `brand` | string | – | Only this brand, e.g. `Samsung` |
+| `minDiscount` | string | `"0"` | Minimum discount: `"0"`, `"10"`, `"20"`, `"30"`, `"40"`, `"50"` |
+| `fAssuredOnly` | boolean | `false` | Only Flipkart Assured products |
+| `includeDetails` | boolean | `true` | Open each product page for specs, variants, offers, seller, gallery and warranty |
+| `includeReviews` | boolean | `false` | Add buyer review records |
+| `maxReviewsPerProduct` | integer | `20` | Review cap per product (0–200) |
+| `reviewsSort` | string | `MOST_HELPFUL` | `MOST_HELPFUL`, `MOST_RECENT`, `POSITIVE_FIRST`, `NEGATIVE_FIRST` |
+| `certifiedBuyersOnly` | boolean | `false` | Only certified-buyer reviews |
+| `maxItems` | integer | `50` | Maximum products to return (1–500) |
+| `maxPages` | integer | `30` | Maximum search/category pages to read (1–30) |
 
-### Example: search for laptops under ₹60,000
+### Example: laptops under ₹60,000
 
 ```json
 {
@@ -59,6 +99,7 @@ Flipkart lists price, MRP, discount and a short spec summary on nearly every pro
   "maxPrice": 60000,
   "minRating": 4.0,
   "sortBy": "price_asc",
+  "includeDetails": true,
   "maxItems": 50
 }
 ```
@@ -70,11 +111,12 @@ Flipkart lists price, MRP, discount and a short spec summary on nearly every pro
   "mode": "byCategory",
   "categoryUrl": "https://www.flipkart.com/laptops/pr?sid=6bo%2Cb5g",
   "sortBy": "popularity",
+  "minDiscount": "20",
   "maxItems": 100
 }
 ```
 
-### Example: fetch specific product URLs
+### Example: product URLs and IDs
 
 ```json
 {
@@ -82,11 +124,14 @@ Flipkart lists price, MRP, discount and a short spec summary on nearly every pro
   "startUrls": [
     {"url": "https://www.flipkart.com/asus-expertbook-laptop/p/itm0af4b?pid=COMH8Z2Q"},
     {"url": "https://www.flipkart.com/samsung-galaxy-s24/p/itm123?pid=SMSG123"}
-  ]
+  ],
+  "productIds": ["MOBHPP598ENKRGBY"],
+  "includeReviews": true,
+  "maxReviewsPerProduct": 20
 }
 ```
 
-### Example: top-rated smartphones under ₹30,000
+### Example: top-rated smartphones with reviews
 
 ```json
 {
@@ -94,42 +139,63 @@ Flipkart lists price, MRP, discount and a short spec summary on nearly every pro
   "searchQuery": "smartphone",
   "maxPrice": 30000,
   "minRating": 4.2,
-  "sortBy": "rating",
+  "brand": "Samsung",
+  "fAssuredOnly": true,
+  "includeDetails": true,
+  "includeReviews": true,
+  "maxReviewsPerProduct": 10,
+  "reviewsSort": "MOST_RECENT",
+  "certifiedBuyersOnly": true,
   "maxItems": 30
 }
 ```
 
 ## Use cases
 
-- **Repricing and price tracking** — re-run the same search or product list on a schedule to catch price and discount changes
-- **Brand and category benchmarking** — pull a category URL to compare ratings and pricing across competing brands
-- **Deal discovery** — sort by discount or price and filter by minimum rating to surface genuinely good offers
-- **Spec-sheet collection** — build a database of key specs (RAM, storage, processor, etc.) for a product line
-- **Seller landscape mapping** — see which sellers list the top-rated products for a given search term
-- **Catalog gap analysis** — compare your own product catalog against what's currently listed on Flipkart
+- **Price and discount tracking** — re-run the same search or product list on a schedule and compare `price`, `originalPrice` and `discountPercent` per `productId`.
+- **Catalog and PIM enrichment** — pull grouped specifications, highlights, description, warranty and manufacturer details for a product line.
+- **Variant monitoring** — see every colour and size with its own product ID, URL, image and stock state.
+- **Seller research** — compare seller ratings, tenure, products sold, quality and speed scores across listings.
+- **Review and sentiment analysis** — collect certified-buyer reviews with ratings, text, location, votes, photos and the purchased variant.
+- **Assortment and brand benchmarking** — filter a category by brand, price, rating, discount and Flipkart Assured.
 
 ## FAQ
 
-**Does this actor cover all of Flipkart's catalog?**
-It covers whatever your search query, category URL or product links return — Flipkart itself decides how many results exist for a given query or category.
+**What data can I get without a product URL?**
+Keyword search and category URLs return the full listing cards: price, MRP, discount, rating, counts, key specs, image, availability and Flipkart Assured. Turn on **Include Full Product Details** to add specs, variants, offers, seller, gallery and warranty.
 
-**What currency are prices in?**
-Indian Rupees (INR) only, since that's the only currency Flipkart lists in. The `currency` field on every record confirms this.
+**Does this actor require a Flipkart account, cookies or an API key?**
+No. It reads public product pages and needs no login or key.
 
-**Why might some products be missing `originalPrice` or `discountPercent`?**
-If a product is not currently on sale (i.e., the sale price equals the original MRP), these fields are omitted. Only products with an active discount show these fields.
+**Do I need to set up a proxy?**
+No. The actor chooses a working connection to Flipkart automatically. Just fill in the input and run it.
 
-**How many results can I get per run?**
-Set `maxItems` up to 500. Flipkart shows approximately 5–24 products per page depending on the category; the actor paginates automatically.
+**Can I use bare product IDs instead of full URLs?**
+Yes. Paste the product ID (the `pid` from a Flipkart URL) into `productIds` with `mode` set to `byUrl`. The actor opens the product page and returns the full record.
 
-**Can I filter products by specific brands?**
-Use the `searchQuery` to include brand names (e.g., `"Samsung 4K TV"` or `"Apple iPhone"`). Category URLs from Flipkart may also include brand filter parameters that the actor will preserve.
+**How many products can I get per run?**
+Set `maxItems` up to 500 and `maxPages` up to 30. Flipkart shows 24–40 cards per page and stops serving results after a few dozen pages; for very broad searches, split by category, brand or price band.
 
-**Why does the `keySpecs` field have multiple values?**
-Flipkart provides 3–5 key specifications per product (processor type, RAM, storage, OS, display size, etc.) as a quick summary. These are stored as an array of strings.
+**Why are some products missing variants or highlights?**
+Not every product has variants, highlights, a description or a warranty. Those fields are omitted when Flipkart does not show them; they are never filled with guessed values. Placeholder values such as `NA`, `N/A` or `None` are also omitted.
 
-**Does this actor require cookies or login?**
-No. This actor scrapes Flipkart's public product listings without any authentication.
+**What happens if a product page cannot be opened?**
+The listing record is still returned with the data from the results page, and the run status reports how many product pages could not be enriched after retries. Nothing is filled with guessed values.
+
+**Why does a category run sometimes return fewer products than expected?**
+Flipkart can mix recommendation or sponsored cards from unrelated departments into a category page. Those cards are filtered out so a category run only returns products from the requested category. If none match, the run reports that honestly instead of returning unrelated items.
+
+**Why is `originalPrice` missing on some products?**
+When the selling price equals the MRP, there is no discount to report, so `originalPrice`, `discountPercent` and `discountAmount` are omitted.
+
+**What is the difference between `ratingCount` and `reviewCount`?**
+`ratingCount` is the number of star ratings. `reviewCount` is the number of written reviews. Both come from Flipkart.
+
+**Do reviews include the variant the reviewer bought?**
+Yes, when Flipkart publishes it. The `productAttributes` array shows the colour, size, storage or other variant attributes attached to the review.
+
+**Are prices in a specific currency?**
+All prices are in Indian Rupees (INR), as shown on flipkart.com.
 
 **Is this actor affiliated with Flipkart?**
-No. This is an independent third-party scraper that uses Flipkart's public website. It is not affiliated with, endorsed by, or connected to Flipkart Internet Private Limited or Walmart Inc.
+No. This is an independent third-party tool that reads publicly visible product data. It is not affiliated with, endorsed by, or connected to Flipkart.

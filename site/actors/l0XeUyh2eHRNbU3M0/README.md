@@ -1,88 +1,178 @@
 # IndiaMART B2B Product Listings by City & State
 
-Search [IndiaMART](https://www.indiamart.com), India's largest B2B marketplace, for products by keyword and narrow results to a specific Indian state or city. Get pricing, minimum order quantity, supplier name and location, rating, and response rate for every matching listing — no login required.
+Scrape **IndiaMART**, India's largest B2B marketplace, for products and suppliers by keyword or category. Narrow results to an Indian city or state, or look up public product and supplier pages directly. Get prices, minimum order quantities, specifications, images, supplier location, ratings, response rates, and verified company details where IndiaMART publishes them.
 
 ## What this actor does
 
-- Searches IndiaMART's product listings by free-text keyword
-- Optionally restricts results to a specific Indian state and/or city
-- Caps the number of records returned per run
-- Reads the supplier's name, location, rating, and response rate directly off each listing
-- Empty fields are omitted from each record
+- **Four modes:** `searchProducts`, `browseCategory`, `productDetails`, `supplierProfile` (legacy `categoryBrowse` and `searchSuppliers` values are accepted)
+- **Location filters:** city and state/union-territory narrowing for keyword and category searches
+- **Commercial filters:** minimum/maximum price, minimum supplier rating, verified suppliers only
+- **Product enrichment:** optional detail-page pass for description, full specifications, MOQ, contact number, GST, IEC and company background
+- **Supplier records:** company name, profile URL, city/state, address, rating, response rate, GST, IEC, exports, employees, legal status, payment and shipment modes
+- **Deeper coverage:** category pages are paginated and expanded through related categories and city routes when a request needs more rows
+- **Empty fields are omitted** — no nulls, blanks or placeholder strings in the dataset
 
-## Output per record
+## Output per product
 
-- `recordType` — always `product`
 - `productId` — IndiaMART product identifier
 - `title` — product name
-- `price` — listed price (INR, with unit where shown)
-- `minOrder` — minimum order quantity
-- `supplier` — supplier/company name
-- `supplierCity`, `supplierState` — supplier's location
-- `imageUrl` — product image URL
-- `productUrl` — IndiaMART listing URL
-- `rating` — supplier star rating
-- `responseRate` — supplier response rate (%)
-- `scrapedAt` — UTC timestamp of collection
+- `price` — normalised price string, e.g. `INR 70/Meter`
+- `priceValue`, `priceCurrency`, `priceUnit`, `priceText` — numeric price, currency, unit and the original displayed text
+- `minOrder` — minimum order quantity with unit
+- `moqValue`, `moqUnit` — numeric MOQ and its unit
+- `supplier` — company name
+- `supplierId`, `supplierUrl` — IndiaMART company ID and profile URL
+- `supplierWebsite` — the supplier's own website when IndiaMART publishes a real external URL (IndiaMART-hosted alias URLs are omitted)
+- `supplierCity`, `supplierState` — supplier location
+- `supplierAddress`, `supplierPincode` — address details when published
+- `supplierRating`, `rating`, `reviewCount` — star rating and number of ratings
+- `responseRate` — supplier's call response rate
+- `phone` — IndiaMART's public call-routing number
+- `gstNumber`, `iecNumber` — GSTIN and Import-Export Code when published
+- `gstVerified`, `verifiedExporter`, `badge` — verification and trust signals
+- `memberSince`, `yearEstablished`, `employees`, `natureOfBusiness`, `legalStatus`, `ceo` — company background
+- `exportsTo`, `gstTurnover`, `gstRegistrationDate` — export and GST details
+- `category`, `categoryId` — IndiaMART category
+- `specifications` — product attributes as key/value pairs
+- `description` — product description when the detail-page enrichment is enabled
+- `imageUrl`, `images` — main image and additional product images
+- `catalogueUrl` — product brochure or catalogue PDF when published
+- `searchQuery` — keyword that produced the record
+- `deliveryAvailable`, `industryLeader`, `supplierAlias` — additional listing signals
+- `recordType: "product"`, `scrapedAt` — record type and UTC collection time
+
+## Output per supplier
+
+- `supplierId`, `supplier`, `supplierUrl` — company identity and profile
+- `supplierCity`, `supplierState`, `supplierAddress`, `supplierPincode` — location
+- `supplierWebsite` — the supplier's own website when IndiaMART publishes a real external URL (IndiaMART-hosted alias URLs are omitted)
+- `supplierRating`, `rating`, `reviewCount`, `responseRate` — reputation signals
+- `phone` — IndiaMART's public call-routing number when published
+- `gstNumber`, `gstRegistrationDate`, `iecNumber`, `gstVerified`, `verifiedExporter`, `badge` — statutory and verification details
+- `memberSince`, `yearEstablished`, `employees`, `natureOfBusiness`, `legalStatus`, `ceo` — company background
+- `additionalBusiness`, `exportsTo`, `exportPercentage` — trade profile
+- `banker`, `paymentModes`, `shipmentModes` — commercial terms when published
+- `products`, `productCount` — product range found on the profile
+- `searchQuery` — keyword that produced the record, when applicable
+- `recordType: "supplier"`, `scrapedAt` — record type and UTC collection time
 
 ## Input
 
 | Field | Type | Default | Description |
 |---|---|---|---|
-| `mode` | string | `searchProducts` | `searchProducts`, `searchSuppliers`, or `categoryBrowse` — all three currently search IndiaMART's product index using `keyword` |
-| `keyword` | string | `cotton fabric` | Product keyword to search for |
-| `state` | string | – | Restrict results to an Indian state (e.g. `Maharashtra`, `Gujarat`) |
-| `city` | string | – | Restrict results to an Indian city (e.g. `Mumbai`, `Surat`) |
-| `maxItems` | integer | `20` | Maximum records to return (1–500) |
+| `mode` | string | `searchProducts` | `searchProducts` / `browseCategory` / `productDetails` / `supplierProfile` (legacy `categoryBrowse` and `searchSuppliers` values are mapped) |
+| `keyword` | string | `cotton fabric` | Product or material keyword (mode=searchProducts) |
+| `category` | string | – | Category slug or URL, e.g. `cotton-fabric` (mode=browseCategory) |
+| `city` | string | – | Indian city, e.g. `Surat`, `Mumbai`, `Jaipur` |
+| `state` | string | – | Indian state or union territory |
+| `productUrls` | array | – | Product URLs or numeric IDs (mode=productDetails) |
+| `supplierUrls` | array | – | Supplier URLs, company IDs or aliases (mode=supplierProfile) |
+| `maxItems` | integer | `20` | Maximum records across all inputs (1–1000) |
+| `expandRelatedCategories` | boolean | `true` | Collect related categories when a keyword or category has too few listings |
+| `enrichWithProductDetails` | boolean | `false` | Open each product page for description, full specs, MOQ, contact, GST and IEC |
+| `minPrice` | integer | `0` | Drop listings below this INR price; 0 means no minimum |
+| `maxPrice` | integer | `0` | Drop listings above this INR price; 0 means no maximum |
+| `minRating` | number | `0` | Drop suppliers below this star rating (0–5) |
+| `verifiedSuppliersOnly` | boolean | `false` | Keep only TrustSEAL, verified-exporter or GST-verified suppliers |
 
-### Example: basic keyword search
+### Example: keyword search in a manufacturing hub
 
 ```json
 {
     "mode": "searchProducts",
     "keyword": "cotton fabric",
-    "maxItems": 20
+    "city": "Surat",
+    "state": "Gujarat",
+    "maxItems": 50
 }
 ```
 
-### Example: keyword search narrowed to a manufacturing hub
+### Example: category browse with commercial filters
 
 ```json
 {
-    "mode": "searchProducts",
-    "keyword": "industrial pump",
-    "state": "Gujarat",
-    "city": "Surat",
-    "maxItems": 50
+    "mode": "browseCategory",
+    "category": "industrial-pumps",
+    "minPrice": 5000,
+    "maxPrice": 200000,
+    "minRating": 3.5,
+    "verifiedSuppliersOnly": true,
+    "maxItems": 100
+}
+```
+
+### Example: look up product pages
+
+```json
+{
+    "mode": "productDetails",
+    "productUrls": [
+        "https://www.indiamart.com/proddetail/cotton-fabric-27595399997.html",
+        "27595399997"
+    ],
+    "maxItems": 10
+}
+```
+
+### Example: look up supplier profiles
+
+```json
+{
+    "mode": "supplierProfile",
+    "supplierUrls": [
+        "https://www.indiamart.com/gautam-fabric/",
+        "https://www.indiamart.com/company/76488165/"
+    ],
+    "maxItems": 10
 }
 ```
 
 ## Use cases
 
-- **India sourcing** — find manufacturers for textiles, engineering goods, chemicals, or food products
-- **Supplier shortlisting** — filter returned listings by rating and response rate before reaching out
-- **Regional sourcing** — target known manufacturing hubs by state or city (e.g. Surat for textiles, Coimbatore for machinery)
-- **Price benchmarking** — compare listed prices and MOQs for the same product keyword across suppliers
+- **India sourcing** — find manufacturers and wholesalers for textiles, engineering goods, chemicals, packaging or food products
+- **Supplier shortlisting** — compare prices, MOQs, ratings and response rates before contacting suppliers
+- **Regional sourcing** — target manufacturing hubs by city or state, such as Surat for textiles or Coimbatore for machinery
+- **B2B lead generation** — collect company names, profile URLs, locations, GSTINs and public call-routing numbers
+- **Export sourcing** — identify verified exporters and see which countries they already ship to
+- **Price benchmarking** — compare listed prices and minimum order quantities across suppliers for the same product
 
 ## FAQ
 
-**What's the difference between the three `mode` options?**
-All three currently query IndiaMART's product search index using `keyword` and return the same product-style record shape; `state`/`city` filtering and `maxItems` apply the same way regardless of which mode is selected.
+**Do I need an IndiaMART account, cookies or an API key?**
+No. The actor reads publicly visible listing and company pages and does not ask for credentials.
 
-**What does `responseRate` mean?**
-The percentage of buyer inquiries the supplier has responded to, as shown on IndiaMART's own listing — a quick signal of how active a supplier is.
+**Do I need to set up a proxy?**
+No. The actor chooses a working connection to IndiaMART automatically. Fill in the input and run it.
 
-**Can I filter by Indian state or city?**
-Yes — set `state` and/or `city` (e.g. `Gujarat` and `Surat`) to keep only listings from suppliers based there.
+**Why do some products have a price and others do not?**
+IndiaMART suppliers choose whether to publish a price. When a listing has no public price, the price fields are omitted rather than filled with a placeholder.
 
-**Are prices in Indian Rupees?**
-Yes. IndiaMART is India-focused and displays prices in INR.
+**Why is `minOrder` missing on some products?**
+Minimum order quantity is published for some listings and not others. The detail-page enrichment pass fills it when IndiaMART shows it.
 
-**Does this require an IndiaMART account?**
-No. Only publicly visible listing data is read; no login is needed.
+**Is the phone number a direct mobile number?**
+No. IndiaMART publishes a call-routing number that connects to the supplier. Personal mobile numbers and email addresses are not published on the site, so this actor does not return them.
 
-**Why is `price` or `rating` missing on some listings?**
-Not every IndiaMART listing publishes a price or has accumulated a rating yet — those fields are omitted rather than filled with a placeholder.
+**Are GST and IEC numbers always available?**
+They are returned when the supplier publishes them on a product or company page. Coverage is higher for exporters and verified suppliers.
+
+**Why do I get fewer records than the number of listings IndiaMART shows?**
+IndiaMART limits how deep anonymous search and category pages go, and “Show More Results” requires a login. The actor paginates up to four category pages, expands related categories and city routes, and uses the public search API to get as close to `maxItems` as the source allows. Deeper category pages repeat heavily and add new IDs unpredictably, so the actor widens the search instead of assuming a fixed page pool. A single broad query may still stop short of 1,000 rows; split it by city, state or narrower category to collect more. The actor reports the shortfall in the terminal run status message and the run log instead of padding the dataset.
+
+**Why is `supplierWebsite` missing on some rows?**
+IndiaMART sometimes publishes its own `indiamart.com/<alias>/` profile URL in the website slot instead of the supplier's real site. Those IndiaMART-hosted URLs are not returned as `supplierWebsite`; the field contains only an external supplier website when one is published.
+
+**Can I get reviews, email addresses, mobile numbers or UDYAM numbers?**
+No. Review pages redirect to the company profile or a login wall, and IndiaMART does not publish emails, personal mobiles or UDYAM numbers to anonymous visitors. The `phone` field is the public call-routing number. These are hard limits of the public site, not missing parser fields.
+
+**Can I collect more than 1,000 records in one run?**
+`maxItems` is capped at 1,000. The anonymous IndiaMART pool can also be smaller than that for one broad query. Run several city, state or category slices and combine the datasets if you need more coverage.
+
+**How fresh is the data?**
+Every record carries `scrapedAt` in UTC. Prices, ratings and stock signals are captured at run time and can change on IndiaMART afterwards.
+
+**My saved task uses an older mode name. Will it still run?**
+Yes. The legacy `categoryBrowse` and `searchSuppliers` values are accepted and mapped to product search, so saved tasks keep working.
 
 **Is this affiliated with IndiaMART?**
-No. This is an independent actor that reads IndiaMART's public search pages and is not operated or endorsed by IndiaMART.
+No. This is an independent actor that reads publicly visible IndiaMART pages and is not operated or endorsed by IndiaMART.

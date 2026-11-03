@@ -1,8 +1,8 @@
 {
   "actorSpecification": 1,
-  "description": "One record per game, with league, status, score, venue, broadcasts and optional leaders, odds, attendance and headline.",
+  "description": "One record per game, team, odds line, or full game detail.",
   "fields": {},
-  "title": "ESPN Live Scores, Schedules & Game Odds Scraper Output",
+  "title": "ESPN Game Center Output",
   "views": {
     "overview": {
       "display": {
@@ -32,10 +32,6 @@
             "format": "text",
             "label": "Game ID"
           },
-          "gameNotes": {
-            "format": "array",
-            "label": "Game Notes"
-          },
           "headline": {
             "format": "text",
             "label": "Headline"
@@ -43,10 +39,6 @@
           "homeTeam": {
             "format": "object",
             "label": "Home"
-          },
-          "leaders": {
-            "format": "object",
-            "label": "Leaders"
           },
           "league": {
             "format": "text",
@@ -56,13 +48,25 @@
             "format": "object",
             "label": "Odds"
           },
+          "recordType": {
+            "format": "text",
+            "label": "Type"
+          },
           "scrapedAt": {
             "format": "text",
             "label": "Scraped At"
           },
+          "seasonYear": {
+            "format": "number",
+            "label": "Season"
+          },
           "shortName": {
             "format": "text",
             "label": "Matchup"
+          },
+          "sourceUrl": {
+            "format": "text",
+            "label": "Source"
           },
           "sport": {
             "format": "text",
@@ -79,12 +83,17 @@
           "venue": {
             "format": "object",
             "label": "Venue"
+          },
+          "week": {
+            "format": "number",
+            "label": "Week"
           }
         }
       },
-      "title": "Game Results",
+      "title": "Game Center",
       "transformation": {
         "fields": [
+          "recordType",
           "gameId",
           "league",
           "sport",
@@ -92,6 +101,8 @@
           "statusDetail",
           "date",
           "dateLocal",
+          "seasonYear",
+          "week",
           "shortName",
           "homeTeam",
           "awayTeam",
@@ -100,8 +111,7 @@
           "attendance",
           "odds",
           "headline",
-          "leaders",
-          "gameNotes",
+          "sourceUrl",
           "scrapedAt"
         ]
       }

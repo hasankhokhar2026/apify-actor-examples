@@ -1,0 +1,173 @@
+{
+  "description": "Search the General Optical Council's public Specialist Register (str.optical.org) for registered optometrists, dispensing opticians, students, and optical businesses across the UK.",
+  "properties": {
+    "address": {
+      "default": "",
+      "description": "Filter registrants by address text (contains match).",
+      "editor": "textfield",
+      "prefill": "",
+      "title": "Address contains (mode=registrant)",
+      "type": "string"
+    },
+    "companyName": {
+      "default": "",
+      "description": "Filter optical businesses whose registered name contains this text.",
+      "editor": "textfield",
+      "prefill": "",
+      "title": "Company name contains (mode=bodyCorporate)",
+      "type": "string"
+    },
+    "fetchDetails": {
+      "default": true,
+      "description": "Visit each registrant/business detail page to also capture qualifications, town, practice address, and fitness-to-practise decisions. Slower but much richer records. Disable for a faster, list-only run.",
+      "prefill": true,
+      "title": "Fetch full profile details",
+      "type": "boolean"
+    },
+    "forename": {
+      "default": "",
+      "description": "Filter registrants by first name (contains match).",
+      "editor": "textfield",
+      "prefill": "",
+      "title": "First name (mode=registrant)",
+      "type": "string"
+    },
+    "gocNumbers": {
+      "default": [],
+      "description": "Exact-match one or more GOC registration numbers (e.g. `01-12294` for a registrant or `CO-4310` for a business). Overrides name-based search when provided.",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "GOC number(s)",
+      "type": "array"
+    },
+    "maxItems": {
+      "default": 50,
+      "description": "Hard cap on the number of records returned.",
+      "maximum": 2000,
+      "minimum": 1,
+      "prefill": 50,
+      "title": "Max items",
+      "type": "integer"
+    },
+    "mode": {
+      "default": "registrant",
+      "description": "Search individual registrants (optometrists/dispensing opticians) or registered optical businesses (body corporates).",
+      "editor": "select",
+      "enum": [
+        "registrant",
+        "bodyCorporate"
+      ],
+      "enumTitles": [
+        "Search registrants (optometrists / dispensing opticians / students)",
+        "Search optical businesses (body corporates)"
+      ],
+      "prefill": "registrant",
+      "title": "Mode",
+      "type": "string"
+    },
+    "postcode": {
+      "default": "",
+      "description": "UK postcode to search around. Combined with `radiusMiles`. Works for both registrants and businesses.",
+      "editor": "textfield",
+      "prefill": "",
+      "title": "Postcode (geography search)",
+      "type": "string"
+    },
+    "radiusMiles": {
+      "default": 50,
+      "description": "Distance in miles from `postcode` to search within. Only used when `postcode` is set.",
+      "maximum": 100,
+      "minimum": 1,
+      "prefill": 50,
+      "title": "Radius in miles (geography search)",
+      "type": "integer"
+    },
+    "registerType": {
+      "default": "",
+      "description": "Restrict to a specific registration category.",
+      "editor": "select",
+      "enum": [
+        "",
+        "Optometrist",
+        "Dispensing Optician",
+        "Student Optometrist",
+        "Student Dispensing Optician",
+        "Dispensing Optician, Student Optometrist",
+        "Student Dispensing Optician, Student Optometrist"
+      ],
+      "enumTitles": [
+        "Any",
+        "Optometrist",
+        "Dispensing Optician",
+        "Student Optometrist",
+        "Student Dispensing Optician",
+        "Dispensing Optician + Student Optometrist",
+        "Student Dispensing Optician + Student Optometrist"
+      ],
+      "prefill": "",
+      "title": "Registered as (mode=registrant)",
+      "type": "string"
+    },
+    "sortBy": {
+      "default": "",
+      "description": "Sort registrant results by surname.",
+      "editor": "select",
+      "enum": [
+        "",
+        "Registrant Surname (a - z)",
+        "Registrant Surname (z - a)"
+      ],
+      "enumTitles": [
+        "Default (relevance)",
+        "Surname A-Z",
+        "Surname Z-A"
+      ],
+      "prefill": "",
+      "title": "Sort order (mode=registrant)",
+      "type": "string"
+    },
+    "soundsLikeSurname": {
+      "default": false,
+      "description": "When enabled, `surname` is matched phonetically (e.g. 'Smyth' also matches 'Smith') instead of as a literal substring.",
+      "prefill": false,
+      "title": "Sounds-like surname match (mode=registrant)",
+      "type": "boolean"
+    },
+    "speciality": {
+      "default": "",
+      "description": "Restrict to registrants holding a specific specialty annotation.",
+      "editor": "select",
+      "enum": [
+        "",
+        "Additional supply",
+        "Contact lens",
+        "Independent prescribing",
+        "Supplementary prescribing"
+      ],
+      "enumTitles": [
+        "Any",
+        "Additional supply",
+        "Contact lens",
+        "Independent prescribing",
+        "Supplementary prescribing"
+      ],
+      "prefill": "",
+      "title": "Specialty (mode=registrant)",
+      "type": "string"
+    },
+    "surname": {
+      "default": "Smith",
+      "description": "Filter registrants whose surname contains this text. Case-insensitive, matches anywhere in the surname.",
+      "editor": "textfield",
+      "prefill": "Smith",
+      "title": "Surname contains (mode=registrant)",
+      "type": "string"
+    }
+  },
+  "required": [
+    "mode"
+  ],
+  "schemaVersion": 1,
+  "title": "UK Optician Register Scraper Input",
+  "type": "object"
+}
