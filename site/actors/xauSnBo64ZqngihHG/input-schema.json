@@ -1,0 +1,172 @@
+{
+  "description": "Search tracks/users, browse charts, fetch an artist's tracks, or scrape any SoundCloud URL.",
+  "properties": {
+    "artistUrl": {
+      "description": "SoundCloud artist profile URL (mode=artistTracks). Example: https://soundcloud.com/artist-name",
+      "editor": "textfield",
+      "title": "Artist URL",
+      "type": "string"
+    },
+    "chartKind": {
+      "default": "top",
+      "description": "Which chart to fetch (mode=charts).",
+      "editor": "select",
+      "enum": [
+        "top",
+        "trending"
+      ],
+      "enumTitles": [
+        "Top — most-played all time",
+        "Trending — currently trending"
+      ],
+      "prefill": "top",
+      "title": "Chart kind",
+      "type": "string"
+    },
+    "genre": {
+      "default": "soundcloud:genres:all-music",
+      "description": "Genre for charts or search filtering.",
+      "editor": "select",
+      "enum": [
+        "soundcloud:genres:all-music",
+        "soundcloud:genres:alternativerock",
+        "soundcloud:genres:ambient",
+        "soundcloud:genres:classical",
+        "soundcloud:genres:country",
+        "soundcloud:genres:danceedm",
+        "soundcloud:genres:dancehall",
+        "soundcloud:genres:deephouse",
+        "soundcloud:genres:disco",
+        "soundcloud:genres:drumbass",
+        "soundcloud:genres:dubstep",
+        "soundcloud:genres:electronic",
+        "soundcloud:genres:folksingersongwriter",
+        "soundcloud:genres:hiphoprap",
+        "soundcloud:genres:house",
+        "soundcloud:genres:indie",
+        "soundcloud:genres:jazzblues",
+        "soundcloud:genres:latin",
+        "soundcloud:genres:metal",
+        "soundcloud:genres:piano",
+        "soundcloud:genres:pop",
+        "soundcloud:genres:rbsoul",
+        "soundcloud:genres:reggae",
+        "soundcloud:genres:reggaeton",
+        "soundcloud:genres:rock",
+        "soundcloud:genres:soundtrack",
+        "soundcloud:genres:techno",
+        "soundcloud:genres:trance",
+        "soundcloud:genres:trap",
+        "soundcloud:genres:triphop",
+        "soundcloud:genres:world"
+      ],
+      "enumTitles": [
+        "All Music",
+        "Alternative Rock",
+        "Ambient",
+        "Classical",
+        "Country",
+        "Dance & EDM",
+        "Dancehall",
+        "Deep House",
+        "Disco",
+        "Drum & Bass",
+        "Dubstep",
+        "Electronic",
+        "Folk & Singer-Songwriter",
+        "Hip-hop & Rap",
+        "House",
+        "Indie",
+        "Jazz & Blues",
+        "Latin",
+        "Metal",
+        "Piano",
+        "Pop",
+        "R&B & Soul",
+        "Reggae",
+        "Reggaeton",
+        "Rock",
+        "Soundtrack",
+        "Techno",
+        "Trance",
+        "Trap",
+        "Trip Hop",
+        "World"
+      ],
+      "prefill": "soundcloud:genres:all-music",
+      "title": "Genre",
+      "type": "string"
+    },
+    "maxItems": {
+      "default": 20,
+      "description": "Maximum number of records to emit.",
+      "maximum": 500,
+      "minimum": 1,
+      "prefill": 20,
+      "title": "Max items",
+      "type": "integer"
+    },
+    "mode": {
+      "default": "charts",
+      "description": "What to scrape.",
+      "editor": "select",
+      "enum": [
+        "charts",
+        "search",
+        "artistTracks",
+        "byUrl"
+      ],
+      "enumTitles": [
+        "Charts — top/trending tracks by genre",
+        "Search — search tracks, users, or playlists",
+        "Artist Tracks — all tracks from a specific artist",
+        "By URL — fetch a specific track, playlist, or user URL"
+      ],
+      "prefill": "charts",
+      "title": "Mode",
+      "type": "string"
+    },
+    "searchKind": {
+      "default": "tracks",
+      "description": "Type of results to search for (mode=search).",
+      "editor": "select",
+      "enum": [
+        "tracks",
+        "users",
+        "playlists",
+        "albums"
+      ],
+      "enumTitles": [
+        "Tracks",
+        "Users / Artists",
+        "Playlists",
+        "Albums"
+      ],
+      "prefill": "tracks",
+      "title": "Search kind",
+      "type": "string"
+    },
+    "searchQuery": {
+      "default": "chill lofi",
+      "description": "Search term for tracks, users, or playlists (mode=search).",
+      "editor": "textfield",
+      "prefill": "chill lofi",
+      "title": "Search query",
+      "type": "string"
+    },
+    "startUrls": {
+      "default": [],
+      "description": "SoundCloud track, playlist, or user URLs to scrape (mode=byUrl).",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Start URLs (mode=byUrl)",
+      "type": "array"
+    }
+  },
+  "required": [
+    "mode"
+  ],
+  "schemaVersion": 1,
+  "title": "SoundCloud Scraper Input",
+  "type": "object"
+}
