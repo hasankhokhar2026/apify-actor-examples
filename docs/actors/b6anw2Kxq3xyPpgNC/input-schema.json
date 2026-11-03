@@ -1,0 +1,181 @@
+{
+  "description": "Scrape free stock photos and videos from Pexels by keyword search, curated/popular feed, photographer portfolio, curated collection, exact photo ID, or similar/related photos.",
+  "properties": {
+    "collectionSlug": {
+      "description": "Pexels curated collection slug or full collection URL (mode=byCollection). Example: `aquatic-aesthetic-bw7dkse` or `https://www.pexels.com/collections/aquatic-aesthetic-bw7dkse/`.",
+      "editor": "textfield",
+      "prefill": "aquatic-aesthetic-bw7dkse",
+      "title": "Collection slug or URL",
+      "type": "string"
+    },
+    "maxDuration": {
+      "default": 0,
+      "description": "Only return videos at most this many seconds long (videos only; ignored for photos). 0 disables the filter.",
+      "maximum": 3600,
+      "minimum": 0,
+      "prefill": 0,
+      "title": "Maximum video duration (seconds)",
+      "type": "integer"
+    },
+    "maxItems": {
+      "default": 30,
+      "description": "Maximum number of media records to return. NOTE: Pexels' own public search pagination resets to empty results past page 20 (confirmed live: page 20 returns real results, page 21+ returns 0 items regardless of the query), so a single search-style query reliably returns roughly 450 items even when far more matches exist and a higher value is requested here.",
+      "maximum": 1000,
+      "minimum": 1,
+      "prefill": 30,
+      "title": "Max items",
+      "type": "integer"
+    },
+    "mediaType": {
+      "default": "photos",
+      "description": "Which kind of media to return. For mode=search this selects between Pexels' separate photo-search and video-search pages (`all` is treated as `photos`). For mode=curated/byUser/byCollection, `all` returns both photos and videos as they naturally appear in the feed.",
+      "editor": "select",
+      "enum": [
+        "photos",
+        "videos",
+        "all"
+      ],
+      "enumTitles": [
+        "Photos only",
+        "Videos only",
+        "All (photos + videos)"
+      ],
+      "prefill": "photos",
+      "title": "Media type",
+      "type": "string"
+    },
+    "minDuration": {
+      "default": 0,
+      "description": "Only return videos at least this many seconds long (videos only; ignored for photos). 0 disables the filter.",
+      "maximum": 3600,
+      "minimum": 0,
+      "prefill": 0,
+      "title": "Minimum video duration (seconds)",
+      "type": "integer"
+    },
+    "minHeight": {
+      "default": 0,
+      "description": "Only return media whose height is at least this many pixels. 0 disables the filter.",
+      "maximum": 20000,
+      "minimum": 0,
+      "prefill": 0,
+      "title": "Minimum height (px)",
+      "type": "integer"
+    },
+    "minWidth": {
+      "default": 0,
+      "description": "Only return media whose width is at least this many pixels. 0 disables the filter.",
+      "maximum": 20000,
+      "minimum": 0,
+      "prefill": 0,
+      "title": "Minimum width (px)",
+      "type": "integer"
+    },
+    "mode": {
+      "default": "search",
+      "description": "What to fetch from Pexels.",
+      "editor": "select",
+      "enum": [
+        "search",
+        "curated",
+        "byPhotoId",
+        "byUser",
+        "byCollection",
+        "similarPhotos"
+      ],
+      "enumTitles": [
+        "Search by keyword",
+        "Curated / popular feed (homepage)",
+        "Lookup photos by ID or URL",
+        "Photographer portfolio",
+        "Curated collection",
+        "Similar / related photos"
+      ],
+      "prefill": "search",
+      "title": "Mode",
+      "type": "string"
+    },
+    "orientation": {
+      "default": "all",
+      "description": "Filter results by image/video orientation.",
+      "editor": "select",
+      "enum": [
+        "all",
+        "landscape",
+        "portrait",
+        "square"
+      ],
+      "enumTitles": [
+        "All orientations",
+        "Landscape",
+        "Portrait",
+        "Square"
+      ],
+      "prefill": "all",
+      "title": "Orientation",
+      "type": "string"
+    },
+    "peopleCount": {
+      "default": "all",
+      "description": "Filter photo search results by how many people appear in them (mode=search, photos only).",
+      "editor": "select",
+      "enum": [
+        "all",
+        "0",
+        "1",
+        "2"
+      ],
+      "enumTitles": [
+        "Any",
+        "No people",
+        "1 person",
+        "2 people"
+      ],
+      "prefill": "all",
+      "title": "Number of people",
+      "type": "string"
+    },
+    "photoIds": {
+      "default": [],
+      "description": "Pexels photo IDs or full photo page URLs (mode=byPhotoId: look up these exact photos; mode=similarPhotos: find photos visually/topically similar to each of these). Example: `18872916` or `https://www.pexels.com/photo/18872916/`.",
+      "editor": "stringList",
+      "prefill": [
+        "18872916"
+      ],
+      "title": "Photo IDs or URLs",
+      "type": "array"
+    },
+    "proxyConfiguration": {
+      "default": {
+        "useApifyProxy": false
+      },
+      "description": "Optional Apify proxy. Pexels is generally reachable without a proxy; enable the free Automatic datacenter group only if you experience blocking.",
+      "editor": "proxy",
+      "prefill": {
+        "useApifyProxy": false
+      },
+      "title": "Proxy configuration",
+      "type": "object"
+    },
+    "searchQuery": {
+      "description": "Keyword to search for (mode=search). Example: `nature`, `city skyline`, `coffee`.",
+      "editor": "textfield",
+      "prefill": "nature",
+      "title": "Search query",
+      "type": "string"
+    },
+    "username": {
+      "description": "Pexels photographer handle or profile URL (mode=byUser). Example: `alex-ivanov-773258579` or `https://www.pexels.com/@alex-ivanov-773258579/`.",
+      "editor": "textfield",
+      "prefill": "alex-ivanov-773258579",
+      "title": "Photographer username",
+      "type": "string"
+    }
+  },
+  "required": [
+    "mode"
+  ],
+  "schemaVersion": 1,
+  "title": "Pexels Stock Media Scraper Input",
+  "type": "object"
+}
