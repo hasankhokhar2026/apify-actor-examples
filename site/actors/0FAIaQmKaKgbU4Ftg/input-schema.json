@@ -1,0 +1,178 @@
+{
+  "description": "Scrape Amazon's Best Sellers, New Releases, Most Wished For, Most Gifted, or Movers & Shakers charts for one or more categories.",
+  "properties": {
+    "categoryNodeIds": {
+      "default": [],
+      "description": "Amazon browse-node IDs in `rootSlug/nodeId` form (e.g. `electronics/172541` for Headphones). Combined with `categoryUrls` if both are provided.",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Category node IDs",
+      "type": "array"
+    },
+    "categoryUrls": {
+      "default": [
+        "electronics"
+      ],
+      "description": "Amazon category slugs (e.g. `electronics`, `electronics/172541`) or full chart URLs to scrape. Each entry is combined with `chartType` and `domain` to build the chart page.",
+      "editor": "stringList",
+      "prefill": [
+        "electronics"
+      ],
+      "title": "Category URLs or slugs",
+      "type": "array"
+    },
+    "chartType": {
+      "default": "bestSellers",
+      "description": "Which Amazon chart to scrape.",
+      "editor": "select",
+      "enum": [
+        "bestSellers",
+        "newReleases",
+        "mostWishedFor",
+        "mostGifted",
+        "moversAndShakers"
+      ],
+      "enumTitles": [
+        "Best Sellers",
+        "New Releases",
+        "Most Wished For",
+        "Most Gifted",
+        "Movers & Shakers"
+      ],
+      "prefill": "bestSellers",
+      "title": "Chart type",
+      "type": "string"
+    },
+    "domain": {
+      "default": "amazon.com",
+      "description": "Which Amazon marketplace to scrape the chart from.",
+      "editor": "select",
+      "enum": [
+        "amazon.com",
+        "amazon.co.uk",
+        "amazon.de",
+        "amazon.fr",
+        "amazon.it",
+        "amazon.es",
+        "amazon.ca",
+        "amazon.com.au",
+        "amazon.co.jp",
+        "amazon.in",
+        "amazon.com.br",
+        "amazon.com.mx",
+        "amazon.nl",
+        "amazon.se",
+        "amazon.pl",
+        "amazon.com.tr",
+        "amazon.ae",
+        "amazon.sa",
+        "amazon.sg",
+        "amazon.eg"
+      ],
+      "enumTitles": [
+        "United States (amazon.com)",
+        "United Kingdom (amazon.co.uk)",
+        "Germany (amazon.de)",
+        "France (amazon.fr)",
+        "Italy (amazon.it)",
+        "Spain (amazon.es)",
+        "Canada (amazon.ca)",
+        "Australia (amazon.com.au)",
+        "Japan (amazon.co.jp)",
+        "India (amazon.in)",
+        "Brazil (amazon.com.br)",
+        "Mexico (amazon.com.mx)",
+        "Netherlands (amazon.nl)",
+        "Sweden (amazon.se)",
+        "Poland (amazon.pl)",
+        "Turkey (amazon.com.tr)",
+        "UAE (amazon.ae)",
+        "Saudi Arabia (amazon.sa)",
+        "Singapore (amazon.sg)",
+        "Egypt (amazon.eg)"
+      ],
+      "prefill": "amazon.com",
+      "title": "Amazon domain",
+      "type": "string"
+    },
+    "includeProductDetails": {
+      "default": false,
+      "description": "For each chart item, also fetch its product detail page for purchase-option and additional rating data. Slower and bounded by `maxProductDetails`.",
+      "prefill": false,
+      "title": "Enrich with product detail page",
+      "type": "boolean"
+    },
+    "maxDepth": {
+      "default": 0,
+      "description": "When > 0, also walk each category's left-nav subcategory links this many levels deep, scraping each subcategory's own chart too. 0 = only the given categories.",
+      "maximum": 3,
+      "minimum": 0,
+      "prefill": 0,
+      "title": "Subcategory recursion depth",
+      "type": "integer"
+    },
+    "maxItems": {
+      "default": 200,
+      "description": "Hard cap on total chart items emitted across all categories in this run.",
+      "maximum": 2000,
+      "minimum": 1,
+      "prefill": 20,
+      "title": "Max total items",
+      "type": "integer"
+    },
+    "maxItemsPerCategory": {
+      "default": 60,
+      "description": "Hard cap on chart items emitted per category (across all its pages).",
+      "maximum": 500,
+      "minimum": 1,
+      "prefill": 20,
+      "title": "Max items per category",
+      "type": "integer"
+    },
+    "maxPages": {
+      "default": 2,
+      "description": "Maximum number of chart pages to fetch per category, starting at `startPage`.",
+      "maximum": 20,
+      "minimum": 1,
+      "prefill": 2,
+      "title": "Max pages per category",
+      "type": "integer"
+    },
+    "maxProductDetails": {
+      "default": 10,
+      "description": "Hard cap on how many chart items get product-detail enrichment when `includeProductDetails` is on.",
+      "maximum": 100,
+      "minimum": 1,
+      "prefill": 5,
+      "title": "Max product detail fetches",
+      "type": "integer"
+    },
+    "proxyConfiguration": {
+      "default": {
+        "useApifyProxy": true
+      },
+      "description": "Apify proxy used to fetch chart pages. Datacenter (AUTO) is used by default and works for most requests; the actor escalates to residential only after repeated blocks on a session.",
+      "editor": "proxy",
+      "prefill": {
+        "useApifyProxy": true
+      },
+      "title": "Proxy configuration",
+      "type": "object"
+    },
+    "startPage": {
+      "default": 1,
+      "description": "First chart page to fetch (each page is a separate ranked page on Amazon's site, not a fixed rank count).",
+      "maximum": 20,
+      "minimum": 1,
+      "prefill": 1,
+      "title": "Start page",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "chartType"
+  ],
+  "schemaVersion": 1,
+  "title": "Amazon Best Sellers & Rankings Scraper Input",
+  "type": "object"
+}
