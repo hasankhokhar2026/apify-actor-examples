@@ -4,104 +4,174 @@
 
 # BuiltIn Tech Company Directory & Hiring Signal Scraper
 
-BuiltIn runs city-specific tech-company directories — builtinchicago.com, builtinboston.com, and more — each listing employers with their headcount, benefits and current hiring status. This actor reads that directory by city and office type, or fetches named companies directly, returning the same signals you'd see browsing the site by hand.
+BuiltIn is a US tech-career and company-research platform where employers publish their headcount, industries, office locations, technology stack, benefits and open roles. This actor turns that public directory into structured company records: browse by city, industry, technology, size and work arrangement, search companies by name, or fetch specific profiles. No account, cookie or proxy setup is needed.
 
 ## What this actor does
 
-- **Two modes**: browse the directory by US city/market and office arrangement, or look up specific companies by name, slug or BuiltIn URL
-- **Covers city-specific BuiltIn domains** — Chicago, Colorado, Boston, Seattle, Austin, Atlanta, Los Angeles and the national/all-US listing
-- **Filters by office type** — hybrid, on-site or fully remote
-- **Optional deep profile fetch** adds website URL, founding year, headquarters and open-jobs count per company, at the cost of one extra request per company
-- Fields a company's profile doesn't carry (such as `founded` on a company that doesn't disclose it) are left out of that record rather than sent empty
+- **Three modes:** browse the US company directory, search companies by name, or fetch specific companies by name, slug or BuiltIn URL
+- **Directory filters:** 79 US city/metro markets, 103 industries, 213 technologies, six employee-size bands, hybrid/on-site/fully-remote work arrangements, and companies with open jobs or open remote jobs
+- **Company intelligence:** headcount, industry tags, headquarters, every published office, founding year, website, logo, cover image, full description and tagline
+- **Tech and benefits:** category-tagged technology stack plus the number of published benefits, with optional full benefit lists
+- **Hiring signals:** whether the company is hiring, total open roles, open roles by category, and optional recent job listings
+- **Clean records:** empty fields are omitted, not sent as `null`
 
 ## Output per company
 
-- `name` — company name
-- `slug` — BuiltIn URL slug
-- `builtInUrl` — direct link to the company's BuiltIn profile
-- `logoUrl` — company logo image URL, when the listing has one (only in `browse` mode)
-- `industries` — list of industry/technology tags (up to 10)
-- `employeeCount` — number of employees
-- `officeCount` — number of office locations
-- `benefitsCount` — number of employee benefits listed (only in `browse` mode)
-- `isHiring` — whether the company is currently marked as actively hiring
-- `openJobsCount` — number of open job listings (only with `includeProfile: true` or `byCompany` mode)
-- `websiteUrl` — the company's official website (only with `includeProfile: true` or `byCompany` mode)
-- `founded` — year the company was founded (only with `includeProfile: true` or `byCompany` mode)
-- `headquarters` — headquarters location (only with `includeProfile: true` or `byCompany` mode)
-- `description` — company description
-- `sourceUrl` — the BuiltIn listing or profile page the record was read from
-- `recordType` — set to `company` for every record
-- `scrapedAt` — ISO 8601 timestamp of the scrape
+- `companyId` - BuiltIn's internal company ID
+- `name` - company name
+- `slug` - BuiltIn profile slug
+- `builtInUrl` - canonical BuiltIn company profile URL
+- `logoUrl` - company logo image
+- `coverImageUrl` - company cover image
+- `description` - the company's published description
+- `tagline` - the company's one-line pitch
+- `industries[]` - BuiltIn industry tags
+- `employeeCount` - published employee count
+- `localEmployees` - employees in the selected market when a location filter is used; omitted otherwise
+- `officeCount` - number of published offices
+- `offices[]` - office locations as readable strings
+- `officeLocations[]` - structured offices with `city`, `state`, `country`, `postalCode`, `streetAddress`, `isHeadquarters`
+- `headquarters` - headquarters location
+- `headquartersCity`, `headquartersState`, `headquartersCountry`, `headquartersPostalCode`
+- `websiteUrl` - the company's official website
+- `founded` - founding year
+- `workModel` - `OnSite`, `Hybrid` or `Remote`
+- `hybridDetails` - published on-site pattern (`onsiteType`, `onsiteValue`)
+- `workplacePolicy` - the company's published workplace-policy text
+- `introHeader` - the profile intro heading, when published
+- `whyWorkWithUs` - the company's published recruiting pitch
+- `techStack[]` - technologies with `name`, `category` and `iconUrl`
+- `techStackByCategory` - technologies grouped by category
+- `techStackSize` - number of published technologies
+- `extraTechnologies[]` - additional technologies with `name` and `category`
+- `benefitsCount` - number of benefits shown in the directory listing
+- `perksCount` - number of benefits recorded on the company profile
+- `perksOverview` - the company's published benefits summary
+- `perks[]` - full published benefit list (with `includeBenefits`)
+- `perkCategories[]` - benefit category headings (with `includeBenefits`)
+- `isHiring` - whether the company currently has open roles
+- `openJobsCount` - total open roles shown by BuiltIn
+- `openJobsByCategory` - open roles grouped by category
+- `jobsUrl` - the company's BuiltIn jobs page
+- `recentJobs[]` - recent job cards with `title`, `jobId`, `workplaceType` and `location` (with `includeProfile` or in search/company modes)
+- `productAndTechEmployeeCount` - product and technology headcount, when published (with `includeProfile`)
+- `typicalTimeOnSite` - published on-site expectation (with `includeProfile`)
+- `lastUpdated` - BuiltIn's last-updated timestamp
+- `sourceUrl` - the listing or profile page the record was read from
+- `recordType` - `company` for company records, `error` for unresolved byCompany inputs
+- `scrapedAt` - ISO 8601 scrape timestamp
+
+### Error rows (mode=byCompany)
+
+When an input cannot be matched to an exact BuiltIn slug or name, the actor emits an error row with `input`, `error`, `recordType: "error"` and `scrapedAt` instead of returning a different company.
 
 ## Input
 
 | Field | Type | Default | Description |
 |---|---|---|---|
-| `mode` | string | `browse` | `browse` (list companies from the directory) or `byCompany` (fetch specific companies). |
-| `location` | string | – (all US) | US city/market to browse: `chicago`, `colorado`, `boston`, `seattle`, `austin`, `atlanta`, `los-angeles` or `national` (same listing as all-US; combine with `officeType: remote` for remote-only). |
-| `officeType` | string | – (all types) | `hybrid`, `on-site` or `remote`. |
-| `companyUrls` | array | `[]` | Company URLs, names or slugs to fetch directly, e.g. `https://builtin.com/company/stripe`, `openai` or `Microsoft` (mode=`byCompany`). |
-| `includeProfile` | boolean | `false` | Fetch each company's full profile page for website, founding year, headquarters and open-jobs count. Slower but more complete. |
-| `maxItems` | integer | `50` | Hard cap on companies returned (1–500). |
+| `mode` | string | `browse` | `browse` walks the directory, `search` looks companies up by name, `byCompany` fetches specific companies. |
+| `searchQueries` | array | `[]` | Company names or partial names to search for (mode=`search`). Browse-only filters are ignored in search mode with a warning. |
+| `companyUrls` | array | `[]` | Exact company URLs, slugs or names to fetch (mode=`byCompany`). Unresolved inputs become error rows. |
+| `location` | string | All US | Browse only. US city/metro market. `national` and an empty value also mean all US. Ignored with a warning in search/byCompany. |
+| `industry` | string | All | Browse only. BuiltIn industry filter. Ignored with a warning in search/byCompany. |
+| `technology` | string | All | Browse only. Technology filter. Ignored with a warning in search/byCompany. |
+| `companySize` | string | All | Browse only. Employee-count band: `1-10`, `11-50`, `51-200`, `201-500`, `501-1000` or `1000`. Ignored with a warning in search/byCompany. |
+| `officeType` | string | All | Browse only. `hybrid`, `on-site` or `remote`. Ignored with a warning in search/byCompany. |
+| `hiringOnly` | boolean | `false` | Browse only. Only companies with at least one open job. Ignored with a warning in search/byCompany. |
+| `remoteJobsOnly` | boolean | `false` | Browse only. Only companies currently listing remote jobs. Ignored with a warning in search/byCompany. |
+| `minEmployees` | integer | - | Drop companies below this published headcount. Companies without a count are kept. |
+| `maxEmployees` | integer | - | Drop companies above this published headcount. Companies without a count are kept. |
+| `includeDetails` | boolean | `true` | Fetch each company's full BuiltIn record for tech stack, offices, headquarters, founding year, website and benefits count. Falls back to the profile page when detail is missing or has no tech stack. |
+| `includeProfile` | boolean | `false` | Also read each profile for recent jobs, on-site expectations and product/tech headcount. |
+| `includeBenefits` | boolean | `false` | Read each company's benefits page and return the full benefit list. |
+| `maxItems` | integer | `100` | Hard cap on company records (1-10,000). Large runs with `includeDetails` on are slow; use `false` for bulk listing. |
 
-### Example: browse all US tech companies
-
-```json
-{
-    "mode": "browse",
-    "maxItems": 50
-}
-```
-
-### Example: hybrid companies in Chicago
+### Example: fintech companies in Chicago
 
 ```json
 {
     "mode": "browse",
     "location": "chicago",
-    "officeType": "hybrid",
-    "maxItems": 30
+    "industry": "fintech",
+    "maxItems": 50
 }
 ```
 
-### Example: specific companies with full profiles
+### Example: Python companies with 201-500 employees
+
+```json
+{
+    "mode": "browse",
+    "technology": "python",
+    "companySize": "201-500",
+    "hiringOnly": true,
+    "maxItems": 100
+}
+```
+
+### Example: search for companies by name
+
+```json
+{
+    "mode": "search",
+    "searchQueries": ["stripe", "notion", "datadog"],
+    "maxItems": 10
+}
+```
+
+### Example: fetch specific companies with benefits
 
 ```json
 {
     "mode": "byCompany",
-    "companyUrls": ["https://builtin.com/company/stripe", "openai", "Microsoft"],
-    "includeProfile": true
+    "companyUrls": ["https://builtin.com/company/stripe", "openai", "Notion"],
+    "includeBenefits": true
 }
 ```
 
 ## Use cases
 
-- **Talent acquisition** — find tech companies in a target city that are actively hiring
-- **Sales prospecting** — build lead lists of growing tech companies filtered by headcount and hiring signals
-- **Market mapping** — survey the tech company landscape and industry mix in a given city
-- **Competitive research** — track a set of named competitors' headcount, benefits and open-roles count over time
-- **Job search** — browse companies by work-arrangement preference (hybrid, remote or on-site)
+- **Talent acquisition** - build city and industry lists of tech employers with open roles and published work arrangements
+- **Sales prospecting** - find companies by size, location and technology stack for account-based outreach
+- **Market mapping** - survey the tech-employer landscape and industry mix across US metros
+- **Competitive research** - track headcount, office footprint, tech stack and hiring activity over time
+- **Recruiting research** - compare benefits, work models and on-site expectations across target employers
+- **Technology adoption analysis** - measure which companies publish a given language, framework, database or tool
 
 ## FAQ
 
-**Do I need an account or API key?**
-No. BuiltIn's company directory and profiles are publicly accessible without login.
+**Do I need an account, cookie or API key?**
+No. The directory, company profiles and search results used here are public. No login or key is required.
 
-**What does `includeProfile` add, and why is it off by default?**
-It fetches each company's full profile page to add `websiteUrl`, `founded`, `headquarters` and `openJobsCount`. It's off by default because it adds one extra request per company, making runs slower.
+**Do I need to configure a proxy?**
+No. The actor connects to BuiltIn automatically. Just fill in the input and run it.
 
-**Can I filter the directory by industry?**
-Not directly — `browse` mode filters by city and office type only. Each returned record includes `industries`, so you can filter client-side, or use `byCompany` mode if you already know the companies you want.
+**What is the difference between `browse`, `search` and `byCompany`?**
+`browse` walks the directory and applies the filters. `search` matches company names and returns the closest matches. `byCompany` accepts only an exact slug or exact name match; unresolved inputs become error rows rather than a different company.
 
-**Why is `national` the same as "All US"?**
-BuiltIn doesn't maintain a separate nationwide-remote listing; `national` points at the same all-US directory as leaving `location` empty. Combine it with `officeType: remote` to see remote-only companies.
+**Why do some companies have no `employeeCount`, `founded` or `headquarters`?**
+Those values are self-reported by companies. If a company has not published a value, the field is omitted rather than guessed.
 
-**Why might `founded` or `headquarters` be missing even with `includeProfile` on?**
-Those fields depend on what the company itself discloses on its BuiltIn profile; if a company hasn't filled them in, there's nothing for the actor to extract.
+**Why is `benefitsCount` different from `perksCount`?**
+`benefitsCount` is the count shown in the directory listing. `perksCount` is the count recorded on the company profile. They can differ because BuiltIn maintains both views.
+
+**Why do some companies have no tech stack?**
+Companies choose what to publish. Companies with no published stack omit `techStack` and `techStackSize`.
+
+**Why are `recentJobs` or `perks` missing?**
+`recentJobs` requires `includeProfile` (or a search/company lookup). `perks` requires `includeBenefits`. Both add one request per company.
+
+**How many companies can one run return?**
+`maxItems` supports up to 10,000 records. BuiltIn serves 20 directory companies per page. The actor uses a page safety cap derived from `maxItems` plus a 50-page scan buffer, with a hard safety ceiling of 5,000 pages, and warns if it stops before reaching `maxItems`. Narrow filters help when client-side filters reject many records.
 
 **How current is the data?**
-Every run reads BuiltIn live, so results reflect whatever the companies have published at run time — profiles are self-reported and maintained by the companies themselves.
+Every run reads BuiltIn live. Company profiles are maintained by the companies themselves, so values reflect what they have published at run time.
+
+**What happens if a `byCompany` name does not match exactly?**
+The actor emits an error row with `input` and `error` instead of guessing. Paste the company's BuiltIn URL if its display name differs from its slug.
+
+**Can I use the browse filters with `search` or `byCompany`?**
+No. `location`, `industry`, `technology`, `companySize`, `officeType`, `hiringOnly` and `remoteJobsOnly` apply only to `browse`; in the other modes they are ignored with a clear warning in the status message.
 
 **Is this affiliated with BuiltIn?**
-No, this is an independent, third-party actor that reads BuiltIn's public company directory and profiles. It is not affiliated with or endorsed by Builtin.com, Inc.
+No. This is an independent, third-party actor that reads BuiltIn's public company directory and profiles. It is not affiliated with or endorsed by BuiltIn.

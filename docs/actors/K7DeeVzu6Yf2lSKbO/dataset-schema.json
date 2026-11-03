@@ -5,21 +5,13 @@
       "display": {
         "component": "table",
         "properties": {
-          "aspectRatio": {
-            "format": "number",
-            "label": "Aspect Ratio"
-          },
           "businessName": {
             "format": "text",
-            "label": "Business"
+            "label": "Place"
           },
-          "caption": {
+          "contributorId": {
             "format": "text",
-            "label": "Caption"
-          },
-          "category": {
-            "format": "text",
-            "label": "Category"
+            "label": "Contributor ID"
           },
           "contributorName": {
             "format": "text",
@@ -37,13 +29,21 @@
             "format": "number",
             "label": "Height"
           },
+          "isOwnerPhoto": {
+            "format": "boolean",
+            "label": "Owner photo"
+          },
+          "isStreetView": {
+            "format": "boolean",
+            "label": "Street View"
+          },
           "isVideo": {
             "format": "boolean",
-            "label": "Is Video"
+            "label": "Video"
           },
-          "orientation": {
+          "mediaType": {
             "format": "text",
-            "label": "Orientation"
+            "label": "Media"
           },
           "photoId": {
             "format": "text",
@@ -51,11 +51,15 @@
           },
           "photoIndex": {
             "format": "number",
-            "label": "Gallery Index"
+            "label": "Position"
           },
           "photoUrl": {
             "format": "link",
             "label": "Photo URL"
+          },
+          "placeCategory": {
+            "format": "text",
+            "label": "Place category"
           },
           "placeId": {
             "format": "text",
@@ -63,11 +67,11 @@
           },
           "scrapedAt": {
             "format": "datetime",
-            "label": "Scraped At"
+            "label": "Scraped at"
           },
-          "tags": {
-            "format": "array",
-            "label": "Tags"
+          "searchQuery": {
+            "format": "text",
+            "label": "Search query"
           },
           "thumbnailUrl": {
             "format": "link",
@@ -75,15 +79,19 @@
           },
           "uploadDate": {
             "format": "datetime",
-            "label": "Uploaded (ISO)"
+            "label": "Uploaded"
           },
           "uploadDateOriginal": {
             "format": "text",
-            "label": "Uploaded (Raw)"
+            "label": "Uploaded (display)"
           },
           "videoDuration": {
             "format": "text",
-            "label": "Video Duration"
+            "label": "Video length"
+          },
+          "videoUrl": {
+            "format": "link",
+            "label": "Video URL"
           },
           "width": {
             "format": "number",
@@ -91,7 +99,7 @@
           }
         }
       },
-      "title": "Photos",
+      "title": "Photos and videos",
       "transformation": {
         "fields": [
           "recordType",
@@ -104,18 +112,31 @@
           "featureId",
           "placeUrl",
           "category",
+          "mediaType",
+          "isVideo",
+          "isStreetView",
           "contributorName",
           "contributorUrl",
+          "contributorId",
+          "contributorAvatarUrl",
+          "isOwnerPhoto",
           "uploadDate",
           "uploadDateOriginal",
           "width",
           "height",
           "aspectRatio",
           "orientation",
-          "isVideo",
+          "latitude",
+          "longitude",
+          "videoUrl",
           "videoDuration",
+          "videoDurationSeconds",
           "caption",
           "tags",
+          "placeCategory",
+          "placeCategories",
+          "placeAddress",
+          "searchQuery",
           "sourceUrl",
           "scrapedAt"
         ]

@@ -1,106 +1,195 @@
 # BizBuySell Businesses-for-Sale & Financials Scraper
 
-BizBuySell is the largest US marketplace for buying and selling small businesses, franchises and commercial real estate. This actor pulls listing cards straight from a state or category search URL and, on request, opens each listing to add the financial figures sellers disclose — cash flow, revenue, EBITDA, real estate and headcount.
+BizBuySell is the largest US marketplace for buying and selling small businesses, franchises and commercial real estate. This actor turns its public listings into structured deal data: asking price, location, cash flow, EBITDA, revenue, broker contacts and the full detail-page story for each business.
 
 ## What this actor does
 
-- **Browses a search URL** you give it (a US state page, the "established businesses" category, or the full marketplace) and walks pages until `maxItems` is reached
-- **Extracts price in two forms** — a formatted string like `$1,150,000` and a numeric value for sorting, side by side
-- **Pulls the full listing summary** rather than the truncated card preview
-- **Re-hosts the listing photo** in the run's own storage so the image link opens reliably, while keeping the original source URL too
-- **Optional financial enrichment** — turn on `enrichDetails` to fetch each listing's detail page for Cash Flow, Gross Revenue, EBITDA, Real Estate, Inventory, FF&E, Rent, founding year and employee count
-- Fields that BizBuySell doesn't disclose for a given listing are left out of that record rather than sent as empty values
+- **Search the marketplace your way** — keyword, state, city, county, 200+ industries, listing type, asking-price range, cash-flow range, gross-revenue range, established-after year, days listed and sort order.
+- **Or paste URLs and IDs** — BizBuySell search pages, category pages, state/city/county pages and individual listing URLs all work; exact listing IDs are supported too.
+- **Get the financial picture** — asking price, cash flow (SDE), EBITDA, gross revenue, real estate, inventory, FF&E, rent, year established and employee count when the seller discloses them.
+- **Reach the broker** — broker name, phone, company and profile link from the listing and its detail page.
+- **Go deeper on demand** — turn on `enrichDetails` for the full description, facilities, competition, growth, financing, support and reason for selling.
+- Empty fields are omitted, never sent as `null`.
 
 ## Output per listing
 
-- `url` — direct link to the listing on bizbuysell.com
 - `productId` — BizBuySell's numeric listing ID
-- `title` — business listing headline
-- `description` — full listing summary text
-- `location` — city and state, e.g. `Bonita Springs, FL`
-- `category` — BizBuySell business category, when the source populates it
-- `askingPrice` — formatted price, or `Not Disclosed` when the seller hides it
-- `askingPriceNumeric` — numeric price for filtering/sorting (omitted for "Not Disclosed" listings)
-- `image` — hosted URL of the listing's primary photo
-- `imageOriginal` — the original BizBuySell CDN image URL
-- `askingPriceDetail` — price as shown on the detail page, with `enrichDetails` on
-- `cashFlow` — Seller's Discretionary Earnings, with `enrichDetails` on
-- `grossRevenue` — annual gross revenue, with `enrichDetails` on
-- `ebitda` — earnings before interest, tax, depreciation and amortization, with `enrichDetails` on
-- `realEstate` — included real-estate value or status (`Owned`, `Leased`), with `enrichDetails` on
-- `inventory`, `ffe`, `rentMonthly` — inventory value, furniture/fixtures/equipment, and monthly rent, with `enrichDetails` on
-- `established` — year the business was founded, with `enrichDetails` on
-- `employees` — headcount, with `enrichDetails` on
-- `searchUrl` — the search URL this listing was found on
-- `scrapedAt` — ISO 8601 UTC timestamp of extraction
-
-If a run finds no listings at all (for example, a category path BizBuySell's mobile site doesn't support), it writes a single record with `_status: "no_data"`, `_reason`, and `_message` explaining why, instead of any listing fields.
+- `title` — listing headline
+- `description` — summary, or the full description with `enrichDetails`
+- `url` — direct link to the listing
+- `location` — city or county plus state, e.g. `Bonita Springs, FL`
+- `city`, `county`, `stateCode`, `state` — parsed location parts
+- `askingPrice`, `askingPriceNumeric` — formatted and numeric asking price
+- `askingPriceDetail` — asking price as shown on the detail page, with `enrichDetails`
+- `cashFlow`, `cashFlowNumeric` — seller's discretionary earnings / SDE
+- `grossRevenue`, `grossRevenueNumeric` — annual gross revenue, with `enrichDetails`
+- `ebitda`, `ebitdaNumeric` — EBITDA when disclosed
+- `realEstate`, `realEstateNumeric` — included real-estate value or `Owned` / `Leased` status, with `enrichDetails`
+- `inventory`, `inventoryNumeric` — inventory value and inclusion, with `enrichDetails`
+- `ffe`, `ffeNumeric` — furniture, fixtures and equipment, with `enrichDetails`
+- `rentMonthly`, `rentMonthlyNumeric` — monthly rent, with `enrichDetails`
+- `established`, `establishedYear` — founding year, with `enrichDetails`
+- `employees`, `employeeCount` — headcount, with `enrichDetails`
+- `listingTypeId`, `listingType` — established, asset sale, real estate or startup
+- `adLevelId`, `adLevel` — marketplace placement level
+- `category` — industry path, e.g. `Laundromats and Coin Laundry > Dry Cleaners`
+- `image` — primary photo URL; with `mirrorImages` on (the default) this is a public Apify storage URL that opens from any client. If you turn mirroring off, this is the source CDN URL and may return 403.
+- `imageOriginal` — the source BizBuySell CDN URL, kept for traceability; the CDN may return 403 to a clean shell, so use `image` for customer-facing links
+- `recentlyAdded`, `recentlyUpdated`, `priceReduced` — listing freshness flags
+- `realEstateIncluded` — real estate included in the asking price
+- `sellerFinancing`, `homeBased` — seller terms and operating style, with `enrichDetails`
+- `brokerName`, `brokerPhone`, `brokerCompany`, `brokerProfileUrl` — listing contact
+- `facilities`, `competition`, `growthAndExpansion`, `financing`, `supportAndTraining`, `reasonForSelling` — detail-page narrative, with `enrichDetails`
+- `buildingSquareFeet`, `website` — premises size and business website, with `enrichDetails`
+- `searchUrl` — the search page that produced the listing
+- `recordType: "businessListing"`, `scrapedAt` — UTC ISO 8601 timestamp
 
 ## Input
 
 | Field | Type | Default | Description |
 |---|---|---|---|
-| `searchUrl` | string | – | BizBuySell search URL to scrape. State paths (e.g. `/california-businesses-for-sale/`) and the base marketplace URL work; keyword/price query strings and city sub-paths are not applied. |
-| `maxItems` | integer | `50` | Maximum number of listings to extract (1–1,000). |
-| `enrichDetails` | boolean | `false` | When true, opens each listing's detail page to add the financial fields listed above. |
-| `proxy` | object | – | Optional proxy configuration; not required to retrieve data. |
+| `mode` | string | `search` | `search`, `byUrls` or `byListingIds` |
+| `searchQuery` | string | - | Keyword, e.g. restaurant, HVAC, car wash (mode=search) |
+| `state` | string | `ALL` | US state or `ALL` (mode=search) |
+| `city` | string | – | City filter, e.g. Austin (mode=search) |
+| `county` | string | – | County filter, e.g. Los Angeles County (mode=search) |
+| `category` | string | `ALL` | BizBuySell industry category (mode=search) |
+| `listingType` | string | `all` | `all`, `established`, `assetSale`, `realEstate`, `startup` (mode=search) |
+| `minAskingPrice` / `maxAskingPrice` | integer | – | Asking-price range in USD |
+| `minCashFlow` / `maxCashFlow` | integer | – | Annual cash-flow range in USD |
+| `minGrossRevenue` / `maxGrossRevenue` | integer | – | Annual gross-revenue range in USD |
+| `establishedAfterYear` | integer | – | Only businesses founded after this year |
+| `listedWithinDays` | integer | `0` | Only listings added or refreshed within this many days; `0` = any |
+| `sortBy` | string | `default` | `default`, `priceAsc`, `priceDesc`, `cashFlowDesc`, `newest` |
+| `sellerFinancing` | boolean | `false` | Only seller-financing listings |
+| `homeBased` | boolean | `false` | Only home-based businesses |
+| `realEstateIncluded` | boolean | `false` | Only listings with real estate included |
+| `absenteeOwner` | boolean | `false` | Only absentee-owner listings |
+| `priceReduced` | boolean | `false` | Only price-reduced listings |
+| `franchiseResale` | boolean | `false` | Only franchise resales |
+| `enrichDetails` | boolean | `false` | Fetch each listing's detail page for full financials and narrative |
+| `mirrorImages` | boolean | `true` | Copy photos into public Apify storage and return stable URLs |
+| `startUrls` | array | `[]` | BizBuySell search, category or listing URLs (mode=byUrls) |
+| `listingIds` | array | `[]` | Numeric listing IDs (mode=byListingIds) |
+| `maxItems` | integer | `50` | Hard cap, 1–10,000 |
 
-### Example: statewide search
+### Example: California laundromats with strong cash flow
 
 ```json
 {
-    "searchUrl": "https://www.bizbuysell.com/california-businesses-for-sale/",
-    "maxItems": 100
+  "mode": "search",
+  "searchQuery": "laundromat",
+  "state": "CA",
+  "minCashFlow": 100000,
+  "maxItems": 50
 }
 ```
 
-### Example: established businesses with financials
+### Example: restaurants in Los Angeles County
 
 ```json
 {
-    "searchUrl": "https://www.bizbuysell.com/established-businesses-for-sale/",
-    "maxItems": 50,
-    "enrichDetails": true
+  "mode": "search",
+  "category": "17",
+  "state": "CA",
+  "county": "Los Angeles County",
+  "minAskingPrice": 100000,
+  "maxAskingPrice": 1000000,
+  "sortBy": "priceAsc",
+  "maxItems": 100
 }
 ```
 
-### Example: full marketplace, listings only
+### Example: look up exact listings with full details
 
 ```json
 {
-    "searchUrl": "https://www.bizbuysell.com/businesses-for-sale/",
-    "maxItems": 20,
-    "enrichDetails": false
+  "mode": "byListingIds",
+  "listingIds": ["2501583", "2571748"],
+  "enrichDetails": true,
+  "maxItems": 2
+}
+```
+
+### Example: paste a BizBuySell search URL
+
+```json
+{
+  "mode": "byUrls",
+  "startUrls": [
+    { "url": "https://www.bizbuysell.com/california-businesses-for-sale/" }
+  ],
+  "maxItems": 50
 }
 ```
 
 ## Use cases
 
-- **Buy-side deal sourcing** — build a sortable shortlist of businesses for sale by state and price
-- **Business brokers** — track new and existing listings and their disclosed financials across a market
-- **M&A and search-fund research** — pull cash flow and revenue figures in bulk to screen acquisition targets
-- **Franchise and investment analysts** — monitor "established businesses" listings for valuation benchmarking
-- **Market research** — study how asking prices and financial disclosure vary by state or category
+- **Deal sourcing** — build a daily shortlist of businesses for sale by state, county, industry and cash flow.
+- **Broker outreach** — collect broker names and phone numbers for a target market and industry.
+- **Valuation benchmarking** — compare asking prices and SDE multiples across regions and categories.
+- **Search-fund research** — screen acquisition targets by revenue, cash flow and seller financing.
+- **Market monitoring** — track new listings, price reductions and recently updated businesses.
+- **Franchise and real-estate buyers** — find franchise resales and listings where real estate is included.
 
 ## FAQ
 
-**Do I need a BizBuySell account?**
-No — every field this actor returns comes from public listing pages.
+### Do I need a BizBuySell account?
 
-**Why does `askingPriceNumeric` sometimes disappear?**
-Some sellers list their business as "Not Disclosed." Those records keep `askingPrice: "Not Disclosed"` but have no numeric price, since there isn't one to parse.
+No. Every field comes from public listing pages and the public search feed. No login, cookie or API key is needed.
 
-**Can I filter by keyword or price range?**
-Only through the `searchUrl` you supply — use a US state path like `/texas-businesses-for-sale/`, the "established businesses" category, or the base marketplace URL. Query-string filters (`?q=`, `?pmin=`, `?pmax=`) and city sub-paths in the URL are not applied, and not every category path BizBuySell shows on its desktop site resolves the same way, so a run can come back empty for some of them.
+### How fresh is the data?
 
-**What does `enrichDetails` add, and is it slower?**
-It fetches each listing's own detail page for Cash Flow, Gross Revenue, EBITDA, Real Estate, Inventory, FF&E, Rent, founding year and employee count. It adds one extra fetch per listing, so large runs with enrichment take longer than listings-only runs.
+Each run reads the current search results and listing pages, so the dataset reflects what BizBuySell shows at that moment.
 
-**Why are some financial fields missing even with `enrichDetails` on?**
-BizBuySell sellers fill in these fields voluntarily. If a seller didn't disclose, say, EBITDA, that field is simply absent from the record.
+### Why are some financial fields missing?
 
-**How many listings are on one search page?**
-Roughly 55–58 per page, so a run with `maxItems: 100` typically needs just two pages.
+Sellers fill in cash flow, revenue, EBITDA, inventory and similar fields voluntarily. If a seller did not disclose a figure, that field is omitted from the record instead of being invented.
 
-**Is this affiliated with BizBuySell?**
-No, this is an independent, third-party actor that reads BizBuySell's public listing pages. It is not affiliated with or endorsed by BizBuySell.com.
+### Why do some listings have no asking price?
+
+Some sellers hide the price. Those records keep the listing, location, description and broker details but omit the price fields.
+
+### What is the difference between cash flow, EBITDA and gross revenue?
+
+Cash flow (SDE) is the seller's discretionary earnings after owner compensation and add-backs. EBITDA is earnings before interest, taxes, depreciation and amortization. Gross revenue is total annual sales before expenses. BizBuySell sellers report them separately and not every listing discloses all three.
+
+### How many listings can I get in one run?
+
+BizBuySell returns up to 10,000 results per query. To go deeper, split the market into smaller slices — for example one state, county or category at a time — and combine the runs. `maxItems` is capped at 10,000 for the same reason.
+
+### Does `enrichDetails` always fill every detail field?
+
+It fills what the public detail page shows. The detail page is sometimes rate-limited by the site, so the actor treats enrichment as best-effort: when a detail page is unavailable, the listing is still saved with its search-result fields and the run continues.
+
+### Can I search by city or county?
+
+Yes. Enter a city or county name and the actor resolves it against BizBuySell's location list. A state filter is optional but helps disambiguate names that exist in several states.
+
+### How does keyword search work?
+
+BizBuySell ranks keyword matches by relevance across the listing, including the full description. It is not an exact substring match, so a result can match a word that appears later in the description rather than in the title.
+
+### Can I get broker email addresses?
+
+No. BizBuySell's public pages expose the broker's name and phone number, not an email address. The actor does not invent or enrich emails.
+
+### Why does `imageOriginal` sometimes fail to open?
+
+`imageOriginal` is the source BizBuySell CDN URL, kept for traceability. That CDN can return 403 to a clean client. The `image` field is the customer-facing URL and is mirrored into Apify storage by default.
+
+### Do you scrape franchise and broker directories?
+
+No. The actor covers business-for-sale listings, including franchise resales and real-estate listings. The separate franchise directory and broker directory are out of scope.
+
+### Why are some fields only present with `enrichDetails`?
+
+Fields such as gross revenue, inventory, FF&E, rent, employees, year established, facilities, financing and website come from the individual listing page. The search feed does not carry them for every listing.
+
+### Do I need to set up a proxy?
+
+No. The actor chooses a working connection to BizBuySell automatically. Just fill in the input and run it.
+
+### Is this affiliated with BizBuySell?
+
+No. This is an independent, third-party actor that reads publicly available BizBuySell listing pages. It is not affiliated with or endorsed by BizBuySell or its parent company.

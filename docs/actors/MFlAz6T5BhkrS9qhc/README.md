@@ -4,322 +4,277 @@
 
 # Bluesky Posts, Profiles, Feeds & Threads Scraper
 
-Bluesky is still small enough that one actor can cover nearly all of it: full-text post search by keyword or hashtag, a user's profile and timeline, a single post's full reply thread, a custom feed, or the followers/follows/likes around any account or post. Pick a mode and get back structured records — no login or cookies needed.
+Scrape **Bluesky** public data without a login, cookies, an API key or a proxy. Search posts by keyword, hashtag, author, mention, domain or URL; read profiles, author feeds, full threads, lists, starter packs, custom feeds, likes, reposts and quotes; and discover trending topics and suggested communities. Every record has flat top-level fields with a few natural nested objects, absolute URLs, ISO dates and omit-empty output.
 
 ## What this actor does
 
-- Covers 14 Bluesky surfaces in one actor: post search, account search, profile, feed, post thread, URL expansion, batch post lookup, followers, follows, likes, list members, starter-pack members, and feed-generator discovery
-- Applies post-level filters — language, minimum likes/reposts, media-only, exclude replies/reposts — across every mode that returns posts
-- Resolves `bsky.app` post URLs straight into full records via `urlFetch`, so you don't need to know AT URIs
-- Preserves quote-posts and reposts as distinct, clearly flagged records rather than collapsing them into their underlying post
-- Omits any field Bluesky has no value for — a record never contains nulls or empty placeholders
+- **20 modes** across posts, accounts, threads, lists, starter packs, feed generators and discovery.
+- **Post search with the full public filter surface**: keyword, hashtag, author, mention, domain, URL, date range, language and top/latest ranking.
+- **Search beyond the first page**: `searchSort=latest` walks backwards through time windows, so a query can return far more than the 100-post relevance cap.
+- **Rich records**: engagement counts, languages, mentions, hashtags, links, domains, images, video, external embeds, quoted posts, reposts, reply roots, labels, self-labels, verification, live status, pinned posts and profile counts.
+- **Batch-friendly**: multiple profiles, posts, lists, starter packs, feeds and URLs per run, with automatic de-duplication.
+- **No credentials and no proxy setup.** Every mode reads public data.
 
 ## Output per record
 
+Every record carries `recordType`, `sourceUrl` and `scrapedAt`. Empty values are omitted at every depth, so the dataset never contains nulls or empty placeholders.
+
 ### Post records (`recordType=post`)
 
-| Field | Description |
-| --- | --- |
-| `uri` | Canonical AT URI (`at://did:plc:.../app.bsky.feed.post/...`) |
-| `cid` | Content ID |
-| `url` | Public `bsky.app` URL (derived from `uri` + author handle) |
-| `text` | Post text |
-| `createdAt` | ISO 8601 timestamp |
-| `indexedAt` | When Bluesky indexed the post |
-| `language` | ISO 639-1 language code |
-| `replyCount` | Reply count |
-| `repostCount` | Repost count |
-| `likeCount` | Like count |
-| `quoteCount` | Quote-post count |
-| `bookmarkCount` | Bookmark count |
-| `inReplyToUri` | AT URI of parent post (when reply) |
-| `inReplyToCid` | CID of parent post (when reply) |
-| `isRepost` | `true` if surfaced via repost reason |
-| `repostedBy` | Handle that reposted (when `isRepost=true`) |
-| `mentions` | Array of mentioned DIDs (extracted from facets) |
-| `tags` | Array of hashtags used (lowercase, extracted from facets) |
-| `urls` | Array of external URLs in the post (extracted from facets) |
-| `mediaAttachments` | Array of `{type, url, previewUrl, description}` for images/videos/external |
-| `quotedPost` | Embedded quoted post `{uri, cid, text, authorHandle, authorDid}` |
-| `author` | Author summary `{did, handle, displayName, avatar}` |
-| `authorHandle` | Author handle (top-level convenience field) |
-| `scrapedAt` | ISO 8601 UTC timestamp of extraction |
+- `uri` - canonical AT URI
+- `cid` - content identifier
+- `id` - same as `uri`
+- `url` - public `bsky.app` post URL
+- `sourceUrl` - same as `url`
+- `text` - post text
+- `createdAt`, `indexedAt` - ISO 8601 timestamps
+- `language` - first declared language
+- `languages[]` - all declared languages
+- `replyCount`, `repostCount`, `likeCount`, `quoteCount`, `bookmarkCount`
+- `isReply` - true when the post replies to another post
+- `inReplyToUri`, `inReplyToCid` - parent post
+- `rootUri`, `rootCid` - thread root
+- `isRepost` - true when surfaced as a repost
+- `repostedBy` - handle that reposted it
+- `repostUri`, `repostCid`, `repostedAt` - repost metadata
+- `isQuote` - true when the post quotes another post
+- `quotedPost` - `{uri, cid, text, createdAt, indexedAt, authorHandle, authorDid, authorDisplayName, authorAvatar, url, likeCount, repostCount, replyCount, quoteCount, labels, labelValues, mediaAttachments}`
+- `mentions[]` - mentioned DIDs
+- `tags[]` - hashtags, lowercase
+- `urls[]` - external links
+- `domains[]` - hostnames from `urls[]`
+- `mediaAttachments[]` - `{type, url, previewUrl, description, width, height, presentation, title}` for images, video and external embeds
+- `hasMedia`, `mediaTypes[]`
+- `labels[]` - `{val, src, uri, cid, cts, ver}`
+- `labelValues[]` - label values only
+- `selfLabels[]` - author-applied labels
+- `author` - `{did, handle, displayName, avatar, createdAt, profileUrl, labels, labelValues, verification, status}`; with `hydrateAuthors=true` it also includes `description`, `banner`, `followersCount`, `followsCount`, `postsCount`, `indexedAt`, `pinnedPostUri`, `pinnedPostCid`
+- `authorHandle` - convenience field
 
-### Account records (`recordType=account`, `like`, `listMember`, or `starterPackMember`)
+### Account records (`recordType=account`, `like`, `listMember`, `repost` or `starterPackMember`)
 
-Returned by `profile`, `actorSearch`, `follows`, `followers`, `getLikes`, `getList`, and the member listing of `getStarterPack`. All these modes share the same account fields; only `recordType` and (for `getLikes`) two extra fields differ. (`getActorLikes` instead returns post records — see above — since it lists posts a user liked, not accounts.)
+- `did`, `id`, `handle`, `displayName`, `description`, `pronouns`
+- `avatar`, `banner`
+- `followersCount`, `followsCount`, `postsCount`
+- `createdAt`, `indexedAt`
+- `url`, `sourceUrl` - public profile URL
+- `labels[]`, `labelValues[]`
+- `verification` - `{verifiedStatus, trustedVerifierStatus, verifications[]}`
+- `associated` - `{listsCount, feedGeneratorsCount, starterPacksCount, isLabeler, chatAllowIncoming, chatAllowGroupInvites, activitySubscription}`
+- `status` - `{type, createdAt, durationMinutes, expiresAt, isActive, embed}`
+- `pinnedPostUri`, `pinnedPostCid`
+- `relation` - `profile`, `searchMatch`, `follower`, `following`, `liked`, `reposted`, `listMember`, `starterPackMember` or `suggestedFollow`
+- `likedAt`, `likedPostUri` - for `mode=getLikes`
+- `repostedPostUri` - for `mode=repostedBy`
+- `listUri`, `listName` - for list members
+- `starterPackUri` - for starter-pack members
 
-| Field | Description |
-| --- | --- |
-| `did` | DID (decentralised identifier) |
-| `id` | Same value as `did` |
-| `handle` | Bluesky handle (e.g. `bsky.app`) |
-| `displayName` | Display name |
-| `description` | Bio |
-| `avatar` | Avatar URL |
-| `banner` | Banner URL |
-| `followersCount`, `followsCount`, `postsCount` | Stats |
-| `createdAt` | Account creation timestamp |
-| `indexedAt` | When Bluesky last reindexed the profile |
-| `url` | Public profile URL |
-| `recordType` | `account` (profile/actorSearch/follows/followers), `like` (getLikes), `listMember` (getList), or `starterPackMember` (getStarterPack member rows) |
-| `likedAt` | ISO 8601 timestamp the like was created (`getLikes` only) |
-| `likedPostUri` | AT URI of the liked post (`getLikes` only) |
+### List records (`recordType=list`)
 
-### Starter pack record (`recordType=starterPack`, `mode=getStarterPack` only)
+- `uri`, `cid`, `id`, `name`, `purpose`, `description`
+- `listItemCount`
+- `creator` - account summary
+- `creatorHandle`, `creatorDid`
+- `labels[]`, `labelValues[]`, `indexedAt`
+- `url`, `sourceUrl` - public list URL
 
-Emitted once per run, before the pack's member rows.
+### Starter-pack records (`recordType=starterPack`)
 
-| Field | Description |
-| --- | --- |
-| `uri` | AT URI of the starter pack |
-| `name` | Starter pack name |
-| `description` | Starter pack description |
-| `creatorHandle` / `creatorDid` | Handle/DID of the account that created the pack |
-| `listUri` | AT URI of the underlying member list |
-| `joinedAllTimeCount` | Total accounts that joined via this pack |
-| `joinedWeekCount` | Accounts that joined via this pack in the last week |
+- `uri`, `cid`, `id`, `name`, `description`
+- `creator` - account summary
+- `creatorHandle`, `creatorDid`
+- `listUri`, `listName`, `listItemCount`
+- `joinedAllTimeCount`, `joinedWeekCount`
+- `createdAt`, `updatedAt`
+- `feeds[]` - `{uri, displayName, description, avatar, creatorHandle}`
+- `listItemsSample[]` - sample account summaries
+- `labels[]`, `labelValues[]`, `indexedAt`
+- `url`, `sourceUrl` - public starter-pack URL
 
-### Feed generator record (`recordType=feedGenerator`, `mode=feedGeneratorsDiscovery` only)
+### Feed-generator records (`recordType=feedGenerator`)
 
-| Field | Description |
-| --- | --- |
-| `uri` | AT URI of the feed generator |
-| `cid` | Content ID |
-| `did` | DID of the feed generator service |
-| `displayName` | Feed name |
-| `description` | Feed description |
-| `avatar` | Feed avatar URL |
-| `likeCount` | Likes the feed itself has received |
-| `creatorHandle` / `creatorDid` | Handle/DID of the feed's creator |
+- `uri`, `cid`, `id`, `did`
+- `displayName`, `description`, `avatar`
+- `likeCount`, `acceptsInteractions`
+- `creator` - account summary
+- `creatorHandle`, `creatorDid`
+- `labels[]`, `labelValues[]`, `indexedAt`
+- `isOnline`, `isValid` - when fetched with `mode=feedGenerator`
+- `url`, `sourceUrl` - public feed URL
 
-Every record type also carries `scrapedAt` (ISO 8601 UTC timestamp of extraction). Empty fields are dropped from every record at every depth — the dataset never contains nulls.
+### Discovery records
+
+- `recordType=trendingTopic`: `topic`, `displayName`, `description`, `link`, `url`, `rank`
+- `recordType=taggedSuggestion`: `tag`, `subjectType`, `subject`, `url`
 
 ## Input
 
-| Parameter | Type | Default | Description |
-| --- | --- | --- | --- |
-| `mode` | Enum | `search` | `search` / `profile` / `actorSearch` / `feed` / `postThread` / `urlFetch` / `getPosts` / `follows` / `followers` / `getLikes` / `getActorLikes` / `getList` / `getStarterPack` / `feedGeneratorsDiscovery` |
-| `searchQuery` | String | `bluesky` | Free-text query (used by `search` and `actorSearch`); also acts as a query keyword for `feedGeneratorsDiscovery` |
-| `searchSort` | Enum | `top` | `top` (engagement) or `latest` (recency) — applies to `mode=search` |
-| `actor` | String | – | Handle (`bsky.app`) or DID. Used by `profile` / `follows` / `followers` / `getActorLikes` |
-| `postUri` | String | — | Full AT URI of a post — used by `mode=postThread` and `mode=getLikes` |
-| `postUris` | Array | — | Up to 25 AT URIs to batch-hydrate — used by `mode=getPosts` |
-| `postUrls` | Array | — | Public bsky.app post URLs to expand — used by `mode=urlFetch` |
-| `listUri` | String | — | AT URI of a Bluesky list — used by `mode=getList` |
-| `starterPackUri` | String | — | AT URI of a starter pack — used by `mode=getStarterPack` |
-| `feedPreset` | Enum | — | Built-in feed preset — `whats-hot`, `discover`, `mutuals`, `bsky-team`, `hot-classic`, `popular-with-friends`, `for-you`, `news`, `trending-videos`, `quiet-posters`. Overrides `feedUri` when set. |
-| `feedUri` | String | — | Custom AT feed URI for `mode=feed` (used when no preset is selected) |
-| `language` | Enum | — | ISO 639-1 dropdown (top 30 codes) — drops posts not in this language |
-| `excludeReplies` | Boolean | `false` | Drop reply posts |
+| Field | Type | Default | Description |
+|---|---|---|---|
+| `mode` | Enum | `search` | `search` / `profile` / `profiles` / `actorSearch` / `feed` / `postThread` / `urlFetch` / `getPosts` / `follows` / `followers` / `getLikes` / `repostedBy` / `quotes` / `getList` / `listFeed` / `lists` / `getStarterPack` / `feedGenerator` / `feedGeneratorsDiscovery` / `discovery`. `getActorLikes` is accepted as a legacy alias for `profile` |
+| `searchQuery` | String | `bluesky` | Keyword, hashtag, phrase or Lucene-style query. Used by `search`, `actorSearch` and `feedGeneratorsDiscovery` |
+| `searchSort` | Enum | `top` | `top` (engagement) or `latest` (newest first; supports deeper collection) |
+| `searchTags` | Array | `[]` | Hashtags without `#`; multiple tags are AND-matched (`mode=search`) |
+| `searchDomain` | String | – | Only posts linking to this domain (`mode=search`) |
+| `searchUrl` | String | – | Only posts linking to this exact URL (`mode=search`) |
+| `mentionsUser` | String | – | Only posts mentioning this handle or DID (`mode=search`) |
+| `fromUser` | String | – | Only posts authored by this handle or DID (`mode=search`) |
+| `since` | String | – | Earliest post date (`YYYY-MM-DD` or ISO datetime) (`mode=search`) |
+| `until` | String | – | Latest post date (`YYYY-MM-DD` or ISO datetime) (`mode=search`) |
+| `language` | Enum | – | ISO 639-1 language filter; empty means no filter |
+| `authorFeedFilter` | Enum | `posts_with_replies` | `posts_with_replies` / `posts_no_replies` / `posts_with_media` / `posts_and_author_threads` (`mode=profile`) |
+| `includePins` | Boolean | `false` | Include the pinned post at the top of the author feed (`mode=profile`) |
+| `includeParents` | Boolean | `false` | Include ancestor posts above the requested post (`mode=postThread`) |
+| `threadDepth` | Integer | `6` | Reply and ancestor levels to walk, 0-1000 (`mode=postThread`) |
+| `actor` | String | – | Handle or DID. Used by `profile`, `follows`, `followers`, `lists` and `discoveryType=suggestedFollows` |
+| `actors` | Array | `[]` | Handles, DIDs or profile URLs (`mode=profiles`) |
+| `postUri` | String | – | AT URI of a post. Used by `postThread`, `getLikes`, `repostedBy` and `quotes` |
+| `postUris` | Array | `[]` | AT URIs to hydrate (`mode=getPosts`; fallback for single-post modes) |
+| `postUrls` | Array | `[]` | bsky.app post URLs for `getPosts`; post, profile, list, feed or starter-pack URLs for `urlFetch`; fallback for single-post modes |
+| `listUri` | String | – | AT URI of a list (`mode=getList`, `mode=listFeed`) |
+| `listUris` | Array | `[]` | AT URIs or list URLs for batch list processing (`mode=getList`) |
+| `starterPackUri` | String | – | AT URI of a starter pack (`mode=getStarterPack`) |
+| `starterPackUris` | Array | `[]` | AT URIs or starter-pack URLs for batch processing (`mode=getStarterPack`) |
+| `feedPreset` | Enum | - | `whats-hot` / `bsky-team` / `hot-classic`; an explicit `feedUri` always wins. Legacy names (`discover`, `mutuals`, `popular-with-friends`, `for-you`, `news`, `trending-videos`, `quiet-posters`) are accepted and mapped to What's Hot. If neither is set, `mode=feed` uses What's Hot |
+| `feedUri` | String | – | AT URI or bsky.app feed URL (`mode=feed`, `mode=feedGenerator`) |
+| `feedUris` | Array | `[]` | AT URIs or feed URLs for batch lookup (`mode=feedGenerator`) |
+| `discoveryType` | Enum | `trendingTopics` | `trendingTopics` / `suggestedFeeds` / `suggestedStarterPacks` / `taggedSuggestions` / `suggestedFollows` (`mode=discovery`) |
+| `excludeReplies` | Boolean | `false` | Drop posts that are replies |
 | `excludeReposts` | Boolean | `false` | Drop reposts |
-| `mediaOnly` | Boolean | `false` | Only emit posts with at least one media attachment |
-| `minLikes` | Integer | — | Drop posts with fewer likes |
-| `minReposts` | Integer | — | Drop posts with fewer reposts |
-| `since` | String | — | `YYYY-MM-DD` — earliest post date (search mode) |
-| `until` | String | — | `YYYY-MM-DD` — latest post date (search mode) |
-| `fromUser` | String | — | Restrict search to a specific author handle / DID |
-| `maxItems` | Integer | `40` | Hard cap on emitted records (1-5000) |
+| `mediaOnly` | Boolean | `false` | Only posts with at least one image, video or external embed |
+| `excludeLabeled` | Boolean | `false` | Drop posts and accounts that carry labels |
+| `verifiedOnly` | Boolean | `false` | Only verified accounts, or posts whose author is verified. Records with no verification object are excluded; post modes hydrate author profiles to check |
+| `minLikes` | Integer | – | Drop posts below this like count, 0-10,000,000 |
+| `minReposts` | Integer | – | Drop posts below this repost count, 0-10,000,000 |
+| `minReplies` | Integer | – | Drop posts below this reply count, 0-10,000,000 |
+| `minQuotes` | Integer | – | Drop posts below this quote count, 0-10,000,000 |
+| `minFollowers` | Integer | – | Keep accounts with at least this many followers, 0-1,000,000,000 |
+| `maxFollowers` | Integer | – | Keep accounts with at most this many followers, 0-1,000,000,000 |
+| `includeListMetadata` | Boolean | `false` | Emit a list record before its members (`mode=getList`) |
+| `includeStarterPackMembers` | Boolean | `true` | Emit the pack's member accounts (`mode=getStarterPack`) |
+| `hydrateAuthors` | Boolean | `false` | Fetch full author profiles for post records in batches of 25. Automatically enabled when `verifiedOnly=true` |
+| `maxItems` | Integer | `40` | Hard cap on emitted records, 1-5000. Source exhaustion or Bluesky caps may return fewer; the run status reports a shortfall |
 
-### Example input — keyword search
+### Example: brand monitoring with filters
 
 ```json
 {
   "mode": "search",
-  "searchQuery": "AI",
+  "searchQuery": "bluesky",
+  "searchSort": "latest",
+  "searchTags": ["opensource"],
   "language": "en",
-  "minLikes": 50,
-  "maxItems": 100
+  "minLikes": 10,
+  "maxItems": 300
 }
 ```
 
-### Example input — hashtag search
-
-```json
-{
-  "mode": "search",
-  "searchQuery": "#python",
-  "since": "2026-01-01",
-  "maxItems": 200
-}
-```
-
-### Example input — user profile
+### Example: a user's profile and recent media posts
 
 ```json
 {
   "mode": "profile",
   "actor": "bsky.app",
-  "maxItems": 50,
-  "excludeReplies": true
+  "authorFeedFilter": "posts_with_media",
+  "includePins": true,
+  "maxItems": 50
 }
 ```
 
-### Example input — account search
-
-```json
-{
-  "mode": "actorSearch",
-  "searchQuery": "rust",
-  "maxItems": 25
-}
-```
-
-### Example input — custom feed
-
-```json
-{
-  "mode": "feed",
-  "feedPreset": "whats-hot",
-  "maxItems": 100
-}
-```
-
-### Example input — post thread (post + replies)
+### Example: a full thread with parents
 
 ```json
 {
   "mode": "postThread",
-  "postUri": "at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.post/3kxxxx",
+  "postUri": "at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.post/3l6oveex3ii2l",
+  "includeParents": true,
+  "threadDepth": 8,
   "maxItems": 200
 }
 ```
 
-### Example input — expand post URLs
-
-```json
-{
-  "mode": "urlFetch",
-  "postUrls": [
-    "https://bsky.app/profile/bsky.app/post/3kxxxx",
-    "https://bsky.app/profile/jay.bsky.team/post/3kyyyy"
-  ]
-}
-```
-
-### Example input — followers / follows
+### Example: audience export with follower counts
 
 ```json
 {
   "mode": "followers",
-  "actor": "bsky.app",
-  "maxItems": 200
+  "actor": "jay.bsky.team",
+  "minFollowers": 100,
+  "maxItems": 500
 }
 ```
 
-### Example input — likes on a post
+### Example: discover trending topics
 
 ```json
 {
-  "mode": "getLikes",
-  "postUri": "at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.post/3kxxxx",
-  "maxItems": 100
-}
-```
-
-### Example input — discover popular feed generators
-
-```json
-{
-  "mode": "feedGeneratorsDiscovery",
-  "searchQuery": "news",
-  "maxItems": 50
-}
-```
-
-### Example input — author + keyword
-
-```json
-{
-  "mode": "search",
-  "searchQuery": "release",
-  "fromUser": "bsky.app",
-  "maxItems": 50
-}
-```
-
-## Example output
-
-```json
-{
-  "recordType": "post",
-  "uri": "at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.post/3ml54ry2iwc2x",
-  "cid": "bafyreidwzz...",
-  "url": "https://bsky.app/profile/bsky.app/post/3ml54ry2iwc2x",
-  "text": "Keep it private! We're adding more ways to connect…",
-  "createdAt": "2026-04-23T17:06:32.796Z",
-  "language": "en",
-  "replyCount": 123,
-  "repostCount": 255,
-  "likeCount": 1509,
-  "quoteCount": 47,
-  "tags": ["bluesky"],
-  "mentions": [],
-  "urls": [],
-  "mediaAttachments": [
-    { "type": "image", "url": "https://cdn.bsky.app/img/feed_fullsize/.../photo.jpg", "previewUrl": "https://cdn.bsky.app/img/feed_thumbnail/.../photo.jpg", "description": "Demonstration of …" }
-  ],
-  "author": {
-    "did": "did:plc:z72i7hdynmk6r22z27h6tvur",
-    "handle": "bsky.app",
-    "displayName": "Bluesky",
-    "avatar": "https://cdn.bsky.app/img/avatar/plain/.../jpeg"
-  },
-  "authorHandle": "bsky.app",
-  "scrapedAt": "2026-05-06T05:24:18Z"
+  "mode": "discovery",
+  "discoveryType": "trendingTopics",
+  "maxItems": 20
 }
 ```
 
 ## Use cases
 
-- **Social listening / brand monitoring** — Track mentions of your brand or product on Bluesky in real time.
-- **Trend research** — Pull `mode=feed` "What's Hot" for a daily snapshot of viral content.
-- **Influencer discovery** — Combine `actorSearch` + `minLikes` filters to surface high-impact accounts in any niche.
-- **Academic research** — Snapshot public conversations on the AT Protocol, with full media + facet provenance.
-- **Content discovery** — Surface high-engagement posts on a specific hashtag for content curation.
-- **Competitor tracking** — Use `fromUser` + keyword to monitor what specific competitors post about specific topics.
+- **Social listening and brand monitoring** - track keywords, hashtags, mentions, domains and authors with date and engagement filters.
+- **Influencer and KOL research** - combine account search with follower ranges, verification and profile counts.
+- **Audience and lead export** - export followers, follows, likers, reposters, list members and starter-pack members with handles, bios and counts.
+- **Conversation analysis** - capture a post, its ancestors and its full reply tree for sentiment or narrative research.
+- **Content and LLM datasets** - collect post text, languages, hashtags, links, media metadata and engagement counts.
+- **Community mapping** - explore lists, list feeds, starter packs, custom feeds and trending topics.
 
 ## FAQ
 
 **Do I need a Bluesky account or login?**
-No. Every mode reads from Bluesky's public, read-only side and serves anonymous requests the same way visiting bsky.app without signing in would.
+No. Every mode reads public data. No cookies, API keys or proxy configuration are needed.
 
-**How does Bluesky's search work?**
-Bluesky supports its standard search operators in the `searchQuery`:
-- `from:handle` — posts by a specific user
-- `since:YYYY-MM-DD` / `until:YYYY-MM-DD` — date range
-- `lang:en` — language filter
-- `#hashtag` — exact hashtag match
+**How far back can a keyword search go?**
+`searchSort=latest` walks backwards through time windows and can return far more than the 100-post relevance cap. `searchSort=top` is relevance-ranked and limited to about 100 posts per query. Search coverage is approximate: use a narrower query or a date range for more predictable volume.
 
-The actor also exposes `since`, `until`, `fromUser`, and `language` as dedicated input fields that get folded into the query.
+**Why do some posts have no text?**
+Bluesky allows media-only posts. The actor omits empty `text` and keeps the media metadata.
 
-**What's the difference between `mode=search` and `mode=actorSearch`?**
-- `mode=search` runs full-text search across **posts**.
-- `mode=actorSearch` runs typeahead-style search across **accounts** (handles + display names + bios).
+**Why are some fields missing from an account?**
+Basic account views do not always include a bio, banner, follower counts or a pinned post. The actor hydrates accounts in batches so those fields are present whenever Bluesky publishes them. Labels, verification and live status are conditional by nature.
 
-**What's a "feed" and which presets are supported?**
-A feed is a curated post stream produced by a feed-generator service. `feedPreset` offers ten built-in options including `whats-hot`, `discover`, `bsky-team`, `mutuals`, and `news` — pick one from the dropdown, or pass any feed's AT URI directly via `feedUri` to pull a custom feed instead.
+**How are reposts and quote posts handled?**
+A repost is one record with `isRepost=true`, `repostedBy` and the original post's content. A quote post is one record with the quoter's text and a nested `quotedPost` object containing the quoted post's text, author, URL, counts and media.
 
-**How are reposts handled?**
-A repost is emitted as one record with `isRepost=true` and `repostedBy=<handle>`, with the underlying post's text/media/counts preserved. Set `excludeReposts: true` to drop these.
+**What is the difference between `mode=search` and `mode=actorSearch`?**
+`search` finds posts. `actorSearch` finds accounts by handle, display name or bio.
 
-**How are quoted posts handled?**
-A quote-post is emitted as one record with the quoter's own text in `text` and the quoted post's details nested under `quotedPost: {uri, cid, text, authorHandle, authorDid}`.
+**What is a feed, and which presets are available?**
+A feed is a curated post stream produced by a feed generator. The built-in presets are What's Hot, Bluesky Team and Hot Classic. Paste any other generator's AT URI or bsky.app feed URL into `feedUri`. An explicit `feedUri` always takes precedence over `feedPreset`; legacy preset names are mapped to What's Hot.
+
+**Does `feedPreset` override my custom `feedUri`?**
+No. `feedUri`/`feedUris` win whenever they are supplied. `feedPreset` is only used when no feed URI is given, and `mode=feedGenerator` never adds an unrequested feed.
+
+**How does `verifiedOnly` work?**
+It keeps only accounts with a valid Bluesky verification and posts whose author is verified. Records with no verification object are excluded. Post modes hydrate author profiles so verification can be checked, which adds batched profile requests and may return fewer posts than an unfiltered search.
+
+**Why did I get fewer records than `maxItems`?**
+Filters can exclude many candidates, Bluesky can exhaust the source, and some search modes have source caps. The run status message reports the shortfall; it does not silently pretend the result is complete.
+
+**Can I export followers of a very large account?**
+Yes, up to `maxItems`. Bluesky returns followers in cursor-paged batches; the actor keeps walking short pages until the cap or the end of the list.
 
 **How current is the data?**
-Live — every run reads Bluesky at request time, so schedule the actor hourly or daily if you want ongoing refreshes.
-
-**Do I need a proxy?**
-No — Bluesky's public read side doesn't block regular cloud traffic, so no proxy input is offered or needed.
+Live. Every run reads Bluesky at request time, so schedule the actor hourly or daily for ongoing refreshes.
 
 **Is this affiliated with Bluesky?**
-No. This is an independent actor that reads Bluesky's public data; it is not endorsed by or affiliated with Bluesky Social PBC.
+No. This is an independent actor that reads public Bluesky data.
 
 ## Limitations
 
-- **`mode=search` returns up to ~100 posts per query.** Bluesky doesn't allow further pagination of search results without an authenticated session, so each query returns a single page of up to 100 posts. To get more, run multiple queries with different keywords, or narrow with `fromUser` and date filters.
-- `mode=profile`, `mode=actorSearch`, and `mode=feed` paginate normally and can return thousands of records.
-- Bluesky search is recency-weighted and does not index every post — very old or low-engagement posts may not surface in `searchPosts`.
-- Custom feeds depend on third-party feed-generator services; if a generator is offline, the feed returns empty.
-- The actor only reads public data — it cannot access private follower lists or DMs.
-- Bluesky's AT Protocol is still evolving; field names and embed types may shift between major releases.
+- **Relevance search is capped at about 100 posts per query.** Use `searchSort=latest` for deeper collection. Time-window search is approximate and de-duplicated by post URI.
+- **Search coverage is not exhaustive.** Bluesky's search index is recency-weighted and does not include every post.
+- **Some endpoints are not public.** A user's liked posts, known followers, trending-post lists and suggested-user lists are not available without authentication and are not included.
+- **Private data is out of scope.** Direct messages, private accounts, notifications and muted/blocked relationships are not available.
+- **Some fields are conditional.** Labels, verification, live status, pinned posts, banners and media are present only when the source has them.
+- **Deleted or blocked posts create gaps in threads.** The actor skips unavailable nodes and keeps the rest of the thread.
+- **Custom feeds depend on third-party generators.** If a generator is offline, its feed returns no posts.
+- **Follower lists can be very large.** Use `maxItems` to bound a run.
+- **`maxItems` is capped at 5,000 per run.** Larger requests are clamped by the input schema.
+- **Filtered account modes keep walking cursor pages until the cap or source exhaustion.** If Bluesky has no more matches, the run reports a shortfall in its status message.
+- **`verifiedOnly` can return far fewer records.** Most post authors do not publish a verification object, so verified-only post searches are intentionally narrow.
+- **`mode=feedGenerator` returns only the feeds you request.** It does not append a default What's Hot record.

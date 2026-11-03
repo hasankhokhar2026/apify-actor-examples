@@ -46,8 +46,8 @@ Empty values are omitted from a record instead of being written as `null`.
 | `mode` | select | `search` | `search` a destination or load hotel `details` |
 | `destination` | string | – | City, region or landmark; required in search mode |
 | `startUrls` | array | `[]` | Booking.com hotel URLs; required in details mode |
-| `checkIn` | string | tomorrow | Check-in date (`YYYY-MM-DD`) |
-| `checkOut` | string | +3 nights | Check-out date (`YYYY-MM-DD`) |
+| `checkIn` | string | - | Check-in date (`YYYY-MM-DD`); empty uses tomorrow |
+| `checkOut` | string | - | Check-out date (`YYYY-MM-DD`); empty uses a 3-night stay |
 | `adults` | integer | `2` | Adult guests (1–30) |
 | `rooms` | integer | `1` | Rooms needed (1–30) |
 | `propertyType` | select | `all` | All, hotels, apartments, hostels, guesthouses, villas or resorts |

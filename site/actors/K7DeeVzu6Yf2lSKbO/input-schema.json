@@ -1,79 +1,190 @@
 {
-  "description": "Extract photos from Google Maps places.",
+  "description": "Collect public Google Maps photos and videos for places or search results.",
   "properties": {
     "enrichDetails": {
       "default": true,
-      "description": "When enabled, reads each photo's metadata: contributor name/URL, observed upload date, original dimensions, aspect ratio, orientation, caption, and tags. Disable for thumbnail-level rows (photo/thumbnail URL, business context, category, video flag and duration). Every surface is walked in both modes, so disabling trims per-photo work instead of skipping the walk.",
-      "prefill": true,
-      "title": "Enrich Photo Details",
+      "description": "Read the contributor name and profile, exact upload date, caption, video download link and video length when Google publishes them.",
+      "prefill": false,
+      "title": "Include photo details",
       "type": "boolean"
+    },
+    "imageSize": {
+      "default": "original",
+      "description": "Resolution for the main photo URL. Thumbnail is about 200 px, medium about 800 px, large about 1600 px, original is the largest Google serves.",
+      "editor": "select",
+      "enum": [
+        "original",
+        "large",
+        "medium",
+        "thumbnail"
+      ],
+      "enumTitles": [
+        "Original (largest)",
+        "Large (~1600 px)",
+        "Medium (~800 px)",
+        "Thumbnail (~200 px)"
+      ],
+      "prefill": "original",
+      "title": "Image size",
+      "type": "string"
+    },
+    "language": {
+      "default": "en",
+      "description": "Language for place names, categories and dates.",
+      "editor": "select",
+      "enum": [
+        "en",
+        "es",
+        "fr",
+        "de",
+        "it",
+        "pt",
+        "pt-BR",
+        "ja",
+        "ko",
+        "zh-CN",
+        "zh-TW",
+        "ar",
+        "ru",
+        "hi",
+        "tr",
+        "nl",
+        "pl",
+        "id",
+        "th",
+        "vi",
+        "he",
+        "sv",
+        "uk"
+      ],
+      "enumTitles": [
+        "English",
+        "Spanish",
+        "French",
+        "German",
+        "Italian",
+        "Portuguese",
+        "Portuguese (Brazil)",
+        "Japanese",
+        "Korean",
+        "Chinese (Simplified)",
+        "Chinese (Traditional)",
+        "Arabic",
+        "Russian",
+        "Hindi",
+        "Turkish",
+        "Dutch",
+        "Polish",
+        "Indonesian",
+        "Thai",
+        "Vietnamese",
+        "Hebrew",
+        "Swedish",
+        "Ukrainian"
+      ],
+      "prefill": "en",
+      "title": "Language",
+      "type": "string"
     },
     "maxPhotos": {
       "default": 100,
-      "description": "Maximum number of photos to extract (1-100000). Google may expose fewer photos for a place or category.",
-      "maximum": 100000,
+      "description": "Maximum number of photos and videos to return for each place (1-10000). The actor stops earlier when Google's public sample ends.",
+      "maximum": 10000,
       "minimum": 1,
-      "prefill": 20,
-      "title": "Max Photos",
+      "prefill": 1,
+      "title": "Max media per place",
       "type": "integer"
+    },
+    "maxPlacesPerQuery": {
+      "default": 20,
+      "description": "Maximum number of places to take from each search query (1-100).",
+      "maximum": 100,
+      "minimum": 1,
+      "prefill": 3,
+      "title": "Max places per query",
+      "type": "integer"
+    },
+    "minHeight": {
+      "default": 0,
+      "description": "Drop media shorter than this. Set to 0 to keep every height.",
+      "maximum": 100000,
+      "minimum": 0,
+      "prefill": 0,
+      "title": "Minimum height (px)",
+      "type": "integer"
+    },
+    "minWidth": {
+      "default": 0,
+      "description": "Drop media narrower than this. Set to 0 to keep every width.",
+      "maximum": 100000,
+      "minimum": 0,
+      "prefill": 0,
+      "title": "Minimum width (px)",
+      "type": "integer"
+    },
+    "mode": {
+      "default": "place",
+      "description": "Choose whether to read photos for specific places or to search for places first.",
+      "editor": "select",
+      "enum": [
+        "place",
+        "search"
+      ],
+      "enumTitles": [
+        "Places (URLs or IDs)",
+        "Search for places"
+      ],
+      "prefill": "place",
+      "title": "Mode",
+      "type": "string"
     },
     "photoCategory": {
       "default": "all",
-      "description": "Filter photos by category tab.",
+      "description": "Choose which media to return. Owner and visitor filters read each photo's public contributor and only return media whose owner/visitor status is known.",
       "editor": "select",
       "enum": [
         "all",
+        "photos",
+        "videos",
         "by_owner",
         "by_visitors",
-        "food_and_drink",
-        "outdoor",
-        "indoor",
-        "menu",
-        "videos"
+        "street_view"
       ],
       "enumTitles": [
-        "All Photos",
-        "By Owner",
-        "By Visitors",
-        "Food & Drink",
-        "Outdoor",
-        "Indoor",
-        "Menu",
-        "Videos"
+        "All photos and videos",
+        "Photos only",
+        "Videos only",
+        "By the business owner",
+        "By visitors",
+        "Nearby Street View panoramas"
       ],
-      "title": "Photo Category",
+      "prefill": "all",
+      "title": "Media filter",
       "type": "string"
     },
-    "placeId": {
-      "description": "Canonical Google Place ID beginning with ChIJ. Use this instead of placeUrl when available.",
-      "editor": "textfield",
-      "example": "ChIJabtoT7hlwokRLECK0SW3_8I",
-      "title": "Google Place ID",
-      "type": "string"
+    "placeUrls": {
+      "default": [],
+      "description": "Google Maps place links, share links, Place IDs (ChIJ...), feature IDs (0x...:0x...), numeric CIDs, or business names. Used when mode is place.",
+      "editor": "stringList",
+      "prefill": [
+        "https://www.google.com/maps/place/Empire+State+Building/@40.7484405,-73.9878584,17z/data=!3m1!4b1!4m6!3m5!1s0x89c259a9b3117469:0xd134e199a405a163!8m2!3d40.7484405!4d-73.9878584!16zL20vMDJfMjg2"
+      ],
+      "title": "Place URLs or IDs",
+      "type": "array"
     },
-    "placeUrl": {
-      "description": "Google Maps URL of the place to scrape photos from.",
-      "editor": "textfield",
-      "prefill": "https://www.google.com/maps/place/Empire+State+Building/@40.7484405,-73.9878584,17z/data=!3m1!4b1!4m6!3m5!1s0x89c259a9b3117469:0xd134e199a405a163!8m2!3d40.7484405!4d-73.9878584!16zL20vMDJfMjg2",
-      "title": "Place URL",
-      "type": "string"
-    },
-    "proxyConfiguration": {
-      "description": "Optional proxy settings. Direct access is tried first; bounded recovery uses the hardcoded US RESIDENTIAL group unless direct-only mode is explicitly selected with useApifyProxy=false.",
-      "editor": "proxy",
-      "prefill": {
-        "apifyProxyCountry": "US",
-        "apifyProxyGroups": [
-          "RESIDENTIAL"
-        ],
-        "useApifyProxy": true
-      },
-      "title": "Proxy Configuration",
-      "type": "object"
+    "searchQueries": {
+      "default": [],
+      "description": "Places to find, for example \"coffee shops in New York\". Include a city or area for precise matches. Used when mode is search.",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Search queries",
+      "type": "array"
     }
   },
-  "required": [],
+  "required": [
+    "mode"
+  ],
   "schemaVersion": 1,
-  "title": "Google Maps Photos Scraper",
+  "title": "Google Maps Photo Gallery Extractor Input",
   "type": "object"
 }
