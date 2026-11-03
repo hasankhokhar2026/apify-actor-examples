@@ -11,6 +11,7 @@ from urllib.parse import quote, urljoin, urlsplit, unquote
 from xml.sax.saxutils import escape as xml_escape
 
 from markdown_it import MarkdownIt
+from markdown_it.token import Token
 
 from .http import SyncError
 from .isolation import check_brand, check_snapshot
@@ -46,8 +47,40 @@ def source_example(actor):
     return result, sorted(required - set(result))
 
 
+def source_relative(target):
+    """True for a README link or image that points into the Actor's own source tree
+    (`../README.md`, `docs/run.png`, `/src/main.py`, an empty target). Those resolve on
+    no public page: neither here nor on the Store, where the source is not published."""
+    target = (target or "").strip()
+    if target.startswith("#"):
+        return False
+    parts = urlsplit(target)
+    return not (parts.scheme or parts.netloc)
+
+
+def without_source_links(children):
+    """A source-relative link keeps its text and loses the link; a source-relative image
+    becomes its alt text. Links do not nest in CommonMark, so one flag pairs open/close."""
+    kept, dropping = [], False
+    for child in children:
+        if child.type == "link_open" and source_relative(child.attrGet("href")):
+            dropping = True
+            continue
+        if child.type == "link_close" and dropping:
+            dropping = False
+            continue
+        if child.type == "image" and source_relative(child.attrGet("src")):
+            alt = Token("text", "", 0)
+            alt.content = child.content
+            kept.append(alt)
+            continue
+        kept.append(child)
+    return kept
+
+
 def markdown(text):
-    """CommonMark with tables; raw HTML is escaped, body H1s become H2s."""
+    """CommonMark with tables; raw HTML is escaped, body H1s become H2s, and links into
+    the Actor's source tree become plain text (they would be dangling links here)."""
     parser = MarkdownIt("commonmark", {"html": False, "linkify": False}).enable("table").enable("strikethrough")
     tokens = parser.parse(text)
     used = {}
@@ -62,6 +95,7 @@ def markdown(text):
                 heading_id += "-" + str(used[heading_id])
             token.attrSet("id", heading_id)
         if token.children:
+            token.children = without_source_links(token.children)
             for child in token.children:
                 if child.type == "link_open" and (child.attrGet("href") or "").startswith("#"):
                     child.attrSet("href", "#readme-" + child.attrGet("href")[1:])
