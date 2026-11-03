@@ -1,0 +1,369 @@
+{
+  "description": "Search the Bar Standards Board's official Barristers' Register, browse past disciplinary findings or interim suspensions, or enrich barrister/finding URLs directly.",
+  "properties": {
+    "areasOfPractice": {
+      "default": [],
+      "description": "Restrict to barristers practising in ANY of these areas of law. Leave empty for all areas. Only applies to the Practising register view.",
+      "editor": "select",
+      "items": {
+        "enum": [
+          "admiralty",
+          "arbitrator-or-umpire-or-mediator",
+          "chancery-contentious",
+          "chancery-non-contentious",
+          "commercial-and-financial-services-1",
+          "competition",
+          "construction",
+          "crime",
+          "defamation",
+          "employment",
+          "european",
+          "family-children",
+          "family-other",
+          "immigration",
+          "insolvency",
+          "intellectual-property",
+          "international",
+          "landlord-tenant-non-residential",
+          "landlord-tenant-residential",
+          "licensing",
+          "other",
+          "other-common-law",
+          "personal-injury",
+          "planning",
+          "professional-discipline",
+          "professional-negligence",
+          "public-law-1",
+          "revenue"
+        ],
+        "enumTitles": [
+          "Admiralty",
+          "Arbitrator, umpire or mediator",
+          "Chancery (contentious)",
+          "Chancery (non-contentious)",
+          "Commercial and Financial Services",
+          "Competition",
+          "Construction",
+          "Crime",
+          "Defamation",
+          "Employment",
+          "European",
+          "Family - children",
+          "Family - other",
+          "Immigration",
+          "Insolvency",
+          "Intellectual property",
+          "International",
+          "Landlord & tenant (non-residential)",
+          "Landlord & tenant (residential)",
+          "Licensing",
+          "Other",
+          "Other common law",
+          "Personal injury",
+          "Planning",
+          "Professional discipline",
+          "Professional negligence",
+          "Public Law",
+          "Revenue"
+        ],
+        "type": "string"
+      },
+      "prefill": [],
+      "title": "Areas of practice filter (mode=search)",
+      "type": "array",
+      "uniqueItems": true
+    },
+    "authorisedToConductLitigation": {
+      "default": "any",
+      "description": "Filter by whether the barrister is authorised to conduct litigation.",
+      "editor": "select",
+      "enum": [
+        "any",
+        "yes",
+        "no"
+      ],
+      "enumTitles": [
+        "Any",
+        "Authorised to conduct litigation only",
+        "Not authorised to conduct litigation only"
+      ],
+      "prefill": "any",
+      "title": "Authorised to conduct litigation (mode=search)",
+      "type": "string"
+    },
+    "disciplinaryActionType": {
+      "default": [],
+      "description": "Restrict to findings with ANY of these sanction types. Leave empty for all types.",
+      "editor": "select",
+      "items": {
+        "enum": [
+          "disbarment",
+          "fine",
+          "other",
+          "suspension"
+        ],
+        "enumTitles": [
+          "Disbarment",
+          "Fine",
+          "Other",
+          "Suspension"
+        ],
+        "type": "string"
+      },
+      "prefill": [],
+      "title": "Disciplinary action type filter (mode=disciplinaryFindings)",
+      "type": "array",
+      "uniqueItems": true
+    },
+    "entityStatus": {
+      "default": [],
+      "description": "Restrict to BSB-regulated entities with these authorisation statuses. Leave empty for all statuses.",
+      "editor": "select",
+      "items": {
+        "enum": [
+          "authorised",
+          "licensed",
+          "previouslyAuthorised"
+        ],
+        "enumTitles": [
+          "Currently authorised (BSB Authorised Body)",
+          "Currently licensed (BSB Licensed Body / ABS)",
+          "Previously authorised (no longer regulated)"
+        ],
+        "type": "string"
+      },
+      "prefill": [],
+      "title": "Entity status filter (mode=entities)",
+      "type": "array",
+      "uniqueItems": true
+    },
+    "fetchFullProfile": {
+      "default": true,
+      "description": "For mode=search and mode=disciplinaryFindings: fetch each record's full detail page for additional fields (chambers address, areas of practice, rights of audience, breach/offence details, etc). Uses one extra HTTP request per record.",
+      "prefill": true,
+      "title": "Fetch full profile details",
+      "type": "boolean"
+    },
+    "findingDateFrom": {
+      "description": "Start of the custom decision-date range, format `YYYY-MM-DD` (e.g. `2020-01-01`).",
+      "editor": "textfield",
+      "title": "Finding date from (mode=disciplinaryFindings, findingDateRange=custom)",
+      "type": "string"
+    },
+    "findingDateRange": {
+      "default": "",
+      "description": "Restrict findings to a decision-date window. `custom` uses `findingDateFrom`/`findingDateTo`.",
+      "editor": "select",
+      "enum": [
+        "",
+        "pastMonth",
+        "pastYear",
+        "custom"
+      ],
+      "enumTitles": [
+        "Any time",
+        "Past month",
+        "Past year",
+        "Custom date range"
+      ],
+      "prefill": "",
+      "title": "Finding date range (mode=disciplinaryFindings)",
+      "type": "string"
+    },
+    "findingDateTo": {
+      "description": "End of the custom decision-date range, format `YYYY-MM-DD` (e.g. `2020-12-31`).",
+      "editor": "textfield",
+      "title": "Finding date to (mode=disciplinaryFindings, findingDateRange=custom)",
+      "type": "string"
+    },
+    "findingStatus": {
+      "default": [],
+      "description": "Restrict to disciplinary findings with these statuses. Leave empty for all statuses.",
+      "editor": "select",
+      "items": {
+        "enum": [
+          "final",
+          "openToAppeal",
+          "appealPending"
+        ],
+        "enumTitles": [
+          "Final",
+          "Open to Appeal",
+          "Appeal Pending"
+        ],
+        "type": "string"
+      },
+      "prefill": [],
+      "title": "Finding status filter (mode=disciplinaryFindings)",
+      "type": "array",
+      "uniqueItems": true
+    },
+    "findingType": {
+      "default": [],
+      "description": "Restrict to findings from ANY of these hearing types. Leave empty for all types.",
+      "editor": "select",
+      "items": {
+        "enum": [
+          "determination-by-consent",
+          "disciplinary-tribunal-3-person",
+          "disciplinary-tribunal-5-person",
+          "visitors-hearing-appeal"
+        ],
+        "enumTitles": [
+          "Determination By Consent",
+          "Disciplinary Tribunal (3 person)",
+          "Disciplinary Tribunal (5 Person)",
+          "Visitors Hearing (appeal)"
+        ],
+        "type": "string"
+      },
+      "prefill": [],
+      "title": "Hearing type filter (mode=disciplinaryFindings)",
+      "type": "array",
+      "uniqueItems": true
+    },
+    "maxItems": {
+      "default": 30,
+      "description": "Hard cap on the number of records emitted in this run.",
+      "maximum": 1000,
+      "minimum": 1,
+      "prefill": 30,
+      "title": "Max items",
+      "type": "integer"
+    },
+    "mode": {
+      "default": "search",
+      "description": "What to fetch from the Bar Standards Board register.",
+      "editor": "select",
+      "enum": [
+        "search",
+        "disciplinaryFindings",
+        "interimSuspensions",
+        "byUrl",
+        "entities"
+      ],
+      "enumTitles": [
+        "Search the Barristers' Register (by name / chambers)",
+        "Browse past disciplinary findings",
+        "Barristers with interim suspensions or conditions",
+        "Fetch specific barrister / finding URLs",
+        "BSB-regulated entities (chambers / legal businesses)"
+      ],
+      "prefill": "search",
+      "title": "Mode",
+      "type": "string"
+    },
+    "practisingStatus": {
+      "default": [],
+      "description": "Restrict to barristers with these practising statuses. Leave empty for all statuses. Only applies to the Practising register view.",
+      "editor": "select",
+      "items": {
+        "enum": [
+          "dual-capacity",
+          "employed",
+          "self-employed"
+        ],
+        "enumTitles": [
+          "Dual Capacity",
+          "Employed",
+          "Self Employed"
+        ],
+        "type": "string"
+      },
+      "prefill": [],
+      "title": "Practising status filter (mode=search)",
+      "type": "array",
+      "uniqueItems": true
+    },
+    "publicAccessRegistered": {
+      "default": "any",
+      "description": "Filter by whether the barrister is registered to accept work directly from the public (Public Access scheme).",
+      "editor": "select",
+      "enum": [
+        "any",
+        "yes",
+        "no"
+      ],
+      "enumTitles": [
+        "Any",
+        "Public Access registered only",
+        "Not Public Access registered only"
+      ],
+      "prefill": "any",
+      "title": "Public Access registered (mode=search)",
+      "type": "string"
+    },
+    "registerView": {
+      "default": "practising",
+      "description": "`Practising` = currently authorised practising barristers. `Sanctioned non-practising` = barristers disbarred or otherwise sanctioned who are no longer authorised to practise.",
+      "editor": "select",
+      "enum": [
+        "practising",
+        "sanctionedNonPractising"
+      ],
+      "enumTitles": [
+        "Practising barristers",
+        "Sanctioned non-practising barristers (disbarred etc.)"
+      ],
+      "prefill": "practising",
+      "title": "Register view (mode=search)",
+      "type": "string"
+    },
+    "searchField": {
+      "default": "name",
+      "description": "Whether `searchQuery` matches the barrister's name or their chambers/organisation.",
+      "editor": "select",
+      "enum": [
+        "name",
+        "organisation"
+      ],
+      "enumTitles": [
+        "Barrister name",
+        "Chambers / organisation name"
+      ],
+      "prefill": "name",
+      "title": "Search by (mode=search)",
+      "type": "string"
+    },
+    "searchQuery": {
+      "default": "",
+      "description": "For mode=search: barrister name or chambers/organisation name (required). For mode=disciplinaryFindings: optional barrister name filter — leave empty to browse all findings. For mode=entities: optional entity/trading name filter — leave empty to include all entities.",
+      "editor": "textfield",
+      "prefill": "smith",
+      "title": "Search query (mode=search, disciplinaryFindings, entities)",
+      "type": "string"
+    },
+    "sortOrder": {
+      "default": "recent",
+      "description": "How to order the disciplinary findings listing.",
+      "editor": "select",
+      "enum": [
+        "recent",
+        "relevance"
+      ],
+      "enumTitles": [
+        "Most recent first",
+        "Relevance"
+      ],
+      "prefill": "recent",
+      "title": "Sort order (mode=disciplinaryFindings)",
+      "type": "string"
+    },
+    "startUrls": {
+      "default": [],
+      "description": "Full barstandardsboard.org.uk barrister-register or disciplinary_finding URLs to fetch directly.",
+      "editor": "stringList",
+      "prefill": [
+        "https://www.barstandardsboard.org.uk/barristers-register/7C5DCA7B263721A6CB12F687568766BD.html"
+      ],
+      "title": "Barrister / finding URLs (mode=byUrl)",
+      "type": "array"
+    }
+  },
+  "required": [
+    "mode"
+  ],
+  "schemaVersion": 1,
+  "title": "UK Barrister Register Scraper Input",
+  "type": "object"
+}
