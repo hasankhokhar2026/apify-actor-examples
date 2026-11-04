@@ -1,0 +1,111 @@
+# Snapchat EU Ads Library Impressions & Targeting Extractor
+
+Under EU digital advertising transparency rules, Snapchat must publish every ad running in the bloc through a public Ads Library API. This actor reads that library directly — search by advertiser name, browse all publicly disclosed sponsored content, or search by creator — and returns each ad or sponsored post as a structured record with creative details, per-country impressions and targeting data, with no login required.
+
+## What this actor does
+
+- Searches ads by advertiser name, with optional country, date-range and status filters
+- Browses the full public library of all disclosed sponsored and branded content, with automatic pagination
+- Searches sponsored content by a specific creator's username or display name
+- Returns per-country impression breakdowns and raw targeting parameters for each ad
+- Empty fields are omitted from records — a field only appears when Snapchat's library actually publishes that data
+
+## Output per ad (mode = `adSearch`)
+
+- `adId`, `adName` — unique ad identifier and the advertiser's internal name for it
+- `adAccountName`, `payingAdvertiserName` — advertiser account and the paying entity as disclosed in the library
+- `profileName`, `profileLogoUrl` — public profile name and logo shown in the ad
+- `headline` — ad headline text
+- `adType`, `adRenderType`, `creativeType` — ad format, render type, and creative type (e.g. `VIDEO`, `IMAGE`)
+- `callToAction` — CTA button label (e.g. `SHOP_NOW`, `LEARN_MORE`)
+- `topSnapMediaType`, `topSnapCropPosition`
+- `mediaDownloadUrl` — direct CDN link to the ad creative
+- `webViewProperties` — web view destination properties
+- `languages` — languages the ad targets
+- `startDate`, `status`, `reviewStatus`, `rejectionReasons`
+- `impressionsTotal` — total impression count across all regions
+- `impressionsMap` — per-country impression breakdown (country code → count)
+- `targetingV2` — raw targeting parameters from the library
+- `stickers`, `dpaPreview` — sticker and dynamic-product-ad preview data, when present
+- `recordType` — always `ad`
+- `scrapedAt` — ISO-8601 UTC scrape timestamp
+
+## Output per sponsored content item (mode = `sponsoredContent` / `creatorSearch`)
+
+- `contentType` — content type (e.g. `SPOTLIGHT`)
+- `contentUrl` — direct URL to the sponsored content post
+- `thumbnailUrl` — content thumbnail
+- `creatorName`, `creatorUrl` — creator who posted the content and their profile URL
+- `sponsorName`, `sponsorUrl` — sponsoring brand's name and profile URL
+- `recordType` — always `sponsoredContent`
+- `scrapedAt` — ISO-8601 UTC scrape timestamp
+
+## Input
+
+| Field | Type | Default | Description |
+|---|---|---|---|
+| `mode` | string | `adSearch` | `adSearch`, `sponsoredContent`, or `creatorSearch` |
+| `payingAdvertiserName` | string | – | Advertiser name to search, used in `adSearch` mode |
+| `countries` | array | `[]` | EU country codes to filter by (`de`, `fr`, `it`, `es`, `pl`, `nl`, `be`, `se`, `at`, `pt`, `cz`, `ro`, `hu`, `dk`, `fi`, `sk`, `bg`, `hr`, `lt`, `lv`, `lu`, `si`, `ee`, `el`, `mt`, `ie`, `cy`); leave empty for all regions. `gb` (UK) is not supported by the library |
+| `startDate` | string | – | Filter ads active from this date (ISO 8601 or `YYYY-MM-DD`) |
+| `endDate` | string | – | Filter ads active up to this date (ISO 8601 or `YYYY-MM-DD`) |
+| `status` | string | `ALL` | `ACTIVE`, `PAUSED`, or `ALL` |
+| `creatorName` | string | – | Creator username or name to search, used in `creatorSearch` mode |
+| `maxResults` | integer | `200` | Maximum records to return (1–10,000); `adSearch` mode is capped at 10 per advertiser by the library itself |
+| `proxyConfiguration` | object | – | Optional Apify proxy configuration |
+
+### Example: active Nike ads in France and Germany
+
+```json
+{
+  "mode": "adSearch",
+  "payingAdvertiserName": "nike",
+  "countries": ["fr", "de"],
+  "status": "ACTIVE"
+}
+```
+
+### Example: browse all sponsored content
+
+```json
+{
+  "mode": "sponsoredContent",
+  "maxResults": 500
+}
+```
+
+### Example: sponsored content by a creator
+
+```json
+{
+  "mode": "creatorSearch",
+  "creatorName": "beauty",
+  "maxResults": 100
+}
+```
+
+## Use cases
+
+- **Competitive ad monitoring** — track a competitor's active Snapchat ad creatives, CTAs and per-country reach
+- **Regulatory/transparency research** — study ad spend patterns and targeting disclosed under EU ad transparency rules
+- **Creator partnership discovery** — find which brands are sponsoring a given creator's content
+- **Creative benchmarking** — compare call-to-action and creative-type choices across advertisers in a category
+- **Impressions analysis** — break down an advertiser's reach by country using `impressionsMap`
+
+## FAQ
+
+**Is this official Snapchat data?** Yes. It reads Snapchat's own public Ads Library, which the platform must publish under EU digital advertising transparency rules; no private pages are accessed.
+
+**Why does `adSearch` return only up to 10 ads?** The Ads Library itself caps advertiser search results at 10 and doesn't paginate that endpoint — this is a limit of the library, not of this actor. Use `sponsoredContent` or `creatorSearch` for larger volumes.
+
+**Which countries are supported?** EU member states only, listed in the `countries` input. The UK (`gb`) is not supported by Snapchat's library; any unsupported code you include is dropped with a warning rather than filtering results.
+
+**Can I download the actual ad creative?** Yes — `mediaDownloadUrl` on ad records is a direct CDN link to the video or image file.
+
+**What does `impressionsMap` contain?** An object mapping each EU country code to its impression count for that ad, e.g. `{"fr": 900000, "de": 600000}`.
+
+**What's the difference between `sponsoredContent` and `creatorSearch`?** `sponsoredContent` paginates through the entire public library of sponsored posts — useful for bulk collection. `creatorSearch` narrows that same library to posts matching one creator's name. Both return the same sponsored-content record shape.
+
+**How much data can `sponsoredContent` mode return?** Up to `maxResults` (max 10,000); the actor follows the library's own pagination automatically to collect that many.
+
+**Is this affiliated with Snapchat?** No. This is an independent, third-party actor that reads Snapchat's publicly mandated Ads Library; it is not operated by or affiliated with Snap Inc.

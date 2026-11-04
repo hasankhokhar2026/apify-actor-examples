@@ -1,0 +1,92 @@
+{
+  "description": "Scrape Snapchat Ads Library / Ad Gallery for advertiser ads, sponsored content, and creator-sponsored posts.",
+  "properties": {
+    "countries": {
+      "description": "EU country codes to filter ads by. Leave empty for all regions. Valid codes: de, fr, it, es, pl, nl, be, se, at, pt, cz, ro, hu, dk, fi, sk, bg, hr, lt, lv, lu, si, ee, el, mt, ie, cy. Note: UK (gb) is not supported by the API.",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Countries",
+      "type": "array"
+    },
+    "creatorName": {
+      "description": "For creatorSearch mode: creator username or name to search sponsored content",
+      "editor": "textfield",
+      "prefill": "beauty",
+      "title": "Creator Name",
+      "type": "string"
+    },
+    "endDate": {
+      "description": "Filter ads active up to this date (ISO 8601 or YYYY-MM-DD). Leave empty for no end-date filter.",
+      "editor": "textfield",
+      "title": "End Date",
+      "type": "string"
+    },
+    "maxResults": {
+      "default": 200,
+      "description": "Maximum number of records to return. Note: adSearch mode returns up to 10 results per advertiser (API limit).",
+      "maximum": 10000,
+      "minimum": 1,
+      "title": "Max Results",
+      "type": "integer"
+    },
+    "mode": {
+      "default": "adSearch",
+      "description": "Select the scraping mode: adSearch to search ads by advertiser, sponsoredContent to browse all sponsored content, or creatorSearch to search by creator.",
+      "editor": "select",
+      "enum": [
+        "adSearch",
+        "sponsoredContent",
+        "creatorSearch"
+      ],
+      "enumTitles": [
+        "Search Ads by Advertiser",
+        "Browse All Sponsored Content",
+        "Search Sponsored Content by Creator"
+      ],
+      "prefill": "adSearch",
+      "title": "Scraping Mode",
+      "type": "string"
+    },
+    "payingAdvertiserName": {
+      "description": "For adSearch mode: advertiser name to search. Examples: nike, coca-cola, amazon",
+      "editor": "textfield",
+      "prefill": "nike",
+      "title": "Advertiser Name",
+      "type": "string"
+    },
+    "proxyConfiguration": {
+      "description": "Optional proxy configuration for requests.",
+      "editor": "proxy",
+      "nullable": true,
+      "title": "Proxy Configuration",
+      "type": "object"
+    },
+    "startDate": {
+      "description": "Filter ads active from this date (ISO 8601 or YYYY-MM-DD). Leave empty for no start-date filter.",
+      "editor": "textfield",
+      "title": "Start Date",
+      "type": "string"
+    },
+    "status": {
+      "default": "ALL",
+      "description": "Filter ads by their current status.",
+      "editor": "select",
+      "enum": [
+        "ACTIVE",
+        "PAUSED",
+        "ALL"
+      ],
+      "enumTitles": [
+        "Active Only",
+        "Paused Only",
+        "All Statuses"
+      ],
+      "prefill": "ALL",
+      "title": "Ad Status",
+      "type": "string"
+    }
+  },
+  "schemaVersion": 1,
+  "title": "Snapchat Ads Gallery Scraper",
+  "type": "object"
+}
