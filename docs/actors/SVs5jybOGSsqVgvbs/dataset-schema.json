@@ -1,0 +1,119 @@
+{
+  "actorSpecification": 1,
+  "views": {
+    "segments": {
+      "display": {
+        "component": "table",
+        "properties": {
+          "authorUsername": {
+            "label": "Author"
+          },
+          "end": {
+            "format": "number",
+            "label": "End (s)"
+          },
+          "index": {
+            "format": "number",
+            "label": "Segment #"
+          },
+          "language": {
+            "label": "Language"
+          },
+          "start": {
+            "format": "number",
+            "label": "Start (s)"
+          },
+          "text": {
+            "label": "Text"
+          },
+          "transcriptionMethod": {
+            "label": "Method"
+          },
+          "tweetUrl": {
+            "format": "link",
+            "label": "Post URL"
+          }
+        }
+      },
+      "title": "Segments",
+      "transformation": {
+        "fields": [
+          "tweetUrl",
+          "authorUsername",
+          "transcriptionMethod",
+          "language",
+          "index",
+          "start",
+          "end",
+          "text"
+        ],
+        "unwind": [
+          "segments"
+        ]
+      }
+    },
+    "transcripts": {
+      "display": {
+        "component": "table",
+        "properties": {
+          "authorName": {
+            "label": "Author Name"
+          },
+          "authorUsername": {
+            "label": "Author"
+          },
+          "collectedAt": {
+            "format": "date",
+            "label": "Data collected at"
+          },
+          "fullTranscript": {
+            "label": "Full Transcript"
+          },
+          "language": {
+            "label": "Language"
+          },
+          "modelUsed": {
+            "label": "Whisper Model"
+          },
+          "publishedAt": {
+            "label": "Published"
+          },
+          "transcriptAvailable": {
+            "format": "boolean",
+            "label": "Available"
+          },
+          "transcriptionMethod": {
+            "label": "Method"
+          },
+          "tweetId": {
+            "label": "Post ID"
+          },
+          "tweetUrl": {
+            "format": "link",
+            "label": "Post URL"
+          },
+          "type": {
+            "label": "Row Type"
+          }
+        }
+      },
+      "title": "Transcripts",
+      "transformation": {
+        "fields": [
+          "type",
+          "tweetUrl",
+          "tweetId",
+          "authorUsername",
+          "authorName",
+          "language",
+          "transcriptionMethod",
+          "transcriptAvailable",
+          "fullTranscript",
+          "modelUsed",
+          "publishedAt",
+          "collectedAt"
+        ]
+      }
+    }
+  }
+}

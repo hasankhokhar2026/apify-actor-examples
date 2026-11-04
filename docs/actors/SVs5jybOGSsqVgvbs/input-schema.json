@@ -1,0 +1,151 @@
+{
+  "properties": {
+    "includeTweetMetadata": {
+      "default": true,
+      "description": "Attach the post's author, text and publish date to every transcript row.",
+      "prefill": true,
+      "title": "Include post details",
+      "type": "boolean"
+    },
+    "includeWordTimestamps": {
+      "default": false,
+      "description": "Add per-word start/end times to AI (Whisper) transcript segments. Automatically enabled when Segment granularity is Sentence or Word. Native captions only carry words when X included inline timing markers.",
+      "prefill": false,
+      "title": "Include word timestamps",
+      "type": "boolean"
+    },
+    "language": {
+      "description": "Optional language code for AI transcription, for example en, es, fr or ur. Improves accuracy when the spoken language is known. Leave empty to detect it automatically. Ignored when native captions are used.",
+      "editor": "textfield",
+      "example": "en",
+      "nullable": true,
+      "title": "Spoken language hint (AI only)",
+      "type": "string"
+    },
+    "outputFormat": {
+      "default": "segments",
+      "description": "Segments gives timestamped lines, full text gives one transcript string, and both gives you both in the same row.",
+      "editor": "select",
+      "enum": [
+        "segments",
+        "fullText",
+        "both",
+        "srt",
+        "vtt"
+      ],
+      "enumTitles": [
+        "Timestamped segments",
+        "Full transcript text",
+        "Both segments and full text",
+        "SRT subtitle file text (downloadable)",
+        "WebVTT subtitle file text (downloadable)"
+      ],
+      "prefill": "segments",
+      "title": "Output format",
+      "type": "string"
+    },
+    "postUrls": {
+      "description": "One or more Twitter/X post links that contain a video or GIF. Both x.com and twitter.com links are accepted. Profile links or usernames also work: the actor transcribes the profile's latest video post.",
+      "editor": "stringList",
+      "example": [
+        "https://x.com/NASA/status/2107095768821576019",
+        "https://twitter.com/elonmusk/status/1519480761749016577",
+        "NASA"
+      ],
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "prefill": [
+        "https://x.com/NASA/status/2107095768821576019"
+      ],
+      "title": "Post links",
+      "type": "array"
+    },
+    "profileUrls": {
+      "description": "Optional. Transcribe the latest video post from these profiles. Paste x.com profile links or bare usernames.",
+      "editor": "stringList",
+      "example": [
+        "NASA",
+        "https://x.com/elonmusk"
+      ],
+      "items": {
+        "type": "string"
+      },
+      "title": "Profile links or usernames",
+      "type": "array"
+    },
+    "proxyConfiguration": {
+      "description": "Optional. Use an Apify proxy if you plan large runs or see frequent rate limits.",
+      "editor": "proxy",
+      "sectionCaption": "Advanced",
+      "sectionDescription": "Optional settings for large or repeated runs.",
+      "title": "Proxy configuration",
+      "type": "object"
+    },
+    "segmentGranularity": {
+      "default": "segment",
+      "description": "Level of the timestamped segments. Segment keeps the raw caption/Whisper cues. Sentence groups real word timings into sentences (or splits cue text, sharing the cue's real time range). Word emits one entry per real word timestamp and is used only when X captions or Whisper provide per-word timings — it is never fabricated; when word timings are missing, the row says so and keeps the raw segments.",
+      "editor": "select",
+      "enum": [
+        "segment",
+        "sentence",
+        "word"
+      ],
+      "enumTitles": [
+        "Segment (raw caption/Whisper cues)",
+        "Sentence",
+        "Word (when per-word timings exist)"
+      ],
+      "prefill": "segment",
+      "title": "Segment granularity",
+      "type": "string"
+    },
+    "transcriptionMethod": {
+      "default": "auto",
+      "description": "Auto tries the video's built-in captions first and only falls back to Whisper AI when none exist. Captions-only skips videos without captions. AI-only always uses Whisper speech-to-text.",
+      "editor": "select",
+      "enum": [
+        "auto",
+        "captions",
+        "ai"
+      ],
+      "enumTitles": [
+        "Auto — built-in captions first, AI fallback",
+        "Built-in captions only — skip videos without captions",
+        "AI (Whisper) only — always transcribe the audio"
+      ],
+      "prefill": "auto",
+      "title": "How to transcribe",
+      "type": "string"
+    },
+    "whisperModel": {
+      "default": "base",
+      "description": "Whisper model used for AI transcription. Larger models are more accurate but slower and need more memory (medium and large-v2 need a run memory of at least 4096 MB and 8192 MB respectively). Base is a good balance for most videos. If the selected model does not fit the run memory, the actor automatically falls back to the next smaller model. Long videos are split into 10-minute chunks automatically, so there is no length limit.",
+      "editor": "select",
+      "enum": [
+        "tiny",
+        "base",
+        "small",
+        "medium",
+        "large-v2"
+      ],
+      "enumTitles": [
+        "Tiny — fastest, lowest accuracy",
+        "Base — fast and accurate (recommended)",
+        "Small — more accurate, slower",
+        "Medium — high accuracy, much slower",
+        "Large-v2 — best accuracy, slowest"
+      ],
+      "prefill": "base",
+      "title": "AI model size",
+      "type": "string"
+    }
+  },
+  "required": [
+    "postUrls"
+  ],
+  "schemaVersion": 1,
+  "title": "Twitter / X Video Transcript Scraper",
+  "type": "object"
+}
