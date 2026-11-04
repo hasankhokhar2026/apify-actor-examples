@@ -1,0 +1,56 @@
+{
+  "description": "Download video metadata and direct CDN URLs for Snapchat Spotlight posts.",
+  "properties": {
+    "includeAiMetadata": {
+      "default": true,
+      "description": "Include LLM-generated title, description, keywords, context cards",
+      "title": "Include AI Metadata",
+      "type": "boolean"
+    },
+    "includeComments": {
+      "default": false,
+      "description": "Decode and include comment threads from the page",
+      "title": "Include Comment Threads",
+      "type": "boolean"
+    },
+    "includeRelatedStories": {
+      "default": false,
+      "description": "Include up to 24 related Spotlight stories from the feed",
+      "title": "Include Related Stories",
+      "type": "boolean"
+    },
+    "includeTranscript": {
+      "default": true,
+      "description": "Parse WebVTT transcript if available (adds transcript[] array)",
+      "title": "Include Video Transcript",
+      "type": "boolean"
+    },
+    "proxyConfiguration": {
+      "description": "Optional proxy settings. Snapchat public Spotlight pages work without a proxy in most regions.",
+      "editor": "proxy",
+      "nullable": true,
+      "sectionCaption": "Proxy",
+      "title": "Proxy Configuration",
+      "type": "object"
+    },
+    "spotlightUrls": {
+      "description": "One or more Snapchat Spotlight URLs to download. Supports standard URLs (snapchat.com/spotlight/...), profile URLs (snapchat.com/@user/spotlight/...), and short links (t.snapchat.com/...).",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "prefill": [
+        "https://www.snapchat.com/spotlight/W7_EDlXWTBiXAEEniNoMPwAAYaXFxdmVobmp6AZ499vl-AZ499rsXAAAAAQ"
+      ],
+      "title": "Spotlight URLs",
+      "type": "array"
+    }
+  },
+  "required": [
+    "spotlightUrls"
+  ],
+  "schemaVersion": 1,
+  "title": "Snapchat Spotlight Video Downloader",
+  "type": "object"
+}

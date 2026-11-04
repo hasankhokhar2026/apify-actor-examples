@@ -1,0 +1,187 @@
+{
+  "actorOutputSchemaVersion": 1,
+  "description": "One record per Snapchat Spotlight link, with its direct video URL, caption, creator info, engagement counts and optional AI metadata, transcript and comments.",
+  "fields": {
+    "attachmentUrl": {
+      "description": "Attachment URL linked from the snap (sparse)",
+      "type": "string"
+    },
+    "audioTranscriptionObjectUrl": {
+      "description": "URL to audio transcription object (when available)",
+      "type": "string"
+    },
+    "caption": {
+      "description": "Video caption / description text",
+      "type": "string"
+    },
+    "commentCount": {
+      "description": "Total comment count (from engagementStats)",
+      "type": "integer"
+    },
+    "contextCards": {
+      "description": "Context card objects linked to the snap (when include_ai_metadata=true)",
+      "type": "array"
+    },
+    "creatorDisplayName": {
+      "description": "Creator display name",
+      "type": "string"
+    },
+    "creatorFollowerCount": {
+      "description": "Creator follower count",
+      "type": "integer"
+    },
+    "creatorUsername": {
+      "description": "Creator Snapchat username",
+      "type": "string"
+    },
+    "detectedLanguages": {
+      "description": "Detected language scores [{languageCode, score}] from cuSignals (when include_ai_metadata=true)",
+      "type": "array"
+    },
+    "durationSeconds": {
+      "description": "Video duration in seconds",
+      "type": "number"
+    },
+    "error": {
+      "description": "Error message if scraping failed for this URL",
+      "type": "string"
+    },
+    "hasAttachment": {
+      "description": "Whether this snap has an attachment",
+      "type": "boolean"
+    },
+    "hashtags": {
+      "description": "Hashtags associated with the snap (when include_ai_metadata=true)",
+      "type": "array"
+    },
+    "height": {
+      "description": "Video height in pixels",
+      "type": "integer"
+    },
+    "inputUrl": {
+      "description": "Original input URL supplied by the user",
+      "type": "string"
+    },
+    "intervalStartTimeMs": {
+      "description": "Snap interval start time in milliseconds (when present)",
+      "type": "integer"
+    },
+    "isAttributed": {
+      "description": "Whether the snap is attributed to a creator",
+      "type": "boolean"
+    },
+    "isSponsored": {
+      "description": "Whether this snap is sponsored content",
+      "type": "boolean"
+    },
+    "lat": {
+      "description": "Snap latitude (when geotagged)",
+      "type": "number"
+    },
+    "likeCount": {
+      "description": "Like/boost count (from engagementStats)",
+      "type": "integer"
+    },
+    "llmDescription": {
+      "description": "AI-generated description (when include_ai_metadata=true)",
+      "type": "string"
+    },
+    "llmKeywords": {
+      "description": "AI-generated keywords (when include_ai_metadata=true)",
+      "type": "array"
+    },
+    "llmTitle": {
+      "description": "AI-generated title (when include_ai_metadata=true)",
+      "type": "string"
+    },
+    "lng": {
+      "description": "Snap longitude (when geotagged)",
+      "type": "number"
+    },
+    "mediaPreviewUrl": {
+      "description": "Media preview image URL",
+      "type": "string"
+    },
+    "name": {
+      "description": "Video name from metadata (when available)",
+      "type": "string"
+    },
+    "overlayUrl": {
+      "description": "Overlay image URL (when present)",
+      "type": "string"
+    },
+    "profileUrl": {
+      "description": "Creator Snapchat profile URL",
+      "type": "string"
+    },
+    "recommendCount": {
+      "description": "Recommend count (from engagementStats)",
+      "type": "integer"
+    },
+    "relatedStories": {
+      "description": "Related spotlight story summaries with thumbnailUrl, storyPageUrl, durationSeconds, creatorUsername",
+      "type": "array"
+    },
+    "scrapedAt": {
+      "description": "ISO 8601 UTC timestamp when this record was scraped",
+      "type": "string"
+    },
+    "shareCount": {
+      "description": "Total share count",
+      "type": "integer"
+    },
+    "snapId": {
+      "description": "Spotlight snap ID",
+      "type": "string"
+    },
+    "snapSubtitles": {
+      "description": "Subtitle/caption data embedded in the snap (when present)",
+      "type": "array"
+    },
+    "snapTitle": {
+      "description": "Snap title (when present)",
+      "type": "string"
+    },
+    "textMetadataKeywords": {
+      "description": "Text metadata keywords (when include_ai_metadata=true)",
+      "type": "array"
+    },
+    "thumbnailUrl": {
+      "description": "Thumbnail image URL",
+      "type": "string"
+    },
+    "transcript": {
+      "description": "Parsed WebVTT transcript segments [{startTime, endTime, text}] (when includeTranscript=true)",
+      "type": "array"
+    },
+    "transcriptUrl": {
+      "description": "URL to original WebVTT transcript file (when transcript is available)",
+      "type": "string"
+    },
+    "uploadedAt": {
+      "description": "Upload timestamp in ISO 8601 UTC",
+      "type": "string"
+    },
+    "videoUrl": {
+      "description": "Direct CDN video URL (may expire)",
+      "type": "string"
+    },
+    "viewCount": {
+      "description": "Total view count (from engagementStats or videoMetadata)",
+      "type": "integer"
+    },
+    "width": {
+      "description": "Video width in pixels",
+      "type": "integer"
+    }
+  },
+  "properties": {
+    "results": {
+      "description": "Dataset containing scraped Spotlight video records",
+      "template": "{{links.apiDefaultDatasetUrl}}/items",
+      "type": "string"
+    }
+  },
+  "title": "Snapchat Spotlight Video Link & Caption Downloader Output",
+  "type": "object"
+}

@@ -1,0 +1,198 @@
+# Snapchat Spotlight Video Link & Caption Downloader
+
+A Snapchat Spotlight link on its own doesn't give you a file you can save or embed. This actor turns one or more of those links into a direct video URL alongside thumbnail, caption, creator info, and engagement counts — with AI-generated descriptions, a WebVTT transcript, comment threads, and related videos available on request. No login or cookies required.
+
+## What this actor does
+
+- Resolves a Spotlight link (including short `t.snapchat.com` links) into a direct, downloadable video URL
+- Captures caption, creator info, and full engagement stats — shares, likes, comments, recommendations
+- Adds AI-generated title, description, keywords and detected languages, on request
+- Parses the video's WebVTT transcript into timestamped segments, on request
+- Can also pull comment threads and up to 24 related Spotlight stories from the same feed
+- Leaves a field out of the record when Snapchat didn't provide a value for it, rather than sending it empty
+
+## Input
+
+| Field | Type | Required | Default | Description |
+|-------|------|----------|---------|-------------|
+| `spotlightUrls` | string[] | Yes | — | One or more Snapchat Spotlight URLs to process |
+| `includeTranscript` | boolean | No | `true` | Parse WebVTT transcript into timestamped segments |
+| `includeAiMetadata` | boolean | No | `true` | Include LLM title, description, keywords, context cards, detected languages |
+| `includeComments` | boolean | No | `false` | Decode comment threads from the page |
+| `includeRelatedStories` | boolean | No | `false` | Include up to 24 related Spotlight stories |
+| `proxyConfiguration` | object | No | — | Optional proxy settings |
+
+### Supported URL Formats
+
+```
+https://www.snapchat.com/spotlight/{id}
+https://www.snapchat.com/@{username}/spotlight/{id}
+https://t.snapchat.com/{id}
+```
+
+Short links (`t.snapchat.com`) are resolved automatically before scraping.
+
+## Output Fields
+
+### Core Fields (always present on success)
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `snapId` | string | Unique Spotlight snap identifier |
+| `inputUrl` | string | The URL you provided as input |
+| `videoUrl` | string | Direct CDN video URL (expires — download promptly) |
+| `thumbnailUrl` | string | Thumbnail image URL |
+| `caption` | string | Caption or description text on the snap |
+| `creatorUsername` | string | Creator's Snapchat username |
+| `profileUrl` | string | Full profile URL (`snapchat.com/@username`) |
+| `creatorDisplayName` | string | Creator's display name |
+| `durationSeconds` | number | Video duration in seconds |
+| `uploadedAt` | string | ISO 8601 upload timestamp |
+| `scrapedAt` | string | ISO 8601 timestamp of when this record was collected |
+| `shareCount` | integer | Number of times the video was shared |
+| `commentCount` | integer | Number of comments |
+| `likeCount` | integer | Number of likes (boosts) |
+| `recommendCount` | integer | Number of recommendations |
+| `mediaPreviewUrl` | string | Preview/thumbnail variant URL |
+| `width` | integer | Video width in pixels (video snaps only) |
+| `height` | integer | Video height in pixels (video snaps only) |
+| `restricted` | boolean | Whether the content is age-restricted |
+| `isAttributed` | boolean | Whether the snap is attributed to Snapchat's own feed |
+
+> `viewCount` is omitted for very recent videos — Snapchat returns -1 as a sentinel value for posts still accumulating views.
+
+### AI Metadata (when `includeAiMetadata: true`)
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `llmTitle` | string | LLM-generated title for the video |
+| `llmDescription` | string | LLM-generated description of the video content |
+| `llmKeywords` | string[] | LLM-generated keyword tags |
+| `textMetadataKeywords` | string[] | Text-based keyword tags extracted from metadata |
+| `hashtags` | string[] | Hashtags associated with the snap |
+| `contextCards` | object[] | Context cards shown on the snap (sound info, creator card, etc.) |
+| `detectedLanguages` | object[] | Detected languages with confidence scores (`languageCode`, `score`) |
+
+### Transcript (when `includeTranscript: true`)
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `transcript` | object[] | Array of `{startTime, endTime, text}` WebVTT segments |
+| `transcriptUrl` | string | URL of the raw WebVTT transcript file |
+
+### Comments (when `includeComments: true`)
+
+Each item in `comments[]`:
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `commentId` | string | Unique comment identifier |
+| `snapId` | string | ID of the snap this comment belongs to |
+| `replyText` | string | Comment text |
+| `reactionCounts` | object[] | Array of `{reactTypeId, count}` reaction tallies |
+| `commenterDisplayName` | string | Commenter's display name |
+| `approvalState` | any | Moderation approval state |
+| `postedAt` | string | ISO 8601 timestamp when the comment was posted |
+
+### Related Stories (when `includeRelatedStories: true`)
+
+Each item in `relatedStories[]`:
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `thumbnailUrl` | string | Thumbnail URL of the related story |
+| `storyPageUrl` | string | Full Spotlight URL of the related story |
+| `durationSeconds` | number | Duration of the related story in seconds |
+| `creatorUsername` | string | Creator's username |
+
+### Error Records
+
+If a URL fails, an error record is saved instead of a video record:
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `inputUrl` | string | The URL that failed |
+| `snapId` | string | Snap ID if it could be extracted |
+| `error` | string | Human-readable error message |
+| `scrapedAt` | string | ISO 8601 timestamp |
+
+## Example Input
+
+```json
+{
+  "spotlightUrls": [
+    "https://www.snapchat.com/spotlight/W7_EDlXWTBiXAEEniNoMPwAAYZmRwYmVqcm5wAZ8Kxg_vAZ8Kxgn9AAAAAQ",
+    "https://www.snapchat.com/spotlight/W7_EDlXWTBiXAEEniNoMPwAAYZG5iaHJuY2phAZ8KF10GAZ8KETc1AAAAAQ"
+  ],
+  "includeTranscript": true,
+  "includeAiMetadata": true,
+  "includeComments": false,
+  "includeRelatedStories": false
+}
+```
+
+## Example Output
+
+```json
+{
+  "snapId": "W7_EDlXWTBiXAEEniNoMPwAAYZG5iaHJuY2phAZ8KF10GAZ8KETc1AAAAAQ",
+  "inputUrl": "https://www.snapchat.com/spotlight/W7_EDlXWTBiXAEEniNoMPwAAYZG5iaHJuY2phAZ8KF10GAZ8KETc1AAAAAQ",
+  "videoUrl": "https://bolt-gcdn.sc-cdn.net/v/udlVbjK0wdjHbPx1FRph0.27.IRZXSOY?...",
+  "thumbnailUrl": "https://bolt-gcdn.sc-cdn.net/v/udlVbjK0wdjHbPx1FRph0.256.IRZXSOY?...",
+  "caption": "Another Spotlight Snap brought to you by Snapchat",
+  "creatorUsername": "waqarzaka",
+  "profileUrl": "https://www.snapchat.com/@waqarzaka",
+  "creatorDisplayName": "Waqar Zaka",
+  "durationSeconds": 130.23,
+  "width": 540,
+  "height": 960,
+  "shareCount": 0,
+  "likeCount": 3,
+  "commentCount": 0,
+  "recommendCount": 0,
+  "uploadedAt": "2026-06-27T17:12:08.245000+00:00",
+  "scrapedAt": "2026-06-28T06:43:34.588497+00:00",
+  "isAttributed": true,
+  "textMetadataKeywords": ["bitcoin", "hacker", "crypto", "cryptocurrency", "blockchain"],
+  "contextCards": [
+    {
+      "contextType": 3,
+      "title": "Waqar Zaka",
+      "subtitle": "waqarzaka",
+      "url": "https://www.snapchat.com/@waqarzaka",
+      "thumbnailType": 0,
+      "hasBadge": true,
+      "id": "36d0088b-39d5-4765-a237-bb147a292272"
+    }
+  ],
+  "detectedLanguages": [
+    { "languageCode": "hi", "score": 0.910262405872345 }
+  ]
+}
+```
+
+## FAQ
+
+**Does this require a Snapchat account or cookies?**
+No. All data is extracted from public Snapchat Spotlight pages. No login, no cookies, and no proxy are required in most regions.
+
+**Do video URLs expire?**
+Yes. Snapchat CDN URLs include signed tokens that expire after a short period. Download the video as soon as the actor completes — do not store the URL and try to fetch it later.
+
+**Why is `viewCount` missing from some records?**
+Snapchat returns -1 as a sentinel for videos that are too new to have an accurate view count. The actor omits this field rather than storing a misleading -1.
+
+**Are `width` and `height` always present?**
+Only for video snaps. Some Spotlight posts are images or have incomplete metadata, in which case these fields are absent.
+
+**Can I scrape a large batch of URLs at once?**
+Yes. Provide all URLs in the `spotlightUrls` array. The actor processes them sequentially with a short delay between requests to stay respectful of rate limits.
+
+**What is the `isAttributed` flag?**
+When `true`, Snapchat itself attributed the snap to its own Discover/Spotlight feed rather than to a specific creator account.
+
+**Can I get comments from all videos?**
+Set `includeComments: true`. Comments are decoded from data embedded in the page, so availability depends on what Snapchat includes per snap.
+
+**Is this affiliated with Snapchat?**
+No. This is an independent data extraction tool and has no connection to Snap Inc.
