@@ -1,0 +1,126 @@
+# Yandex Market Price & Seller Offer Comparison Scraper
+
+Pull product listings, pricing, and reviews from [Yandex Market](https://market.yandex.ru), the marketplace where most listings are fulfilled by multiple independent sellers competing on the same product page. Search by keyword, browse a category, compare every seller's price for one product, or collect reviews.
+
+## What this actor does
+
+- Searches Yandex Market by one or more keywords and returns matching product cards
+- Browses every product listed under a category URL
+- Fetches a single product's full detail page together with every seller's competing offer for that product
+- Collects reviews for a product or for a seller's storefront
+- Empty fields are omitted from records
+
+## Output per product
+
+- `recordType` — always `product`
+- `productId` — Yandex Market's internal product ID
+- `name`
+- `url` — canonical product page URL
+- `categoryPath` — array of category names from top-level down to the product's category (product-detail fetches only)
+- `rating`, `reviewCount`
+- `price`, `originalPrice`, `discount` — current price, pre-discount price, and discount percentage, in `currency` (`RUB`)
+- `sellerName` — the primary/lead seller shown on a search or category card
+- `deliveryInfo` — delivery estimate text as shown on a search or category card
+- `availability` — `in_stock` or `out_of_stock`
+- `specs` — key/value map of technical specifications (product-detail fetches only, when the page lists any)
+- `images` — array of product image URLs
+- `offers` — populated only in product-detail fetches; array of every competing seller's offer for this product (see below)
+- `scrapedAt`
+
+## Output per seller offer (nested in `offers`, product-detail fetches only)
+
+- `sellerName`, `sellerUrl` — when shown on the offer
+- `price`, `originalPrice` — when the offer shows a pre-discount price
+
+## Output per review
+
+- `recordType` — always `review`
+- `reviewType` — `product` or `seller`
+- `productId`, `productName`, `productUrl` — present on product reviews
+- `sellerId`, `sellerName`, `sellerUrl` — present on seller reviews
+- `author`, `rating`, `title`, `text` — when the review shows them
+- `date`
+- `scrapedAt`
+
+## Input
+
+| Field | Type | Default | Description |
+|---|---|---|---|
+| `mode` | string | `searchProducts` | `searchProducts` / `browseCategory` / `getProductDetails` / `getReviews` |
+| `searchQueries` | array | – | Keywords to search, e.g. `["iPhone 15", "Samsung Galaxy"]` (mode=searchProducts) |
+| `categoryUrls` | array | – | `market.yandex.ru/catalog` URLs to browse (mode=browseCategory) |
+| `productUrls` | array | – | Product URLs for detail fetch or product reviews (mode=getProductDetails, getReviews) |
+| `sellerUrls` | array | – | Seller storefront URLs for seller reviews (mode=getReviews) |
+| `maxItems` | integer | `50` | Records per query/URL (1–1000) |
+| `sortOrder` | string | `relevance` | `relevance` / `priceAsc` / `priceDesc` / `rating` / `popularity` |
+| `minPrice` | integer | – | Minimum price in RUB |
+| `maxPrice` | integer | – | Maximum price in RUB |
+| `minRating` | string | `any` | `any` / `3` / `3.5` / `4` / `4.5` |
+| `reviewsSortOrder` | string | `newest` | `newest` / `highestRating` / `lowestRating` / `mostHelpful` |
+| `proxyConfiguration` | object | RESIDENTIAL | Yandex Market blocks plain datacenter traffic, so a residential proxy is set by default |
+
+### Example: keyword search with price range
+
+```json
+{
+  "mode": "searchProducts",
+  "searchQueries": ["iPhone 15", "Samsung Galaxy S24"],
+  "minPrice": 50000,
+  "maxPrice": 100000,
+  "sortOrder": "priceAsc"
+}
+```
+
+### Example: browse a category
+
+```json
+{
+  "mode": "browseCategory",
+  "categoryUrls": ["https://market.yandex.ru/catalog--smartfony/54726/list"],
+  "maxItems": 100
+}
+```
+
+### Example: compare every seller's offer for one product
+
+```json
+{
+  "mode": "getProductDetails",
+  "productUrls": ["https://market.yandex.ru/product--apple-iphone-15/1926025774"]
+}
+```
+
+### Example: newest reviews for a product
+
+```json
+{
+  "mode": "getReviews",
+  "productUrls": ["https://market.yandex.ru/product--apple-iphone-15/1926025774"],
+  "reviewsSortOrder": "newest",
+  "maxItems": 100
+}
+```
+
+## Use cases
+
+- **Price monitoring** — track how a product's price moves across every seller offering it
+- **Seller benchmarking** — compare seller ratings, delivery times, and pricing side by side
+- **Catalog research** — pull a whole category's listings with specs and current prices
+- **Sentiment tracking** — gather product reviews with pros/cons to spot recurring complaints
+- **Market-entry analysis** — scope typical price ranges and seller competition before listing a product
+
+## FAQ
+
+**Does `searchQueries` accept Russian text?**  Yes — keywords can be in Russian or English; Yandex Market returns whatever matches on its own site.
+
+**How do I see every seller's price for one product, not just the lead offer?**  Use `mode: "getProductDetails"` with the product URL — the `offers` array on that record lists every competing seller's offer.
+
+**Why does a `searchProducts` record have an empty `offers` field?**  Search and category listing cards only show the lead seller; the full offer comparison is only fetched in `getProductDetails` mode, to avoid an extra request per card during a listing scan.
+
+**Can I get reviews for a seller instead of a product?**  Yes — pass a storefront URL in `sellerUrls` with `mode: "getReviews"`; those records carry `reviewType: "seller"` and seller identifying fields instead of product ones.
+
+**Do I need to configure the proxy myself?**  No — `proxyConfiguration` defaults to a residential proxy because Yandex Market blocks plain datacenter traffic; leave the default unless you have your own proxy group to use instead.
+
+**What happens if a run finds nothing?**  If no product, listing, or review records could be extracted for the whole run, the dataset gets a single informational record (`type: "yandex_market_scraper_error"`) naming the mode and suggesting a residential proxy, instead of leaving the dataset silently empty.
+
+**Is this affiliated with Yandex?**  No. This actor reads Yandex Market's publicly accessible pages and is not affiliated with or endorsed by Yandex.

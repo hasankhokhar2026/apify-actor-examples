@@ -1,0 +1,172 @@
+{
+  "description": "Search products, browse categories, get product details with all seller offers, or scrape reviews from Yandex Market.",
+  "properties": {
+    "categoryUrls": {
+      "description": "Yandex Market category page URLs (mode=browseCategory). Must be market.yandex.ru/catalog URLs.",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "prefill": [
+        "https://market.yandex.ru/catalog--smartfony/54726"
+      ],
+      "title": "Category URLs",
+      "type": "array"
+    },
+    "maxItems": {
+      "default": 50,
+      "description": "Maximum number of records to return per query/URL.",
+      "maximum": 1000,
+      "minimum": 1,
+      "prefill": 5,
+      "title": "Max Items",
+      "type": "integer"
+    },
+    "maxPrice": {
+      "description": "Maximum price filter in Russian rubles. Only applies in searchProducts and browseCategory modes.",
+      "minimum": 0,
+      "title": "Max Price (RUB)",
+      "type": "integer"
+    },
+    "minPrice": {
+      "description": "Minimum price filter in Russian rubles. Only applies in searchProducts and browseCategory modes.",
+      "minimum": 0,
+      "title": "Min Price (RUB)",
+      "type": "integer"
+    },
+    "minRating": {
+      "default": "any",
+      "description": "Filter out products below this rating. Only applies in searchProducts and browseCategory modes.",
+      "editor": "select",
+      "enum": [
+        "any",
+        "3",
+        "3.5",
+        "4",
+        "4.5"
+      ],
+      "enumTitles": [
+        "Any rating",
+        "3+ stars",
+        "3.5+ stars",
+        "4+ stars",
+        "4.5+ stars"
+      ],
+      "title": "Min Rating (search & category only)",
+      "type": "string"
+    },
+    "mode": {
+      "default": "searchProducts",
+      "description": "What to scrape. searchProducts: find products by keyword. browseCategory: scrape a product category. getProductDetails: full details + all seller offers for specific product URLs. getReviews: scrape product or seller reviews.",
+      "editor": "select",
+      "enum": [
+        "searchProducts",
+        "browseCategory",
+        "getProductDetails",
+        "getReviews"
+      ],
+      "enumTitles": [
+        "Search products by keyword",
+        "Browse a product category",
+        "Get product details + all seller offers",
+        "Get product or seller reviews"
+      ],
+      "prefill": "searchProducts",
+      "title": "Mode",
+      "type": "string"
+    },
+    "productUrls": {
+      "description": "Yandex Market product page URLs (mode=getProductDetails or getReviews). Format: https://market.yandex.ru/product--{slug}/{id}",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "prefill": [
+        "https://market.yandex.ru/product--smartfon-apple-iphone-7/14206636"
+      ],
+      "title": "Product URLs",
+      "type": "array"
+    },
+    "proxyConfiguration": {
+      "description": "Required. Yandex Market only serves Russian IPs. Use Apify Residential proxy with country=RU for reliable access.",
+      "editor": "proxy",
+      "prefill": {
+        "apifyProxyCountry": "RU",
+        "apifyProxyGroups": [
+          "RESIDENTIAL"
+        ],
+        "useApifyProxy": true
+      },
+      "title": "Proxy Configuration",
+      "type": "object"
+    },
+    "reviewsSortOrder": {
+      "default": "newest",
+      "description": "How to sort reviews. Only applies in getReviews mode.",
+      "editor": "select",
+      "enum": [
+        "newest",
+        "highestRating",
+        "lowestRating",
+        "mostHelpful"
+      ],
+      "enumTitles": [
+        "Newest first",
+        "Highest rated first",
+        "Lowest rated first",
+        "Most helpful first"
+      ],
+      "title": "Reviews Sort Order (getReviews only)",
+      "type": "string"
+    },
+    "searchQueries": {
+      "description": "One or more search queries (mode=searchProducts). Examples: 'iPhone 15', 'ноутбук Samsung'.",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "prefill": [
+        "iPhone 15"
+      ],
+      "title": "Search Queries",
+      "type": "array"
+    },
+    "sellerUrls": {
+      "description": "Yandex Market seller page URLs (mode=getReviews only). Format: https://market.yandex.ru/shop--{slug}/{id}",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "prefill": [],
+      "title": "Seller URLs (getReviews only)",
+      "type": "array"
+    },
+    "sortOrder": {
+      "default": "relevance",
+      "description": "How to sort search results. Only applies in searchProducts and browseCategory modes.",
+      "editor": "select",
+      "enum": [
+        "relevance",
+        "priceAsc",
+        "priceDesc",
+        "rating",
+        "popularity"
+      ],
+      "enumTitles": [
+        "Relevance (default)",
+        "Price: low to high",
+        "Price: high to low",
+        "Highest rated",
+        "Most popular"
+      ],
+      "title": "Sort Order (search & category only)",
+      "type": "string"
+    }
+  },
+  "required": [
+    "mode"
+  ],
+  "schemaVersion": 1,
+  "title": "Yandex Market Scraper Input",
+  "type": "object"
+}
