@@ -4,143 +4,220 @@
 
 # Username Search & Cross-Platform Identity Resolution
 
-Search for usernames across **400+ social networks**, narrow results down to just the platforms you care about, and — uniquely — figure out **which account on a target platform actually belongs to a known profile**, even when squatters and lookalike accounts are in the way.
+Find where a handle exists across hundreds of social networks, developer communities, forums, and niche sites — then work out which account on a target platform actually belongs to a profile you already know. Every hit is reported as a candidate with its own status and, when you ask for it, its public profile details. No login, no API key, no proxy setup.
+
+Two workflows share one dataset:
+
+- **Broad Search** sweeps a username across the supported network list and returns the profile URLs that survive verification.
+- **Identity Resolution** takes a known source profile, finds or accepts candidates on one target network, and ranks them with a transparent signal breakdown.
 
 ## What this actor does
 
-- **Search 400+ social networks** in a single run, or filter down to just the ones you need via a dropdown of every supported network
-- **Batch processing** — search multiple usernames at once, with `{?}` wildcard expansion for username variations (e.g. `john{?}doe` → `john_doe`, `john-doe`, `john.doe`)
-- **Identity resolution** — give it a known account on one platform and a target network, and it either auto-discovers or verifies candidate accounts there, ranking each by a transparent, multi-signal confidence score (bio backlink, display-name/avatar similarity, verified badge, follower count, username similarity) — never a black-box match
-- **Honest "no match" reporting** — if no candidate clears the confidence bar, the actor says so instead of guessing
-- **Empty fields are omitted** — no `null`, no placeholders; every field present is real data
-- **No login required** — works entirely with publicly available information
+- **436 selectable networks** — GitHub, YouTube, TikTok, LinkedIn, Reddit, Steam, Bluesky, Mastodon instances, coding platforms, forums, gaming sites, and more. Pick a shortlist or sweep the safe default set.
+- **Honest per-site status** — every checked site is counted as found, not found, blocked, error, invalid, or unreliable; blocked/rate-limited sites are named instead of silently disappearing.
+- **Verification on by default** — each claimed profile is re-opened. Dead URLs are dropped; login walls and rate limits stay visible and flagged for review.
+- **Optional profile details** — turn on `extractProfileFields` to add display name, bio, avatar, follower count, location, website, and join date where the source exposes them.
+- **False-positive controls** — eight sites that returned random control handles as "found" in live testing are disabled in an unfiltered sweep; adult/NSFW sites are disabled by default too.
+- **Identity scoring** — bio backlinks, display-name similarity, avatar similarity, verified badge, relative follower count, and username similarity are combined per candidate, with the full breakdown included.
+- **Batch and wildcard input** — process up to 500 usernames per run when `maxUsernames` is raised; the default cap is 100 and truncation is reported in the status message and record warnings. `john{?}doe` expands to `john_doe`, `john-doe`, and `john.doe`. Rows are pushed as each username finishes, so a timeout keeps the completed rows.
+- **Empty fields are omitted** — no `null`, no placeholder strings; every field present contains real data.
 
-## Output
+## Output: per username (mode = `broadSearch`)
 
-### Broad Search (mode = `broadSearch`)
+One row per searched username:
 
-- `username` — the username that was searched
-- `links[]` — URLs of profiles where the username was found (omitted entirely if none found)
+- `username` — the handle that was searched
+- `links[]` — profile URLs that passed the active checks
+- `profiles[]` — per-site evidence, each with:
+  - `siteName`, `siteMainUrl`, `profileUrl`, `finalUrl`
+  - `status` — `found`, `unreliable`, `blocked`, `error`
+  - `httpStatus`, `responseTimeMs`
+  - `verificationStatus` — `verified`, `gated`, `missing`, `unverified`
+  - `verificationRequired` — true when the result needs a human look
+  - `unreliable` — present on known false-positive sites
+  - optional `displayName`, `bio`, `avatarUrl`, `followers`, `location`, `websiteUrl`, `joinedAt`, `verified`
+- `foundCount` — profile URLs in `links` (usable found profiles)
+- `verifiedCount` — profiles that passed verification
+- `checkedCount` — sites actually checked
+- `statusCounts` — claimed found / verified / unreliable / notFound / blocked / error / invalid
+- `searchMode` — `focused` when `targetNetworks` was supplied, otherwise `broad`
+- `searchCompleted`, `partialFailure`, `sitesCheckedCount`
+- `sitesRequested` — the shortlist you sent (omitted for a broad sweep)
+- `sitesInvalid` — names the actor did not recognize
+- `warnings[]` — non-fatal notes, including why a site could not be checked
+- `sourceUrl` — the first profile URL in `links` (verified when verification is on), for traceability
+- `recordType: "usernameSearch"`, `scrapedAt`
 
-### Identity Resolution (mode = `identityResolution`)
+## Output: per target network (mode = `identityResolution`)
 
-One record per target network:
+One row per target network:
 
-- `sourceProfile` — the known account being resolved against, with any enrichment found: `platform`, `handle`, `profileUrl`, `displayName`, `verified`
-- `targetNetwork` — the network this record's candidates were evaluated on
+- `sourceProfile` — `platform`, `handle`, `profileUrl`, `displayName`, `verified`, plus optional `bio`, `avatarUrl`, `followers`, `location`, `websiteUrl`, `joinedAt`, `sourceUrl`
+- `targetNetwork`
 - `candidateMode` — `discover` or `verify`
-- `candidatesEvaluated` — how many candidates were scored
-- `bestMatch` — the highest-confidence candidate (handle, profileUrl, confidenceScore, confidenceLabel, signals) — omitted entirely if none clears the confidence bar
-- `candidates[]` — every scored candidate, ranked by confidence, each with its own `signals` breakdown
-- `warnings[]` — non-fatal notes (e.g. a signal couldn't be computed, or auto-discovery isn't supported for this network) — omitted if empty
+- `discoveryMethod` — `search`, `heuristic`, or `verify`
+- `candidatesEvaluated`
+- `bestMatch` — the highest-confidence candidate above `minConfidenceScore` **and** supported by at least one independent signal (or a verified profile), with `handle`, `profileUrl`, `confidenceScore`, `confidenceLabel`, `signals`, `profileExists`, `verificationStatus`, and the same optional profile fields
+- `candidates[]` — every scored candidate, ranked by confidence, each with its own `signals` breakdown and `profileExists`/`verificationStatus`. A candidate the target network says does not exist is never a `bestMatch`; a username-only match is capped below `high`.
+- `minConfidenceScore`, `partialFailure`, `sitesInvalid`
+- `warnings[]` — missing source signals, unsupported discovery paths, or blocked candidates
+- `sourceUrl`, `recordType: "identityResolution"`, `scrapedAt`
+
+A candidate's `signals` object only contains the signals that could actually be computed. Missing signals are omitted, not zeroed; the score renormalizes over what remains.
 
 ## Input
 
 | Field | Type | Default | Description |
 |---|---|---|---|
 | `mode` | string | `broadSearch` | `broadSearch` or `identityResolution` |
-| `usernames` | array | – | Usernames to search (mode=broadSearch). Supports `{?}` wildcard. |
-| `targetNetworks` | array | – | Networks to limit the search/resolution to — dropdown of every supported network. Optional filter in broadSearch (omit to search all 400+); required (1+) in identityResolution; exactly one required when `candidateMode` is `verify`. |
-| `sourceProfile` | object | – | The known account to resolve against — `{platform, handle}` (mode=identityResolution) |
-| `sourceOverrides` | object | – | Manual `displayName`/`bio`/`avatarUrl` for the source, used when the source platform can't be auto-read or to supplement missing data (mode=identityResolution) |
-| `candidateMode` | string | `discover` | `discover` — auto-find candidates via search + username-variation heuristics; `verify` — score only the handles you supply (mode=identityResolution) |
-| `candidateHandles` | array | – | Candidate handles to score (required when `candidateMode` is `verify`) |
-| `maxCandidatesToDiscover` | integer | `20` | Caps how many candidates `discover` mode generates/searches (1–60) |
+| `usernames` | array | – | Handles to search (mode=broadSearch). Accepts `@handle` and `{?}` wildcards. |
+| `targetNetworks` | array | all safe sites | Shortlist of network names. Required for identityResolution; `verify` accepts exactly one. |
+| `includeNsfw` | boolean | `false` | Include the 17 adult/NSFW sites in an unfiltered sweep. |
+| `includeUnreliable` | boolean | `false` | Include the 8 sites with known false-positive behaviour; their results are flagged. |
+| `verifyResults` | boolean | `true` | Re-open claimed profiles and drop dead URLs. Gated pages stay flagged. |
+| `extractProfileFields` | boolean | `false` | Add public profile details where available (extra request per profile). |
+| `maxUsernames` | integer | `100` | Usernames processed per broadSearch run (1–500). Truncation is reported in the status message and warnings. |
+| `maxConcurrency` | integer | `2` | Usernames searched in parallel (1–5). |
+| `requestTimeoutSecs` | integer | `20` | Per-site timeout for checks and verification (5–60). |
+| `sourceProfile` | object | – | Known account for identityResolution, e.g. `{"platform":"github","handle":"torvalds"}` |
+| `sourceOverrides` | object | – | Manual `displayName`, `bio`, or `avatarUrl` for the source profile. |
+| `candidateMode` | string | `discover` | `discover` candidates automatically, or `verify` only the handles you supply. |
+| `candidateHandles` | array | `[]` | Candidate handles for `verify` mode. |
+| `maxCandidatesToDiscover` | integer | `20` | Candidate cap per target network (1–60). |
+| `minConfidenceScore` | number | `0.3` | Minimum score for a `bestMatch` (0–1). |
 
-### Example: filter Broad Search to specific networks
+Legacy keys from earlier versions are still accepted in code: `username`, `query`, `searchQuery`, `sites`, `networks`, `socials`, `platforms`, `profile`, `handles`, `maxCandidates`, `maxItems`, `maxResults`, `includeProfileDetails`, `verify`, `nsfw`, and `confidenceThreshold`. They are mapped onto the fields above; they do not need to be in your saved input.
+
+### Example: focused broad search with details
 
 ```json
 {
   "mode": "broadSearch",
-  "usernames": ["johndoe"],
-  "targetNetworks": ["GitHub", "YouTube"]
+  "usernames": ["torvalds"],
+  "targetNetworks": ["GitHub", "YouTube", "Reddit", "Medium"],
+  "verifyResults": true,
+  "extractProfileFields": true
 }
 ```
 
-### Example: discover the real account on a target network
+### Example: broad sweep with safe defaults
+
+```json
+{
+  "mode": "broadSearch",
+  "usernames": ["openai", "natgeo"],
+  "verifyResults": true,
+  "maxConcurrency": 2
+}
+```
+
+### Example: verify a shortlist on one network
 
 ```json
 {
   "mode": "identityResolution",
-  "sourceProfile": { "platform": "instagram", "handle": "xyz" },
+  "sourceProfile": {"platform": "github", "handle": "torvalds"},
+  "targetNetworks": ["GitHub"],
+  "candidateMode": "verify",
+  "candidateHandles": ["torvalds", "torvalds-official"],
+  "minConfidenceScore": 0.5
+}
+```
+
+### Example: discover candidates automatically
+
+```json
+{
+  "mode": "identityResolution",
+  "sourceProfile": {"platform": "github", "handle": "torvalds"},
   "targetNetworks": ["GitHub"],
   "candidateMode": "discover",
   "maxCandidatesToDiscover": 20
 }
 ```
 
-### Example: verify a shortlist of suspects
-
-```json
-{
-  "mode": "identityResolution",
-  "sourceProfile": { "platform": "github", "handle": "torvalds" },
-  "targetNetworks": ["TikTok"],
-  "candidateMode": "verify",
-  "candidateHandles": ["torvalds", "torvalds_official", "real_torvalds"]
-}
-```
-
-### Example: batch username search with wildcard expansion
+### Example: wildcard batch
 
 ```json
 {
   "mode": "broadSearch",
-  "usernames": ["john{?}doe", "janedoe"],
-  "targetNetworks": ["GitHub", "Reddit", "Twitter"]
+  "usernames": ["john{?}doe", "jane_doe"],
+  "targetNetworks": ["GitHub", "Bluesky", "Mastodon.social"],
+  "maxUsernames": 10
 }
 ```
 
-## Use Cases
+## Use cases
 
-- **Influencer verification** — confirm which TikTok/Instagram/Twitter account genuinely belongs to a known creator before running a partnership or ad spend
-- **Brand protection** — find squatter and impersonator accounts across networks and see exactly why they were flagged as low-confidence
-- **OSINT investigations** — discover all online accounts associated with a username, filtered to the networks that matter for the case
-- **Digital forensics** — cross-reference identity signals across platforms with a transparent, auditable trail
-- **Recruiting / vendor vetting** — cross-check a candidate's or vendor's professional and social presence before engaging
+- **Influencer and partnership vetting** — confirm which account belongs to a creator before committing spend.
+- **Brand protection** — find lookalike and squatter accounts, and see the exact status of each site that was checked.
+- **OSINT and investigations** — map a handle across social, coding, gaming, and forum communities with an auditable per-site trail.
+- **Recruiting and vendor due diligence** — cross-check a candidate's public technical and social presence.
+- **Digital-footprint audits** — discover forgotten accounts before a launch, job change, or privacy cleanup.
+- **Dataset enrichment** — add verified profile URLs and optional public details to a lead or identity table.
+
+## Data source and coverage
+
+The actor ships a pinned snapshot of the [Sherlock project](https://github.com/sherlock-project/sherlock) site database (MIT License), taken on 2026-11-04. The snapshot contains 435 sites; the upstream project's own false-positive exclusions have already been removed. Reddit is added as a separate target and is checked through its public JSON endpoint. The actor is not affiliated with Sherlock or any of the networks it checks.
+
+An unfiltered sweep checks the safe default set (410 sites): the 17 adult/NSFW sites and the 8 known-false-positive sites are skipped unless you opt in. Reddit is not part of the unfiltered sweep; target it explicitly to check it. A focused `targetNetworks` shortlist checks exactly the sites you name.
+
+Identity resolution needs a username profile URL template. Discord, Diskusjon.no, and Kvinneguiden do not have one in the vendored site database, so identity mode skips those targets with a warning instead of inventing a URL. Broad search still checks them through their own existence probes.
+
+## Limitations
+
+- A matching username does **not** prove that two accounts belong to the same person. Treat broad-search hits as candidates and verify important findings at the source.
+- Some sites block automated requests from datacenter IPs. They are reported as `blocked` (401/403/429/WAF), never silently treated as "not found".
+- Profile details are best-effort. Many sites expose only a display name or bio; follower counts, locations, and join dates are available on fewer sites. Fields the page does not expose are omitted.
+- The site database is a snapshot. A site that changes its markup after the snapshot date can produce a wrong status until the snapshot is refreshed.
+- Reddit frequently rejects anonymous requests from cloud IP ranges. Its status is reported honestly; GitHub is the most reliable identity-resolution target.
+- Adult/NSFW and known-false-positive sites are opt-in so the default output stays clean. Opting in is supported and clearly flagged.
+- Avatar URLs are checked from a clean client before they are emitted. URLs that do not return an image are dropped rather than pushed as broken links; they are not rehosted.
+- A broadSearch run stops starting new usernames after roughly 27 minutes so a large batch cannot burn the whole run timeout. Completed rows are already in the dataset; skipped rows carry a warning.
+- Existence sweeps retry transient 429/471/5xx responses in bounded batches, then stop retrying after repeated blocks instead of hammering a WAF.
 
 ## FAQ
 
-### Can I limit results to just the networks I care about?
+### How is this different from a plain Sherlock run?
 
-Yes. Set `targetNetworks` in `broadSearch` mode (e.g. `["TikTok", "Instagram"]`) — pick from the dropdown of every supported network — and only those sites are checked, so you don't pay for or wait on the other 400+. `identityResolution` mode additionally accepts `Reddit` as a target since it resolves candidates through Reddit's own public search API rather than Sherlock's site list.
+A plain Sherlock run prints URLs. This actor adds verification, per-site statuses, optional public profile details, false-positive controls, and an identity-resolution mode that ranks candidates on independent signals. It also gives you a machine-readable dataset instead of console text.
 
-### How does it tell the real account apart from fake/lookalike accounts?
+### Do I need cookies, an API key, or a proxy?
 
-This is what `identityResolution` mode is for. Given a known source profile, it finds candidate accounts on the target network (either by searching the platform directly or by generating and existence-checking common username variants like numeric suffixes and "official"/"real" patterns), then scores every candidate on independent signals: whether the candidate's bio links back to the source account, how similar the display names are, how similar the profile pictures are, verified-badge status, relative follower count, and username similarity (case-insensitive). The scores are weighted so that bio backlinks and display-name/avatar similarity — signals fakes rarely have — count far more than raw username similarity, which is exactly what squatter accounts (`xyz0`, `xyz1`, `xyz2`) try to exploit. A bio backlink only ever *helps* a candidate when found — a real profile whose bio simply doesn't mention the source platform (common; most people don't cross-link everywhere) is never penalized for it. The full signal breakdown is always included so you can see exactly why a candidate was or wasn't picked. If no candidate is confidently the real account, the actor reports that honestly instead of guessing.
+No. The actor only requests public pages and public JSON endpoints. There is no credential field and no proxy configuration to fill in.
 
-### What if I already know the suspect accounts and just want them ranked?
+### Why are some sites missing from my results?
 
-Use `candidateMode: "verify"` with `candidateHandles` set to your list of suspects and a single `targetNetworks` entry. The actor skips discovery and scores exactly those candidates.
+If you sent `targetNetworks`, only those sites were checked. In an unfiltered sweep, adult/NSFW sites and the eight known-false-positive sites are skipped by default. Set `includeNsfw` or `includeUnreliable` to include them.
 
-### Why is auto-discovery unavailable for some networks?
+### What do the per-site statuses mean?
 
-TikTok's public existence-check reports every handle — including random strings — as "existing," so auto-generated candidates there would be fabricated rather than real. Auto-discovery (`candidateMode: "discover"`) is disabled specifically for TikTok for this reason; `candidateMode: "verify"` still works fully, with the same transparent scoring, once you supply your own candidate list.
+`found` means the site's existence rule claimed the handle. `unreliable` means the site is known to claim random handles. `blocked` means the site returned 401/403/429 or a WAF page. `error` means a timeout or network failure. `invalid` means the handle cannot exist on that site because it fails the site's own username pattern.
 
-### How many social networks does it search?
+### Why does a profile have no display name or avatar?
 
-Broad Search covers the same 400+ platforms as the original Sherlock — GitHub, Twitter/X, Instagram, Reddit, TikTok, LinkedIn, YouTube, and hundreds more.
+The optional fields are extracted only when the public page exposes them. Login walls, JavaScript-only pages, and sites without OpenGraph/JSON-LD metadata often provide nothing. The actor omits missing fields instead of inventing values.
 
-### Does it find private or deleted accounts?
+### What does `verifyResults` actually check?
 
-No. Only publicly accessible profiles are checked — private, deleted, or restricted-visibility accounts won't appear.
+It re-requests each claimed profile URL. A 404/410 is marked `missing` and dropped from `links`. A 401/403/429 or a login redirect is marked `gated` and kept visible with `verificationRequired: true` at the claimed URL (the redirect target is kept separately in `finalUrl`). A 200 page is marked `verified` only when it has real profile evidence: a canonical handle path plus profile metadata, or Person/ProfilePage JSON-LD that names the handle. A soft-404 ("Page not found"), a login wall, or a generic page with the handle merely somewhere in the URL is `unverified`, not `verified`.
 
-### What does the `{?}` wildcard do?
+### How does identity resolution decide on a best match?
 
-Expands a username into three variations using common separators: `_`, `-`, and `.`. For example, `john{?}doe` searches `john_doe`, `john-doe`, and `john.doe`.
+Each candidate is scored on the signals that can be computed: bio backlink, display-name similarity, avatar similarity, verified badge, follower count relative to the other candidates, and username similarity. The weighted score is shown per candidate. In `verify` mode every candidate is existence-checked on the target network first; a 404 lookalike is reported with `profileExists: false` and can never become `bestMatch`. `bestMatch` is only emitted when the top score reaches `minConfidenceScore` and the candidate has independent evidence (a non-username signal or a verified profile). A username-only match is capped below `high` confidence.
 
-### Does this require a login or API key?
+### Why is my target network not in the dropdown?
 
-No. Everything works with publicly accessible information — no authentication, cookies, or API keys required.
+The dropdown is generated from the pinned site snapshot plus Reddit. If a network is absent, it was not in the snapshot or was one of the upstream false-positive exclusions. You can still supply it as a candidate target only if it is recognized; unknown names are reported in `sitesInvalid`.
 
-### Can false positives occur?
+### Can I search private or deleted accounts?
 
-Yes, occasionally — on both Broad Search (a site may report a username as existing when the page is actually an error page) and Identity Resolution (signals can be sparse for platforms that block scraping, e.g. Twitter/X, lowering confidence). Always review the `signals` breakdown before treating a match as certain.
+No. Only public pages are requested. Private, deleted, and restricted profiles are not accessible.
 
-### Is this affiliated with any of the platforms it searches?
+### Can I export the dataset?
 
-No. This is an independent, third-party actor using only publicly accessible information; it is not affiliated with GitHub, Reddit, TikTok, Instagram, Twitter/X, LinkedIn, YouTube, or any other platform it searches.
+Yes. Apify datasets export to JSON, CSV, Excel, HTML, XML, and RSS from the console or API.
 
-### What output formats are available?
+### Is this affiliated with the networks it checks?
 
-Results can be exported as JSON, CSV, Excel (XLSX), HTML, RSS, or XML directly from the Apify platform.
+No. This is an independent third-party actor using publicly accessible information. It is not affiliated with GitHub, Reddit, TikTok, Instagram, Twitter/X, LinkedIn, YouTube, Sherlock, or any other site in the database.

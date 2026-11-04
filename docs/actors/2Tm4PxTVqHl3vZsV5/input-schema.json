@@ -1,67 +1,58 @@
 {
-  "description": "Scrape Pinterest pins, boards, and user profiles. No login needed.",
+  "description": "Collect public Pinterest Pins, profiles, boards, board sections, idea topics, search results, and comments. No login or cookies required.",
   "properties": {
     "boardUrls": {
-      "default": [
-        "https://www.pinterest.com/nasa/ceres/"
-      ],
-      "description": "Public board links or `username/board-name` paths, for example `https://www.pinterest.com/nasa/ceres/`.",
+      "default": [],
+      "description": "Public board links, `username/board-name` paths, or a section link such as `https://www.pinterest.com/krity_s/home-decor/mens/`.",
       "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
       "prefill": [
         "https://www.pinterest.com/nasa/ceres/"
       ],
-      "title": "Board URLs",
+      "title": "Board or section URLs",
       "type": "array"
     },
     "commerceOnly": {
       "default": false,
-      "description": "Pro filter: when true, return only product/shoppable pins. Equivalent to Pinterest's native 'Products' filter (commerce_only=true).",
+      "description": "Keep only Pins that carry Pinterest product or shopping metadata.",
       "prefill": false,
-      "title": "Commerce only (shoppable pins)",
+      "title": "Shoppable Pins only",
       "type": "boolean"
-    },
-    "cookies": {
-      "description": "Optional Cookie Editor JSON export. All public modes work without cookies; never share this secret publicly.",
-      "editor": "json",
-      "isSecret": true,
-      "title": "Optional Pinterest cookies",
-      "type": "array"
-    },
-    "cookiesJson": {
-      "description": "Compatibility alias for pasting a Cookie Editor JSON export.",
-      "editor": "textarea",
-      "isSecret": true,
-      "title": "Optional cookies JSON (alias)",
-      "type": "string"
     },
     "enrichPinDetails": {
       "default": false,
-      "description": "For `userPins` and `boardPins`, visit each public Pin detail page for detail-only fields. Slower but more complete.",
+      "description": "For `userPins` and `boardPins`, visit each numeric Pin page for detail-only fields. Slower but more complete.",
       "prefill": false,
       "title": "Enrich collection Pins",
       "type": "boolean"
     },
     "excludeAds": {
       "default": false,
-      "description": "Drop promoted/sponsored pins.",
+      "description": "Drop Pins that Pinterest explicitly marks as promoted or sponsored.",
       "prefill": false,
-      "title": "Exclude promoted/ads (Pro filter)",
+      "title": "Exclude promoted Pins",
       "type": "boolean"
     },
     "ideaSlugs": {
       "default": [],
       "description": "Idea topic path pairs such as `beauty/935541271955`. Used when `mode=ideas`.",
       "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
       "prefill": [],
       "title": "Idea topic paths",
       "type": "array"
     },
     "ideaUrls": {
-      "default": [
-        "https://www.pinterest.com/ideas/beauty/935541271955/"
-      ],
+      "default": [],
       "description": "Public Pinterest idea-topic links, for example `https://www.pinterest.com/ideas/beauty/935541271955/`.",
       "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
       "prefill": [
         "https://www.pinterest.com/ideas/beauty/935541271955/"
       ],
@@ -70,33 +61,41 @@
     },
     "imageOnly": {
       "default": false,
-      "description": "Drop video pins, keep image pins only.",
+      "description": "Drop video Pins and keep image Pins only.",
       "prefill": false,
-      "title": "Image-only (Pro filter)",
+      "title": "Image Pins only",
       "type": "boolean"
     },
     "includeComments": {
       "default": false,
-      "description": "Add real comment/activity rows for collected Pins. Pinterest's public cookieless path is used automatically.",
+      "description": "Add real public comment and activity rows for collected numeric Pins.",
       "prefill": false,
       "title": "Include Pin comments",
       "type": "boolean"
     },
+    "includeIdeaPins": {
+      "default": false,
+      "description": "When mode=`ideas`, also emit the Pins shown on the idea-topic page.",
+      "prefill": false,
+      "title": "Include idea-topic Pins",
+      "type": "boolean"
+    },
     "keywords": {
-      "default": [
-        "minimalist home office"
-      ],
-      "description": "Words or phrases for search modes, for example `minimalist home office`.",
+      "default": [],
+      "description": "Words or phrases for search modes, for example `minimalist kitchen`.",
       "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
       "prefill": [
-        "minimalist home office"
+        "minimalist kitchen"
       ],
       "title": "Search words",
       "type": "array"
     },
     "language": {
       "default": "en",
-      "description": "Pinterest UI language (affects ranked search results).",
+      "description": "Pinterest UI language. It affects ranked search results and localized labels.",
       "editor": "select",
       "enum": [
         "en",
@@ -128,7 +127,17 @@
         "zh",
         "bn",
         "ms",
-        "fil"
+        "fil",
+        "bg",
+        "ca",
+        "et",
+        "he",
+        "hr",
+        "lt",
+        "lv",
+        "sk",
+        "sl",
+        "sr"
       ],
       "enumTitles": [
         "English",
@@ -160,24 +169,25 @@
         "Chinese",
         "Bengali",
         "Malay",
-        "Filipino"
+        "Filipino",
+        "Bulgarian",
+        "Catalan",
+        "Estonian",
+        "Hebrew",
+        "Croatian",
+        "Lithuanian",
+        "Latvian",
+        "Slovak",
+        "Slovenian",
+        "Serbian"
       ],
       "prefill": "en",
       "title": "Language",
       "type": "string"
     },
-    "limit": {
-      "default": 10,
-      "description": "Compatibility alias for maxComments.",
-      "maximum": 20000,
-      "minimum": 1,
-      "prefill": 10,
-      "title": "Maximum comments per Pin (alias)",
-      "type": "integer"
-    },
     "maxComments": {
       "default": 10,
-      "description": "Maximum public comment/activity rows per Pin when comments are enabled or mode=comments.",
+      "description": "Maximum public comment and activity rows per Pin when comments are enabled or mode=`comments`.",
       "maximum": 20000,
       "minimum": 1,
       "prefill": 10,
@@ -195,31 +205,30 @@
     },
     "maxPages": {
       "default": 10,
-      "description": "Maximum search result pages to walk per keyword or board (1 page ≈ 25 pins). Default 10.",
-      "editor": "number",
+      "description": "Maximum result pages to walk per feed (one page is about 25-50 Pins).",
       "maximum": 2000,
       "minimum": 1,
-      "prefill": 10,
+      "prefill": 1,
       "title": "Max pages",
       "type": "integer"
     },
     "minCreatorFollowers": {
-      "description": "Keep Pins whose public creator follower count reaches N. Unknown counts are retained.",
+      "description": "Keep Pins whose public creator follower count reaches N. Unknown counts pass through.",
       "maximum": 1000000000,
       "minimum": 0,
-      "title": "Min creator followers",
+      "title": "Minimum creator followers",
       "type": "integer"
     },
     "minSaves": {
-      "description": "Keep Pins whose Pinterest save count is at least N. Pins without a published count are retained as unknown.",
+      "description": "Keep Pins whose published save count is at least N. Pins without a published count pass through as unknown.",
       "maximum": 10000000,
       "minimum": 0,
-      "title": "Min saves (Pro filter)",
+      "title": "Minimum saves",
       "type": "integer"
     },
     "mode": {
-      "default": "pinDetail",
-      "description": "Choose the Pinterest use case. The legacy `search` value remains accepted for existing users.",
+      "default": "searchPins",
+      "description": "Choose the Pinterest use case. Every mode uses public Pinterest data and needs no login.",
       "editor": "select",
       "enum": [
         "auto",
@@ -234,8 +243,10 @@
         "userBoards",
         "boardDetail",
         "boardPins",
+        "boardSections",
         "ideas",
-        "search"
+        "search",
+        "relatedPins"
       ],
       "enumTitles": [
         "Auto-detect mixed Pinterest URLs",
@@ -249,28 +260,31 @@
         "Pins created by a person",
         "Boards owned by a person",
         "Board details",
-        "Pins inside a board",
-        "Idea topic details",
-        "Search Pins (legacy alias)"
+        "Pins inside a board or board section",
+        "Sections inside a board",
+        "Idea topic details and Pins",
+        "Search Pins (legacy alias)",
+        "Related Pins (unavailable from Apify cloud)"
       ],
-      "prefill": "pinDetail",
+      "prefill": "searchPins",
       "title": "What to collect",
       "type": "string"
     },
     "pinUrls": {
-      "default": [
-        "https://www.pinterest.com/pin/142567144448888376/"
-      ],
-      "description": "Public Pinterest pin links or numeric IDs (used when mode=`pinDetail`).",
+      "default": [],
+      "description": "Public Pinterest Pin links or numeric IDs. Used by mode=`pinDetail` and `comments`. Opaque e1_ IDs from feeds are list-only and cannot be opened directly.",
       "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
       "prefill": [
         "https://www.pinterest.com/pin/142567144448888376/"
       ],
-      "title": "Pin URLs",
+      "title": "Pin URLs or IDs",
       "type": "array"
     },
     "proxyConfiguration": {
-      "description": "Optional Apify proxy settings. Public direct-pin pages do not require login; some feed surfaces may be withheld from datacenter traffic.",
+      "description": "Optional Apify proxy override. The actor automatically falls back to Apify datacenter proxy and direct traffic, so no proxy setup is required.",
       "editor": "proxy",
       "title": "Optional proxy",
       "type": "object"
@@ -284,29 +298,22 @@
     },
     "startUrls": {
       "default": [],
-      "description": "Mixed public Pinterest links for mode=`auto`. Each unambiguous Pin, profile, board, idea, or search link is routed to the matching collector; unsupported section links are skipped.",
-      "editor": "stringList",
-      "prefill": [],
-      "title": "Pinterest URLs (auto-detect)",
-      "type": "array"
-    },
-    "urls": {
-      "default": [],
-      "description": "Compatibility alias for pinUrls, useful with mode=comments.",
+      "description": "Mixed public Pinterest links for mode=`auto`. Unambiguous Pin, profile, board, board-section, idea, and search links are routed to the matching collector; unsupported links are skipped.",
       "editor": "stringList",
       "items": {
         "type": "string"
       },
       "prefill": [],
-      "title": "Pin URLs (comments alias)",
+      "title": "Pinterest URLs (auto-detect)",
       "type": "array"
     },
     "usernames": {
-      "default": [
-        "nasa"
-      ],
+      "default": [],
       "description": "Pinterest usernames, @usernames, or public profile links.",
       "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
       "prefill": [
         "nasa"
       ],

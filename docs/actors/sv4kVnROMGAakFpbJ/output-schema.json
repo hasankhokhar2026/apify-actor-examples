@@ -1,6 +1,6 @@
 {
   "actorOutputSchemaVersion": 1,
-  "description": "One row per place in search/details modes and one row per review in reviews mode. Empty fields are omitted at every depth. Every record carries recordType, sourceUrl and scrapedAt.",
+  "description": "One row per place in search/details modes and one row per review in reviews mode. Empty fields are omitted at every depth. Every record carries recordType, sourceUrl and scrapedAt. Legacy place names are kept for backward compatibility; rating, numberOfReviews, latitude and longitude are strings, while ratingValue, reviewCount, lat and lng are numeric.",
   "properties": {
     "address": {
       "description": "Full address",
@@ -26,6 +26,18 @@
       "title": "Author location",
       "type": "string"
     },
+    "city": {
+      "description": "City name",
+      "template": "{{city}}",
+      "title": "City",
+      "type": "string"
+    },
+    "country": {
+      "description": "Country name",
+      "template": "{{country}}",
+      "title": "Country",
+      "type": "string"
+    },
     "cuisine": {
       "description": "Restaurant cuisines",
       "template": "{{cuisine}}",
@@ -36,6 +48,24 @@
       "description": "Review submission timestamp",
       "template": "{{date}}",
       "title": "Review date",
+      "type": "string"
+    },
+    "description": {
+      "description": "Place description when published",
+      "template": "{{description}}",
+      "title": "Description",
+      "type": "string"
+    },
+    "detailSource": {
+      "description": "detailPage or typeaheadFallback",
+      "template": "{{detailSource}}",
+      "title": "Detail source",
+      "type": "string"
+    },
+    "detailStatus": {
+      "description": "complete or partial when only a TypeAhead fallback was available",
+      "template": "{{detailStatus}}",
+      "title": "Detail status",
       "type": "string"
     },
     "email": {
@@ -50,10 +80,28 @@
       "title": "Helpful votes",
       "type": "string"
     },
+    "hotelClass": {
+      "description": "Hotel star rating when published",
+      "template": "{{hotelClass}}",
+      "title": "Hotel class",
+      "type": "string"
+    },
+    "hours": {
+      "description": "Opening hours text when published",
+      "template": "{{hours}}",
+      "title": "Hours",
+      "type": "string"
+    },
     "id": {
       "description": "Place ID for place rows, review ID for review rows",
       "template": "{{id}}",
       "title": "ID",
+      "type": "string"
+    },
+    "isClosed": {
+      "description": "Whether the place is permanently closed, as text",
+      "template": "{{isClosed}}",
+      "title": "Is closed",
       "type": "string"
     },
     "language": {
@@ -63,15 +111,33 @@
       "type": "string"
     },
     "lat": {
-      "description": "Latitude",
+      "description": "Numeric latitude",
       "template": "{{lat}}",
-      "title": "Latitude",
+      "title": "Numeric latitude",
+      "type": "string"
+    },
+    "latitude": {
+      "description": "Legacy latitude as text",
+      "template": "{{latitude}}",
+      "title": "Legacy latitude",
       "type": "string"
     },
     "lng": {
-      "description": "Longitude",
+      "description": "Numeric longitude",
       "template": "{{lng}}",
-      "title": "Longitude",
+      "title": "Numeric longitude",
+      "type": "string"
+    },
+    "locationId": {
+      "description": "Legacy alias of id for place rows",
+      "template": "{{locationId}}",
+      "title": "Legacy location ID",
+      "type": "string"
+    },
+    "longitude": {
+      "description": "Legacy longitude as text",
+      "template": "{{longitude}}",
+      "title": "Legacy longitude",
       "type": "string"
     },
     "name": {
@@ -80,10 +146,28 @@
       "title": "Place name",
       "type": "string"
     },
+    "neighborhoods": {
+      "description": "Neighborhood names when published",
+      "template": "{{neighborhoods}}",
+      "title": "Neighborhoods",
+      "type": "string"
+    },
+    "numberOfReviews": {
+      "description": "Legacy review count as text",
+      "template": "{{numberOfReviews}}",
+      "title": "Legacy number of reviews",
+      "type": "string"
+    },
     "phone": {
       "description": "Phone number",
       "template": "{{phone}}",
       "title": "Phone",
+      "type": "string"
+    },
+    "photoUrl": {
+      "description": "Legacy alias of the first photo",
+      "template": "{{photoUrl}}",
+      "title": "Legacy photo URL",
       "type": "string"
     },
     "photos": {
@@ -98,8 +182,20 @@
       "title": "Place ID",
       "type": "string"
     },
+    "postalCode": {
+      "description": "Postal or ZIP code",
+      "template": "{{postalCode}}",
+      "title": "Postal code",
+      "type": "string"
+    },
+    "priceLevel": {
+      "description": "Price level symbols when published",
+      "template": "{{priceLevel}}",
+      "title": "Price level",
+      "type": "string"
+    },
     "priceRange": {
-      "description": "Price range or price level published by Tripadvisor",
+      "description": "Price range text published by Tripadvisor",
       "template": "{{priceRange}}",
       "title": "Price range",
       "type": "string"
@@ -110,10 +206,28 @@
       "title": "Ranking",
       "type": "string"
     },
+    "rankingPosition": {
+      "description": "Numeric rank parsed from the ranking string",
+      "template": "{{rankingPosition}}",
+      "title": "Ranking position",
+      "type": "string"
+    },
+    "rankingString": {
+      "description": "Legacy alias of ranking",
+      "template": "{{rankingString}}",
+      "title": "Legacy ranking string",
+      "type": "string"
+    },
     "rating": {
-      "description": "Bubble rating, 0-5",
+      "description": "Legacy bubble rating as text, 0-5",
       "template": "{{rating}}",
       "title": "Rating",
+      "type": "string"
+    },
+    "ratingValue": {
+      "description": "Numeric bubble rating, 0-5",
+      "template": "{{ratingValue}}",
+      "title": "Numeric rating",
       "type": "string"
     },
     "recordType": {
@@ -123,9 +237,15 @@
       "type": "string"
     },
     "reviewCount": {
-      "description": "Total number of reviews for the place",
+      "description": "Numeric total number of reviews for the place",
       "template": "{{reviewCount}}",
       "title": "Review count",
+      "type": "string"
+    },
+    "scrapeTimestamp": {
+      "description": "Legacy alias of scrapedAt",
+      "template": "{{scrapeTimestamp}}",
+      "title": "Legacy scrape timestamp",
       "type": "string"
     },
     "scrapedAt": {
@@ -134,10 +254,34 @@
       "title": "Scraped at",
       "type": "string"
     },
+    "searchQuery": {
+      "description": "The search query that found the place",
+      "template": "{{searchQuery}}",
+      "title": "Search query",
+      "type": "string"
+    },
     "sourceUrl": {
       "description": "Tripadvisor page the record came from",
       "template": "{{sourceUrl}}",
       "title": "Source URL",
+      "type": "string"
+    },
+    "state": {
+      "description": "State or province",
+      "template": "{{state}}",
+      "title": "State or province",
+      "type": "string"
+    },
+    "street": {
+      "description": "Street address",
+      "template": "{{street}}",
+      "title": "Street",
+      "type": "string"
+    },
+    "subcategory": {
+      "description": "Legacy specific subcategory label; falls back to the place type",
+      "template": "{{subcategory}}",
+      "title": "Subcategory",
       "type": "string"
     },
     "text": {
@@ -168,6 +312,18 @@
       "description": "Canonical Tripadvisor place page",
       "template": "{{url}}",
       "title": "Place URL",
+      "type": "string"
+    },
+    "webUrl": {
+      "description": "Legacy alias of url",
+      "template": "{{webUrl}}",
+      "title": "Legacy web URL",
+      "type": "string"
+    },
+    "website": {
+      "description": "Official website URL when published",
+      "template": "{{website}}",
+      "title": "Website",
       "type": "string"
     }
   },

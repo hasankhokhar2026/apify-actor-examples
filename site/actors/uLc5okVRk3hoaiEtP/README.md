@@ -1,56 +1,109 @@
 # Ashby Job Board Compensation & Openings Scraper
 
-Scrape public **Ashby job boards** for any company that hires on `jobs.ashbyhq.com`. Get every open role with title, department, team, location, remote status, salary / compensation ranges, apply links, and full job descriptions. HTTP-only via the public Ashby posting API — **no login, no API key, no proxy.**
+Scrape public **Ashby job boards** for any company hiring on `jobs.ashbyhq.com`. Get every open role with its department, team, structured location, remote or hybrid type, the employer's own salary range, full description, and apply link. Filter by keyword, workplace type, employment type, publish date, or pay. **No login, no API key, no proxy.**
+
+Ashby powers the careers pages of thousands of modern companies. This actor reads the same public job-board data those pages use, so every run reflects the employer's current postings rather than an old index.
 
 ## What this actor does
 
-- **Two modes:** `byOrg` (all jobs across one or more companies) and `jobDetail` (a single job by ID)
-- **Multi-company:** pass many org slugs in one run (e.g. `Ramp`, `Notion`, `Linear`)
-- **Compensation included:** salary ranges, equity / commission summaries, and per-tier breakdowns when the company publishes them
-- **Filters:** department, location, remote-only
-- **Empty fields are omitted** — every record contains only fields that actually have data
+- **Three modes:** `byOrg` lists jobs across companies, `jobDetail` fetches specific postings by URL or ID, and `boardSummary` returns one company-level overview.
+- **Accepts what you have:** board slugs (`Ramp`), company names (`Neko Health`), board URLs, or full job URLs.
+- **Structured pay:** numeric salary minimum and maximum, currency, pay period, annualized values, equity percentage, and bonus/commission flags, plus the original human-readable summaries.
+- **Precise remote data:** separates fully remote from hybrid, keeps secondary locations with their city/region/country, and can add remote-eligible countries.
+- **Useful filters:** keyword, department/team, location, workplace type, employment type, publish date or relative window (`24h`, `7d`, `2w`), annual salary range, salary currency, and salary-only.
+- **Company and job detail:** optional company name/logo/timezone, all team names, confidentiality flag, compensation philosophy, and direct-apply flag.
+- **Clean output:** empty fields are omitted; there are no `null`, blank, or placeholder values.
+
+## Modes
+
+| Mode | What it returns | Typical use |
+|---|---|---|
+| `byOrg` | One record per job across the companies you name | Job feeds, recruiting intelligence, compensation research |
+| `jobDetail` | The exact postings you point at, by public URL or ID | Refresh a saved job, verify a posting, build a watchlist |
+| `boardSummary` | One record per company with job counts and department, team, location, workplace, and pay breakdowns | Compare hiring across companies without downloading every description |
 
 ## Output per job
 
-- `id` — Ashby job posting UUID
+- `id` — Ashby posting UUID
 - `title`
 - `department`, `team`
-- `employmentType` — `FullTime`, `Contract`, `Intern`, `Temporary`
-- `location` — primary location string
-- `isRemote` — boolean
-- `workplaceType` — `Remote`, `Hybrid`, `OnSite`
-- `secondaryLocations[]` — additional location strings
-- `compensationSummary` — human-readable pay summary (e.g. `$147K – $262K • Offers Equity`)
-- `salarySummary` — base salary range (e.g. `$147K - $262K`)
-- `compensationTiers[]` — structured pay tiers with components (type, interval, currency, min/max)
+- `employmentType` — `FullTime`, `PartTime`, `Contract`, `Intern`, or `Temporary`
+- `location` — primary location label
+- `locationCity`, `locationRegion`, `locationCountry` — structured primary address when published
+- `isRemote` — the employer's remote flag; true for both Remote and Hybrid
+- `workplaceType` — `Remote`, `Hybrid`, or `OnSite`
+- `secondaryLocations[]` — additional location labels
+- `secondaryLocationDetails[]` — each secondary location with its city, region, and country
+- `isListed` — false for direct-link-only postings
 - `publishedAt` — ISO timestamp
-- `jobUrl` — public posting URL
-- `applyUrl` — application URL
-- `descriptionPlain` — full plain-text job description
-- `organization` — the company slug
+- `jobUrl`, `applyUrl`, `sourceUrl`
+- `compensationSummary` — the employer's own pay summary, e.g. `$147K – $262K • Offers Equity`
+- `salarySummary` — the employer's salary-only summary, e.g. `$147K – $262K`
+- `salaryMin`, `salaryMax`, `salaryCurrency`, `salaryInterval` — numeric salary range as published
+- `annualSalaryMin`, `annualSalaryMax` — the same range annualized (hourly, weekly, monthly, yearly)
+- `hasSalary`, `hasEquity`, `hasBonus`, `hasCommission` — pay-component flags
+- `equityPercentMin`, `equityPercentMax` — equity percentage range when published
+- `compensationTiers[]` — every published tier with its title, summary, notes, and components
+- `compensationComponents[]` — the flattened salary/equity/bonus/commission components
+- `descriptionPlain` — full plain-text description
+- `descriptionHtml` — full HTML description when enabled
+- `organization` — the company's Ashby board slug
+- `organizationName`, `organizationLogoUrl`, `organizationTimezone` — optional company metadata
+- `teamNames[]` — all team names when job-page details are enabled
+- `isConfidential`, `compensationPhilosophyHtml`, `remoteEligibleCountries[]`, `directApply` — optional job-page details
 - `recordType: "job"`, `scrapedAt`
 
-If an org slug or job ID doesn't resolve, that item produces an error record instead: `recordType: "error"`, `error` (e.g. `org_not_found`, `job_not_found`, `invalid_org_slug`), `message`, `input` (the value that failed), `sourceUrl`, and `scrapedAt`.
+## Output per company summary
+
+`boardSummary` mode returns one record per company:
+
+- `organization`, `organizationName`, `organizationLogoUrl`, `organizationTimezone`, `sourceUrl`
+- `jobsOnBoard` — public jobs on the board before filters
+- `jobsMatched` — jobs after the filters you set
+- `departments[]`, `teams[]`, `locations[]` — up to 50 values each, with counts
+- `workplaceTypes`, `employmentTypes` — counts by value, including `Unknown` where the board omits it
+- `jobsWithCompensation`, `jobsWithSalary` — pay coverage
+- `salaryCurrencies[]`
+- `publishedAtMin`, `publishedAtMax`
+- `recordType: "boardSummary"`, `scrapedAt`
 
 ## Input
 
 | Field | Type | Default | Description |
 |---|---|---|---|
-| `mode` | string | `byOrg` | `byOrg` / `jobDetail` |
-| `orgSlugs` | array | `["Ramp"]` | Company slugs (mode=byOrg) |
-| `orgSlug` | string | – | Single company slug (mode=jobDetail) |
-| `jobId` | string | – | Job posting UUID (mode=jobDetail) |
-| `department` | string | – | Keep only jobs whose department contains this text |
-| `location` | string | – | Keep only jobs whose location contains this text |
-| `isRemoteOnly` | bool | `false` | Keep only remote jobs |
-| `maxItems` | int | `100` | Hard cap on emitted records (1–2000) |
+| `mode` | string | `byOrg` | `byOrg` / `jobDetail` / `boardSummary` |
+| `orgSlugs` | array | `["Ramp"]` | Slugs, company names, or board URLs (mode=byOrg, boardSummary) |
+| `jobUrls` | array | `[]` | Public job URLs (mode=jobDetail) |
+| `orgSlug` | string | – | Company slug for `orgSlug` + `jobId` lookups (mode=jobDetail) |
+| `jobId` | string | – | Posting UUID or full job URL (mode=jobDetail) |
+| `searchQuery` | string | – | Text match over title, department, team, location, description (descriptions are searched even when their output is off and in `boardSummary`) |
+| `department` | string | – | Text match over department and team |
+| `location` | string | – | Text match over primary/secondary location and address |
+| `workplaceType` | string | `any` | `any` / `Remote` / `Hybrid` / `OnSite` |
+| `employmentType` | string | `any` | `any` / `FullTime` / `PartTime` / `Contract` / `Intern` / `Temporary` |
+| `isRemoteOnly` | bool | `false` | Remote-friendly jobs (Remote and Hybrid) |
+| `publishedAfter` | string | – | ISO date/datetime or `24h` / `7d` / `2w` |
+| `publishedBefore` | string | – | ISO date/datetime or relative window |
+| `minAnnualSalary` | int | – | Minimum annualized salary (0–10,000,000) |
+| `maxAnnualSalary` | int | – | Maximum annualized salary (0–10,000,000) |
+| `salaryCurrency` | string | `any` | Compare salaries in one currency |
+| `hasSalaryOnly` | bool | `false` | Drop jobs without a published salary |
+| `sortBy` | string | `default` | `default` / `newest` / `oldest` / `title` |
+| `includeUnlisted` | bool | `false` | Include direct-link-only jobs in every mode; `jobDetail` returns `job_not_listed` unless enabled |
+| `includeCompanyInfo` | bool | `true` | Add company name, logo, timezone |
+| `includeDetails` | bool | `false` | Add all team names, confidentiality, compensation philosophy, remote-eligible countries, direct-apply |
+| `includeDescriptionPlain` | bool | `true` | Include the plain-text description |
+| `includeDescriptionHtml` | bool | `false` | Include the HTML description |
+| `maxItemsPerOrg` | int | `0` | Per-company cap after filters (0 = no cap) |
+| `maxItems` | int | `100` | Cap on job/summary records (1–5000); error diagnostics are extra |
 
-### Example: all jobs at one company
+### Example: every open role at one company
 
 ```json
 {
   "mode": "byOrg",
-  "orgSlugs": ["Ramp"]
+  "orgSlugs": ["Ramp"],
+  "maxItems": 500
 }
 ```
 
@@ -61,50 +114,99 @@ If an org slug or job ID doesn't resolve, that item produces an error record ins
   "mode": "byOrg",
   "orgSlugs": ["Ramp", "Notion", "Linear"],
   "department": "Engineering",
-  "maxItems": 500
+  "includeCompanyInfo": true,
+  "maxItems": 200
 }
 ```
 
-### Example: remote-only jobs
+### Example: fully remote roles published in the last two weeks
 
 ```json
 {
   "mode": "byOrg",
-  "orgSlugs": ["Notion"],
-  "isRemoteOnly": true
+  "orgSlugs": ["Notion", "Linear", "Supabase"],
+  "workplaceType": "Remote",
+  "publishedAfter": "2w",
+  "hasSalaryOnly": true,
+  "maxItems": 100
 }
 ```
 
-### Example: a single job by ID
+### Example: well-paid product roles in US dollars
+
+```json
+{
+  "mode": "byOrg",
+  "orgSlugs": ["Ramp", "Plaid", "Cohere"],
+  "searchQuery": "product",
+  "minAnnualSalary": 150000,
+  "salaryCurrency": "USD",
+  "sortBy": "newest",
+  "maxItems": 50
+}
+```
+
+### Example: specific postings by URL
 
 ```json
 {
   "mode": "jobDetail",
-  "orgSlug": "Ramp",
-  "jobId": "09a9381c-677b-40a5-9ff1-027bd4302c13"
+  "jobUrls": [
+    "https://jobs.ashbyhq.com/Ramp/09a9381c-677b-40a5-9ff1-027bd4302c13",
+    "https://jobs.ashbyhq.com/Linear/453f1ba0-a35e-4ed2-8215-1514e0a30b92"
+  ],
+  "includeDetails": true
+}
+```
+
+### Example: compare hiring across companies
+
+```json
+{
+  "mode": "boardSummary",
+  "orgSlugs": ["Ramp", "Notion", "Linear", "Harvey"]
 }
 ```
 
 ## Use cases
 
-- **Job aggregators** — ingest fresh openings from hundreds of Ashby-powered companies
-- **Recruiting intelligence** — track which teams a competitor is hiring for and where
-- **Compensation benchmarking** — collect published salary ranges by role and location
-- **Talent sourcing** — build a live feed of remote or location-specific roles
-- **Market research** — monitor hiring velocity and departmental growth over time
+- **Job boards and aggregators** — keep a live feed of openings from every Ashby-powered company you track.
+- **Recruiting and sourcing** — find engineering, design, sales, or operations roles by team, location, and workplace type.
+- **Compensation benchmarking** — collect the employer's own salary ranges as numbers, with currency and pay period.
+- **Remote-work feeds** — build a daily feed of fully remote roles with remote-eligible countries.
+- **Hiring intelligence** — compare departments, teams, locations, and pay coverage across competitors.
+- **Market research** — track which companies are hiring and where over time.
 
 ## FAQ
 
-**What is Ashby?**  Ashby is an applicant-tracking and recruiting platform. Many startups and scale-ups host their public careers page on `jobs.ashbyhq.com/{company}`. This actor reads the same public job data those pages are built from.
+**What is Ashby?** Ashby is an applicant-tracking and recruiting platform. Many companies host their public careers page at `jobs.ashbyhq.com/{company}`. This actor reads the public job-board data behind those pages.
 
-**How do I find a company's slug?**  It's the path segment in the board URL. For `https://jobs.ashbyhq.com/Ramp`, the slug is `Ramp`. You can paste the full URL too — the actor extracts the slug for you.
+**How do I find a company's slug?** It is the path segment in the board URL. For `https://jobs.ashbyhq.com/Ramp`, the slug is `Ramp`. You can also paste the board URL or the company name, and the actor matches it to the closest live board.
 
-**Do I need an API key or login?**  No. The Ashby posting API is public. No auth, no cookies, no proxy required.
+**Do I need an API key, login, or proxy?** No. The Ashby job-board endpoint is public. No credentials, cookies, or proxy setup are needed.
 
-**Why do some jobs have no salary?**  Companies choose whether to publish compensation. When they don't, the `compensationSummary` / `salarySummary` / `compensationTiers` fields are simply omitted.
+**Why is `isRemote` true for a hybrid job?** Ashby's remote flag means "remote-friendly", not "fully remote". Use `workplaceType: "Remote"` for fully remote roles and `workplaceType: "Hybrid"` for hybrid roles.
 
-**Can I get a specific job's full description?**  Yes — use `jobDetail` mode with the `orgSlug` and `jobId`, or read `descriptionPlain` from any `byOrg` result.
+**Why do some jobs have no salary?** Companies choose whether to publish compensation. When they do not, the salary fields are omitted. This actor never guesses or fabricates a range.
 
-**What happens if a company slug doesn't exist?**  The actor emits a typed `error` record (`recordType: "error"`) for that slug and continues with the rest — one bad slug never fails the whole run.
+**What do `salaryMin` and `salaryMax` mean when a job has several pay tiers?** They are the lowest and highest values across every published salary component, so a multi-location or multi-level posting reports its full range. `compensationTiers` keeps the individual tiers.
 
-**How fresh is the data?**  Live. Every run reads each company's current public job board directly.
+**What is the difference between `salaryMin` and `annualSalaryMin`?** `salaryMin` is the number exactly as published, with `salaryInterval` telling you whether it is yearly, monthly, weekly, or hourly. `annualSalaryMin` converts it to a yearly figure so you can compare roles with different pay periods.
+
+**Why are unlisted jobs missing?** Ashby can return jobs marked `isListed:false`, which are reachable by direct link but are not shown on the public board. They are excluded by default in `byOrg`, `boardSummary`, and `jobDetail`. Set `includeUnlisted: true` to include them; a `jobDetail` lookup for an unlisted job otherwise emits a `job_not_listed` error with the fix in its message.
+
+**Can I get only new postings?** Yes. Set `publishedAfter` to `24h`, `7d`, `2w`, or an ISO date. No saved state is needed between runs.
+
+**Why does the run finish with fewer records than the board has?** `maxItems` is a hard cap and filters run first. Ashby returns a company's whole board at once, so a large board is downloaded even when you save fewer records. Raise `maxItems` or narrow the filters to control the result size.
+
+**Are company websites included?** No. Company names, logos, and timezones are included, but website links are omitted because some employers block automated access to them.
+
+**Is this affiliated with Ashby?** No. This is a third-party actor that reads Ashby's public job-board data.
+
+## Limitations
+
+- Ashby does not publish a directory of every company on its platform. You need a board slug, board URL, job URL, or a company name that resolves to a live board.
+- Salary ranges are shown only when the employer publishes them; equity and bonus details follow the same rule.
+- Currencies are not converted. Use `salaryCurrency` to compare one currency at a time.
+- A board larger than 5,000 jobs would be truncated by the `maxItems` ceiling.
+- Markdown descriptions, seniority scores, and LinkedIn or AI enrichment are not produced. Descriptions are available as plain text and HTML.

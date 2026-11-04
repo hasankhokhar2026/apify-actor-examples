@@ -1,103 +1,169 @@
 # Pinterest Pins, Profiles, Boards & Idea Topics Scraper
 
-Fourteen Pinterest surfaces, one actor: point it at a keyword, a username, a board, an idea-topic page, or a batch of mixed public URLs it auto-routes for you, and it returns the matching Pins, creators, boards, or idea topics. What sets this one apart is its built-in quality filters — minimum saves, minimum creator followers, verified-only, outbound-link-required, image-only, ad-exclusion, and commerce-only — so you can narrow a noisy search down to exactly the rows you want before the run even finishes.
+Collect public Pinterest Pins, creator profiles, boards, board sections,
+idea topics, search results, and comments in one cookieless actor. Point it at a
+keyword, a username, a board or section link, an idea-topic page, a numeric Pin, or a
+batch of mixed public links and it returns the matching rows with real media, creator,
+board, SEO, commerce, and engagement fields.
+
+No Pinterest login, cookie, API key, or user-supplied proxy is required.
 
 ## What this actor does
 
-- Covers Pin detail, Pin/video/user/board search, public profiles, a creator's Pins/boards, board detail/Pins, idea topics, comments, and automatic URL routing in one actor
-- Accepts public URLs, numeric Pin IDs, usernames, board paths, idea-topic links, or plain search phrases — mix and match across a single run
-- Applies pro-level filters at collection time: `minSaves`, `minCreatorFollowers`, `verifiedOnly`, `requireOutboundLink`, `imageOnly`, `excludeAds`, `commerceOnly`
-- Returns real media variants, creator and board objects, product/SEO metadata, and Story Pin page content whenever Pinterest publishes them
-- Keeps genuine zero and `false` values from Pinterest but omits any field Pinterest simply never published for that record
+- Searches Pins, video Pins, people, and boards.
+- Reads Pin details and public comments/activity by numeric Pin URL or ID.
+- Reads public profiles, a creator's Pins, and a creator's boards.
+- Reads board details, board Pins, board sections, and Pins inside a section.
+- Reads idea-topic metadata and, optionally, the Pins shown on the topic page.
+- Auto-routes mixed Pin, profile, board, section, idea, and search links.
+- Applies filters for minimum saves, minimum creator followers, verified accounts,
+  outbound links, image-only results, promoted Pins, and shoppable Pins.
+- Pushes rows as they are collected and omits fields Pinterest never published.
 
-## Output per record
+## Modes
 
-Every row contains `recordType`, `sourceUrl`, and `scrapedAt`. Optional fields are omitted when Pinterest does not publish them.
-
-### Pin fields
-
-Pin rows can contain `pinId`, `pinUrl`, `title`, `description`, `altText`, `autoAltText`, `createdAt`, `images`, `imageUrl`, `videoVariants`, `videoUrl`, `mediaType`, `isVideo`, `pinFormat`, `storyPages`, `saves`, `commentCount`, `likeCount`, `reactionCount`, `reactionCounts`, `repinCount`, `shareCount`, `dominantColor`, `isPromoted`, `isShoppable`, `shoppingFlags`, `product`, `richContentType`, `richContentSite`, `richContentTitle`, `richContentDescription`, `richSummaryType`, `richSummarySite`, `richSummaryTitle`, `articlePublishedAt`, `linkUrl`, `linkDomain`, `seoUrl`, `mobileLinkUrl`, `trackedLinkUrl`, `utmLinkUrl`, `domain`, `contentCategory`, `mediaMethod`, `creator`, `creatorId`, `creatorUsername`, `creatorFullName`, `creatorFollowerCount`, `creatorAvatar`, `creatorVerified`, `creatorIsVerified`, `creatorIsAdsOnly`, `originalCreator`, `board`, `boardId`, `boardName`, `boardDescription`, `boardUrl`, `boardCoverImageUrl`, `boardPinCount`, `boardFollowerCount`, `boardSectionCount`, `boardCollaboratorCount`, `boardPrivacy`, `boardCreatedAt`, `boardIsCollaborative`, `boardFollowedByMe`, `commentsDisabled`, `commentsEligible`, `isEligibleForImageDownload`, `isEligibleForProduct`, `isOutOfStock`, `isStaleProduct`, `isUnsafeForComments`, `isDownstreamPromotion`, `shouldMute`, `visualAnnotations`, `seoBreadcrumbs`, `relatedInterests`, `canonicalUrl`, `canonicalPinId`, and `canonicalPinUrl`.
-
-Image/video maps can include Pinterest's real variant names and nested `url`, `width`, `height`, `duration`, and `thumbnailUrl`. Story pages can contain `pageId`, `layout`, and content blocks with `type`, `text`, `images`, and `videos`.
-
-### Profile fields
-
-Profile rows can contain `profileId`, `username`, `profileUrl`, `fullName`, `bio`, `location`, `createdAt`, `followerCount`, `followingCount`, `pinCount`, `nativePinCount`, `boardCount`, `groupBoardCount`, `videoPinCount`, `storyPinCount`, `profileViews`, `profileReach`, `avatarUrls`, `avatarUrl`, `websiteUrl`, `listedWebsiteUrl`, `domainUrl`, `profileCoverUrl`, `isPrivate`, `isPartner`, `isVerified`, `isVerifiedMerchant`, `isDomainVerified`, `isGcoAccount`, `isTastemaker`, `isInspirationalMerchant`, `isAdsOnlyProfile`, and `isAdsOnly`.
-
-### Board fields
-
-Board rows can contain `boardId`, `name`, `description`, `url`, `boardUrl`, `createdAt`, `pinCount`, `followerCount`, `sectionCount`, `collaboratorCount`, `privacy`, `coverImageUrl`, `isCollaborative`, `followedByMe`, and `ownerUsername`.
-
-### Idea fields
-
-Idea rows can contain `ideaId`, `ideaSlug`, `ideaUrl`, `name`, `title`, `description`, `followerCount`, `pinCount`, `sectionCount`, and `coverImageUrl`.
-
-### Comment/activity fields
-
-Comment and activity rows can contain `recordType`, `activityType`, `pinId`, `pinUrl`, `commentId`, `nodeId`, `text`, `createdAt`, `likeCount`, `reactionCounts`, `reactionByMe`, `helpfulCount`, `markedHelpfulByMe`, `replyCount`, `isEdited`, `isHighlightedByPinOwner`, `isTranslatable`, `tags`, `taggedUsers`, `media`, and an `author` object with `id`, `username`, `firstName`, `fullName`, `avatarUrl`, and `isPrivateProfile`.
-
-Zero and `false` values are retained when Pinterest explicitly publishes them. An absent value means the public Pinterest response did not contain it; private, deleted, or blocked objects are not represented by guessed rows.
+| Mode | What it returns |
+|---|---|
+| `auto` | Routes mixed public Pinterest links to the matching collector. |
+| `pinDetail` | One detailed Pin row per numeric Pin URL or ID. |
+| `comments` | Public comment and activity rows for numeric Pins. |
+| `searchPins` | Pins matching search phrases. |
+| `searchVideos` | Video Pins from Pinterest's native video search scope. |
+| `searchUsers` | Public profile rows from people search. |
+| `searchBoards` | Public board rows from board search. |
+| `userProfile` | Public profile identity, counts, websites, and flags. |
+| `userPins` | Pins in a creator's public created-Pins feed. |
+| `userBoards` | Boards owned by a public creator. |
+| `boardDetail` | Public board metadata. |
+| `boardPins` | Pins inside a board, or inside one board section when given a section URL. |
+| `boardSections` | Sections inside a board. |
+| `ideas` | Idea-topic metadata, plus topic Pins when `includeIdeaPins` is on. |
 
 ## Input
 
 | Field | Type | Default | Description |
 |---|---|---|---|
-| `mode` | choice | `pinDetail` | `auto`, `pinDetail`, `comments`, `searchPins`, `searchVideos`, `searchUsers`, `searchBoards`, `userProfile`, `userPins`, `userBoards`, `boardDetail`, `boardPins`, `ideas`, or `search`. |
-| `startUrls` | array | — | Mixed public links for `auto`. |
-| `keywords` | array of text | `["minimalist home office"]` | Search phrases. |
-| `pinUrls` | array | `["https://www.pinterest.com/pin/142567144448888376/"]` | Public Pin URLs or numeric IDs. |
-| `urls` | array | – | Alias for `pinUrls`, used with `mode=comments`. |
-| `usernames` | array | `["nasa"]` | Usernames, `@usernames`, or profile URLs. |
-| `boardUrls` | array | `["https://www.pinterest.com/nasa/ceres/"]` | Board URLs or `username/board-name` paths. |
-| `ideaUrls` | array | `["https://www.pinterest.com/ideas/beauty/935541271955/"]` | Full public idea-topic URLs. |
-| `ideaSlugs` | array | — | `slug/numeric-id` idea paths. |
-| `maxItems` | integer | `50` | Maximum rows across supplied inputs; supports large exports up to the schema limit. |
-| `maxPages` | integer | `10` | Pages per feed; `0` follows cursors until source exhaustion, and the maximum is 2,000. |
-| `language` | choice | `en` | Pinterest search language. |
-| `minSaves` | integer | — | Keep Pins meeting a published save threshold. |
-| `minCreatorFollowers` | integer | — | Keep Pins meeting a published creator-follower threshold. |
-| `verifiedOnly` | boolean | `false` | Keep only explicitly verified creators/profiles. |
+| `mode` | choice | `searchPins` | One of the modes above. |
+| `startUrls` | array | empty | Mixed public links for `auto`. |
+| `keywords` | array | `[]` | Search phrases. |
+| `pinUrls` | array | `[]` | Numeric Pin URLs or IDs for `pinDetail` and `comments`. |
+| `usernames` | array | `[]` | Usernames, @usernames, or profile links. |
+| `boardUrls` | array | `[]` | Board links, `username/board` paths, or section links. |
+| `ideaUrls` | array | `[]` | Full public idea-topic links. |
+| `ideaSlugs` | array | empty | `slug/numeric-id` idea paths. |
+| `maxItems` | integer | `50` | Maximum rows returned across all inputs (1-20,000). |
+| `maxPages` | integer | `10` | Maximum pages per feed (1-2,000). |
+| `language` | choice | `en` | Pinterest UI language for search ranking and labels. |
+| `minSaves` | integer | unset | Keep Pins whose published save count reaches the value. Unknown counts pass through. |
+| `minCreatorFollowers` | integer | unset | Keep Pins whose creator follower count reaches the value. Unknown counts pass through. |
+| `verifiedOnly` | boolean | `false` | Keep only explicitly verified creators or profiles. |
 | `requireOutboundLink` | boolean | `false` | Keep only Pins with a Pinterest-published destination URL. |
-| `imageOnly` | boolean | `false` | Exclude video Pins. |
-| `excludeAds` | boolean | `false` | Exclude Pins explicitly marked promoted. |
-| `commerceOnly` | boolean | `false` | Keep only Pins with Pinterest product/shopping data. |
-| `enrichPinDetails` | boolean | `false` | Request more Pin detail data for Pins from feeds. |
-| `includeComments` | boolean | `false` | Add public comment/activity rows for collected Pins. |
-| `maxComments` / `limit` | integer | `10` | Maximum public activity rows per Pin. |
-| `cookies` / `cookiesJson` | array/string | — | Optional Cookie-Editor export; public data does not require it. |
-| `proxyConfiguration` | object | — | Optional Apify proxy configuration. |
+| `imageOnly` | boolean | `false` | Drop video Pins. |
+| `excludeAds` | boolean | `false` | Drop Pins Pinterest marks as promoted. |
+| `commerceOnly` | boolean | `false` | Keep only Pins with Pinterest product/shopping metadata. |
+| `enrichPinDetails` | boolean | `false` | Visit numeric Pins from `userPins`/`boardPins` for detail-only fields. |
+| `includeComments` | boolean | `false` | Add public comment/activity rows for collected numeric Pins. |
+| `includeIdeaPins` | boolean | `false` | Also emit the Pins shown on an idea-topic page. |
+| `maxComments` | integer | `10` | Maximum comment/activity rows per Pin. |
+| `proxyConfiguration` | object | unset | Optional proxy override. The actor selects a working route automatically. |
 
-## Modes
+Legacy task inputs are still accepted in code: `search` maps to `searchPins`, `urls`
+maps to `pinUrls`, `limit` maps to `maxComments`, and `queries` maps to `keywords`.
+Cookie fields are no longer used; public Pinterest data needs no cookies.
 
-| Mode | Output |
-|---|---|
-| `auto` | Routes mixed public links to the matching collector. |
-| `pinDetail` | Detailed public Pin rows. |
-| `comments` | Public comment/activity rows for a Pin. |
-| `searchPins` | Pins matching search phrases. |
-| `searchVideos` | Pinterest-classified video or Story Pins matching phrases. |
-| `searchUsers` | Public creator/profile rows from Pinterest search. |
-| `searchBoards` | Public board rows from Pinterest search. |
-| `userProfile` | Public profile identity, counts, websites, and flags. |
-| `userPins` | Pins shown in a public creator's created-Pins feed. |
-| `userBoards` | Boards owned by a public creator. |
-| `boardDetail` | Public board detail rows. |
-| `boardPins` | Pins inside public boards. |
-| `ideas` | Public idea-topic metadata. |
-| `search` | Alias for `searchPins`. |
+## Output
 
-### Example: search Pins
+Every row has `recordType`, `sourceUrl`, and `scrapedAt`. Optional fields are omitted
+when Pinterest does not publish them for that record.
+
+### Pin rows
+
+`pinId`, `pinUrl`, `title`, `description`, `descriptionHtml`, `altText`,
+`autoAltText`, `seoTitle`, `seoDescription`, `seoUrl`, `createdAt`, `domain`,
+`images`, `imageUrl`, `imageWidth`, `imageHeight`, `imageSignature`, `videoVariants`,
+`videoUrl`, `videoDurationMs`, `videoDurationSec`, `videoThumbnailUrl`, `isVideo`,
+`mediaType`, `isPlayable`, `isRepin`, `pinFormat`, `storyPages`, `saves`,
+`commentCount`, `likeCount`, `reactionCount`, `reactionCounts`, `repinCount`,
+`shareCount`, `favoriteUserCount`, `viewCount`, `dominantColor`, `isPromoted`,
+`isShoppable`, `shoppingFlags`, `product`, `productPinData`, `productMetadataId`,
+`priceValue`, `priceCurrency`, `productAvailability`, `hashtags`, `richContentType`,
+`richContentSite`, `richContentTitle`, `richContentDescription`, `richSummaryType`,
+`richSummarySite`, `richSummaryTitle`, `articlePublishedAt`, `recipe`, `linkUrl`,
+`linkDomain`, `mobileLinkUrl`, `trackedLinkUrl`, `utmLinkUrl`, `contentCategory`,
+`mediaMethod`, `creator`, `creatorId`, `creatorUsername`, `creatorFullName`,
+`creatorFollowerCount`, `creatorAvatar`, `creatorUrl`, `creatorVerified`,
+`creatorIsVerified`, `creatorIsAdsOnly`, `originalCreator`, `originalCreatorUrl`,
+`boardId`, `boardName`, `boardDescription`, `boardUrl`, `boardOwnerUsername`,
+`boardCoverImageUrl`, `boardPinCount`, `boardFollowerCount`, `boardSectionCount`,
+`boardCollaboratorCount`, `boardPrivacy`, `boardCreatedAt`, `boardIsCollaborative`,
+`boardFollowedByMe`, `commentsDisabled`, `commentsEligible`,
+`isEligibleForImageDownload`, `isEligibleForProduct`, `isOutOfStock`,
+`isStaleProduct`, `isDownstreamPromotion`, `visualAnnotations`, `seoBreadcrumbs`,
+`relatedInterests`, `canonicalUrl`, `canonicalPinId`, `canonicalPinUrl`,
+`sourceType`, `sourceKeyword`, `sourceUsername`, `sourceBoardPath`, `sourceIdeaUrl`,
+`ideaId`, `ideaSlug`, `sectionId`,
+`sectionTitle`, `sectionSlug`, `sectionPinCount`, `sectionUrl`.
+
+An opaque `e1_...` Pin row keeps `pinId`, omits `pinUrl`, and adds
+`idIsEncrypted=true`, `detailAvailable=false`, and `commentsAvailable=false`.
+`sourceUrl` points at the search, board, or idea page that opens.
+
+### Profile rows
+
+`profileId`, `username`, `profileUrl`, `fullName`, `bio`, `location`, `createdAt`,
+`followerCount`, `followingCount`, `pinCount`, `nativePinCount`, `boardCount`,
+`groupBoardCount`, `videoPinCount`, `storyPinCount`, `profileViews`, `profileReach`,
+`avatarUrls`, `avatarUrl`, `websiteUrl`, `listedWebsiteUrl`, `domainUrl`,
+`profileCoverUrl`, `isPrivate`, `isPartner`, `isVerified`, `isVerifiedMerchant`,
+`isDomainVerified`, `isGcoAccount`, `isTastemaker`, `isInspirationalMerchant`,
+`isAdsOnlyProfile`, `isAdsOnly`.
+
+### Board rows
+
+`boardId`, `name`, `description`, `url`, `boardUrl`, `createdAt`, `pinCount`,
+`followerCount`, `sectionCount`, `collaboratorCount`, `privacy`, `coverImageUrl`,
+`isCollaborative`, `followedByMe`, `ownerUsername`.
+
+### Board-section rows
+
+`recordType="boardSection"`, `sectionId`, `sectionTitle`, `sectionSlug`,
+`sectionPinCount`, `sectionUrl`, `boardId`, `boardName`, `boardUrl`,
+`boardPinCount`, `boardFollowerCount`, `boardSectionCount`, `ownerUsername`, and
+`previewPins` when Pinterest supplies preview cards.
+
+### Idea rows
+
+`ideaId`, `ideaSlug`, `ideaUrl`, `name`, `title`, `description`, `followerCount`,
+`pinCount`, `sectionCount`, and `coverImageUrl`.
+
+### Comment and activity rows
+
+`recordType`, `activityType`, `pinId`, `pinUrl`, `commentId`, `nodeId`, `text`,
+`createdAt`, `likeCount`, `reactionCounts`, `reactionByMe`, `helpfulCount`,
+`markedHelpfulByMe`, `replyCount`, `isEdited`, `isHighlightedByPinOwner`,
+`isTranslatable`, `tags`, `taggedUsers`, `media`, and an `author` object with
+`id`, `username`, `firstName`, `fullName`, `avatarUrl`, and `isPrivateProfile`.
+
+Zero and `false` values are kept when Pinterest explicitly publishes them. Price
+fields are emitted only when the Pin has real product or shopping metadata, and a
+zero price is omitted unless that metadata marks the product as free. An absent field
+means the public response did not contain it; private or deleted objects are never
+guessed.
+
+## Examples
+
+### Search Pins
 
 ```json
 {
   "mode": "searchPins",
-  "keywords": ["minimalist home office", "small kitchen ideas"],
+  "keywords": ["minimalist kitchen", "small home office"],
   "maxItems": 500,
   "excludeAds": true
 }
 ```
 
-### Example: audit creators
+### Audit creator profiles
 
 ```json
 {
@@ -106,60 +172,98 @@ Zero and `false` values are retained when Pinterest explicitly publishes them. A
 }
 ```
 
-### Example: large board with details
+### Board sections and one section's Pins
+
+```json
+{
+  "mode": "boardSections",
+  "boardUrls": ["https://www.pinterest.com/krity_s/home-decor/"],
+  "maxItems": 50
+}
+```
 
 ```json
 {
   "mode": "boardPins",
-  "boardUrls": ["https://www.pinterest.com/nasa/ceres/"],
-  "maxItems": 20000,
-  "maxPages": 2000,
-  "enrichPinDetails": true
+  "boardUrls": ["https://www.pinterest.com/krity_s/home-decor/mens/"],
+  "maxItems": 100
 }
 ```
 
-### Example: mixed Pinterest surfaces
+### Idea topic metadata plus its Pins
+
+```json
+{
+  "mode": "ideas",
+  "ideaUrls": ["https://www.pinterest.com/ideas/beauty/935541271955/"],
+  "includeIdeaPins": true,
+  "maxItems": 50
+}
+```
+
+### Mixed Pinterest links
 
 ```json
 {
   "mode": "auto",
   "startUrls": [
-    "https://www.pinterest.com/pin/142567144448888376/",
+    "https://www.pinterest.com/pin/142567144449081155/",
     "https://www.pinterest.com/nasa/",
     "https://www.pinterest.com/nasa/ceres/",
-    "https://www.pinterest.com/ideas/beauty/935541271955/"
+    "https://www.pinterest.com/krity_s/home-decor/mens/",
+    "https://www.pinterest.com/ideas/beauty/935541271955/",
+    "https://www.pinterest.com/search/pins/?q=space+photography"
   ],
-  "includeComments": true,
-  "maxComments": 25,
   "maxItems": 1000
 }
 ```
 
 ## Use cases
 
-- **Niche content research** — pull high-save, verified-creator Pins for a topic before building a board or campaign
-- **Creator and competitor audits** — profile a list of usernames for follower counts, pin counts, and verification status
-- **Board inventory snapshots** — export every Pin inside a large board, with optional per-pin detail enrichment
-- **Shoppable-product discovery** — filter search results down to `commerceOnly` Pins with outbound links for affiliate or sourcing research
-- **Idea-topic tracking** — monitor Pinterest's curated idea-topic pages for a category over time
-- **Mixed-link batch processing** — drop a list of assorted Pinterest URLs into `auto` mode and let the actor route each one
+- Niche content research: pull high-save, verified-creator Pins for a topic.
+- Creator audits: profile a list of usernames for follower and Pin counts.
+- Board and section snapshots: export a large board or one section.
+- Idea-topic monitoring: track a curated topic and its current Pins.
+- Mixed-link batch processing: route a list of assorted Pinterest URLs in one run.
 
-## FAQ
+## FAQ and limits
 
-**Do I need Pinterest cookies to use this?** No — every mode works on public data without login. Cookies are accepted only as an optional extra for sessions that need them.
+**Do I need Pinterest cookies or a login?** No. Every shipped mode reads public data.
+Cookie inputs from old saved tasks are ignored with a log line.
 
-**How large a run can I do?** `maxItems` and `maxPages` both support very large values; the actor follows feed cursors and pushes rows as it collects them rather than waiting to finish the whole run, so actual output is capped only by what Pinterest's public feed has available.
+**Why is `pinUrl` missing on some Pin rows?** Recent signed-out search, board, and
+idea feeds return opaque `e1_...` IDs that Pinterest's detail endpoint
+cannot open. Those rows are still real list data; the actor keeps `pinId` and adds
+`idIsEncrypted=true` and `detailAvailable=false` instead of writing a broken URL.
 
-**Why didn't `minSaves` or `verifiedOnly` return a row I expected?** These filters only check values Pinterest actually publishes — if a Pin has no published save count or a profile isn't explicitly flagged verified, it's filtered out rather than guessed into passing.
+**Why do search rows not show saves or comment counts?** Pinterest does not publish
+those counters on most signed-out search cards. The actor emits only counters the
+source actually contains and never invents zeroes.
 
-**Does `searchVideos` give me downloadable video files?** No — it returns Pinterest's media URLs and variants (including direct `.mp4`/HLS links where published); downloading and converting those files is outside this actor's scope.
+**Does `relatedPins` still work?** No. Pinterest serves the related-closeup feed on the
+workstation but blocks it by ASN from Apify cloud exits, so the mode is not advertised
+or shown in the input schema. Old saved tasks that still send `mode=relatedPins`
+finish with a status message explaining the limit instead of returning a silent empty
+result. Use `searchPins`, `boardPins`, or `ideas` for discovery.
 
-**Is `commerceOnly` based on keyword matching?** No — it only keeps Pins that carry Pinterest's own product/shopping metadata, never a guess based on the Pin's text.
+**What about the root `/ideas/` feed?** Pinterest requires a numeric interest ID for
+the topic feed. Use a topic URL such as `/ideas/beauty/935541271955/`; the root page
+alone is not supported.
 
-**Why are some profile or board fields missing?** Pinterest exposes a different field set depending on account type, privacy, and what the public API response includes for that object; this actor never fills gaps with placeholder values.
+**Can I filter by price or domain on the server?** Those unpublished search options
+are not exposed because they are ignored or require a token. Use `commerceOnly` and
+the client-side filters that Pinterest's public data actually supports.
 
-**Will I get comments for every Pin when `includeComments` is on?** Only for Pins that actually have public comments or activity Pinterest serves — Pins with none simply produce no comment rows.
+**Are comment replies included?** The actor returns the public top-level comment and
+activity rows Pinterest serves. Replies are not a separate shipped mode.
 
-**What happens if I point it at a private board or profile?** Private objects are skipped; nothing is fabricated for content Pinterest doesn't make public.
+**Will a proxy be selected automatically?** Yes. The actor tries public traffic first,
+then Apify datacenter proxy, and honours an optional caller-supplied proxy. You never
+need to configure one.
 
-**Is this affiliated with Pinterest?** No. This is an independent actor that reads Pinterest's public pages; it is not endorsed by or affiliated with Pinterest Inc.
+**How large a run can I do?** `maxItems` supports up to 20,000 rows and the actor
+follows feed cursors with duplicate and cursor-loop guards. Output is still bounded
+by what Pinterest's public feed exposes.
+
+**Is this affiliated with Pinterest?** No. It is an independent actor that reads
+public Pinterest pages and is not endorsed by Pinterest, Inc.

@@ -50,7 +50,7 @@
         &quot;Place details&quot;,
         &quot;Reviews&quot;
       ],
-      &quot;prefill&quot;: &quot;details&quot;,
+      &quot;prefill&quot;: &quot;search&quot;,
       &quot;title&quot;: &quot;Mode&quot;,
       &quot;type&quot;: &quot;string&quot;
     },
@@ -65,6 +65,7 @@
     &quot;query&quot;: {
       &quot;description&quot;: &quot;What to search for, for example &#x27;hotels in New York&#x27;, &#x27;restaurants Paris&#x27; or &#x27;Eiffel Tower&#x27;. The place family is inferred from words such as hotels, restaurants, museums or things to do.&quot;,
       &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;prefill&quot;: &quot;Eiffel Tower&quot;,
       &quot;sectionCaption&quot;: &quot;Search&quot;,
       &quot;title&quot;: &quot;Search query&quot;,
       &quot;type&quot;: &quot;string&quot;
@@ -280,9 +281,6 @@
       &quot;items&quot;: {
         &quot;type&quot;: &quot;string&quot;
       },
-      &quot;prefill&quot;: [
-        &quot;https://www.tripadvisor.com/Hotel_Review-g60763-d675616-Reviews-The_Plaza_New_York_A_Fairmont_Managed_Hotel-New_York_City_New_York.html&quot;
-      ],
       &quot;sectionCaption&quot;: &quot;Targets&quot;,
       &quot;title&quot;: &quot;Place URLs or IDs&quot;,
       &quot;type&quot;: &quot;array&quot;
@@ -293,9 +291,9 @@
   &quot;title&quot;: &quot;Tripadvisor Place and Review Scraper input&quot;,
   &quot;type&quot;: &quot;object&quot;
 }
-</code></pre></details></section><section class="schema-section" id="output-schema"><h2>Output schema</h2><p>Published result links and storage locations. This schema is not an exhaustive contract for every field in a dataset record.</p><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>recordType</code></td><td>string</td><td>required</td><td>place or review</td></tr><tr><td><code>sourceUrl</code></td><td>string</td><td>required</td><td>Tripadvisor page the record came from</td></tr><tr><td><code>scrapedAt</code></td><td>string</td><td>required</td><td>ISO timestamp of the run</td></tr><tr><td><code>id</code></td><td>string</td><td>required</td><td>Place ID for place rows, review ID for review rows</td></tr><tr><td><code>name</code></td><td>string</td><td>optional</td><td>Place name</td></tr><tr><td><code>type</code></td><td>string</td><td>optional</td><td>hotel, restaurant or attraction</td></tr><tr><td><code>url</code></td><td>string</td><td>optional</td><td>Canonical Tripadvisor place page</td></tr><tr><td><code>rating</code></td><td>string</td><td>optional</td><td>Bubble rating, 0-5</td></tr><tr><td><code>reviewCount</code></td><td>string</td><td>optional</td><td>Total number of reviews for the place</td></tr><tr><td><code>ranking</code></td><td>string</td><td>optional</td><td>Tripadvisor ranking text, for example #13 of 588 hotels in New York City</td></tr><tr><td><code>priceRange</code></td><td>string</td><td>optional</td><td>Price range or price level published by Tripadvisor</td></tr><tr><td><code>cuisine</code></td><td>string</td><td>optional</td><td>Restaurant cuisines</td></tr><tr><td><code>phone</code></td><td>string</td><td>optional</td><td>Phone number</td></tr><tr><td><code>email</code></td><td>string</td><td>optional</td><td>Published email</td></tr><tr><td><code>address</code></td><td>string</td><td>optional</td><td>Full address</td></tr><tr><td><code>lat</code></td><td>string</td><td>optional</td><td>Latitude</td></tr><tr><td><code>lng</code></td><td>string</td><td>optional</td><td>Longitude</td></tr><tr><td><code>amenities</code></td><td>string</td><td>optional</td><td>Hotel amenities</td></tr><tr><td><code>photos</code></td><td>string</td><td>optional</td><td>Place photo URLs</td></tr><tr><td><code>placeId</code></td><td>string</td><td>optional</td><td>Place ID for review rows</td></tr><tr><td><code>title</code></td><td>string</td><td>optional</td><td>Review title</td></tr><tr><td><code>text</code></td><td>string</td><td>optional</td><td>Review body</td></tr><tr><td><code>date</code></td><td>string</td><td>optional</td><td>Review submission timestamp</td></tr><tr><td><code>tripType</code></td><td>string</td><td>optional</td><td>Traveler type reported by the reviewer</td></tr><tr><td><code>language</code></td><td>string</td><td>optional</td><td>Review language tag</td></tr><tr><td><code>author</code></td><td>string</td><td>optional</td><td>Reviewer display name</td></tr><tr><td><code>authorLocation</code></td><td>string</td><td>optional</td><td>Reviewer hometown when published</td></tr><tr><td><code>helpfulVotes</code></td><td>string</td><td>optional</td><td>Helpful votes on the review</td></tr></tbody></table></div><p><a href="output-schema.json">Download the published output schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+</code></pre></details></section><section class="schema-section" id="output-schema"><h2>Output schema</h2><p>Published result links and storage locations. This schema is not an exhaustive contract for every field in a dataset record.</p><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>recordType</code></td><td>string</td><td>required</td><td>place or review</td></tr><tr><td><code>sourceUrl</code></td><td>string</td><td>required</td><td>Tripadvisor page the record came from</td></tr><tr><td><code>scrapedAt</code></td><td>string</td><td>required</td><td>ISO timestamp of the run</td></tr><tr><td><code>id</code></td><td>string</td><td>required</td><td>Place ID for place rows, review ID for review rows</td></tr><tr><td><code>locationId</code></td><td>string</td><td>optional</td><td>Legacy alias of id for place rows</td></tr><tr><td><code>name</code></td><td>string</td><td>optional</td><td>Place name</td></tr><tr><td><code>type</code></td><td>string</td><td>optional</td><td>hotel, restaurant or attraction</td></tr><tr><td><code>subcategory</code></td><td>string</td><td>optional</td><td>Legacy specific subcategory label; falls back to the place type</td></tr><tr><td><code>url</code></td><td>string</td><td>optional</td><td>Canonical Tripadvisor place page</td></tr><tr><td><code>webUrl</code></td><td>string</td><td>optional</td><td>Legacy alias of url</td></tr><tr><td><code>rating</code></td><td>string</td><td>optional</td><td>Legacy bubble rating as text, 0-5</td></tr><tr><td><code>ratingValue</code></td><td>string</td><td>optional</td><td>Numeric bubble rating, 0-5</td></tr><tr><td><code>reviewCount</code></td><td>string</td><td>optional</td><td>Numeric total number of reviews for the place</td></tr><tr><td><code>numberOfReviews</code></td><td>string</td><td>optional</td><td>Legacy review count as text</td></tr><tr><td><code>ranking</code></td><td>string</td><td>optional</td><td>Tripadvisor ranking text, for example #13 of 588 hotels in New York City</td></tr><tr><td><code>rankingString</code></td><td>string</td><td>optional</td><td>Legacy alias of ranking</td></tr><tr><td><code>rankingPosition</code></td><td>string</td><td>optional</td><td>Numeric rank parsed from the ranking string</td></tr><tr><td><code>priceRange</code></td><td>string</td><td>optional</td><td>Price range text published by Tripadvisor</td></tr><tr><td><code>priceLevel</code></td><td>string</td><td>optional</td><td>Price level symbols when published</td></tr><tr><td><code>cuisine</code></td><td>string</td><td>optional</td><td>Restaurant cuisines</td></tr><tr><td><code>phone</code></td><td>string</td><td>optional</td><td>Phone number</td></tr><tr><td><code>email</code></td><td>string</td><td>optional</td><td>Published email</td></tr><tr><td><code>website</code></td><td>string</td><td>optional</td><td>Official website URL when published</td></tr><tr><td><code>hotelClass</code></td><td>string</td><td>optional</td><td>Hotel star rating when published</td></tr><tr><td><code>hours</code></td><td>string</td><td>optional</td><td>Opening hours text when published</td></tr><tr><td><code>description</code></td><td>string</td><td>optional</td><td>Place description when published</td></tr><tr><td><code>neighborhoods</code></td><td>string</td><td>optional</td><td>Neighborhood names when published</td></tr><tr><td><code>address</code></td><td>string</td><td>optional</td><td>Full address</td></tr><tr><td><code>street</code></td><td>string</td><td>optional</td><td>Street address</td></tr><tr><td><code>city</code></td><td>string</td><td>optional</td><td>City name</td></tr><tr><td><code>state</code></td><td>string</td><td>optional</td><td>State or province</td></tr><tr><td><code>country</code></td><td>string</td><td>optional</td><td>Country name</td></tr><tr><td><code>postalCode</code></td><td>string</td><td>optional</td><td>Postal or ZIP code</td></tr><tr><td><code>lat</code></td><td>string</td><td>optional</td><td>Numeric latitude</td></tr><tr><td><code>lng</code></td><td>string</td><td>optional</td><td>Numeric longitude</td></tr><tr><td><code>latitude</code></td><td>string</td><td>optional</td><td>Legacy latitude as text</td></tr><tr><td><code>longitude</code></td><td>string</td><td>optional</td><td>Legacy longitude as text</td></tr><tr><td><code>amenities</code></td><td>string</td><td>optional</td><td>Hotel amenities</td></tr><tr><td><code>photos</code></td><td>string</td><td>optional</td><td>Place photo URLs</td></tr><tr><td><code>photoUrl</code></td><td>string</td><td>optional</td><td>Legacy alias of the first photo</td></tr><tr><td><code>searchQuery</code></td><td>string</td><td>optional</td><td>The search query that found the place</td></tr><tr><td><code>isClosed</code></td><td>string</td><td>optional</td><td>Whether the place is permanently closed, as text</td></tr><tr><td><code>scrapeTimestamp</code></td><td>string</td><td>optional</td><td>Legacy alias of scrapedAt</td></tr><tr><td><code>detailSource</code></td><td>string</td><td>optional</td><td>detailPage or typeaheadFallback</td></tr><tr><td><code>detailStatus</code></td><td>string</td><td>optional</td><td>complete or partial when only a TypeAhead fallback was available</td></tr><tr><td><code>placeId</code></td><td>string</td><td>optional</td><td>Place ID for review rows</td></tr><tr><td><code>title</code></td><td>string</td><td>optional</td><td>Review title</td></tr><tr><td><code>text</code></td><td>string</td><td>optional</td><td>Review body</td></tr><tr><td><code>date</code></td><td>string</td><td>optional</td><td>Review submission timestamp</td></tr><tr><td><code>tripType</code></td><td>string</td><td>optional</td><td>Traveler type reported by the reviewer</td></tr><tr><td><code>language</code></td><td>string</td><td>optional</td><td>Review language tag</td></tr><tr><td><code>author</code></td><td>string</td><td>optional</td><td>Reviewer display name</td></tr><tr><td><code>authorLocation</code></td><td>string</td><td>optional</td><td>Reviewer hometown when published</td></tr><tr><td><code>helpfulVotes</code></td><td>string</td><td>optional</td><td>Helpful votes on the review</td></tr></tbody></table></div><p><a href="output-schema.json">Download the published output schema</a></p><details><summary>View complete JSON</summary><pre><code>{
   &quot;actorOutputSchemaVersion&quot;: 1,
-  &quot;description&quot;: &quot;One row per place in search/details modes and one row per review in reviews mode. Empty fields are omitted at every depth. Every record carries recordType, sourceUrl and scrapedAt.&quot;,
+  &quot;description&quot;: &quot;One row per place in search/details modes and one row per review in reviews mode. Empty fields are omitted at every depth. Every record carries recordType, sourceUrl and scrapedAt. Legacy place names are kept for backward compatibility; rating, numberOfReviews, latitude and longitude are strings, while ratingValue, reviewCount, lat and lng are numeric.&quot;,
   &quot;properties&quot;: {
     &quot;address&quot;: {
       &quot;description&quot;: &quot;Full address&quot;,
@@ -321,6 +319,18 @@
       &quot;title&quot;: &quot;Author location&quot;,
       &quot;type&quot;: &quot;string&quot;
     },
+    &quot;city&quot;: {
+      &quot;description&quot;: &quot;City name&quot;,
+      &quot;template&quot;: &quot;{{city}}&quot;,
+      &quot;title&quot;: &quot;City&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;country&quot;: {
+      &quot;description&quot;: &quot;Country name&quot;,
+      &quot;template&quot;: &quot;{{country}}&quot;,
+      &quot;title&quot;: &quot;Country&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
     &quot;cuisine&quot;: {
       &quot;description&quot;: &quot;Restaurant cuisines&quot;,
       &quot;template&quot;: &quot;{{cuisine}}&quot;,
@@ -331,6 +341,24 @@
       &quot;description&quot;: &quot;Review submission timestamp&quot;,
       &quot;template&quot;: &quot;{{date}}&quot;,
       &quot;title&quot;: &quot;Review date&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;description&quot;: {
+      &quot;description&quot;: &quot;Place description when published&quot;,
+      &quot;template&quot;: &quot;{{description}}&quot;,
+      &quot;title&quot;: &quot;Description&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;detailSource&quot;: {
+      &quot;description&quot;: &quot;detailPage or typeaheadFallback&quot;,
+      &quot;template&quot;: &quot;{{detailSource}}&quot;,
+      &quot;title&quot;: &quot;Detail source&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;detailStatus&quot;: {
+      &quot;description&quot;: &quot;complete or partial when only a TypeAhead fallback was available&quot;,
+      &quot;template&quot;: &quot;{{detailStatus}}&quot;,
+      &quot;title&quot;: &quot;Detail status&quot;,
       &quot;type&quot;: &quot;string&quot;
     },
     &quot;email&quot;: {
@@ -345,10 +373,28 @@
       &quot;title&quot;: &quot;Helpful votes&quot;,
       &quot;type&quot;: &quot;string&quot;
     },
+    &quot;hotelClass&quot;: {
+      &quot;description&quot;: &quot;Hotel star rating when published&quot;,
+      &quot;template&quot;: &quot;{{hotelClass}}&quot;,
+      &quot;title&quot;: &quot;Hotel class&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;hours&quot;: {
+      &quot;description&quot;: &quot;Opening hours text when published&quot;,
+      &quot;template&quot;: &quot;{{hours}}&quot;,
+      &quot;title&quot;: &quot;Hours&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
     &quot;id&quot;: {
       &quot;description&quot;: &quot;Place ID for place rows, review ID for review rows&quot;,
       &quot;template&quot;: &quot;{{id}}&quot;,
       &quot;title&quot;: &quot;ID&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;isClosed&quot;: {
+      &quot;description&quot;: &quot;Whether the place is permanently closed, as text&quot;,
+      &quot;template&quot;: &quot;{{isClosed}}&quot;,
+      &quot;title&quot;: &quot;Is closed&quot;,
       &quot;type&quot;: &quot;string&quot;
     },
     &quot;language&quot;: {
@@ -358,15 +404,33 @@
       &quot;type&quot;: &quot;string&quot;
     },
     &quot;lat&quot;: {
-      &quot;description&quot;: &quot;Latitude&quot;,
+      &quot;description&quot;: &quot;Numeric latitude&quot;,
       &quot;template&quot;: &quot;{{lat}}&quot;,
-      &quot;title&quot;: &quot;Latitude&quot;,
+      &quot;title&quot;: &quot;Numeric latitude&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;latitude&quot;: {
+      &quot;description&quot;: &quot;Legacy latitude as text&quot;,
+      &quot;template&quot;: &quot;{{latitude}}&quot;,
+      &quot;title&quot;: &quot;Legacy latitude&quot;,
       &quot;type&quot;: &quot;string&quot;
     },
     &quot;lng&quot;: {
-      &quot;description&quot;: &quot;Longitude&quot;,
+      &quot;description&quot;: &quot;Numeric longitude&quot;,
       &quot;template&quot;: &quot;{{lng}}&quot;,
-      &quot;title&quot;: &quot;Longitude&quot;,
+      &quot;title&quot;: &quot;Numeric longitude&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;locationId&quot;: {
+      &quot;description&quot;: &quot;Legacy alias of id for place rows&quot;,
+      &quot;template&quot;: &quot;{{locationId}}&quot;,
+      &quot;title&quot;: &quot;Legacy location ID&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;longitude&quot;: {
+      &quot;description&quot;: &quot;Legacy longitude as text&quot;,
+      &quot;template&quot;: &quot;{{longitude}}&quot;,
+      &quot;title&quot;: &quot;Legacy longitude&quot;,
       &quot;type&quot;: &quot;string&quot;
     },
     &quot;name&quot;: {
@@ -375,10 +439,28 @@
       &quot;title&quot;: &quot;Place name&quot;,
       &quot;type&quot;: &quot;string&quot;
     },
+    &quot;neighborhoods&quot;: {
+      &quot;description&quot;: &quot;Neighborhood names when published&quot;,
+      &quot;template&quot;: &quot;{{neighborhoods}}&quot;,
+      &quot;title&quot;: &quot;Neighborhoods&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;numberOfReviews&quot;: {
+      &quot;description&quot;: &quot;Legacy review count as text&quot;,
+      &quot;template&quot;: &quot;{{numberOfReviews}}&quot;,
+      &quot;title&quot;: &quot;Legacy number of reviews&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
     &quot;phone&quot;: {
       &quot;description&quot;: &quot;Phone number&quot;,
       &quot;template&quot;: &quot;{{phone}}&quot;,
       &quot;title&quot;: &quot;Phone&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;photoUrl&quot;: {
+      &quot;description&quot;: &quot;Legacy alias of the first photo&quot;,
+      &quot;template&quot;: &quot;{{photoUrl}}&quot;,
+      &quot;title&quot;: &quot;Legacy photo URL&quot;,
       &quot;type&quot;: &quot;string&quot;
     },
     &quot;photos&quot;: {
@@ -393,8 +475,20 @@
       &quot;title&quot;: &quot;Place ID&quot;,
       &quot;type&quot;: &quot;string&quot;
     },
+    &quot;postalCode&quot;: {
+      &quot;description&quot;: &quot;Postal or ZIP code&quot;,
+      &quot;template&quot;: &quot;{{postalCode}}&quot;,
+      &quot;title&quot;: &quot;Postal code&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;priceLevel&quot;: {
+      &quot;description&quot;: &quot;Price level symbols when published&quot;,
+      &quot;template&quot;: &quot;{{priceLevel}}&quot;,
+      &quot;title&quot;: &quot;Price level&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
     &quot;priceRange&quot;: {
-      &quot;description&quot;: &quot;Price range or price level published by Tripadvisor&quot;,
+      &quot;description&quot;: &quot;Price range text published by Tripadvisor&quot;,
       &quot;template&quot;: &quot;{{priceRange}}&quot;,
       &quot;title&quot;: &quot;Price range&quot;,
       &quot;type&quot;: &quot;string&quot;
@@ -405,10 +499,28 @@
       &quot;title&quot;: &quot;Ranking&quot;,
       &quot;type&quot;: &quot;string&quot;
     },
+    &quot;rankingPosition&quot;: {
+      &quot;description&quot;: &quot;Numeric rank parsed from the ranking string&quot;,
+      &quot;template&quot;: &quot;{{rankingPosition}}&quot;,
+      &quot;title&quot;: &quot;Ranking position&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;rankingString&quot;: {
+      &quot;description&quot;: &quot;Legacy alias of ranking&quot;,
+      &quot;template&quot;: &quot;{{rankingString}}&quot;,
+      &quot;title&quot;: &quot;Legacy ranking string&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
     &quot;rating&quot;: {
-      &quot;description&quot;: &quot;Bubble rating, 0-5&quot;,
+      &quot;description&quot;: &quot;Legacy bubble rating as text, 0-5&quot;,
       &quot;template&quot;: &quot;{{rating}}&quot;,
       &quot;title&quot;: &quot;Rating&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;ratingValue&quot;: {
+      &quot;description&quot;: &quot;Numeric bubble rating, 0-5&quot;,
+      &quot;template&quot;: &quot;{{ratingValue}}&quot;,
+      &quot;title&quot;: &quot;Numeric rating&quot;,
       &quot;type&quot;: &quot;string&quot;
     },
     &quot;recordType&quot;: {
@@ -418,9 +530,15 @@
       &quot;type&quot;: &quot;string&quot;
     },
     &quot;reviewCount&quot;: {
-      &quot;description&quot;: &quot;Total number of reviews for the place&quot;,
+      &quot;description&quot;: &quot;Numeric total number of reviews for the place&quot;,
       &quot;template&quot;: &quot;{{reviewCount}}&quot;,
       &quot;title&quot;: &quot;Review count&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;scrapeTimestamp&quot;: {
+      &quot;description&quot;: &quot;Legacy alias of scrapedAt&quot;,
+      &quot;template&quot;: &quot;{{scrapeTimestamp}}&quot;,
+      &quot;title&quot;: &quot;Legacy scrape timestamp&quot;,
       &quot;type&quot;: &quot;string&quot;
     },
     &quot;scrapedAt&quot;: {
@@ -429,10 +547,34 @@
       &quot;title&quot;: &quot;Scraped at&quot;,
       &quot;type&quot;: &quot;string&quot;
     },
+    &quot;searchQuery&quot;: {
+      &quot;description&quot;: &quot;The search query that found the place&quot;,
+      &quot;template&quot;: &quot;{{searchQuery}}&quot;,
+      &quot;title&quot;: &quot;Search query&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
     &quot;sourceUrl&quot;: {
       &quot;description&quot;: &quot;Tripadvisor page the record came from&quot;,
       &quot;template&quot;: &quot;{{sourceUrl}}&quot;,
       &quot;title&quot;: &quot;Source URL&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;state&quot;: {
+      &quot;description&quot;: &quot;State or province&quot;,
+      &quot;template&quot;: &quot;{{state}}&quot;,
+      &quot;title&quot;: &quot;State or province&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;street&quot;: {
+      &quot;description&quot;: &quot;Street address&quot;,
+      &quot;template&quot;: &quot;{{street}}&quot;,
+      &quot;title&quot;: &quot;Street&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;subcategory&quot;: {
+      &quot;description&quot;: &quot;Legacy specific subcategory label; falls back to the place type&quot;,
+      &quot;template&quot;: &quot;{{subcategory}}&quot;,
+      &quot;title&quot;: &quot;Subcategory&quot;,
       &quot;type&quot;: &quot;string&quot;
     },
     &quot;text&quot;: {
@@ -463,6 +605,18 @@
       &quot;description&quot;: &quot;Canonical Tripadvisor place page&quot;,
       &quot;template&quot;: &quot;{{url}}&quot;,
       &quot;title&quot;: &quot;Place URL&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;webUrl&quot;: {
+      &quot;description&quot;: &quot;Legacy alias of url&quot;,
+      &quot;template&quot;: &quot;{{webUrl}}&quot;,
+      &quot;title&quot;: &quot;Legacy web URL&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;website&quot;: {
+      &quot;description&quot;: &quot;Official website URL when published&quot;,
+      &quot;template&quot;: &quot;{{website}}&quot;,
+      &quot;title&quot;: &quot;Website&quot;,
       &quot;type&quot;: &quot;string&quot;
     }
   },
@@ -716,7 +870,7 @@
 </tr>
 <tr>
 <td><code>details</code></td>
-<td>Reads one place per URL or ID through the Location API, then optionally enriches it with amenities and a larger photo.</td>
+<td>Reads one place per URL or ID from the place page JSON-LD and embedded data, including amenities and a larger photo when published.</td>
 <td><code>startUrls</code></td>
 </tr>
 <tr>
@@ -728,8 +882,10 @@
 </table></div>
 <p>Every record is a flat JSON object. Place rows carry <code>recordType: &quot;place&quot;</code>, review rows carry <code>recordType: &quot;review&quot;</code>, and both include <code>sourceUrl</code> and <code>scrapedAt</code>. Empty fields are omitted at every depth, so there are no nulls, empty strings, empty arrays or empty objects in the dataset.</p>
 <h2 id="readme-place-fields">Place fields</h2>
-<p><code>id</code>, <code>name</code>, <code>type</code>, <code>url</code>, <code>rating</code>, <code>reviewCount</code>, <code>ranking</code>, <code>priceRange</code>, <code>cuisine</code>, <code>phone</code>, <code>email</code>, <code>address</code>, <code>lat</code>, <code>lng</code>, <code>amenities</code>, <code>photos</code>, <code>sourceUrl</code>, <code>scrapedAt</code>, <code>recordType</code>.</p>
-<p><code>type</code> is <code>hotel</code>, <code>restaurant</code> or <code>attraction</code>. <code>rating</code> is a number from 0 to 5, <code>reviewCount</code> is an integer, and <code>amenities</code> and <code>photos</code> are arrays of strings. <code>ranking</code> is the full Tripadvisor ranking text when the Location API publishes it.</p>
+<p>Current fields: <code>id</code>, <code>name</code>, <code>type</code>, <code>url</code>, <code>ratingValue</code>, <code>reviewCount</code>, <code>ranking</code>, <code>priceRange</code>, <code>cuisine</code>, <code>phone</code>, <code>email</code>, <code>address</code>, <code>lat</code>, <code>lng</code>, <code>amenities</code>, <code>photos</code>, <code>sourceUrl</code>, <code>scrapedAt</code>, <code>recordType</code>, <code>detailSource</code>, <code>detailStatus</code>.</p>
+<p>Backward-compatible legacy fields are always restored on place rows: <code>locationId</code>, <code>subcategory</code>, <code>street</code>, <code>city</code>, <code>state</code>, <code>country</code>, <code>postalCode</code>, <code>latitude</code>, <code>longitude</code>, <code>rating</code>, <code>numberOfReviews</code>, <code>rankingPosition</code>, <code>rankingString</code>, <code>priceLevel</code>, <code>website</code>, <code>hotelClass</code>, <code>hours</code>, <code>description</code>, <code>neighborhoods</code>, <code>webUrl</code>, <code>isClosed</code>, <code>photoUrl</code>, <code>searchQuery</code>, <code>scrapeTimestamp</code>.</p>
+<p><code>type</code> is <code>hotel</code>, <code>restaurant</code> or <code>attraction</code>. <code>ratingValue</code>, <code>reviewCount</code>, <code>lat</code> and <code>lng</code> are numeric. The legacy <code>rating</code>, <code>numberOfReviews</code>, <code>latitude</code> and <code>longitude</code> fields are strings, matching the pre-revamp contract. <code>amenities</code> and <code>photos</code> are arrays of strings. <code>ranking</code> is the full Tripadvisor ranking text when the place page publishes it.</p>
+<p>A TypeAhead fallback row carries <code>detailSource: &quot;typeaheadFallback&quot;</code> and <code>detailStatus: &quot;partial&quot;</code>; a normal detail-page row carries <code>detailStatus: &quot;complete&quot;</code>. Media URLs are checked for scheme, host and extension before they are published.</p>
 <h2 id="readme-review-fields">Review fields</h2>
 <p><code>id</code>, <code>placeId</code>, <code>title</code>, <code>text</code>, <code>rating</code>, <code>date</code>, <code>tripType</code>, <code>language</code>, <code>author</code>, <code>authorLocation</code>, <code>helpfulVotes</code>, <code>sourceUrl</code>, <code>scrapedAt</code>, <code>recordType</code>.</p>
 <p><code>date</code> is the review submission timestamp, <code>tripType</code> is the traveler type reported by the reviewer, and <code>authorLocation</code> is the reviewer's published hometown.</p>
@@ -871,27 +1027,32 @@
 }
 </code></pre>
 <h2 id="readme-how-search-works">How search works</h2>
-<p>The actor resolves the destination with the type-ahead GraphQL index, then reads ranked listing pages (<code>Hotels</code>, <code>Restaurants</code> and <code>Attractions</code>) 30 places at a time. When a listing page is unavailable, it runs scoped type-ahead queries for the same destination. Duplicates are removed by place ID, and the order follows the ranking position.</p>
-<p><code>search</code> never uses a browser, a cookie or a login. Listing pages use a Safari TLS profile; the JSON APIs are called with plain HTTP.</p>
+<p>The actor resolves the destination with the type-ahead GraphQL index and always sends the full free-text query first, even when the query contains a family word such as <code>restaurants</code>. Queries like <code>sushi restaurants in New York</code> therefore keep <code>sushi</code> in the request instead of browsing every restaurant in the city.</p>
+<p>Ranked listing pages (<code>Hotels</code>, <code>Restaurants</code> and <code>Attractions</code>) 30 places at a time are used as a supplement. When listing rows are added for a free-text query, they are filtered client-side by the remaining terms against name, cuisine and description; unrelated rows are dropped and reported as <code>relevance_filtered</code> in the run status. TypeAhead results are limited to 20 per request, so a free-text-only query can stop at 20 rows; listing supplement and pagination extend family searches up to <code>maxItems</code>.</p>
+<p>Duplicates are removed by place ID, and TypeAhead results keep their order ahead of listing supplements. <code>search</code> never uses a browser, a cookie or a login. Listing pages use a Safari TLS profile; the JSON APIs are called with plain HTTP. With <code>includeDetails: true</code>, each place is opened once to fill the full ranking, amenities and photo.</p>
 <h2 id="readme-how-details-works">How details works</h2>
-<p>Place IDs are read from URLs such as <code>/Hotel_Review-g60763-d675616-...</code> or from numeric IDs. The Location API supplies the core place fields. With <code>includeDetails: true</code>, the actor also reads the key-amenities and primary-photo GraphQL queries. In <code>details</code> mode it may read the place page to fill hotel amenities or restaurant cuisine that the JSON APIs omit.</p>
+<p>Place IDs are read from URLs such as <code>/Hotel_Review-g60763-d675616-...</code> or from numeric IDs. Each place page is read as HTML and its schema.org JSON-LD plus server-rendered data supply the place fields, including rating, review count, ranking, price range, contacts, coordinates, amenities, cuisine and photos.</p>
+<p>When only a numeric ID is given, the actor opens a category-agnostic Tripadvisor URL and follows the canonical redirect to the hotel, restaurant or attraction page. Redirected URLs are accepted when they keep the same location ID; a redirect to a different ID or to a category page is treated as not found, so data is never attributed to the wrong place.</p>
+<p>If a detail page is blocked, details mode falls back to the public TypeAhead record for the same location ID, including ID-only targets with no URL. The fallback is attempted even when the only target is a numeric ID. If TypeAhead cannot identify the place, the review clients resolve the type as a last resort (<code>detailSource: &quot;reviewTypeFallback&quot;</code>). Those rows are marked <code>detailStatus: &quot;partial&quot;</code> and counted as <code>details_fallback</code> in the run status. For reviews, an ID-only target whose detail page cannot resolve the place type also tries the three review clients before the run is marked blocked.</p>
 <p>Unsupported Tripadvisor entities such as activities, cruises and airlines are skipped with a counter instead of failing the whole run.</p>
 <h2 id="readme-how-reviews-works">How reviews works</h2>
 <p>Reviews come from the public reviews GraphQL endpoint. Each request returns at most 20 reviews; the actor pages by offset until <code>maxReviews</code>, the place total, or the run cap is reached. Filters are sent to the server, not applied after downloading everything.</p>
 <p>Unlike many review tools, the actor filters every row by the target location ID. Attractions are read with the <code>DETAILED</code> sort when <code>MOST_RECENT</code> is requested, which keeps bookable product reviews out of the attraction's own review stream.</p>
 <h2 id="readme-limits">Limits</h2>
 <ul>
-<li>20 reviews per upstream request.</li>
-<li>500 reviews per place per run.</li>
+<li>20 results per TypeAhead request. Free-text-only queries can therefore stop at 20 unless listing pages add relevant rows.</li>
+<li>Search listing pages hold 30 places; up to 17 pages (500 places) are read per family, matching the <code>maxItems</code> ceiling.</li>
+<li>500 reviews per place per run (a product cap; the upstream offset pagination was verified past 5,000).</li>
 <li>10,000 reviews per run across all targets.</li>
 <li>500 places per run.</li>
-<li>Search pages hold 30 places; at most 10 pages are read per family.</li>
 <li>Reviews are deduplicated by review ID and places by location ID.</li>
+<li>Media URLs are validated for scheme, host and extension, but are not rehosted; a hotlink-blocked CDN URL can still fail in a consumer application.</li>
 </ul>
-<p>The actor fails the run when it produces zero records or when every request is blocked. If only some targets or pages fail, it pushes the records it has and reports the partial counts in the run status.</p>
+<p>The actor fails the run when it produces zero records or when every request is blocked. If only some targets or pages fail, it pushes the records it has and reports the partial counts in the run status, including <code>details_fallback</code> and <code>relevance_filtered</code>.</p>
 <h2 id="readme-proxy-and-anti-bot-behaviour">Proxy and anti-bot behaviour</h2>
 <p>Access is direct first. If Tripadvisor returns a real block, the actor tries the free Apify datacenter proxy (<code>AUTO</code>). It only moves to the <code>RESIDENTIAL</code> group after <code>AUTO</code> is also blocked. A user-supplied <code>proxyConfiguration</code> is used after a direct block. You do not need to configure anything for a normal run.</p>
-<p>The JSON endpoints (Location API and GraphQL) are the primary path. HTML listing and enrichment pages are secondary and are fetched only when they add data.</p>
+<p>Escalation is per request: every JSON or HTML request starts at <code>direct</code> and only that request moves up the ladder after a block. A blocked detail page therefore does not force later TypeAhead or review requests onto a paid rung.</p>
+<p>The TypeAhead and reviews GraphQL endpoints are the primary path for discovery and reviews. Place details are read from the place page HTML, which is fetched with the Safari TLS profile and only when a place record is needed.</p>
 <h2 id="readme-faq">FAQ</h2>
 <p><strong>Do I need a Tripadvisor account or API key?</strong>
 No. The actor reads public place and review data. It does not log in, and it does not need user cookies.</p>
@@ -902,9 +1063,9 @@ Tripadvisor publishes amenities mainly for hotels. Restaurants and attractions o
 <p><strong>Why are there fewer reviews than the total on the page?</strong>
 The review count on a place page can include reviews in many languages and, for attractions, reviews from bookable products. The actor returns the reviews that match the target place and your filters, up to <code>maxReviews</code>.</p>
 <p><strong>Why does a search return fewer places than <code>maxItems</code>?</strong>
-Tripadvisor may not render enough ranked cards for a destination, or a page may be unavailable. The actor falls back to type-ahead results and reports partial runs in the status message.</p>
+Tripadvisor may not render enough ranked cards for a destination, a page may be unavailable, or a free-text TypeAhead query may return at most 20 rows. The actor supplements TypeAhead with filtered listing pages and reports <code>relevance_filtered</code>, <code>listing_failures</code> and other partial counts in the status message.</p>
 <p><strong>Are the records always the same shape?</strong>
 No. Empty fields are removed, so a restaurant row has <code>cuisine</code> while a hotel row may have <code>amenities</code>. Every record keeps the identity, source and timestamp fields.</p>
 <p><strong>Is this affiliated with Tripadvisor?</strong>
 No. This is an independent, third-party actor that reads publicly available Tripadvisor data. It is not affiliated with or endorsed by Tripadvisor.</p>
-</details></section><section id="python-quickstart"><h2>Python quickstart</h2><p>Use a schema-derived input and the Python standard library to start a run. An Apify account and token are required for execution.</p><p><a href="/apify-actor-examples/guides/sv4kVnROMGAakFpbJ/">Open the step-by-step Python guide →</a></p></section><p class="source-note">Source build <code>REpkKrndcW9VyXZNB</code>. Documentation is regenerated from the default published build; private drafts are not included.</p></article></div></main><footer class="footer"><strong>Nimbryxo Studio</strong><div class="footer-links"><a href="/apify-actor-examples/topics/">Topics</a><a href="/apify-actor-examples/sources/">Documentation sources</a><a href="https://apify.com/nimbryxo-studio">Apify</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></div></footer></body></html>
+</details></section><section id="python-quickstart"><h2>Python quickstart</h2><p>Use a schema-derived input and the Python standard library to start a run. An Apify account and token are required for execution.</p><p><a href="/apify-actor-examples/guides/sv4kVnROMGAakFpbJ/">Open the step-by-step Python guide →</a></p></section><p class="source-note">Source build <code>Kpwye7U0V5HAbd8G6</code>. Documentation is regenerated from the default published build; private drafts are not included.</p></article></div></main><footer class="footer"><strong>Nimbryxo Studio</strong><div class="footer-links"><a href="/apify-actor-examples/topics/">Topics</a><a href="/apify-actor-examples/sources/">Documentation sources</a><a href="https://apify.com/nimbryxo-studio">Apify</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></div></footer></body></html>

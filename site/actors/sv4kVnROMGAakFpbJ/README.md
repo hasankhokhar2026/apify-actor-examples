@@ -7,16 +7,20 @@ Read Tripadvisor places and reviews in one actor. Search a destination for ranke
 | Mode | What it does | Main inputs |
 |---|---|---|
 | `search` | Finds ranked places through Tripadvisor listing pages. If those pages are unavailable, it falls back to the GraphQL type-ahead index. | `query`, optional `location` |
-| `details` | Reads one place per URL or ID through the Location API, then optionally enriches it with amenities and a larger photo. | `startUrls` |
+| `details` | Reads one place per URL or ID from the place page JSON-LD and embedded data, including amenities and a larger photo when published. | `startUrls` |
 | `reviews` | Reads reviews for each target place, 20 per request, with offset pagination and filters. Targets can come from URLs, IDs, or a search query. | `startUrls` or `query`, review filters |
 
 Every record is a flat JSON object. Place rows carry `recordType: "place"`, review rows carry `recordType: "review"`, and both include `sourceUrl` and `scrapedAt`. Empty fields are omitted at every depth, so there are no nulls, empty strings, empty arrays or empty objects in the dataset.
 
 ## Place fields
 
-`id`, `name`, `type`, `url`, `rating`, `reviewCount`, `ranking`, `priceRange`, `cuisine`, `phone`, `email`, `address`, `lat`, `lng`, `amenities`, `photos`, `sourceUrl`, `scrapedAt`, `recordType`.
+Current fields: `id`, `name`, `type`, `url`, `ratingValue`, `reviewCount`, `ranking`, `priceRange`, `cuisine`, `phone`, `email`, `address`, `lat`, `lng`, `amenities`, `photos`, `sourceUrl`, `scrapedAt`, `recordType`, `detailSource`, `detailStatus`.
 
-`type` is `hotel`, `restaurant` or `attraction`. `rating` is a number from 0 to 5, `reviewCount` is an integer, and `amenities` and `photos` are arrays of strings. `ranking` is the full Tripadvisor ranking text when the Location API publishes it.
+Backward-compatible legacy fields are always restored on place rows: `locationId`, `subcategory`, `street`, `city`, `state`, `country`, `postalCode`, `latitude`, `longitude`, `rating`, `numberOfReviews`, `rankingPosition`, `rankingString`, `priceLevel`, `website`, `hotelClass`, `hours`, `description`, `neighborhoods`, `webUrl`, `isClosed`, `photoUrl`, `searchQuery`, `scrapeTimestamp`.
+
+`type` is `hotel`, `restaurant` or `attraction`. `ratingValue`, `reviewCount`, `lat` and `lng` are numeric. The legacy `rating`, `numberOfReviews`, `latitude` and `longitude` fields are strings, matching the pre-revamp contract. `amenities` and `photos` are arrays of strings. `ranking` is the full Tripadvisor ranking text when the place page publishes it.
+
+A TypeAhead fallback row carries `detailSource: "typeaheadFallback"` and `detailStatus: "partial"`; a normal detail-page row carries `detailStatus: "complete"`. Media URLs are checked for scheme, host and extension before they are published.
 
 ## Review fields
 
@@ -99,13 +103,19 @@ Search a city and then export its reviews:
 
 ## How search works
 
-The actor resolves the destination with the type-ahead GraphQL index, then reads ranked listing pages (`Hotels`, `Restaurants` and `Attractions`) 30 places at a time. When a listing page is unavailable, it runs scoped type-ahead queries for the same destination. Duplicates are removed by place ID, and the order follows the ranking position.
+The actor resolves the destination with the type-ahead GraphQL index and always sends the full free-text query first, even when the query contains a family word such as `restaurants`. Queries like `sushi restaurants in New York` therefore keep `sushi` in the request instead of browsing every restaurant in the city.
 
-`search` never uses a browser, a cookie or a login. Listing pages use a Safari TLS profile; the JSON APIs are called with plain HTTP.
+Ranked listing pages (`Hotels`, `Restaurants` and `Attractions`) 30 places at a time are used as a supplement. When listing rows are added for a free-text query, they are filtered client-side by the remaining terms against name, cuisine and description; unrelated rows are dropped and reported as `relevance_filtered` in the run status. TypeAhead results are limited to 20 per request, so a free-text-only query can stop at 20 rows; listing supplement and pagination extend family searches up to `maxItems`.
+
+Duplicates are removed by place ID, and TypeAhead results keep their order ahead of listing supplements. `search` never uses a browser, a cookie or a login. Listing pages use a Safari TLS profile; the JSON APIs are called with plain HTTP. With `includeDetails: true`, each place is opened once to fill the full ranking, amenities and photo.
 
 ## How details works
 
-Place IDs are read from URLs such as `/Hotel_Review-g60763-d675616-...` or from numeric IDs. The Location API supplies the core place fields. With `includeDetails: true`, the actor also reads the key-amenities and primary-photo GraphQL queries. In `details` mode it may read the place page to fill hotel amenities or restaurant cuisine that the JSON APIs omit.
+Place IDs are read from URLs such as `/Hotel_Review-g60763-d675616-...` or from numeric IDs. Each place page is read as HTML and its schema.org JSON-LD plus server-rendered data supply the place fields, including rating, review count, ranking, price range, contacts, coordinates, amenities, cuisine and photos.
+
+When only a numeric ID is given, the actor opens a category-agnostic Tripadvisor URL and follows the canonical redirect to the hotel, restaurant or attraction page. Redirected URLs are accepted when they keep the same location ID; a redirect to a different ID or to a category page is treated as not found, so data is never attributed to the wrong place.
+
+If a detail page is blocked, details mode falls back to the public TypeAhead record for the same location ID, including ID-only targets with no URL. The fallback is attempted even when the only target is a numeric ID. If TypeAhead cannot identify the place, the review clients resolve the type as a last resort (`detailSource: "reviewTypeFallback"`). Those rows are marked `detailStatus: "partial"` and counted as `details_fallback` in the run status. For reviews, an ID-only target whose detail page cannot resolve the place type also tries the three review clients before the run is marked blocked.
 
 Unsupported Tripadvisor entities such as activities, cruises and airlines are skipped with a counter instead of failing the whole run.
 
@@ -117,20 +127,23 @@ Unlike many review tools, the actor filters every row by the target location ID.
 
 ## Limits
 
-- 20 reviews per upstream request.
-- 500 reviews per place per run.
+- 20 results per TypeAhead request. Free-text-only queries can therefore stop at 20 unless listing pages add relevant rows.
+- Search listing pages hold 30 places; up to 17 pages (500 places) are read per family, matching the `maxItems` ceiling.
+- 500 reviews per place per run (a product cap; the upstream offset pagination was verified past 5,000).
 - 10,000 reviews per run across all targets.
 - 500 places per run.
-- Search pages hold 30 places; at most 10 pages are read per family.
 - Reviews are deduplicated by review ID and places by location ID.
+- Media URLs are validated for scheme, host and extension, but are not rehosted; a hotlink-blocked CDN URL can still fail in a consumer application.
 
-The actor fails the run when it produces zero records or when every request is blocked. If only some targets or pages fail, it pushes the records it has and reports the partial counts in the run status.
+The actor fails the run when it produces zero records or when every request is blocked. If only some targets or pages fail, it pushes the records it has and reports the partial counts in the run status, including `details_fallback` and `relevance_filtered`.
 
 ## Proxy and anti-bot behaviour
 
 Access is direct first. If Tripadvisor returns a real block, the actor tries the free Apify datacenter proxy (`AUTO`). It only moves to the `RESIDENTIAL` group after `AUTO` is also blocked. A user-supplied `proxyConfiguration` is used after a direct block. You do not need to configure anything for a normal run.
 
-The JSON endpoints (Location API and GraphQL) are the primary path. HTML listing and enrichment pages are secondary and are fetched only when they add data.
+Escalation is per request: every JSON or HTML request starts at `direct` and only that request moves up the ladder after a block. A blocked detail page therefore does not force later TypeAhead or review requests onto a paid rung.
+
+The TypeAhead and reviews GraphQL endpoints are the primary path for discovery and reviews. Place details are read from the place page HTML, which is fetched with the Safari TLS profile and only when a place record is needed.
 
 ## FAQ
 
@@ -147,7 +160,7 @@ Tripadvisor publishes amenities mainly for hotels. Restaurants and attractions o
 The review count on a place page can include reviews in many languages and, for attractions, reviews from bookable products. The actor returns the reviews that match the target place and your filters, up to `maxReviews`.
 
 **Why does a search return fewer places than `maxItems`?**
-Tripadvisor may not render enough ranked cards for a destination, or a page may be unavailable. The actor falls back to type-ahead results and reports partial runs in the status message.
+Tripadvisor may not render enough ranked cards for a destination, a page may be unavailable, or a free-text TypeAhead query may return at most 20 rows. The actor supplements TypeAhead with filtered listing pages and reports `relevance_filtered`, `listing_failures` and other partial counts in the status message.
 
 **Are the records always the same shape?**
 No. Empty fields are removed, so a restaurant row has `cuisine` while a hotel row may have `amenities`. Every record keeps the identity, source and timestamp fields.

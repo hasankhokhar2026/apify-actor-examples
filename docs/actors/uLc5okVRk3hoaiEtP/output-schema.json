@@ -1,9 +1,15 @@
 {
   "actorOutputSchemaVersion": 1,
-  "description": "Jobs from public Ashby job boards — title, department, team, location, remote status, compensation ranges, apply links, and full descriptions.",
+  "description": "Jobs and company board summaries from public Ashby job boards - titles, departments, teams, structured locations, workplace types, compensation ranges, descriptions, apply links, and optional company metadata.",
   "properties": {
+    "boardSummaries": {
+      "description": "Dataset containing one departments/locations/compensation summary per company in boardSummary mode.",
+      "template": "{{links.apiDefaultDatasetUrl}}/items",
+      "title": "Ashby board summaries",
+      "type": "string"
+    },
     "jobs": {
-      "description": "Dataset containing all scraped Ashby job postings.",
+      "description": "Dataset containing scraped Ashby job postings in byOrg and jobDetail modes.",
       "template": "{{links.apiDefaultDatasetUrl}}/items",
       "title": "Ashby jobs",
       "type": "string"

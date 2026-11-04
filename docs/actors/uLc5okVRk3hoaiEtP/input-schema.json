@@ -1,79 +1,319 @@
 {
-  "description": "List all jobs across one or more Ashby job boards, or fetch a single job by ID.",
+  "description": "List jobs across Ashby job boards, fetch specific job postings by URL or ID, or summarize a company's board.",
   "properties": {
     "department": {
-      "description": "Keep only jobs whose department contains this text (case-insensitive), e.g. `Engineering`, `Sales`, `Design`. Applies in mode=byOrg.",
+      "description": "Case-insensitive text match over department and team. Examples: `Engineering`, `Sales`, `Design`.",
       "editor": "textfield",
-      "title": "Filter by department",
+      "title": "Department or team (mode=byOrg, boardSummary)",
       "type": "string"
+    },
+    "employmentType": {
+      "default": "any",
+      "description": "Keep only one employment type.",
+      "editor": "select",
+      "enum": [
+        "any",
+        "FullTime",
+        "PartTime",
+        "Contract",
+        "Intern",
+        "Temporary"
+      ],
+      "enumTitles": [
+        "Any employment type",
+        "Full time",
+        "Part time",
+        "Contract",
+        "Internship",
+        "Temporary"
+      ],
+      "prefill": "any",
+      "title": "Employment type (mode=byOrg, boardSummary)",
+      "type": "string"
+    },
+    "hasSalaryOnly": {
+      "default": false,
+      "description": "Drop jobs where the employer did not publish a salary range.",
+      "prefill": false,
+      "title": "Only jobs with a published salary (mode=byOrg, boardSummary)",
+      "type": "boolean"
+    },
+    "includeCompanyInfo": {
+      "default": true,
+      "description": "Fetch each company's public board page once for its display name, logo, and timezone. Adds one request per company. Off in the daily test prefill.",
+      "prefill": false,
+      "title": "Include company name and logo",
+      "type": "boolean"
+    },
+    "includeDescriptionHtml": {
+      "default": false,
+      "description": "Add the original `descriptionHtml` to each job. Increases dataset size.",
+      "prefill": false,
+      "title": "Include HTML description (mode=byOrg, jobDetail)",
+      "type": "boolean"
+    },
+    "includeDescriptionPlain": {
+      "default": true,
+      "description": "Add `descriptionPlain` to each job. On by default; turn it off for compact metadata-only rows.",
+      "prefill": false,
+      "title": "Include plain-text description (mode=byOrg, jobDetail)",
+      "type": "boolean"
+    },
+    "includeDetails": {
+      "default": false,
+      "description": "Fetch each returned job's public page for all team names, confidentiality, compensation philosophy, direct-apply flag, and remote-eligible countries. Adds one request per job; slower on large runs.",
+      "prefill": false,
+      "title": "Include job-page details (mode=byOrg, jobDetail)",
+      "type": "boolean"
+    },
+    "includeUnlisted": {
+      "default": false,
+      "description": "Include jobs marked `isListed:false` (direct-link-only postings that are not shown on the public board). Applies to every mode: `jobDetail` returns a `job_not_listed` error for an unlisted job unless this is on. Off by default.",
+      "prefill": false,
+      "title": "Include unlisted jobs",
+      "type": "boolean"
     },
     "isRemoteOnly": {
       "default": false,
-      "description": "Keep only jobs flagged as remote. Applies in mode=byOrg.",
+      "description": "Keep jobs the board marks as remote. Ashby sets this for both Remote and Hybrid roles; use `workplaceType=Remote` for fully remote jobs.",
       "prefill": false,
-      "title": "Remote jobs only",
+      "title": "Remote-friendly only (mode=byOrg, boardSummary)",
       "type": "boolean"
     },
     "jobId": {
-      "description": "The Ashby job posting UUID, e.g. `09a9381c-677b-40a5-9ff1-027bd4302c13`. Found in a job URL: `https://jobs.ashbyhq.com/{org}/{jobId}`.",
+      "description": "The Ashby posting UUID or a full job URL. Used alone or with `orgSlug`.",
       "editor": "textfield",
       "title": "Job ID (mode=jobDetail)",
       "type": "string"
     },
+    "jobUrls": {
+      "default": [],
+      "description": "Public Ashby job posting URLs, e.g. `https://jobs.ashbyhq.com/Ramp/<job-id>`. The `/application` suffix and query strings are accepted.",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "prefill": [],
+      "title": "Job URLs (mode=jobDetail)",
+      "type": "array"
+    },
     "location": {
-      "description": "Keep only jobs whose primary or secondary location contains this text (case-insensitive), e.g. `New York`, `Remote`, `London`. Applies in mode=byOrg.",
+      "description": "Case-insensitive text match over the primary location, secondary locations, city, region, and country. Examples: `New York`, `Remote`, `London`.",
       "editor": "textfield",
-      "title": "Filter by location",
+      "title": "Location (mode=byOrg, boardSummary)",
       "type": "string"
+    },
+    "maxAnnualSalary": {
+      "description": "Keep jobs whose published annual salary range overlaps this maximum. Use with `minAnnualSalary` for a range.",
+      "maximum": 10000000,
+      "minimum": 0,
+      "title": "Maximum annual salary (mode=byOrg, boardSummary)",
+      "type": "integer"
     },
     "maxItems": {
       "default": 100,
-      "description": "Hard cap on the number of job records emitted.",
-      "maximum": 2000,
+      "description": "Hard cap on the number of job records (or company summaries) pushed to the dataset. Error records for invalid inputs are additional diagnostics and do not count.",
+      "maximum": 5000,
       "minimum": 1,
-      "prefill": 100,
-      "title": "Max items",
+      "prefill": 1,
+      "title": "Max records",
+      "type": "integer"
+    },
+    "maxItemsPerOrg": {
+      "default": 0,
+      "description": "Cap the number of job records from each company after filters. `0` means no per-company cap.",
+      "maximum": 5000,
+      "minimum": 0,
+      "prefill": 0,
+      "title": "Max jobs per company (mode=byOrg)",
+      "type": "integer"
+    },
+    "minAnnualSalary": {
+      "description": "Keep jobs whose published annual salary range overlaps this minimum. Hourly, monthly, and weekly ranges are annualized. Jobs with no published salary are kept unless `hasSalaryOnly` is on.",
+      "maximum": 10000000,
+      "minimum": 0,
+      "title": "Minimum annual salary (mode=byOrg, boardSummary)",
       "type": "integer"
     },
     "mode": {
       "default": "byOrg",
-      "description": "What to scrape.",
+      "description": "What to collect. `byOrg` lists jobs from one or more companies; `jobDetail` fetches specific postings by URL or ID; `boardSummary` returns one departments/locations/compensation summary per company. The legacy values are kept so saved tasks continue to run.",
       "editor": "select",
       "enum": [
         "byOrg",
-        "jobDetail"
+        "jobDetail",
+        "boardSummary",
+        "companies",
+        "job",
+        "detail",
+        "summary"
       ],
       "enumTitles": [
-        "List all jobs across organizations",
-        "Fetch a single job by ID"
+        "List jobs across companies",
+        "Fetch specific jobs by URL or ID",
+        "Summarize company job boards",
+        "Legacy: companies (same as list jobs)",
+        "Legacy: job (same as fetch jobs)",
+        "Legacy: detail (same as fetch jobs)",
+        "Legacy: summary (same as board summary)"
       ],
       "prefill": "byOrg",
       "title": "Mode",
       "type": "string"
     },
     "orgSlug": {
-      "description": "Single Ashby company slug that owns the job (e.g. `Ramp`).",
+      "description": "Used with `jobId` when you do not have a full job URL. Example: `Ramp`.",
       "editor": "textfield",
-      "title": "Organization slug (mode=jobDetail)",
+      "title": "Company slug (mode=jobDetail)",
       "type": "string"
     },
     "orgSlugs": {
       "default": [
         "Ramp"
       ],
-      "description": "One or more Ashby company slugs, e.g. `Ramp`, `Notion`, `Linear`. You can also paste a full board URL like `https://jobs.ashbyhq.com/Ramp` and the slug is extracted automatically.",
+      "description": "Ashby board slugs, company names, or board URLs. Examples: `Ramp`, `Neko Health`, `https://jobs.ashbyhq.com/Ramp`. Names are matched to the closest live board automatically.",
       "editor": "stringList",
       "prefill": [
         "Ramp"
       ],
-      "title": "Organization slugs (mode=byOrg)",
+      "title": "Companies (mode=byOrg, boardSummary)",
       "type": "array"
+    },
+    "publishedAfter": {
+      "description": "Only jobs published on or after this date. Accepts `YYYY-MM-DD`, an ISO datetime, or a relative window such as `24h`, `7d`, or `2w`.",
+      "editor": "textfield",
+      "title": "Published after (mode=byOrg, boardSummary)",
+      "type": "string"
+    },
+    "publishedBefore": {
+      "description": "Only jobs published on or before this date. Accepts `YYYY-MM-DD`, an ISO datetime, or a relative window.",
+      "editor": "textfield",
+      "title": "Published before (mode=byOrg, boardSummary)",
+      "type": "string"
+    },
+    "salaryCurrency": {
+      "default": "any",
+      "description": "Only compare salaries in this currency. `any` compares the numeric range as published (currencies are not converted).",
+      "editor": "select",
+      "enum": [
+        "any",
+        "USD",
+        "EUR",
+        "GBP",
+        "CAD",
+        "AUD",
+        "SGD",
+        "PLN",
+        "SEK",
+        "CNY",
+        "MXN",
+        "KRW",
+        "BRL",
+        "SAR",
+        "DKK",
+        "ALL",
+        "INR",
+        "JPY",
+        "CHF",
+        "NZD",
+        "ZAR",
+        "AED",
+        "NOK",
+        "HKD",
+        "ILS",
+        "TRY",
+        "CZK",
+        "HUF",
+        "RON",
+        "UAH"
+      ],
+      "enumTitles": [
+        "Any currency",
+        "US dollar",
+        "Euro",
+        "British pound",
+        "Canadian dollar",
+        "Australian dollar",
+        "Singapore dollar",
+        "Polish zloty",
+        "Swedish krona",
+        "Chinese yuan",
+        "Mexican peso",
+        "South Korean won",
+        "Brazilian real",
+        "Saudi riyal",
+        "Danish krone",
+        "Albanian lek",
+        "Indian rupee",
+        "Japanese yen",
+        "Swiss franc",
+        "New Zealand dollar",
+        "South African rand",
+        "UAE dirham",
+        "Norwegian krone",
+        "Hong Kong dollar",
+        "Israeli shekel",
+        "Turkish lira",
+        "Czech koruna",
+        "Hungarian forint",
+        "Romanian leu",
+        "Ukrainian hryvnia"
+      ],
+      "prefill": "any",
+      "title": "Salary currency (mode=byOrg, boardSummary)",
+      "type": "string"
+    },
+    "searchQuery": {
+      "description": "Case-insensitive text match over title, department, team, location, and description. Descriptions are searched even when `includeDescriptionPlain` is off and in `boardSummary` mode. Examples: `engineer`, `payments`, `München`.",
+      "editor": "textfield",
+      "title": "Search text (mode=byOrg, boardSummary)",
+      "type": "string"
+    },
+    "sortBy": {
+      "default": "default",
+      "description": "Order of the returned job records. `default` keeps the board's own order.",
+      "editor": "select",
+      "enum": [
+        "default",
+        "newest",
+        "oldest",
+        "title"
+      ],
+      "enumTitles": [
+        "Board order",
+        "Newest first",
+        "Oldest first",
+        "Title A-Z"
+      ],
+      "prefill": "default",
+      "title": "Sort results (mode=byOrg)",
+      "type": "string"
+    },
+    "workplaceType": {
+      "default": "any",
+      "description": "Keep only fully remote, hybrid, or on-site jobs. Unlike `isRemoteOnly`, this separates Remote from Hybrid. Jobs with no workplace type are excluded when a specific value is chosen.",
+      "editor": "select",
+      "enum": [
+        "any",
+        "Remote",
+        "Hybrid",
+        "OnSite"
+      ],
+      "enumTitles": [
+        "Any workplace type",
+        "Fully remote",
+        "Hybrid",
+        "On-site"
+      ],
+      "prefill": "any",
+      "title": "Workplace type (mode=byOrg, boardSummary)",
+      "type": "string"
     }
   },
   "required": [
     "mode"
   ],
   "schemaVersion": 1,
-  "title": "Ashby Jobs Scraper Input",
+  "title": "Ashby Job Board Scraper Input",
   "type": "object"
 }

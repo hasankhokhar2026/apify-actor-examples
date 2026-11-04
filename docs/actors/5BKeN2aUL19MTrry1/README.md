@@ -4,117 +4,151 @@
 
 # Bar Standards Board Barrister Register Scraper
 
-Scrape the **Bar Standards Board's** official public register for England & Wales — search the Barristers' Register by name or chambers, filter by practising status / area of practice / Public Access, browse past disciplinary findings, check barristers currently under interim suspension, look up BSB-regulated entities (chambers / legal-services businesses), or enrich specific barrister/finding URLs directly. Data comes straight from [barstandardsboard.org.uk](https://www.barstandardsboard.org.uk), the statutory regulator of barristers in England and Wales. No auth, no proxy, no cookies required.
+Scrape the **Bar Standards Board's** official public register for England & Wales. Search the Barristers' Register by name or chambers, pull the complete authorised-practising register in a single run, browse past disciplinary findings with sanctions, costs and decision documents, check interim suspensions, export BSB-regulated entities, or fetch specific barrister and finding URLs directly. Everything comes from [barstandardsboard.org.uk](https://www.barstandardsboard.org.uk), the statutory regulator of barristers in England and Wales. No login, no cookies, no proxy configuration and no API key are needed.
 
 ## What this actor does
 
-- **Five modes:**
-  - `search` — search the live Barristers' Register by name or chambers/organisation
-  - `disciplinaryFindings` — browse the public register of past disciplinary findings
-  - `interimSuspensions` — list barristers currently subject to interim suspension or interim conditions
-  - `entities` — BSB-regulated legal-services businesses ("entities"): authorised bodies, licensed bodies (ABS), and previously-authorised bodies
-  - `byUrl` — fetch specific barrister-register or disciplinary-finding URLs directly
-- **Rich filters** on `search`: practising status, area of practice (27 categories), Public Access registration, authorisation to conduct litigation, and register view (practising vs. sanctioned/disbarred)
-- **Rich filters** on `disciplinaryFindings`: finding status, disciplinary action/sanction type, hearing type, and a decision-date window (past month / past year / custom range)
-- **Full profile enrichment** — optionally fetches each barrister's/finding's detail page for chambers address, call date, Inn of Court, rights of audience, areas of practice, disciplinary history, breach/offence details, and more
-- **Empty fields are always omitted** — every field on every record is real, extracted data (no `null`/`N/A` placeholders)
+- **Six modes:**
+  - `authorisedBarristers` — the full authorised-practising register (about 18,700 barristers) from the BSB's own published CSV, with contact details, member status, reserved activities and any current disciplinary finding
+  - `search` — live search of the Barristers' Register by barrister name or chambers/organisation name
+  - `disciplinaryFindings` — browse the public register of past disciplinary findings, sorted by date or relevance
+  - `interimSuspensions` — barristers currently subject to an interim suspension or interim conditions
+  - `entities` — BSB-regulated legal-services businesses (authorised bodies, licensed bodies/ABS, and previously-authorised bodies), including their reserved legal activities
+  - `byUrl` — fetch one or more barrister-register or disciplinary-finding URLs directly
+- **Filters that match the regulator's own register:** practising status, 28 areas of practice, Public Access registration, conduct-of-litigation authorisation, register view (practising vs. sanctioned non-practising)
+- **Disciplinary filters:** finding status, sanction type, hearing type, and a decision-date window (past month, past year, or a custom range)
+- **Deep profiles:** call date, Inn of Court, practising certificate validity, chambers address and switchboard, other addresses and numbers, rights of audience, areas of practice, other entitlements, youth-courts registration and disciplinary history
+- **Decision documents:** finding records include sanction, costs, status and links to published decision/report documents where the BSB provides them
+- **Empty fields are always omitted** — every value is real extracted data, never `null`, `N/A` or a placeholder sentence
 
-## Output fields
+## Output per barrister (`recordType: "barrister"`)
 
-### Barrister records (`recordType: "barrister"`)
-
-`barristerName`, `barristerUrl` / `sourceUrl`, `practisingStatusBadge`, `primaryPracticeAddress`, and `barristerId` come straight from the register's listing page. Every other field below is only added when `fetchFullProfile` is on (the default) — turning it off gives you just those five fields plus `registerView`, `recordType` and `scrapedAt`.
+`search` returns the listing fields plus enrichment from each profile page. `authorisedBarristers` returns the full CSV record, which also carries the address split and member status. Fields the source does not publish for an individual are omitted.
 
 | Field | Description |
 |---|---|
-| `barristerName` | Full name as shown on the register |
-| `barristerId` | Bar Standards Board's internal register ID |
-| `barristerUrl` / `sourceUrl` | Canonical register URL for this barrister |
-| `practisingStatusBadge` | Register badge, e.g. `Practising`, `Disbarred` |
-| `currentPractisingStatus` | `Employed`, `Self Employed`, `Dual Capacity`, `Disbarred`, etc. — requires `fetchFullProfile` |
-| `dateOfCall` | Month/year called to the Bar — requires `fetchFullProfile` |
-| `innOfCourt` | Inn of Court membership — requires `fetchFullProfile` |
-| `practisingCertificateValid` | Practising certificate validity period — requires `fetchFullProfile` |
-| `primaryPracticeAddress` | Chambers / employer address |
-| `primaryPracticeSwitchboardNumber` | Chambers switchboard phone number — requires `fetchFullProfile` |
-| `rightsOfAudience` | List of rights of audience granted — requires `fetchFullProfile` |
-| `publicAccessRegistered` | Whether registered for the Public Access scheme (bool) — requires `fetchFullProfile` |
-| `authorisedToConductLitigation` | Whether authorised to conduct litigation (bool) — requires `fetchFullProfile` |
-| `areasOfPractice` | List of declared practice areas — requires `fetchFullProfile` |
-| `otherEntitlements` | Other regulatory entitlements (e.g. Immigration Work, Probate) — requires `fetchFullProfile` |
-| `youthCourtsRegistered` | Whether registered to work in Youth Courts (bool) — requires `fetchFullProfile` |
-| `disciplinaryFindings` | List of `{findingDate, hearingType, findingUrl, findingId}` if any exist — requires `fetchFullProfile` |
+| `barristerName` | Full name as published, including title and post-nominal honours where present |
+| `title` / `forenames` / `surname` / `honours` | Name parts from the full-register CSV |
+| `barristerId` | BSB register ID extracted from the profile URL (search / byUrl only) |
+| `barristerUrl` / `sourceUrl` | Canonical register profile URL, or the CSV download URL for full-register records |
+| `practisingStatusBadge` | Badge shown on the register, e.g. `Practising`, `Disbarred` |
+| `currentPractisingStatus` | `Employed`, `Self Employed`, `Dual Capacity`, `Disbarred`, etc. |
+| `memberStatus` | Membership position, e.g. `Tenant`, `Door Tenant`, `Sole Practitioner`, `Manager (BSB Authorised Body)` |
+| `dateOfCall` | Month and year called to the Bar |
+| `innOfCourt` | Inn of Court |
+| `practisingCertificateValid` | Practising certificate validity period |
+| `primaryPracticeAddress` | Main chambers / employer address |
+| `addressName`, `addressFloorStreet`, `addressTown`, `addressCounty`, `addressPostcode`, `addressCountry` | Address components from the full-register CSV |
+| `primaryPracticeSwitchboardNumber` | Main switchboard number |
+| `otherPracticeAddresses` | Additional practice addresses listed for the barrister |
+| `otherPracticeSwitchboardNumbers` | Additional switchboard numbers |
+| `fax` | Fax number, where the BSB publishes one |
+| `rightsOfAudience` | Rights of audience granted |
+| `publicAccessRegistered` | Whether registered for the Public Access scheme (boolean) |
+| `authorisedToConductLitigation` | Whether authorised to conduct litigation (boolean) |
+| `areasOfPractice` | Declared areas of practice |
+| `otherEntitlements` | Other regulatory entitlements, e.g. probate activities, reserved instrument activities, administration of oaths |
+| `youthCourtsRegistered` | Whether registered for youth courts (boolean) |
+| `disciplinaryFindings` | List of findings with `findingId`, `findingDate`, `hearingType`, `findingUrl`, `breachDetails`, `offenceDetails`, `sanction`, `costs`, `findingStatus`. `findingDate` is ISO 8601: `YYYY-MM-DD` for full decision dates, `YYYY-MM` for the month-precision summary boxes shown on barrister profiles. The summary boxes themselves carry only date/type/URL/ID; the other finding fields are available in `disciplinaryFindings` and `byUrl` finding records and in CSV-nested findings |
 | `registerView` | `practising` or `sanctionedNonPractising` |
 | `recordType`, `scrapedAt` | Always present |
 
-### Disciplinary finding records (`recordType: "disciplinaryFinding"`)
-
-`barristerName`, `findingUrl` / `findingId` / `sourceUrl`, `sanction`, `hearingType`, and `findingDate` come straight from the findings listing page. `barristerRegisterUrl` / `barristerId`, `currentPractisingStatus`, `dateOfCall`, `innOfCourt`, `breachDetails`, and `offenceDetails` are only added when `fetchFullProfile` is on (the default).
+## Output per disciplinary finding (`recordType: "disciplinaryFinding"`)
 
 | Field | Description |
 |---|---|
-| `barristerName` | Name of the barrister subject to the finding |
-| `barristerRegisterUrl` / `barristerId` | Link back to the barrister's register entry — requires `fetchFullProfile` |
+| `barristerName` | Barrister subject to the finding |
+| `barristerRegisterUrl` / `barristerId` | Link back to the barrister's register entry |
 | `findingUrl` / `findingId` / `sourceUrl` | Canonical finding URL and ID |
 | `sanction` | Sanction imposed |
-| `hearingType` | Tribunal/hearing type |
-| `findingDate` | Date of the finding |
-| `currentPractisingStatus`, `dateOfCall`, `innOfCourt` | Barrister's status at time of finding — requires `fetchFullProfile` |
-| `breachDetails` | Rules/Code of Conduct provisions breached — requires `fetchFullProfile` |
-| `offenceDetails` | Narrative description of the misconduct — requires `fetchFullProfile` |
+| `costs` | Costs order, where published |
+| `findingStatus` | `Final`, `Open to Appeal` or `Appeal Pending` |
+| `hearingType` | Tribunal / hearing type |
+| `findingDate` | Decision date in ISO 8601 (`YYYY-MM-DD`) |
+| `currentPractisingStatus`, `dateOfCall`, `innOfCourt` | Barrister's details at the time of the finding |
+| `breachDetails` | Rules / Code of Conduct provisions breached |
+| `offenceDetails` | Narrative description of the misconduct |
+| `documents` | Published decision/report documents as `{documentTitle, documentUrl, documentType}` |
 
-### Interim suspension records (`recordType: "interimSuspension"`)
+## Output per interim suspension (`recordType: "interimSuspension"`)
 
 | Field | Description |
 |---|---|
 | `barristerName` | Name of the suspended barrister |
-| `details` | Full text describing the suspension/conditions |
-| `sourceUrl` | Link to the listing (with anchor) |
+| `details` | Full text of the suspension or interim conditions |
+| `sourceUrl` | Link to the listing anchor |
+| `recordType`, `scrapedAt` | Always present |
 
-### Entity records (`recordType: "entity"`)
+## Output per entity (`recordType: "entity"`)
 
 | Field | Description |
 |---|---|
 | `entityName` | Name of the BSB-regulated entity |
-| `tradingNameOf` | Underlying company name, if the entity trades under a different name |
-| `entityStatus` | `authorised` / `licensed` / `previouslyAuthorised` |
+| `tradingNameOf` | Underlying company name when the entity trades under a different name |
+| `entityStatus` | `authorised`, `licensed` or `previouslyAuthorised` |
 | `entityType` | Legal structure, e.g. `Limited Liability Partnership`, `Private Limited Company` |
-| `authorisationValidFrom` | Date authorisation/licence took effect (`YYYY-MM-DD`) |
-| `renewalDate` | Next renewal date (authorised/licensed entities only) |
-| `authorisationValidTo` | Date authorisation ended (previously-authorised entities only) |
-| `practisingAddress` / `practisingAddressSecondary` | Registered practising address(es) |
-| `telephone` | Contact telephone number, where published |
-| `managers` | List of named managers/partners |
+| `authorisationValidFrom` | Date authorisation or licence took effect |
+| `renewalDate` | Next renewal date (current entities) |
+| `authorisationValidTo` | Date authorisation ended (previously-authorised entities) |
+| `practisingAddress` / `practisingAddressSecondary` | Registered practice address(es) |
+| `telephone` | Telephone number, where published |
+| `managers` | Named managers / partners |
 | `headOfLegalPractice` | Head of Legal Practice (HOLP) |
 | `headOfFinanceAndAdministration` | Head of Finance and Administration (HOFA) |
-| `administrationOfOaths` | Whether authorised to administer oaths (bool) |
-| `authorisedToConductLitigation` | Whether authorised to conduct litigation (bool) |
-| `sourceUrl` | The BSB entities-register download URL this record was extracted from |
+| `administrationOfOaths` | Authorised to administer oaths (boolean) |
+| `authorisedToConductLitigation` | Authorised to conduct litigation (boolean) |
+| `fullRightsOfAudience` | Authorised to exercise full rights of audience (boolean) |
+| `probateActivities` | Authorised for probate activities (boolean) |
+| `reservedInstrumentActivities` | Authorised for reserved instrument activities (boolean) |
+| `approvedTrainingOrganisation` | Approved training organisation (boolean) |
+| `immigrationAdvice` | Authorised to undertake immigration advice (boolean) |
+| `sourceUrl` | The BSB entities-register workbook URL |
+| `recordType`, `scrapedAt` | Always present |
 
 ## Input
 
 | Field | Type | Default | Description |
 |---|---|---|---|
-| `mode` | select | `search` | `search` / `disciplinaryFindings` / `interimSuspensions` / `entities` / `byUrl` |
-| `searchQuery` | string | – | Name/chambers (mode=search, required) or optional name filter (mode=disciplinaryFindings, entities) |
-| `searchField` | select | `name` | `name` or `organisation` (mode=search) |
+| `mode` | select | `search` | `search` / `authorisedBarristers` / `disciplinaryFindings` / `interimSuspensions` / `entities` / `byUrl` |
+| `searchQuery` | string | – | Barrister/chambers query for `search` (required); optional name/chambers filter for `authorisedBarristers`, `disciplinaryFindings` and `entities` |
+| `searchField` | select | `name` | Match `searchQuery` against `name` or `organisation` (mode=search and authorisedBarristers) |
 | `registerView` | select | `practising` | `practising` or `sanctionedNonPractising` (mode=search) |
-| `practisingStatus` | multi-select | – | Filter by `Dual Capacity` / `Employed` / `Self Employed` (mode=search) |
-| `areasOfPractice` | multi-select | – | Filter by one or more of 27 practice areas (mode=search) |
-| `publicAccessRegistered` | select | `any` | `any` / `yes` / `no` (mode=search) |
-| `authorisedToConductLitigation` | select | `any` | `any` / `yes` / `no` (mode=search) |
+| `practisingStatus` | multi-select | – | `Dual Capacity` / `Employed` / `Self Employed` (mode=search, authorisedBarristers) |
+| `areasOfPractice` | multi-select | – | Any of 28 practice areas (mode=search, authorisedBarristers) |
+| `publicAccessRegistered` | select | `any` | `any` / `yes` / `no` (mode=search, authorisedBarristers) |
+| `authorisedToConductLitigation` | select | `any` | `any` / `yes` / `no` (mode=search, authorisedBarristers) |
 | `sortOrder` | select | `recent` | `recent` or `relevance` (mode=disciplinaryFindings) |
-| `findingStatus` | multi-select | – | Filter by `Final` / `Open to Appeal` / `Appeal Pending` (mode=disciplinaryFindings) |
-| `disciplinaryActionType` | multi-select | – | Filter by `Disbarment` / `Fine` / `Other` / `Suspension` (mode=disciplinaryFindings) |
-| `findingType` | multi-select | – | Filter by hearing type, e.g. Disciplinary Tribunal (3/5 person) (mode=disciplinaryFindings) |
+| `findingStatus` | multi-select | – | `Final` / `Open to Appeal` / `Appeal Pending` (mode=disciplinaryFindings) |
+| `disciplinaryActionType` | multi-select | – | `Disbarment` / `Fine` / `Other` / `Suspension` (mode=disciplinaryFindings) |
+| `findingType` | multi-select | – | Determination by consent, Disciplinary Tribunal (3/5 person), Visitors Hearing (appeal) (mode=disciplinaryFindings) |
 | `findingDateRange` | select | any | `pastMonth` / `pastYear` / `custom` (mode=disciplinaryFindings) |
-| `findingDateFrom` / `findingDateTo` | string | – | Custom decision-date range boundaries, format `YYYY-MM-DD` (findingDateRange=custom) |
-| `entityStatus` | multi-select | – | Filter by `authorised` / `licensed` / `previouslyAuthorised` (mode=entities) |
-| `startUrls` | array | – | Barrister/finding URLs to fetch directly (mode=byUrl) |
-| `fetchFullProfile` | boolean | `true` | Fetch each record's detail page for extra fields |
-| `maxItems` | integer | `30` | Hard cap on emitted records (1–1000) |
+| `findingDateFrom` / `findingDateTo` | string | – | Custom decision-date boundaries in `YYYY-MM-DD` (findingDateRange=custom) |
+| `entityStatus` | multi-select | – | `authorised` / `licensed` / `previouslyAuthorised` (mode=entities) |
+| `startUrls` | array | – | Barrister or finding URLs (mode=byUrl) |
+| `fetchFullProfile` | boolean | `true` | Fetch each search/finding detail page for extra fields (not used by authorisedBarristers) |
+| `maxItems` | integer | `30` | Hard cap on emitted records (1–20,000) |
 
-### Example: search practising barristers by chambers, filtered
+### Example: pull the complete authorised-practising register
+
+```json
+{
+  "mode": "authorisedBarristers",
+  "maxItems": 20000
+}
+```
+
+### Example: full register filtered to crime barristers with Public Access
+
+```json
+{
+  "mode": "authorisedBarristers",
+  "areasOfPractice": ["crime"],
+  "publicAccessRegistered": "yes",
+  "maxItems": 500
+}
+```
+
+### Example: search barristers at a chambers
 
 ```json
 {
@@ -137,22 +171,12 @@ Scrape the **Bar Standards Board's** official public register for England & Wale
 }
 ```
 
-### Example: disciplinary findings, disbarment or suspension in the past year
+### Example: disbarment or suspension in a custom period
 
 ```json
 {
   "mode": "disciplinaryFindings",
   "disciplinaryActionType": ["disbarment", "suspension"],
-  "findingDateRange": "pastYear",
-  "maxItems": 50
-}
-```
-
-### Example: disciplinary findings in a custom date range
-
-```json
-{
-  "mode": "disciplinaryFindings",
   "findingDateRange": "custom",
   "findingDateFrom": "2020-01-01",
   "findingDateTo": "2020-12-31",
@@ -160,7 +184,7 @@ Scrape the **Bar Standards Board's** official public register for England & Wale
 }
 ```
 
-### Example: check barristers currently under interim suspension
+### Example: barristers under interim suspension
 
 ```json
 {
@@ -176,45 +200,57 @@ Scrape the **Bar Standards Board's** official public register for England & Wale
   "mode": "entities",
   "searchQuery": "law",
   "entityStatus": ["authorised", "licensed"],
-  "maxItems": 100
+  "maxItems": 200
 }
 ```
 
-### Example: fetch specific barrister URLs
+### Example: fetch specific barrister or finding URLs
 
 ```json
 {
   "mode": "byUrl",
   "startUrls": [
-    "https://www.barstandardsboard.org.uk/barristers-register/7C5DCA7B263721A6CB12F687568766BD.html"
+    "https://www.barstandardsboard.org.uk/barristers-register/7C5DCA7B263721A6CB12F687568766BD.html",
+    "https://www.barstandardsboard.org.uk/disciplinary_finding/183742.html"
   ]
 }
 ```
 
 ## Use cases
 
-- **Due diligence** — verify a barrister's practising status, Inn of Court, and disciplinary history before instructing them
-- **Legal directories & comparison sites** — bulk-import chambers, practice areas, and contact details
-- **Compliance monitoring** — track new disciplinary findings or interim suspensions as they're published
-- **Recruitment & chambers research** — find barristers by practice area, chambers, or public-access availability
-- **Journalism & legal research** — cross-reference disciplinary sanctions with case reporting
+- **Due diligence** — verify a barrister's practising status, certificate validity, Inn of Court and disciplinary history before instructing them
+- **Legal directories and comparison sites** — import the full authorised-practising register with chambers, contact details and practice areas
+- **Compliance monitoring** — track new disciplinary findings, sanctions and interim suspensions as they are published
+- **Recruitment and chambers research** — size practice areas, identify Public Access or litigation-authorised barristers, and map chambers
+- **Regulatory analytics** — measure the distribution of practising statuses, areas of practice and reserved activities across England & Wales
+- **Journalism and legal research** — cross-reference a finding's sanction, costs and published decision documents with case reporting
 
 ## Limitations
 
-- The BSB also publishes a "Disqualified persons" page (people barred from working for any BSB-regulated entity). It is not a structured/searchable register — it is a single static sentence ("There are currently no persons disqualified") that is empty at the time of writing — so it is not exposed as a mode here. If the BSB later populates it with a real list, it can be added as a future mode.
+- The BSB's **Disqualified persons** page is currently empty ("There are currently no persons disqualified"), so it is not exposed as a mode. This is a currently-empty surface, not a proven unparseable page.
+- The **full-register CSV** does not publish a barrister profile URL or register ID. Those two fields are available in `search` and `byUrl` records, but not in `authorisedBarristers` records.
+- The register's own **date filter** is unreliable and can return the full findings list for any date selected. The actor therefore applies the decision-date window to each finding's actual decision date, so the filter works as expected.
+- Historical findings before 2002 are not published by the BSB.
+- Some addresses or phone numbers are genuinely unpublished by the BSB for a particular barrister; those fields are omitted rather than invented.
 
 ## FAQ
 
-**Is this official data?** Yes — everything comes directly from the Bar Standards Board's own public register at barstandardsboard.org.uk, the statutory regulator for barristers in England and Wales.
+**Is this official data?** Yes. Every record comes from the Bar Standards Board's own public register at barstandardsboard.org.uk, the statutory regulator for barristers in England and Wales.
 
-**What's the difference between `practising` and `sanctionedNonPractising` register views?** `practising` covers currently authorised practising barristers (Employed / Self Employed / Dual Capacity). `sanctionedNonPractising` covers barristers who have been disbarred or otherwise sanctioned and are no longer authorised to practise.
+**What is the difference between the `search` and `authorisedBarristers` modes?** `search` asks the live register for a name or chambers match and can enrich each result from its profile page. `authorisedBarristers` downloads the BSB's published full-register CSV in one request and returns every authorised practising barrister with the complete CSV field set. Use the CSV mode for bulk work and `search` for targeted lookups.
 
-**Why do some barrister records have fewer fields than others?** The register itself only publishes certain fields for certain statuses — e.g. a disbarred barrister has no current chambers address, so that field is simply omitted rather than shown as empty.
+**What is the difference between `practising` and `sanctionedNonPractising`?** `practising` covers currently authorised barristers who hold a practising certificate. `sanctionedNonPractising` covers disbarred or unregistered barristers who have a current disciplinary finding.
 
-**Does `searchQuery` support partial matches?** Yes — the register performs a substring/fuzzy match against barrister names or chambers/organisation names, same as the site's own search box.
+**Why do some barrister records have fewer fields than others?** The register only publishes certain details for certain statuses. For example, a disbarred barrister has no current chambers address, so that field is omitted rather than shown as empty.
 
-**How far back do disciplinary findings go?** Per the Bar Standards Board's publication policy, historical findings before 2002 are not published, and findings without a suspension/disbarment are removed from the register after two years.
+**Does `searchQuery` support partial matches?** Yes. The register performs a substring match on names or chambers/organisation names, the same as the site's own search box. The full-register mode applies the same partial-match rule to the CSV.
 
-**Can I look up a barrister I already have a URL for?** Yes — use `mode: "byUrl"` with the full barrister-register or disciplinary_finding URL(s).
+**Can I get every barrister in one run?** Yes. Use `mode: "authorisedBarristers"` and set `maxItems` to `20000`, the current maximum and above the register size (18,739 rows at the latest verification).
 
-**Is `fetchFullProfile` worth the extra request?** For `search` and `disciplinaryFindings`, the listing page already includes name, status/sanction, and address/hearing-type. Turning on `fetchFullProfile` (default) fetches each individual detail page for the complete profile — Inn of Court, rights of audience, areas of practice, breach/offence details, etc. Turn it off for a faster, lighter-weight listing-only crawl.
+**How current is the register?** The BSB updates the register continuously, with up to an hour of processing lag. The full-register CSV is regenerated by the BSB; `sourceUrl` identifies the current downloadable asset (the URL itself does not encode a snapshot date).
+
+**Can I look up a barrister when I only have a URL?** Yes. Use `mode: "byUrl"` with full barrister-register or disciplinary_finding URLs.
+
+**Are decision documents always available?** No. The BSB publishes a decision or report document for some findings only. When a document is published, it appears in `documents`; otherwise the field is omitted.
+
+**Do I need to set up a proxy?** No. The actor connects to the public register directly. Just fill in the input and run it.

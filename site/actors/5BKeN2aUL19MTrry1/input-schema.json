@@ -1,9 +1,9 @@
 {
-  "description": "Search the Bar Standards Board's official Barristers' Register, browse past disciplinary findings or interim suspensions, or enrich barrister/finding URLs directly.",
+  "description": "Search or bulk-download the Bar Standards Board's official Barristers' Register, browse disciplinary findings or interim suspensions, export BSB-regulated entities, or fetch barrister and finding URLs directly.",
   "properties": {
     "areasOfPractice": {
       "default": [],
-      "description": "Restrict to barristers practising in ANY of these areas of law. Leave empty for all areas. Only applies to the Practising register view.",
+      "description": "Restrict to barristers practising in ANY of these areas of law. Leave empty for all areas. Applies to mode=search (practising view only) and mode=authorisedBarristers.",
       "editor": "select",
       "items": {
         "enum": [
@@ -75,7 +75,7 @@
     },
     "authorisedToConductLitigation": {
       "default": "any",
-      "description": "Filter by whether the barrister is authorised to conduct litigation.",
+      "description": "Filter by whether the barrister is authorised to conduct litigation. Applies to mode=search (practising view only) and mode=authorisedBarristers.",
       "editor": "select",
       "enum": [
         "any",
@@ -139,8 +139,8 @@
     },
     "fetchFullProfile": {
       "default": true,
-      "description": "For mode=search and mode=disciplinaryFindings: fetch each record's full detail page for additional fields (chambers address, areas of practice, rights of audience, breach/offence details, etc). Uses one extra HTTP request per record.",
-      "prefill": true,
+      "description": "For mode=search and mode=disciplinaryFindings: fetch each record's full detail page for additional fields (chambers address, areas of practice, rights of audience, breach/offence details, etc). Uses one extra HTTP request per record. Not used by mode=authorisedBarristers (the CSV already contains the full record).",
+      "prefill": false,
       "title": "Fetch full profile details",
       "type": "boolean"
     },
@@ -152,7 +152,7 @@
     },
     "findingDateRange": {
       "default": "",
-      "description": "Restrict findings to a decision-date window. `custom` uses `findingDateFrom`/`findingDateTo`.",
+      "description": "Restrict findings to a decision-date window. `custom` uses `findingDateFrom`/`findingDateTo`. The window is applied to each finding's decision date.",
       "editor": "select",
       "enum": [
         "",
@@ -224,10 +224,10 @@
     },
     "maxItems": {
       "default": 30,
-      "description": "Hard cap on the number of records emitted in this run.",
-      "maximum": 1000,
+      "description": "Hard cap on the number of records emitted in this run. The full authorised-practising register currently has about 18,700 rows.",
+      "maximum": 20000,
       "minimum": 1,
-      "prefill": 30,
+      "prefill": 1,
       "title": "Max items",
       "type": "integer"
     },
@@ -237,6 +237,7 @@
       "editor": "select",
       "enum": [
         "search",
+        "authorisedBarristers",
         "disciplinaryFindings",
         "interimSuspensions",
         "byUrl",
@@ -244,6 +245,7 @@
       ],
       "enumTitles": [
         "Search the Barristers' Register (by name / chambers)",
+        "Full authorised-practising register (bulk CSV, ~18,700 barristers)",
         "Browse past disciplinary findings",
         "Barristers with interim suspensions or conditions",
         "Fetch specific barrister / finding URLs",
@@ -255,7 +257,7 @@
     },
     "practisingStatus": {
       "default": [],
-      "description": "Restrict to barristers with these practising statuses. Leave empty for all statuses. Only applies to the Practising register view.",
+      "description": "Restrict to barristers with these practising statuses. Leave empty for all statuses. Applies to mode=search (practising view only) and mode=authorisedBarristers.",
       "editor": "select",
       "items": {
         "enum": [
@@ -277,7 +279,7 @@
     },
     "publicAccessRegistered": {
       "default": "any",
-      "description": "Filter by whether the barrister is registered to accept work directly from the public (Public Access scheme).",
+      "description": "Filter by whether the barrister is registered to accept work directly from the public (Public Access scheme). Applies to mode=search (practising view only) and mode=authorisedBarristers.",
       "editor": "select",
       "enum": [
         "any",
@@ -311,7 +313,7 @@
     },
     "searchField": {
       "default": "name",
-      "description": "Whether `searchQuery` matches the barrister's name or their chambers/organisation.",
+      "description": "Whether `searchQuery` matches the barrister's name or their chambers/organisation (mode=search and mode=authorisedBarristers).",
       "editor": "select",
       "enum": [
         "name",
@@ -327,10 +329,10 @@
     },
     "searchQuery": {
       "default": "",
-      "description": "For mode=search: barrister name or chambers/organisation name (required). For mode=disciplinaryFindings: optional barrister name filter — leave empty to browse all findings. For mode=entities: optional entity/trading name filter — leave empty to include all entities.",
+      "description": "For mode=search: barrister name or chambers/organisation name (required). For mode=authorisedBarristers: optional name/chambers filter over the full register. For mode=disciplinaryFindings: optional barrister name filter — leave empty to browse all findings. For mode=entities: optional entity/trading name filter — leave empty to include all entities.",
       "editor": "textfield",
       "prefill": "smith",
-      "title": "Search query (mode=search, disciplinaryFindings, entities)",
+      "title": "Search query (mode=search, authorisedBarristers, disciplinaryFindings, entities)",
       "type": "string"
     },
     "sortOrder": {
@@ -364,6 +366,6 @@
     "mode"
   ],
   "schemaVersion": 1,
-  "title": "UK Barrister Register Scraper Input",
+  "title": "Bar Standards Board Barrister Register Scraper Input",
   "type": "object"
 }
