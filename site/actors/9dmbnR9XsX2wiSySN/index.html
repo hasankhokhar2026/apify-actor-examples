@@ -1,0 +1,944 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src &#x27;self&#x27;; script-src &#x27;self&#x27; &#x27;sha256-v9ybnTTJ6EHCwoNdSA1phcqjAoUvqosklS8JflIcvdI=&#x27;; style-src &#x27;self&#x27;; img-src &#x27;self&#x27; https: data:; base-uri &#x27;self&#x27;; form-action &#x27;self&#x27;; object-src &#x27;none&#x27;"><title>YouTube Ad Creative &amp; Advertiser Tracker | Nimbryxo Studio</title><meta name="description" content="Find the video and image ad creatives an advertiser is running on YouTube, discovered by keyword, advertiser name, or advertiser ID, with country, format, and first/last-shown date"><meta name="robots" content="index,follow"><link rel="canonical" href="https://hasankhokhar2026.github.io/apify-actor-examples/actors/9dmbnR9XsX2wiSySN/"><meta property="og:title" content="YouTube Ad Creative &amp; Advertiser Tracker | Nimbryxo Studio"><meta property="og:description" content="Find the video and image ad creatives an advertiser is running on YouTube, discovered by keyword, advertiser name, or advertiser ID, with country, format, and first/last-shown date"><meta property="og:type" content="website"><meta property="og:url" content="https://hasankhokhar2026.github.io/apify-actor-examples/actors/9dmbnR9XsX2wiSySN/"><meta property="og:site_name" content="Nimbryxo Studio"><meta name="twitter:card" content="summary"><link rel="icon" href="/apify-actor-examples/assets/mark.svg?v=2d20f9dc334a" type="image/svg+xml"><link rel="stylesheet" href="/apify-actor-examples/assets/site.css?v=39545fd4a399"><link rel="stylesheet" href="/apify-actor-examples/assets/brand.css?v=eb0f935ade25"><link rel="alternate" type="application/rss+xml" title="Nimbryxo Studio guides" href="/apify-actor-examples/feed.xml"><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization","name":"Nimbryxo Studio","url":"https://hasankhokhar2026.github.io/apify-actor-examples/","sameAs":["https://apify.com/nimbryxo-studio"]},{"@type":"WebSite","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#website","name":"Nimbryxo Studio","url":"https://hasankhokhar2026.github.io/apify-actor-examples/","publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"inLanguage":"en"},{"@type":"WebPage","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/9dmbnR9XsX2wiSySN/#webpage","name":"YouTube Ad Creative & Advertiser Tracker","description":"Find the video and image ad creatives an advertiser is running on YouTube, discovered by keyword, advertiser name, or advertiser ID, with country, format, and first/last-shown dates.","url":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/9dmbnR9XsX2wiSySN/","isPartOf":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#website"},"publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"inLanguage":"en","mainEntity":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/9dmbnR9XsX2wiSySN/#article"},"breadcrumb":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/9dmbnR9XsX2wiSySN/#breadcrumb"}},{"@type":"TechArticle","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/9dmbnR9XsX2wiSySN/#article","headline":"YouTube Ad Creative & Advertiser Tracker","name":"YouTube Ad Creative & Advertiser Tracker","description":"Find the video and image ad creatives an advertiser is running on YouTube, discovered by keyword, advertiser name, or advertiser ID, with country, format, and first/last-shown dates.","url":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/9dmbnR9XsX2wiSySN/","author":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"mainEntityOfPage":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/9dmbnR9XsX2wiSySN/#webpage"},"inLanguage":"en"},{"@type":"BreadcrumbList","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/9dmbnR9XsX2wiSySN/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Nimbryxo Studio","item":"https://hasankhokhar2026.github.io/apify-actor-examples/"},{"@type":"ListItem","position":2,"name":"Actors","item":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/"},{"@type":"ListItem","position":3,"name":"YouTube Ad Creative & Advertiser Tracker","item":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/9dmbnR9XsX2wiSySN/"}]}]}</script><script src="/apify-actor-examples/assets/site.js?v=7cabac48dd31" defer></script></head><body class="theme-studio"><a href="#main" class="skip-link">Skip to content</a><header><div class="inner"><a href="/apify-actor-examples/" class="brand"><img src="/apify-actor-examples/assets/mark.svg?v=2d20f9dc334a" alt="" width="29" height="29">Nimbryxo Studio</a><nav aria-label="Main navigation"><a href="/apify-actor-examples/actors/" aria-current="page">Actors</a><a href="/apify-actor-examples/guides/">Guides</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></nav></div></header><main id="main"><div class="doc-layout"><aside class="contents" aria-label="On this page"><strong>Contents</strong><a href="#overview">Overview</a><a href="#published-readme">Published README</a><a href="#input-schema">Input schema</a><a href="#output-schema">Output schema</a><a href="#dataset-schema">Dataset schema</a><a href="#python-quickstart">Python quickstart</a></aside><article class="prose"><div class="breadcrumb"><a href="/apify-actor-examples/actors/">Actors</a><span>/</span><span>YouTube Ad Creative &amp; Advertiser Tracker</span></div><section id="overview"><h1 class="doc-title">YouTube Ad Creative &amp; Advertiser Tracker</h1><p class="lede">Find the video and image ad creatives an advertiser is running on YouTube, discovered by keyword, advertiser name, or advertiser ID, with country, format, and first/last-shown dates.</p><div class="actions"><a class="button" href="https://apify.com/nimbryxo-studio/youtube-ad-creative-and-advertiser-tracker">Open on Apify</a><a class="text-link" href="https://github.com/hasankhokhar2026/apify-actor-examples/blob/main/docs/actors/9dmbnR9XsX2wiSySN/README.md">GitHub source</a></div></section><section class="schema-section" id="input-schema"><h2>Input schema</h2><p>Input fields, types, required flags, descriptions, defaults, and prefills come from the published definition. Prefill examples are distinct from defaults.</p><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>advertisers</code></td><td>array</td><td>optional</td><td>Advertiser names or AR-IDs to scrape YouTube ads for (e.g. &#x27;Nike, Inc.&#x27;, &#x27;AR16735076323512287233&#x27;). Leave empty to use searchTerms.</td></tr><tr><td><code>searchTerms</code></td><td>array</td><td>optional</td><td>Keywords or domain names to discover advertisers, then scrape their YouTube ads (e.g. &#x27;electric car&#x27;, &#x27;nike.com&#x27;).</td></tr><tr><td><code>countries</code></td><td>array</td><td>optional</td><td>Country codes to filter ads by (ISO 3166-1 alpha-2).</td></tr></tbody></table></div><details><summary>Show all input fields</summary><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>advertisers</code></td><td>array</td><td>optional</td><td>Advertiser names or AR-IDs to scrape YouTube ads for (e.g. &#x27;Nike, Inc.&#x27;, &#x27;AR16735076323512287233&#x27;). Leave empty to use searchTerms.</td></tr><tr><td><code>searchTerms</code></td><td>array</td><td>optional</td><td>Keywords or domain names to discover advertisers, then scrape their YouTube ads (e.g. &#x27;electric car&#x27;, &#x27;nike.com&#x27;).</td></tr><tr><td><code>countries</code></td><td>array</td><td>optional</td><td>Country codes to filter ads by (ISO 3166-1 alpha-2).</td></tr><tr><td><code>dateFrom</code></td><td>string</td><td>optional</td><td>Only return ads first shown on or after this date (YYYY-MM-DD).</td></tr><tr><td><code>dateTo</code></td><td>string</td><td>optional</td><td>Only return ads last shown on or before this date (YYYY-MM-DD).</td></tr><tr><td><code>includeVideoDetails</code></td><td>boolean</td><td>optional</td><td>Fetch the ad detail page for each ad to resolve the video URL and format (slower, but gives the actual video asset for video ads).</td></tr><tr><td><code>maxAdvertisersPerTerm</code></td><td>integer</td><td>optional</td><td>Maximum advertisers to scrape per keyword (when searchTerms is used).</td></tr><tr><td><code>maxItems</code></td><td>integer</td><td>optional</td><td>Hard cap on total ad records returned (1-5000).</td></tr><tr><td><code>maxConcurrency</code></td><td>integer</td><td>optional</td><td>Advertisers scraped in parallel. Higher is faster but increases rate-limit risk.</td></tr><tr><td><code>outputFormat</code></td><td>string</td><td>optional</td><td>Dataset always receives JSON records. Additionally export results as CSV, Excel, or HTML in the key-value store (OUTPUT.csv / OUTPUT.xlsx / OUTPUT.html).</td></tr><tr><td><code>proxyConfiguration</code></td><td>object</td><td>optional</td><td>Optional proxy. For moderate traffic no proxy is needed. Enable Apify proxy for high-volume scraping.</td></tr></tbody></table></div></details><p><a href="input-schema.json">Download the published input schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+  &quot;description&quot;: &quot;Scrape YouTube ads from Google&#x27;s Ads Transparency Center. Search by advertiser, keyword, or country, and export the results.&quot;,
+  &quot;properties&quot;: {
+    &quot;advertisers&quot;: {
+      &quot;description&quot;: &quot;Advertiser names or AR-IDs to scrape YouTube ads for (e.g. &#x27;Nike, Inc.&#x27;, &#x27;AR16735076323512287233&#x27;). Leave empty to use searchTerms.&quot;,
+      &quot;editor&quot;: &quot;stringList&quot;,
+      &quot;example&quot;: [
+        &quot;Nike, Inc.&quot;,
+        &quot;Samsung Electronics America&quot;
+      ],
+      &quot;items&quot;: {
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;title&quot;: &quot;Advertisers&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;countries&quot;: {
+      &quot;description&quot;: &quot;Country codes to filter ads by (ISO 3166-1 alpha-2).&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;items&quot;: {
+        &quot;enum&quot;: [
+          &quot;AD&quot;,
+          &quot;AE&quot;,
+          &quot;AG&quot;,
+          &quot;AI&quot;,
+          &quot;AL&quot;,
+          &quot;AM&quot;,
+          &quot;AO&quot;,
+          &quot;AQ&quot;,
+          &quot;AR&quot;,
+          &quot;AS&quot;,
+          &quot;AT&quot;,
+          &quot;AU&quot;,
+          &quot;AW&quot;,
+          &quot;AZ&quot;,
+          &quot;BA&quot;,
+          &quot;BB&quot;,
+          &quot;BD&quot;,
+          &quot;BE&quot;,
+          &quot;BF&quot;,
+          &quot;BG&quot;,
+          &quot;BH&quot;,
+          &quot;BI&quot;,
+          &quot;BJ&quot;,
+          &quot;BM&quot;,
+          &quot;BN&quot;,
+          &quot;BO&quot;,
+          &quot;BQ&quot;,
+          &quot;BR&quot;,
+          &quot;BS&quot;,
+          &quot;BT&quot;,
+          &quot;BV&quot;,
+          &quot;BW&quot;,
+          &quot;BY&quot;,
+          &quot;BZ&quot;,
+          &quot;CA&quot;,
+          &quot;CC&quot;,
+          &quot;CD&quot;,
+          &quot;CF&quot;,
+          &quot;CG&quot;,
+          &quot;CH&quot;,
+          &quot;CI&quot;,
+          &quot;CK&quot;,
+          &quot;CL&quot;,
+          &quot;CM&quot;,
+          &quot;CN&quot;,
+          &quot;CO&quot;,
+          &quot;CR&quot;,
+          &quot;CV&quot;,
+          &quot;CW&quot;,
+          &quot;CX&quot;,
+          &quot;CY&quot;,
+          &quot;CZ&quot;,
+          &quot;DE&quot;,
+          &quot;DJ&quot;,
+          &quot;DK&quot;,
+          &quot;DM&quot;,
+          &quot;DO&quot;,
+          &quot;DZ&quot;,
+          &quot;EC&quot;,
+          &quot;EE&quot;,
+          &quot;EG&quot;,
+          &quot;EH&quot;,
+          &quot;ER&quot;,
+          &quot;ES&quot;,
+          &quot;ET&quot;,
+          &quot;FI&quot;,
+          &quot;FJ&quot;,
+          &quot;FK&quot;,
+          &quot;FM&quot;,
+          &quot;FO&quot;,
+          &quot;FR&quot;,
+          &quot;GA&quot;,
+          &quot;GB&quot;,
+          &quot;GD&quot;,
+          &quot;GE&quot;,
+          &quot;GF&quot;,
+          &quot;GG&quot;,
+          &quot;GH&quot;,
+          &quot;GI&quot;,
+          &quot;GL&quot;,
+          &quot;GM&quot;,
+          &quot;GN&quot;,
+          &quot;GP&quot;,
+          &quot;GQ&quot;,
+          &quot;GR&quot;,
+          &quot;GS&quot;,
+          &quot;GT&quot;,
+          &quot;GU&quot;,
+          &quot;GW&quot;,
+          &quot;GY&quot;,
+          &quot;HK&quot;,
+          &quot;HM&quot;,
+          &quot;HN&quot;,
+          &quot;HR&quot;,
+          &quot;HT&quot;,
+          &quot;HU&quot;,
+          &quot;ID&quot;,
+          &quot;IE&quot;,
+          &quot;IL&quot;,
+          &quot;IM&quot;,
+          &quot;IN&quot;,
+          &quot;IO&quot;,
+          &quot;IQ&quot;,
+          &quot;IS&quot;,
+          &quot;IT&quot;,
+          &quot;JE&quot;,
+          &quot;JM&quot;,
+          &quot;JO&quot;,
+          &quot;JP&quot;,
+          &quot;KE&quot;,
+          &quot;KG&quot;,
+          &quot;KH&quot;,
+          &quot;KI&quot;,
+          &quot;KM&quot;,
+          &quot;KN&quot;,
+          &quot;KR&quot;,
+          &quot;KW&quot;,
+          &quot;KY&quot;,
+          &quot;KZ&quot;,
+          &quot;LA&quot;,
+          &quot;LB&quot;,
+          &quot;LC&quot;,
+          &quot;LI&quot;,
+          &quot;LK&quot;,
+          &quot;LR&quot;,
+          &quot;LS&quot;,
+          &quot;LT&quot;,
+          &quot;LU&quot;,
+          &quot;LV&quot;,
+          &quot;LY&quot;,
+          &quot;MA&quot;,
+          &quot;MC&quot;,
+          &quot;MD&quot;,
+          &quot;ME&quot;,
+          &quot;MG&quot;,
+          &quot;MH&quot;,
+          &quot;MK&quot;,
+          &quot;ML&quot;,
+          &quot;MM&quot;,
+          &quot;MN&quot;,
+          &quot;MO&quot;,
+          &quot;MP&quot;,
+          &quot;MQ&quot;,
+          &quot;MR&quot;,
+          &quot;MS&quot;,
+          &quot;MT&quot;,
+          &quot;MU&quot;,
+          &quot;MV&quot;,
+          &quot;MW&quot;,
+          &quot;MX&quot;,
+          &quot;MY&quot;,
+          &quot;MZ&quot;,
+          &quot;NA&quot;,
+          &quot;NC&quot;,
+          &quot;NE&quot;,
+          &quot;NF&quot;,
+          &quot;NG&quot;,
+          &quot;NI&quot;,
+          &quot;NL&quot;,
+          &quot;NO&quot;,
+          &quot;NP&quot;,
+          &quot;NR&quot;,
+          &quot;NU&quot;,
+          &quot;NZ&quot;,
+          &quot;OM&quot;,
+          &quot;PA&quot;,
+          &quot;PE&quot;,
+          &quot;PF&quot;,
+          &quot;PG&quot;,
+          &quot;PH&quot;,
+          &quot;PK&quot;,
+          &quot;PL&quot;,
+          &quot;PM&quot;,
+          &quot;PN&quot;,
+          &quot;PR&quot;,
+          &quot;PS&quot;,
+          &quot;PT&quot;,
+          &quot;PW&quot;,
+          &quot;PY&quot;,
+          &quot;QA&quot;,
+          &quot;RE&quot;,
+          &quot;RO&quot;,
+          &quot;RW&quot;,
+          &quot;SA&quot;,
+          &quot;SB&quot;,
+          &quot;SC&quot;,
+          &quot;SE&quot;,
+          &quot;SG&quot;,
+          &quot;SH&quot;,
+          &quot;SI&quot;,
+          &quot;SJ&quot;,
+          &quot;SK&quot;,
+          &quot;SL&quot;,
+          &quot;SM&quot;,
+          &quot;SN&quot;,
+          &quot;SO&quot;,
+          &quot;SR&quot;,
+          &quot;ST&quot;,
+          &quot;SV&quot;,
+          &quot;SX&quot;,
+          &quot;SZ&quot;,
+          &quot;TC&quot;,
+          &quot;TD&quot;,
+          &quot;TF&quot;,
+          &quot;TG&quot;,
+          &quot;TH&quot;,
+          &quot;TJ&quot;,
+          &quot;TK&quot;,
+          &quot;TL&quot;,
+          &quot;TM&quot;,
+          &quot;TN&quot;,
+          &quot;TO&quot;,
+          &quot;TR&quot;,
+          &quot;TT&quot;,
+          &quot;TV&quot;,
+          &quot;TW&quot;,
+          &quot;TZ&quot;,
+          &quot;UA&quot;,
+          &quot;UG&quot;,
+          &quot;UM&quot;,
+          &quot;US&quot;,
+          &quot;UY&quot;,
+          &quot;UZ&quot;,
+          &quot;VA&quot;,
+          &quot;VC&quot;,
+          &quot;VE&quot;,
+          &quot;VG&quot;,
+          &quot;VI&quot;,
+          &quot;VN&quot;,
+          &quot;VU&quot;,
+          &quot;WF&quot;,
+          &quot;WS&quot;,
+          &quot;YE&quot;,
+          &quot;YT&quot;,
+          &quot;ZA&quot;,
+          &quot;ZM&quot;,
+          &quot;ZW&quot;
+        ],
+        &quot;enumTitles&quot;: [
+          &quot;Andorra&quot;,
+          &quot;United Arab Emirates&quot;,
+          &quot;Antigua and Barbuda&quot;,
+          &quot;Anguilla&quot;,
+          &quot;Albania&quot;,
+          &quot;Armenia&quot;,
+          &quot;Angola&quot;,
+          &quot;Antarctica&quot;,
+          &quot;Argentina&quot;,
+          &quot;American Samoa&quot;,
+          &quot;Austria&quot;,
+          &quot;Australia&quot;,
+          &quot;Aruba&quot;,
+          &quot;Azerbaijan&quot;,
+          &quot;Bosnia and Herzegovina&quot;,
+          &quot;Barbados&quot;,
+          &quot;Bangladesh&quot;,
+          &quot;Belgium&quot;,
+          &quot;Burkina Faso&quot;,
+          &quot;Bulgaria&quot;,
+          &quot;Bahrain&quot;,
+          &quot;Burundi&quot;,
+          &quot;Benin&quot;,
+          &quot;Bermuda&quot;,
+          &quot;Brunei Darussalam&quot;,
+          &quot;Bolivia, Plurinational State of&quot;,
+          &quot;Bonaire, Sint Eustatius and Saba&quot;,
+          &quot;Brazil&quot;,
+          &quot;Bahamas&quot;,
+          &quot;Bhutan&quot;,
+          &quot;Bouvet Island&quot;,
+          &quot;Botswana&quot;,
+          &quot;Belarus&quot;,
+          &quot;Belize&quot;,
+          &quot;Canada&quot;,
+          &quot;Cocos (Keeling) Islands&quot;,
+          &quot;Congo, The Democratic Republic of the&quot;,
+          &quot;Central African Republic&quot;,
+          &quot;Congo&quot;,
+          &quot;Switzerland&quot;,
+          &quot;Côte d&#x27;Ivoire&quot;,
+          &quot;Cook Islands&quot;,
+          &quot;Chile&quot;,
+          &quot;Cameroon&quot;,
+          &quot;China&quot;,
+          &quot;Colombia&quot;,
+          &quot;Costa Rica&quot;,
+          &quot;Cabo Verde&quot;,
+          &quot;Curaçao&quot;,
+          &quot;Christmas Island&quot;,
+          &quot;Cyprus&quot;,
+          &quot;Czechia&quot;,
+          &quot;Germany&quot;,
+          &quot;Djibouti&quot;,
+          &quot;Denmark&quot;,
+          &quot;Dominica&quot;,
+          &quot;Dominican Republic&quot;,
+          &quot;Algeria&quot;,
+          &quot;Ecuador&quot;,
+          &quot;Estonia&quot;,
+          &quot;Egypt&quot;,
+          &quot;Western Sahara&quot;,
+          &quot;Eritrea&quot;,
+          &quot;Spain&quot;,
+          &quot;Ethiopia&quot;,
+          &quot;Finland&quot;,
+          &quot;Fiji&quot;,
+          &quot;Falkland Islands (Malvinas)&quot;,
+          &quot;Micronesia, Federated States of&quot;,
+          &quot;Faroe Islands&quot;,
+          &quot;France&quot;,
+          &quot;Gabon&quot;,
+          &quot;United Kingdom&quot;,
+          &quot;Grenada&quot;,
+          &quot;Georgia&quot;,
+          &quot;French Guiana&quot;,
+          &quot;Guernsey&quot;,
+          &quot;Ghana&quot;,
+          &quot;Gibraltar&quot;,
+          &quot;Greenland&quot;,
+          &quot;Gambia&quot;,
+          &quot;Guinea&quot;,
+          &quot;Guadeloupe&quot;,
+          &quot;Equatorial Guinea&quot;,
+          &quot;Greece&quot;,
+          &quot;South Georgia and the South Sandwich Islands&quot;,
+          &quot;Guatemala&quot;,
+          &quot;Guam&quot;,
+          &quot;Guinea-Bissau&quot;,
+          &quot;Guyana&quot;,
+          &quot;Hong Kong&quot;,
+          &quot;Heard Island and McDonald Islands&quot;,
+          &quot;Honduras&quot;,
+          &quot;Croatia&quot;,
+          &quot;Haiti&quot;,
+          &quot;Hungary&quot;,
+          &quot;Indonesia&quot;,
+          &quot;Ireland&quot;,
+          &quot;Israel&quot;,
+          &quot;Isle of Man&quot;,
+          &quot;India&quot;,
+          &quot;British Indian Ocean Territory&quot;,
+          &quot;Iraq&quot;,
+          &quot;Iceland&quot;,
+          &quot;Italy&quot;,
+          &quot;Jersey&quot;,
+          &quot;Jamaica&quot;,
+          &quot;Jordan&quot;,
+          &quot;Japan&quot;,
+          &quot;Kenya&quot;,
+          &quot;Kyrgyzstan&quot;,
+          &quot;Cambodia&quot;,
+          &quot;Kiribati&quot;,
+          &quot;Comoros&quot;,
+          &quot;Saint Kitts and Nevis&quot;,
+          &quot;Korea, Republic of&quot;,
+          &quot;Kuwait&quot;,
+          &quot;Cayman Islands&quot;,
+          &quot;Kazakhstan&quot;,
+          &quot;Lao People&#x27;s Democratic Republic&quot;,
+          &quot;Lebanon&quot;,
+          &quot;Saint Lucia&quot;,
+          &quot;Liechtenstein&quot;,
+          &quot;Sri Lanka&quot;,
+          &quot;Liberia&quot;,
+          &quot;Lesotho&quot;,
+          &quot;Lithuania&quot;,
+          &quot;Luxembourg&quot;,
+          &quot;Latvia&quot;,
+          &quot;Libya&quot;,
+          &quot;Morocco&quot;,
+          &quot;Monaco&quot;,
+          &quot;Moldova, Republic of&quot;,
+          &quot;Montenegro&quot;,
+          &quot;Madagascar&quot;,
+          &quot;Marshall Islands&quot;,
+          &quot;North Macedonia&quot;,
+          &quot;Mali&quot;,
+          &quot;Myanmar&quot;,
+          &quot;Mongolia&quot;,
+          &quot;Macao&quot;,
+          &quot;Northern Mariana Islands&quot;,
+          &quot;Martinique&quot;,
+          &quot;Mauritania&quot;,
+          &quot;Montserrat&quot;,
+          &quot;Malta&quot;,
+          &quot;Mauritius&quot;,
+          &quot;Maldives&quot;,
+          &quot;Malawi&quot;,
+          &quot;Mexico&quot;,
+          &quot;Malaysia&quot;,
+          &quot;Mozambique&quot;,
+          &quot;Namibia&quot;,
+          &quot;New Caledonia&quot;,
+          &quot;Niger&quot;,
+          &quot;Norfolk Island&quot;,
+          &quot;Nigeria&quot;,
+          &quot;Nicaragua&quot;,
+          &quot;Netherlands&quot;,
+          &quot;Norway&quot;,
+          &quot;Nepal&quot;,
+          &quot;Nauru&quot;,
+          &quot;Niue&quot;,
+          &quot;New Zealand&quot;,
+          &quot;Oman&quot;,
+          &quot;Panama&quot;,
+          &quot;Peru&quot;,
+          &quot;French Polynesia&quot;,
+          &quot;Papua New Guinea&quot;,
+          &quot;Philippines&quot;,
+          &quot;Pakistan&quot;,
+          &quot;Poland&quot;,
+          &quot;Saint Pierre and Miquelon&quot;,
+          &quot;Pitcairn&quot;,
+          &quot;Puerto Rico&quot;,
+          &quot;Palestine, State of&quot;,
+          &quot;Portugal&quot;,
+          &quot;Palau&quot;,
+          &quot;Paraguay&quot;,
+          &quot;Qatar&quot;,
+          &quot;Réunion&quot;,
+          &quot;Romania&quot;,
+          &quot;Rwanda&quot;,
+          &quot;Saudi Arabia&quot;,
+          &quot;Solomon Islands&quot;,
+          &quot;Seychelles&quot;,
+          &quot;Sweden&quot;,
+          &quot;Singapore&quot;,
+          &quot;Saint Helena, Ascension and Tristan da Cunha&quot;,
+          &quot;Slovenia&quot;,
+          &quot;Svalbard and Jan Mayen&quot;,
+          &quot;Slovakia&quot;,
+          &quot;Sierra Leone&quot;,
+          &quot;San Marino&quot;,
+          &quot;Senegal&quot;,
+          &quot;Somalia&quot;,
+          &quot;Suriname&quot;,
+          &quot;Sao Tome and Principe&quot;,
+          &quot;El Salvador&quot;,
+          &quot;Sint Maarten (Dutch part)&quot;,
+          &quot;Eswatini&quot;,
+          &quot;Turks and Caicos Islands&quot;,
+          &quot;Chad&quot;,
+          &quot;French Southern Territories&quot;,
+          &quot;Togo&quot;,
+          &quot;Thailand&quot;,
+          &quot;Tajikistan&quot;,
+          &quot;Tokelau&quot;,
+          &quot;Timor-Leste&quot;,
+          &quot;Turkmenistan&quot;,
+          &quot;Tunisia&quot;,
+          &quot;Tonga&quot;,
+          &quot;Türkiye&quot;,
+          &quot;Trinidad and Tobago&quot;,
+          &quot;Tuvalu&quot;,
+          &quot;Taiwan, Province of China&quot;,
+          &quot;Tanzania, United Republic of&quot;,
+          &quot;Ukraine&quot;,
+          &quot;Uganda&quot;,
+          &quot;United States Minor Outlying Islands&quot;,
+          &quot;United States&quot;,
+          &quot;Uruguay&quot;,
+          &quot;Uzbekistan&quot;,
+          &quot;Holy See (Vatican City State)&quot;,
+          &quot;Saint Vincent and the Grenadines&quot;,
+          &quot;Venezuela, Bolivarian Republic of&quot;,
+          &quot;Virgin Islands, British&quot;,
+          &quot;Virgin Islands, U.S.&quot;,
+          &quot;Viet Nam&quot;,
+          &quot;Vanuatu&quot;,
+          &quot;Wallis and Futuna&quot;,
+          &quot;Samoa&quot;,
+          &quot;Yemen&quot;,
+          &quot;Mayotte&quot;,
+          &quot;South Africa&quot;,
+          &quot;Zambia&quot;,
+          &quot;Zimbabwe&quot;
+        ],
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;prefill&quot;: [
+        &quot;US&quot;
+      ],
+      &quot;title&quot;: &quot;Countries&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;dateFrom&quot;: {
+      &quot;description&quot;: &quot;Only return ads first shown on or after this date (YYYY-MM-DD).&quot;,
+      &quot;editor&quot;: &quot;datepicker&quot;,
+      &quot;pattern&quot;: &quot;^\\d{4}-\\d{2}-\\d{2}$&quot;,
+      &quot;title&quot;: &quot;First shown on/after (YYYY-MM-DD)&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;dateTo&quot;: {
+      &quot;description&quot;: &quot;Only return ads last shown on or before this date (YYYY-MM-DD).&quot;,
+      &quot;editor&quot;: &quot;datepicker&quot;,
+      &quot;pattern&quot;: &quot;^\\d{4}-\\d{2}-\\d{2}$&quot;,
+      &quot;title&quot;: &quot;First shown on/before (YYYY-MM-DD)&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;includeVideoDetails&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;Fetch the ad detail page for each ad to resolve the video URL and format (slower, but gives the actual video asset for video ads).&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Include video details&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;maxAdvertisersPerTerm&quot;: {
+      &quot;default&quot;: 5,
+      &quot;description&quot;: &quot;Maximum advertisers to scrape per keyword (when searchTerms is used).&quot;,
+      &quot;maximum&quot;: 50,
+      &quot;minimum&quot;: 1,
+      &quot;prefill&quot;: 5,
+      &quot;title&quot;: &quot;Max advertisers per search term&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;maxConcurrency&quot;: {
+      &quot;default&quot;: 2,
+      &quot;description&quot;: &quot;Advertisers scraped in parallel. Higher is faster but increases rate-limit risk.&quot;,
+      &quot;maximum&quot;: 5,
+      &quot;minimum&quot;: 1,
+      &quot;prefill&quot;: 2,
+      &quot;title&quot;: &quot;Max concurrency&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;maxItems&quot;: {
+      &quot;default&quot;: 100,
+      &quot;description&quot;: &quot;Hard cap on total ad records returned (1-5000).&quot;,
+      &quot;maximum&quot;: 5000,
+      &quot;minimum&quot;: 1,
+      &quot;prefill&quot;: 50,
+      &quot;title&quot;: &quot;Max items&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;outputFormat&quot;: {
+      &quot;default&quot;: &quot;json&quot;,
+      &quot;description&quot;: &quot;Dataset always receives JSON records. Additionally export results as CSV, Excel, or HTML in the key-value store (OUTPUT.csv / OUTPUT.xlsx / OUTPUT.html).&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;json&quot;,
+        &quot;csv&quot;,
+        &quot;excel&quot;,
+        &quot;html&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;JSON (dataset only)&quot;,
+        &quot;CSV (OUTPUT.csv)&quot;,
+        &quot;Excel (OUTPUT.xlsx)&quot;,
+        &quot;HTML (OUTPUT.html)&quot;
+      ],
+      &quot;prefill&quot;: &quot;json&quot;,
+      &quot;title&quot;: &quot;Output format&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;proxyConfiguration&quot;: {
+      &quot;description&quot;: &quot;Optional proxy. For moderate traffic no proxy is needed. Enable Apify proxy for high-volume scraping.&quot;,
+      &quot;editor&quot;: &quot;proxy&quot;,
+      &quot;title&quot;: &quot;Proxy Configuration&quot;,
+      &quot;type&quot;: &quot;object&quot;
+    },
+    &quot;searchTerms&quot;: {
+      &quot;description&quot;: &quot;Keywords or domain names to discover advertisers, then scrape their YouTube ads (e.g. &#x27;electric car&#x27;, &#x27;nike.com&#x27;).&quot;,
+      &quot;editor&quot;: &quot;stringList&quot;,
+      &quot;items&quot;: {
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;prefill&quot;: [
+        &quot;electric car&quot;
+      ],
+      &quot;title&quot;: &quot;Search Terms (keywords)&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    }
+  },
+  &quot;schemaVersion&quot;: 1,
+  &quot;title&quot;: &quot;YouTube Ads Scraper Input&quot;,
+  &quot;type&quot;: &quot;object&quot;
+}
+</code></pre></details></section><section class="schema-section" id="output-schema"><h2>Output schema</h2><p>Published result links and storage locations. This schema is not an exhaustive contract for every field in a dataset record.</p><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>ads</code></td><td>string</td><td>optional</td><td>Dataset containing all scraped YouTube ad creative records.</td></tr></tbody></table></div><p><a href="output-schema.json">Download the published output schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+  &quot;actorOutputSchemaVersion&quot;: 1,
+  &quot;description&quot;: &quot;YouTube ad creative records with advertiser, country, format, thumbnail, and first/last-shown dates, sourced from the Google Ads Transparency Center.&quot;,
+  &quot;properties&quot;: {
+    &quot;ads&quot;: {
+      &quot;description&quot;: &quot;Dataset containing all scraped YouTube ad creative records.&quot;,
+      &quot;template&quot;: &quot;{{links.apiDefaultDatasetUrl}}/items&quot;,
+      &quot;title&quot;: &quot;YouTube ad creatives&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    }
+  },
+  &quot;title&quot;: &quot;YouTube Ad Creative &amp; Advertiser Tracker Output&quot;
+}
+</code></pre></details></section><section class="schema-section" id="dataset-schema"><h2>Dataset schema</h2><p>Published dataset views and any declared field definitions. A view can select only a subset of the returned record fields.</p><p><a href="dataset-schema.json">Download the published dataset schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+  &quot;actorSpecification&quot;: 1,
+  &quot;fields&quot;: {
+    &quot;properties&quot;: {
+      &quot;adCount&quot;: {
+        &quot;description&quot;: &quot;Advertiser total ad count&quot;,
+        &quot;type&quot;: [
+          &quot;integer&quot;,
+          &quot;null&quot;
+        ]
+      },
+      &quot;adId&quot;: {
+        &quot;description&quot;: &quot;Google creative ID (CR...)&quot;,
+        &quot;type&quot;: [
+          &quot;string&quot;,
+          &quot;null&quot;
+        ]
+      },
+      &quot;advertiserId&quot;: {
+        &quot;description&quot;: &quot;Google advertiser ID (AR...)&quot;,
+        &quot;type&quot;: [
+          &quot;string&quot;,
+          &quot;null&quot;
+        ]
+      },
+      &quot;advertiserName&quot;: {
+        &quot;description&quot;: &quot;Advertiser display name&quot;,
+        &quot;type&quot;: [
+          &quot;string&quot;,
+          &quot;null&quot;
+        ]
+      },
+      &quot;countryCode&quot;: {
+        &quot;description&quot;: &quot;Advertiser country (ISO-2)&quot;,
+        &quot;type&quot;: [
+          &quot;string&quot;,
+          &quot;null&quot;
+        ]
+      },
+      &quot;firstShown&quot;: {
+        &quot;description&quot;: &quot;First shown date (ISO 8601)&quot;,
+        &quot;type&quot;: [
+          &quot;string&quot;,
+          &quot;null&quot;
+        ]
+      },
+      &quot;format&quot;: {
+        &quot;description&quot;: &quot;Ad format: VIDEO / IMAGE / TEXT&quot;,
+        &quot;type&quot;: [
+          &quot;string&quot;,
+          &quot;null&quot;
+        ]
+      },
+      &quot;imageHeight&quot;: {
+        &quot;description&quot;: &quot;Media height in pixels&quot;,
+        &quot;type&quot;: [
+          &quot;integer&quot;,
+          &quot;null&quot;
+        ]
+      },
+      &quot;imageUrl&quot;: {
+        &quot;description&quot;: &quot;Ad thumbnail / image URL&quot;,
+        &quot;type&quot;: [
+          &quot;string&quot;,
+          &quot;null&quot;
+        ]
+      },
+      &quot;imageWidth&quot;: {
+        &quot;description&quot;: &quot;Media width in pixels&quot;,
+        &quot;type&quot;: [
+          &quot;integer&quot;,
+          &quot;null&quot;
+        ]
+      },
+      &quot;lastShown&quot;: {
+        &quot;description&quot;: &quot;Last shown date (ISO 8601)&quot;,
+        &quot;type&quot;: [
+          &quot;string&quot;,
+          &quot;null&quot;
+        ]
+      },
+      &quot;mediaType&quot;: {
+        &quot;description&quot;: &quot;image / video / text / unknown&quot;,
+        &quot;type&quot;: [
+          &quot;string&quot;,
+          &quot;null&quot;
+        ]
+      },
+      &quot;scrapedAt&quot;: {
+        &quot;description&quot;: &quot;ISO 8601 scrape timestamp&quot;,
+        &quot;type&quot;: [
+          &quot;string&quot;,
+          &quot;null&quot;
+        ]
+      },
+      &quot;searchTerm&quot;: {
+        &quot;description&quot;: &quot;Keyword that discovered this ad (search mode)&quot;,
+        &quot;type&quot;: [
+          &quot;string&quot;,
+          &quot;null&quot;
+        ]
+      },
+      &quot;sourceUrl&quot;: {
+        &quot;description&quot;: &quot;Ads Transparency Center detail URL&quot;,
+        &quot;type&quot;: [
+          &quot;string&quot;,
+          &quot;null&quot;
+        ]
+      },
+      &quot;type&quot;: {
+        &quot;description&quot;: &quot;ad or advertiser&quot;,
+        &quot;type&quot;: [
+          &quot;string&quot;,
+          &quot;null&quot;
+        ]
+      },
+      &quot;videoUrl&quot;: {
+        &quot;description&quot;: &quot;Resolved video URL (video ads, when includeVideoDetails is on)&quot;,
+        &quot;type&quot;: [
+          &quot;string&quot;,
+          &quot;null&quot;
+        ]
+      }
+    },
+    &quot;type&quot;: &quot;object&quot;
+  },
+  &quot;title&quot;: &quot;YouTube Ads&quot;,
+  &quot;views&quot;: {
+    &quot;overview&quot;: {
+      &quot;display&quot;: {
+        &quot;component&quot;: &quot;table&quot;,
+        &quot;properties&quot;: {
+          &quot;advertiserName&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Advertiser&quot;
+          },
+          &quot;countryCode&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Country&quot;
+          },
+          &quot;firstShown&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;First shown&quot;
+          },
+          &quot;format&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Format&quot;
+          },
+          &quot;imageUrl&quot;: {
+            &quot;format&quot;: &quot;image&quot;,
+            &quot;label&quot;: &quot;Media&quot;
+          },
+          &quot;lastShown&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Last shown&quot;
+          },
+          &quot;videoUrl&quot;: {
+            &quot;format&quot;: &quot;link&quot;,
+            &quot;label&quot;: &quot;Video&quot;
+          }
+        }
+      },
+      &quot;title&quot;: &quot;YouTube Ads Overview&quot;,
+      &quot;transformation&quot;: {
+        &quot;fields&quot;: [
+          &quot;advertiserName&quot;,
+          &quot;countryCode&quot;,
+          &quot;format&quot;,
+          &quot;firstShown&quot;,
+          &quot;lastShown&quot;,
+          &quot;imageUrl&quot;,
+          &quot;videoUrl&quot;
+        ]
+      }
+    }
+  }
+}
+</code></pre></details></section><section class="schema-section" id="key-value-schema"><h2>Key-value schema</h2><p>Published key-value store definitions, when provided by this build.</p><p>This definition is not present in the default published build. See the published README for available documentation.</p></section><section id="published-readme"><h2>Published README</h2><details><summary>Read the full published documentation</summary><h2 id="readme-youtube-ad-creative-advertiser-tracker">YouTube Ad Creative &amp; Advertiser Tracker</h2>
+<p>Pull the ad creatives a brand is actually running on YouTube, straight from Google's public Ads Transparency Center. Hand it a keyword, an advertiser name, or an advertiser AR-ID and get back every matching ad creative with its thumbnail, format, country, and the dates it was first and last shown.</p>
+<h2 id="readme-what-this-actor-does">What this actor does</h2>
+<ul>
+<li><strong>Two ways in:</strong> pass advertiser names/AR-IDs directly, or give keywords and let the actor discover matching advertisers first</li>
+<li><strong>YouTube-scoped:</strong> every creative returned was served on YouTube, not Google's wider display network</li>
+<li><strong>Country and date filters:</strong> narrow by ISO-2 country code and by first-shown date window</li>
+<li><strong>Multiple export formats:</strong> dataset JSON always, plus optional CSV, Excel, or HTML written to the key-value store</li>
+<li><strong>Empty fields are omitted</strong> — a record only carries the values Google actually returned for that creative</li>
+</ul>
+<h2 id="readme-output-per-ad-creative">Output per ad creative</h2>
+<ul>
+<li><code>adId</code> — the creative's unique ID (e.g. <code>CR09196456782480801793</code>)</li>
+<li><code>advertiserId</code> — the advertiser's AR-ID</li>
+<li><code>advertiserName</code> — advertiser display name</li>
+<li><code>countryCode</code> — ISO-2 country this creative was matched under (omitted when advertisers were passed directly by AR-ID)</li>
+<li><code>format</code> — <code>VIDEO</code> or <code>IMAGE</code></li>
+<li><code>mediaType</code> — <code>video</code> or <code>image</code></li>
+<li><code>imageUrl</code>, <code>imageWidth</code>, <code>imageHeight</code> — the creative's thumbnail/preview image and its dimensions</li>
+<li><code>videoUrl</code> — resolved playable video URL, only present when <code>includeVideoDetails</code> is enabled and Google exposes it</li>
+<li><code>firstShown</code>, <code>lastShown</code> — timestamps the creative was first and most recently observed running</li>
+<li><code>adCount</code> — total creative count Google reports for the advertiser at query time</li>
+<li><code>searchTerm</code> — the keyword that surfaced this advertiser (present only for keyword-discovered results)</li>
+<li><code>sourceUrl</code> — the Ads Transparency Center page for this exact creative</li>
+<li><code>scrapedAt</code> — when the actor fetched the record</li>
+</ul>
+<p>When no ad creatives match the input at all, the dataset instead gets a single status row (<code>recordType: &quot;status&quot;</code>, <code>status: &quot;no_ads_found&quot;</code>) echoing back the <code>searchTerms</code>/<code>countries</code>/<code>dateFrom</code>/<code>dateTo</code> that were tried, so an empty dataset always comes with an explanation.</p>
+<h2 id="readme-input">Input</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>advertisers</code></td>
+<td>array</td>
+<td>—</td>
+<td>Advertiser names or AR-IDs to pull ads for directly (e.g. <code>Nike, Inc.</code>, <code>AR16735076323512287233</code>).</td>
+</tr>
+<tr>
+<td><code>searchTerms</code></td>
+<td>array</td>
+<td>–</td>
+<td>Keywords used to discover advertisers before pulling their ads.</td>
+</tr>
+<tr>
+<td><code>countries</code></td>
+<td>array</td>
+<td>–</td>
+<td>ISO-2 country codes to match advertisers against. Leave empty for all countries.</td>
+</tr>
+<tr>
+<td><code>dateFrom</code></td>
+<td>string</td>
+<td>—</td>
+<td>Keep only creatives first shown on or after this <code>YYYY-MM-DD</code> date.</td>
+</tr>
+<tr>
+<td><code>dateTo</code></td>
+<td>string</td>
+<td>—</td>
+<td>Keep only creatives first shown on or before this <code>YYYY-MM-DD</code> date.</td>
+</tr>
+<tr>
+<td><code>includeVideoDetails</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Also fetch each creative's detail page to try to resolve a playable video URL.</td>
+</tr>
+<tr>
+<td><code>maxAdvertisersPerTerm</code></td>
+<td>integer</td>
+<td><code>5</code></td>
+<td>Advertisers to pull per keyword in <code>searchTerms</code> (1–50).</td>
+</tr>
+<tr>
+<td><code>maxItems</code></td>
+<td>integer</td>
+<td><code>100</code></td>
+<td>Hard cap on total ad creative records returned (1–5000).</td>
+</tr>
+<tr>
+<td><code>maxConcurrency</code></td>
+<td>integer</td>
+<td><code>2</code></td>
+<td>Advertisers processed in parallel (1–5).</td>
+</tr>
+<tr>
+<td><code>outputFormat</code></td>
+<td>string</td>
+<td><code>json</code></td>
+<td>Also export to the key-value store as <code>OUTPUT.csv</code>, <code>OUTPUT.xlsx</code>, or <code>OUTPUT.html</code>.</td>
+</tr>
+<tr>
+<td><code>proxyConfiguration</code></td>
+<td>object</td>
+<td>—</td>
+<td>Optional Apify proxy for higher-volume runs.</td>
+</tr>
+</tbody>
+</table></div>
+<p>At least one of <code>advertisers</code> or <code>searchTerms</code> is required.</p>
+<h3 id="readme-example-discover-advertisers-by-keyword">Example: discover advertisers by keyword</h3>
+<pre><code class="language-json">{
+  &quot;searchTerms&quot;: [&quot;electric car&quot;],
+  &quot;countries&quot;: [&quot;US&quot;],
+  &quot;maxAdvertisersPerTerm&quot;: 5,
+  &quot;maxItems&quot;: 50
+}
+</code></pre>
+<h3 id="readme-example-pull-a-known-advertiser-s-creatives-directly">Example: pull a known advertiser's creatives directly</h3>
+<pre><code class="language-json">{
+  &quot;advertisers&quot;: [&quot;AR16735076323512287233&quot;],
+  &quot;countries&quot;: [&quot;US&quot;, &quot;GB&quot;],
+  &quot;maxItems&quot;: 40
+}
+</code></pre>
+<h3 id="readme-example-narrow-window-with-resolved-video-urls">Example: narrow window with resolved video URLs</h3>
+<pre><code class="language-json">{
+  &quot;searchTerms&quot;: [&quot;nike&quot;],
+  &quot;dateFrom&quot;: &quot;2026-01-01&quot;,
+  &quot;dateTo&quot;: &quot;2026-03-31&quot;,
+  &quot;includeVideoDetails&quot;: true,
+  &quot;outputFormat&quot;: &quot;csv&quot;
+}
+</code></pre>
+<h2 id="readme-use-cases">Use cases</h2>
+<ul>
+<li><strong>Competitive ad monitoring</strong> — see which creatives a rival brand is currently running on YouTube</li>
+<li><strong>Creative swipe files</strong> — collect thumbnails and formats from an industry to spot creative trends</li>
+<li><strong>Flight tracking</strong> — watch <code>firstShown</code>/<code>lastShown</code> to know when a competitor's campaign started or stopped</li>
+<li><strong>Agency reporting</strong> — export a client's or competitor's ad library to CSV/Excel for a deck</li>
+<li><strong>Market scans</strong> — run a keyword across multiple countries to see who is advertising where</li>
+</ul>
+<h2 id="readme-faq">FAQ</h2>
+<p><strong>Where does this data come from?</strong>
+Google's own public Ads Transparency Center, filtered to creatives shown on YouTube — the same tool anyone can browse at adstransparency.google.com.</p>
+<p><strong>Do I need an API key, login, or cookies?</strong>
+No. The Transparency Center is public and the actor reads it without any authentication.</p>
+<p><strong>Why is there no YouTube video ID or embeddable video for most ads?</strong>
+Google's Transparency Center does not publish the underlying YouTube video ID for most creatives, only a thumbnail and the ad's detail page. Enabling <code>includeVideoDetails</code> resolves a playable video URL when Google's detail page exposes one.</p>
+<p><strong>Why is <code>countryCode</code> missing on some records?</strong>
+It's only populated when an advertiser was found through keyword search. When you pass an advertiser AR-ID directly, Google's API doesn't expose that advertiser's country, so the field is left out.</p>
+<p><strong>How far back does the data go?</strong>
+Google's Transparency Center indexes ads from September 2023 onward, and it isn't a complete archive — older or very low-volume creatives may not appear.</p>
+<p><strong>Is there a limit on how many creatives one advertiser can return?</strong>
+Yes, Google's own library caps each advertiser's results at roughly 40 creatives per query; the actor returns the most recent ones and deduplicates by <code>adId</code> across repeated queries.</p>
+<p><strong>What's the difference between the <code>advertisers</code> and <code>searchTerms</code> inputs?</strong>
+<code>advertisers</code> goes straight to a known advertiser's ad library. <code>searchTerms</code> runs a keyword search first to find matching advertisers, then pulls each one's ads — useful when you don't already know the advertiser's exact name or AR-ID.</p>
+<p><strong>Is this affiliated with Google or YouTube?</strong>
+No. This is an independent actor that reads Google's publicly available Ads Transparency Center data.</p>
+</details></section><section id="python-quickstart"><h2>Python quickstart</h2><p>Use a schema-derived input and the Python standard library to start a run. An Apify account and token are required for execution.</p><p><a href="/apify-actor-examples/guides/9dmbnR9XsX2wiSySN/">Open the step-by-step Python guide →</a></p></section><p class="source-note">Source build <code>5d8QxabyrsPwre1lD</code>. Documentation is regenerated from the default published build; private drafts are not included.</p></article></div></main><footer class="footer"><strong>Nimbryxo Studio</strong><div class="footer-links"><a href="/apify-actor-examples/topics/">Topics</a><a href="/apify-actor-examples/sources/">Documentation sources</a><a href="https://apify.com/nimbryxo-studio">Apify</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></div></footer></body></html>

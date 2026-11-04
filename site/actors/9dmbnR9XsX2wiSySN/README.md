@@ -1,0 +1,114 @@
+# YouTube Ad Creative & Advertiser Tracker
+
+Pull the ad creatives a brand is actually running on YouTube, straight from Google's public Ads Transparency Center. Hand it a keyword, an advertiser name, or an advertiser AR-ID and get back every matching ad creative with its thumbnail, format, country, and the dates it was first and last shown.
+
+## What this actor does
+
+- **Two ways in:** pass advertiser names/AR-IDs directly, or give keywords and let the actor discover matching advertisers first
+- **YouTube-scoped:** every creative returned was served on YouTube, not Google's wider display network
+- **Country and date filters:** narrow by ISO-2 country code and by first-shown date window
+- **Multiple export formats:** dataset JSON always, plus optional CSV, Excel, or HTML written to the key-value store
+- **Empty fields are omitted** — a record only carries the values Google actually returned for that creative
+
+## Output per ad creative
+
+- `adId` — the creative's unique ID (e.g. `CR09196456782480801793`)
+- `advertiserId` — the advertiser's AR-ID
+- `advertiserName` — advertiser display name
+- `countryCode` — ISO-2 country this creative was matched under (omitted when advertisers were passed directly by AR-ID)
+- `format` — `VIDEO` or `IMAGE`
+- `mediaType` — `video` or `image`
+- `imageUrl`, `imageWidth`, `imageHeight` — the creative's thumbnail/preview image and its dimensions
+- `videoUrl` — resolved playable video URL, only present when `includeVideoDetails` is enabled and Google exposes it
+- `firstShown`, `lastShown` — timestamps the creative was first and most recently observed running
+- `adCount` — total creative count Google reports for the advertiser at query time
+- `searchTerm` — the keyword that surfaced this advertiser (present only for keyword-discovered results)
+- `sourceUrl` — the Ads Transparency Center page for this exact creative
+- `scrapedAt` — when the actor fetched the record
+
+When no ad creatives match the input at all, the dataset instead gets a single status row (`recordType: "status"`, `status: "no_ads_found"`) echoing back the `searchTerms`/`countries`/`dateFrom`/`dateTo` that were tried, so an empty dataset always comes with an explanation.
+
+## Input
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `advertisers` | array | — | Advertiser names or AR-IDs to pull ads for directly (e.g. `Nike, Inc.`, `AR16735076323512287233`). |
+| `searchTerms` | array | – | Keywords used to discover advertisers before pulling their ads. |
+| `countries` | array | – | ISO-2 country codes to match advertisers against. Leave empty for all countries. |
+| `dateFrom` | string | — | Keep only creatives first shown on or after this `YYYY-MM-DD` date. |
+| `dateTo` | string | — | Keep only creatives first shown on or before this `YYYY-MM-DD` date. |
+| `includeVideoDetails` | boolean | `false` | Also fetch each creative's detail page to try to resolve a playable video URL. |
+| `maxAdvertisersPerTerm` | integer | `5` | Advertisers to pull per keyword in `searchTerms` (1–50). |
+| `maxItems` | integer | `100` | Hard cap on total ad creative records returned (1–5000). |
+| `maxConcurrency` | integer | `2` | Advertisers processed in parallel (1–5). |
+| `outputFormat` | string | `json` | Also export to the key-value store as `OUTPUT.csv`, `OUTPUT.xlsx`, or `OUTPUT.html`. |
+| `proxyConfiguration` | object | — | Optional Apify proxy for higher-volume runs. |
+
+At least one of `advertisers` or `searchTerms` is required.
+
+### Example: discover advertisers by keyword
+
+```json
+{
+  "searchTerms": ["electric car"],
+  "countries": ["US"],
+  "maxAdvertisersPerTerm": 5,
+  "maxItems": 50
+}
+```
+
+### Example: pull a known advertiser's creatives directly
+
+```json
+{
+  "advertisers": ["AR16735076323512287233"],
+  "countries": ["US", "GB"],
+  "maxItems": 40
+}
+```
+
+### Example: narrow window with resolved video URLs
+
+```json
+{
+  "searchTerms": ["nike"],
+  "dateFrom": "2026-01-01",
+  "dateTo": "2026-03-31",
+  "includeVideoDetails": true,
+  "outputFormat": "csv"
+}
+```
+
+## Use cases
+
+- **Competitive ad monitoring** — see which creatives a rival brand is currently running on YouTube
+- **Creative swipe files** — collect thumbnails and formats from an industry to spot creative trends
+- **Flight tracking** — watch `firstShown`/`lastShown` to know when a competitor's campaign started or stopped
+- **Agency reporting** — export a client's or competitor's ad library to CSV/Excel for a deck
+- **Market scans** — run a keyword across multiple countries to see who is advertising where
+
+## FAQ
+
+**Where does this data come from?**
+Google's own public Ads Transparency Center, filtered to creatives shown on YouTube — the same tool anyone can browse at adstransparency.google.com.
+
+**Do I need an API key, login, or cookies?**
+No. The Transparency Center is public and the actor reads it without any authentication.
+
+**Why is there no YouTube video ID or embeddable video for most ads?**
+Google's Transparency Center does not publish the underlying YouTube video ID for most creatives, only a thumbnail and the ad's detail page. Enabling `includeVideoDetails` resolves a playable video URL when Google's detail page exposes one.
+
+**Why is `countryCode` missing on some records?**
+It's only populated when an advertiser was found through keyword search. When you pass an advertiser AR-ID directly, Google's API doesn't expose that advertiser's country, so the field is left out.
+
+**How far back does the data go?**
+Google's Transparency Center indexes ads from September 2023 onward, and it isn't a complete archive — older or very low-volume creatives may not appear.
+
+**Is there a limit on how many creatives one advertiser can return?**
+Yes, Google's own library caps each advertiser's results at roughly 40 creatives per query; the actor returns the most recent ones and deduplicates by `adId` across repeated queries.
+
+**What's the difference between the `advertisers` and `searchTerms` inputs?**
+`advertisers` goes straight to a known advertiser's ad library. `searchTerms` runs a keyword search first to find matching advertisers, then pulls each one's ads — useful when you don't already know the advertiser's exact name or AR-ID.
+
+**Is this affiliated with Google or YouTube?**
+No. This is an independent actor that reads Google's publicly available Ads Transparency Center data.

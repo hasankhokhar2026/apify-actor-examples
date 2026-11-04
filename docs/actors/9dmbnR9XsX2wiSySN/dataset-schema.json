@@ -1,0 +1,177 @@
+{
+  "actorSpecification": 1,
+  "fields": {
+    "properties": {
+      "adCount": {
+        "description": "Advertiser total ad count",
+        "type": [
+          "integer",
+          "null"
+        ]
+      },
+      "adId": {
+        "description": "Google creative ID (CR...)",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "advertiserId": {
+        "description": "Google advertiser ID (AR...)",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "advertiserName": {
+        "description": "Advertiser display name",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "countryCode": {
+        "description": "Advertiser country (ISO-2)",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "firstShown": {
+        "description": "First shown date (ISO 8601)",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "format": {
+        "description": "Ad format: VIDEO / IMAGE / TEXT",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "imageHeight": {
+        "description": "Media height in pixels",
+        "type": [
+          "integer",
+          "null"
+        ]
+      },
+      "imageUrl": {
+        "description": "Ad thumbnail / image URL",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "imageWidth": {
+        "description": "Media width in pixels",
+        "type": [
+          "integer",
+          "null"
+        ]
+      },
+      "lastShown": {
+        "description": "Last shown date (ISO 8601)",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "mediaType": {
+        "description": "image / video / text / unknown",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "scrapedAt": {
+        "description": "ISO 8601 scrape timestamp",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "searchTerm": {
+        "description": "Keyword that discovered this ad (search mode)",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "sourceUrl": {
+        "description": "Ads Transparency Center detail URL",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "type": {
+        "description": "ad or advertiser",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "videoUrl": {
+        "description": "Resolved video URL (video ads, when includeVideoDetails is on)",
+        "type": [
+          "string",
+          "null"
+        ]
+      }
+    },
+    "type": "object"
+  },
+  "title": "YouTube Ads",
+  "views": {
+    "overview": {
+      "display": {
+        "component": "table",
+        "properties": {
+          "advertiserName": {
+            "format": "text",
+            "label": "Advertiser"
+          },
+          "countryCode": {
+            "format": "text",
+            "label": "Country"
+          },
+          "firstShown": {
+            "format": "text",
+            "label": "First shown"
+          },
+          "format": {
+            "format": "text",
+            "label": "Format"
+          },
+          "imageUrl": {
+            "format": "image",
+            "label": "Media"
+          },
+          "lastShown": {
+            "format": "text",
+            "label": "Last shown"
+          },
+          "videoUrl": {
+            "format": "link",
+            "label": "Video"
+          }
+        }
+      },
+      "title": "YouTube Ads Overview",
+      "transformation": {
+        "fields": [
+          "advertiserName",
+          "countryCode",
+          "format",
+          "firstShown",
+          "lastShown",
+          "imageUrl",
+          "videoUrl"
+        ]
+      }
+    }
+  }
+}
