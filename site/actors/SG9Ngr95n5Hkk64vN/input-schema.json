@@ -1,0 +1,108 @@
+{
+  "description": "Search Reddit by keywords with advanced filters. Pro adds: subreddit filter/blocklist, dateFrom/dateTo, minScore, maxAgeDays, excludeNsfw, authorBlocklist, keywordRequireAll.",
+  "properties": {
+    "authorBlocklist": {
+      "default": [],
+      "description": "Drop posts by these usernames (case-insensitive).",
+      "editor": "stringList",
+      "title": "Author blocklist",
+      "type": "array"
+    },
+    "dateFrom": {
+      "description": "Drop posts with `created_at` before this date (inclusive). Format: YYYY-MM-DD.",
+      "editor": "textfield",
+      "title": "Date from (YYYY-MM-DD)",
+      "type": "string"
+    },
+    "dateTo": {
+      "description": "Drop posts with `created_at` after this date (inclusive end-of-day). Format: YYYY-MM-DD.",
+      "editor": "textfield",
+      "title": "Date to (YYYY-MM-DD)",
+      "type": "string"
+    },
+    "excludeNsfw": {
+      "default": false,
+      "description": "Drop NSFW posts.",
+      "title": "Exclude NSFW",
+      "type": "boolean"
+    },
+    "keywordRequireAll": {
+      "default": false,
+      "description": "When multiple keywords given, also dedupe & only emit posts whose title/content contains ALL of them. Default: each keyword runs independently (OR).",
+      "title": "Require all keywords (AND)",
+      "type": "boolean"
+    },
+    "keywords": {
+      "description": "List of keywords to search. Each runs as a separate Reddit search.",
+      "editor": "stringList",
+      "minItems": 1,
+      "prefill": [
+        "python programming"
+      ],
+      "title": "Keywords",
+      "type": "array"
+    },
+    "maxAgeDays": {
+      "description": "Drop posts older than N days.",
+      "maximum": 36500,
+      "minimum": 1,
+      "title": "Max post age in days (filter)",
+      "type": "integer"
+    },
+    "minScore": {
+      "description": "Drop posts with score below this number.",
+      "maximum": 10000000,
+      "minimum": -10000,
+      "title": "Min score (filter)",
+      "type": "integer"
+    },
+    "resultLimit": {
+      "default": 500,
+      "description": "Max posts per keyword (1-1000).",
+      "maximum": 1000,
+      "minimum": 1,
+      "title": "Result limit per keyword",
+      "type": "integer"
+    },
+    "sort": {
+      "default": "relevance",
+      "description": "How to sort the search results.",
+      "enum": [
+        "relevance",
+        "hot",
+        "top",
+        "new",
+        "comments"
+      ],
+      "enumTitles": [
+        "Relevance",
+        "Hot",
+        "Top",
+        "New",
+        "Comments"
+      ],
+      "title": "Sort by",
+      "type": "string"
+    },
+    "subredditBlocklist": {
+      "default": [],
+      "description": "Drop posts from these subreddits.",
+      "editor": "stringList",
+      "title": "Subreddit blocklist",
+      "type": "array"
+    },
+    "subredditFilter": {
+      "default": [],
+      "description": "Only emit posts from these subreddits (without `r/` prefix). Empty = all.",
+      "editor": "stringList",
+      "title": "Subreddit filter (allowlist)",
+      "type": "array"
+    }
+  },
+  "required": [
+    "keywords"
+  ],
+  "schemaVersion": 1,
+  "title": "Reddit Keywords Pro Input",
+  "type": "object"
+}

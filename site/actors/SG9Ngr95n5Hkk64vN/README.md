@@ -1,0 +1,115 @@
+# Reddit Keyword Search with Advanced Filters
+
+Search Reddit for one or more keywords and get back matching posts, narrowed down with subreddit allow/block lists, a minimum score, a date range, an NSFW toggle, and an author blocklist — so the dataset you export only contains the posts that actually matter to you.
+
+## What this actor does
+
+- Runs a separate Reddit search for each keyword you provide and tags every post with the keyword that found it
+- Keeps or drops posts by subreddit (allowlist or blocklist), minimum score, maximum age in days, or an explicit date range
+- Can require that a post's title/content contain every keyword at once instead of matching any single one
+- Drops NSFW posts and posts from specific authors on request
+- Omits any field Reddit's listing didn't provide for a post rather than returning it empty
+
+## Output per post
+
+- `keyword` — the keyword that matched this post
+- `post_id`, `post_name` — Reddit's post ID and fullname (`t3_...`)
+- `title`, `content` — post title and self-text snippet, when the post has one
+- `author`, `author_fullname`
+- `subreddit`, `subreddit_prefixed` — e.g. `r/geopolitics`
+- `score`, `num_comments`, `num_crossposts`, `gilded_count`
+- `url`, `permalink`, `external_url` — external link target, only present when it differs from the Reddit permalink
+- `thumbnail_url`, `link_flair`
+- `created_utc`, `created_at`
+- `is_self`, `is_stickied`, `is_nsfw`, `is_spoiler`, `is_promoted`, `is_original_content`
+- `post_hint` — rough content type (`self`, `image`, `gallery`, `link`, `hosted:video`, `rich:video`)
+- `title_word_count`, `post_age_seconds`
+- `crosspost_parent` — the original post's ID, title, author, subreddit, score, and comment count, present only when this post is a crosspost
+
+## Output when nothing is returned
+
+If `keywords` is empty, or every post the search found was rejected by your filters (or no posts were found at all), the actor emits a single `recordType: "error"` record instead of post records, with `reason` (`no_keywords` or `all_filters_dropped_results`), a human-readable `message`, and — for the filters case — the `keywords` searched and an `appliedFilters` summary of every filter value you set, so you can see why nothing came through.
+
+## Input
+
+| Field | Type | Default | Description |
+|---|---|---|---|
+| `keywords` | array | – | Keywords to search; each one runs as its own search (required) |
+| `resultLimit` | integer | `500` | Max posts to return per keyword (1-1000) |
+| `sort` | string (select) | `relevance` | `relevance`, `hot`, `top`, `new`, or `comments` |
+| `subredditFilter` | array | `[]` | Only keep posts from these subreddits (no `r/` prefix); empty keeps all |
+| `subredditBlocklist` | array | `[]` | Drop posts from these subreddits |
+| `minScore` | integer | – | Drop posts with a score below this number |
+| `maxAgeDays` | integer | – | Drop posts older than this many days |
+| `excludeNsfw` | boolean | `false` | Drop posts marked NSFW |
+| `authorBlocklist` | array | `[]` | Drop posts from these usernames (case-insensitive) |
+| `keywordRequireAll` | boolean | `false` | With multiple keywords, keep only posts whose title/content contains all of them, instead of any one |
+| `dateFrom` | string | – | Drop posts created before this date (`YYYY-MM-DD`, inclusive) |
+| `dateTo` | string | – | Drop posts created after this date (`YYYY-MM-DD`, inclusive of the full day) |
+
+### Example: single keyword, top posts of all time
+
+```json
+{
+  "keywords": ["machine learning"],
+  "resultLimit": 100,
+  "sort": "top"
+}
+```
+
+### Example: brand mentions, excluding NSFW and low-score noise
+
+```json
+{
+  "keywords": ["mybrand", "mybrand review"],
+  "minScore": 5,
+  "excludeNsfw": true,
+  "subredditBlocklist": ["spam"],
+  "resultLimit": 200
+}
+```
+
+### Example: posts from the last 30 days that mention two terms together
+
+```json
+{
+  "keywords": ["layoffs", "tech"],
+  "keywordRequireAll": true,
+  "maxAgeDays": 30,
+  "sort": "new"
+}
+```
+
+## Use cases
+
+- Brand and product monitoring — track mentions while filtering out low-score or NSFW noise
+- Lead and sentiment research — pull threads matching two or more terms at once with `keywordRequireAll`
+- Subreddit-scoped research — restrict a broad keyword search to a hand-picked set of communities
+- Trend tracking — compare `new` vs `top` results for the same keyword over a rolling date window
+- Moderation or spam review — drop known problem authors or subreddits before they reach your dataset
+
+## FAQ
+
+**How is this different from a plain keyword search?**
+Every filter here (subreddit allow/block, score floor, date range, NSFW exclusion, author blocklist, multi-keyword AND matching) is applied after the search, so the dataset you get already reflects your criteria instead of needing to be cleaned up afterward.
+
+**What happens when I give several keywords?**
+By default each keyword runs as an independent search and results are combined (OR). Set `keywordRequireAll` to `true` to instead keep only posts whose title or content contains every keyword you listed.
+
+**Why do some posts have no `content`?**
+Link posts and posts without a text body don't have self-text; `content` is only present for text (self) posts that have one.
+
+**What does `external_url` mean, and why is it sometimes missing?**
+It's the destination of a link post when that destination differs from the Reddit permalink. Self-posts, and link posts that just point back at Reddit, don't get this field.
+
+**Can I combine `dateFrom`/`dateTo` with `maxAgeDays`?**
+Yes — both filters are applied together, so the post must satisfy whichever ones you set.
+
+**Does `subredditFilter` and `subredditBlocklist` work together?**
+Yes. A post must pass both: it's dropped if it's in the blocklist, and dropped if an allowlist is set and the post's subreddit isn't in it.
+
+**Do I need a Reddit account or API credentials?**
+No — this actor reads Reddit's public search results directly, without a login.
+
+**Is this affiliated with Reddit?**
+No. This is an independent actor that reads Reddit's publicly available search pages.
