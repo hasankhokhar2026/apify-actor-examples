@@ -1,0 +1,175 @@
+{
+  "properties": {
+    "channelUrls": {
+      "description": "YouTube channel URLs, handles (@username), or channel IDs (UCxxx). Accepts any format.",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "prefill": [
+        "https://www.youtube.com/@Apify"
+      ],
+      "title": "Channel URLs",
+      "type": "array"
+    },
+    "includeAbout": {
+      "default": true,
+      "description": "Extract total views, join date, location, and external links from the channel About page.",
+      "prefill": true,
+      "title": "Include About Page Data",
+      "type": "boolean"
+    },
+    "includeLiveVideos": {
+      "default": false,
+      "description": "Scrape the channel Live/Streams tab and include live/archived streams.",
+      "prefill": false,
+      "title": "Include Live/Stream Videos",
+      "type": "boolean"
+    },
+    "includePlaylists": {
+      "default": false,
+      "description": "Scrape the channel Playlists tab and include playlist metadata in the output.",
+      "prefill": false,
+      "title": "Include Channel Playlists",
+      "type": "boolean"
+    },
+    "includeShorts": {
+      "default": false,
+      "description": "Scrape the channel Shorts tab and include Shorts in the output.",
+      "prefill": false,
+      "title": "Include Channel Shorts",
+      "type": "boolean"
+    },
+    "market": {
+      "default": "US",
+      "description": "Country code for localized content (affects gl/hl URL parameters).",
+      "editor": "select",
+      "enum": [
+        "US",
+        "GB",
+        "CA",
+        "AU",
+        "DE",
+        "FR",
+        "JP",
+        "KR",
+        "BR",
+        "IN",
+        "MX",
+        "IT",
+        "ES",
+        "NL",
+        "PL",
+        "RU",
+        "SE",
+        "NO",
+        "DK",
+        "FI",
+        "ZA",
+        "SG",
+        "HK",
+        "TW",
+        "ID",
+        "MY",
+        "TH",
+        "PH",
+        "AR",
+        "CO",
+        "CL"
+      ],
+      "enumTitles": [
+        "United States",
+        "United Kingdom",
+        "Canada",
+        "Australia",
+        "Germany",
+        "France",
+        "Japan",
+        "South Korea",
+        "Brazil",
+        "India",
+        "Mexico",
+        "Italy",
+        "Spain",
+        "Netherlands",
+        "Poland",
+        "Russia",
+        "Sweden",
+        "Norway",
+        "Denmark",
+        "Finland",
+        "South Africa",
+        "Singapore",
+        "Hong Kong",
+        "Taiwan",
+        "Indonesia",
+        "Malaysia",
+        "Thailand",
+        "Philippines",
+        "Argentina",
+        "Colombia",
+        "Chile"
+      ],
+      "title": "Market / Region",
+      "type": "string"
+    },
+    "maxLiveVideos": {
+      "default": 20,
+      "description": "Maximum live/stream videos to return.",
+      "maximum": 500,
+      "minimum": 1,
+      "title": "Max Live Videos",
+      "type": "integer"
+    },
+    "maxPlaylists": {
+      "default": 20,
+      "description": "Maximum number of playlists to scrape (when includePlaylists is enabled).",
+      "maximum": 500,
+      "minimum": 1,
+      "title": "Max Playlists",
+      "type": "integer"
+    },
+    "maxShorts": {
+      "default": 20,
+      "description": "Maximum number of Shorts to return (when includeShorts is enabled).",
+      "maximum": 2000,
+      "minimum": 1,
+      "title": "Max Shorts",
+      "type": "integer"
+    },
+    "maxVideos": {
+      "default": 50,
+      "description": "Maximum number of videos to scrape per channel. Set to 0 to get only channel info without videos.",
+      "editor": "number",
+      "maximum": 10000,
+      "minimum": 0,
+      "prefill": 3,
+      "title": "Max Videos Per Channel",
+      "type": "integer"
+    },
+    "sortVideosBy": {
+      "default": "newest",
+      "description": "How to sort the channel's video listings.",
+      "editor": "select",
+      "enum": [
+        "newest",
+        "popular",
+        "oldest"
+      ],
+      "enumTitles": [
+        "Newest first",
+        "Most popular",
+        "Oldest first"
+      ],
+      "title": "Sort Videos By",
+      "type": "string"
+    }
+  },
+  "required": [
+    "channelUrls"
+  ],
+  "schemaVersion": 1,
+  "title": "YouTube Channel Scraper Input",
+  "type": "object"
+}
