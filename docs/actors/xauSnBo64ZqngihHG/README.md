@@ -4,121 +4,241 @@
 
 # SoundCloud Charts, Search & Artist Catalog Scraper
 
-Pull structured data straight from [SoundCloud](https://soundcloud.com): genre charts, keyword search across tracks/users/playlists/albums, a full artist catalog, or any track/playlist/profile URL you already have. No SoundCloud account or API key needed.
+Pull public SoundCloud data into one clean dataset: the current global New & Hot
+chart, 20 genre trending lists, keyword search across tracks, artists, playlists and
+albums, complete artist catalogs, playlist contents, track comments, and artist
+followers. No SoundCloud account, cookie or API key is required.
 
 ## What this actor does
 
-- Browses genre charts — most-played of all time or currently trending, across 30+ genres
-- Searches by keyword for tracks, users, playlists, or albums
-- Pulls every track from one artist's public profile
-- Resolves a list of SoundCloud track/playlist/user URLs directly to structured records
-- Empty fields are omitted from records rather than returned as blanks
+- **Search** tracks, users/artists, playlists or albums by keyword, with a real
+  SoundCloud genre filter for tracks and playlists.
+- **Charts** the global New & Hot list (up to 100 tracks) or one of 20 current
+  genre trending lists (about 50 tracks each).
+- **Artist catalog** exports the profile row plus uploaded tracks and, optionally,
+  albums, playlists, top tracks and public web profiles.
+- **URLs** resolves any public track, playlist/album or artist URL. Playlist URLs
+  expand into every track, not just the first page. Artist URLs return the profile
+  and uploaded tracks.
+- **Comments** collects public comments for one or more tracks, including the
+  commenter's profile fields and the time in the track.
+- **Followers** collects an artist's followers or the accounts the artist follows.
+- Empty fields are omitted from records. No `null`, blank strings or empty arrays
+  are pushed.
 
-## Output per record
+## Output records
 
-Each record is a track, a user/artist profile, or a playlist, distinguished by `recordType`.
+Every row has a `recordType`: `track`, `user`, `playlist` or `comment`. Existing
+field names are preserved; the revamp adds fields beside them.
 
-- `title` — track title, artist/username, or playlist title
-- `url` — the canonical SoundCloud page URL
-- `trackId` — SoundCloud's internal numeric ID
-- `artist`, `artistUrl` — uploader's name and profile URL (tracks and playlists)
-- `duration` — length as `MM:SS` or `HH:MM:SS` (tracks and playlists)
-- `playCount` — total plays (tracks and users)
-- `likeCount` — likes/favorites (tracks, users, playlists)
-- `repostCount` — reposts (tracks, users, playlists)
-- `commentCount` — comments (tracks only)
-- `genre` — genre label (tracks and playlists)
-- `tags` — array of tags attached by the uploader (tracks only)
-- `uploadDate` — ISO 8601 date the item was created
-- `lastModified` — ISO 8601 date the track was last edited, when SoundCloud reports one (tracks only)
-- `streamUrl` — SoundCloud's own transcoding/stream endpoint for the track (tracks only) — see FAQ
-- `artworkUrl` — artwork/avatar image URL at 500×500
-- `waveformUrl` — waveform image URL (tracks only)
-- `description` — track or profile description, when the uploader wrote one
-- `recordType` — `track`, `user`, or `playlist`
-- `scrapedAt` — ISO 8601 timestamp of the request
+### Track fields
+
+| Field | Meaning |
+|---|---|
+| `recordType` | `track` |
+| `title`, `url`, `trackId`, `urn` | Track identity and canonical page URL |
+| `artist`, `artistUrl`, `artistId` | Uploader identity |
+| `artistFollowers`, `artistVerified`, `artistCity`, `artistCountry`, `artistDescription` | Creator details when SoundCloud publishes them |
+| `duration` | `M:SS` / `H:MM:SS` (unchanged legacy field) |
+| `durationMs`, `durationSeconds` | Numeric duration |
+| `playCount`, `likeCount`, `repostCount`, `commentCount`, `downloadCount` | Engagement snapshot |
+| `genre`, `tags`, `description` | Uploader metadata when present |
+| `uploadDate`, `lastModified`, `releaseDate` | ISO-8601 dates |
+| `labelName`, `license`, `isrc`, `upc` | Release and rights metadata when present |
+| `publisherArtist`, `albumTitle`, `writerComposer`, `explicit` | Publisher metadata when present |
+| `streamable`, `downloadable`, `hasDownloadsLeft`, `policy`, `monetizationModel` | Source playback flags |
+| `streamUrl` | Playable signed media URL when `resolveStreamUrls=true`; otherwise the stable API transcoding URL |
+| `streamUrlApi` | Stable SoundCloud transcoding endpoint (not directly playable without a `client_id`) |
+| `streamUrlProtocol`, `streamUrlMimeType`, `streamUrlPreset` | Stream format details |
+| `streamUrlExpiresAt` | Expiry of the signed media URL (about two hours) |
+| `streamUrlIsPreview` | `true` for a 30-second preview / `SNIP` track |
+| `artworkUrl`, `artworkUrlOriginal` | Cover image at 500x500 and original size |
+| `waveformUrl` | Waveform amplitude JSON (not an image) |
+| `chartGenre`, `chartRank`, `chartScore`, `chartLastUpdated` | Chart context |
+| `playlistId`, `playlistTitle`, `playlistUrl`, `playlistPosition` | Playlist context when a playlist is expanded |
+| `sourceQuery`, `sourceType`, `sourceUrl` | What input produced the row |
+| `scrapedAt` | ISO-8601 scrape time |
+
+### User / artist fields
+
+`recordType=user`; keeps `title`, `url`, `trackId`, `artist`, `artistUrl`,
+`playCount`, `likeCount`, `repostCount`, `description`, `artworkUrl`, `scrapedAt`.
+Adds `userId`, `username`, `fullName`, `followersCount`, `followingsCount`,
+`trackCount`, `playlistCount`, `commentsCount`, `verified`, `pro`, `city`,
+`countryCode`, `lastModified`, `webProfiles`, `relationship` (followers mode),
+`sourceArtistId`, `sourceArtistUsername`.
+
+### Playlist / album fields
+
+`recordType=playlist`; keeps `title`, `url`, `trackId`, `artist`, `artistUrl`,
+`duration`, `likeCount`, `repostCount`, `genre`, `description`, `uploadDate`,
+`artworkUrl`, `scrapedAt`. Adds `playlistId`, `urn`, `trackCount`, `setType`,
+`isAlbum`, `tags`, `releaseDate`, `lastModified`, `durationMs`, `labelName`.
+
+### Comment fields
+
+`recordType=comment`; `commentId`, `body`, `createdAt`, `timestampMs`,
+`timestampFormatted`, `trackId`, `trackTitle`, `trackUrl`, `userId`, `username`,
+`userUrl`, `userFollowers`, `userCity`, `userCountry`, `scrapedAt`.
 
 ## Input
 
-| Field | Type | Default | Description |
+| Field | Type | Default | What it does |
 |---|---|---|---|
-| `mode` | string | `charts` | `charts` / `search` / `artistTracks` / `byUrl` |
-| `chartKind` | string | `top` | `top` (most-played of all time) or `trending` (mode=charts) |
-| `genre` | string | `soundcloud:genres:all-music` | Genre filter for charts and search |
-| `searchQuery` | string | `chill lofi` | Search keyword (mode=search) |
-| `searchKind` | string | `tracks` | What to search: tracks, users, playlists, or albums (mode=search) |
-| `artistUrl` | string | – | SoundCloud artist profile URL (mode=artistTracks) |
-| `startUrls` | array | `[]` | SoundCloud track/playlist/user URLs to resolve directly (mode=byUrl) |
-| `maxItems` | integer | `20` | Maximum records to return (1–500) |
+| `mode` | select | `search` | `search`, `charts`, `artistTracks`, `byUrl`, `comments`, `followers` |
+| `searchQueries` | string list | `[]` | One or more search keywords |
+| `searchType` | select | `tracks` | `tracks`, `users`, `playlists`, `albums`, `all` |
+| `chartGenre` | select | `all` | Global New & Hot or one of 20 genre trending lists |
+| `searchGenre` | select | any genre | Real SoundCloud genre filter for track/playlist search |
+| `sortBy` | select | `relevance` | `relevance`, `newest`, `mostPlayed`, `mostLiked` (client-side) |
+| `minPlayCount`, `minLikeCount` | integer | `0` | Client-side thresholds after fetching |
+| `artistUrls` | string list | `[]` | Artist URLs, usernames or numeric user IDs |
+| `includeTracks` | boolean | `true` | Artist tracks |
+| `includeAlbums` | boolean | `false` | Artist albums/EPs |
+| `includePlaylists` | boolean | `false` | Artist playlists |
+| `includeTopTracks` | boolean | `false` | Artist top tracks |
+| `includeWebProfiles` | boolean | `false` | Public social/web profile links |
+| `startUrls` | URL list | `[]` | Track, playlist or artist URLs / numeric track IDs |
+| `includePlaylistTracks` | boolean | `true` | Expand every playlist track |
+| `includeUserProfile` | boolean | `true` | Emit the profile row for artist URLs in `byUrl` |
+| `trackUrls` | URL list | `[]` | Tracks for comments mode |
+| `commentsSort` | select | `newest` | `newest`, `oldest`, `track-timestamp` |
+| `relationship` | select | `followers` | `followers` or `followings` |
+| `resolveStreamUrls` | boolean | `true` | Resolve signed playable stream URLs + expiry |
+| `maxItems` | integer | `100` | Hard record cap (1-5000) |
 
-Genres available for `genre`: All Music, Alternative Rock, Ambient, Classical, Country, Dance & EDM, Dancehall, Deep House, Disco, Drum & Bass, Dubstep, Electronic, Folk & Singer-Songwriter, Hip-hop & Rap, House, Indie, Jazz & Blues, Latin, Metal, Piano, Pop, R&B & Soul, Reggae, Reggaeton, Rock, Soundtrack, Techno, Trance, Trap, Trip Hop, World.
+## Examples
 
-### Example: trending electronic chart
-
-```json
-{
-  "mode": "charts",
-  "chartKind": "trending",
-  "genre": "electronic",
-  "maxItems": 50
-}
-```
-
-### Example: search for playlists by keyword
+**Search tracks with a genre filter**
 
 ```json
 {
   "mode": "search",
-  "searchQuery": "lofi study beats",
-  "searchKind": "playlists",
-  "maxItems": 30
+  "searchQueries": ["lofi", "ambient jazz"],
+  "searchType": "tracks",
+  "searchGenre": "Jazz & Blues",
+  "maxItems": 100
 }
 ```
 
-### Example: an artist's full catalog
+**Global New & Hot chart**
+
+```json
+{ "mode": "charts", "chartGenre": "all", "maxItems": 100 }
+```
+
+**Trap trending list**
+
+```json
+{ "mode": "charts", "chartGenre": "trap", "maxItems": 50 }
+```
+
+**Full artist catalog**
 
 ```json
 {
   "mode": "artistTracks",
-  "artistUrl": "https://soundcloud.com/lofi_producer",
-  "maxItems": 200
+  "artistUrls": ["https://soundcloud.com/chillhopdotcom"],
+  "includeTracks": true,
+  "includeAlbums": true,
+  "includePlaylists": true,
+  "maxItems": 500
 }
 ```
 
-### Example: resolve specific URLs
+**Expand a playlist**
 
 ```json
 {
   "mode": "byUrl",
-  "startUrls": [
-    "https://soundcloud.com/artist/chill-lofi-beat",
-    "https://soundcloud.com/lofi_producer"
-  ]
+  "startUrls": ["https://soundcloud.com/chillhopdotcom/sets/chillhop-essentials-summer-2026"],
+  "includePlaylistTracks": true,
+  "maxItems": 300
 }
 ```
 
-## Use cases
+**Track comments**
 
-- **Music discovery** — pull genre charts to see what's rising without opening SoundCloud
-- **Artist research** — build a complete, current discography for any public profile
-- **Playlist curation** — source track metadata (genre, tags, duration) for building new playlists
-- **Catalog monitoring** — re-run `artistTracks` on a schedule to catch new uploads
-- **Analytics dashboards** — track play/like/repost counts for a set of tracks over time
+```json
+{
+  "mode": "comments",
+  "trackUrls": ["https://soundcloud.com/user/track"],
+  "commentsSort": "newest",
+  "maxItems": 200
+}
+```
+
+**Artist followers**
+
+```json
+{
+  "mode": "followers",
+  "artistUrls": ["https://soundcloud.com/chillhopdotcom"],
+  "relationship": "followers",
+  "maxItems": 500
+}
+```
+
+## Charts: what is available
+
+SoundCloud's current public chart surface is **New & Hot**, not the retired all-time
+Top chart. The actor returns:
+
+- the global New & Hot list (up to 100 tracks), and
+- 20 current genre trending lists (about 50 tracks each).
+
+The old per-genre chart endpoint and the all-time Top chart are no longer available
+from SoundCloud's public API. Requests for the legacy `top` value are mapped to the
+current global New & Hot list and the status message says so.
+
+## Stream URLs, previews and rights
+
+Stream metadata comes from SoundCloud's public transcodings. `streamUrl` is a
+**signed** media URL and expires after about two hours; `streamUrlExpiresAt` records
+the exact time. `streamUrlApi` is the stable API endpoint, but it is not playable on
+its own without a `client_id`.
+
+Not every track is fully playable: SoundCloud may return a 30-second preview
+(`streamUrlIsPreview=true`), use DRM/encrypted transcodings, or disable downloads.
+The actor reports the metadata it can see and never fabricates an audio file. This
+actor does not download or rehost audio.
+
+## Limitations
+
+- Search returns at most **300 rows per query**. Use more queries or a genre filter
+  to reach further.
+- The all-time Top chart and regional/country charts are not available from the
+  current public surface.
+- Server-side BPM, duration, upload-date, license and access filters are not
+  available on SoundCloud's public v2 search; the actor only exposes the real
+  genre filter. `sortBy` and the minimum play/like thresholds are applied to the
+  rows already fetched.
+- SoundCloud does not publish a user join date or a user repost count in this API.
+- BPM and musical key are not exposed for tracks.
+- City/country, description, genre, tags, ISRC, UPC, label and release date are
+  conditional; fields are omitted when SoundCloud does not provide them.
+- Only public tracks, playlists and profiles are reachable. Private/unlisted
+  content is out of scope.
+- Huge follower lists can be expensive; use `maxItems` to cap them.
 
 ## FAQ
 
-**Do I need a SoundCloud account to use this?**  No — every mode reads SoundCloud's public pages and public API; no login or API key is required.
+**Do I need a SoundCloud account or API key?** No. The actor reads the same public
+pages and public v2 JSON the SoundCloud web player uses, with no login.
 
-**What's the difference between `top` and `trending` charts?**  `top` ranks the most-played tracks of all time in a genre; `trending` ranks tracks currently gaining traction, which changes day to day.
+**Why is `streamUrl` sometimes missing?** SoundCloud may expose only encrypted/DRM
+transcodings or a preview for that track. `streamUrlApi`, `policy` and the preview
+flag still describe what is available.
 
-**Can I get the actual audio file?**  The `streamUrl` field points at SoundCloud's own stream endpoint for the track. Whether a given track can actually be played/downloaded from it still depends on the streaming permissions the artist set on SoundCloud.
+**Why does a search stop at 300 rows?** That is SoundCloud's public search window
+per query. Split the job into more queries or use `searchGenre` to partition it.
 
-**Why is `playCount` or `commentCount` missing from some tracks?**  Those fields are only included when SoundCloud's own data for the track includes a value; very new or low-visibility tracks sometimes don't carry one.
+**Why is `waveformUrl` a JSON file?** SoundCloud's waveform field points to amplitude
+JSON, not an image. It is kept under the existing field name for compatibility.
 
-**Why do playlist records have `genre` but not `commentCount` or `tags`?**  SoundCloud's playlist objects simply don't carry per-track stats like comment counts or a track's own tags, so this actor doesn't invent values for fields SoundCloud never returns there.
+**Can I schedule monitoring?** Yes. Run the actor on a schedule and compare
+`playCount`, `likeCount`, `repostCount` and `followersCount` snapshots. Monitoring
+helpers are not part of this version; the dataset is designed for external diffing.
 
-**How many records can one run return?**  Up to `maxItems`, capped at 500. For a bigger pull, split the work across multiple runs with different genres, search terms, or artists.
-
-**Can this reach private or unlisted tracks?**  No — only tracks, playlists, and profiles that are publicly visible on soundcloud.com without logging in are accessible.
-
-**Is this affiliated with SoundCloud?**  No. This is an independent actor that reads SoundCloud's publicly available pages and is not affiliated with or endorsed by SoundCloud.
+**Is this affiliated with SoundCloud?** No. This is an independent actor that reads
+publicly visible data and is not endorsed by SoundCloud.

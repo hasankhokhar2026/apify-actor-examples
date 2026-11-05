@@ -1,19 +1,19 @@
 {
   "actorOutputSchemaVersion": 1,
-  "description": "Screenshot results with download links for each captured URL",
+  "description": "One record per captured URL, with the file link, page metadata, block/error classification and capture evidence.",
   "properties": {
     "screenshotFiles": {
-      "description": "Key-value store containing the screenshot PNG/PDF files",
+      "description": "Key-value store containing the PNG, JPEG, WebP or PDF files.",
       "template": "{{links.apiDefaultKeyValueStoreUrl}}/records",
-      "title": "Screenshot Files",
+      "title": "Capture files",
       "type": "string"
     },
     "screenshots": {
-      "description": "Dataset containing results for each screenshotted URL",
+      "description": "Dataset containing one result per URL, including status, HTTP status, page title, image dimensions and public file URL.",
       "template": "{{links.apiDefaultDatasetUrl}}/items",
-      "title": "Screenshot Results",
+      "title": "Capture results",
       "type": "string"
     }
   },
-  "title": "Full-Page Website Screenshot & PDF Capture Output"
+  "title": "Complete Page Capture Output"
 }

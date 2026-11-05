@@ -1,108 +1,428 @@
 {
-  "description": "Take full-page screenshots of websites as PNG or PDF. Configure viewport, wait conditions, scrolling, and element hiding.",
+  "description": "Capture complete full-page screenshots or PDFs of any list of URLs. The actor scrolls lazy content, waits for images and fonts, removes fixed headers and consent overlays, and reports blocks and truncation honestly.",
   "properties": {
+    "colorScheme": {
+      "default": "no-preference",
+      "description": "Request the site's light or dark theme through prefers-color-scheme where the site supports it.",
+      "editor": "select",
+      "enum": [
+        "no-preference",
+        "light",
+        "dark"
+      ],
+      "enumTitles": [
+        "Follow the site",
+        "Force light",
+        "Force dark"
+      ],
+      "prefill": "no-preference",
+      "title": "Color scheme",
+      "type": "string"
+    },
+    "cookieBannerAction": {
+      "default": "hide",
+      "description": "Hide common cookie and consent overlays, click Accept first, or leave them untouched.",
+      "editor": "select",
+      "enum": [
+        "hide",
+        "accept",
+        "off"
+      ],
+      "enumTitles": [
+        "Hide banners (recommended)",
+        "Click Accept",
+        "Leave banners"
+      ],
+      "prefill": "hide",
+      "title": "Consent banners",
+      "type": "string"
+    },
     "delay": {
       "default": 0,
-      "description": "Milliseconds to wait after the page loads before taking the screenshot. Useful for pages with animations or lazy-loaded content.",
-      "maximum": 3600000,
+      "description": "Additional milliseconds to wait after navigation before scrolling or capturing.",
+      "maximum": 600000,
       "minimum": 0,
       "prefill": 0,
-      "title": "Delay Before Screenshot (ms)",
+      "title": "Extra delay after load",
       "type": "integer"
     },
     "delayAfterScrolling": {
-      "default": 2500,
-      "description": "Milliseconds to wait after scrolling to bottom. Only applies when Scroll to Bottom is enabled and Wait for Network Idle After Scroll is disabled.",
-      "maximum": 3600000,
+      "default": 1000,
+      "description": "Milliseconds to wait after scrolling and before capture. Only used when scrolling is enabled.",
+      "maximum": 600000,
       "minimum": 0,
-      "title": "Delay After Scrolling (ms)",
+      "prefill": 0,
+      "title": "Delay after scrolling",
+      "type": "integer"
+    },
+    "device": {
+      "default": "custom",
+      "description": "Device preset. Custom uses the viewport width, height and scale factor below. Presets emulate a real mobile or desktop browser.",
+      "editor": "select",
+      "enum": [
+        "custom",
+        "desktop",
+        "desktop_hd",
+        "laptop",
+        "tablet",
+        "ipad",
+        "iphone_15",
+        "iphone_se",
+        "pixel_8",
+        "galaxy_s23"
+      ],
+      "enumTitles": [
+        "Custom viewport",
+        "Desktop 1280x1080",
+        "Desktop HD 1920x1080",
+        "Laptop 1366x768",
+        "Tablet 768x1024",
+        "iPad 1024x1366",
+        "iPhone 15",
+        "iPhone SE",
+        "Pixel 8",
+        "Galaxy S23"
+      ],
+      "prefill": "custom",
+      "sectionCaption": "Device & rendering",
+      "sectionDescription": "Viewport, scale, color scheme and language for the browser.",
+      "title": "Device",
+      "type": "string"
+    },
+    "deviceScaleFactor": {
+      "default": 1,
+      "description": "Pixel density for Device=Custom: 1 is standard, 2 is retina, 3 is high-DPI mobile. Device presets use their own scale factor.",
+      "maximum": 3,
+      "minimum": 1,
+      "prefill": 1,
+      "title": "Device scale factor",
       "type": "integer"
     },
     "format": {
       "default": "png",
-      "description": "Screenshot output format. PNG captures a full-page image. PDF generates a printable document.",
+      "description": "PNG is lossless, JPEG and WebP are smaller, PDF produces a printable document. WebP conversion uses Pillow after the browser capture.",
       "editor": "select",
       "enum": [
         "png",
+        "jpeg",
+        "webp",
         "pdf"
       ],
       "enumTitles": [
-        "PNG Image",
-        "PDF Document"
+        "PNG image",
+        "JPEG image",
+        "WebP image",
+        "PDF document"
       ],
-      "title": "Output Format",
+      "prefill": "png",
+      "title": "Output format",
       "type": "string"
     },
-    "proxyConfiguration": {
-      "description": "Optional proxy settings. The actor works without proxy for most websites.",
-      "editor": "proxy",
-      "sectionCaption": "Advanced Settings",
-      "title": "Proxy Configuration",
-      "type": "object"
-    },
-    "scrollToBottom": {
-      "default": false,
-      "description": "Scroll to the bottom of the page before taking the screenshot. Triggers lazy-loaded images and infinite scroll content.",
-      "sectionCaption": "Scrolling",
-      "title": "Scroll to Bottom",
+    "fullPage": {
+      "default": true,
+      "description": "Capture the full scrollable page. Turn off to capture only the visible viewport. A selector overrides this option.",
+      "prefill": true,
+      "title": "Capture the whole page",
       "type": "boolean"
     },
+    "hideFixedElements": {
+      "default": false,
+      "description": "Hide real fixed headers, full-screen overlays and chat widgets before capture. Sticky content blocks are left in place. Default off because resetting to the top already prevents repeated headers on most pages.",
+      "prefill": false,
+      "title": "Hide fixed headers and overlays",
+      "type": "boolean"
+    },
+    "locale": {
+      "default": "en-US",
+      "description": "Locale used for navigator.language and localized pages.",
+      "editor": "select",
+      "enum": [
+        "en-US",
+        "en-GB",
+        "de-DE",
+        "fr-FR",
+        "es-ES",
+        "it-IT",
+        "pt-BR",
+        "nl-NL",
+        "pl-PL",
+        "ru-RU",
+        "tr-TR",
+        "ar-SA",
+        "hi-IN",
+        "ja-JP",
+        "zh-CN",
+        "ko-KR"
+      ],
+      "enumTitles": [
+        "English (US)",
+        "English (UK)",
+        "German",
+        "French",
+        "Spanish",
+        "Italian",
+        "Portuguese (Brazil)",
+        "Dutch",
+        "Polish",
+        "Russian",
+        "Turkish",
+        "Arabic",
+        "Hindi",
+        "Japanese",
+        "Chinese (Simplified)",
+        "Korean"
+      ],
+      "prefill": "en-US",
+      "title": "Browser language",
+      "type": "string"
+    },
+    "maxConcurrency": {
+      "default": 1,
+      "description": "How many URLs to capture in parallel. Keep at 1 for long pages at 2048 MB; higher values need more memory.",
+      "maximum": 5,
+      "minimum": 1,
+      "prefill": 1,
+      "sectionCaption": "Reliability",
+      "sectionDescription": "Retries, timeouts and page-size limits.",
+      "title": "Concurrent URLs",
+      "type": "integer"
+    },
+    "maxPageHeight": {
+      "default": 0,
+      "description": "Clip full-page images at this CSS height. 0 means unlimited. PDFs keep their full document height and ignore this limit. Truncation is reported in the record.",
+      "maximum": 200000,
+      "minimum": 0,
+      "prefill": 0,
+      "title": "Maximum page height",
+      "type": "integer"
+    },
+    "maxRetries": {
+      "default": 1,
+      "description": "Retry transient navigation failures and block pages. Retries use the AUTO datacenter proxy when no user proxy is configured.",
+      "maximum": 5,
+      "minimum": 0,
+      "prefill": 0,
+      "title": "Retries per URL",
+      "type": "integer"
+    },
+    "maxScrollSteps": {
+      "default": 400,
+      "description": "Stop after this many scroll steps. Prevents infinite-scroll pages from running forever. A cap hit sets truncated=true in the record.",
+      "maximum": 1000,
+      "minimum": 1,
+      "prefill": 400,
+      "title": "Maximum scroll steps",
+      "type": "integer"
+    },
+    "navigationTimeoutSecs": {
+      "default": 60,
+      "description": "Maximum seconds to wait for navigation and selector readiness per URL.",
+      "maximum": 300,
+      "minimum": 5,
+      "prefill": 60,
+      "title": "Navigation timeout",
+      "type": "integer"
+    },
+    "pdfFitOnePage": {
+      "default": false,
+      "description": "Create one tall PDF page instead of paginated paper. Overrides the paper height but keeps the selected margins.",
+      "prefill": false,
+      "title": "Fit the whole page on one PDF page",
+      "type": "boolean"
+    },
+    "pdfLandscape": {
+      "default": false,
+      "description": "Use landscape orientation for PDF pages.",
+      "prefill": false,
+      "title": "Landscape PDF",
+      "type": "boolean"
+    },
+    "pdfMargin": {
+      "default": "none",
+      "description": "Page margins for PDF output.",
+      "editor": "select",
+      "enum": [
+        "none",
+        "narrow",
+        "normal",
+        "wide"
+      ],
+      "enumTitles": [
+        "None",
+        "Narrow (0.25 in)",
+        "Normal (0.5 in)",
+        "Wide (1 in)"
+      ],
+      "prefill": "none",
+      "title": "PDF margin",
+      "type": "string"
+    },
+    "pdfPageSize": {
+      "default": "web",
+      "description": "Paper size for PDF output. Web page width preserves the previous 1280 px wide / Letter-height behavior.",
+      "editor": "select",
+      "enum": [
+        "web",
+        "a4",
+        "letter",
+        "legal",
+        "a3",
+        "a5",
+        "tabloid"
+      ],
+      "enumTitles": [
+        "Web page width (current behavior)",
+        "A4",
+        "Letter",
+        "Legal",
+        "A3",
+        "A5",
+        "Tabloid"
+      ],
+      "prefill": "web",
+      "sectionCaption": "PDF options",
+      "sectionDescription": "Only used when Output format is PDF.",
+      "title": "PDF page size",
+      "type": "string"
+    },
+    "pdfPrintBackground": {
+      "default": true,
+      "description": "Include CSS backgrounds, colors and images in the PDF.",
+      "prefill": true,
+      "title": "Print backgrounds",
+      "type": "boolean"
+    },
+    "proxyConfiguration": {
+      "description": "Optional proxy override. The actor starts direct and uses an Apify AUTO datacenter proxy only after a real block when this is empty. Residential is never selected automatically.",
+      "editor": "proxy",
+      "sectionCaption": "Advanced",
+      "title": "Proxy configuration",
+      "type": "object"
+    },
+    "quality": {
+      "default": 85,
+      "description": "Quality for JPEG and WebP output (1-100). Ignored for PNG and PDF.",
+      "maximum": 100,
+      "minimum": 1,
+      "prefill": 85,
+      "title": "Image quality",
+      "type": "integer"
+    },
+    "scrollStepPx": {
+      "default": 250,
+      "description": "Pixels to scroll per step. Smaller steps trigger more IntersectionObserver content but take longer.",
+      "maximum": 2000,
+      "minimum": 100,
+      "prefill": 250,
+      "title": "Scroll step",
+      "type": "integer"
+    },
+    "scrollToBottom": {
+      "default": true,
+      "description": "Scroll through the page in steps to trigger lazy images, infinite-scroll widgets and content-visibility sections before capture.",
+      "prefill": false,
+      "sectionCaption": "Scrolling & cleanup",
+      "sectionDescription": "Controls for lazy content, fixed elements and consent overlays.",
+      "title": "Scroll to load lazy content",
+      "type": "boolean"
+    },
+    "selector": {
+      "description": "Optional CSS selector. When set, captures only that element and ignores fullPage. Example: main, #pricing, article.",
+      "editor": "textfield",
+      "title": "Capture one element",
+      "type": "string"
+    },
     "selectorsToHide": {
-      "description": "Comma-separated CSS selectors of elements to hide before taking the screenshot. Example: '.cookie-banner, #popup, .ads'",
+      "description": "Comma or newline separated CSS selectors for extra elements to hide before capture. Example: .newsletter-popup, #chat-widget",
       "editor": "textarea",
-      "title": "CSS Selectors to Hide",
+      "title": "Additional CSS selectors to hide",
       "type": "string"
     },
     "urls": {
-      "description": "List of web page URLs to capture as screenshots.",
+      "description": "Web pages to capture. Each item can be a URL object or a plain URL string. Bare domains such as example.com are accepted and use https.",
       "editor": "requestListSources",
       "prefill": [
         {
           "url": "https://www.apify.com/"
         }
       ],
-      "title": "URLs to Screenshot",
+      "title": "URLs to capture",
       "type": "array"
+    },
+    "viewportHeight": {
+      "default": 1080,
+      "description": "Browser viewport height in pixels when Device is Custom.",
+      "maximum": 4320,
+      "minimum": 100,
+      "prefill": 1080,
+      "title": "Viewport height",
+      "type": "integer"
     },
     "viewportWidth": {
       "default": 1280,
-      "description": "Browser viewport width in pixels. Height is fixed at 1080px.",
+      "description": "Browser viewport width in pixels when Device is Custom.",
       "maximum": 3840,
       "minimum": 100,
       "prefill": 1280,
-      "title": "Viewport Width (px)",
+      "title": "Viewport width",
       "type": "integer"
+    },
+    "waitForFonts": {
+      "default": true,
+      "description": "Wait up to 5 seconds for web fonts to finish loading.",
+      "prefill": true,
+      "title": "Wait for fonts",
+      "type": "boolean"
+    },
+    "waitForImages": {
+      "default": true,
+      "description": "Wait up to 5 seconds for images to finish loading after scrolling. Incomplete images are reported in warnings.",
+      "prefill": false,
+      "title": "Wait for images",
+      "type": "boolean"
+    },
+    "waitForSelector": {
+      "description": "Optional CSS selector to wait for before capture. Useful for single-page apps. Fails the URL if the element never becomes visible.",
+      "editor": "textfield",
+      "title": "Wait for element",
+      "type": "string"
     },
     "waitUntil": {
       "default": "load",
-      "description": "When to consider the page loaded before taking the screenshot.",
+      "description": "Navigation readiness. DOM content loaded is the fastest reliable default; network idle can stall on analytics-heavy sites.",
       "editor": "select",
       "enum": [
         "load",
         "domcontentloaded",
-        "networkidle"
+        "networkidle",
+        "commit"
       ],
       "enumTitles": [
-        "Page is opened (load)",
-        "Content is loaded (DOM)",
-        "Network is idle"
+        "Page load event",
+        "DOM content loaded (recommended)",
+        "Network idle (can stall)",
+        "Navigation committed"
       ],
-      "prefill": "load",
-      "title": "Wait Until",
+      "prefill": "domcontentloaded",
+      "sectionCaption": "Loading & timing",
+      "sectionDescription": "Controls for deciding when the page and its assets are ready.",
+      "title": "Wait until",
       "type": "string"
     },
     "waitUntilNetworkIdleAfterScroll": {
       "default": false,
-      "description": "After scrolling, wait until no network requests are made for 500ms. Ensures all lazy-loaded content finishes loading. Overrides Delay After Scrolling.",
-      "title": "Wait for Network Idle After Scroll",
+      "description": "After scrolling, wait until the network is idle before capture. Uses the timeout below.",
+      "prefill": false,
+      "title": "Wait for network idle after scrolling",
       "type": "boolean"
     },
     "waitUntilNetworkIdleAfterScrollTimeout": {
-      "default": 30000,
-      "description": "Maximum time to wait for network idle after scrolling. Only applies when Wait for Network Idle After Scroll is enabled.",
-      "maximum": 3600000,
+      "default": 15000,
+      "description": "Maximum milliseconds to wait for network idle after scrolling.",
+      "maximum": 120000,
       "minimum": 1000,
-      "title": "Network Idle After Scroll Timeout (ms)",
+      "prefill": 1000,
+      "title": "Network idle timeout",
       "type": "integer"
     }
   },

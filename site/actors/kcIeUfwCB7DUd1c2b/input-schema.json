@@ -1,0 +1,165 @@
+{
+  "description": "Capture clean PNG screenshots of public X posts and profiles. No login or cookies required.",
+  "properties": {
+    "captureMode": {
+      "default": "postCard",
+      "description": "What to capture. Post links always produce a single post card; this mode applies to profile links.",
+      "editor": "select",
+      "enum": [
+        "postCard",
+        "profileHeader",
+        "fullProfilePage"
+      ],
+      "enumTitles": [
+        "Post card (one post)",
+        "Profile header (header + first posts)",
+        "Full profile page (scrollable page)"
+      ],
+      "prefill": "postCard",
+      "title": "Capture mode",
+      "type": "string"
+    },
+    "deviceScaleFactor": {
+      "default": "1x",
+      "description": "Render the page at a higher pixel density for sharper screenshots. 2x doubles and 3x triples the pixel dimensions.",
+      "editor": "select",
+      "enum": [
+        "1x",
+        "2x",
+        "3x"
+      ],
+      "enumTitles": [
+        "1x (standard)",
+        "2x (retina)",
+        "3x (high density)"
+      ],
+      "prefill": "1x",
+      "title": "Pixel density",
+      "type": "string"
+    },
+    "format": {
+      "default": "png",
+      "description": "File format of the saved screenshot. JPEG and WEBP support the quality setting; PNG is lossless.",
+      "editor": "select",
+      "enum": [
+        "png",
+        "jpeg",
+        "webp"
+      ],
+      "enumTitles": [
+        "PNG (lossless, largest)",
+        "JPEG (smaller file, quality setting applies)",
+        "WEBP (smallest file, quality setting applies)"
+      ],
+      "prefill": "png",
+      "title": "Image format",
+      "type": "string"
+    },
+    "fullPage": {
+      "default": false,
+      "description": "When on, the whole page is captured instead of just the post card or the visible profile header.",
+      "prefill": false,
+      "title": "Capture the full scrollable page",
+      "type": "boolean"
+    },
+    "hideReplies": {
+      "default": true,
+      "description": "Hide reply posts so screenshots stay focused on original posts.",
+      "prefill": true,
+      "title": "Hide replies",
+      "type": "boolean"
+    },
+    "includeMetadata": {
+      "default": false,
+      "description": "Add details to each row: post id, post URL, author handle, text snippet and the author's follower, following and post counts for posts; username, display name, follower, following and post counts for profiles. Counts are only added when X shows them.",
+      "prefill": false,
+      "title": "Include post/profile details",
+      "type": "boolean"
+    },
+    "postUrls": {
+      "description": "Posts to capture as clean post cards. Paste x.com or twitter.com links, bare numeric post IDs, profile links or bare usernames. Any input works in every list.",
+      "editor": "stringList",
+      "example": [
+        "https://x.com/NASA/status/2107095768821576019",
+        "2107095768821576019",
+        "@apify"
+      ],
+      "prefill": [
+        "https://x.com/NASA/status/2107095768821576019"
+      ],
+      "title": "X post links, IDs or usernames",
+      "type": "array"
+    },
+    "profileUrls": {
+      "description": "Optional. Profiles to capture (header and first posts). Paste profile links, bare usernames, post links or post IDs and the actor routes them to the right capture. Use capture mode to choose header-only or the full page.",
+      "editor": "stringList",
+      "example": [
+        "https://x.com/apify",
+        "apify"
+      ],
+      "title": "X profile links or usernames",
+      "type": "array"
+    },
+    "proxyConfiguration": {
+      "description": "Optional. Use a proxy if you plan large runs or see frequent rate limits.",
+      "editor": "proxy",
+      "nullable": true,
+      "sectionCaption": "Advanced",
+      "sectionDescription": "Optional settings for large or repeated runs.",
+      "title": "Proxy configuration",
+      "type": "object"
+    },
+    "quality": {
+      "default": 90,
+      "description": "Quality for JPEG and WEBP output (1-100). Ignored for PNG.",
+      "maximum": 100,
+      "minimum": 1,
+      "prefill": 90,
+      "title": "Image quality",
+      "type": "integer"
+    },
+    "theme": {
+      "default": "dark",
+      "description": "Color theme for the screenshot.",
+      "editor": "select",
+      "enum": [
+        "dark",
+        "light",
+        "system"
+      ],
+      "enumTitles": [
+        "Dark",
+        "Light",
+        "System (browser default)"
+      ],
+      "prefill": "dark",
+      "title": "Theme",
+      "type": "string"
+    },
+    "tweetUrls": {
+      "description": "Alias of X post links. Accepts tweet links, bare tweet IDs, profile links and bare usernames.",
+      "editor": "stringList",
+      "title": "Tweet links (alias)",
+      "type": "array"
+    },
+    "viewportHeight": {
+      "default": 900,
+      "description": "Browser height used for the capture.",
+      "maximum": 2160,
+      "minimum": 240,
+      "title": "Viewport height (pixels)",
+      "type": "integer"
+    },
+    "viewportWidth": {
+      "default": 1440,
+      "description": "Browser width used for the capture. Higher values fit more of the page.",
+      "maximum": 3840,
+      "minimum": 320,
+      "title": "Viewport width (pixels)",
+      "type": "integer"
+    }
+  },
+  "schemaVersion": 1,
+  "title": "Twitter (X) Screenshot Generator",
+  "type": "object"
+}

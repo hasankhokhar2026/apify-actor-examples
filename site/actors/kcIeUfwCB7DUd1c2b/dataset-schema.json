@@ -1,0 +1,212 @@
+{
+  "actorSpecification": 1,
+  "fields": {
+    "properties": {
+      "authorFollowers": {
+        "description": "Post author follower count (when Include post/profile details is on)",
+        "title": "Author followers",
+        "type": "number"
+      },
+      "authorFollowing": {
+        "description": "Post author following count (when Include post/profile details is on)",
+        "title": "Author following",
+        "type": "number"
+      },
+      "authorPostCount": {
+        "description": "Post author post count (when Include post/profile details is on)",
+        "title": "Author posts",
+        "type": "number"
+      },
+      "authorUsername": {
+        "description": "Post author handle (when Include post/profile details is on)",
+        "title": "Author",
+        "type": "string"
+      },
+      "captureMode": {
+        "description": "postCard, profileHeader or fullProfilePage",
+        "title": "Capture mode",
+        "type": "string"
+      },
+      "capturedAt": {
+        "description": "ISO timestamp when the screenshot was taken",
+        "title": "Captured at",
+        "type": "string"
+      },
+      "deviceScaleFactor": {
+        "description": "Device scale factor used for the capture",
+        "title": "Pixel density",
+        "type": "number"
+      },
+      "downloadUrl": {
+        "description": "Public signed URL to download the screenshot file",
+        "format": "link",
+        "title": "Download URL",
+        "type": "string"
+      },
+      "fileSizeBytes": {
+        "description": "Size of the saved screenshot in bytes",
+        "title": "File size",
+        "type": "number"
+      },
+      "filename": {
+        "description": "File name of the screenshot in the key-value store",
+        "title": "File name",
+        "type": "string"
+      },
+      "followers": {
+        "description": "Follower count (when Include post/profile details is on)",
+        "title": "Followers",
+        "type": "number"
+      },
+      "following": {
+        "description": "Accounts followed (when Include post/profile details is on)",
+        "title": "Following",
+        "type": "number"
+      },
+      "format": {
+        "description": "Saved image format (png, jpeg or webp)",
+        "title": "Format",
+        "type": "string"
+      },
+      "height": {
+        "description": "Height of the captured image in pixels",
+        "title": "Height",
+        "type": "number"
+      },
+      "name": {
+        "description": "Profile display name (when Include post/profile details is on)",
+        "title": "Profile name",
+        "type": "string"
+      },
+      "postCount": {
+        "description": "Profile post count (when Include post/profile details is on)",
+        "title": "Posts",
+        "type": "number"
+      },
+      "profileUrl": {
+        "description": "The profile URL when a profile was captured",
+        "format": "link",
+        "title": "Profile URL",
+        "type": "string"
+      },
+      "quality": {
+        "description": "JPEG/WEBP quality setting",
+        "title": "Quality",
+        "type": "number"
+      },
+      "status": {
+        "description": "Result status (success or error details)",
+        "title": "Status",
+        "type": "string"
+      },
+      "targetUrl": {
+        "description": "The Twitter/X post or profile URL that was captured",
+        "format": "link",
+        "title": "Target URL",
+        "type": "string"
+      },
+      "textSnippet": {
+        "description": "First characters of the post text (when Include post/profile details is on)",
+        "title": "Text snippet",
+        "type": "string"
+      },
+      "tweetId": {
+        "description": "Numeric post id (when Include post/profile details is on)",
+        "title": "Post ID",
+        "type": "string"
+      },
+      "tweetUrl": {
+        "description": "Canonical post URL (when Include post/profile details is on)",
+        "title": "Post URL",
+        "type": "string"
+      },
+      "type": {
+        "description": "screenshot for a captured image, status for a run message.",
+        "title": "Row type",
+        "type": "string"
+      },
+      "username": {
+        "description": "Profile handle (when Include post/profile details is on)",
+        "title": "Profile username",
+        "type": "string"
+      },
+      "width": {
+        "description": "Width of the captured image in pixels",
+        "title": "Width",
+        "type": "number"
+      }
+    },
+    "type": "object"
+  },
+  "title": "Twitter Screenshots",
+  "views": {
+    "overview": {
+      "description": "Screenshots of Twitter/X posts and profiles with download links.",
+      "display": {
+        "component": "table",
+        "properties": {
+          "captureMode": {
+            "format": "text",
+            "label": "Mode"
+          },
+          "capturedAt": {
+            "format": "date",
+            "label": "Captured At"
+          },
+          "downloadUrl": {
+            "format": "link",
+            "label": "Download"
+          },
+          "fileSizeBytes": {
+            "format": "number",
+            "label": "Bytes"
+          },
+          "filename": {
+            "format": "text",
+            "label": "File"
+          },
+          "format": {
+            "format": "text",
+            "label": "Format"
+          },
+          "height": {
+            "format": "number",
+            "label": "Height"
+          },
+          "status": {
+            "format": "text",
+            "label": "Status"
+          },
+          "targetUrl": {
+            "format": "link",
+            "label": "Target URL"
+          },
+          "type": {
+            "format": "text",
+            "label": "Row Type"
+          },
+          "width": {
+            "format": "number",
+            "label": "Width"
+          }
+        }
+      },
+      "title": "Screenshots",
+      "transformation": {
+        "fields": [
+          "type",
+          "targetUrl",
+          "captureMode",
+          "status",
+          "format",
+          "width",
+          "height",
+          "fileSizeBytes",
+          "filename",
+          "downloadUrl",
+          "capturedAt"
+        ]
+      }
+    }
+  }
+}

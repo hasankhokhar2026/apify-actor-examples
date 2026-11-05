@@ -1,90 +1,107 @@
 {
-  "description": "Search the General Optical Council's public Specialist Register (str.optical.org) for registered optometrists, dispensing opticians, students, and optical businesses across the UK.",
+  "description": "Search the General Optical Council's public Specialist Register (str.optical.org) for registered optometrists, dispensing opticians, students, and optical businesses across the UK. Look up exact GOC numbers, search by name, specialty, company, or postcode, or export the full business register.",
   "properties": {
-    "address": {
-      "default": "",
-      "description": "Filter registrants by address text (contains match).",
-      "editor": "textfield",
-      "prefill": "",
-      "title": "Address contains (mode=registrant)",
-      "type": "string"
+    "addresses": {
+      "default": [],
+      "description": "One or more address, town, or postcode-area text searches for registrant mode. Each value runs its own search and results are merged. Latin-script values only.",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Address or town contains (one or more)",
+      "type": "array"
     },
-    "companyName": {
-      "default": "",
-      "description": "Filter optical businesses whose registered name contains this text.",
-      "editor": "textfield",
-      "prefill": "",
-      "title": "Company name contains (mode=bodyCorporate)",
-      "type": "string"
+    "companyNames": {
+      "default": [],
+      "description": "One or more optical-business names to search in bodyCorporate mode. Each value runs its own search and results are merged. Latin-script values only.",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Company names (one or more)",
+      "type": "array"
     },
     "fetchDetails": {
       "default": true,
-      "description": "Visit each registrant/business detail page to also capture qualifications, town, practice address, and fitness-to-practise decisions. Slower but much richer records. Disable for a faster, list-only run.",
-      "prefill": true,
+      "description": "Visit each result's detail page to capture qualifications, town, every practice address, postcodes, and FTP decision documents. Slower and dependent on the GOC's flaky detail pages; disable for a fast list-only run. Ignored in allBusinesses mode, which is always list-only.",
+      "prefill": false,
+      "sectionCaption": "Output options",
+      "sectionDescription": "Control detail enrichment and the size of the run.",
       "title": "Fetch full profile details",
       "type": "boolean"
     },
     "forename": {
       "default": "",
-      "description": "Filter registrants by first name (contains match).",
+      "description": "Optional first-name filter applied to every surname search in registrant mode.",
       "editor": "textfield",
       "prefill": "",
-      "title": "First name (mode=registrant)",
+      "title": "First name contains",
       "type": "string"
     },
     "gocNumbers": {
       "default": [],
-      "description": "Exact-match one or more GOC registration numbers (e.g. `01-12294` for a registrant or `CO-4310` for a business). Overrides name-based search when provided.",
+      "description": "Exact GOC registration numbers, e.g. 01-12294, D-9396, SO-44231, CO-4310. In byGocNumber mode this is the whole lookup list (registrants and businesses can be mixed). Missing hyphens, lowercase, and a missing leading zero are normalised. In search modes the numbers are combined (AND) with the other filters.",
       "editor": "stringList",
-      "prefill": [],
+      "prefill": [
+        "01-12294"
+      ],
       "title": "GOC number(s)",
       "type": "array"
     },
+    "maxDetailedItems": {
+      "default": 2000,
+      "description": "Only used when fetchDetails is on. The first N records are enriched; the rest are emitted with list-level fields. Keep this modest for large runs. Ignored in allBusinesses mode.",
+      "maximum": 3000,
+      "minimum": 1,
+      "prefill": 1,
+      "title": "Maximum records with full details",
+      "type": "integer"
+    },
     "maxItems": {
       "default": 50,
-      "description": "Hard cap on the number of records returned.",
-      "maximum": 2000,
+      "description": "Hard cap on records emitted across all searches. The registrant register is about 33,359 rows at 5 per page, so a complete registrant export cannot finish in one default run. The full business register is about 2,973 rows and allBusinesses is list-only.",
+      "maximum": 25000,
       "minimum": 1,
-      "prefill": 50,
-      "title": "Max items",
+      "prefill": 1,
+      "title": "Maximum records",
       "type": "integer"
     },
     "mode": {
       "default": "registrant",
-      "description": "Search individual registrants (optometrists/dispensing opticians) or registered optical businesses (body corporates).",
+      "description": "Choose the task. `registrant` searches individuals by name, register type, specialty, address, postcode, or GOC number. `bodyCorporate` searches registered businesses. `byGocNumber` checks a list of exact GOC numbers and detects registrants vs businesses automatically. `allBusinesses` exports the full registered-business list (~3,000 records).",
       "editor": "select",
       "enum": [
         "registrant",
-        "bodyCorporate"
+        "bodyCorporate",
+        "byGocNumber",
+        "allBusinesses"
       ],
       "enumTitles": [
-        "Search registrants (optometrists / dispensing opticians / students)",
-        "Search optical businesses (body corporates)"
+        "Search individual registrants (name, register type, specialty, location)",
+        "Search optical businesses (company name, GOC number, location)",
+        "Look up exact GOC number(s) — registrants and/or businesses",
+        "All registered optical businesses (full business register, list-only)"
       ],
-      "prefill": "registrant",
-      "title": "Mode",
+      "prefill": "byGocNumber",
+      "title": "What do you want to collect?",
       "type": "string"
     },
     "postcode": {
       "default": "",
-      "description": "UK postcode to search around. Combined with `radiusMiles`. Works for both registrants and businesses.",
+      "description": "UK postcode or outward code (SW1A 1AA or EH1) used with radiusMiles. Works for registrant and business searches. Only real postcodes return results.",
       "editor": "textfield",
       "prefill": "",
-      "title": "Postcode (geography search)",
+      "title": "Postcode for a distance search",
       "type": "string"
     },
     "radiusMiles": {
       "default": 50,
-      "description": "Distance in miles from `postcode` to search within. Only used when `postcode` is set.",
+      "description": "Distance in miles from the postcode. Only used when postcode is set.",
       "maximum": 100,
       "minimum": 1,
       "prefill": 50,
-      "title": "Radius in miles (geography search)",
+      "title": "Distance radius (miles)",
       "type": "integer"
     },
     "registerType": {
       "default": "",
-      "description": "Restrict to a specific registration category.",
+      "description": "Restrict registrant searches to one registration category.",
       "editor": "select",
       "enum": [
         "",
@@ -96,7 +113,7 @@
         "Student Dispensing Optician, Student Optometrist"
       ],
       "enumTitles": [
-        "Any",
+        "Any register type",
         "Optometrist",
         "Dispensing Optician",
         "Student Optometrist",
@@ -105,12 +122,12 @@
         "Student Dispensing Optician + Student Optometrist"
       ],
       "prefill": "",
-      "title": "Registered as (mode=registrant)",
+      "title": "Registered as",
       "type": "string"
     },
     "sortBy": {
       "default": "",
-      "description": "Sort registrant results by surname.",
+      "description": "Sort registrant results by surname. The GOC register ignores this for business searches.",
       "editor": "select",
       "enum": [
         "",
@@ -118,24 +135,24 @@
         "Registrant Surname (z - a)"
       ],
       "enumTitles": [
-        "Default (relevance)",
+        "Default register order",
         "Surname A-Z",
         "Surname Z-A"
       ],
       "prefill": "",
-      "title": "Sort order (mode=registrant)",
+      "title": "Sort order (registrant searches)",
       "type": "string"
     },
     "soundsLikeSurname": {
       "default": false,
-      "description": "When enabled, `surname` is matched phonetically (e.g. 'Smyth' also matches 'Smith') instead of as a literal substring.",
+      "description": "Match surnames phonetically (e.g. 'Smyth' also finds 'Smith') instead of as a literal substring.",
       "prefill": false,
-      "title": "Sounds-like surname match (mode=registrant)",
+      "title": "Sounds-like surname matching",
       "type": "boolean"
     },
     "speciality": {
       "default": "",
-      "description": "Restrict to registrants holding a specific specialty annotation.",
+      "description": "Restrict registrant searches to one specialty annotation.",
       "editor": "select",
       "enum": [
         "",
@@ -145,29 +162,31 @@
         "Supplementary prescribing"
       ],
       "enumTitles": [
-        "Any",
+        "Any specialty",
         "Additional supply",
         "Contact lens",
         "Independent prescribing",
         "Supplementary prescribing"
       ],
       "prefill": "",
-      "title": "Specialty (mode=registrant)",
+      "title": "Specialty",
       "type": "string"
     },
-    "surname": {
-      "default": "Smith",
-      "description": "Filter registrants whose surname contains this text. Case-insensitive, matches anywhere in the surname.",
-      "editor": "textfield",
-      "prefill": "Smith",
-      "title": "Surname contains (mode=registrant)",
-      "type": "string"
+    "surnames": {
+      "default": [],
+      "description": "One or more surnames to search. Each surname runs its own search and results are merged without duplicates. Leave empty if you search by company, register type, specialty, address, postcode, or GOC number instead. Latin-script values only: the GOC search ignores non-Latin text.",
+      "editor": "stringList",
+      "prefill": [],
+      "sectionCaption": "Search filters",
+      "sectionDescription": "Provide at least one filter for the search modes. Multiple surnames or addresses run separate searches.",
+      "title": "Surnames (one or more)",
+      "type": "array"
     }
   },
   "required": [
     "mode"
   ],
   "schemaVersion": 1,
-  "title": "UK Optician Register Scraper Input",
+  "title": "GOC Optician & Optometrist Register Scraper Input",
   "type": "object"
 }

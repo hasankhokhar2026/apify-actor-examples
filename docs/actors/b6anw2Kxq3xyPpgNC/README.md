@@ -4,184 +4,225 @@
 
 # Pexels Stock Media Scraper
 
-Scrape **Pexels** — the free stock photo and video platform — without needing an API key. Search by keyword, browse the curated/popular feed, pull an entire photographer's portfolio, grab every photo and video in a curated collection, look up exact photos by ID, or find photos similar/related to a given one. Get direct, hotlink-safe image and video file URLs at multiple sizes/qualities, photographer credit and full profile stats, EXIF camera data, engagement counts, tags, dominant colors, and dimensions. No login, no cookies, no paid proxy required.
+Scrape **Pexels** photos and videos without a Pexels account, cookie, or API key. Search by keyword, browse the curated feed, pull a photographer's portfolio or a collection, look up exact photos and videos by ID or URL, find similar media, or paste any Pexels link. Get direct CDN URLs at every size and video rendition, tags, colors, dimensions, photographer credit, engagement counts, camera metadata, and the full photographer profile.
 
 ## What this actor does
 
-- **Six modes:** `search`, `curated`, `byPhotoId`, `byUser`, `byCollection`, `similarPhotos`
-- **Photos and videos:** every mode returns photos, videos, or both
-- **Filters:** orientation, minimum width/height, video duration range, number of people (photo search)
-- **Direct media URLs:** multiple image sizes and video file qualities, ready to download or embed
-- **Photographer credit:** name, profile URL, avatar, social links, and donation link where available
-- **Bonus detail data (mode=byPhotoId):** EXIF camera metadata, view/download/like counts, and the photographer's full profile stats — all bundled free with the same page fetch
-- **Empty fields are omitted** — you never have to defend against `null`
+- **Seven ways in:** `search`, `curated`, `byMediaId`, `byUser`, `byCollection`, `similarMedia`, `byUrl`
+- **Photos and videos in one actor:** search one type or both, and mix photo/video IDs and URLs
+- **Full filter surface:** orientation, size, color or hex, people count, people age, locale, minimum width/height, minimum FPS, duration range, and publish-date window
+- **Direct media URLs:** multiple image sizes, the original file, every video rendition, and a highest-resolution convenience URL
+- **Photographer credit:** name, profile, avatar, location, socials, donation link, hero/superhero badges, and full profile statistics
+- **Engagement and camera data:** views, downloads, likes, image views, reactions, EXIF camera fields, content-safety ratings, and file size when `includeDetails` is on
+- **Empty fields are omitted:** you never have to defend against `null`
+- **No browser:** the actor uses Pexels' public web JSON route with an HTML fallback, so runs are small and fast
 
-## Output per photo (`recordType: "photo"`)
+## Modes
 
-- `photoId`, `title`, `description`, `alt`, `slug`
-- `width`, `height`, `orientation` (`landscape` / `portrait` / `square`), `aspectRatio`
-- `license`, `featured` (Pexels editor's pick)
-- `createdAt`, `publishedAt`
-- `photographerName`, `photographerId`, `photographerUsername`, `photographerUrl`, `photographerAvatarUrl`, `photographerLocation`, `photographerInstagram`, `photographerTwitter`, `photographerIsHero`, `photographerDonateUrl`
-- `tags[]`
-- `imageSmallUrl`, `imageMediumUrl`, `imageLargeUrl`, `imageOriginalUrl`, `downloadUrl`
-- `avgColor` (hex), `colorPalette[]` (hex)
-- `collectionIds[]` — curated collections this photo belongs to (if any)
-- `pageUrl`, `sourceUrl`
-- `recordType: "photo"`, `scrapedAt`
+| Mode | What you give it | What you get |
+|---|---|---|
+| `search` | `searchQueries` + `mediaType` | Keyword results, photos, videos, or both |
+| `curated` | nothing | Pexels' editorial photo feed (paginated) |
+| `byMediaId` | `mediaIds` | Exact photos and videos by ID or URL, enriched with detail data |
+| `byUser` | `username` | A photographer's full portfolio, with profile stats |
+| `byCollection` | `collectionSlug` | Every photo and video in a collection |
+| `similarMedia` | `mediaIds` | Pexels' related-media feed for each seed |
+| `byUrl` | `startUrls` | Automatically routes search, photo, video, profile, collection, image, and video-file URLs |
 
-### Bonus fields (mode=`byPhotoId` only — bundled free with the detail-page fetch)
-
-- **Camera / EXIF:** `cameraMake`, `cameraModel`, `cameraIso`, `cameraAperture`, `cameraFocalLength`, `cameraShutterSpeed`, `cameraSoftware`, `photographedAt`, `fileSizeBytes`, `latitude`, `longitude`, `locationName` — present only when the photographer's upload retained this metadata
-- **Engagement stats:** `viewsCount`, `downloadsCount`, `likesCount`
-- **Full photographer profile:** `photographerBio`, `photographerWebsite`, `photographerYoutube`, `photographerTiktok`, `photographerFollowersCount`, `photographerFollowingsCount`, `photographerPhotosCount`, `photographerMediaCount`, `photographerPortfolioMediaCount`, `photographerCollectionsCount`, `photographerFirstUploadedOn` (also included for every record in mode=`byUser`, fetched once per run)
-
-## Output per video (`recordType: "video"`)
-
-- `videoId`, `title`, `description`, `slug`
-- `width`, `height`, `orientation`, `aspectRatio`
-- `durationSeconds`, `fps`
-- `license`, `featured`
-- `createdAt`, `publishedAt`
-- `photographerName`, `photographerId`, `photographerUsername`, `photographerUrl`, `photographerAvatarUrl`, `photographerLocation`, `photographerInstagram`, `photographerTwitter`, `photographerIsHero`, `photographerDonateUrl`
-- `tags[]`
-- `videoPreviewUrl`, `thumbnailSmallUrl`, `thumbnailMediumUrl`, `thumbnailLargeUrl`, `downloadUrl`
-- `videoFiles[]` — every available quality: `{ url, width, height, fps, fileType, downloadUrl }`
-- `bestVideoUrl` — the highest-resolution file, for convenience
-- `collectionIds[]`
-- `pageUrl`, `sourceUrl`
-- `recordType: "video"`, `scrapedAt`
+Legacy mode values are still accepted in code: `byPhotoId` maps to `byMediaId` and `similarPhotos` maps to `similarMedia`. The old `searchQuery` and `photoIds` input keys are mapped too, so saved tasks keep working.
 
 ## Input
 
 | Field | Type | Default | Description |
 |---|---|---|---|
-| `mode` | string | `search` | `search` / `curated` / `byPhotoId` / `byUser` / `byCollection` / `similarPhotos` |
-| `searchQuery` | string | – | Keyword to search (mode=search) |
+| `mode` | string | `search` | `search` / `curated` / `byMediaId` / `byUser` / `byCollection` / `similarMedia` / `byUrl` |
+| `searchQueries` | array | `[]` | One or more keywords for search |
 | `mediaType` | string | `photos` | `photos` / `videos` / `all` |
+| `startUrls` | array | `[]` | Pexels URLs for `byUrl` |
 | `orientation` | string | `all` | `all` / `landscape` / `portrait` / `square` |
-| `minWidth` | int | `0` | Minimum width in pixels (0 = no filter) |
-| `minHeight` | int | `0` | Minimum height in pixels (0 = no filter) |
-| `minDuration` | int | `0` | Minimum video length in seconds (videos only) |
-| `maxDuration` | int | `0` | Maximum video length in seconds (videos only, 0 = no cap) |
-| `peopleCount` | string | `all` | `all` / `0` / `1` / `2` (mode=search, photos only) |
-| `photoIds` | array | – | Photo IDs or URLs (mode=byPhotoId: look these up; mode=similarPhotos: find photos similar to these) |
-| `username` | string | – | Photographer handle or profile URL (mode=byUser) |
-| `collectionSlug` | string | – | Collection slug or URL (mode=byCollection) |
-| `maxItems` | int | `30` | Hard cap on returned records (1–1000) |
-| `proxyConfiguration` | object | off | Optional Apify proxy |
+| `size` | string | `all` | `all` / `large` (24 MP or 4K) / `medium` (12 MP or Full HD) / `small` (4 MP or HD) |
+| `color` | string | `all` | 12 Pexels colors, photos only |
+| `colorHex` | string | empty | Any hex color such as `#2563eb`; overrides `color` |
+| `peopleCount` | string | `all` | `all` / `0` / `1` / `2` |
+| `peopleAge` | string | `all` | `all` / `baby` / `child` / `teenager` / `adult` |
+| `locale` | string | `en-US` | 28 Pexels locales; localizes titles, descriptions, and search |
+| `minWidth` | integer | `0` | Minimum width in pixels (0 = off) |
+| `minHeight` | integer | `0` | Minimum height in pixels (0 = off) |
+| `minFps` | integer | `0` | Minimum video frame rate (0 = off); photos always pass |
+| `minDuration` | integer | `0` | Minimum video duration in seconds (0 = off) |
+| `maxDuration` | integer | `0` | Maximum video duration in seconds (0 = off) |
+| `publishedAfter` | string | empty | `YYYY-MM-DD`; keep media published on or after this date |
+| `publishedBefore` | string | empty | `YYYY-MM-DD`; keep media published on or before this date |
+| `mediaIds` | array | `[]` | Photo/video IDs or URLs for ID and similar modes |
+| `username` | string | empty | Photographer handle, ID, or profile URL |
+| `collectionSlug` | string | empty | Collection slug or full URL |
+| `maxItems` | integer | `30` | Global cap (1-5000); prefill 3 for the daily test |
+| `includeDetails` | boolean | `false` | Add views/downloads/likes, EXIF, content safety, and full profile stats; one extra request per item |
+| `dedupe` | boolean | `true` | Keep only the first occurrence of each media ID |
+| `proxyConfiguration` | object | off | Optional proxy override; the actor works directly and escalates only when blocked |
 
-### Example: search for landscape nature photos
+## Examples
+
+Search landscape nature photos at least 24 MP:
 
 ```json
 {
   "mode": "search",
-  "searchQuery": "nature",
+  "searchQueries": ["nature"],
   "mediaType": "photos",
   "orientation": "landscape",
-  "minWidth": 3000,
+  "size": "large",
   "maxItems": 50
 }
 ```
 
-### Example: search for short ocean videos
+Search short ocean videos at 60 fps or higher:
 
 ```json
 {
   "mode": "search",
-  "searchQuery": "ocean waves",
+  "searchQueries": ["ocean"],
   "mediaType": "videos",
-  "minDuration": 5,
+  "minFps": 60,
   "maxDuration": 30,
   "maxItems": 20
 }
 ```
 
-### Example: a photographer's full portfolio
+Get a photographer's portfolio in Spanish:
 
 ```json
 {
   "mode": "byUser",
   "username": "alex-ivanov-773258579",
+  "locale": "es-ES",
   "maxItems": 100
 }
 ```
 
-### Example: look up specific photos by ID
+Look up a photo and a video by ID:
 
 ```json
 {
-  "mode": "byPhotoId",
-  "photoIds": ["18872916", "37237947"]
+  "mode": "byMediaId",
+  "mediaIds": ["18872916", "25961000"]
 }
 ```
 
-### Example: everything in a curated collection
+Scrape a collection, including its videos:
 
 ```json
 {
   "mode": "byCollection",
-  "collectionSlug": "aquatic-aesthetic-bw7dkse",
+  "collectionSlug": "fashion-kwvfk6o",
   "mediaType": "all",
   "maxItems": 100
 }
 ```
 
-### Example: photos similar to a given photo
+Find media similar to a photo or video:
 
 ```json
 {
-  "mode": "similarPhotos",
-  "photoIds": ["18872916"],
-  "maxItems": 12
+  "mode": "similarMedia",
+  "mediaIds": ["18872916"],
+  "maxItems": 24
 }
 ```
 
+Paste any Pexels link:
+
+```json
+{
+  "mode": "byUrl",
+  "startUrls": [
+    {"url": "https://www.pexels.com/search/nature/?orientation=landscape"},
+    {"url": "https://www.pexels.com/photo/18872916/"},
+    {"url": "https://www.pexels.com/@alex-ivanov-773258579/"},
+    {"url": "https://www.pexels.com/collections/aquatic-aesthetic-bw7dkse/"}
+  ],
+  "maxItems": 60
+}
+```
+
+## Output
+
+Every row is one photo or video. Existing field names are preserved.
+
+### Photo fields
+
+`photoId`, `title`, `description`, `alt`, `slug`, `width`, `height`, `orientation`, `aspectRatio`, `license`, `licenseUrl`, `featured`, `createdAt`, `publishedAt`, `updatedAt`, `feedAt`, `photographerName`, `photographerId`, `photographerUsername`, `photographerUrl`, `photographerAvatarUrl`, `photographerLocation`, `photographerInstagram`, `photographerTwitter`, `photographerIsHero`, `photographerSuperhero`, `photographerActiveHero`, `photographerBadges`, `photographerDonateUrl`, `attribution`, `tags`, `imageSmallUrl`, `imageMediumUrl`, `imageLargeUrl`, `imageOriginalUrl`, `downloadUrl`, `downloadPageUrl`, `avgColor`, `colorPalette`, `collectionIds`, `reactionEmotionalCount`, `reactionTechnicalCount`, `reactionStylisticCount`, `pageUrl`, `sourceUrl`, `recordType`, `scrapedAt`.
+
+With `includeDetails` or `byMediaId`, photos can also include `cameraMake`, `cameraModel`, `cameraIso`, `cameraAperture`, `cameraFocalLength`, `cameraShutterSpeed`, `cameraSoftware`, `photographedAt`, `cameraOrientation`, `fileSizeBytes`, `latitude`, `longitude`, `locationName`, `copyright`, `googlePlaceId`, `contentSafety`, `viewsCount`, `downloadsCount`, `likesCount`, `imageViewsCount`, and the full profile fields below.
+
+### Video fields
+
+`videoId`, `title`, `description`, `slug`, `width`, `height`, `orientation`, `aspectRatio`, `durationSeconds`, `fps`, `license`, `licenseUrl`, `featured`, `createdAt`, `publishedAt`, `updatedAt`, `feedAt`, `photographerName`, `photographerId`, `photographerUsername`, `photographerUrl`, `photographerAvatarUrl`, `photographerLocation`, `photographerInstagram`, `photographerTwitter`, `photographerIsHero`, `photographerSuperhero`, `photographerActiveHero`, `photographerBadges`, `photographerDonateUrl`, `attribution`, `tags`, `videoPreviewUrl`, `videoProvider`, `thumbnailSmallUrl`, `thumbnailMediumUrl`, `thumbnailLargeUrl`, `downloadUrl`, `downloadPageUrl`, `videoFiles[]`, `bestVideoUrl`, `collectionIds`, `reactionEmotionalCount`, `reactionTechnicalCount`, `reactionStylisticCount`, `pageUrl`, `sourceUrl`, `recordType`, `scrapedAt`.
+
+`videoFiles[]` entries contain `url`, `quality` (when Pexels supplies it), `width`, `height`, `fps`, `fileType`, and `downloadUrl`. There is no top-level `videoQuality` field; the quality label lives inside each `videoFiles[]` entry.
+
+### Profile fields (detail / portfolio modes)
+
+`photographerBio`, `photographerWebsite`, `photographerYoutube`, `photographerTiktok`, `photographerFollowersCount`, `photographerFollowingsCount`, `photographerPhotosCount`, `photographerMediaCount`, `photographerPortfolioMediaCount`, `photographerCollectionsCount`, `photographerFirstUploadedOn`, `photographerLastUploadedAt`, `photographerImageViewsAllTime`, `photographerImageViewsLast30Days`, `photographerChallengesWonCount`, `photographerChallengesParticipatedCount`, `photographerHomepageFeaturedCount`, `photographerLeaderboardLast30DaysPosition`, `photographerLeaderboardAllTimePosition`, `photographerConfirmed`, `photographerBadges[]`.
+
+### Provenance
+
+`foundBy` is one of `keyword`, `curated`, `id`, `user`, `collection`, or `similar`; `query`, `seedMediaId`, `collectionSlug`, and `username` are added where they apply. `sourceUrl` remains the media page URL for backward compatibility.
+
+## Limits and data notes
+
+- **Search depth:** Pexels serves at most about **480 records per search query** (20 pages of 24). Page 21 and beyond return empty even though the site displays `total_results=10000`. Use narrower queries, filters, multiple queries, or the curated/profile/collection modes for more.
+- **Curated feed:** photos only. The public feed contains about **68,000 curated photos** and paginates at 80 per page.
+- **Photographer, collection, and similar feeds:** 80 records per page and paginate to the source total. The HTML fallback is limited to its first 12 records because `?page=N` is ignored on those pages; the actor uses the public web JSON route for full pagination.
+- **Video by ID:** Pexels returns 403 for a bare numeric video URL without a locale prefix; the actor resolves video IDs through the media JSON route first, then falls back to the locale-prefixed video page (`/{locale}/video/<id>/`) and its detail data.
+- **Server-side filters:** orientation, size, color/hex, people count, people age, locale, and video resolution/frame-rate parameters are honored. Duration, width, height, and publish-date filters are applied by the actor on the returned records because Pexels' web route ignores them.
+- **Camera and location fields are conditional:** in a 10-photo sample, camera data was present on 50%, a location name on 20%, and latitude/longitude on 0%. A later 50-photo audit found camera and location text on 26-60% of records but no coordinates. Empty fields are omitted, never fabricated.
+- **Coordinates and collection membership are not public:** the anonymous Pexels route exposes `mediumDetails` latitude/longitude as null and returns an empty `collection_ids` array. The actor keeps `latitude`, `longitude`, and `collectionIds` for compatibility but omits them when Pexels does not provide values.
+- **Image originals:** most originals are JPEG, but some are PNG. The actor takes the original URL from Pexels' own download link instead of assuming an extension.
+- **Attribution:** Pexels asks API users to credit photographers and link back to Pexels. The actor adds a ready-to-use `attribution` field and `licenseUrl` to every record. The Pexels license itself does not require attribution.
+- **No account, cookie, or API key:** all data comes from public Pexels pages and Pexels' public browser route. The actor keeps an HTML fallback if the public route changes.
+- **Proxy:** direct connections are the default. The actor escalates automatically only if Pexels blocks the run. The optional `proxyConfiguration` field is an override, not a requirement.
+
 ## Use cases
 
-- **Content creators** — source royalty-free photos and videos for blogs, social media, and presentations
-- **App/website placeholders** — bulk-fetch themed imagery for mockups and prototypes
-- **Marketing teams** — pull a specific photographer's or collection's catalog for campaign moodboards
-- **Machine learning** — build labeled image/video datasets with tags and dominant colors
-- **Digital asset management** — mirror direct download URLs into your own DAM system
+- Content and social teams sourcing campaign imagery and clips
+- Designers building moodboards and placeholders at specific sizes and orientations
+- Video editors finding 4K/60 fps clips by duration
+- AI and ML teams building tagged image/video datasets with dimensions, colors, and engagement signals
+- Digital asset teams mirroring direct CDN URLs into a DAM with photographer credit and license traceability
+- Localization teams pulling the same query in multiple languages
 
 ## FAQ
 
 **Is this affiliated with Pexels?**
-No, this is an independent third-party actor that reads Pexels' public web pages. It is not affiliated with or endorsed by Pexels.
+No. This is an independent third-party actor that reads public Pexels pages. It is not affiliated with or endorsed by Pexels.
 
 **Do I need a Pexels account or API key?**
-No. All modes work against Pexels' public pages with no login and no API key.
+No. The actor does not use the official Pexels API, so there is no account, API key, quota, or cookie to supply.
 
 **Are the media files free to use?**
-Yes — all content returned is licensed under the Pexels License (free for personal and commercial use, no attribution required), per Pexels' own terms.
+Pexels publishes its content under the Pexels License, which allows free personal and commercial use without attribution. Review the current license and the context of each asset before publishing. The actor returns `licenseUrl` and `attribution` to make credit easy.
 
-**Why do some records not have `photographerLocation` or `photographerInstagram`?**
-Those fields are only included when the photographer has filled them in on their Pexels profile. Empty fields are always omitted rather than returned as blank values.
+**Why do some records miss camera or location fields?**
+Those values come from the original upload and the photographer's profile. Pexels only retains them when they were supplied. The actor omits unavailable fields instead of returning an empty column.
 
-**What does `peopleCount` filter, exactly?**
-It filters Pexels' own photo search index by how many people appear in the photo (0, 1, or 2). It only applies to `mode=search` with `mediaType=photos`.
+**Why did `search` stop at about 480 records?**
+That is Pexels' anonymous search ceiling. Split the topic into narrower queries or use `curated`, `byUser`, `byCollection`, or `similarMedia`, which paginate to larger totals.
 
-**Can I look up a single video by ID?**
-Not currently — Pexels' individual video pages are protected more aggressively than photo pages and could not be scraped reliably (re-verified 2026-07: 5/5 test lookups still blocked with HTTP 403, versus a high success rate for photo detail pages). Videos are still fully available through `search`, `curated`, `byUser`, and `byCollection`.
+**Why does a collection return 84 records when I asked for 100?**
+The collection itself has 84 records. `maxItems` is a cap, not a guarantee that the source contains that many matches.
 
-**Can I filter by color or a minimum "quality" preset?**
-Not currently — Pexels' `color=` and `size=` search URL parameters were re-tested (2026-07) and confirmed to have no effect on which photos are returned (the result set changes only due to normal ranking variance, identically for any parameter value, real or nonsense). Use `minWidth`/`minHeight` instead, which are enforced by this actor itself against each photo's real dimensions.
+**Can I get videos in a collection or portfolio?**
+Yes. Set `mediaType` to `videos` or `all`. Collection media type filtering is applied by the actor; portfolio media type is also filtered server-side.
 
-**What is `mode=similarPhotos`?**
-It returns photos Pexels itself considers visually/topically similar to each photo ID you supply — the same "related photos" feed shown on a photo's own page, sourced from the same request used by `mode=byPhotoId` (no extra cost).
+**What is `includeDetails`?**
+It opens each media's detail page to add views, downloads, likes, camera/EXIF data, content safety, and full profile stats. It costs one extra request per item. `byMediaId` always enriches because exact lookup is expected to return the complete record.
 
-**Why do some `byPhotoId` records have camera/EXIF fields and others don't?**
-`cameraMake`, `cameraModel`, `cameraIso`, `photographedAt`, `latitude`/`longitude`, etc. come from the photo's original file metadata. Pexels only retains this when the photographer's upload included it — many uploads have it stripped, in which case those fields are omitted entirely rather than returned empty.
+**Can I paste a normal Pexels URL?**
+Yes. `byUrl` accepts search pages (with their filters), photo pages, video pages, photographer profiles, collections, image-file URLs, and video-file URLs.
 
-**Why does `pageUrl` return an error when I open it with `curl` but works fine in my browser?**
-`pageUrl`/`sourceUrl` point at Pexels' own page, which is protected by a JavaScript challenge that only real browsers can pass — it opens normally for people (and for anything that renders JavaScript), it just won't respond to a plain command-line request. All `imageXxxUrl`, `videoFiles[].url`, `thumbnailXxxUrl`, and `downloadUrl` fields are direct CDN links and work everywhere, including `curl` and server-side downloads, with no such restriction.
+**Are the CDN links stable?**
+All tested `images.pexels.com` and `videos.pexels.com` links returned 200. The actor returns the URLs exactly as Pexels supplies them, including the original file and every video rendition. Keep the media ID as the stable key.
 
 **How fresh is the data?**
-Every run reads Pexels' live pages, so results reflect what's on the site at run time.
-
-**How many items can I get per run?**
-Up to `maxItems` (max 1000). Actual results depend on how many matches exist for your query/filters. For `mode=similarPhotos`, each input photo ID contributes up to ~12 similar photos; supply more IDs to get more results.
-
-**Why did `mode=search` return only ~450 items even though I set `maxItems` to 1000 and Pexels shows thousands of results?**
-Pexels' own search-results pagination reports a large `total_results`/`total_pages` count, but it only actually serves the first ~20 pages (~450-480 photos) of guest/anonymous search results per query — page 21 onward returns an empty result set, even though earlier pages still claimed hundreds of pages remained (re-verified 2026-07 across multiple unrelated queries). This is a hard limit on Pexels' side, not a filter or bug in this actor — once you hit it, set a narrower `searchQuery`, add `orientation`/`minWidth`/`minHeight`/`peopleCount` filters, or switch to `mode=curated`/`byUser`/`byCollection` (which paginate differently) to source more items.
+Every run reads Pexels live, so engagement counts and search order reflect the moment of the run.

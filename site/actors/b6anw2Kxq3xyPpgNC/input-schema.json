@@ -1,16 +1,145 @@
 {
-  "description": "Scrape free stock photos and videos from Pexels by keyword search, curated/popular feed, photographer portfolio, curated collection, exact photo ID, or similar/related photos.",
+  "description": "Scrape free stock photos and videos from Pexels by keyword, photographer, collection, exact media ID/URL, similar media, curated feed, or any pasted Pexels URL. No Pexels account, cookie, or API key is required.",
   "properties": {
     "collectionSlug": {
-      "description": "Pexels curated collection slug or full collection URL (mode=byCollection). Example: `aquatic-aesthetic-bw7dkse` or `https://www.pexels.com/collections/aquatic-aesthetic-bw7dkse/`.",
+      "default": "",
+      "description": "Pexels collection slug or full collection URL for mode=byCollection. Example: `aquatic-aesthetic-bw7dkse`.",
       "editor": "textfield",
       "prefill": "aquatic-aesthetic-bw7dkse",
       "title": "Collection slug or URL",
       "type": "string"
     },
+    "color": {
+      "default": "all",
+      "description": "Filter photos by dominant color. Use Color hex instead for an exact hex value. Photos only.",
+      "editor": "select",
+      "enum": [
+        "all",
+        "red",
+        "orange",
+        "yellow",
+        "green",
+        "turquoise",
+        "blue",
+        "violet",
+        "pink",
+        "brown",
+        "black",
+        "gray",
+        "white"
+      ],
+      "enumTitles": [
+        "Any color",
+        "Red",
+        "Orange",
+        "Yellow",
+        "Green",
+        "Turquoise",
+        "Blue",
+        "Violet",
+        "Pink",
+        "Brown",
+        "Black",
+        "Gray",
+        "White"
+      ],
+      "prefill": "all",
+      "title": "Color",
+      "type": "string"
+    },
+    "colorHex": {
+      "default": "",
+      "description": "Optional hex color such as `#2563eb` or `#fff`. Overrides the Color dropdown when set. Photos only.",
+      "editor": "textfield",
+      "prefill": "",
+      "title": "Color hex",
+      "type": "string"
+    },
+    "dedupe": {
+      "default": true,
+      "description": "Keep only the first occurrence of each photo or video across queries, IDs, and URLs.",
+      "prefill": true,
+      "title": "Remove duplicates",
+      "type": "boolean"
+    },
+    "includeDetails": {
+      "default": false,
+      "description": "Open each media's detail page to add views, downloads, likes, camera/EXIF data, and the photographer's full profile. Adds one request per item and can be slow on large runs. Mode=byMediaId always enriches.",
+      "prefill": false,
+      "title": "Include engagement and camera details",
+      "type": "boolean"
+    },
+    "locale": {
+      "default": "en-US",
+      "description": "Pexels locale for titles, descriptions, and search results. Search terms are used as typed.",
+      "editor": "select",
+      "enum": [
+        "en-US",
+        "pt-BR",
+        "es-ES",
+        "ca-ES",
+        "de-DE",
+        "it-IT",
+        "fr-FR",
+        "sv-SE",
+        "id-ID",
+        "pl-PL",
+        "ja-JP",
+        "zh-TW",
+        "zh-CN",
+        "ko-KR",
+        "th-TH",
+        "nl-NL",
+        "hu-HU",
+        "vi-VN",
+        "cs-CZ",
+        "da-DK",
+        "fi-FI",
+        "uk-UA",
+        "el-GR",
+        "ro-RO",
+        "nb-NO",
+        "sk-SK",
+        "tr-TR",
+        "ru-RU"
+      ],
+      "enumTitles": [
+        "English (US)",
+        "Portuguese (Brazil)",
+        "Spanish (Spain)",
+        "Catalan",
+        "German",
+        "Italian",
+        "French",
+        "Swedish",
+        "Indonesian",
+        "Polish",
+        "Japanese",
+        "Chinese (Taiwan)",
+        "Chinese (Simplified)",
+        "Korean",
+        "Thai",
+        "Dutch",
+        "Hungarian",
+        "Vietnamese",
+        "Czech",
+        "Danish",
+        "Finnish",
+        "Ukrainian",
+        "Greek",
+        "Romanian",
+        "Norwegian (Bokmal)",
+        "Slovak",
+        "Turkish",
+        "Russian"
+      ],
+      "prefill": "en-US",
+      "title": "Locale",
+      "type": "string"
+    },
     "maxDuration": {
       "default": 0,
-      "description": "Only return videos at most this many seconds long (videos only; ignored for photos). 0 disables the filter.",
+      "description": "Only return videos at most this many seconds long. 0 disables the filter.",
       "maximum": 3600,
       "minimum": 0,
       "prefill": 0,
@@ -19,16 +148,30 @@
     },
     "maxItems": {
       "default": 30,
-      "description": "Maximum number of media records to return. NOTE: Pexels' own public search pagination resets to empty results past page 20 (confirmed live: page 20 returns real results, page 21+ returns 0 items regardless of the query), so a single search-style query reliably returns roughly 450 items even when far more matches exist and a higher value is requested here.",
-      "maximum": 1000,
+      "description": "Maximum number of media records to return across all queries, IDs, and URLs. Pexels search serves at most about 480 records per query (20 pages of 24); a single search query cannot exceed that even with a higher value.",
+      "maximum": 5000,
       "minimum": 1,
-      "prefill": 30,
+      "prefill": 3,
+      "sectionCaption": "Output options",
+      "sectionDescription": "Control the size of the dataset and optional per-item enrichment.",
       "title": "Max items",
       "type": "integer"
     },
+    "mediaIds": {
+      "default": [],
+      "description": "Pexels photo or video IDs, or full photo/video/image-file URLs. Used by Look up media by ID/URL and Similar media modes.",
+      "editor": "stringList",
+      "prefill": [
+        "18872916"
+      ],
+      "sectionCaption": "Lookup targets",
+      "sectionDescription": "Targets for the ID, photographer, and collection modes. Each field is used only by its matching mode.",
+      "title": "Media IDs or URLs",
+      "type": "array"
+    },
     "mediaType": {
       "default": "photos",
-      "description": "Which kind of media to return. For mode=search this selects between Pexels' separate photo-search and video-search pages (`all` is treated as `photos`). For mode=curated/byUser/byCollection, `all` returns both photos and videos as they naturally appear in the feed.",
+      "description": "Photos, videos, or both. `all` searches photos and videos and merges the results. Exact ID/URL lookups return the requested media type regardless of this setting.",
       "editor": "select",
       "enum": [
         "photos",
@@ -38,7 +181,7 @@
       "enumTitles": [
         "Photos only",
         "Videos only",
-        "All (photos + videos)"
+        "Photos and videos"
       ],
       "prefill": "photos",
       "title": "Media type",
@@ -46,16 +189,25 @@
     },
     "minDuration": {
       "default": 0,
-      "description": "Only return videos at least this many seconds long (videos only; ignored for photos). 0 disables the filter.",
+      "description": "Only return videos at least this many seconds long. 0 disables the filter.",
       "maximum": 3600,
       "minimum": 0,
       "prefill": 0,
       "title": "Minimum video duration (seconds)",
       "type": "integer"
     },
+    "minFps": {
+      "default": 0,
+      "description": "Only return videos with at least this many frames per second (for example 60). 0 disables the filter. Photos always pass.",
+      "maximum": 240,
+      "minimum": 0,
+      "prefill": 0,
+      "title": "Minimum frame rate",
+      "type": "integer"
+    },
     "minHeight": {
       "default": 0,
-      "description": "Only return media whose height is at least this many pixels. 0 disables the filter.",
+      "description": "Only return media at least this tall. 0 disables the filter. Enforced on each returned record.",
       "maximum": 20000,
       "minimum": 0,
       "prefill": 0,
@@ -64,7 +216,7 @@
     },
     "minWidth": {
       "default": 0,
-      "description": "Only return media whose width is at least this many pixels. 0 disables the filter.",
+      "description": "Only return media at least this wide. 0 disables the filter. Enforced on each returned record.",
       "maximum": 20000,
       "minimum": 0,
       "prefill": 0,
@@ -73,23 +225,25 @@
     },
     "mode": {
       "default": "search",
-      "description": "What to fetch from Pexels.",
+      "description": "What to fetch from Pexels. Use Search by keyword for discovery, Look up media by ID/URL for exact assets, Photographer portfolio or Collection for a catalog, Similar media for related assets, Curated feed for Pexels' editorial selection, or Paste URLs to route any Pexels link automatically.",
       "editor": "select",
       "enum": [
         "search",
         "curated",
-        "byPhotoId",
+        "byMediaId",
         "byUser",
         "byCollection",
-        "similarPhotos"
+        "similarMedia",
+        "byUrl"
       ],
       "enumTitles": [
         "Search by keyword",
-        "Curated / popular feed (homepage)",
-        "Lookup photos by ID or URL",
+        "Curated feed (editorial photos)",
+        "Look up media by ID or URL",
         "Photographer portfolio",
-        "Curated collection",
-        "Similar / related photos"
+        "Collection",
+        "Similar / related media",
+        "Paste Pexels URLs"
       ],
       "prefill": "search",
       "title": "Mode",
@@ -97,7 +251,7 @@
     },
     "orientation": {
       "default": "all",
-      "description": "Filter results by image/video orientation.",
+      "description": "Filter by media orientation. Applies to search, profile, and collection modes.",
       "editor": "select",
       "enum": [
         "all",
@@ -106,18 +260,42 @@
         "square"
       ],
       "enumTitles": [
-        "All orientations",
+        "Any orientation",
         "Landscape",
         "Portrait",
         "Square"
       ],
       "prefill": "all",
+      "sectionCaption": "Search filters",
+      "sectionDescription": "Optional filters. They apply to search, photographer portfolios, collections, and similar-media feeds; exact ID/URL lookups return the requested asset in full.",
       "title": "Orientation",
+      "type": "string"
+    },
+    "peopleAge": {
+      "default": "all",
+      "description": "Filter by the age of people in the media. Applies to photos and videos.",
+      "editor": "select",
+      "enum": [
+        "all",
+        "baby",
+        "child",
+        "teenager",
+        "adult"
+      ],
+      "enumTitles": [
+        "Any age",
+        "Baby",
+        "Child",
+        "Teenager",
+        "Adult"
+      ],
+      "prefill": "all",
+      "title": "People age",
       "type": "string"
     },
     "peopleCount": {
       "default": "all",
-      "description": "Filter photo search results by how many people appear in them (mode=search, photos only).",
+      "description": "Filter by how many people appear in the media. Applies to photos and videos.",
       "editor": "select",
       "enum": [
         "all",
@@ -135,37 +313,86 @@
       "title": "Number of people",
       "type": "string"
     },
-    "photoIds": {
-      "default": [],
-      "description": "Pexels photo IDs or full photo page URLs (mode=byPhotoId: look up these exact photos; mode=similarPhotos: find photos visually/topically similar to each of these). Example: `18872916` or `https://www.pexels.com/photo/18872916/`.",
-      "editor": "stringList",
-      "prefill": [
-        "18872916"
-      ],
-      "title": "Photo IDs or URLs",
-      "type": "array"
-    },
     "proxyConfiguration": {
       "default": {
         "useApifyProxy": false
       },
-      "description": "Optional Apify proxy. Pexels is generally reachable without a proxy; enable the free Automatic datacenter group only if you experience blocking.",
+      "description": "Optional Apify proxy override. The actor works directly without a proxy and escalates automatically only if Pexels blocks the run.",
       "editor": "proxy",
       "prefill": {
         "useApifyProxy": false
       },
+      "sectionCaption": "Advanced",
+      "sectionDescription": "Optional transport override. Leave the proxy off for the default direct-first behavior.",
       "title": "Proxy configuration",
       "type": "object"
     },
-    "searchQuery": {
-      "description": "Keyword to search for (mode=search). Example: `nature`, `city skyline`, `coffee`.",
+    "publishedAfter": {
+      "default": "",
+      "description": "Optional YYYY-MM-DD date. Only return media published on or after this date. Applied to the records returned by the current search/all listing.",
       "editor": "textfield",
-      "prefill": "nature",
-      "title": "Search query",
+      "prefill": "",
+      "title": "Published after",
       "type": "string"
     },
+    "publishedBefore": {
+      "default": "",
+      "description": "Optional YYYY-MM-DD date. Only return media published on or before this date. Applied to the records returned by the current search/all listing.",
+      "editor": "textfield",
+      "prefill": "",
+      "title": "Published before",
+      "type": "string"
+    },
+    "searchQueries": {
+      "default": [],
+      "description": "One or more keywords for mode=search, one per line. Each query is searched separately and duplicates are removed. Example: `nature`, `city skyline`, `coffee`.",
+      "editor": "stringList",
+      "prefill": [
+        "nature"
+      ],
+      "title": "Search queries",
+      "type": "array"
+    },
+    "size": {
+      "default": "all",
+      "description": "Pexels minimum-size filter. Photos: large is 24 MP, medium is 12 MP, small is 4 MP. Videos: large is 4K, medium is Full HD, small is HD.",
+      "editor": "select",
+      "enum": [
+        "all",
+        "large",
+        "medium",
+        "small"
+      ],
+      "enumTitles": [
+        "Any size",
+        "Large (24 MP / 4K)",
+        "Medium (12 MP / Full HD)",
+        "Small (4 MP / HD)"
+      ],
+      "prefill": "all",
+      "title": "Minimum size",
+      "type": "string"
+    },
+    "startUrls": {
+      "default": [],
+      "description": "Pexels search, photo, video, photographer, collection, image-file, or video-file URLs for mode=byUrl. Search URLs keep their orientation, size, color, people, and page filters.",
+      "editor": "requestListSources",
+      "items": {
+        "properties": {
+          "url": {
+            "description": "Pexels search, media, photographer, collection, or file URL.",
+            "title": "URL",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "title": "Pexels URLs",
+      "type": "array"
+    },
     "username": {
-      "description": "Pexels photographer handle or profile URL (mode=byUser). Example: `alex-ivanov-773258579` or `https://www.pexels.com/@alex-ivanov-773258579/`.",
+      "default": "",
+      "description": "Pexels photographer handle, ID, or profile URL for mode=byUser. Example: `alex-ivanov-773258579` or `https://www.pexels.com/@alex-ivanov-773258579/`.",
       "editor": "textfield",
       "prefill": "alex-ivanov-773258579",
       "title": "Photographer username",

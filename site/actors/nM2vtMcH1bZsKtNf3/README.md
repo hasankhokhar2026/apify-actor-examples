@@ -1,17 +1,27 @@
 # GOC Optician & Optometrist Register Scraper
 
-Search the General Optical Council's (GOC) public **Specialist Register** at [str.optical.org](https://str.optical.org) — the official, legally-mandated register of every optometrist, dispensing optician, optometry/dispensing student, and registered optical business ("body corporate") permitted to practise in the UK. No login, no API key, no cookies required — the register is public.
+Search and export the General Optical Council's (GOC) public **Specialist Register** at [str.optical.org](https://str.optical.org) — the statutory register of every optometrist, dispensing optician, student optometrist/student dispensing optician, and registered optical business permitted to practise in the UK. No login, API key, cookie, or proxy is required. The actor selects its own network route automatically; you do not configure a proxy.
 
 ## What this actor does
 
-- **Two search modes:** individual registrants (`registrant`) or optical businesses (`bodyCorporate`)
-- **Search by name** — surname (with optional phonetic "sounds-like" matching) and first name
-- **Search by exact GOC number(s)** — one or many, comma-separated
-- **Filter by registration category** — Optometrist, Dispensing Optician, Student (+ dual categories)
-- **Filter by specialty** — Contact lens, Independent prescribing, Supplementary prescribing, Additional supply
-- **Postcode radius search** — find every registrant/business within N miles of a UK postcode
-- **Full-profile enrichment** — optionally visits each result's detail page to also capture qualifications, town, practice address, and fitness-to-practise decisions
-- **Empty fields are always omitted** — every emitted field is real, non-null data
+- **Search individual registrants** by surname, first name, register type, specialty, address/town, postcode radius, or exact GOC number.
+- **Search optical businesses** by company name, GOC number, or postcode radius.
+- **Check a list of exact GOC numbers** — registrants and businesses can be mixed in one list; the actor detects the prefix, batches the lookups, and reports numbers that were not found.
+- **Export the full registered-business list** (~3,000 businesses) in one run.
+- **Enrich with profile data** — qualifications, town, every published practice address, practice postcodes, and FTP decision PDF links.
+- **Use multiple surnames, addresses, or company names** in one run; each value is searched separately and results are de-duplicated by GOC number.
+- **Omit empty fields** — every emitted field carries real, non-null data.
+
+## Modes
+
+| Mode | Use it for |
+|---|---|
+| `registrant` | Individuals: name, register type, specialty, address, postcode radius, GOC number |
+| `bodyCorporate` | Registered optical businesses: company name, GOC number, postcode radius |
+| `byGocNumber` | Bulk verification of exact GOC numbers; registrants and businesses mixed |
+| `allBusinesses` | Full registered-business export (~3,000 rows) |
+
+`registrant` and `bodyCorporate` need at least one search filter. `byGocNumber` needs `gocNumbers`. `allBusinesses` needs no filter.
 
 ## Output fields
 
@@ -22,117 +32,134 @@ Search the General Optical Council's (GOC) public **Specialist Register** at [st
 | `gocNumber` | Official GOC registration number, e.g. `01-12294`, `D-9396` |
 | `name` | Full registered name |
 | `registerType` | `Optometrist`, `Dispensing Optician`, `Student Optometrist`, etc. |
-| `registrationStatus` | e.g. `Registered` |
+| `registrationStatus` | `Registered`, `Registered with Conditions`, `Suspended` |
 | `registrationDate` | Date of most recent registration, ISO `yyyy-mm-dd` |
-| `specialities` | Specialty annotation, when held (e.g. `Contact Lens Specialty`) |
-| `qualifications` | Professional qualifications abbreviation (detail page only) |
-| `town` | Registered town (detail page only) |
-| `practiceAddresses` | Practice address, when published (detail page only) |
-| `ftpDecisions` | Fitness-to-practise decision text, when one exists (detail page only) |
+| `specialities` | Raw specialty text, e.g. `Contact Lens Specialty` |
+| `specialityList` | Normalised specialty values, e.g. `["Contact lens"]` |
+| `specialityCount` | Number of specialty annotations |
+| `qualifications` | Professional qualifications, when published (detail page) |
+| `town` | Registered town (detail page) |
+| `practiceAddresses` | First published practice address (detail page) |
+| `otherPracticeAddresses` | Additional practice addresses (detail page) |
+| `practiceAddressCount` | Total published practice addresses |
+| `practicePostcodes` | UK postcodes extracted from all practice addresses |
+| `primaryPracticePostcode` | First practice postcode |
+| `ftpDecisions` | FTP decision title(s), separated by `; ` |
+| `ftpDecisionDocuments` | `{title, url}` for each published FTP decision PDF |
+| `ftpDecisionCount` | Number of published FTP decisions |
+| `hasFtpDecision` | `true` when an FTP decision is published |
+| `hasConditions` | `true` when the status contains `Conditions` |
+| `isSuspended` | `true` when the status contains `Suspended` |
+| `isStudent` | `true` for student register types |
+| `searchTerm` | The surname/address that found the record, when the run used more than one search term |
 | `sourceUrl` | Canonical GOC register profile URL |
 | `recordType` | `"registrant"` |
 | `scrapedAt` | UTC ISO timestamp |
 
 ### Body corporate records (`recordType: "bodyCorporate"`)
 
-| Field | Description |
-|---|---|
-| `gocNumber` | Official GOC business registration number, e.g. `CO-4310` |
-| `companyName` | Registered business name |
-| `registrationStatus` | e.g. `Registered` |
-| `registrationDate` | ISO `yyyy-mm-dd` |
-| `town` | Registered town (detail page only) |
-| `practiceAddresses` | Practice address (detail page only) |
-| `ftpDecisions` | Fitness-to-practise decision text, when one exists (detail page only) |
-| `sourceUrl` | Canonical GOC register profile URL |
-| `recordType` | `"bodyCorporate"` |
-| `scrapedAt` | UTC ISO timestamp |
+The same common fields where applicable, with `companyName` instead of `name`. `registerType`, `specialities`, and `qualifications` are omitted because the GOC does not publish them for businesses.
 
 ## Input
 
 | Field | Type | Default | Description |
 |---|---|---|---|
-| `mode` | select | `registrant` | `registrant` or `bodyCorporate` |
-| `surname` | string | `Smith` | (mode=registrant) Surname contains |
-| `soundsLikeSurname` | bool | `false` | (mode=registrant) Match `surname` phonetically |
-| `forename` | string | – | (mode=registrant) First name contains |
-| `registerType` | select | – | (mode=registrant) Registration category |
-| `speciality` | select | – | (mode=registrant) Specialty annotation |
-| `address` | string | – | (mode=registrant) Address contains |
-| `sortBy` | select | – | (mode=registrant) Sort by surname A-Z / Z-A |
-| `companyName` | string | – | (mode=bodyCorporate) Company name contains |
-| `gocNumbers` | array | – | Exact GOC number(s); overrides name search |
-| `postcode` | string | – | UK postcode for a radius search (both modes) |
-| `radiusMiles` | int | `50` | Radius in miles from `postcode` (1–100) |
-| `fetchDetails` | bool | `true` | Fetch each profile's detail page for extra fields |
-| `maxItems` | int | `50` | Hard cap on returned records (1–2000) |
+| `mode` | select | `registrant` | `registrant`, `bodyCorporate`, `byGocNumber`, or `allBusinesses` |
+| `surnames` | array | `[]` | One or more surnames (registrant mode) |
+| `forename` | string | – | First-name contains filter (registrant mode) |
+| `soundsLikeSurname` | bool | `false` | Phonetic surname matching |
+| `registerType` | select | – | Registration category |
+| `speciality` | select | – | Specialty annotation |
+| `addresses` | array | `[]` | Address/town text searches (registrant mode) |
+| `companyNames` | array | `[]` | Company-name searches (business mode) |
+| `gocNumbers` | array | `[]` | Exact GOC numbers; mixed registrant/business in `byGocNumber` |
+| `postcode` | string | – | UK postcode or outward code for a distance search |
+| `radiusMiles` | int | `50` | Radius in miles (1–100) |
+| `sortBy` | select | – | Surname A-Z or Z-A (registrant searches) |
+| `fetchDetails` | bool | `true` | Fetch profile details; off is much faster. Ignored in `allBusinesses`, which is always list-only |
+| `maxDetailedItems` | int | `2000` | Cap on records with detail enrichment |
+| `maxItems` | int | `50` | Hard cap on emitted records (1–25,000) |
 
-At least one search criterion (`surname`, `forename`, `registerType`, `speciality`, `address`, `companyName`, `gocNumbers`, or `postcode`) is required per mode — the register does not support an unfiltered "list everyone" query.
+Legacy tasks that send `surname`, `companyName`, or `address` still work: those keys are mapped in code to the new arrays.
 
-### Example: find all Smiths on the register
+### Examples
+
+Find optometrists named Smith or Jones, with full details:
 
 ```json
 {
   "mode": "registrant",
-  "surname": "Smith",
-  "maxItems": 50
+  "surnames": ["Smith", "Jones"],
+  "registerType": "Optometrist",
+  "fetchDetails": true,
+  "maxDetailedItems": 100
 }
 ```
 
-### Example: registered contact lens specialists
+Check a mixed list of GOC numbers:
+
+```json
+{
+  "mode": "byGocNumber",
+  "gocNumbers": ["01-12294", "D-9396", "CO-4310"],
+  "fetchDetails": false,
+  "maxItems": 10
+}
+```
+
+Find contact-lens dispensing opticians near Edinburgh:
 
 ```json
 {
   "mode": "registrant",
   "speciality": "Contact lens",
-  "maxItems": 100
+  "postcode": "EH1",
+  "radiusMiles": 25,
+  "fetchDetails": true
 }
 ```
 
-### Example: optical businesses near a postcode
+Export every registered optical business:
 
 ```json
 {
-  "mode": "bodyCorporate",
-  "postcode": "SW1A 1AA",
-  "radiusMiles": 10,
-  "maxItems": 50
+  "mode": "allBusinesses",
+  "fetchDetails": false,
+  "maxItems": 3000
 }
 ```
 
-### Example: exact GOC number lookup
+## How it works
 
-```json
-{
-  "mode": "registrant",
-  "gocNumbers": ["01-12294", "D-9396"]
-}
-```
+The actor sends the same JSON search request as the public register (`POST /registrant/list`) and parses the returned HTML fragment. Detail enrichment fetches `GET /Registrant/{guid}`. FTP decision links point at public PDFs on `mygoc.azurewebsites.net`.
 
-## Use cases
+The register returns 5 results per page. Large runs are bounded by `maxItems` and the platform timeout. The actor streams records, retries transient list errors, caps detail fetches, and falls back to list-only records when the detail pages keep failing.
 
-- **Employer / recruiter verification** — confirm an optometrist or dispensing optician holds a current, valid GOC registration before hiring
-- **Compliance & due diligence** — check an optical business's registration status before a partnership or supply agreement
-- **Market research** — map optical practices and specialists by postcode/region
-- **Patient safety** — verify a practitioner's registered specialty (e.g. contact lens fitting, independent prescribing)
-- **Directory building** — populate a "find an optician near you" tool with verified GOC data
+## Limits and accuracy
+
+- **The GOC register is live.** Counts and records change between runs.
+- **Detail pages are flaky.** The GOC's own detail pages intermittently return HTTP 500 or take tens of seconds. The actor uses short timeouts, a circuit breaker, and list-only fallback, so a run can still complete with list-level fields for the records whose detail page failed.
+- **A full registrant export does not fit one default run.** The register returned 33,359 registrants on 2026-11-05 at a fixed 5 records per page: 6,672 page requests. At the measured cloud rate of about 1.36 s/page that is roughly 151 minutes, far above the default 3,600 s timeout. Even one register type (`Optometrist`, 19,501) is 3,901 pages, about 88 minutes. Raising `maxItems` does not remove the page ceiling, and the actor does not ship a chunk/resume cursor; use narrow filters or accept a partial export. The full business register is about 2,973 rows (595 pages, roughly 13.5 minutes) and `allBusinesses` is deliberately list-only.
+- **No contact details are published.** The GOC register does not expose email, phone, website, gender, languages, home visits, registration expiry, first-registration date, or conditions text. Those fields are not emitted.
+- **No status filter exists upstream.** The actor returns the raw `registrationStatus` and the derived `hasConditions`/`isSuspended` flags.
+- **Non-Latin search text is rejected.** The GOC search silently ignores CJK/emoji/non-Latin text and would return the whole register; the actor refuses those values before sending a request.
+- **Body corporate sorting is ignored upstream.** `sortBy` affects registrant searches only.
+- **Historical/erased registrants are not in the public search.** They cannot be retrieved from this source.
 
 ## FAQ
 
-**What is the GOC Specialist Register?** The UK General Optical Council is the statutory regulator for optometry and dispensing opticians. Its public "Specialist Register" (branded `str.optical.org`) lets anyone verify whether an individual or business is currently permitted to practise/trade.
+**Do I need cookies or an API key?** No. The register is public and the actor uses the same public endpoint as the website.
 
-**Do I need cookies, a login, or an API key?** No. The register is a public search tool; this actor talks to the same public search endpoint the website itself uses.
+**Why are some fields missing?** Qualifications, town, practice addresses, and FTP decisions are published conditionally. `fetchDetails` must be on for those fields, except in `allBusinesses`, which is list-only. Detail pages can also fail; the actor then emits list-level fields for the affected records. Empty values are omitted, never emitted as `null` or `"None"`.
 
-**Why do some records have fewer fields than others?** `qualifications`, `town`, `practiceAddresses`, and `ftpDecisions` are only published for some registrants/businesses, and only appear when `fetchDetails` is enabled (visits the individual profile page). Fields the register doesn't publish for a given record are omitted rather than emitted as blank/null.
+**What does `ftpDecisions` mean?** Fitness to Practise — a published regulatory decision against the registrant or business. Most records have none.
 
-**What does `ftpDecisions` mean?** "Fitness to Practise" — any published regulatory decision against that registrant/business. Most registrants show no decision, so the field is simply absent.
+**Can I combine filters?** Yes. Surnames, address text, register type, specialty, and postcode are combined with AND on the register. Multiple surnames or addresses run separate searches and are merged.
 
-**Can I search by both name and postcode at once?** Yes — all provided filters are combined (AND logic) by the register's own search, e.g. `surname=Smith` + `postcode=SW1A 1AA` finds only Smiths near that postcode.
+**Why did my GOC number not appear?** `byGocNumber` reports missing numbers in the run status. A number that is not on the current register, or is formatted in a way the actor cannot normalise, will not return a record.
 
-**What's the difference between `registrant` and `bodyCorporate` mode?** `registrant` searches individual practitioners (optometrists, dispensing opticians, students). `bodyCorporate` searches registered optical businesses/companies — a separate GOC register requirement for any entity providing optical services.
+**Why does a `sourceUrl` sometimes show a server error?** It points at the live GOC page, which is intermittently unavailable. Reload it; the scraped data is unaffected.
 
-**How current is the data?** The GOC register is the live, authoritative source — the same one used for official verification — so results reflect the register's current state at the time of the run.
+## Data source
 
-**Does it support non-Latin characters in name searches?** UK optician names are virtually always Latin-script, so this is rarely a practical limitation. Note that the GOC's own search backend silently ignores non-Latin/CJK text in `surname`/`forename`/`address`/`companyName` (it returns its default unfiltered result set rather than zero matches) — this is upstream behavior on the register itself, not something this actor can change. Stick to Latin-script queries for predictable results.
-
-**Why does a record's `sourceUrl` occasionally return a server error when I click it?** The GOC's register (str.optical.org) is a known-flaky public government site — its own detail pages intermittently return HTTP 500 (roughly 1 in 5 requests, independent of query), even for a plain browser visit. The actor retries its own detail-page fetches automatically (3 attempts with backoff) so this rarely affects scraped output, but the emitted `sourceUrl` itself points at the live GOC page and inherits that same intermittent flakiness — simply reload the link if it happens.
+General Optical Council public Specialist Register: https://str.optical.org. This actor is independent and not affiliated with the GOC.

@@ -1,67 +1,222 @@
 {
-  "description": "Search tracks/users, browse charts, fetch an artist's tracks, or scrape any SoundCloud URL.",
+  "description": "Search SoundCloud, read the global or genre New & Hot charts, export an artist catalog, resolve track/playlist/profile URLs, collect comments, or list followers.",
   "properties": {
-    "artistUrl": {
-      "description": "SoundCloud artist profile URL (mode=artistTracks). Example: https://soundcloud.com/artist-name",
-      "editor": "textfield",
-      "title": "Artist URL",
-      "type": "string"
+    "artistUrls": {
+      "default": [],
+      "description": "Artist profile URLs, usernames, or numeric user IDs. Used by artistTracks and followers modes.",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "prefill": [],
+      "sectionCaption": "Artist catalog",
+      "sectionDescription": "Controls what is exported for each artist profile. The profile row is always included in artistTracks.",
+      "title": "Artists",
+      "type": "array"
     },
-    "chartKind": {
-      "default": "top",
-      "description": "Which chart to fetch (mode=charts).",
+    "chartGenre": {
+      "default": "all",
+      "description": "Global New & Hot returns up to 100 tracks. Genre values use SoundCloud's current trending-by-genre lists (about 50 tracks each).",
       "editor": "select",
       "enum": [
-        "top",
-        "trending"
+        "all",
+        "all-genres",
+        "trap",
+        "hip-hop",
+        "pop",
+        "electronic",
+        "r-n-b",
+        "alternative-hip-hop",
+        "indie",
+        "dubstep",
+        "house",
+        "folk",
+        "alternative-rock",
+        "ambient",
+        "hardcore",
+        "rock",
+        "reggae",
+        "latin",
+        "metal",
+        "dancehall",
+        "afrobeat"
       ],
       "enumTitles": [
-        "Top — most-played all time",
-        "Trending — currently trending"
+        "Global New & Hot (100)",
+        "All Genres (system list, ~50)",
+        "Trap",
+        "Hip Hop",
+        "Pop",
+        "Electronic",
+        "R&B",
+        "Alternative Hip Hop",
+        "Indie",
+        "Dubstep",
+        "House",
+        "Folk",
+        "Alternative Rock",
+        "Ambient",
+        "Hardcore",
+        "Rock",
+        "Reggae",
+        "Latin",
+        "Metal",
+        "Dancehall",
+        "Afrobeat"
       ],
-      "prefill": "top",
-      "title": "Chart kind",
+      "prefill": "all",
+      "title": "Chart genre",
       "type": "string"
     },
-    "genre": {
-      "default": "soundcloud:genres:all-music",
-      "description": "Genre for charts or search filtering.",
+    "commentsSort": {
+      "default": "newest",
+      "description": "How SoundCloud should order comments.",
       "editor": "select",
       "enum": [
-        "soundcloud:genres:all-music",
-        "soundcloud:genres:alternativerock",
-        "soundcloud:genres:ambient",
-        "soundcloud:genres:classical",
-        "soundcloud:genres:country",
-        "soundcloud:genres:danceedm",
-        "soundcloud:genres:dancehall",
-        "soundcloud:genres:deephouse",
-        "soundcloud:genres:disco",
-        "soundcloud:genres:drumbass",
-        "soundcloud:genres:dubstep",
-        "soundcloud:genres:electronic",
-        "soundcloud:genres:folksingersongwriter",
-        "soundcloud:genres:hiphoprap",
-        "soundcloud:genres:house",
-        "soundcloud:genres:indie",
-        "soundcloud:genres:jazzblues",
-        "soundcloud:genres:latin",
-        "soundcloud:genres:metal",
-        "soundcloud:genres:piano",
-        "soundcloud:genres:pop",
-        "soundcloud:genres:rbsoul",
-        "soundcloud:genres:reggae",
-        "soundcloud:genres:reggaeton",
-        "soundcloud:genres:rock",
-        "soundcloud:genres:soundtrack",
-        "soundcloud:genres:techno",
-        "soundcloud:genres:trance",
-        "soundcloud:genres:trap",
-        "soundcloud:genres:triphop",
-        "soundcloud:genres:world"
+        "newest",
+        "oldest",
+        "track-timestamp"
       ],
       "enumTitles": [
-        "All Music",
+        "Newest first",
+        "Oldest first",
+        "By time in track"
+      ],
+      "prefill": "newest",
+      "title": "Comment order",
+      "type": "string"
+    },
+    "includeAlbums": {
+      "default": false,
+      "description": "Include the artist's albums/EPs as playlist rows.",
+      "prefill": false,
+      "title": "Include albums",
+      "type": "boolean"
+    },
+    "includePlaylistTracks": {
+      "default": true,
+      "description": "For playlist URLs, hydrate and emit every track (not just the first five).",
+      "prefill": true,
+      "title": "Expand playlist tracks",
+      "type": "boolean"
+    },
+    "includePlaylists": {
+      "default": false,
+      "description": "Include the artist's playlists as playlist rows.",
+      "prefill": false,
+      "title": "Include playlists",
+      "type": "boolean"
+    },
+    "includeTopTracks": {
+      "default": false,
+      "description": "Include SoundCloud's small top-tracks list for each artist.",
+      "prefill": false,
+      "title": "Include top tracks",
+      "type": "boolean"
+    },
+    "includeTracks": {
+      "default": true,
+      "description": "Include the artist's uploaded tracks.",
+      "prefill": true,
+      "title": "Include tracks",
+      "type": "boolean"
+    },
+    "includeUserProfile": {
+      "default": true,
+      "description": "For artist URLs in mode=byUrl, emit the profile row before the tracks.",
+      "prefill": true,
+      "title": "Include artist profile row",
+      "type": "boolean"
+    },
+    "includeWebProfiles": {
+      "default": false,
+      "description": "Add the artist's public social/web profile links to the profile row.",
+      "prefill": false,
+      "title": "Include web profiles",
+      "type": "boolean"
+    },
+    "maxItems": {
+      "default": 100,
+      "description": "Hard cap on dataset rows. SoundCloud search still returns at most 300 rows per query; charts and per-artist sections have their own source limits.",
+      "maximum": 5000,
+      "minimum": 1,
+      "prefill": 2,
+      "title": "Maximum records",
+      "type": "integer"
+    },
+    "minLikeCount": {
+      "default": 0,
+      "description": "Drop track/playlist rows below this like count after fetching. 0 means no filter.",
+      "maximum": 1000000000,
+      "minimum": 0,
+      "prefill": 0,
+      "title": "Minimum likes",
+      "type": "integer"
+    },
+    "minPlayCount": {
+      "default": 0,
+      "description": "Drop track/playlist rows below this play count after fetching. 0 means no filter.",
+      "maximum": 1000000000,
+      "minimum": 0,
+      "prefill": 0,
+      "title": "Minimum plays",
+      "type": "integer"
+    },
+    "mode": {
+      "default": "search",
+      "description": "Choose the intent. Keyword search, New & Hot charts, an artist catalog, specific URLs, track comments, or an artist's followers.",
+      "editor": "select",
+      "enum": [
+        "search",
+        "charts",
+        "artistTracks",
+        "byUrl",
+        "comments",
+        "followers"
+      ],
+      "enumTitles": [
+        "Search by keyword - tracks, users, playlists or albums",
+        "Charts - global New & Hot or a genre trending list",
+        "Artist catalog - profile, tracks, albums, playlists",
+        "Track, playlist or artist URLs",
+        "Track comments",
+        "Artist followers or followings"
+      ],
+      "prefill": "search",
+      "title": "What to collect",
+      "type": "string"
+    },
+    "relationship": {
+      "default": "followers",
+      "description": "For mode=followers, collect the artist's followers or the accounts the artist follows.",
+      "editor": "select",
+      "enum": [
+        "followers",
+        "followings"
+      ],
+      "enumTitles": [
+        "Followers",
+        "Accounts followed"
+      ],
+      "prefill": "followers",
+      "title": "Follower relationship",
+      "type": "string"
+    },
+    "resolveStreamUrls": {
+      "default": true,
+      "description": "Add a playable signed stream URL plus protocol, preview and expiry fields. Signed URLs expire after about two hours. Turn off for large runs if you only need the stable API endpoint.",
+      "prefill": true,
+      "sectionCaption": "Advanced",
+      "sectionDescription": "Stream resolution and the overall record cap.",
+      "title": "Resolve playable stream URLs",
+      "type": "boolean"
+    },
+    "searchGenre": {
+      "default": "",
+      "description": "Optional SoundCloud genre filter for track and playlist searches. Leave as any genre to search everything. This is a real SoundCloud filter, not a client-side guess.",
+      "editor": "select",
+      "enum": [
+        "",
         "Alternative Rock",
         "Ambient",
         "Classical",
@@ -91,75 +246,144 @@
         "Trance",
         "Trap",
         "Trip Hop",
-        "World"
-      ],
-      "prefill": "soundcloud:genres:all-music",
-      "title": "Genre",
-      "type": "string"
-    },
-    "maxItems": {
-      "default": 20,
-      "description": "Maximum number of records to emit.",
-      "maximum": 500,
-      "minimum": 1,
-      "prefill": 20,
-      "title": "Max items",
-      "type": "integer"
-    },
-    "mode": {
-      "default": "charts",
-      "description": "What to scrape.",
-      "editor": "select",
-      "enum": [
-        "charts",
-        "search",
-        "artistTracks",
-        "byUrl"
+        "World",
+        "Lo-fi",
+        "Lofi"
       ],
       "enumTitles": [
-        "Charts — top/trending tracks by genre",
-        "Search — search tracks, users, or playlists",
-        "Artist Tracks — all tracks from a specific artist",
-        "By URL — fetch a specific track, playlist, or user URL"
+        "(any genre)",
+        "Alternative Rock",
+        "Ambient",
+        "Classical",
+        "Country",
+        "Dance & EDM",
+        "Dancehall",
+        "Deep House",
+        "Disco",
+        "Drum & Bass",
+        "Dubstep",
+        "Electronic",
+        "Folk & Singer-Songwriter",
+        "Hip-hop & Rap",
+        "House",
+        "Indie",
+        "Jazz & Blues",
+        "Latin",
+        "Metal",
+        "Piano",
+        "Pop",
+        "R&B & Soul",
+        "Reggae",
+        "Reggaeton",
+        "Rock",
+        "Soundtrack",
+        "Techno",
+        "Trance",
+        "Trap",
+        "Trip Hop",
+        "World",
+        "Lo-fi",
+        "Lofi"
       ],
-      "prefill": "charts",
-      "title": "Mode",
+      "prefill": "",
+      "sectionCaption": "Search filters",
+      "sectionDescription": "Optional refinements for mode=search. Genre is applied by SoundCloud; sort and minimum counts are applied to the fetched rows.",
+      "title": "Genre filter",
       "type": "string"
     },
-    "searchKind": {
+    "searchQueries": {
+      "default": [],
+      "description": "One or more keywords or artist names (mode=search). Example: lofi, techno, ambient jazz.",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "prefill": [
+        "lofi"
+      ],
+      "title": "Search queries",
+      "type": "array"
+    },
+    "searchType": {
       "default": "tracks",
-      "description": "Type of results to search for (mode=search).",
+      "description": "What kind of results to return (mode=search).",
       "editor": "select",
       "enum": [
         "tracks",
         "users",
         "playlists",
-        "albums"
+        "albums",
+        "all"
       ],
       "enumTitles": [
         "Tracks",
-        "Users / Artists",
+        "Users / artists",
         "Playlists",
-        "Albums"
+        "Albums",
+        "All result types"
       ],
       "prefill": "tracks",
-      "title": "Search kind",
+      "title": "Search result type",
       "type": "string"
     },
-    "searchQuery": {
-      "default": "chill lofi",
-      "description": "Search term for tracks, users, or playlists (mode=search).",
-      "editor": "textfield",
-      "prefill": "chill lofi",
-      "title": "Search query",
+    "sortBy": {
+      "default": "relevance",
+      "description": "How to order the rows already fetched. SoundCloud search itself is relevance-ordered, so this is a client-side sort of that result set.",
+      "editor": "select",
+      "enum": [
+        "relevance",
+        "newest",
+        "mostPlayed",
+        "mostLiked"
+      ],
+      "enumTitles": [
+        "Relevance (source order)",
+        "Newest upload",
+        "Most played",
+        "Most liked"
+      ],
+      "prefill": "relevance",
+      "title": "Sort fetched rows",
       "type": "string"
     },
     "startUrls": {
       "default": [],
-      "description": "SoundCloud track, playlist, or user URLs to scrape (mode=byUrl).",
-      "editor": "stringList",
+      "description": "Track, playlist/album, or artist URLs. Numeric track IDs are also accepted. Used by mode=byUrl.",
+      "editor": "requestListSources",
+      "items": {
+        "properties": {
+          "url": {
+            "description": "SoundCloud track, playlist, album, user, or search URL.",
+            "title": "URL",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
       "prefill": [],
-      "title": "Start URLs (mode=byUrl)",
+      "sectionCaption": "URLs and playlists",
+      "sectionDescription": "Playlist URLs export the playlist row and, when enabled, every track in it. Artist URLs export the profile and uploaded tracks.",
+      "title": "SoundCloud URLs or IDs",
+      "type": "array"
+    },
+    "trackUrls": {
+      "default": [],
+      "description": "Tracks whose public comments should be collected. Used by mode=comments.",
+      "editor": "requestListSources",
+      "items": {
+        "properties": {
+          "url": {
+            "description": "SoundCloud track URL used for comments mode.",
+            "title": "URL",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "prefill": [],
+      "sectionCaption": "Comments and audience",
+      "sectionDescription": "Comment collection and follower/following collection. These modes keep the track or artist context on every row.",
+      "title": "Track URLs or IDs",
       "type": "array"
     }
   },
