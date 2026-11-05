@@ -1,0 +1,72 @@
+{
+  "description": "Look up Google Fonts families by name, browse by category, or list the entire library.",
+  "properties": {
+    "category": {
+      "default": "Sans Serif",
+      "description": "Filter the library to a single font category.",
+      "editor": "select",
+      "enum": [
+        "Sans Serif",
+        "Serif",
+        "Display",
+        "Handwriting",
+        "Monospace"
+      ],
+      "enumTitles": [
+        "Sans Serif",
+        "Serif",
+        "Display",
+        "Handwriting",
+        "Monospace"
+      ],
+      "prefill": "Sans Serif",
+      "title": "Category (mode=byCategory)",
+      "type": "string"
+    },
+    "families": {
+      "default": [
+        "Roboto"
+      ],
+      "description": "Exact font family names, e.g. `Roboto`, `Open Sans`, `Lora`, `Playfair Display`. Case-insensitive.",
+      "editor": "stringList",
+      "prefill": [
+        "Roboto"
+      ],
+      "title": "Font families (mode=byFamily)",
+      "type": "array"
+    },
+    "maxItems": {
+      "default": 50,
+      "description": "Hard cap on the number of font records emitted.",
+      "maximum": 2000,
+      "minimum": 1,
+      "prefill": 50,
+      "title": "Max items",
+      "type": "integer"
+    },
+    "mode": {
+      "default": "byFamily",
+      "description": "What to fetch from the Google Fonts library.",
+      "editor": "select",
+      "enum": [
+        "byFamily",
+        "byCategory",
+        "listAll"
+      ],
+      "enumTitles": [
+        "Lookup specific font families by name",
+        "Browse a font category",
+        "List the entire library"
+      ],
+      "prefill": "byFamily",
+      "title": "Mode",
+      "type": "string"
+    }
+  },
+  "required": [
+    "mode"
+  ],
+  "schemaVersion": 1,
+  "title": "Google Fonts Scraper Input",
+  "type": "object"
+}
