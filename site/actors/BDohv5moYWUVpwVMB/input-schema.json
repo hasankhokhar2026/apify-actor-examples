@@ -1,95 +1,267 @@
 {
-  "description": "Scrape posts from Reddit subreddits with advanced filters. Pro adds: keywordFilter, minScore, maxAgeDays, excludeStickied, excludeNsfw, authorBlocklist, domainAllowlist/Blocklist.",
+  "description": "Scrape public subreddit listings and keep only the posts you want. Filter by keywords, score, comments, upvote ratio, age, flair, post type, author, domain, NSFW and stickied status. No login, API key or proxy setup.",
   "properties": {
+    "authorAllowlist": {
+      "default": [],
+      "description": "Case-insensitive usernames. Leave empty for any author.",
+      "editor": "stringList",
+      "prefill": [],
+      "sectionCaption": "Authors & domains",
+      "sectionDescription": "Optional allow and block lists. Self-posts always pass domain filters.",
+      "title": "Only these authors",
+      "type": "array"
+    },
     "authorBlocklist": {
       "default": [],
-      "description": "Drop posts by these usernames (case-insensitive).",
+      "description": "Case-insensitive usernames to drop.",
       "editor": "stringList",
-      "title": "Author blocklist",
+      "prefill": [],
+      "title": "Block these authors",
       "type": "array"
     },
     "domainAllowlist": {
       "default": [],
-      "description": "If set, only emit posts whose link domain is in this list (e.g. `[\"github.com\", \"arxiv.org\"]`). Self-posts pass.",
+      "description": "Keep posts linking to these domains. Self-posts always pass. Accepts bare domains or URLs.",
       "editor": "stringList",
-      "title": "Domain allowlist",
+      "example": [
+        "github.com",
+        "arxiv.org"
+      ],
+      "prefill": [],
+      "title": "Only these link domains",
       "type": "array"
     },
     "domainBlocklist": {
       "default": [],
-      "description": "Drop posts whose link domain is in this list.",
+      "description": "Drop posts linking to these domains. Self-posts always pass.",
       "editor": "stringList",
-      "title": "Domain blocklist",
+      "prefill": [],
+      "title": "Block these link domains",
+      "type": "array"
+    },
+    "excludeKeywords": {
+      "default": [],
+      "description": "Drop posts containing any of these words or phrases.",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Exclude keywords",
       "type": "array"
     },
     "excludeNsfw": {
       "default": false,
-      "description": "Drop NSFW posts.",
-      "title": "Exclude NSFW",
-      "type": "boolean"
-    },
-    "excludeOriginalContent": {
-      "default": false,
-      "description": "Drop posts marked as Original Content.",
-      "title": "Exclude OC posts",
+      "description": "Drop posts marked NSFW. NSFW-only communities are hidden anonymously, so this is a per-post filter.",
+      "prefill": false,
+      "title": "Exclude NSFW posts",
       "type": "boolean"
     },
     "excludeStickied": {
       "default": false,
-      "description": "Drop pinned/stickied posts (typically mod announcements).",
+      "description": "Drop pinned moderator/announcement posts.",
+      "prefill": false,
       "title": "Exclude stickied posts",
       "type": "boolean"
     },
-    "keywordFilter": {
-      "description": "Only emit posts whose title or content contains this substring (case-insensitive).",
-      "editor": "textfield",
-      "title": "Keyword filter (substring)",
+    "flairAllowlist": {
+      "default": [],
+      "description": "Case-insensitive exact flair names. Leave empty for any flair.",
+      "editor": "stringList",
+      "example": [
+        "Discussion",
+        "News"
+      ],
+      "prefill": [],
+      "title": "Only these post flairs",
+      "type": "array"
+    },
+    "includeKeywords": {
+      "default": [],
+      "description": "Keep posts containing at least one of these words or phrases. Matching is case-insensitive.",
+      "editor": "stringList",
+      "example": [
+        "release",
+        "python"
+      ],
+      "prefill": [],
+      "sectionCaption": "Post filters",
+      "sectionDescription": "Filters are applied before Max matching posts per subreddit is counted.",
+      "title": "Include keywords",
+      "type": "array"
+    },
+    "includeSubredditInfo": {
+      "default": false,
+      "description": "Emit one extra record per subreddit with its description, weekly active users and weekly contributions. Adds one request per subreddit.",
+      "prefill": false,
+      "sectionCaption": "Advanced",
+      "sectionDescription": "Optional extra output. The post scrape works without it.",
+      "title": "Include subreddit info records",
+      "type": "boolean"
+    },
+    "keywordMatch": {
+      "default": "any",
+      "description": "Any keyword, all keywords, or the exact phrase formed by joining the include keywords.",
+      "editor": "select",
+      "enum": [
+        "any",
+        "all",
+        "exact"
+      ],
+      "enumTitles": [
+        "Any keyword",
+        "All keywords",
+        "Exact phrase"
+      ],
+      "prefill": "any",
+      "title": "Keyword matching",
       "type": "string"
     },
     "maxAgeDays": {
-      "description": "Drop posts older than N days.",
+      "description": "Shortcut for keeping only recent posts. Posted after can also be used.",
       "maximum": 36500,
       "minimum": 1,
-      "title": "Max post age in days (filter)",
+      "title": "Maximum post age in days",
+      "type": "integer"
+    },
+    "maxComments": {
+      "description": "Drop posts with more comments. Leave empty for no maximum.",
+      "maximum": 10000000,
+      "minimum": 0,
+      "title": "Maximum comments",
+      "type": "integer"
+    },
+    "maxItems": {
+      "default": 1000,
+      "description": "Overall cap across all subreddits.",
+      "maximum": 10000,
+      "minimum": 1,
+      "prefill": 10,
+      "title": "Max posts in total",
       "type": "integer"
     },
     "maxPosts": {
       "default": 25,
-      "description": "Max posts per subreddit.",
+      "description": "Stop after this many posts pass your filters. The actor keeps paging until it finds them or reaches Reddit's listing limit.",
       "maximum": 1000,
       "minimum": 1,
-      "title": "Max posts per subreddit",
+      "prefill": 3,
+      "title": "Max matching posts per subreddit",
+      "type": "integer"
+    },
+    "maxScore": {
+      "description": "Drop posts with a higher score. Leave empty for no maximum.",
+      "maximum": 10000000,
+      "minimum": -10000,
+      "title": "Maximum score",
+      "type": "integer"
+    },
+    "minComments": {
+      "description": "Drop posts with fewer comments. Leave empty for no minimum.",
+      "maximum": 10000000,
+      "minimum": 0,
+      "title": "Minimum comments",
       "type": "integer"
     },
     "minScore": {
-      "description": "Drop posts with score below this number.",
+      "description": "Drop posts with a lower score. Leave empty for no minimum.",
       "maximum": 10000000,
       "minimum": -10000,
-      "title": "Min score (filter)",
+      "title": "Minimum score",
       "type": "integer"
+    },
+    "minUpvoteRatio": {
+      "description": "Keep posts with at least this upvote ratio, from 0 to 1. Leave empty for no minimum.",
+      "maximum": 1,
+      "minimum": 0,
+      "title": "Minimum upvote ratio",
+      "type": "number"
+    },
+    "postType": {
+      "default": "all",
+      "description": "Keep one post type or all types.",
+      "editor": "select",
+      "enum": [
+        "all",
+        "text",
+        "link",
+        "image",
+        "video",
+        "gallery",
+        "poll",
+        "crosspost",
+        "gif",
+        "multi_media"
+      ],
+      "enumTitles": [
+        "All types",
+        "Text",
+        "Link",
+        "Image",
+        "Video",
+        "Gallery",
+        "Poll",
+        "Crosspost",
+        "GIF",
+        "Multi-media"
+      ],
+      "prefill": "all",
+      "title": "Post type",
+      "type": "string"
+    },
+    "postedAfter": {
+      "description": "ISO date (2026-10-01) or a relative value such as 7 days or 24 hours. Leave empty for no lower bound.",
+      "editor": "textfield",
+      "title": "Posts created on or after",
+      "type": "string"
+    },
+    "postedBefore": {
+      "description": "ISO date or a relative value such as 7 days. Leave empty for no upper bound.",
+      "editor": "textfield",
+      "title": "Posts created on or before",
+      "type": "string"
+    },
+    "searchIn": {
+      "default": "title-and-body",
+      "description": "Search the title, the body, or both.",
+      "editor": "select",
+      "enum": [
+        "title-and-body",
+        "title",
+        "body"
+      ],
+      "enumTitles": [
+        "Title and body",
+        "Title only",
+        "Body only"
+      ],
+      "prefill": "title-and-body",
+      "title": "Search keywords in",
+      "type": "string"
     },
     "sort": {
       "default": "hot",
-      "description": "How to sort posts in the subreddit.",
+      "description": "How to order posts in each subreddit. Top and controversial use the time filter.",
+      "editor": "select",
       "enum": [
         "hot",
         "new",
         "top",
         "rising",
-        "controversial"
+        "controversial",
+        "best"
       ],
       "enumTitles": [
         "Hot",
         "New",
         "Top",
         "Rising",
-        "Controversial"
+        "Controversial",
+        "Best"
       ],
+      "prefill": "new",
       "title": "Sort posts by",
       "type": "string"
     },
     "subreddits": {
-      "description": "List of subreddit names without `r/` prefix.",
+      "description": "Public subreddits to scrape. Accepts names, r/ names or full Reddit URLs.",
       "editor": "stringList",
       "example": [
         "python",
@@ -98,12 +270,15 @@
       "prefill": [
         "python"
       ],
+      "sectionCaption": "Subreddits & sorting",
+      "sectionDescription": "Pick the communities and how their posts should be ordered.",
       "title": "Subreddits",
       "type": "array"
     },
     "timeFilter": {
       "default": "day",
-      "description": "Time range for `top` or `controversial` sorts.",
+      "description": "Time window used when Sort is Top or Controversial. Ignored for other sorts.",
+      "editor": "select",
       "enum": [
         "hour",
         "day",
@@ -113,14 +288,15 @@
         "all"
       ],
       "enumTitles": [
-        "Past Hour",
-        "Past Day",
-        "Past Week",
-        "Past Month",
-        "Past Year",
-        "All Time"
+        "Past hour",
+        "Past day",
+        "Past week",
+        "Past month",
+        "Past year",
+        "All time"
       ],
-      "title": "Time filter (top/controversial)",
+      "prefill": "day",
+      "title": "Time range for top / controversial",
       "type": "string"
     }
   },
@@ -128,6 +304,6 @@
     "subreddits"
   ],
   "schemaVersion": 1,
-  "title": "Reddit Scraper Pro Input",
+  "title": "Reddit Subreddit Post Filter & Moderation Scraper Input",
   "type": "object"
 }

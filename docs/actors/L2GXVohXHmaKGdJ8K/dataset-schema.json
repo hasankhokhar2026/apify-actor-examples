@@ -1,58 +1,123 @@
 {
   "actorSpecification": 1,
   "fields": {
+    "adFormat": {
+      "description": "Spark ads or Non-Spark ads; omitted when the board did not reveal it",
+      "title": "Ad Format",
+      "type": "string"
+    },
     "adId": {
-      "description": "Unique ad ID from TikTok Creative Center",
+      "description": "Unique TikTok material ID",
       "title": "Ad ID",
       "type": "string"
     },
+    "adSource": {
+      "description": "TikTok Ads Manager or Others, from the ad detail",
+      "title": "Ad Source",
+      "type": "string"
+    },
     "adTitle": {
-      "description": "Ad creative title",
+      "description": "Ad caption or headline",
       "title": "Ad Title",
       "type": "string"
     },
     "adUrl": {
-      "description": "Direct link to the ad in TikTok Creative Center",
+      "description": "Creative Center reference URL with the ad_id query parameter (TikTok redirects ad deep links to the dashboard)",
       "title": "Ad URL",
       "type": "string"
     },
+    "availableTotal": {
+      "description": "TikTok's ranked-index size for the base query",
+      "title": "Available Total",
+      "type": "integer"
+    },
     "brandName": {
-      "description": "Advertiser/brand name",
+      "description": "Advertiser/brand name when TikTok publishes it; sentinel values are omitted",
       "title": "Brand Name",
       "type": "string"
     },
-    "cost": {
-      "description": "Relative cost tier (0 = low, higher = more spend)",
-      "title": "Cost Tier",
+    "commentCount": {
+      "description": "Comment count from the ad detail; 0 is a real value",
+      "title": "Comments",
       "type": "integer"
     },
+    "cost": {
+      "description": "TikTok budget tier: 0 low, 1 medium, 2 high",
+      "title": "Cost Tier Code",
+      "type": "integer"
+    },
+    "costTier": {
+      "description": "Low, Medium, or High",
+      "title": "Cost Tier",
+      "type": "string"
+    },
+    "creativeCenterUrl": {
+      "description": "Canonical Creative Center ad URL in the form /topads/<id>/pc/en",
+      "title": "Creative Center URL",
+      "type": "string"
+    },
     "ctr": {
-      "description": "Click-through rate",
+      "description": "TikTok CTR score in percent units (0.62 means 0.62%)",
       "title": "CTR",
       "type": "number"
     },
+    "detailUnavailable": {
+      "description": "True when a requested ad ID has no detail record",
+      "title": "Detail Unavailable",
+      "type": "boolean"
+    },
+    "detailsFetched": {
+      "description": "Present when detail enrichment was requested",
+      "title": "Details Fetched",
+      "type": "boolean"
+    },
+    "foundInCountry": {
+      "description": "Market whose board surfaced the ad",
+      "title": "Found In Country",
+      "type": "string"
+    },
     "industryKey": {
-      "description": "Industry category key (e.g. label_14104000000)",
+      "description": "Raw TikTok industry label, e.g. label_14104000000",
       "title": "Industry Key",
       "type": "string"
     },
+    "industryName": {
+      "description": "Human-readable industry name",
+      "title": "Industry",
+      "type": "string"
+    },
     "isSearch": {
-      "description": "Whether this is a search placement ad",
+      "description": "TikTok's raw is_search flag",
       "title": "Is Search Ad",
       "type": "boolean"
     },
+    "landingPageUrl": {
+      "description": "Destination URL when the ad detail exposes it",
+      "title": "Landing Page",
+      "type": "string"
+    },
     "like": {
-      "description": "Number of likes on the ad",
+      "description": "Like count on the ad",
       "title": "Likes",
       "type": "integer"
     },
     "objectiveKey": {
-      "description": "Campaign objective key (e.g. campaign_objective_conversion)",
+      "description": "Raw TikTok campaign objective key",
       "title": "Objective Key",
       "type": "string"
     },
+    "objectiveName": {
+      "description": "Human-readable campaign objective",
+      "title": "Objective",
+      "type": "string"
+    },
+    "objectives": {
+      "description": "Objective objects with key, name, and numeric id",
+      "title": "Objectives",
+      "type": "array"
+    },
     "observedCountry": {
-      "description": "Country filter applied (ISO code or 'all')",
+      "description": "Country filter applied, or all",
       "title": "Observed Country",
       "type": "string"
     },
@@ -61,40 +126,90 @@
       "title": "Observed Period",
       "type": "integer"
     },
+    "parentIndustryName": {
+      "description": "Parent industry name when the ad has a child category",
+      "title": "Parent Industry",
+      "type": "string"
+    },
+    "rank": {
+      "description": "Position on the board that surfaced the ad (1-based)",
+      "title": "Rank",
+      "type": "integer"
+    },
+    "retentionCurve": {
+      "description": "Per-second retention points {second, value} when keyframes are enabled",
+      "title": "Retention Curve",
+      "type": "array"
+    },
     "scrapedAt": {
-      "description": "ISO 8601 timestamp when this ad was scraped",
+      "description": "ISO 8601 collection timestamp",
       "title": "Scraped At",
       "type": "string"
     },
+    "shareCount": {
+      "description": "Share count from the ad detail; 0 is a real value",
+      "title": "Shares",
+      "type": "integer"
+    },
+    "source": {
+      "description": "creativeCenterTopAds, creativeCenterSpotlight, or creativeCenterAdDetail",
+      "title": "Source",
+      "type": "string"
+    },
+    "spotlightHighlight": {
+      "description": "TikTok expert commentary for Spotlight ads",
+      "title": "Spotlight Commentary",
+      "type": "string"
+    },
+    "targetCountries": {
+      "description": "Countries from the ad detail's country_code list",
+      "title": "Target Countries",
+      "type": "array"
+    },
     "videoCoverUrl": {
-      "description": "URL of the ad video thumbnail/cover image",
+      "description": "Cover/thumbnail URL",
       "title": "Video Cover URL",
       "type": "string"
     },
     "videoDuration": {
-      "description": "Video duration in seconds",
+      "description": "Duration in seconds",
       "title": "Video Duration",
       "type": "number"
     },
     "videoHeight": {
-      "description": "Video height in pixels",
+      "description": "Height in pixels",
       "title": "Video Height",
       "type": "integer"
     },
     "videoId": {
-      "description": "TikTok video ID for this ad creative",
+      "description": "TikTok video ID for the ad creative",
       "title": "Video ID",
       "type": "string"
     },
+    "videoUrlBest": {
+      "description": "Best available rendition (1080p, 720p, 540p, 480p, 360p)",
+      "title": "Best Video URL",
+      "type": "string"
+    },
     "videoUrls": {
-      "description": "Video URLs by resolution (e.g. {720p: url, 1080p: url})",
+      "description": "Resolution-keyed video URLs",
       "title": "Video URLs",
       "type": "object"
     },
+    "videoUrlsExpireAt": {
+      "description": "Earliest expiry of the signed media URLs (ISO 8601)",
+      "title": "Media Expiry",
+      "type": "string"
+    },
     "videoWidth": {
-      "description": "Video width in pixels",
+      "description": "Width in pixels",
       "title": "Video Width",
       "type": "integer"
+    },
+    "voiceOver": {
+      "description": "Whether the ad detail reports a voice-over",
+      "title": "Voice Over",
+      "type": "boolean"
     }
   },
   "title": "TikTok Top Ads",
@@ -111,37 +226,45 @@
             "format": "text",
             "label": "Ad Title"
           },
-          "adUrl": {
-            "format": "link",
-            "label": "Ad URL"
-          },
           "brandName": {
             "format": "text",
             "label": "Brand"
+          },
+          "creativeCenterUrl": {
+            "format": "link",
+            "label": "Creative Center"
           },
           "ctr": {
             "format": "number",
             "label": "CTR"
           },
-          "industryKey": {
+          "foundInCountry": {
+            "format": "text",
+            "label": "Market"
+          },
+          "industryName": {
             "format": "text",
             "label": "Industry"
+          },
+          "landingPageUrl": {
+            "format": "link",
+            "label": "Landing Page"
           },
           "like": {
             "format": "number",
             "label": "Likes"
           },
-          "observedCountry": {
+          "objectiveName": {
             "format": "text",
-            "label": "Country"
+            "label": "Objective"
+          },
+          "observedPeriod": {
+            "format": "number",
+            "label": "Period (days)"
           },
           "scrapedAt": {
             "format": "text",
             "label": "Scraped At"
-          },
-          "videoDuration": {
-            "format": "number",
-            "label": "Duration (s)"
           }
         }
       },
@@ -153,13 +276,13 @@
           "brandName",
           "ctr",
           "like",
-          "videoDuration",
-          "industryKey",
-          "objectiveKey",
-          "observedCountry",
+          "industryName",
+          "objectiveName",
+          "foundInCountry",
           "observedPeriod",
-          "scrapedAt",
-          "adUrl"
+          "landingPageUrl",
+          "creativeCenterUrl",
+          "scrapedAt"
         ]
       }
     }

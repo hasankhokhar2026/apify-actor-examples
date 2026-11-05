@@ -1,95 +1,267 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src &#x27;self&#x27;; script-src &#x27;self&#x27; &#x27;sha256-PEg8Zu1xoXTRx4pVXnuDErmALsigbr8XnWh9+JtQOAE=&#x27;; style-src &#x27;self&#x27;; img-src &#x27;self&#x27; https: data:; base-uri &#x27;self&#x27;; form-action &#x27;self&#x27;; object-src &#x27;none&#x27;"><title>Reddit Subreddit Post Filter &amp; Moderation Scraper | Nimbryxo Studio</title><meta name="description" content="Scrape subreddit posts and filter them server-side by keyword, score, age, NSFW, stickied status, author or link domain. Returns gilded and crosspost counts, flair and media hints "><meta name="robots" content="index,follow"><link rel="canonical" href="https://hasankhokhar2026.github.io/apify-actor-examples/actors/BDohv5moYWUVpwVMB/"><meta property="og:title" content="Reddit Subreddit Post Filter &amp; Moderation Scraper | Nimbryxo Studio"><meta property="og:description" content="Scrape subreddit posts and filter them server-side by keyword, score, age, NSFW, stickied status, author or link domain. Returns gilded and crosspost counts, flair and media hints "><meta property="og:type" content="website"><meta property="og:url" content="https://hasankhokhar2026.github.io/apify-actor-examples/actors/BDohv5moYWUVpwVMB/"><meta property="og:site_name" content="Nimbryxo Studio"><meta name="twitter:card" content="summary"><link rel="icon" href="/apify-actor-examples/assets/mark.svg?v=2d20f9dc334a" type="image/svg+xml"><link rel="stylesheet" href="/apify-actor-examples/assets/site.css?v=39545fd4a399"><link rel="stylesheet" href="/apify-actor-examples/assets/brand.css?v=eb0f935ade25"><link rel="alternate" type="application/rss+xml" title="Nimbryxo Studio guides" href="/apify-actor-examples/feed.xml"><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization","name":"Nimbryxo Studio","url":"https://hasankhokhar2026.github.io/apify-actor-examples/","sameAs":["https://apify.com/nimbryxo-studio"]},{"@type":"WebSite","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#website","name":"Nimbryxo Studio","url":"https://hasankhokhar2026.github.io/apify-actor-examples/","publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"inLanguage":"en"},{"@type":"WebPage","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/BDohv5moYWUVpwVMB/#webpage","name":"Reddit Subreddit Post Filter & Moderation Scraper","description":"Scrape subreddit posts and filter them server-side by keyword, score, age, NSFW, stickied status, author or link domain. Returns gilded and crosspost counts, flair and media hints per post. No login.","url":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/BDohv5moYWUVpwVMB/","isPartOf":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#website"},"publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"inLanguage":"en","mainEntity":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/BDohv5moYWUVpwVMB/#article"},"breadcrumb":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/BDohv5moYWUVpwVMB/#breadcrumb"}},{"@type":"TechArticle","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/BDohv5moYWUVpwVMB/#article","headline":"Reddit Subreddit Post Filter & Moderation Scraper","name":"Reddit Subreddit Post Filter & Moderation Scraper","description":"Scrape subreddit posts and filter them server-side by keyword, score, age, NSFW, stickied status, author or link domain. Returns gilded and crosspost counts, flair and media hints per post. No login.","url":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/BDohv5moYWUVpwVMB/","author":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"mainEntityOfPage":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/BDohv5moYWUVpwVMB/#webpage"},"inLanguage":"en"},{"@type":"BreadcrumbList","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/BDohv5moYWUVpwVMB/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Nimbryxo Studio","item":"https://hasankhokhar2026.github.io/apify-actor-examples/"},{"@type":"ListItem","position":2,"name":"Actors","item":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/"},{"@type":"ListItem","position":3,"name":"Reddit Subreddit Post Filter & Moderation Scraper","item":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/BDohv5moYWUVpwVMB/"}]}]}</script><script src="/apify-actor-examples/assets/site.js?v=7cabac48dd31" defer></script></head><body class="theme-studio"><a href="#main" class="skip-link">Skip to content</a><header><div class="inner"><a href="/apify-actor-examples/" class="brand"><img src="/apify-actor-examples/assets/mark.svg?v=2d20f9dc334a" alt="" width="29" height="29">Nimbryxo Studio</a><nav aria-label="Main navigation"><a href="/apify-actor-examples/actors/" aria-current="page">Actors</a><a href="/apify-actor-examples/guides/">Guides</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></nav></div></header><main id="main"><div class="doc-layout"><aside class="contents" aria-label="On this page"><strong>Contents</strong><a href="#overview">Overview</a><a href="#published-readme">Published README</a><a href="#input-schema">Input schema</a><a href="#output-schema">Output schema</a><a href="#dataset-schema">Dataset schema</a><a href="#python-quickstart">Python quickstart</a></aside><article class="prose"><div class="breadcrumb"><a href="/apify-actor-examples/actors/">Actors</a><span>/</span><span>Reddit Subreddit Post Filter &amp; Moderation Scraper</span></div><section id="overview"><h1 class="doc-title">Reddit Subreddit Post Filter &amp; Moderation Scraper</h1><p class="lede">Scrape subreddit posts and filter them server-side by keyword, score, age, NSFW, stickied status, author or link domain. Returns gilded and crosspost counts, flair and media hints per post. No login.</p><div class="actions"><a class="button" href="https://apify.com/nimbryxo-studio/reddit-subreddit-post-filter-and-moderation">Open on Apify</a><a class="text-link" href="https://github.com/hasankhokhar2026/apify-actor-examples/blob/main/docs/actors/BDohv5moYWUVpwVMB/README.md">GitHub source</a></div></section><section class="schema-section" id="input-schema"><h2>Input schema</h2><p>Input fields, types, required flags, descriptions, defaults, and prefills come from the published definition. Prefill examples are distinct from defaults.</p><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>subreddits</code></td><td>array</td><td>required</td><td>List of subreddit names without `r/` prefix.</td></tr><tr><td><code>maxPosts</code></td><td>integer</td><td>optional</td><td>Max posts per subreddit.</td></tr><tr><td><code>sort</code></td><td>string</td><td>optional</td><td>How to sort posts in the subreddit.</td></tr></tbody></table></div><details><summary>Show all input fields</summary><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>subreddits</code></td><td>array</td><td>required</td><td>List of subreddit names without `r/` prefix.</td></tr><tr><td><code>maxPosts</code></td><td>integer</td><td>optional</td><td>Max posts per subreddit.</td></tr><tr><td><code>sort</code></td><td>string</td><td>optional</td><td>How to sort posts in the subreddit.</td></tr><tr><td><code>timeFilter</code></td><td>string</td><td>optional</td><td>Time range for `top` or `controversial` sorts.</td></tr><tr><td><code>keywordFilter</code></td><td>string</td><td>optional</td><td>Only emit posts whose title or content contains this substring (case-insensitive).</td></tr><tr><td><code>minScore</code></td><td>integer</td><td>optional</td><td>Drop posts with score below this number.</td></tr><tr><td><code>maxAgeDays</code></td><td>integer</td><td>optional</td><td>Drop posts older than N days.</td></tr><tr><td><code>excludeStickied</code></td><td>boolean</td><td>optional</td><td>Drop pinned/stickied posts (typically mod announcements).</td></tr><tr><td><code>excludeNsfw</code></td><td>boolean</td><td>optional</td><td>Drop NSFW posts.</td></tr><tr><td><code>excludeOriginalContent</code></td><td>boolean</td><td>optional</td><td>Drop posts marked as Original Content.</td></tr><tr><td><code>authorBlocklist</code></td><td>array</td><td>optional</td><td>Drop posts by these usernames (case-insensitive).</td></tr><tr><td><code>domainAllowlist</code></td><td>array</td><td>optional</td><td>If set, only emit posts whose link domain is in this list (e.g. `[&quot;github.com&quot;, &quot;arxiv.org&quot;]`). Self-posts pass.</td></tr><tr><td><code>domainBlocklist</code></td><td>array</td><td>optional</td><td>Drop posts whose link domain is in this list.</td></tr></tbody></table></div></details><p><a href="input-schema.json">Download the published input schema</a></p><details><summary>View complete JSON</summary><pre><code>{
-  &quot;description&quot;: &quot;Scrape posts from Reddit subreddits with advanced filters. Pro adds: keywordFilter, minScore, maxAgeDays, excludeStickied, excludeNsfw, authorBlocklist, domainAllowlist/Blocklist.&quot;,
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src &#x27;self&#x27;; script-src &#x27;self&#x27; &#x27;sha256-9qUwWlPrmOUukuw/eDgC+ovKPUd2r0ir68SrdKmFRZA=&#x27;; style-src &#x27;self&#x27;; img-src &#x27;self&#x27; https: data:; base-uri &#x27;self&#x27;; form-action &#x27;self&#x27;; object-src &#x27;none&#x27;"><title>Reddit Subreddit Post Filter &amp; Moderation Scraper | Nimbryxo Studio</title><meta name="description" content="Scrape public subreddit listings and filter posts by keyword, score, comments, upvote ratio, age, flair, type, author, domain, NSFW or stickied status. Returns media, gallery, vide"><meta name="robots" content="index,follow"><link rel="canonical" href="https://hasankhokhar2026.github.io/apify-actor-examples/actors/BDohv5moYWUVpwVMB/"><meta property="og:title" content="Reddit Subreddit Post Filter &amp; Moderation Scraper | Nimbryxo Studio"><meta property="og:description" content="Scrape public subreddit listings and filter posts by keyword, score, comments, upvote ratio, age, flair, type, author, domain, NSFW or stickied status. Returns media, gallery, vide"><meta property="og:type" content="website"><meta property="og:url" content="https://hasankhokhar2026.github.io/apify-actor-examples/actors/BDohv5moYWUVpwVMB/"><meta property="og:site_name" content="Nimbryxo Studio"><meta name="twitter:card" content="summary"><link rel="icon" href="/apify-actor-examples/assets/mark.svg?v=2d20f9dc334a" type="image/svg+xml"><link rel="stylesheet" href="/apify-actor-examples/assets/site.css?v=39545fd4a399"><link rel="stylesheet" href="/apify-actor-examples/assets/brand.css?v=eb0f935ade25"><link rel="alternate" type="application/rss+xml" title="Nimbryxo Studio guides" href="/apify-actor-examples/feed.xml"><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization","name":"Nimbryxo Studio","url":"https://hasankhokhar2026.github.io/apify-actor-examples/","sameAs":["https://apify.com/nimbryxo-studio"]},{"@type":"WebSite","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#website","name":"Nimbryxo Studio","url":"https://hasankhokhar2026.github.io/apify-actor-examples/","publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"inLanguage":"en"},{"@type":"WebPage","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/BDohv5moYWUVpwVMB/#webpage","name":"Reddit Subreddit Post Filter & Moderation Scraper","description":"Scrape public subreddit listings and filter posts by keyword, score, comments, upvote ratio, age, flair, type, author, domain, NSFW or stickied status. Returns media, gallery, video, poll and crosspost fields. No login or API key.","url":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/BDohv5moYWUVpwVMB/","isPartOf":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#website"},"publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"inLanguage":"en","mainEntity":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/BDohv5moYWUVpwVMB/#article"},"breadcrumb":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/BDohv5moYWUVpwVMB/#breadcrumb"}},{"@type":"TechArticle","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/BDohv5moYWUVpwVMB/#article","headline":"Reddit Subreddit Post Filter & Moderation Scraper","name":"Reddit Subreddit Post Filter & Moderation Scraper","description":"Scrape public subreddit listings and filter posts by keyword, score, comments, upvote ratio, age, flair, type, author, domain, NSFW or stickied status. Returns media, gallery, video, poll and crosspost fields. No login or API key.","url":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/BDohv5moYWUVpwVMB/","author":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"mainEntityOfPage":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/BDohv5moYWUVpwVMB/#webpage"},"inLanguage":"en"},{"@type":"BreadcrumbList","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/BDohv5moYWUVpwVMB/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Nimbryxo Studio","item":"https://hasankhokhar2026.github.io/apify-actor-examples/"},{"@type":"ListItem","position":2,"name":"Actors","item":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/"},{"@type":"ListItem","position":3,"name":"Reddit Subreddit Post Filter & Moderation Scraper","item":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/BDohv5moYWUVpwVMB/"}]}]}</script><script src="/apify-actor-examples/assets/site.js?v=7cabac48dd31" defer></script></head><body class="theme-studio"><a href="#main" class="skip-link">Skip to content</a><header><div class="inner"><a href="/apify-actor-examples/" class="brand"><img src="/apify-actor-examples/assets/mark.svg?v=2d20f9dc334a" alt="" width="29" height="29">Nimbryxo Studio</a><nav aria-label="Main navigation"><a href="/apify-actor-examples/actors/" aria-current="page">Actors</a><a href="/apify-actor-examples/guides/">Guides</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></nav></div></header><main id="main"><div class="doc-layout"><aside class="contents" aria-label="On this page"><strong>Contents</strong><a href="#overview">Overview</a><a href="#published-readme">Published README</a><a href="#input-schema">Input schema</a><a href="#output-schema">Output schema</a><a href="#dataset-schema">Dataset schema</a><a href="#python-quickstart">Python quickstart</a></aside><article class="prose"><div class="breadcrumb"><a href="/apify-actor-examples/actors/">Actors</a><span>/</span><span>Reddit Subreddit Post Filter &amp; Moderation Scraper</span></div><section id="overview"><h1 class="doc-title">Reddit Subreddit Post Filter &amp; Moderation Scraper</h1><p class="lede">Scrape public subreddit listings and filter posts by keyword, score, comments, upvote ratio, age, flair, type, author, domain, NSFW or stickied status. Returns media, gallery, video, poll and crosspost fields. No login or API key.</p><div class="actions"><a class="button" href="https://apify.com/nimbryxo-studio/reddit-subreddit-post-filter-and-moderation">Open on Apify</a><a class="text-link" href="https://github.com/hasankhokhar2026/apify-actor-examples/blob/main/docs/actors/BDohv5moYWUVpwVMB/README.md">GitHub source</a></div></section><section class="schema-section" id="input-schema"><h2>Input schema</h2><p>Input fields, types, required flags, descriptions, defaults, and prefills come from the published definition. Prefill examples are distinct from defaults.</p><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>subreddits</code></td><td>array</td><td>required</td><td>Public subreddits to scrape. Accepts names, r/ names or full Reddit URLs.</td></tr><tr><td><code>sort</code></td><td>string</td><td>optional</td><td>How to order posts in each subreddit. Top and controversial use the time filter.</td></tr><tr><td><code>timeFilter</code></td><td>string</td><td>optional</td><td>Time window used when Sort is Top or Controversial. Ignored for other sorts.</td></tr></tbody></table></div><details><summary>Show all input fields</summary><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>subreddits</code></td><td>array</td><td>required</td><td>Public subreddits to scrape. Accepts names, r/ names or full Reddit URLs.</td></tr><tr><td><code>sort</code></td><td>string</td><td>optional</td><td>How to order posts in each subreddit. Top and controversial use the time filter.</td></tr><tr><td><code>timeFilter</code></td><td>string</td><td>optional</td><td>Time window used when Sort is Top or Controversial. Ignored for other sorts.</td></tr><tr><td><code>maxPosts</code></td><td>integer</td><td>optional</td><td>Stop after this many posts pass your filters. The actor keeps paging until it finds them or reaches Reddit&#x27;s listing limit.</td></tr><tr><td><code>maxItems</code></td><td>integer</td><td>optional</td><td>Overall cap across all subreddits.</td></tr><tr><td><code>includeKeywords</code></td><td>array</td><td>optional</td><td>Keep posts containing at least one of these words or phrases. Matching is case-insensitive.</td></tr><tr><td><code>excludeKeywords</code></td><td>array</td><td>optional</td><td>Drop posts containing any of these words or phrases.</td></tr><tr><td><code>keywordMatch</code></td><td>string</td><td>optional</td><td>Any keyword, all keywords, or the exact phrase formed by joining the include keywords.</td></tr><tr><td><code>searchIn</code></td><td>string</td><td>optional</td><td>Search the title, the body, or both.</td></tr><tr><td><code>minScore</code></td><td>integer</td><td>optional</td><td>Drop posts with a lower score. Leave empty for no minimum.</td></tr><tr><td><code>maxScore</code></td><td>integer</td><td>optional</td><td>Drop posts with a higher score. Leave empty for no maximum.</td></tr><tr><td><code>minComments</code></td><td>integer</td><td>optional</td><td>Drop posts with fewer comments. Leave empty for no minimum.</td></tr><tr><td><code>maxComments</code></td><td>integer</td><td>optional</td><td>Drop posts with more comments. Leave empty for no maximum.</td></tr><tr><td><code>minUpvoteRatio</code></td><td>number</td><td>optional</td><td>Keep posts with at least this upvote ratio, from 0 to 1. Leave empty for no minimum.</td></tr><tr><td><code>postedAfter</code></td><td>string</td><td>optional</td><td>ISO date (2026-10-01) or a relative value such as 7 days or 24 hours. Leave empty for no lower bound.</td></tr><tr><td><code>postedBefore</code></td><td>string</td><td>optional</td><td>ISO date or a relative value such as 7 days. Leave empty for no upper bound.</td></tr><tr><td><code>maxAgeDays</code></td><td>integer</td><td>optional</td><td>Shortcut for keeping only recent posts. Posted after can also be used.</td></tr><tr><td><code>flairAllowlist</code></td><td>array</td><td>optional</td><td>Case-insensitive exact flair names. Leave empty for any flair.</td></tr><tr><td><code>postType</code></td><td>string</td><td>optional</td><td>Keep one post type or all types.</td></tr><tr><td><code>excludeStickied</code></td><td>boolean</td><td>optional</td><td>Drop pinned moderator/announcement posts.</td></tr><tr><td><code>excludeNsfw</code></td><td>boolean</td><td>optional</td><td>Drop posts marked NSFW. NSFW-only communities are hidden anonymously, so this is a per-post filter.</td></tr><tr><td><code>authorAllowlist</code></td><td>array</td><td>optional</td><td>Case-insensitive usernames. Leave empty for any author.</td></tr><tr><td><code>authorBlocklist</code></td><td>array</td><td>optional</td><td>Case-insensitive usernames to drop.</td></tr><tr><td><code>domainAllowlist</code></td><td>array</td><td>optional</td><td>Keep posts linking to these domains. Self-posts always pass. Accepts bare domains or URLs.</td></tr><tr><td><code>domainBlocklist</code></td><td>array</td><td>optional</td><td>Drop posts linking to these domains. Self-posts always pass.</td></tr><tr><td><code>includeSubredditInfo</code></td><td>boolean</td><td>optional</td><td>Emit one extra record per subreddit with its description, weekly active users and weekly contributions. Adds one request per subreddit.</td></tr></tbody></table></div></details><p><a href="input-schema.json">Download the published input schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+  &quot;description&quot;: &quot;Scrape public subreddit listings and keep only the posts you want. Filter by keywords, score, comments, upvote ratio, age, flair, post type, author, domain, NSFW and stickied status. No login, API key or proxy setup.&quot;,
   &quot;properties&quot;: {
+    &quot;authorAllowlist&quot;: {
+      &quot;default&quot;: [],
+      &quot;description&quot;: &quot;Case-insensitive usernames. Leave empty for any author.&quot;,
+      &quot;editor&quot;: &quot;stringList&quot;,
+      &quot;prefill&quot;: [],
+      &quot;sectionCaption&quot;: &quot;Authors &amp; domains&quot;,
+      &quot;sectionDescription&quot;: &quot;Optional allow and block lists. Self-posts always pass domain filters.&quot;,
+      &quot;title&quot;: &quot;Only these authors&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
     &quot;authorBlocklist&quot;: {
       &quot;default&quot;: [],
-      &quot;description&quot;: &quot;Drop posts by these usernames (case-insensitive).&quot;,
+      &quot;description&quot;: &quot;Case-insensitive usernames to drop.&quot;,
       &quot;editor&quot;: &quot;stringList&quot;,
-      &quot;title&quot;: &quot;Author blocklist&quot;,
+      &quot;prefill&quot;: [],
+      &quot;title&quot;: &quot;Block these authors&quot;,
       &quot;type&quot;: &quot;array&quot;
     },
     &quot;domainAllowlist&quot;: {
       &quot;default&quot;: [],
-      &quot;description&quot;: &quot;If set, only emit posts whose link domain is in this list (e.g. `[\&quot;github.com\&quot;, \&quot;arxiv.org\&quot;]`). Self-posts pass.&quot;,
+      &quot;description&quot;: &quot;Keep posts linking to these domains. Self-posts always pass. Accepts bare domains or URLs.&quot;,
       &quot;editor&quot;: &quot;stringList&quot;,
-      &quot;title&quot;: &quot;Domain allowlist&quot;,
+      &quot;example&quot;: [
+        &quot;github.com&quot;,
+        &quot;arxiv.org&quot;
+      ],
+      &quot;prefill&quot;: [],
+      &quot;title&quot;: &quot;Only these link domains&quot;,
       &quot;type&quot;: &quot;array&quot;
     },
     &quot;domainBlocklist&quot;: {
       &quot;default&quot;: [],
-      &quot;description&quot;: &quot;Drop posts whose link domain is in this list.&quot;,
+      &quot;description&quot;: &quot;Drop posts linking to these domains. Self-posts always pass.&quot;,
       &quot;editor&quot;: &quot;stringList&quot;,
-      &quot;title&quot;: &quot;Domain blocklist&quot;,
+      &quot;prefill&quot;: [],
+      &quot;title&quot;: &quot;Block these link domains&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;excludeKeywords&quot;: {
+      &quot;default&quot;: [],
+      &quot;description&quot;: &quot;Drop posts containing any of these words or phrases.&quot;,
+      &quot;editor&quot;: &quot;stringList&quot;,
+      &quot;prefill&quot;: [],
+      &quot;title&quot;: &quot;Exclude keywords&quot;,
       &quot;type&quot;: &quot;array&quot;
     },
     &quot;excludeNsfw&quot;: {
       &quot;default&quot;: false,
-      &quot;description&quot;: &quot;Drop NSFW posts.&quot;,
-      &quot;title&quot;: &quot;Exclude NSFW&quot;,
-      &quot;type&quot;: &quot;boolean&quot;
-    },
-    &quot;excludeOriginalContent&quot;: {
-      &quot;default&quot;: false,
-      &quot;description&quot;: &quot;Drop posts marked as Original Content.&quot;,
-      &quot;title&quot;: &quot;Exclude OC posts&quot;,
+      &quot;description&quot;: &quot;Drop posts marked NSFW. NSFW-only communities are hidden anonymously, so this is a per-post filter.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Exclude NSFW posts&quot;,
       &quot;type&quot;: &quot;boolean&quot;
     },
     &quot;excludeStickied&quot;: {
       &quot;default&quot;: false,
-      &quot;description&quot;: &quot;Drop pinned/stickied posts (typically mod announcements).&quot;,
+      &quot;description&quot;: &quot;Drop pinned moderator/announcement posts.&quot;,
+      &quot;prefill&quot;: false,
       &quot;title&quot;: &quot;Exclude stickied posts&quot;,
       &quot;type&quot;: &quot;boolean&quot;
     },
-    &quot;keywordFilter&quot;: {
-      &quot;description&quot;: &quot;Only emit posts whose title or content contains this substring (case-insensitive).&quot;,
-      &quot;editor&quot;: &quot;textfield&quot;,
-      &quot;title&quot;: &quot;Keyword filter (substring)&quot;,
+    &quot;flairAllowlist&quot;: {
+      &quot;default&quot;: [],
+      &quot;description&quot;: &quot;Case-insensitive exact flair names. Leave empty for any flair.&quot;,
+      &quot;editor&quot;: &quot;stringList&quot;,
+      &quot;example&quot;: [
+        &quot;Discussion&quot;,
+        &quot;News&quot;
+      ],
+      &quot;prefill&quot;: [],
+      &quot;title&quot;: &quot;Only these post flairs&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;includeKeywords&quot;: {
+      &quot;default&quot;: [],
+      &quot;description&quot;: &quot;Keep posts containing at least one of these words or phrases. Matching is case-insensitive.&quot;,
+      &quot;editor&quot;: &quot;stringList&quot;,
+      &quot;example&quot;: [
+        &quot;release&quot;,
+        &quot;python&quot;
+      ],
+      &quot;prefill&quot;: [],
+      &quot;sectionCaption&quot;: &quot;Post filters&quot;,
+      &quot;sectionDescription&quot;: &quot;Filters are applied before Max matching posts per subreddit is counted.&quot;,
+      &quot;title&quot;: &quot;Include keywords&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;includeSubredditInfo&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;Emit one extra record per subreddit with its description, weekly active users and weekly contributions. Adds one request per subreddit.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;sectionCaption&quot;: &quot;Advanced&quot;,
+      &quot;sectionDescription&quot;: &quot;Optional extra output. The post scrape works without it.&quot;,
+      &quot;title&quot;: &quot;Include subreddit info records&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;keywordMatch&quot;: {
+      &quot;default&quot;: &quot;any&quot;,
+      &quot;description&quot;: &quot;Any keyword, all keywords, or the exact phrase formed by joining the include keywords.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;any&quot;,
+        &quot;all&quot;,
+        &quot;exact&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;Any keyword&quot;,
+        &quot;All keywords&quot;,
+        &quot;Exact phrase&quot;
+      ],
+      &quot;prefill&quot;: &quot;any&quot;,
+      &quot;title&quot;: &quot;Keyword matching&quot;,
       &quot;type&quot;: &quot;string&quot;
     },
     &quot;maxAgeDays&quot;: {
-      &quot;description&quot;: &quot;Drop posts older than N days.&quot;,
+      &quot;description&quot;: &quot;Shortcut for keeping only recent posts. Posted after can also be used.&quot;,
       &quot;maximum&quot;: 36500,
       &quot;minimum&quot;: 1,
-      &quot;title&quot;: &quot;Max post age in days (filter)&quot;,
+      &quot;title&quot;: &quot;Maximum post age in days&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;maxComments&quot;: {
+      &quot;description&quot;: &quot;Drop posts with more comments. Leave empty for no maximum.&quot;,
+      &quot;maximum&quot;: 10000000,
+      &quot;minimum&quot;: 0,
+      &quot;title&quot;: &quot;Maximum comments&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;maxItems&quot;: {
+      &quot;default&quot;: 1000,
+      &quot;description&quot;: &quot;Overall cap across all subreddits.&quot;,
+      &quot;maximum&quot;: 10000,
+      &quot;minimum&quot;: 1,
+      &quot;prefill&quot;: 10,
+      &quot;title&quot;: &quot;Max posts in total&quot;,
       &quot;type&quot;: &quot;integer&quot;
     },
     &quot;maxPosts&quot;: {
       &quot;default&quot;: 25,
-      &quot;description&quot;: &quot;Max posts per subreddit.&quot;,
+      &quot;description&quot;: &quot;Stop after this many posts pass your filters. The actor keeps paging until it finds them or reaches Reddit&#x27;s listing limit.&quot;,
       &quot;maximum&quot;: 1000,
       &quot;minimum&quot;: 1,
-      &quot;title&quot;: &quot;Max posts per subreddit&quot;,
+      &quot;prefill&quot;: 3,
+      &quot;title&quot;: &quot;Max matching posts per subreddit&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;maxScore&quot;: {
+      &quot;description&quot;: &quot;Drop posts with a higher score. Leave empty for no maximum.&quot;,
+      &quot;maximum&quot;: 10000000,
+      &quot;minimum&quot;: -10000,
+      &quot;title&quot;: &quot;Maximum score&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;minComments&quot;: {
+      &quot;description&quot;: &quot;Drop posts with fewer comments. Leave empty for no minimum.&quot;,
+      &quot;maximum&quot;: 10000000,
+      &quot;minimum&quot;: 0,
+      &quot;title&quot;: &quot;Minimum comments&quot;,
       &quot;type&quot;: &quot;integer&quot;
     },
     &quot;minScore&quot;: {
-      &quot;description&quot;: &quot;Drop posts with score below this number.&quot;,
+      &quot;description&quot;: &quot;Drop posts with a lower score. Leave empty for no minimum.&quot;,
       &quot;maximum&quot;: 10000000,
       &quot;minimum&quot;: -10000,
-      &quot;title&quot;: &quot;Min score (filter)&quot;,
+      &quot;title&quot;: &quot;Minimum score&quot;,
       &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;minUpvoteRatio&quot;: {
+      &quot;description&quot;: &quot;Keep posts with at least this upvote ratio, from 0 to 1. Leave empty for no minimum.&quot;,
+      &quot;maximum&quot;: 1,
+      &quot;minimum&quot;: 0,
+      &quot;title&quot;: &quot;Minimum upvote ratio&quot;,
+      &quot;type&quot;: &quot;number&quot;
+    },
+    &quot;postType&quot;: {
+      &quot;default&quot;: &quot;all&quot;,
+      &quot;description&quot;: &quot;Keep one post type or all types.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;all&quot;,
+        &quot;text&quot;,
+        &quot;link&quot;,
+        &quot;image&quot;,
+        &quot;video&quot;,
+        &quot;gallery&quot;,
+        &quot;poll&quot;,
+        &quot;crosspost&quot;,
+        &quot;gif&quot;,
+        &quot;multi_media&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;All types&quot;,
+        &quot;Text&quot;,
+        &quot;Link&quot;,
+        &quot;Image&quot;,
+        &quot;Video&quot;,
+        &quot;Gallery&quot;,
+        &quot;Poll&quot;,
+        &quot;Crosspost&quot;,
+        &quot;GIF&quot;,
+        &quot;Multi-media&quot;
+      ],
+      &quot;prefill&quot;: &quot;all&quot;,
+      &quot;title&quot;: &quot;Post type&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;postedAfter&quot;: {
+      &quot;description&quot;: &quot;ISO date (2026-10-01) or a relative value such as 7 days or 24 hours. Leave empty for no lower bound.&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;title&quot;: &quot;Posts created on or after&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;postedBefore&quot;: {
+      &quot;description&quot;: &quot;ISO date or a relative value such as 7 days. Leave empty for no upper bound.&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;title&quot;: &quot;Posts created on or before&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;searchIn&quot;: {
+      &quot;default&quot;: &quot;title-and-body&quot;,
+      &quot;description&quot;: &quot;Search the title, the body, or both.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;title-and-body&quot;,
+        &quot;title&quot;,
+        &quot;body&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;Title and body&quot;,
+        &quot;Title only&quot;,
+        &quot;Body only&quot;
+      ],
+      &quot;prefill&quot;: &quot;title-and-body&quot;,
+      &quot;title&quot;: &quot;Search keywords in&quot;,
+      &quot;type&quot;: &quot;string&quot;
     },
     &quot;sort&quot;: {
       &quot;default&quot;: &quot;hot&quot;,
-      &quot;description&quot;: &quot;How to sort posts in the subreddit.&quot;,
+      &quot;description&quot;: &quot;How to order posts in each subreddit. Top and controversial use the time filter.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
       &quot;enum&quot;: [
         &quot;hot&quot;,
         &quot;new&quot;,
         &quot;top&quot;,
         &quot;rising&quot;,
-        &quot;controversial&quot;
+        &quot;controversial&quot;,
+        &quot;best&quot;
       ],
       &quot;enumTitles&quot;: [
         &quot;Hot&quot;,
         &quot;New&quot;,
         &quot;Top&quot;,
         &quot;Rising&quot;,
-        &quot;Controversial&quot;
+        &quot;Controversial&quot;,
+        &quot;Best&quot;
       ],
+      &quot;prefill&quot;: &quot;new&quot;,
       &quot;title&quot;: &quot;Sort posts by&quot;,
       &quot;type&quot;: &quot;string&quot;
     },
     &quot;subreddits&quot;: {
-      &quot;description&quot;: &quot;List of subreddit names without `r/` prefix.&quot;,
+      &quot;description&quot;: &quot;Public subreddits to scrape. Accepts names, r/ names or full Reddit URLs.&quot;,
       &quot;editor&quot;: &quot;stringList&quot;,
       &quot;example&quot;: [
         &quot;python&quot;,
@@ -98,12 +270,15 @@
       &quot;prefill&quot;: [
         &quot;python&quot;
       ],
+      &quot;sectionCaption&quot;: &quot;Subreddits &amp; sorting&quot;,
+      &quot;sectionDescription&quot;: &quot;Pick the communities and how their posts should be ordered.&quot;,
       &quot;title&quot;: &quot;Subreddits&quot;,
       &quot;type&quot;: &quot;array&quot;
     },
     &quot;timeFilter&quot;: {
       &quot;default&quot;: &quot;day&quot;,
-      &quot;description&quot;: &quot;Time range for `top` or `controversial` sorts.&quot;,
+      &quot;description&quot;: &quot;Time window used when Sort is Top or Controversial. Ignored for other sorts.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
       &quot;enum&quot;: [
         &quot;hour&quot;,
         &quot;day&quot;,
@@ -113,14 +288,15 @@
         &quot;all&quot;
       ],
       &quot;enumTitles&quot;: [
-        &quot;Past Hour&quot;,
-        &quot;Past Day&quot;,
-        &quot;Past Week&quot;,
-        &quot;Past Month&quot;,
-        &quot;Past Year&quot;,
-        &quot;All Time&quot;
+        &quot;Past hour&quot;,
+        &quot;Past day&quot;,
+        &quot;Past week&quot;,
+        &quot;Past month&quot;,
+        &quot;Past year&quot;,
+        &quot;All time&quot;
       ],
-      &quot;title&quot;: &quot;Time filter (top/controversial)&quot;,
+      &quot;prefill&quot;: &quot;day&quot;,
+      &quot;title&quot;: &quot;Time range for top / controversial&quot;,
       &quot;type&quot;: &quot;string&quot;
     }
   },
@@ -128,121 +304,502 @@
     &quot;subreddits&quot;
   ],
   &quot;schemaVersion&quot;: 1,
-  &quot;title&quot;: &quot;Reddit Scraper Pro Input&quot;,
+  &quot;title&quot;: &quot;Reddit Subreddit Post Filter &amp; Moderation Scraper Input&quot;,
   &quot;type&quot;: &quot;object&quot;
 }
-</code></pre></details></section><section class="schema-section" id="output-schema"><h2>Output schema</h2><p>Published result links and storage locations. This schema is not an exhaustive contract for every field in a dataset record.</p><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>subreddit</code></td><td>string</td><td>required</td><td>Name of the subreddit (e.g., python)</td></tr><tr><td><code>subreddit_prefixed</code></td><td>string</td><td>optional</td><td>Subreddit name with r/ prefix (e.g., r/python)</td></tr><tr><td><code>post_id</code></td><td>string</td><td>required</td><td>Unique post identifier</td></tr><tr><td><code>post_name</code></td><td>string</td><td>optional</td><td>Full post name in Reddit format (e.g., t3_abc123)</td></tr><tr><td><code>title</code></td><td>string</td><td>required</td><td>Post title</td></tr><tr><td><code>author</code></td><td>string</td><td>optional</td><td>Username of the post author</td></tr><tr><td><code>content</code></td><td>string</td><td>optional</td><td>Text content of self posts (first 1000 characters). Null for link posts.</td></tr><tr><td><code>score</code></td><td>string</td><td>optional</td><td>Post score (upvotes minus downvotes)</td></tr><tr><td><code>num_comments</code></td><td>string</td><td>optional</td><td>Total number of comments on the post</td></tr><tr><td><code>url</code></td><td>string</td><td>required</td><td>Permalink to the post on reddit.com</td></tr><tr><td><code>old_reddit_url</code></td><td>string</td><td>optional</td><td>Permalink to the post on old.reddit.com</td></tr><tr><td><code>link_flair</code></td><td>string</td><td>optional</td><td>Post flair/tag text (if any)</td></tr><tr><td><code>thumbnail_url</code></td><td>string</td><td>optional</td><td>URL of the post thumbnail image (if any)</td></tr><tr><td><code>created_utc</code></td><td>string</td><td>optional</td><td>Unix timestamp when the post was created</td></tr><tr><td><code>created_at</code></td><td>string</td><td>optional</td><td>ISO 8601 formatted datetime when the post was created</td></tr><tr><td><code>is_stickied</code></td><td>string</td><td>optional</td><td>Whether the post is stickied/pinned</td></tr><tr><td><code>is_nsfw</code></td><td>string</td><td>optional</td><td>Whether the post is marked as NSFW</td></tr></tbody></table></div><p><a href="output-schema.json">Download the published output schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+</code></pre></details></section><section class="schema-section" id="output-schema"><h2>Output schema</h2><p>Published result links and storage locations. This schema is not an exhaustive contract for every field in a dataset record.</p><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>recordType</code></td><td>string</td><td>required</td><td>post, error, status or subreddit.</td></tr><tr><td><code>type</code></td><td>string</td><td>optional</td><td>Set on error and status records.</td></tr><tr><td><code>reason</code></td><td>string</td><td>optional</td><td>Why an error or status record was emitted, for example blocked, private, empty, no_matches or info_unavailable.</td></tr><tr><td><code>message</code></td><td>string</td><td>optional</td><td>Human-readable explanation for an error or status record.</td></tr><tr><td><code>page_title</code></td><td>string</td><td>optional</td><td>Title of the Reddit page that could not be read.</td></tr><tr><td><code>httpStatus</code></td><td>string</td><td>optional</td><td>HTTP status from the failed request.</td></tr><tr><td><code>postCount</code></td><td>string</td><td>optional</td><td>Number of posts emitted for a status record.</td></tr><tr><td><code>filteredCount</code></td><td>string</td><td>optional</td><td>Number of fetched posts removed by filters.</td></tr><tr><td><code>scrapedAt</code></td><td>string</td><td>optional</td><td>ISO 8601 timestamp for an error or status record.</td></tr><tr><td><code>post_id</code></td><td>string</td><td>optional</td><td>Reddit post ID without the t3_ prefix.</td></tr><tr><td><code>post_name</code></td><td>string</td><td>optional</td><td>Full Reddit post name, for example t3_abc123.</td></tr><tr><td><code>title</code></td><td>string</td><td>optional</td><td>Post title.</td></tr><tr><td><code>author</code></td><td>string</td><td>optional</td><td>Post author username.</td></tr><tr><td><code>author_fullname</code></td><td>string</td><td>optional</td><td>Author account fullname, for example t2_abc123.</td></tr><tr><td><code>author_id</code></td><td>string</td><td>optional</td><td>Author account ID.</td></tr><tr><td><code>subreddit</code></td><td>string</td><td>optional</td><td>Subreddit name without r/.</td></tr><tr><td><code>subreddit_prefixed</code></td><td>string</td><td>optional</td><td>Subreddit name with the r/ prefix.</td></tr><tr><td><code>subreddit_id</code></td><td>string</td><td>optional</td><td>Subreddit fullname, for example t5_abc123.</td></tr><tr><td><code>display_name</code></td><td>string</td><td>optional</td><td>Subreddit display name on an optional subreddit record.</td></tr><tr><td><code>description</code></td><td>string</td><td>optional</td><td>Subreddit description on an optional subreddit record.</td></tr><tr><td><code>weekly_active_users</code></td><td>string</td><td>optional</td><td>Reddit&#x27;s weekly active user count on an optional subreddit record.</td></tr><tr><td><code>weekly_contributions</code></td><td>string</td><td>optional</td><td>Reddit&#x27;s weekly contribution count on an optional subreddit record.</td></tr><tr><td><code>subscribers</code></td><td>string</td><td>optional</td><td>Subreddit subscriber count when the metadata source provides it.</td></tr><tr><td><code>content</code></td><td>string</td><td>optional</td><td>Text body of a self post, first 1000 characters. Omitted for posts without a body.</td></tr><tr><td><code>content_length</code></td><td>string</td><td>optional</td><td>Full character length of the text body.</td></tr><tr><td><code>score</code></td><td>string</td><td>optional</td><td>Post score.</td></tr><tr><td><code>num_comments</code></td><td>string</td><td>optional</td><td>Reported comment count.</td></tr><tr><td><code>upvote_ratio</code></td><td>string</td><td>optional</td><td>Upvote ratio from 0 to 1.</td></tr><tr><td><code>url</code></td><td>string</td><td>optional</td><td>Reddit permalink of the post.</td></tr><tr><td><code>permalink</code></td><td>string</td><td>optional</td><td>Reddit permalink of the post.</td></tr><tr><td><code>old_reddit_url</code></td><td>string</td><td>optional</td><td>Old Reddit permalink. Old Reddit may require a login.</td></tr><tr><td><code>external_url</code></td><td>string</td><td>optional</td><td>Off-Reddit link, image, gallery or video URL when distinct from the permalink.</td></tr><tr><td><code>domain</code></td><td>string</td><td>optional</td><td>Link domain, self.&lt;subreddit&gt; for text posts, or reddit.com for galleries.</td></tr><tr><td><code>post_type</code></td><td>string</td><td>optional</td><td>text, link, image, video, gallery, poll, crosspost, gif or multi_media.</td></tr><tr><td><code>post_hint</code></td><td>string</td><td>optional</td><td>Normalized post classification: self, image, gallery, hosted:video, rich:video or link.</td></tr><tr><td><code>link_flair</code></td><td>string</td><td>optional</td><td>Post flair text when the post has one.</td></tr><tr><td><code>link_flair_background_color</code></td><td>string</td><td>optional</td><td>Flair background color when Reddit provides one.</td></tr><tr><td><code>thumbnail_url</code></td><td>string</td><td>optional</td><td>Post thumbnail or external preview image.</td></tr><tr><td><code>preview_url</code></td><td>string</td><td>optional</td><td>Reddit preview image.</td></tr><tr><td><code>image_url</code></td><td>string</td><td>optional</td><td>Full image URL for image and GIF posts.</td></tr><tr><td><code>image_urls</code></td><td>string</td><td>optional</td><td>Image URLs belonging to the post, including gallery renditions.</td></tr><tr><td><code>gallery_id</code></td><td>string</td><td>optional</td><td>Gallery identifier for gallery posts.</td></tr><tr><td><code>gallery_images</code></td><td>string</td><td>optional</td><td>Full-size gallery image URLs.</td></tr><tr><td><code>gallery_count</code></td><td>string</td><td>optional</td><td>Number of gallery images captured.</td></tr><tr><td><code>is_self</code></td><td>string</td><td>optional</td><td>True for text and poll posts.</td></tr><tr><td><code>is_stickied</code></td><td>string</td><td>optional</td><td>True when the post is pinned.</td></tr><tr><td><code>is_nsfw</code></td><td>string</td><td>optional</td><td>True when the post is marked NSFW.</td></tr><tr><td><code>is_spoiler</code></td><td>string</td><td>optional</td><td>True when the post is marked as a spoiler.</td></tr><tr><td><code>is_promoted</code></td><td>string</td><td>optional</td><td>Not exposed by anonymous Reddit listings; omitted.</td></tr><tr><td><code>is_original_content</code></td><td>string</td><td>optional</td><td>Not exposed by anonymous Reddit listings; omitted.</td></tr><tr><td><code>is_gallery</code></td><td>string</td><td>optional</td><td>True for gallery posts.</td></tr><tr><td><code>is_crosspost</code></td><td>string</td><td>optional</td><td>True for crossposts.</td></tr><tr><td><code>gilded_count</code></td><td>string</td><td>optional</td><td>Not exposed as a gilded breakdown by anonymous Reddit listings; omitted.</td></tr><tr><td><code>num_crossposts</code></td><td>string</td><td>optional</td><td>Not exposed by anonymous Reddit listings; omitted.</td></tr><tr><td><code>crosspost_parent</code></td><td>string</td><td>optional</td><td>Parent post of a crosspost.</td></tr><tr><td><code>crosspost_parent_id</code></td><td>string</td><td>optional</td><td>Parent post ID for a crosspost.</td></tr><tr><td><code>crosspost_parent_subreddit</code></td><td>string</td><td>optional</td><td>Parent subreddit for a crosspost.</td></tr><tr><td><code>crosspost_parent_url</code></td><td>string</td><td>optional</td><td>Parent post URL for a crosspost.</td></tr><tr><td><code>total_awards_received</code></td><td>string</td><td>optional</td><td>Award count reported by Reddit.</td></tr><tr><td><code>top_award_id</code></td><td>string</td><td>optional</td><td>ID of the top award when Reddit provides one.</td></tr><tr><td><code>top_award_icon_url</code></td><td>string</td><td>optional</td><td>Icon URL of the top award when Reddit provides one.</td></tr><tr><td><code>has_media</code></td><td>string</td><td>optional</td><td>True when the post has an image, gallery, video, embed or poll.</td></tr><tr><td><code>media_type</code></td><td>string</td><td>optional</td><td>image, gallery, video, gif, poll or embed.</td></tr><tr><td><code>video_url</code></td><td>string</td><td>optional</td><td>Stable direct video URL when available.</td></tr><tr><td><code>video_hls_url</code></td><td>string</td><td>optional</td><td>HLS playlist URL. Signed URLs may expire.</td></tr><tr><td><code>video_mp4_url</code></td><td>string</td><td>optional</td><td>MP4 rendition URL. Signed URLs may expire.</td></tr><tr><td><code>video_poster_url</code></td><td>string</td><td>optional</td><td>Video poster image URL.</td></tr><tr><td><code>video_duration_seconds</code></td><td>string</td><td>optional</td><td>Video duration in seconds.</td></tr><tr><td><code>video_width</code></td><td>string</td><td>optional</td><td>Video width in pixels.</td></tr><tr><td><code>video_height</code></td><td>string</td><td>optional</td><td>Video height in pixels.</td></tr><tr><td><code>video_bitrate_kbps</code></td><td>string</td><td>optional</td><td>Video bitrate in kilobits per second.</td></tr><tr><td><code>embed_provider</code></td><td>string</td><td>optional</td><td>Provider name for an external embed, for example YouTube.</td></tr><tr><td><code>embed_html</code></td><td>string</td><td>optional</td><td>Embed iframe HTML when Reddit provides it.</td></tr><tr><td><code>embed_title</code></td><td>string</td><td>optional</td><td>Title from the embed iframe.</td></tr><tr><td><code>poll_data</code></td><td>string</td><td>optional</td><td>Poll state. Vote counts and option positions are captured; option labels are not always rendered anonymously.</td></tr><tr><td><code>language</code></td><td>string</td><td>optional</td><td>Post language code reported by Reddit.</td></tr><tr><td><code>title_word_count</code></td><td>string</td><td>optional</td><td>Number of words in the title.</td></tr><tr><td><code>post_age_seconds</code></td><td>string</td><td>optional</td><td>Age of the post in seconds at scrape time.</td></tr><tr><td><code>created_utc</code></td><td>string</td><td>optional</td><td>Unix timestamp of post creation.</td></tr><tr><td><code>created_at</code></td><td>string</td><td>optional</td><td>ISO 8601 creation time.</td></tr><tr><td><code>crawled_at</code></td><td>string</td><td>optional</td><td>ISO 8601 timestamp of this scrape.</td></tr></tbody></table></div><p><a href="output-schema.json">Download the published output schema</a></p><details><summary>View complete JSON</summary><pre><code>{
   &quot;actorOutputSchemaVersion&quot;: 1,
-  &quot;description&quot;: &quot;One record per subreddit post that passes your filters, with score, comments, flair, gilded/crosspost counts and media hints.&quot;,
+  &quot;description&quot;: &quot;One record per post that passes your filters. Error and status records explain blocked, private, empty or no-match subreddits. Optional subreddit records add community metadata.&quot;,
   &quot;properties&quot;: {
     &quot;author&quot;: {
-      &quot;description&quot;: &quot;Username of the post author&quot;,
+      &quot;description&quot;: &quot;Post author username.&quot;,
       &quot;template&quot;: &quot;{{author}}&quot;,
       &quot;title&quot;: &quot;Author&quot;,
       &quot;type&quot;: &quot;string&quot;
     },
+    &quot;author_fullname&quot;: {
+      &quot;description&quot;: &quot;Author account fullname, for example t2_abc123.&quot;,
+      &quot;template&quot;: &quot;{{author_fullname}}&quot;,
+      &quot;title&quot;: &quot;Author fullname&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;author_id&quot;: {
+      &quot;description&quot;: &quot;Author account ID.&quot;,
+      &quot;template&quot;: &quot;{{author_id}}&quot;,
+      &quot;title&quot;: &quot;Author ID&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
     &quot;content&quot;: {
-      &quot;description&quot;: &quot;Text content of self posts (first 1000 characters). Null for link posts.&quot;,
+      &quot;description&quot;: &quot;Text body of a self post, first 1000 characters. Omitted for posts without a body.&quot;,
       &quot;template&quot;: &quot;{{content}}&quot;,
       &quot;title&quot;: &quot;Content&quot;,
       &quot;type&quot;: &quot;string&quot;
     },
+    &quot;content_length&quot;: {
+      &quot;description&quot;: &quot;Full character length of the text body.&quot;,
+      &quot;template&quot;: &quot;{{content_length}}&quot;,
+      &quot;title&quot;: &quot;Content length&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;crawled_at&quot;: {
+      &quot;description&quot;: &quot;ISO 8601 timestamp of this scrape.&quot;,
+      &quot;template&quot;: &quot;{{crawled_at}}&quot;,
+      &quot;title&quot;: &quot;Crawled at&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
     &quot;created_at&quot;: {
-      &quot;description&quot;: &quot;ISO 8601 formatted datetime when the post was created&quot;,
+      &quot;description&quot;: &quot;ISO 8601 creation time.&quot;,
       &quot;template&quot;: &quot;{{created_at}}&quot;,
-      &quot;title&quot;: &quot;Created At&quot;,
+      &quot;title&quot;: &quot;Created at&quot;,
       &quot;type&quot;: &quot;string&quot;
     },
     &quot;created_utc&quot;: {
-      &quot;description&quot;: &quot;Unix timestamp when the post was created&quot;,
+      &quot;description&quot;: &quot;Unix timestamp of post creation.&quot;,
       &quot;template&quot;: &quot;{{created_utc}}&quot;,
       &quot;title&quot;: &quot;Created UTC&quot;,
       &quot;type&quot;: &quot;string&quot;
     },
+    &quot;crosspost_parent&quot;: {
+      &quot;description&quot;: &quot;Parent post of a crosspost.&quot;,
+      &quot;template&quot;: &quot;{{crosspost_parent}}&quot;,
+      &quot;title&quot;: &quot;Crosspost parent&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;crosspost_parent_id&quot;: {
+      &quot;description&quot;: &quot;Parent post ID for a crosspost.&quot;,
+      &quot;template&quot;: &quot;{{crosspost_parent_id}}&quot;,
+      &quot;title&quot;: &quot;Crosspost parent ID&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;crosspost_parent_subreddit&quot;: {
+      &quot;description&quot;: &quot;Parent subreddit for a crosspost.&quot;,
+      &quot;template&quot;: &quot;{{crosspost_parent_subreddit}}&quot;,
+      &quot;title&quot;: &quot;Crosspost parent subreddit&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;crosspost_parent_url&quot;: {
+      &quot;description&quot;: &quot;Parent post URL for a crosspost.&quot;,
+      &quot;template&quot;: &quot;{{crosspost_parent_url}}&quot;,
+      &quot;title&quot;: &quot;Crosspost parent URL&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;description&quot;: {
+      &quot;description&quot;: &quot;Subreddit description on an optional subreddit record.&quot;,
+      &quot;template&quot;: &quot;{{description}}&quot;,
+      &quot;title&quot;: &quot;Description&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;display_name&quot;: {
+      &quot;description&quot;: &quot;Subreddit display name on an optional subreddit record.&quot;,
+      &quot;template&quot;: &quot;{{display_name}}&quot;,
+      &quot;title&quot;: &quot;Display name&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;domain&quot;: {
+      &quot;description&quot;: &quot;Link domain, self.&lt;subreddit&gt; for text posts, or reddit.com for galleries.&quot;,
+      &quot;template&quot;: &quot;{{domain}}&quot;,
+      &quot;title&quot;: &quot;Domain&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;embed_html&quot;: {
+      &quot;description&quot;: &quot;Embed iframe HTML when Reddit provides it.&quot;,
+      &quot;template&quot;: &quot;{{embed_html}}&quot;,
+      &quot;title&quot;: &quot;Embed HTML&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;embed_provider&quot;: {
+      &quot;description&quot;: &quot;Provider name for an external embed, for example YouTube.&quot;,
+      &quot;template&quot;: &quot;{{embed_provider}}&quot;,
+      &quot;title&quot;: &quot;Embed provider&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;embed_title&quot;: {
+      &quot;description&quot;: &quot;Title from the embed iframe.&quot;,
+      &quot;template&quot;: &quot;{{embed_title}}&quot;,
+      &quot;title&quot;: &quot;Embed title&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;external_url&quot;: {
+      &quot;description&quot;: &quot;Off-Reddit link, image, gallery or video URL when distinct from the permalink.&quot;,
+      &quot;template&quot;: &quot;{{external_url}}&quot;,
+      &quot;title&quot;: &quot;External URL&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;filteredCount&quot;: {
+      &quot;description&quot;: &quot;Number of fetched posts removed by filters.&quot;,
+      &quot;template&quot;: &quot;{{filteredCount}}&quot;,
+      &quot;title&quot;: &quot;Filtered count&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;gallery_count&quot;: {
+      &quot;description&quot;: &quot;Number of gallery images captured.&quot;,
+      &quot;template&quot;: &quot;{{gallery_count}}&quot;,
+      &quot;title&quot;: &quot;Gallery count&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;gallery_id&quot;: {
+      &quot;description&quot;: &quot;Gallery identifier for gallery posts.&quot;,
+      &quot;template&quot;: &quot;{{gallery_id}}&quot;,
+      &quot;title&quot;: &quot;Gallery ID&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;gallery_images&quot;: {
+      &quot;description&quot;: &quot;Full-size gallery image URLs.&quot;,
+      &quot;template&quot;: &quot;{{gallery_images}}&quot;,
+      &quot;title&quot;: &quot;Gallery images&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;gilded_count&quot;: {
+      &quot;description&quot;: &quot;Not exposed as a gilded breakdown by anonymous Reddit listings; omitted.&quot;,
+      &quot;template&quot;: &quot;{{gilded_count}}&quot;,
+      &quot;title&quot;: &quot;Gilded count&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;has_media&quot;: {
+      &quot;description&quot;: &quot;True when the post has an image, gallery, video, embed or poll.&quot;,
+      &quot;template&quot;: &quot;{{has_media}}&quot;,
+      &quot;title&quot;: &quot;Has media&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;httpStatus&quot;: {
+      &quot;description&quot;: &quot;HTTP status from the failed request.&quot;,
+      &quot;template&quot;: &quot;{{httpStatus}}&quot;,
+      &quot;title&quot;: &quot;HTTP status&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;image_url&quot;: {
+      &quot;description&quot;: &quot;Full image URL for image and GIF posts.&quot;,
+      &quot;template&quot;: &quot;{{image_url}}&quot;,
+      &quot;title&quot;: &quot;Image URL&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;image_urls&quot;: {
+      &quot;description&quot;: &quot;Image URLs belonging to the post, including gallery renditions.&quot;,
+      &quot;template&quot;: &quot;{{image_urls}}&quot;,
+      &quot;title&quot;: &quot;Image URLs&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;is_crosspost&quot;: {
+      &quot;description&quot;: &quot;True for crossposts.&quot;,
+      &quot;template&quot;: &quot;{{is_crosspost}}&quot;,
+      &quot;title&quot;: &quot;Is crosspost&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;is_gallery&quot;: {
+      &quot;description&quot;: &quot;True for gallery posts.&quot;,
+      &quot;template&quot;: &quot;{{is_gallery}}&quot;,
+      &quot;title&quot;: &quot;Is gallery&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
     &quot;is_nsfw&quot;: {
-      &quot;description&quot;: &quot;Whether the post is marked as NSFW&quot;,
+      &quot;description&quot;: &quot;True when the post is marked NSFW.&quot;,
       &quot;template&quot;: &quot;{{is_nsfw}}&quot;,
       &quot;title&quot;: &quot;Is NSFW&quot;,
       &quot;type&quot;: &quot;string&quot;
     },
+    &quot;is_original_content&quot;: {
+      &quot;description&quot;: &quot;Not exposed by anonymous Reddit listings; omitted.&quot;,
+      &quot;template&quot;: &quot;{{is_original_content}}&quot;,
+      &quot;title&quot;: &quot;Is original content&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;is_promoted&quot;: {
+      &quot;description&quot;: &quot;Not exposed by anonymous Reddit listings; omitted.&quot;,
+      &quot;template&quot;: &quot;{{is_promoted}}&quot;,
+      &quot;title&quot;: &quot;Is promoted&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;is_self&quot;: {
+      &quot;description&quot;: &quot;True for text and poll posts.&quot;,
+      &quot;template&quot;: &quot;{{is_self}}&quot;,
+      &quot;title&quot;: &quot;Is self post&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;is_spoiler&quot;: {
+      &quot;description&quot;: &quot;True when the post is marked as a spoiler.&quot;,
+      &quot;template&quot;: &quot;{{is_spoiler}}&quot;,
+      &quot;title&quot;: &quot;Is spoiler&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
     &quot;is_stickied&quot;: {
-      &quot;description&quot;: &quot;Whether the post is stickied/pinned&quot;,
+      &quot;description&quot;: &quot;True when the post is pinned.&quot;,
       &quot;template&quot;: &quot;{{is_stickied}}&quot;,
-      &quot;title&quot;: &quot;Is Stickied&quot;,
+      &quot;title&quot;: &quot;Is stickied&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;language&quot;: {
+      &quot;description&quot;: &quot;Post language code reported by Reddit.&quot;,
+      &quot;template&quot;: &quot;{{language}}&quot;,
+      &quot;title&quot;: &quot;Language&quot;,
       &quot;type&quot;: &quot;string&quot;
     },
     &quot;link_flair&quot;: {
-      &quot;description&quot;: &quot;Post flair/tag text (if any)&quot;,
+      &quot;description&quot;: &quot;Post flair text when the post has one.&quot;,
       &quot;template&quot;: &quot;{{link_flair}}&quot;,
-      &quot;title&quot;: &quot;Link Flair&quot;,
+      &quot;title&quot;: &quot;Link flair&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;link_flair_background_color&quot;: {
+      &quot;description&quot;: &quot;Flair background color when Reddit provides one.&quot;,
+      &quot;template&quot;: &quot;{{link_flair_background_color}}&quot;,
+      &quot;title&quot;: &quot;Link flair background&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;media_type&quot;: {
+      &quot;description&quot;: &quot;image, gallery, video, gif, poll or embed.&quot;,
+      &quot;template&quot;: &quot;{{media_type}}&quot;,
+      &quot;title&quot;: &quot;Media type&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;message&quot;: {
+      &quot;description&quot;: &quot;Human-readable explanation for an error or status record.&quot;,
+      &quot;template&quot;: &quot;{{message}}&quot;,
+      &quot;title&quot;: &quot;Message&quot;,
       &quot;type&quot;: &quot;string&quot;
     },
     &quot;num_comments&quot;: {
-      &quot;description&quot;: &quot;Total number of comments on the post&quot;,
+      &quot;description&quot;: &quot;Reported comment count.&quot;,
       &quot;template&quot;: &quot;{{num_comments}}&quot;,
-      &quot;title&quot;: &quot;Number of Comments&quot;,
+      &quot;title&quot;: &quot;Number of comments&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;num_crossposts&quot;: {
+      &quot;description&quot;: &quot;Not exposed by anonymous Reddit listings; omitted.&quot;,
+      &quot;template&quot;: &quot;{{num_crossposts}}&quot;,
+      &quot;title&quot;: &quot;Number of crossposts&quot;,
       &quot;type&quot;: &quot;string&quot;
     },
     &quot;old_reddit_url&quot;: {
-      &quot;description&quot;: &quot;Permalink to the post on old.reddit.com&quot;,
+      &quot;description&quot;: &quot;Old Reddit permalink. Old Reddit may require a login.&quot;,
       &quot;template&quot;: &quot;{{old_reddit_url}}&quot;,
       &quot;title&quot;: &quot;Old Reddit URL&quot;,
       &quot;type&quot;: &quot;string&quot;
     },
+    &quot;page_title&quot;: {
+      &quot;description&quot;: &quot;Title of the Reddit page that could not be read.&quot;,
+      &quot;template&quot;: &quot;{{page_title}}&quot;,
+      &quot;title&quot;: &quot;Page title&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;permalink&quot;: {
+      &quot;description&quot;: &quot;Reddit permalink of the post.&quot;,
+      &quot;template&quot;: &quot;{{permalink}}&quot;,
+      &quot;title&quot;: &quot;Permalink&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;poll_data&quot;: {
+      &quot;description&quot;: &quot;Poll state. Vote counts and option positions are captured; option labels are not always rendered anonymously.&quot;,
+      &quot;template&quot;: &quot;{{poll_data}}&quot;,
+      &quot;title&quot;: &quot;Poll data&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;postCount&quot;: {
+      &quot;description&quot;: &quot;Number of posts emitted for a status record.&quot;,
+      &quot;template&quot;: &quot;{{postCount}}&quot;,
+      &quot;title&quot;: &quot;Post count&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;post_age_seconds&quot;: {
+      &quot;description&quot;: &quot;Age of the post in seconds at scrape time.&quot;,
+      &quot;template&quot;: &quot;{{post_age_seconds}}&quot;,
+      &quot;title&quot;: &quot;Post age&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;post_hint&quot;: {
+      &quot;description&quot;: &quot;Normalized post classification: self, image, gallery, hosted:video, rich:video or link.&quot;,
+      &quot;template&quot;: &quot;{{post_hint}}&quot;,
+      &quot;title&quot;: &quot;Post hint&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
     &quot;post_id&quot;: {
-      &quot;description&quot;: &quot;Unique post identifier&quot;,
+      &quot;description&quot;: &quot;Reddit post ID without the t3_ prefix.&quot;,
       &quot;template&quot;: &quot;{{post_id}}&quot;,
       &quot;title&quot;: &quot;Post ID&quot;,
       &quot;type&quot;: &quot;string&quot;
     },
     &quot;post_name&quot;: {
-      &quot;description&quot;: &quot;Full post name in Reddit format (e.g., t3_abc123)&quot;,
+      &quot;description&quot;: &quot;Full Reddit post name, for example t3_abc123.&quot;,
       &quot;template&quot;: &quot;{{post_name}}&quot;,
-      &quot;title&quot;: &quot;Post Name&quot;,
+      &quot;title&quot;: &quot;Post name&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;post_type&quot;: {
+      &quot;description&quot;: &quot;text, link, image, video, gallery, poll, crosspost, gif or multi_media.&quot;,
+      &quot;template&quot;: &quot;{{post_type}}&quot;,
+      &quot;title&quot;: &quot;Post type&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;preview_url&quot;: {
+      &quot;description&quot;: &quot;Reddit preview image.&quot;,
+      &quot;template&quot;: &quot;{{preview_url}}&quot;,
+      &quot;title&quot;: &quot;Preview URL&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;reason&quot;: {
+      &quot;description&quot;: &quot;Why an error or status record was emitted, for example blocked, private, empty, no_matches or info_unavailable.&quot;,
+      &quot;template&quot;: &quot;{{reason}}&quot;,
+      &quot;title&quot;: &quot;Reason&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;recordType&quot;: {
+      &quot;description&quot;: &quot;post, error, status or subreddit.&quot;,
+      &quot;template&quot;: &quot;{{recordType}}&quot;,
+      &quot;title&quot;: &quot;Record type&quot;,
       &quot;type&quot;: &quot;string&quot;
     },
     &quot;score&quot;: {
-      &quot;description&quot;: &quot;Post score (upvotes minus downvotes)&quot;,
+      &quot;description&quot;: &quot;Post score.&quot;,
       &quot;template&quot;: &quot;{{score}}&quot;,
       &quot;title&quot;: &quot;Score&quot;,
       &quot;type&quot;: &quot;string&quot;
     },
+    &quot;scrapedAt&quot;: {
+      &quot;description&quot;: &quot;ISO 8601 timestamp for an error or status record.&quot;,
+      &quot;template&quot;: &quot;{{scrapedAt}}&quot;,
+      &quot;title&quot;: &quot;Scraped at&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
     &quot;subreddit&quot;: {
-      &quot;description&quot;: &quot;Name of the subreddit (e.g., python)&quot;,
+      &quot;description&quot;: &quot;Subreddit name without r/.&quot;,
       &quot;template&quot;: &quot;{{subreddit}}&quot;,
       &quot;title&quot;: &quot;Subreddit&quot;,
       &quot;type&quot;: &quot;string&quot;
     },
+    &quot;subreddit_id&quot;: {
+      &quot;description&quot;: &quot;Subreddit fullname, for example t5_abc123.&quot;,
+      &quot;template&quot;: &quot;{{subreddit_id}}&quot;,
+      &quot;title&quot;: &quot;Subreddit ID&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
     &quot;subreddit_prefixed&quot;: {
-      &quot;description&quot;: &quot;Subreddit name with r/ prefix (e.g., r/python)&quot;,
+      &quot;description&quot;: &quot;Subreddit name with the r/ prefix.&quot;,
       &quot;template&quot;: &quot;{{subreddit_prefixed}}&quot;,
-      &quot;title&quot;: &quot;Subreddit Prefixed&quot;,
+      &quot;title&quot;: &quot;Subreddit prefixed&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;subscribers&quot;: {
+      &quot;description&quot;: &quot;Subreddit subscriber count when the metadata source provides it.&quot;,
+      &quot;template&quot;: &quot;{{subscribers}}&quot;,
+      &quot;title&quot;: &quot;Subscribers&quot;,
       &quot;type&quot;: &quot;string&quot;
     },
     &quot;thumbnail_url&quot;: {
-      &quot;description&quot;: &quot;URL of the post thumbnail image (if any)&quot;,
+      &quot;description&quot;: &quot;Post thumbnail or external preview image.&quot;,
       &quot;template&quot;: &quot;{{thumbnail_url}}&quot;,
       &quot;title&quot;: &quot;Thumbnail URL&quot;,
       &quot;type&quot;: &quot;string&quot;
     },
     &quot;title&quot;: {
-      &quot;description&quot;: &quot;Post title&quot;,
+      &quot;description&quot;: &quot;Post title.&quot;,
       &quot;template&quot;: &quot;{{title}}&quot;,
       &quot;title&quot;: &quot;Title&quot;,
       &quot;type&quot;: &quot;string&quot;
     },
+    &quot;title_word_count&quot;: {
+      &quot;description&quot;: &quot;Number of words in the title.&quot;,
+      &quot;template&quot;: &quot;{{title_word_count}}&quot;,
+      &quot;title&quot;: &quot;Title word count&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;top_award_icon_url&quot;: {
+      &quot;description&quot;: &quot;Icon URL of the top award when Reddit provides one.&quot;,
+      &quot;template&quot;: &quot;{{top_award_icon_url}}&quot;,
+      &quot;title&quot;: &quot;Top award icon URL&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;top_award_id&quot;: {
+      &quot;description&quot;: &quot;ID of the top award when Reddit provides one.&quot;,
+      &quot;template&quot;: &quot;{{top_award_id}}&quot;,
+      &quot;title&quot;: &quot;Top award ID&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;total_awards_received&quot;: {
+      &quot;description&quot;: &quot;Award count reported by Reddit.&quot;,
+      &quot;template&quot;: &quot;{{total_awards_received}}&quot;,
+      &quot;title&quot;: &quot;Total awards&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;type&quot;: {
+      &quot;description&quot;: &quot;Set on error and status records.&quot;,
+      &quot;template&quot;: &quot;{{type}}&quot;,
+      &quot;title&quot;: &quot;Internal record type&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;upvote_ratio&quot;: {
+      &quot;description&quot;: &quot;Upvote ratio from 0 to 1.&quot;,
+      &quot;template&quot;: &quot;{{upvote_ratio}}&quot;,
+      &quot;title&quot;: &quot;Upvote ratio&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
     &quot;url&quot;: {
-      &quot;description&quot;: &quot;Permalink to the post on reddit.com&quot;,
+      &quot;description&quot;: &quot;Reddit permalink of the post.&quot;,
       &quot;template&quot;: &quot;{{url}}&quot;,
       &quot;title&quot;: &quot;URL&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;video_bitrate_kbps&quot;: {
+      &quot;description&quot;: &quot;Video bitrate in kilobits per second.&quot;,
+      &quot;template&quot;: &quot;{{video_bitrate_kbps}}&quot;,
+      &quot;title&quot;: &quot;Video bitrate&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;video_duration_seconds&quot;: {
+      &quot;description&quot;: &quot;Video duration in seconds.&quot;,
+      &quot;template&quot;: &quot;{{video_duration_seconds}}&quot;,
+      &quot;title&quot;: &quot;Video duration&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;video_height&quot;: {
+      &quot;description&quot;: &quot;Video height in pixels.&quot;,
+      &quot;template&quot;: &quot;{{video_height}}&quot;,
+      &quot;title&quot;: &quot;Video height&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;video_hls_url&quot;: {
+      &quot;description&quot;: &quot;HLS playlist URL. Signed URLs may expire.&quot;,
+      &quot;template&quot;: &quot;{{video_hls_url}}&quot;,
+      &quot;title&quot;: &quot;Video HLS URL&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;video_mp4_url&quot;: {
+      &quot;description&quot;: &quot;MP4 rendition URL. Signed URLs may expire.&quot;,
+      &quot;template&quot;: &quot;{{video_mp4_url}}&quot;,
+      &quot;title&quot;: &quot;Video MP4 URL&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;video_poster_url&quot;: {
+      &quot;description&quot;: &quot;Video poster image URL.&quot;,
+      &quot;template&quot;: &quot;{{video_poster_url}}&quot;,
+      &quot;title&quot;: &quot;Video poster URL&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;video_url&quot;: {
+      &quot;description&quot;: &quot;Stable direct video URL when available.&quot;,
+      &quot;template&quot;: &quot;{{video_url}}&quot;,
+      &quot;title&quot;: &quot;Video URL&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;video_width&quot;: {
+      &quot;description&quot;: &quot;Video width in pixels.&quot;,
+      &quot;template&quot;: &quot;{{video_width}}&quot;,
+      &quot;title&quot;: &quot;Video width&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;weekly_active_users&quot;: {
+      &quot;description&quot;: &quot;Reddit&#x27;s weekly active user count on an optional subreddit record.&quot;,
+      &quot;template&quot;: &quot;{{weekly_active_users}}&quot;,
+      &quot;title&quot;: &quot;Weekly active users&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;weekly_contributions&quot;: {
+      &quot;description&quot;: &quot;Reddit&#x27;s weekly contribution count on an optional subreddit record.&quot;,
+      &quot;template&quot;: &quot;{{weekly_contributions}}&quot;,
+      &quot;title&quot;: &quot;Weekly contributions&quot;,
       &quot;type&quot;: &quot;string&quot;
     }
   },
   &quot;required&quot;: [
-    &quot;subreddit&quot;,
-    &quot;post_id&quot;,
-    &quot;title&quot;,
-    &quot;url&quot;
+    &quot;recordType&quot;
   ],
   &quot;schemaVersion&quot;: 1,
   &quot;title&quot;: &quot;Reddit Subreddit Post Filter &amp; Moderation Scraper Output&quot;,
@@ -259,50 +816,36 @@
       &quot;title&quot;: &quot;Reddit Posts (Pro)&quot;,
       &quot;transformation&quot;: {
         &quot;fields&quot;: [
+          &quot;recordType&quot;,
           &quot;subreddit_prefixed&quot;,
           &quot;title&quot;,
           &quot;author&quot;,
           &quot;score&quot;,
+          &quot;upvote_ratio&quot;,
           &quot;num_comments&quot;,
-          &quot;content&quot;,
-          &quot;url&quot;,
+          &quot;post_type&quot;,
           &quot;created_at&quot;,
-          &quot;link_flair&quot;
+          &quot;link_flair&quot;,
+          &quot;url&quot;,
+          &quot;display_name&quot;,
+          &quot;description&quot;,
+          &quot;subscribers&quot;
         ]
       }
     }
   }
 }
 </code></pre></details></section><section class="schema-section" id="key-value-schema"><h2>Key-value schema</h2><p>Published key-value store definitions, when provided by this build.</p><p>This definition is not present in the default published build. See the published README for available documentation.</p></section><section id="published-readme"><h2>Published README</h2><details><summary>Read the full published documentation</summary><h2 id="readme-reddit-subreddit-post-filter-moderation-scraper">Reddit Subreddit Post Filter &amp; Moderation Scraper</h2>
-<p>Pulling posts from a subreddit is easy; pulling only the posts you actually want is the hard part. This actor scrapes one or more public subreddits and applies a stack of server-side filters — keyword, score floor, maximum age, NSFW, stickied status, author blocklist and link-domain allow/block lists — so the dataset you get back is already narrowed to what matters.</p>
-<h2 id="readme-what-this-actor-does">What this actor does</h2>
+<p>Pull posts from public subreddits, then keep only the ones that matter. This actor reads Reddit's public subreddit listings, applies a full set of filters before it counts toward your limit, and writes clean post records with score, comments, flair, media, gallery, video, poll and crosspost data.</p>
+<p>No Reddit login, API key, cookie or proxy setup is required.</p>
+<h2 id="readme-what-it-does">What it does</h2>
 <ul>
-<li><strong>Scrapes any number of public subreddits</strong> in one run, sorted hot, new, top, rising or controversial</li>
-<li><strong>Filters posts before they reach your dataset</strong>: minimum score, maximum age in days, a title/content keyword, NSFW, stickied, and Original-Content exclusions</li>
-<li><strong>Blocks by author or link domain</strong>, or restricts results to an allowlist of domains</li>
-<li><strong>Flags subreddit-level problems</strong> (banned, quarantined, private or missing subreddits) with a clear error record instead of silently returning nothing</li>
-<li>Fields a post doesn't have (such as <code>link_flair</code> on an unflaired post, or <code>crosspost_parent</code> on a non-crosspost) are left out of that record rather than sent empty</li>
-</ul>
-<h2 id="readme-output-per-post">Output per post</h2>
-<ul>
-<li><code>post_id</code>, <code>post_name</code> — Reddit's post ID and full post name (e.g. <code>t3_abc123</code>)</li>
-<li><code>title</code>, <code>author</code>, <code>author_fullname</code> — post title and author identifiers</li>
-<li><code>subreddit</code>, <code>subreddit_prefixed</code> — subreddit name, plain and with the <code>r/</code> prefix</li>
-<li><code>content</code> — self-post text, when the post is a text post</li>
-<li><code>score</code>, <code>num_comments</code> — post score and comment count</li>
-<li><code>url</code>, <code>permalink</code> — the post's Reddit permalink</li>
-<li><code>external_url</code>, <code>domain</code> — the linked URL and its domain, for link posts</li>
-<li><code>link_flair</code> — post flair/tag text, when set</li>
-<li><code>thumbnail_url</code>, <code>preview_url</code>, <code>image_url</code> — thumbnail and media preview URLs, when available</li>
-<li><code>post_hint</code> — Reddit's classification of the post (e.g. image, link, self)</li>
-<li><code>is_self</code>, <code>is_stickied</code>, <code>is_nsfw</code>, <code>is_spoiler</code>, <code>is_promoted</code>, <code>is_original_content</code>, <code>is_gallery</code> — boolean flags, present only when true</li>
-<li><code>gallery_id</code> — gallery identifier, for gallery posts</li>
-<li><code>gilded_count</code> — number of awards/gildings on the post, when greater than zero</li>
-<li><code>num_crossposts</code>, <code>crosspost_parent</code> — crosspost count and the original post it was crossposted from, when applicable</li>
-<li><code>title_word_count</code> — word count of the title</li>
-<li><code>post_age_seconds</code> — how old the post was at scrape time, in seconds</li>
-<li><code>created_utc</code>, <code>created_at</code> — Unix timestamp and ISO 8601 datetime of post creation</li>
-<li><code>recordType</code> — set to <code>post</code> for every real post record (error records use <code>recordType: &quot;error&quot;</code> instead, with <code>reason</code> and <code>message</code> fields explaining what went wrong)</li>
+<li>Scrapes one or many public subreddits, sorted hot, new, top, rising, controversial or best.</li>
+<li>Applies the time filter for top and controversial.</li>
+<li>Keeps paging until it finds the requested number of <strong>matching</strong> posts or reaches Reddit's listing limit.</li>
+<li>Filters by keywords, score, comment count, upvote ratio, date/age, flair, post type, author, domain, NSFW and stickied status.</li>
+<li>Emits explicit <code>status</code> or <code>error</code> records when a subreddit is blocked, private, banned, missing or empty, instead of silently returning nothing.</li>
+<li>Optionally emits one community metadata record per subreddit.</li>
 </ul>
 <h2 id="readme-input">Input</h2>
 <div class="table-wrap"><table>
@@ -318,132 +861,214 @@
 <tr>
 <td><code>subreddits</code></td>
 <td>array</td>
-<td>–</td>
-<td>Subreddit names to scrape, without the <code>r/</code> prefix.</td>
+<td>—</td>
+<td>Subreddit names, <code>r/</code> names or full Reddit URLs. Required.</td>
+</tr>
+<tr>
+<td><code>sort</code></td>
+<td>select</td>
+<td><code>hot</code></td>
+<td><code>hot</code>, <code>new</code>, <code>top</code>, <code>rising</code>, <code>controversial</code> or <code>best</code>.</td>
+</tr>
+<tr>
+<td><code>timeFilter</code></td>
+<td>select</td>
+<td><code>day</code></td>
+<td><code>hour</code>, <code>day</code>, <code>week</code>, <code>month</code>, <code>year</code> or <code>all</code>; used with top/controversial.</td>
 </tr>
 <tr>
 <td><code>maxPosts</code></td>
 <td>integer</td>
 <td><code>25</code></td>
-<td>Maximum posts to scrape per subreddit (1–1000).</td>
+<td>Maximum matching posts per subreddit (1–1000).</td>
 </tr>
 <tr>
-<td><code>sort</code></td>
-<td>string</td>
-<td><code>hot</code></td>
-<td><code>hot</code>, <code>new</code>, <code>top</code>, <code>rising</code> or <code>controversial</code>.</td>
-</tr>
-<tr>
-<td><code>timeFilter</code></td>
-<td>string</td>
-<td><code>day</code></td>
-<td>Time range used with <code>top</code>/<code>controversial</code>: <code>hour</code>, <code>day</code>, <code>week</code>, <code>month</code>, <code>year</code> or <code>all</code>.</td>
-</tr>
-<tr>
-<td><code>keywordFilter</code></td>
-<td>string</td>
-<td>–</td>
-<td>Only keep posts whose title or content contains this substring (case-insensitive).</td>
-</tr>
-<tr>
-<td><code>minScore</code></td>
+<td><code>maxItems</code></td>
 <td>integer</td>
-<td>–</td>
-<td>Drop posts with a score below this number.</td>
+<td><code>1000</code></td>
+<td>Overall cap across all subreddits (1–10,000).</td>
+</tr>
+<tr>
+<td><code>includeKeywords</code></td>
+<td>array</td>
+<td><code>[]</code></td>
+<td>Keep posts containing any/all of these words or phrases.</td>
+</tr>
+<tr>
+<td><code>excludeKeywords</code></td>
+<td>array</td>
+<td><code>[]</code></td>
+<td>Drop posts containing any of these words or phrases.</td>
+</tr>
+<tr>
+<td><code>keywordMatch</code></td>
+<td>select</td>
+<td><code>any</code></td>
+<td><code>any</code>, <code>all</code> or <code>exact</code> (join include keywords into one phrase).</td>
+</tr>
+<tr>
+<td><code>searchIn</code></td>
+<td>select</td>
+<td><code>title-and-body</code></td>
+<td><code>title-and-body</code>, <code>title</code> or <code>body</code>.</td>
+</tr>
+<tr>
+<td><code>minScore</code> / <code>maxScore</code></td>
+<td>integer</td>
+<td>empty</td>
+<td>Score range.</td>
+</tr>
+<tr>
+<td><code>minComments</code> / <code>maxComments</code></td>
+<td>integer</td>
+<td>empty</td>
+<td>Comment-count range.</td>
+</tr>
+<tr>
+<td><code>minUpvoteRatio</code></td>
+<td>number</td>
+<td>empty</td>
+<td>Minimum upvote ratio, 0–1.</td>
+</tr>
+<tr>
+<td><code>postedAfter</code> / <code>postedBefore</code></td>
+<td>string</td>
+<td>empty</td>
+<td>ISO date or relative value such as <code>7 days</code> or <code>24 hours</code>.</td>
 </tr>
 <tr>
 <td><code>maxAgeDays</code></td>
 <td>integer</td>
-<td>–</td>
-<td>Drop posts older than this many days.</td>
+<td>empty</td>
+<td>Shortcut for a recent-post cutoff.</td>
+</tr>
+<tr>
+<td><code>flairAllowlist</code></td>
+<td>array</td>
+<td><code>[]</code></td>
+<td>Only these exact flair names (case-insensitive).</td>
+</tr>
+<tr>
+<td><code>postType</code></td>
+<td>select</td>
+<td><code>all</code></td>
+<td><code>all</code>, <code>text</code>, <code>link</code>, <code>image</code>, <code>video</code>, <code>gallery</code>, <code>poll</code>, <code>crosspost</code>, <code>gif</code> or <code>multi_media</code>.</td>
 </tr>
 <tr>
 <td><code>excludeStickied</code></td>
 <td>boolean</td>
 <td><code>false</code></td>
-<td>Drop pinned/stickied posts (typically mod announcements).</td>
+<td>Drop pinned posts.</td>
 </tr>
 <tr>
 <td><code>excludeNsfw</code></td>
 <td>boolean</td>
 <td><code>false</code></td>
-<td>Drop NSFW posts.</td>
+<td>Drop posts marked NSFW.</td>
 </tr>
 <tr>
-<td><code>excludeOriginalContent</code></td>
+<td><code>authorAllowlist</code> / <code>authorBlocklist</code></td>
+<td>array</td>
+<td><code>[]</code></td>
+<td>Username allow/block lists.</td>
+</tr>
+<tr>
+<td><code>domainAllowlist</code> / <code>domainBlocklist</code></td>
+<td>array</td>
+<td><code>[]</code></td>
+<td>Link-domain allow/block lists. Self-posts pass.</td>
+</tr>
+<tr>
+<td><code>includeSubredditInfo</code></td>
 <td>boolean</td>
 <td><code>false</code></td>
-<td>Drop posts marked as Original Content.</td>
-</tr>
-<tr>
-<td><code>authorBlocklist</code></td>
-<td>array</td>
-<td><code>[]</code></td>
-<td>Drop posts from these usernames (case-insensitive).</td>
-</tr>
-<tr>
-<td><code>domainAllowlist</code></td>
-<td>array</td>
-<td><code>[]</code></td>
-<td>If set, only keep posts whose link domain is in this list (self-posts always pass).</td>
-</tr>
-<tr>
-<td><code>domainBlocklist</code></td>
-<td>array</td>
-<td><code>[]</code></td>
-<td>Drop posts whose link domain is in this list.</td>
+<td>Emit one community metadata record per subreddit.</td>
 </tr>
 </tbody>
 </table></div>
-<h3 id="readme-example-clean-high-score-posts-only">Example: clean, high-score posts only</h3>
+<h3 id="readme-examples">Examples</h3>
+<p>High-score, clean posts:</p>
 <pre><code class="language-json">{
-    &quot;subreddits&quot;: [&quot;python&quot;, &quot;programming&quot;],
-    &quot;sort&quot;: &quot;top&quot;,
-    &quot;timeFilter&quot;: &quot;week&quot;,
-    &quot;minScore&quot;: 100,
-    &quot;excludeNsfw&quot;: true,
-    &quot;excludeStickied&quot;: true,
-    &quot;maxPosts&quot;: 50
+  &quot;subreddits&quot;: [&quot;python&quot;, &quot;programming&quot;],
+  &quot;sort&quot;: &quot;top&quot;,
+  &quot;timeFilter&quot;: &quot;week&quot;,
+  &quot;minScore&quot;: 100,
+  &quot;excludeNsfw&quot;: true,
+  &quot;excludeStickied&quot;: true,
+  &quot;maxPosts&quot;: 50
 }
 </code></pre>
-<h3 id="readme-example-keyword-monitoring-across-subreddits">Example: keyword monitoring across subreddits</h3>
+<p>Keyword monitoring:</p>
 <pre><code class="language-json">{
-    &quot;subreddits&quot;: [&quot;technology&quot;, &quot;artificial&quot;],
-    &quot;sort&quot;: &quot;new&quot;,
-    &quot;keywordFilter&quot;: &quot;regulation&quot;,
-    &quot;maxAgeDays&quot;: 7,
-    &quot;maxPosts&quot;: 100
+  &quot;subreddits&quot;: [&quot;technology&quot;, &quot;artificial&quot;],
+  &quot;sort&quot;: &quot;new&quot;,
+  &quot;includeKeywords&quot;: [&quot;regulation&quot;, &quot;policy&quot;],
+  &quot;excludeKeywords&quot;: [&quot;giveaway&quot;],
+  &quot;postedAfter&quot;: &quot;7 days&quot;,
+  &quot;maxPosts&quot;: 100
 }
 </code></pre>
-<h3 id="readme-example-trusted-domain-link-roundup">Example: trusted-domain link roundup</h3>
+<p>Trusted-domain links only:</p>
 <pre><code class="language-json">{
-    &quot;subreddits&quot;: [&quot;machinelearning&quot;],
-    &quot;sort&quot;: &quot;hot&quot;,
-    &quot;domainAllowlist&quot;: [&quot;arxiv.org&quot;, &quot;github.com&quot;],
-    &quot;maxPosts&quot;: 30
+  &quot;subreddits&quot;: [&quot;machinelearning&quot;],
+  &quot;sort&quot;: &quot;hot&quot;,
+  &quot;domainAllowlist&quot;: [&quot;arxiv.org&quot;, &quot;github.com&quot;],
+  &quot;maxPosts&quot;: 30
 }
 </code></pre>
-<h2 id="readme-use-cases">Use cases</h2>
+<h2 id="readme-output">Output</h2>
+<p>Each post record includes:</p>
 <ul>
-<li><strong>Community monitoring</strong> — track keyword mentions across one or more subreddits, filtered to recent, non-stickied posts</li>
-<li><strong>Content curation</strong> — build a trusted-source link digest using <code>domainAllowlist</code></li>
-<li><strong>Brand or topic tracking</strong> — follow discussion volume and sentiment proxies (score, comments) for a term over time</li>
-<li><strong>Moderation research</strong> — audit stickied, NSFW or Original-Content posts separately using the exclude flags in reverse</li>
-<li><strong>Noise reduction</strong> — drop known spam authors or domains with <code>authorBlocklist</code>/<code>domainBlocklist</code> before the data reaches your pipeline</li>
+<li><code>recordType</code> (<code>post</code>), <code>post_id</code>, <code>post_name</code>, <code>title</code></li>
+<li><code>author</code>, <code>author_fullname</code>, <code>author_id</code></li>
+<li><code>subreddit</code>, <code>subreddit_prefixed</code>, <code>subreddit_id</code></li>
+<li><code>content</code>, <code>content_length</code> (self-post body; <code>content</code> is capped at 1,000 characters)</li>
+<li><code>score</code>, <code>num_comments</code>, <code>upvote_ratio</code></li>
+<li><code>url</code>, <code>permalink</code>, <code>old_reddit_url</code>, <code>external_url</code>, <code>domain</code></li>
+<li><code>post_type</code>, <code>post_hint</code>, <code>language</code></li>
+<li><code>link_flair</code>, <code>link_flair_background_color</code></li>
+<li><code>thumbnail_url</code>, <code>preview_url</code>, <code>image_url</code>, <code>image_urls</code></li>
+<li><code>gallery_id</code>, <code>gallery_images</code>, <code>gallery_count</code></li>
+<li><code>is_self</code>, <code>is_stickied</code>, <code>is_nsfw</code>, <code>is_spoiler</code>, <code>is_gallery</code>, <code>is_crosspost</code></li>
+<li><code>crosspost_parent</code>, <code>crosspost_parent_id</code>, <code>crosspost_parent_subreddit</code>, <code>crosspost_parent_url</code></li>
+<li><code>total_awards_received</code>, <code>top_award_id</code>, <code>top_award_icon_url</code></li>
+<li><code>has_media</code>, <code>media_type</code></li>
+<li><code>video_url</code>, <code>video_hls_url</code>, <code>video_mp4_url</code>, <code>video_poster_url</code>, <code>video_duration_seconds</code>, <code>video_width</code>, <code>video_height</code>, <code>video_bitrate_kbps</code></li>
+<li><code>embed_provider</code>, <code>embed_html</code>, <code>embed_title</code></li>
+<li><code>poll_data</code> (closed state, total votes, option positions/votes where rendered)</li>
+<li><code>title_word_count</code>, <code>post_age_seconds</code>, <code>created_utc</code>, <code>created_at</code>, <code>crawled_at</code></li>
+</ul>
+<p>Optional community record (<code>recordType: &quot;subreddit&quot;</code>): <code>subreddit</code>, <code>subreddit_prefixed</code>, <code>subreddit_id</code>, <code>display_name</code>, <code>description</code>, <code>subscribers</code>, <code>created_utc</code>, <code>created_at</code>, <code>crawled_at</code>. <code>weekly_active_users</code> and <code>weekly_contributions</code> are included only when the direct Reddit page header provides them; the Arctic Shift metadata fallback does not expose those two values, so they are omitted rather than fabricated.</p>
+<p>Status/error records explain what happened without failing the run:</p>
+<ul>
+<li><code>recordType: &quot;error&quot;</code> with <code>reason</code> (<code>blocked</code>, <code>login_required</code>, <code>private</code>, <code>banned</code>, <code>not_found</code>, <code>nsfw_gated</code>, <code>rate_limited</code>, <code>http_error</code>), <code>message</code>, <code>subreddit</code>, optional <code>page_title</code> and <code>httpStatus</code>.</li>
+<li><code>recordType: &quot;status&quot;</code> with <code>reason</code> (<code>empty</code>, <code>no_matches</code>, <code>rising_cap</code>, <code>info_unavailable</code>), <code>message</code>, <code>postCount</code>, <code>filteredCount</code>.</li>
+</ul>
+<p>Fields Reddit does not expose anonymously are never fabricated. <code>is_promoted</code>, <code>is_original_content</code>, <code>gilded_count</code> and <code>num_crossposts</code> remain documented for compatibility but are omitted because the public listing does not carry reliable values. <code>old_reddit_url</code> may redirect to a login page on old Reddit.</p>
+<h2 id="readme-limits-and-behavior">Limits and behavior</h2>
+<ul>
+<li>Reddit's full HTML listing feeds stop at roughly <strong>1,000 posts</strong> for hot/new and roughly <strong>500</strong> for top/controversial. The cloud RSS fallback is capped at <strong>100 posts per subreddit</strong>. Split by sort, time range or subreddit to collect more.</li>
+<li><code>rising</code> is a small live listing; it may return fewer posts than <code>maxPosts</code>.</li>
+<li><code>maxPosts</code> counts <strong>matching</strong> posts, not scanned posts. If a filter is restrictive, the actor pages deeper until it finds matches or reaches the listing ceiling.</li>
+<li>NSFW-only communities are age-gated for anonymous visitors and may appear as <code>not_found</code> or <code>nsfw_gated</code>. Per-post NSFW filtering works when the listing carries the flag.</li>
+<li>Poll option labels are not always rendered in the public listing; vote counts and positions are captured when present.</li>
+<li>Video HLS/MP4 URLs can be signed and expire. <code>video_url</code> uses a stable low-resolution fallback; the HLS/MP4 fields are provided for convenience.</li>
+<li>If Reddit blocks the direct listing, the actor first reads the same listing through a Google Translate mirror. That mirror keeps the full post fields. If it is unavailable, the actor falls back to the public Atom/RSS feed. The RSS fallback carries title, author, URL, body and timestamps, but not score, comment count, media, gallery, video or poll fields; the run status message says when it is used.</li>
+<li>If score, comment-count or upvote-ratio filters are set and only RSS is available, the actor does <strong>not</strong> silently pass those filters. It emits a clear <code>metrics_unavailable</code> error record for that subreddit and skips it, rather than returning unfiltered posts as if they matched.</li>
+<li>When <code>includeSubredditInfo</code> is enabled, the actor tries the direct subreddit page header first and falls back to Arctic Shift's public <code>subreddits/search</code> endpoint. Arctic supplies subscribers, description and creation time; weekly active users and weekly contributions are not available there, so those fields are omitted.</li>
+<li>The actor paces requests and backs off on rate limits. It never uses a wall-clock stop that silently under-delivers rows.</li>
 </ul>
 <h2 id="readme-faq">FAQ</h2>
-<p><strong>Do I need to log in to Reddit?</strong>
-No — only public subreddits are scraped, and no account or cookie is required.</p>
-<p><strong>Can I scrape private or quarantined subreddits?</strong>
-No. If a subreddit is banned, quarantined, private or doesn't exist, the actor returns a single error record with <code>recordType: &quot;error&quot;</code> and a <code>reason</code> explaining the subreddit's status, instead of failing the whole run.</p>
-<p><strong>Why is <code>content</code> missing from a post?</strong>
-<code>content</code> only holds text for self (text) posts. Link posts have no self-text to extract, so the field is left out.</p>
-<p><strong>How do <code>domainAllowlist</code> and <code>domainBlocklist</code> interact?</strong>
-<code>domainAllowlist</code>, when set, restricts results to only those link domains (self-posts always pass). <code>domainBlocklist</code> removes specific domains regardless of the allowlist. Use one or the other for most cases.</p>
-<p><strong>Why do filters reduce my post count below <code>maxPosts</code>?</strong>
-<code>maxPosts</code> caps how many posts are fetched from the subreddit before filtering; your keyword, score, age and exclusion filters are then applied on top, so the final count can be lower.</p>
-<p><strong>What happens with <code>timeFilter</code> outside <code>top</code>/<code>controversial</code>?</strong>
-It's ignored for <code>hot</code>, <code>new</code> and <code>rising</code>, since those sorts aren't time-windowed on Reddit.</p>
+<p><strong>Do I need a Reddit account, API key or proxy?</strong>
+No. The actor reads public listing HTML directly and escalates its own internal proxy only if Reddit blocks the request.</p>
+<p><strong>Why did I get a status or error record instead of posts?</strong>
+The subreddit may be private, banned, missing, age-gated, temporarily blocked or empty. The record's <code>reason</code> and <code>message</code> explain which case applies. The rest of the run continues.</p>
+<p><strong>Why did I get a <code>metrics_unavailable</code> error?</strong>
+Reddit’s RSS fallback has no score, comment count or upvote ratio. The actor will not pretend a metric filter passed on RSS-only data. It skips that subreddit and emits the error; retry when the full listing or Translate mirror is available, or remove the metric filter.</p>
+<p><strong>Why are my filters returning fewer posts than <code>maxPosts</code>?</strong>
+<code>maxPosts</code> is the number of posts that pass your filters. If the source runs out before that, the actor returns what exists. The run status message reports filtered outages.</p>
+<p><strong>Can I scrape comments?</strong>
+No. This actor is focused on subreddit posts and moderation filters. Use a dedicated Reddit comment scraper for threads.</p>
 <p><strong>Is this affiliated with Reddit?</strong>
-No, this is an independent, third-party actor that reads Reddit's public subreddit pages. It is not affiliated with or endorsed by Reddit, Inc.</p>
-</details></section><section id="python-quickstart"><h2>Python quickstart</h2><p>Use a schema-derived input and the Python standard library to start a run. An Apify account and token are required for execution.</p><p><a href="/apify-actor-examples/guides/BDohv5moYWUVpwVMB/">Open the step-by-step Python guide →</a></p></section><p class="source-note">Source build <code>TzfTWaw9SpLUgoSsA</code>. Documentation is regenerated from the default published build; private drafts are not included.</p></article></div></main><footer class="footer"><strong>Nimbryxo Studio</strong><div class="footer-links"><a href="/apify-actor-examples/topics/">Topics</a><a href="/apify-actor-examples/sources/">Documentation sources</a><a href="https://apify.com/nimbryxo-studio">Apify</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></div></footer></body></html>
+No. This is an independent, third-party actor that reads public Reddit pages. It is not affiliated with or endorsed by Reddit, Inc.</p>
+</details></section><section id="python-quickstart"><h2>Python quickstart</h2><p>Use a schema-derived input and the Python standard library to start a run. An Apify account and token are required for execution.</p><p><a href="/apify-actor-examples/guides/BDohv5moYWUVpwVMB/">Open the step-by-step Python guide →</a></p></section><p class="source-note">Source build <code>BLjZQoaYOw4cv3DKH</code>. Documentation is regenerated from the default published build; private drafts are not included.</p></article></div></main><footer class="footer"><strong>Nimbryxo Studio</strong><div class="footer-links"><a href="/apify-actor-examples/topics/">Topics</a><a href="/apify-actor-examples/sources/">Documentation sources</a><a href="https://apify.com/nimbryxo-studio">Apify</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></div></footer></body></html>

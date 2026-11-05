@@ -1,13 +1,31 @@
 {
   "actorOutputSchemaVersion": 1,
-  "description": "Products from Coupang — South Korea's largest e-commerce platform. Includes pricing, ratings, Rocket delivery flags, seller info, and product URLs.",
+  "description": "Coupang best-seller products, keyword suggestions, or category nodes. Product records include current/original price, unit price, coupon, rating, Rocket delivery, and a category breadcrumb. Best sellers are limited to 30 products per page; optional child-category fan-out continues until maxItems. Search, product details, and reviews require a Korean residential proxy.",
   "properties": {
-    "products": {
-      "description": "Dataset containing all scraped Coupang products.",
+    "categories": {
+      "description": "Category records from the Coupang category tree (recordType=category).",
       "template": "{{links.apiDefaultDatasetUrl}}/items",
-      "title": "Coupang products",
+      "title": "Category tree",
+      "type": "string"
+    },
+    "keywordSuggestions": {
+      "description": "Keyword suggestion records (recordType=keywordSuggestion).",
+      "template": "{{links.apiDefaultDatasetUrl}}/items",
+      "title": "Keyword suggestions",
+      "type": "string"
+    },
+    "prices": {
+      "description": "Product records with current price, original price, unit price, coupon, discount, rating, Rocket flag, and categories breadcrumb.",
+      "template": "{{links.apiDefaultDatasetUrl}}/items",
+      "title": "Prices",
+      "type": "string"
+    },
+    "products": {
+      "description": "Product records from Coupang best100 (recordType=product), including price, unit price, coupon, rating, Rocket delivery, and categories breadcrumb.",
+      "template": "{{links.apiDefaultDatasetUrl}}/items",
+      "title": "Best-seller products",
       "type": "string"
     }
   },
-  "title": "Coupang Product Finder with Rocket Delivery Flags Output"
+  "title": "Coupang Best Sellers Output"
 }

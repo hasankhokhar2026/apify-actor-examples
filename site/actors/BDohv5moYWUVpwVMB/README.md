@@ -1,118 +1,145 @@
 # Reddit Subreddit Post Filter & Moderation Scraper
 
-Pulling posts from a subreddit is easy; pulling only the posts you actually want is the hard part. This actor scrapes one or more public subreddits and applies a stack of server-side filters — keyword, score floor, maximum age, NSFW, stickied status, author blocklist and link-domain allow/block lists — so the dataset you get back is already narrowed to what matters.
+Pull posts from public subreddits, then keep only the ones that matter. This actor reads Reddit's public subreddit listings, applies a full set of filters before it counts toward your limit, and writes clean post records with score, comments, flair, media, gallery, video, poll and crosspost data.
 
-## What this actor does
+No Reddit login, API key, cookie or proxy setup is required.
 
-- **Scrapes any number of public subreddits** in one run, sorted hot, new, top, rising or controversial
-- **Filters posts before they reach your dataset**: minimum score, maximum age in days, a title/content keyword, NSFW, stickied, and Original-Content exclusions
-- **Blocks by author or link domain**, or restricts results to an allowlist of domains
-- **Flags subreddit-level problems** (banned, quarantined, private or missing subreddits) with a clear error record instead of silently returning nothing
-- Fields a post doesn't have (such as `link_flair` on an unflaired post, or `crosspost_parent` on a non-crosspost) are left out of that record rather than sent empty
+## What it does
 
-## Output per post
-
-- `post_id`, `post_name` — Reddit's post ID and full post name (e.g. `t3_abc123`)
-- `title`, `author`, `author_fullname` — post title and author identifiers
-- `subreddit`, `subreddit_prefixed` — subreddit name, plain and with the `r/` prefix
-- `content` — self-post text, when the post is a text post
-- `score`, `num_comments` — post score and comment count
-- `url`, `permalink` — the post's Reddit permalink
-- `external_url`, `domain` — the linked URL and its domain, for link posts
-- `link_flair` — post flair/tag text, when set
-- `thumbnail_url`, `preview_url`, `image_url` — thumbnail and media preview URLs, when available
-- `post_hint` — Reddit's classification of the post (e.g. image, link, self)
-- `is_self`, `is_stickied`, `is_nsfw`, `is_spoiler`, `is_promoted`, `is_original_content`, `is_gallery` — boolean flags, present only when true
-- `gallery_id` — gallery identifier, for gallery posts
-- `gilded_count` — number of awards/gildings on the post, when greater than zero
-- `num_crossposts`, `crosspost_parent` — crosspost count and the original post it was crossposted from, when applicable
-- `title_word_count` — word count of the title
-- `post_age_seconds` — how old the post was at scrape time, in seconds
-- `created_utc`, `created_at` — Unix timestamp and ISO 8601 datetime of post creation
-- `recordType` — set to `post` for every real post record (error records use `recordType: "error"` instead, with `reason` and `message` fields explaining what went wrong)
+- Scrapes one or many public subreddits, sorted hot, new, top, rising, controversial or best.
+- Applies the time filter for top and controversial.
+- Keeps paging until it finds the requested number of **matching** posts or reaches Reddit's listing limit.
+- Filters by keywords, score, comment count, upvote ratio, date/age, flair, post type, author, domain, NSFW and stickied status.
+- Emits explicit `status` or `error` records when a subreddit is blocked, private, banned, missing or empty, instead of silently returning nothing.
+- Optionally emits one community metadata record per subreddit.
 
 ## Input
 
 | Field | Type | Default | Description |
 |---|---|---|---|
-| `subreddits` | array | – | Subreddit names to scrape, without the `r/` prefix. |
-| `maxPosts` | integer | `25` | Maximum posts to scrape per subreddit (1–1000). |
-| `sort` | string | `hot` | `hot`, `new`, `top`, `rising` or `controversial`. |
-| `timeFilter` | string | `day` | Time range used with `top`/`controversial`: `hour`, `day`, `week`, `month`, `year` or `all`. |
-| `keywordFilter` | string | – | Only keep posts whose title or content contains this substring (case-insensitive). |
-| `minScore` | integer | – | Drop posts with a score below this number. |
-| `maxAgeDays` | integer | – | Drop posts older than this many days. |
-| `excludeStickied` | boolean | `false` | Drop pinned/stickied posts (typically mod announcements). |
-| `excludeNsfw` | boolean | `false` | Drop NSFW posts. |
-| `excludeOriginalContent` | boolean | `false` | Drop posts marked as Original Content. |
-| `authorBlocklist` | array | `[]` | Drop posts from these usernames (case-insensitive). |
-| `domainAllowlist` | array | `[]` | If set, only keep posts whose link domain is in this list (self-posts always pass). |
-| `domainBlocklist` | array | `[]` | Drop posts whose link domain is in this list. |
+| `subreddits` | array | — | Subreddit names, `r/` names or full Reddit URLs. Required. |
+| `sort` | select | `hot` | `hot`, `new`, `top`, `rising`, `controversial` or `best`. |
+| `timeFilter` | select | `day` | `hour`, `day`, `week`, `month`, `year` or `all`; used with top/controversial. |
+| `maxPosts` | integer | `25` | Maximum matching posts per subreddit (1–1000). |
+| `maxItems` | integer | `1000` | Overall cap across all subreddits (1–10,000). |
+| `includeKeywords` | array | `[]` | Keep posts containing any/all of these words or phrases. |
+| `excludeKeywords` | array | `[]` | Drop posts containing any of these words or phrases. |
+| `keywordMatch` | select | `any` | `any`, `all` or `exact` (join include keywords into one phrase). |
+| `searchIn` | select | `title-and-body` | `title-and-body`, `title` or `body`. |
+| `minScore` / `maxScore` | integer | empty | Score range. |
+| `minComments` / `maxComments` | integer | empty | Comment-count range. |
+| `minUpvoteRatio` | number | empty | Minimum upvote ratio, 0–1. |
+| `postedAfter` / `postedBefore` | string | empty | ISO date or relative value such as `7 days` or `24 hours`. |
+| `maxAgeDays` | integer | empty | Shortcut for a recent-post cutoff. |
+| `flairAllowlist` | array | `[]` | Only these exact flair names (case-insensitive). |
+| `postType` | select | `all` | `all`, `text`, `link`, `image`, `video`, `gallery`, `poll`, `crosspost`, `gif` or `multi_media`. |
+| `excludeStickied` | boolean | `false` | Drop pinned posts. |
+| `excludeNsfw` | boolean | `false` | Drop posts marked NSFW. |
+| `authorAllowlist` / `authorBlocklist` | array | `[]` | Username allow/block lists. |
+| `domainAllowlist` / `domainBlocklist` | array | `[]` | Link-domain allow/block lists. Self-posts pass. |
+| `includeSubredditInfo` | boolean | `false` | Emit one community metadata record per subreddit. |
 
-### Example: clean, high-score posts only
+### Examples
 
-```json
-{
-    "subreddits": ["python", "programming"],
-    "sort": "top",
-    "timeFilter": "week",
-    "minScore": 100,
-    "excludeNsfw": true,
-    "excludeStickied": true,
-    "maxPosts": 50
-}
-```
-
-### Example: keyword monitoring across subreddits
+High-score, clean posts:
 
 ```json
 {
-    "subreddits": ["technology", "artificial"],
-    "sort": "new",
-    "keywordFilter": "regulation",
-    "maxAgeDays": 7,
-    "maxPosts": 100
+  "subreddits": ["python", "programming"],
+  "sort": "top",
+  "timeFilter": "week",
+  "minScore": 100,
+  "excludeNsfw": true,
+  "excludeStickied": true,
+  "maxPosts": 50
 }
 ```
 
-### Example: trusted-domain link roundup
+Keyword monitoring:
 
 ```json
 {
-    "subreddits": ["machinelearning"],
-    "sort": "hot",
-    "domainAllowlist": ["arxiv.org", "github.com"],
-    "maxPosts": 30
+  "subreddits": ["technology", "artificial"],
+  "sort": "new",
+  "includeKeywords": ["regulation", "policy"],
+  "excludeKeywords": ["giveaway"],
+  "postedAfter": "7 days",
+  "maxPosts": 100
 }
 ```
 
-## Use cases
+Trusted-domain links only:
 
-- **Community monitoring** — track keyword mentions across one or more subreddits, filtered to recent, non-stickied posts
-- **Content curation** — build a trusted-source link digest using `domainAllowlist`
-- **Brand or topic tracking** — follow discussion volume and sentiment proxies (score, comments) for a term over time
-- **Moderation research** — audit stickied, NSFW or Original-Content posts separately using the exclude flags in reverse
-- **Noise reduction** — drop known spam authors or domains with `authorBlocklist`/`domainBlocklist` before the data reaches your pipeline
+```json
+{
+  "subreddits": ["machinelearning"],
+  "sort": "hot",
+  "domainAllowlist": ["arxiv.org", "github.com"],
+  "maxPosts": 30
+}
+```
+
+## Output
+
+Each post record includes:
+
+- `recordType` (`post`), `post_id`, `post_name`, `title`
+- `author`, `author_fullname`, `author_id`
+- `subreddit`, `subreddit_prefixed`, `subreddit_id`
+- `content`, `content_length` (self-post body; `content` is capped at 1,000 characters)
+- `score`, `num_comments`, `upvote_ratio`
+- `url`, `permalink`, `old_reddit_url`, `external_url`, `domain`
+- `post_type`, `post_hint`, `language`
+- `link_flair`, `link_flair_background_color`
+- `thumbnail_url`, `preview_url`, `image_url`, `image_urls`
+- `gallery_id`, `gallery_images`, `gallery_count`
+- `is_self`, `is_stickied`, `is_nsfw`, `is_spoiler`, `is_gallery`, `is_crosspost`
+- `crosspost_parent`, `crosspost_parent_id`, `crosspost_parent_subreddit`, `crosspost_parent_url`
+- `total_awards_received`, `top_award_id`, `top_award_icon_url`
+- `has_media`, `media_type`
+- `video_url`, `video_hls_url`, `video_mp4_url`, `video_poster_url`, `video_duration_seconds`, `video_width`, `video_height`, `video_bitrate_kbps`
+- `embed_provider`, `embed_html`, `embed_title`
+- `poll_data` (closed state, total votes, option positions/votes where rendered)
+- `title_word_count`, `post_age_seconds`, `created_utc`, `created_at`, `crawled_at`
+
+Optional community record (`recordType: "subreddit"`): `subreddit`, `subreddit_prefixed`, `subreddit_id`, `display_name`, `description`, `subscribers`, `created_utc`, `created_at`, `crawled_at`. `weekly_active_users` and `weekly_contributions` are included only when the direct Reddit page header provides them; the Arctic Shift metadata fallback does not expose those two values, so they are omitted rather than fabricated.
+
+Status/error records explain what happened without failing the run:
+
+- `recordType: "error"` with `reason` (`blocked`, `login_required`, `private`, `banned`, `not_found`, `nsfw_gated`, `rate_limited`, `http_error`), `message`, `subreddit`, optional `page_title` and `httpStatus`.
+- `recordType: "status"` with `reason` (`empty`, `no_matches`, `rising_cap`, `info_unavailable`), `message`, `postCount`, `filteredCount`.
+
+Fields Reddit does not expose anonymously are never fabricated. `is_promoted`, `is_original_content`, `gilded_count` and `num_crossposts` remain documented for compatibility but are omitted because the public listing does not carry reliable values. `old_reddit_url` may redirect to a login page on old Reddit.
+
+## Limits and behavior
+
+- Reddit's full HTML listing feeds stop at roughly **1,000 posts** for hot/new and roughly **500** for top/controversial. The cloud RSS fallback is capped at **100 posts per subreddit**. Split by sort, time range or subreddit to collect more.
+- `rising` is a small live listing; it may return fewer posts than `maxPosts`.
+- `maxPosts` counts **matching** posts, not scanned posts. If a filter is restrictive, the actor pages deeper until it finds matches or reaches the listing ceiling.
+- NSFW-only communities are age-gated for anonymous visitors and may appear as `not_found` or `nsfw_gated`. Per-post NSFW filtering works when the listing carries the flag.
+- Poll option labels are not always rendered in the public listing; vote counts and positions are captured when present.
+- Video HLS/MP4 URLs can be signed and expire. `video_url` uses a stable low-resolution fallback; the HLS/MP4 fields are provided for convenience.
+- If Reddit blocks the direct listing, the actor first reads the same listing through a Google Translate mirror. That mirror keeps the full post fields. If it is unavailable, the actor falls back to the public Atom/RSS feed. The RSS fallback carries title, author, URL, body and timestamps, but not score, comment count, media, gallery, video or poll fields; the run status message says when it is used.
+- If score, comment-count or upvote-ratio filters are set and only RSS is available, the actor does **not** silently pass those filters. It emits a clear `metrics_unavailable` error record for that subreddit and skips it, rather than returning unfiltered posts as if they matched.
+- When `includeSubredditInfo` is enabled, the actor tries the direct subreddit page header first and falls back to Arctic Shift's public `subreddits/search` endpoint. Arctic supplies subscribers, description and creation time; weekly active users and weekly contributions are not available there, so those fields are omitted.
+- The actor paces requests and backs off on rate limits. It never uses a wall-clock stop that silently under-delivers rows.
 
 ## FAQ
 
-**Do I need to log in to Reddit?**
-No — only public subreddits are scraped, and no account or cookie is required.
+**Do I need a Reddit account, API key or proxy?**
+No. The actor reads public listing HTML directly and escalates its own internal proxy only if Reddit blocks the request.
 
-**Can I scrape private or quarantined subreddits?**
-No. If a subreddit is banned, quarantined, private or doesn't exist, the actor returns a single error record with `recordType: "error"` and a `reason` explaining the subreddit's status, instead of failing the whole run.
+**Why did I get a status or error record instead of posts?**
+The subreddit may be private, banned, missing, age-gated, temporarily blocked or empty. The record's `reason` and `message` explain which case applies. The rest of the run continues.
 
-**Why is `content` missing from a post?**
-`content` only holds text for self (text) posts. Link posts have no self-text to extract, so the field is left out.
+**Why did I get a `metrics_unavailable` error?**
+Reddit’s RSS fallback has no score, comment count or upvote ratio. The actor will not pretend a metric filter passed on RSS-only data. It skips that subreddit and emits the error; retry when the full listing or Translate mirror is available, or remove the metric filter.
 
-**How do `domainAllowlist` and `domainBlocklist` interact?**
-`domainAllowlist`, when set, restricts results to only those link domains (self-posts always pass). `domainBlocklist` removes specific domains regardless of the allowlist. Use one or the other for most cases.
+**Why are my filters returning fewer posts than `maxPosts`?**
+`maxPosts` is the number of posts that pass your filters. If the source runs out before that, the actor returns what exists. The run status message reports filtered outages.
 
-**Why do filters reduce my post count below `maxPosts`?**
-`maxPosts` caps how many posts are fetched from the subreddit before filtering; your keyword, score, age and exclusion filters are then applied on top, so the final count can be lower.
-
-**What happens with `timeFilter` outside `top`/`controversial`?**
-It's ignored for `hot`, `new` and `rising`, since those sorts aren't time-windowed on Reddit.
+**Can I scrape comments?**
+No. This actor is focused on subreddit posts and moderation filters. Use a dedicated Reddit comment scraper for threads.
 
 **Is this affiliated with Reddit?**
-No, this is an independent, third-party actor that reads Reddit's public subreddit pages. It is not affiliated with or endorsed by Reddit, Inc.
+No. This is an independent, third-party actor that reads public Reddit pages. It is not affiliated with or endorsed by Reddit, Inc.

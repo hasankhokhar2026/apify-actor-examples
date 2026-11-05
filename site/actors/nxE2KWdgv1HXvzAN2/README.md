@@ -1,129 +1,153 @@
 # TikTok Follow Graph & Audience Export Scraper
 
-Every TikTok profile has two sides to its follow graph: who it follows, and who follows it back. This actor exports either side (or both) as full user records — not just handles, but bio, verification status and growth metrics for every account in the list. The following side is open to anyone; the followers side needs you to supply your own logged-in session cookie, since TikTok's followers endpoint checks for one.
+Export the two sides of a public TikTok account's follow graph: the accounts that follow it, the accounts it follows, or both. Every row is a real public profile with exact audience stats, source context, and optional contact signals from the bio. The actor needs no TikTok login, session cookie, or API key.
+
+TikTok's web app signs its own list requests. This actor asks the page to make those requests, so public follower and following lists are reachable without a user session. Private accounts and hidden following lists are not bypassed; the run reports them instead of inventing rows.
 
 ## What this actor does
 
-- Accepts TikTok usernames (with or without @) and/or full profile URLs
-- Scrapes the following list — accounts the target user follows — without any authentication
-- Scrapes the followers list — accounts that follow the target user — when a `sessionCookie` is provided
-- Can scrape both lists in a single run
-- Returns username, display name, bio, avatar, verification status, and organization flag per user
-- Optionally includes follower/following/heart/video counts from statsV2 for each user
-- Paginates up to 5,000 users per profile
-- Empty fields are omitted
-
-## Output per user
-
-- `sourceUsername` — the profile that was queried
-- `sourceUserId` — TikTok user ID of the queried profile
-- `listType` — `"followers"` or `"following"`
-- `userId` — TikTok user ID (18–19 digit string)
-- `secUid` — TikTok secUid for API calls
-- `username` — TikTok @handle
-- `displayName` — display name / nickname
-- `verified` — whether this user has a verified badge
-- `isOrganization` — whether this is a business/organization account
-- `privateAccount` — whether this account is private
-- `bio` — profile bio/signature text
-- `avatarUrl` — avatar image URL
-- `followerCount` — number of followers (from statsV2)
-- `followingCount` — number of accounts this user follows (from statsV2)
-- `heartCount` — total likes received across all videos (from statsV2)
-- `videoCount` — number of public videos posted (from statsV2)
-- `scrapedAt` — ISO 8601 timestamp when the record was collected
+- Exports **followers** (scene 67) and **following** (scene 21) for public profiles.
+- Accepts usernames, `@handles`, and profile URLs, including `m.tiktok.com` links.
+- Works on one profile or a batch of profiles in the same run.
+- Walks each list cursor by cursor, not just the first page.
+- Adds exact follower, following, likes-received, video, likes-given, and friend counts from TikTok's `statsV2`.
+- Can filter the audience by verification, TikTok Shop seller status, privacy, follower range, bio/name keywords, or the presence of a public bio email.
+- Supports both lists in one run.
+- Reports hidden/private lists and source shortfalls in the run status and `RUN_SUMMARY`, never as fake rows.
 
 ## Input
 
-| Field | Type | Default | Description |
+| Field | Type | Default | What it does |
 |---|---|---|---|
-| `usernames` | array | — | TikTok usernames to scrape (with or without @) |
-| `profileUrls` | array | — | Full TikTok profile URLs as alternative or additional input |
-| `listType` | string | `"following"` | `"following"` (no cookie needed), `"followers"` (requires sessionCookie), or `"both"` |
-| `maxUsersPerProfile` | integer | `100` | Maximum users to fetch per profile (up to 5,000) |
-| `includeStats` | boolean | `true` | Include follower/following/heart/video counts per user |
-| `sessionCookie` | string | — | TikTok `sessionid` cookie value — required for followers mode |
+| `profiles` | string list | - | TikTok usernames, `@handles`, or profile URLs. Paste one per line. |
+| `listType` | select | `following` | `followers`, `following`, or `both`. |
+| `maxUsersPerProfile` | integer | `100` | Maximum rows per requested list (1-5000). Each list gets this cap. |
+| `includeStats` | boolean | `true` | Adds follower, following, likes-received, video, likes-given, and friend counts. |
+| `includeBioEmail` | boolean | `false` | Adds a public email from the bio when one is present. |
+| `onlyVerified` | boolean | `false` | Keeps only verified accounts. |
+| `sellerOnly` | boolean | `false` | Keeps only TikTok Shop sellers. |
+| `excludePrivate` | boolean | `false` | Skips private accounts. |
+| `minFollowers` | integer | `0` | Minimum follower count for a listed account; 0 = off. |
+| `maxFollowers` | integer | `0` | Maximum follower count for a listed account; 0 = no maximum. |
+| `bioKeywords` | string list | `[]` | Keeps rows whose bio or display name contains any keyword (case-insensitive). |
+| `onlyWithEmail` | boolean | `false` | Keeps only rows with a public bio email; also fills `bioEmail`. |
+| `scanLimit` | integer | `0` | Maximum list rows to scan before stopping; 0 = automatic (10x the row cap, up to 10,000). Raise it for rare filters. |
 
-### Example: Following list — no cookie needed
+`profiles` is not marked required in the schema so saved tasks that still send the legacy `usernames` or `profileUrls` keys keep running. The actor reads those legacy keys, maps them onto `profiles`, and fails clearly only when no valid target remains. A legacy `sessionCookie` is accepted but ignored; it is no longer needed.
+
+### Example: followers
 
 ```json
 {
-  "usernames": ["natgeo"],
-  "listType": "following",
-  "maxUsersPerProfile": 30,
+  "profiles": ["natgeo"],
+  "listType": "followers",
+  "maxUsersPerProfile": 100,
   "includeStats": true
 }
 ```
 
-### Example: Followers list — requires sessionCookie
+### Example: both lists with filters
 
 ```json
 {
-  "usernames": ["natgeo"],
-  "listType": "followers",
+  "profiles": [
+    "https://www.tiktok.com/@sephora",
+    "@natgeo"
+  ],
+  "listType": "both",
   "maxUsersPerProfile": 500,
   "includeStats": true,
-  "sessionCookie": "your_sessionid_value_here"
+  "includeBioEmail": true,
+  "excludePrivate": true,
+  "minFollowers": 1000,
+  "bioKeywords": ["beauty", "skincare"]
 }
 ```
 
-### Example: Both lists for multiple profiles
+## Output
 
-```json
-{
-  "usernames": ["natgeo", "bbcnews"],
-  "listType": "both",
-  "maxUsersPerProfile": 200,
-  "includeStats": true,
-  "sessionCookie": "your_sessionid_value_here"
-}
-```
+One dataset row is one account in one requested list. The same account can appear once in `followers` and once in `following` because those are different relationships.
 
-### Example: Following list — lightweight, no stats
+### Identity and relationship
 
-```json
-{
-  "usernames": ["khaby.lame"],
-  "listType": "following",
-  "maxUsersPerProfile": 1000,
-  "includeStats": false
-}
-```
+- `sourceUsername`, `sourceUserId`, `sourceProfileUrl`, `listType`
+- `position` - 1-based order in the emitted rows for this source/list
+- `listTotal` - total relationship count reported by TikTok for this list
+- `userId`, `secUid`, `username`, `displayName`, `profileUrl`
+- `bio`, `avatarUrl`, `scrapedAt`
 
-## Use cases
+### Account status
 
-- **Influencer scouting** — discover which accounts top creators follow to find emerging talent before they go viral
-- **Audience research** — export a brand account's follower list for CRM enrichment or lookalike audience building
-- **Competitive analysis** — identify follower overlap between competing accounts or creators in the same niche
-- **Partnership vetting** — check whether a target influencer follows brand accounts or competitor handles
-- **Community mapping** — map the follow graph around a specific creator or brand to understand their ecosystem
-- **Social analytics export** — build structured datasets of TikTok user profiles for social media intelligence platforms
+- `verified`, `privateAccount`, `ttSeller`
+- `isOrganization` - kept for compatibility, but TikTok's list endpoint usually does not expose it, so it is usually omitted.
+
+### Exact audience stats
+
+- `followerCount`, `followingCount`, `heartCount` (likes received)
+- `videoCount`, `diggCount` (likes given), `friendCount`
+
+### Source context
+
+- `sourceFollowerCount`, `sourceFollowingCount`
+- `sourceVerified`, `sourcePrivate`, `sourceIsOrganization`
+
+### Optional contact signal
+
+- `bioEmail` - first public-looking email in the bio, only when email extraction is enabled. Omitted when no valid email is present.
+
+All fields are omitted when empty. Zero counts are real values and are kept. `avatarUrl` is a signed TikTok CDN URL and may expire; `profileUrl` is the permanent link.
+
+## How it works
+
+1. The actor opens the public profile page in a headless Chromium browser. No user session or cookie is supplied.
+2. It reads the profile's own SSR payload for the secure user ID, exact `statsV2`, and the account's following visibility.
+3. Inside that page, it asks TikTok's own client to call the relationship-list endpoint with scene 67 (followers) or scene 21 (following). TikTok's page runtime signs the request and attaches the anonymous session token.
+4. It follows the returned cursors until the requested cap, the end of the source list, a stagnant cursor, a source truncation, or the scan limit.
+5. Rows are deduplicated by user ID per source/list, filtered, assigned a position, and pushed to the dataset.
+
+No `sessionCookie` is injected. No manual `X-Bogus` or `X-Dynosaur` value is replayed. The page signs each request.
+
+## What is available and what is not
+
+**Available for public profiles:** follower and following lists, exact account stats, verification, privacy, TikTok Shop seller status, bio, avatar, profile URL, and optional bio email.
+
+**Not available from this source:**
+
+- Private accounts: both lists are blocked.
+- A public account that hides its following list: the following list is unavailable, while its followers may still be exported.
+- `bioLink`, `region`, `language`, `createTime`, and per-follow `followedAt`: TikTok's list endpoint does not return them.
+- `isOrganization` for listed accounts: usually absent from the list payload.
+- Guaranteed row count parity: TikTok does not return every row for every account (deleted, private, or restricted accounts are omitted). The run reports the source total and the returned count.
 
 ## FAQ
 
 **Do I need a TikTok account or cookies?**
-It depends on the mode. `listType: "following"` is fully public — no cookie needed. `listType: "followers"` requires a `sessionCookie` because TikTok's followers API (`scene=151`) ignores the target account parameters without authentication and returns a generic regional list.
+No. Public follower and following lists are exported without a login, session cookie, or API key.
 
-**How do I get my sessionCookie?**
-Install the Cookie-Editor browser extension, log into TikTok at tiktok.com, click the icon, find the cookie named `sessionid`, and copy its value. Paste that value into the `sessionCookie` field.
+**Why can a run return fewer rows than the profile's follower count?**
+TikTok's list endpoint omits accounts it cannot expose (for example deleted, private, or restricted accounts). The run records the source total in `listTotal`, the returned count in `RUN_SUMMARY`, and the source shortfall in the final status message. Filters can also reduce the pushed rows; use `scanLimit` to search deeper for rare filters.
 
-**Why does `heartCount` come from statsV2?**
-TikTok's legacy `stats.heart` field uses a 32-bit integer that overflows to negative values for large creators with billions of likes. `statsV2.heartCount` is a string and never overflows.
+**Why is a following list empty?**
+The account may not follow anyone, or it may hide its following list. A hidden list is reported in the run status; no rows are invented.
 
-**Can I scrape the following list of a private account?**
-The following list of a private account is not publicly accessible via TikTok's API.
+**Can I export a private account's followers?**
+No. Private accounts are not bypassed.
 
-**Can I get more than 5,000 users?**
-5,000 is the practical limit per profile enforced by TikTok's pagination. Set `maxUsersPerProfile` to 5,000 for the maximum.
+**Why is `isOrganization` missing?**
+TikTok's relationship-list payload usually does not include it. The field remains in the output contract for compatibility and is filled only if the source provides it.
 
-**How long does it take to scrape 1,000 users?**
-Approximately 5 minutes per 1,000 users due to API pagination delays.
+**Are avatar URLs permanent?**
+No. They are signed CDN links that expire. Use `profileUrl` for a permanent link.
 
-**Can I scrape multiple profiles at once?**
-Yes. Add multiple entries to `usernames` or `profileUrls`. Profiles are scraped sequentially.
+**Can I filter by follower count or bio keyword?**
+Yes. Use `minFollowers`, `maxFollowers`, `bioKeywords`, `onlyVerified`, `sellerOnly`, `excludePrivate`, or `onlyWithEmail`.
 
-**Are TikTok usernames case-sensitive?**
-No. TikTok usernames are case-insensitive and the actor normalizes them automatically.
+**How are filters applied?**
+After the list is fetched, before rows are pushed. Filtered-out rows are not charged.
 
-**What happens if `listType: "followers"` is used without a sessionCookie?**
-Without a cookie, TikTok's followers API ignores `targetUserId` and returns a generic regional user list unrelated to the queried account. Always provide a `sessionCookie` for followers mode.
+**Does `maxUsersPerProfile` apply to each list or the whole run?**
+Each requested list gets the cap. For `listType: "both"`, followers and following can each return up to the cap.
+
+## Data source and responsible use
+
+The actor reads publicly visible TikTok profile and relationship data. It does not log in, bypass private accounts, or access non-public content. Use the output only for lawful research, analytics, and outreach, and comply with TikTok's terms and applicable privacy laws.

@@ -1,0 +1,80 @@
+{
+  "description": "Monitor TikTok LIVE streams. Without a sessionCookie: emits one room-metadata row per live user (title, viewer count, stream URLs, host stats). With a sessionCookie: captures real-time events (chat, gifts, likes, follows, joins).",
+  "properties": {
+    "connectionDuration": {
+      "default": 60,
+      "description": "How long to stay connected to each LIVE stream and collect events.",
+      "maximum": 3600,
+      "minimum": 10,
+      "prefill": 10,
+      "title": "Connection Duration (Seconds)",
+      "type": "integer"
+    },
+    "eventCap": {
+      "default": 500,
+      "description": "Stop collecting events from a stream after capturing this many. Applies per stream.",
+      "maximum": 10000,
+      "minimum": 1,
+      "prefill": 100,
+      "title": "Event Cap",
+      "type": "integer"
+    },
+    "eventTypes": {
+      "default": [
+        "all"
+      ],
+      "description": "Which event types to capture and push to the dataset. Use 'all' to capture every event type.",
+      "editor": "select",
+      "items": {
+        "enum": [
+          "chat",
+          "gift",
+          "like",
+          "follow",
+          "share",
+          "join",
+          "stats",
+          "all"
+        ],
+        "type": "string"
+      },
+      "prefill": [
+        "all"
+      ],
+      "title": "Event Type Filter",
+      "type": "array"
+    },
+    "liveUrls": {
+      "description": "Direct TikTok LIVE URLs (e.g. https://www.tiktok.com/@username/live). Alternative to usernames.",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "title": "Live Stream URLs",
+      "type": "array"
+    },
+    "sessionCookie": {
+      "description": "Optional. Value of the TikTok `sessionid` cookie from a logged-in browser session. When provided, the actor captures real-time events (chat, gifts, likes, follows, joins) from the LIVE stream. Without this, the actor runs in room-metadata mode (1 row per live user: title, viewer count, stream URLs, host profile). To obtain: open TikTok in a browser → DevTools → Application → Cookies → copy the `sessionid` value.",
+      "editor": "textfield",
+      "isSecret": true,
+      "title": "Session Cookie (sessionid) — for event-stream mode",
+      "type": "string"
+    },
+    "usernames": {
+      "description": "TikTok usernames to watch for LIVE streams (without the @ symbol). The actor will check each username for an active LIVE session. Note: the prefill account may not always be live — runs during off-hours may produce 0 rows. This is expected behavior.",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "prefill": [
+        "natgeo"
+      ],
+      "title": "Usernames",
+      "type": "array"
+    }
+  },
+  "required": [],
+  "schemaVersion": 1,
+  "title": "TikTok LIVE Scraper Input",
+  "type": "object"
+}

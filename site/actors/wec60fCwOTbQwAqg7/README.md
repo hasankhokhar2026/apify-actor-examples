@@ -1,0 +1,124 @@
+# TikTok LIVE Room Status & Chat Capture Tool
+
+Check whether a TikTok creator is currently LIVE and pull the room's title, viewer counts, and host profile — no login needed. Optionally, with a TikTok session cookie, stay connected to the stream and capture its chat messages, gifts, likes, and other events as they happen.
+
+## What this actor does
+
+- **Checks usernames or LIVE URLs** for an active broadcast
+- **Room-status mode (no cookie):** one record per live user with title, viewer counts, stream URLs, and host profile
+- **Event-capture mode (session cookie):** stays connected and records every chat message, gift, like, join, share, and viewer-stats update as its own record
+- **Time and count limits:** stops after `connectionDuration` seconds or `eventCap` events, whichever comes first
+- **Event-type filter:** capture only the event categories you care about — unmapped (`other`) events always pass through regardless of the filter, since they can't be matched to a selected category
+- **Exits cleanly with zero records when nobody is live** — that's expected behavior, not an error, and empty fields are always omitted
+
+## Output per room-status record
+
+- `roomId` — TikTok's LIVE room identifier
+- `hostUsername` — broadcaster's TikTok username
+- `hostUserId` — broadcaster's TikTok user ID
+- `hostDisplayName` — broadcaster's display name
+- `hostVerified` — whether the host's account is verified
+- `hostBio` — the host's profile bio text
+- `hostAvatarUrl` — host's avatar image URL
+- `hostFollowerCount`, `hostFollowingCount` — the host's follower and following counts
+- `liveTitle` — the current LIVE stream's title
+- `liveStatus`, `liveRoomMode` — TikTok's room status and mode values
+- `startTime`, `startedAt` — when the stream started, as a raw timestamp and as an ISO 8601 string
+- `totalViewers` — cumulative viewer count since the stream started
+- `currentViewers` — current live viewer count
+- `liveUrl` — the broadcaster's LIVE URL
+- `streamUrls` — a map of stream quality labels (e.g. `hls_720p`, `flv_1080p60`) to their playback URLs, when TikTok exposes them
+- `scrapedAt` — when the record was fetched
+
+## Output per captured event record
+
+- `roomId` — the LIVE room the event came from
+- `eventType` — `chat`, `gift`, `like`, `follow`, `share`, `join`, `stats`, `other`, or `raw`
+- `receivedAt` — ISO 8601 UTC timestamp when the event arrived
+- `user` — object with `id`, `username`, `displayName`, `avatarUrl` for the user tied to the event, when TikTok includes one
+- `payload` — event-specific details:
+  - chat: `text`, and `emotes` when the message includes them
+  - gift: `giftName`, `giftId`, `giftCount`
+  - like: `totalLikes`
+  - stats: `viewerCount`, `totalUsers`
+  - other (unmapped event types): `rawMethod` and `payloadSize` for reference
+  - raw (undecodable WebSocket frames): `rawBase64` and `frameSize`
+  - follow/share/join events carry only the `user` object, with no extra `payload`
+
+## Input
+
+| Field | Type | Default | Description |
+|---|---|---|---|
+| `usernames` | array | – | TikTok usernames to check for an active LIVE session (without `@`) |
+| `liveUrls` | array | – | Direct TikTok LIVE URLs, an alternative to `usernames` |
+| `connectionDuration` | integer | `60` | Seconds to stay connected to each LIVE stream (10–3600) |
+| `eventCap` | integer | `500` | Stop capturing events from a stream after this many (1–10,000), per stream |
+| `eventTypes` | array | `["all"]` | Which event categories to keep: `chat`, `gift`, `like`, `follow`, `share`, `join`, `stats`, or `all` |
+| `sessionCookie` | string | – | TikTok `sessionid` cookie value. Without it, the actor only returns room-status records |
+
+### Example: check room status, no cookie
+
+```json
+{ "usernames": ["natgeo"], "connectionDuration": 10 }
+```
+
+### Example: capture events with a session cookie
+
+```json
+{
+  "usernames": ["khaby.lame"],
+  "connectionDuration": 120,
+  "eventCap": 1000,
+  "eventTypes": ["chat", "gift", "stats"],
+  "sessionCookie": "your_sessionid_value_here"
+}
+```
+
+### Example: check several accounts at once
+
+```json
+{ "usernames": ["natgeo", "bbcnews", "cnn"], "connectionDuration": 60 }
+```
+
+### Example: check a specific LIVE URL
+
+```json
+{ "liveUrls": ["https://www.tiktok.com/@natgeo/live"], "connectionDuration": 30 }
+```
+
+## Use cases
+
+- **Live status alerts** — check a watchlist of creators and know within seconds who's currently live
+- **Community management** — follow your own brand's chat in real time during a live event
+- **Audience research** — capture viewer counts and gift activity to gauge how a stream performed
+- **Event archiving** — record the chat and event timeline from a launch or performance streamed on TikTok LIVE
+- **Moderation review** — pull a stream's chat for later review of comments or reported behavior
+
+## FAQ
+
+**Is this affiliated with TikTok?**
+No. This is an independent, third-party actor that reads TikTok's publicly available LIVE room data and is not affiliated with or endorsed by TikTok.
+
+**What happens if the account isn't live when the actor runs?**
+The actor returns zero records and logs that the creator wasn't live — this is expected, not a failure. Run it during the creator's usual streaming hours for the best chance of a hit.
+
+**Do I need a cookie for room-status mode?**
+No. Checking whether someone is live and getting the room's title, viewer counts, and host profile works without any login.
+
+**How do I get a session cookie for event-capture mode?**
+Log into TikTok in a browser, open its developer tools, find the cookie named `sessionid` under Application/Storage, and paste its value into `sessionCookie`.
+
+**Is my session cookie stored anywhere?**
+No. It's used only to connect to the LIVE stream during the run and isn't saved or logged.
+
+**What does `connectionDuration` actually limit?**
+How long the actor stays connected to each stream before moving on. A short window (10–60 seconds) is enough to confirm live status; a longer one is needed to capture a meaningful chat/event history.
+
+**Can I check multiple accounts in one run?**
+Yes — list several usernames, and the actor checks each one in turn, connecting and collecting for `connectionDuration` seconds before moving to the next.
+
+**What are the `other` and `raw` event types?**
+Some TikTok LIVE message types aren't mapped to a named category — those are kept as `other` events with `rawMethod` and `payloadSize` in the payload, and they're always captured regardless of your `eventTypes` filter. Occasionally a WebSocket frame can't be decoded at all; when that happens and `eventTypes` includes `all` (the default), it's kept as a `raw` event with the frame's base64 bytes and size, so nothing is silently dropped.
+
+**What quality options appear in `streamUrls`?**
+Whatever TikTok exposes for that stream at the time — typically a mix of HLS and FLV links across resolutions such as 360p, 720p, and 1080p60, when the room is actively broadcasting.

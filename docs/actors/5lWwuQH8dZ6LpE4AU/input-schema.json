@@ -1,50 +1,278 @@
 {
-  "description": "Scrape employee reviews from a Glassdoor company reviews page. Provide a Glassdoor session cookie to access more reviews (pagination requires login).",
+  "description": "Scrape employee reviews from Glassdoor companies by URL, name, or employer id. No login, cookie, or proxy setup is required.",
   "properties": {
-    "companyUrl": {
-      "description": "Glassdoor company reviews page URL (e.g., 'https://www.glassdoor.com/Reviews/Google-Reviews-E9079.htm').",
-      "editor": "textfield",
-      "prefill": "https://www.glassdoor.com/Reviews/Google-Reviews-E9079.htm",
-      "title": "Company Reviews URL",
+    "companies": {
+      "default": [],
+      "description": "Glassdoor company Review or Overview URLs, company names, or employer ids. Add one item per company. Example: https://www.glassdoor.com/Reviews/Google-Reviews-E9079.htm or Google or 9079.",
+      "editor": "stringList",
+      "prefill": [
+        "https://www.glassdoor.com/Reviews/Google-Reviews-E9079.htm"
+      ],
+      "title": "Companies",
+      "type": "array"
+    },
+    "employmentType": {
+      "default": "any",
+      "description": "Only keep reviews with this employment status.",
+      "editor": "select",
+      "enum": [
+        "any",
+        "regular",
+        "part_time",
+        "intern",
+        "contract",
+        "freelance",
+        "temporary"
+      ],
+      "enumTitles": [
+        "Any employment type",
+        "Full-time (regular)",
+        "Part-time",
+        "Intern",
+        "Contract",
+        "Freelance",
+        "Temporary"
+      ],
+      "prefill": "any",
+      "title": "Employment type",
       "type": "string"
     },
-    "cookie": {
-      "description": "Your Glassdoor session cookie value for full pagination. Without this, only ~3-6 reviews from page 1 are available. To get the cookie: log into Glassdoor in your browser, open DevTools > Application > Cookies > glassdoor.com, and copy the full cookie string (or just the 'GSESSIONID' value).",
+    "includeCompanyProfile": {
+      "default": false,
+      "description": "Add company profile fields such as website, headquarters, size, revenue, industry, CEO, and company sub-ratings to each review. This makes one extra request per company.",
+      "prefill": false,
+      "sectionCaption": "Company profile",
+      "sectionDescription": "Optional company context. Leave this off for the smallest and fastest run.",
+      "title": "Include company profile",
+      "type": "boolean"
+    },
+    "includeWorldwideReviews": {
+      "default": false,
+      "description": "Remove Glassdoor's default review criteria and include reviews from all countries. This raises the review ceiling but can add much older or non-local reviews.",
+      "prefill": false,
+      "title": "Include worldwide reviews",
+      "type": "boolean"
+    },
+    "jobFunction": {
+      "default": "any",
+      "description": "Only keep reviews whose job function matches this category.",
+      "editor": "select",
+      "enum": [
+        "any",
+        "1001",
+        "1002",
+        "1003",
+        "1004",
+        "1005",
+        "1006",
+        "1007",
+        "1008",
+        "1009",
+        "1010",
+        "1011",
+        "1012",
+        "1013",
+        "1014",
+        "1015",
+        "1016",
+        "1017",
+        "1018",
+        "1019",
+        "1020",
+        "1021",
+        "1022",
+        "1023"
+      ],
+      "enumTitles": [
+        "Any job function",
+        "Administrative",
+        "Arts & Design",
+        "Business",
+        "Consulting",
+        "Customer Services & Support",
+        "Education",
+        "Engineering",
+        "Finance & Accounting",
+        "Healthcare",
+        "Human Resources",
+        "Information Technology",
+        "Legal",
+        "Marketing",
+        "Media & Communications",
+        "Military & Protective Services",
+        "Operations",
+        "Other",
+        "Product & Project Management",
+        "Research & Science",
+        "Retail & Food Services",
+        "Sales",
+        "Skilled Labor & Manufacturing",
+        "Transportation"
+      ],
+      "prefill": "any",
+      "title": "Job function",
+      "type": "string"
+    },
+    "jobTitleKeywords": {
+      "default": "",
+      "description": "Only keep reviews whose job title matches these words. Glassdoor may also return closely related titles, such as software developer for software engineer.",
       "editor": "textfield",
-      "isSecret": true,
-      "title": "Glassdoor Session Cookie (Optional)",
+      "prefill": "",
+      "title": "Job title keywords",
+      "type": "string"
+    },
+    "keyword": {
+      "default": "",
+      "description": "Only keep reviews that mention this word or phrase.",
+      "editor": "textfield",
+      "prefill": "",
+      "title": "Review text keyword",
+      "type": "string"
+    },
+    "language": {
+      "default": "eng",
+      "description": "Language of the reviews to collect. Choose all languages to include every language Glassdoor exposes.",
+      "editor": "select",
+      "enum": [
+        "eng",
+        "fra",
+        "deu",
+        "nld",
+        "por",
+        "spa",
+        "ita",
+        "all"
+      ],
+      "enumTitles": [
+        "English",
+        "French",
+        "German",
+        "Dutch",
+        "Portuguese",
+        "Spanish",
+        "Italian",
+        "All languages"
+      ],
+      "prefill": "eng",
+      "title": "Review language",
+      "type": "string"
+    },
+    "location": {
+      "default": "",
+      "description": "City, state, metro area, or country to filter reviews by, such as New York, NY or London. Leave empty for all locations. The value is resolved automatically through Glassdoor's location search.",
+      "editor": "textfield",
+      "prefill": "",
+      "title": "Location",
       "type": "string"
     },
     "maxItems": {
       "default": 100,
-      "description": "Maximum number of reviews to scrape.",
-      "maximum": 1000,
+      "description": "Maximum number of reviews to save across all companies.",
+      "maximum": 50000,
       "minimum": 1,
-      "prefill": 5,
-      "title": "Maximum Items",
+      "prefill": 3,
+      "title": "Maximum reviews",
       "type": "integer"
     },
-    "sort": {
-      "default": "DATE",
-      "description": "How to sort reviews.",
+    "maxReviewsPerCompany": {
+      "default": 0,
+      "description": "Maximum reviews to save for each company. Set to 0 for no per-company limit.",
+      "maximum": 50000,
+      "minimum": 0,
+      "prefill": 0,
+      "title": "Maximum reviews per company",
+      "type": "integer"
+    },
+    "onlyCurrentEmployees": {
+      "default": false,
+      "description": "Only keep reviews written by current employees.",
+      "prefill": false,
+      "title": "Current employees only",
+      "type": "boolean"
+    },
+    "onlyWithEmployerResponses": {
+      "default": false,
+      "description": "Only keep reviews that have an official employer response.",
+      "prefill": false,
+      "title": "Only reviews with employer responses",
+      "type": "boolean"
+    },
+    "postedWithinDays": {
+      "default": "any",
+      "description": "Only keep reviews posted within this many days. Uses newest-first order and stops when older reviews are reached.",
       "editor": "select",
       "enum": [
-        "DATE",
-        "RELEVANCE"
+        "any",
+        "7",
+        "30",
+        "90",
+        "180",
+        "365"
       ],
       "enumTitles": [
-        "Newest First",
-        "Most Relevant"
+        "Any time",
+        "Last 7 days",
+        "Last 30 days",
+        "Last 90 days",
+        "Last 6 months",
+        "Last 12 months"
       ],
-      "prefill": "DATE",
-      "title": "Sort Order",
+      "prefill": "any",
+      "title": "Posted within",
+      "type": "string"
+    },
+    "rating": {
+      "default": "any",
+      "description": "Only keep reviews with this exact overall star rating.",
+      "editor": "select",
+      "enum": [
+        "any",
+        "1",
+        "2",
+        "3",
+        "4",
+        "5"
+      ],
+      "enumTitles": [
+        "Any rating",
+        "1 star",
+        "2 stars",
+        "3 stars",
+        "4 stars",
+        "5 stars"
+      ],
+      "prefill": "any",
+      "title": "Star rating",
+      "type": "string"
+    },
+    "sortBy": {
+      "default": "mostRecent",
+      "description": "Order in which Glassdoor returns reviews.",
+      "editor": "select",
+      "enum": [
+        "mostRecent",
+        "mostRelevant",
+        "oldest",
+        "highestRated",
+        "lowestRated",
+        "mostRelevantClassic"
+      ],
+      "enumTitles": [
+        "Newest first",
+        "Most relevant",
+        "Oldest first",
+        "Highest rated",
+        "Lowest rated",
+        "Most relevant (classic)"
+      ],
+      "prefill": "mostRecent",
+      "sectionCaption": "Review filters",
+      "sectionDescription": "Optional filters for the review export. When a date window is selected, sorting is forced to newest first.",
+      "title": "Sort reviews by",
       "type": "string"
     }
   },
-  "required": [
-    "companyUrl"
-  ],
   "schemaVersion": 1,
-  "title": "Glassdoor Reviews Scraper Input",
+  "title": "Glassdoor Employee Review Export Input",
   "type": "object"
 }

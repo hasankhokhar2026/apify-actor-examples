@@ -1,16 +1,43 @@
 {
-  "description": "Scrape the followers or following list for TikTok profiles. Input usernames or profile URLs.",
+  "description": "Export the followers or following list of public TikTok profiles. No login or cookie is needed. Private accounts and hidden following lists are reported honestly.",
   "properties": {
+    "bioKeywords": {
+      "default": [],
+      "description": "Only include accounts whose bio or display name contains any of these keywords. Matching is case-insensitive.",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "prefill": [],
+      "title": "Bio or name keywords",
+      "type": "array"
+    },
+    "excludePrivate": {
+      "default": false,
+      "description": "Skip accounts whose profile is private.",
+      "prefill": false,
+      "title": "Exclude private accounts",
+      "type": "boolean"
+    },
+    "includeBioEmail": {
+      "default": false,
+      "description": "Add a public email address from the bio when one is present. The field is omitted when the bio has no valid email.",
+      "prefill": false,
+      "title": "Extract email from bio",
+      "type": "boolean"
+    },
     "includeStats": {
       "default": true,
-      "description": "Include follower/following/heart/video counts from statsV2 for each user in the output.",
+      "description": "Add follower, following, likes received, video, likes given, and friend counts for each listed account.",
       "prefill": true,
-      "title": "Include User Stats",
+      "sectionCaption": "Output extras",
+      "sectionDescription": "Optional fields added to each row.",
+      "title": "Include audience stats",
       "type": "boolean"
     },
     "listType": {
       "default": "following",
-      "description": "Choose whether to scrape followers, following, or both lists for each profile. NOTE: 'followers' requires a sessionCookie — without it TikTok's API returns a generic list, not the account's real followers. 'following' works without a cookie.",
+      "description": "Choose the side of the follow graph: people who follow the profile, accounts the profile follows, or both lists.",
       "editor": "select",
       "enum": [
         "followers",
@@ -18,41 +45,60 @@
         "both"
       ],
       "enumTitles": [
-        "Followers only (requires sessionCookie)",
-        "Following only",
-        "Both (followers needs sessionCookie)"
+        "Followers",
+        "Following",
+        "Both lists"
       ],
       "prefill": "following",
-      "title": "List Type",
+      "title": "Which list to export",
       "type": "string"
+    },
+    "maxFollowers": {
+      "default": 0,
+      "description": "Only include accounts with at most this many followers. 0 = no maximum.",
+      "maximum": 1000000000,
+      "minimum": 0,
+      "prefill": 0,
+      "title": "Maximum followers",
+      "type": "integer"
     },
     "maxUsersPerProfile": {
       "default": 100,
-      "description": "Maximum number of follower or following users to fetch per profile.",
+      "description": "Maximum rows to return for each requested list. Each list gets this cap. The source may return fewer when accounts are private or deleted.",
       "maximum": 5000,
       "minimum": 1,
-      "prefill": 30,
-      "title": "Max Users Per Profile",
+      "prefill": 3,
+      "title": "Max users per list",
       "type": "integer"
     },
-    "profileUrls": {
-      "description": "TikTok profile URLs as alternative or additional input. E.g. https://www.tiktok.com/@natgeo",
-      "editor": "stringList",
-      "items": {
-        "type": "string"
-      },
-      "title": "Profile URLs",
-      "type": "array"
+    "minFollowers": {
+      "default": 0,
+      "description": "Only include accounts with at least this many followers. 0 = no minimum.",
+      "maximum": 1000000000,
+      "minimum": 0,
+      "prefill": 0,
+      "title": "Minimum followers",
+      "type": "integer"
     },
-    "sessionCookie": {
-      "description": "Value of the TikTok `sessionid` cookie. **Required to scrape followers** — without it, TikTok's API ignores the target account and returns a generic regional list. Not needed for 'following' mode. To obtain: install Cookie-Editor extension → log into TikTok → click Cookie-Editor → find 'sessionid' → copy its Value.",
-      "editor": "textfield",
-      "isSecret": true,
-      "title": "TikTok Session Cookie (required for followers list)",
-      "type": "string"
+    "onlyVerified": {
+      "default": false,
+      "description": "Only include accounts with a TikTok verified badge.",
+      "prefill": false,
+      "sectionCaption": "Audience filters",
+      "sectionDescription": "Optional filters applied after the list is fetched. Filtered-out rows are not pushed or charged.",
+      "title": "Verified accounts only",
+      "type": "boolean"
     },
-    "usernames": {
-      "description": "TikTok usernames (with or without @) to fetch followers/following for.",
+    "onlyWithEmail": {
+      "default": false,
+      "description": "Only include accounts with a public email in the bio. This also fills the bioEmail field.",
+      "prefill": false,
+      "title": "Only accounts with a bio email",
+      "type": "boolean"
+    },
+    "profiles": {
+      "default": [],
+      "description": "TikTok usernames, @handles, or profile URLs. Paste one per line. Examples: natgeo, @sephora, https://www.tiktok.com/@tiktok.",
       "editor": "stringList",
       "items": {
         "type": "string"
@@ -60,12 +106,28 @@
       "prefill": [
         "natgeo"
       ],
-      "title": "Usernames",
+      "title": "TikTok profiles",
       "type": "array"
+    },
+    "scanLimit": {
+      "default": 0,
+      "description": "Maximum list rows to scan before stopping. Use a higher value to search deeper for rare filters. 0 = automatic (10x the row cap, up to 10,000).",
+      "maximum": 100000,
+      "minimum": 0,
+      "prefill": 0,
+      "title": "Scan limit",
+      "type": "integer"
+    },
+    "sellerOnly": {
+      "default": false,
+      "description": "Only include accounts marked as TikTok Shop sellers.",
+      "prefill": false,
+      "title": "TikTok Shop sellers only",
+      "type": "boolean"
     }
   },
   "required": [],
   "schemaVersion": 1,
-  "title": "TikTok Followers/Following Scraper Input",
+  "title": "TikTok Follow Graph & Audience Export Scraper Input",
   "type": "object"
 }

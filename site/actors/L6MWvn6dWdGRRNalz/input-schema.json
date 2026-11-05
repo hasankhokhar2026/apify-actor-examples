@@ -1,104 +1,167 @@
 {
-  "description": "Search Coupang products, get product details, browse categories, or fetch best sellers.",
+  "description": "Scrape Coupang best sellers by category, Coupang keyword suggestions, or the Coupang category tree. Product records include current and original price, unit price, coupon, rating, Rocket delivery, and a category breadcrumb. Set includeSubcategories to walk child best100 pages until Maximum products is reached. No proxy, cookies, or login required for these modes.",
   "properties": {
-    "categoryId": {
-      "description": "Coupang category ID to browse products from.",
-      "editor": "textfield",
-      "title": "Category ID (mode=categoryProducts)",
+    "category": {
+      "default": "electronics",
+      "description": "Coupang best-seller category. Each category page returns up to 30 products; enable Include subcategories to continue into child pages until Maximum products is reached.",
+      "editor": "select",
+      "enum": [
+        "electronics",
+        "fashion",
+        "beauty",
+        "baby",
+        "food",
+        "kitchen",
+        "household",
+        "home",
+        "sports",
+        "automotive",
+        "books",
+        "toys",
+        "office",
+        "pets",
+        "health",
+        "all"
+      ],
+      "enumTitles": [
+        "Electronics and digital",
+        "Fashion",
+        "Beauty",
+        "Baby and kids",
+        "Food",
+        "Kitchen",
+        "Household",
+        "Home and interior",
+        "Sports and leisure",
+        "Automotive",
+        "Books and media",
+        "Toys and hobbies",
+        "Stationery and office",
+        "Pet supplies",
+        "Health and supplements",
+        "All categories (up to 450 products)"
+      ],
+      "prefill": "electronics",
+      "sectionCaption": "Best sellers",
+      "sectionDescription": "Pick a category. Coupang's best100 page exposes 30 products per category.",
+      "title": "Category",
       "type": "string"
     },
-    "keyword": {
-      "description": "Keyword to search for products (mode=search).",
+    "categoryId": {
+      "description": "Optional numeric Coupang best100 category ID or /np/categories/ URL. Overrides the category dropdown.",
       "editor": "textfield",
-      "prefill": "laptop",
-      "title": "Search keyword",
+      "title": "Advanced category ID",
       "type": "string"
+    },
+    "includeSubcategories": {
+      "default": false,
+      "description": "When true, after the selected category page is fetched, also fetch its child category best-seller pages until Maximum products is reached. Default false; small maxItems values usually need no child pages.",
+      "prefill": false,
+      "title": "Include subcategories",
+      "type": "boolean"
+    },
+    "maxCategories": {
+      "default": 1000,
+      "description": "Maximum category nodes to return from the Coupang category tree.",
+      "maximum": 5000,
+      "minimum": 1,
+      "prefill": 50,
+      "sectionCaption": "Category tree",
+      "sectionDescription": "The Coupang category tree with IDs and URLs. No proxy required.",
+      "title": "Maximum categories",
+      "type": "integer"
     },
     "maxItems": {
       "default": 20,
-      "description": "Maximum number of products to return.",
-      "maximum": 500,
+      "description": "Maximum number of best-seller products to return. A single best100 page has at most 30; set includeSubcategories=true to continue into child pages, or use category=all.",
+      "maximum": 5000,
       "minimum": 1,
-      "prefill": 20,
-      "title": "Max items",
+      "prefill": 3,
+      "sectionCaption": "Limits",
+      "sectionDescription": "The daily test uses 3 products. Coupang best100 exposes 30 products per category.",
+      "title": "Maximum products",
       "type": "integer"
     },
     "maxPrice": {
-      "description": "Maximum product price in Korean Won.",
+      "description": "Only return products at or below this price in Korean won.",
       "maximum": 100000000,
       "minimum": 0,
       "title": "Maximum price (KRW)",
       "type": "integer"
     },
+    "maxSuggestions": {
+      "default": 10,
+      "description": "Maximum suggestions to return per keyword.",
+      "maximum": 10,
+      "minimum": 1,
+      "prefill": 10,
+      "title": "Suggestions per keyword",
+      "type": "integer"
+    },
     "minPrice": {
-      "description": "Minimum product price in Korean Won.",
+      "description": "Only return products at or above this price in Korean won.",
       "maximum": 100000000,
       "minimum": 0,
+      "sectionCaption": "Filters",
+      "sectionDescription": "Optional filters applied to the best-seller products.",
       "title": "Minimum price (KRW)",
       "type": "integer"
     },
+    "minRating": {
+      "description": "Keep only products rated at least this many stars. Products without a rating are skipped.",
+      "maximum": 5,
+      "minimum": 0,
+      "title": "Minimum rating",
+      "type": "number"
+    },
     "mode": {
-      "default": "search",
-      "description": "What to fetch from Coupang.",
+      "default": "bestSellers",
+      "description": "What to collect. Best sellers returns products with price, unit price, coupon, rating, Rocket delivery, and category breadcrumb; keyword suggestions and the category tree return discovery data. Search, product details, and reviews need a Korean residential proxy and are unavailable unless that connection is enabled.",
       "editor": "select",
       "enum": [
+        "bestSellers",
+        "keywordSuggestions",
+        "categories",
         "search",
         "productDetails",
-        "categoryProducts",
-        "bestSellers"
+        "reviews",
+        "categoryProducts"
       ],
       "enumTitles": [
-        "Search products by keyword",
-        "Get product details by product ID",
-        "Browse products by category",
-        "Get best sellers"
+        "Best sellers by category",
+        "Keyword suggestions",
+        "Category tree",
+        "Search by keyword (unavailable without a proxy)",
+        "Product details (unavailable without a proxy)",
+        "Product reviews (unavailable without a proxy)",
+        "Category products (legacy alias for best sellers)"
       ],
-      "prefill": "search",
+      "prefill": "bestSellers",
       "title": "Mode",
       "type": "string"
     },
-    "productIds": {
-      "default": [],
-      "description": "List of Coupang product IDs to fetch details for.",
-      "editor": "stringList",
-      "prefill": [],
-      "title": "Product IDs (mode=productDetails)",
-      "type": "array"
-    },
     "rocketOnly": {
       "default": false,
-      "description": "Only include products with Rocket delivery (free next-day delivery).",
+      "description": "Keep only products with Coupang's Rocket delivery badge.",
       "prefill": false,
       "title": "Rocket delivery only",
       "type": "boolean"
     },
-    "sortBy": {
-      "default": "bestSelling",
-      "description": "Sort order for search results.",
-      "editor": "select",
-      "enum": [
-        "bestSelling",
-        "priceAsc",
-        "priceDesc",
-        "rating",
-        "newest"
-      ],
-      "enumTitles": [
-        "Best Selling",
-        "Price: Low to High",
-        "Price: High to Low",
-        "Rating",
-        "Newest"
-      ],
-      "prefill": "bestSelling",
-      "title": "Sort by",
-      "type": "string"
+    "searchQueries": {
+      "default": [],
+      "description": "Keywords for keyword suggestions (mode=keywordSuggestions). Korean or English.",
+      "editor": "stringList",
+      "prefill": [],
+      "sectionCaption": "Keyword suggestions",
+      "sectionDescription": "Coupang's own search-box suggestions. No proxy required.",
+      "title": "Keywords",
+      "type": "array"
     }
   },
   "required": [
     "mode"
   ],
   "schemaVersion": 1,
-  "title": "Coupang Scraper Input",
+  "title": "Coupang Best Sellers Scraper Input",
   "type": "object"
 }

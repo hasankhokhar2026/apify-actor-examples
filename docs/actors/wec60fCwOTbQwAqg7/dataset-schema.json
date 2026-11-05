@@ -1,0 +1,246 @@
+{
+  "actorSpecification": 1,
+  "fields": {
+    "currentViewers": {
+      "description": "Concurrent viewers at time of scrape (room-metadata mode only)",
+      "title": "Current Viewers",
+      "type": "integer"
+    },
+    "eventTimestamp": {
+      "description": "ISO 8601 UTC datetime from TikTok's event createTime (event-stream mode, when available)",
+      "title": "Event Timestamp",
+      "type": "string"
+    },
+    "eventType": {
+      "description": "Event type for event-stream mode: 'chat', 'gift', 'like', 'follow', 'share', 'join', 'stats', or 'other'",
+      "title": "Event Type",
+      "type": "string"
+    },
+    "hostAvatarUrl": {
+      "description": "URL of the streamer's avatar image (room-metadata mode only)",
+      "title": "Host Avatar URL",
+      "type": "string"
+    },
+    "hostBio": {
+      "description": "Streamer bio/signature (room-metadata mode only)",
+      "title": "Host Bio",
+      "type": "string"
+    },
+    "hostDisplayName": {
+      "description": "Display name of the streamer (room-metadata mode only)",
+      "title": "Host Display Name",
+      "type": "string"
+    },
+    "hostFollowerCount": {
+      "description": "Number of followers the streamer has (room-metadata mode only)",
+      "title": "Host Follower Count",
+      "type": "integer"
+    },
+    "hostFollowingCount": {
+      "description": "Number of accounts the streamer follows (room-metadata mode only)",
+      "title": "Host Following Count",
+      "type": "integer"
+    },
+    "hostUserId": {
+      "description": "TikTok user ID of the streamer (room-metadata mode only)",
+      "title": "Host User ID",
+      "type": "string"
+    },
+    "hostUsername": {
+      "description": "Username of the streamer (room-metadata mode only)",
+      "title": "Host Username",
+      "type": "string"
+    },
+    "hostVerified": {
+      "description": "Whether the streamer has a verified badge (room-metadata mode only)",
+      "title": "Host Verified",
+      "type": "boolean"
+    },
+    "liveRoomMode": {
+      "description": "TikTok internal room mode code (room-metadata mode only)",
+      "title": "Live Room Mode",
+      "type": "integer"
+    },
+    "liveStatus": {
+      "description": "TikTok internal status code for the LIVE room (4 = active)",
+      "title": "Live Status",
+      "type": "integer"
+    },
+    "liveTitle": {
+      "description": "Title of the LIVE stream (room-metadata mode only)",
+      "title": "Live Title",
+      "type": "string"
+    },
+    "liveUrl": {
+      "description": "URL to the LIVE stream page (room-metadata mode only)",
+      "title": "Live URL",
+      "type": "string"
+    },
+    "msgId": {
+      "description": "TikTok internal message ID for deduplication (event-stream mode, when available)",
+      "title": "Message ID",
+      "type": "string"
+    },
+    "payload": {
+      "description": "Event-type-specific data: text (chat), giftName/giftId/giftCount (gift), totalLikes (like), viewerCount/totalUsers (stats)",
+      "properties": {
+        "actionId": {
+          "title": "Action ID",
+          "type": "integer"
+        },
+        "giftCount": {
+          "title": "Gift Count",
+          "type": "integer"
+        },
+        "giftId": {
+          "title": "Gift ID",
+          "type": "string"
+        },
+        "giftName": {
+          "title": "Gift Name",
+          "type": "string"
+        },
+        "payloadSize": {
+          "title": "Payload Size",
+          "type": "integer"
+        },
+        "rawMethod": {
+          "title": "Raw Method",
+          "type": "string"
+        },
+        "text": {
+          "title": "Chat Text",
+          "type": "string"
+        },
+        "totalLikes": {
+          "title": "Total Likes",
+          "type": "integer"
+        },
+        "totalUsers": {
+          "title": "Total Users",
+          "type": "integer"
+        },
+        "viewerCount": {
+          "title": "Viewer Count",
+          "type": "integer"
+        }
+      },
+      "title": "Payload",
+      "type": "object"
+    },
+    "receivedAt": {
+      "description": "ISO 8601 UTC datetime when the event was captured (event-stream mode)",
+      "title": "Received At",
+      "type": "string"
+    },
+    "roomId": {
+      "description": "TikTok LIVE room ID (string to preserve 64-bit precision)",
+      "title": "Room ID",
+      "type": "string"
+    },
+    "scrapedAt": {
+      "description": "ISO 8601 UTC timestamp when the data was collected",
+      "title": "Scraped At",
+      "type": "string"
+    },
+    "startTime": {
+      "description": "Stream start time as a Unix timestamp (room-metadata mode only)",
+      "title": "Start Time (Unix)",
+      "type": "integer"
+    },
+    "startedAt": {
+      "description": "Stream start time in ISO 8601 UTC format (room-metadata mode only)",
+      "title": "Started At",
+      "type": "string"
+    },
+    "streamUrls": {
+      "description": "HLS and FLV playback URLs at multiple qualities (hls_ld, hls_sd, hls_hd, hls_hd_60, hls_uhd_60, flv_ld, flv_sd, flv_hd, etc.) — room-metadata mode only",
+      "title": "Stream URLs",
+      "type": "object"
+    },
+    "totalViewers": {
+      "description": "Cumulative unique viewers since stream started (room-metadata mode only)",
+      "title": "Total Viewers",
+      "type": "integer"
+    },
+    "user": {
+      "description": "User who triggered the event (event-stream mode; absent for 'stats' and 'other' events)",
+      "properties": {
+        "avatarUrl": {
+          "title": "Avatar URL",
+          "type": "string"
+        },
+        "displayName": {
+          "title": "Display Name",
+          "type": "string"
+        },
+        "id": {
+          "title": "User ID",
+          "type": "string"
+        },
+        "username": {
+          "title": "Username",
+          "type": "string"
+        }
+      },
+      "title": "User",
+      "type": "object"
+    }
+  },
+  "title": "TikTok LIVE Data",
+  "views": {
+    "overview": {
+      "description": "Room metadata rows (no sessionCookie) or real-time event rows (with sessionCookie). Room-metadata rows include stream URLs, viewer counts, and host profile. Event rows include chat messages, gifts, likes, joins, and viewer stats.",
+      "display": {
+        "component": "table",
+        "properties": {
+          "eventType": {
+            "format": "text",
+            "label": "Event Type"
+          },
+          "hostUsername": {
+            "format": "text",
+            "label": "Host"
+          },
+          "liveTitle": {
+            "format": "text",
+            "label": "Title"
+          },
+          "payload": {
+            "format": "text",
+            "label": "Payload"
+          },
+          "receivedAt": {
+            "format": "text",
+            "label": "Received At"
+          },
+          "roomId": {
+            "format": "text",
+            "label": "Room ID"
+          },
+          "totalViewers": {
+            "format": "number",
+            "label": "Total Viewers"
+          },
+          "user": {
+            "format": "text",
+            "label": "User"
+          }
+        }
+      },
+      "title": "LIVE Data Overview",
+      "transformation": {
+        "fields": [
+          "roomId",
+          "hostUsername",
+          "liveTitle",
+          "totalViewers",
+          "eventType",
+          "receivedAt",
+          "user",
+          "payload"
+        ]
+      }
+    }
+  }
+}

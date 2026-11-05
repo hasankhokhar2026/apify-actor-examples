@@ -2,14 +2,24 @@
   "actorSpecification": 1,
   "fields": {
     "avatarUrl": {
-      "description": "URL of the account's profile avatar image",
+      "description": "Signed TikTok CDN URL for the profile avatar. May expire; profileUrl is permanent.",
       "title": "Avatar URL",
       "type": "string"
     },
     "bio": {
-      "description": "Profile biography/signature text",
+      "description": "Public profile biography/signature text",
       "title": "Bio",
       "type": "string"
+    },
+    "bioEmail": {
+      "description": "First public-looking email address found in the bio, when email extraction is enabled",
+      "title": "Bio Email",
+      "type": "string"
+    },
+    "diggCount": {
+      "description": "Number of likes this account has given from statsV2",
+      "title": "Digg Count",
+      "type": "integer"
     },
     "displayName": {
       "description": "Display name (nickname) of this account",
@@ -17,34 +27,54 @@
       "type": "string"
     },
     "followerCount": {
-      "description": "Number of followers this account has (from statsV2)",
+      "description": "Exact follower count for this account from statsV2",
       "title": "Follower Count",
       "type": "integer"
     },
     "followingCount": {
-      "description": "Number of accounts this account follows (from statsV2)",
+      "description": "Exact number of accounts this account follows from statsV2",
       "title": "Following Count",
       "type": "integer"
     },
+    "friendCount": {
+      "description": "Mutual friend count reported by TikTok from statsV2",
+      "title": "Friend Count",
+      "type": "integer"
+    },
     "heartCount": {
-      "description": "Total likes/hearts received across all videos (from statsV2 only — statsV1 heart overflows for large creators)",
+      "description": "Total likes received across all videos from statsV2",
       "title": "Heart Count",
       "type": "integer"
     },
     "isOrganization": {
-      "description": "Whether TikTok classifies this account as an organization",
+      "description": "Whether TikTok classifies this account as an organization. Usually absent for list rows.",
       "title": "Is Organization",
       "type": "boolean"
     },
+    "listTotal": {
+      "description": "Total relationship count reported by TikTok for this list",
+      "title": "List Total",
+      "type": "integer"
+    },
     "listType": {
-      "description": "Either 'followers' or 'following'",
+      "description": "Either followers or following",
       "title": "List Type",
       "type": "string"
     },
+    "position": {
+      "description": "1-based position in the emitted rows for this source and list",
+      "title": "Position",
+      "type": "integer"
+    },
     "privateAccount": {
-      "description": "Whether this account is set to private",
+      "description": "Whether this account is private",
       "title": "Private Account",
       "type": "boolean"
+    },
+    "profileUrl": {
+      "description": "Canonical https://www.tiktok.com/@username URL",
+      "title": "Profile URL",
+      "type": "string"
     },
     "scrapedAt": {
       "description": "ISO 8601 UTC datetime when this row was generated",
@@ -56,15 +86,50 @@
       "title": "Secure UID",
       "type": "string"
     },
+    "sourceFollowerCount": {
+      "description": "Exact follower count of the source profile from statsV2",
+      "title": "Source Follower Count",
+      "type": "integer"
+    },
+    "sourceFollowingCount": {
+      "description": "Exact following count of the source profile from statsV2",
+      "title": "Source Following Count",
+      "type": "integer"
+    },
+    "sourceIsOrganization": {
+      "description": "Whether TikTok classifies the source profile as an organization",
+      "title": "Source Is Organization",
+      "type": "boolean"
+    },
+    "sourcePrivate": {
+      "description": "Whether the source profile is private",
+      "title": "Source Private",
+      "type": "boolean"
+    },
+    "sourceProfileUrl": {
+      "description": "Canonical TikTok profile URL of the source account",
+      "title": "Source Profile URL",
+      "type": "string"
+    },
     "sourceUserId": {
       "description": "TikTok user ID of the profile whose list was scraped",
       "title": "Source User ID",
       "type": "string"
     },
     "sourceUsername": {
-      "description": "The @username of the profile whose followers/following list was scraped",
+      "description": "The @username of the profile whose list was scraped",
       "title": "Source Username",
       "type": "string"
+    },
+    "sourceVerified": {
+      "description": "Whether the source profile has a verified badge",
+      "title": "Source Verified",
+      "type": "boolean"
+    },
+    "ttSeller": {
+      "description": "Whether this account sells through TikTok Shop",
+      "title": "TikTok Shop Seller",
+      "type": "boolean"
     },
     "userId": {
       "description": "TikTok user ID of this account",
@@ -72,7 +137,7 @@
       "type": "string"
     },
     "username": {
-      "description": "TikTok @username (uniqueId) of this account",
+      "description": "TikTok @handle (uniqueId) of this account",
       "title": "Username",
       "type": "string"
     },
@@ -82,7 +147,7 @@
       "type": "boolean"
     },
     "videoCount": {
-      "description": "Number of public videos posted by this account (from statsV2)",
+      "description": "Number of public videos posted by this account from statsV2",
       "title": "Video Count",
       "type": "integer"
     }
@@ -90,10 +155,14 @@
   "title": "TikTok Followers & Following",
   "views": {
     "overview": {
-      "description": "TikTok user accounts from a profile's followers or following list, with engagement stats.",
+      "description": "TikTok accounts from a profile's followers or following list, with exact audience stats and source context.",
       "display": {
         "component": "table",
         "properties": {
+          "diggCount": {
+            "format": "number",
+            "label": "Likes Given"
+          },
           "displayName": {
             "format": "text",
             "label": "Display Name"
@@ -108,11 +177,27 @@
           },
           "heartCount": {
             "format": "number",
-            "label": "Total Likes"
+            "label": "Likes Received"
+          },
+          "listTotal": {
+            "format": "number",
+            "label": "List Total"
           },
           "listType": {
             "format": "text",
             "label": "List Type"
+          },
+          "position": {
+            "format": "number",
+            "label": "Position"
+          },
+          "privateAccount": {
+            "format": "boolean",
+            "label": "Private"
+          },
+          "profileUrl": {
+            "format": "text",
+            "label": "Profile URL"
           },
           "scrapedAt": {
             "format": "text",
@@ -121,6 +206,10 @@
           "sourceUsername": {
             "format": "text",
             "label": "Source Profile"
+          },
+          "ttSeller": {
+            "format": "boolean",
+            "label": "TikTok Shop Seller"
           },
           "userId": {
             "format": "text",
@@ -140,19 +229,25 @@
           }
         }
       },
-      "title": "Users Overview",
+      "title": "Follow graph",
       "transformation": {
         "fields": [
           "sourceUsername",
           "listType",
+          "position",
           "userId",
           "username",
           "displayName",
           "verified",
+          "privateAccount",
+          "ttSeller",
           "followerCount",
           "followingCount",
           "heartCount",
           "videoCount",
+          "diggCount",
+          "listTotal",
+          "profileUrl",
           "scrapedAt"
         ]
       }
