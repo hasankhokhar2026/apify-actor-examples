@@ -1,0 +1,266 @@
+{
+  "properties": {
+    "dateFrom": {
+      "description": "Only return tweets posted on or after this date. Leave empty for no lower bound.",
+      "editor": "datepicker",
+      "nullable": true,
+      "title": "Start date",
+      "type": "string"
+    },
+    "dateTo": {
+      "description": "Only return tweets posted on or before this date. Leave empty for no upper bound.",
+      "editor": "datepicker",
+      "nullable": true,
+      "title": "End date",
+      "type": "string"
+    },
+    "endDate": {
+      "description": "Deprecated — use 'End date' instead. Kept so existing saved inputs keep working. Format: YYYY-MM-DD.",
+      "editor": "textfield",
+      "nullable": true,
+      "title": "End date (legacy)",
+      "type": "string"
+    },
+    "excludeReplies": {
+      "default": false,
+      "description": "Skip replies and keep only top-level posts.",
+      "prefill": false,
+      "title": "Exclude replies",
+      "type": "boolean"
+    },
+    "excludeRetweets": {
+      "default": false,
+      "description": "Skip retweets/reposts and keep only original posts.",
+      "prefill": false,
+      "title": "Exclude retweets (reposts)",
+      "type": "boolean"
+    },
+    "keywords": {
+      "description": "Words, phrases, hashtags or full X search queries to monitor. Each keyword is searched separately, and every result row tells you which keyword found it (searchTerm).",
+      "editor": "stringList",
+      "example": [
+        "web scraping",
+        "data mining",
+        "#AI"
+      ],
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "prefill": [
+        "apify"
+      ],
+      "title": "Search keywords",
+      "type": "array"
+    },
+    "language": {
+      "default": "Any language",
+      "description": "Only return tweets written in this language. Leave the default to search all languages.",
+      "editor": "select",
+      "enum": [
+        "Any language",
+        "en",
+        "es",
+        "zh",
+        "hi",
+        "ar",
+        "bn",
+        "pt",
+        "ru",
+        "ja",
+        "de",
+        "fr",
+        "ko",
+        "tr",
+        "vi",
+        "te",
+        "mr",
+        "ta",
+        "ur",
+        "it",
+        "th",
+        "gu",
+        "fa",
+        "pl",
+        "uk",
+        "ml",
+        "kn",
+        "id",
+        "ms",
+        "sw",
+        "ha",
+        "am",
+        "my",
+        "pa",
+        "nl",
+        "ro",
+        "el",
+        "he",
+        "sv",
+        "hu",
+        "cs"
+      ],
+      "enumTitles": [
+        "Any language",
+        "English",
+        "Spanish",
+        "Chinese",
+        "Hindi",
+        "Arabic",
+        "Bengali",
+        "Portuguese",
+        "Russian",
+        "Japanese",
+        "German",
+        "French",
+        "Korean",
+        "Turkish",
+        "Vietnamese",
+        "Telugu",
+        "Marathi",
+        "Tamil",
+        "Urdu",
+        "Italian",
+        "Thai",
+        "Gujarati",
+        "Persian",
+        "Polish",
+        "Ukrainian",
+        "Malayalam",
+        "Kannada",
+        "Indonesian",
+        "Malay",
+        "Swahili",
+        "Hausa",
+        "Amharic",
+        "Burmese",
+        "Punjabi",
+        "Dutch",
+        "Romanian",
+        "Greek",
+        "Hebrew",
+        "Swedish",
+        "Hungarian",
+        "Czech"
+      ],
+      "prefill": "Any language",
+      "title": "Language",
+      "type": "string"
+    },
+    "maxItems": {
+      "description": "Alias of Maximum tweets per keyword. The actor accepts either name.",
+      "maximum": 1000,
+      "minimum": 1,
+      "title": "Maximum tweets per keyword (alias)",
+      "type": "integer"
+    },
+    "maxTweets": {
+      "default": 20,
+      "description": "Stop after this many tweets for each keyword.",
+      "maximum": 1000,
+      "minimum": 1,
+      "prefill": 20,
+      "title": "Maximum tweets per keyword",
+      "type": "integer"
+    },
+    "minimumLikes": {
+      "description": "Only return tweets with at least this many likes. Leave empty for no minimum.",
+      "maximum": 100000000,
+      "minimum": 0,
+      "nullable": true,
+      "title": "Minimum likes",
+      "type": "integer"
+    },
+    "minimumReplies": {
+      "description": "Only return tweets with at least this many replies. Leave empty for no minimum.",
+      "maximum": 100000000,
+      "minimum": 0,
+      "nullable": true,
+      "title": "Minimum replies",
+      "type": "integer"
+    },
+    "minimumRetweets": {
+      "description": "Only return tweets with at least this many retweets. Leave empty for no minimum.",
+      "maximum": 100000000,
+      "minimum": 0,
+      "nullable": true,
+      "title": "Minimum retweets",
+      "type": "integer"
+    },
+    "onlyImages": {
+      "default": false,
+      "description": "Only return tweets that contain at least one image.",
+      "prefill": false,
+      "title": "Tweets with images only",
+      "type": "boolean"
+    },
+    "onlyVerifiedUsers": {
+      "default": false,
+      "description": "Only return tweets from verified (blue check) accounts.",
+      "prefill": false,
+      "title": "Verified accounts only",
+      "type": "boolean"
+    },
+    "onlyVideos": {
+      "default": false,
+      "description": "Only return tweets that contain at least one video or GIF.",
+      "prefill": false,
+      "title": "Tweets with videos only",
+      "type": "boolean"
+    },
+    "proxyConfiguration": {
+      "description": "Optional. Use a proxy if you run large jobs or see frequent IP-based rate limits.",
+      "editor": "proxy",
+      "nullable": true,
+      "sectionCaption": "Advanced",
+      "sectionDescription": "Optional settings for large or repeated runs.",
+      "title": "Proxy configuration",
+      "type": "object"
+    },
+    "searchType": {
+      "default": "Top",
+      "description": "Top returns the most relevant and popular tweets. Latest returns the newest tweets first — best for real-time monitoring.",
+      "editor": "select",
+      "enum": [
+        "Top",
+        "Latest"
+      ],
+      "enumTitles": [
+        "Top — most relevant and popular",
+        "Latest — newest first"
+      ],
+      "prefill": "Top",
+      "title": "Result order",
+      "type": "string"
+    },
+    "sort": {
+      "description": "Alias of Result order. The actor accepts either name.",
+      "editor": "select",
+      "enum": [
+        "Top",
+        "Latest"
+      ],
+      "enumTitles": [
+        "Top — most relevant and popular",
+        "Latest — newest first"
+      ],
+      "title": "Result order (alias)",
+      "type": "string"
+    },
+    "startDate": {
+      "description": "Deprecated — use 'Start date' instead. Kept so existing saved inputs keep working. Format: YYYY-MM-DD.",
+      "editor": "textfield",
+      "nullable": true,
+      "sectionCaption": "Advanced (legacy)",
+      "sectionDescription": "Deprecated aliases kept for backwards compatibility. Prefer the fields above.",
+      "title": "Start date (legacy)",
+      "type": "string"
+    }
+  },
+  "required": [
+    "keywords"
+  ],
+  "schemaVersion": 1,
+  "title": "Twitter Keywords Scraper",
+  "type": "object"
+}
