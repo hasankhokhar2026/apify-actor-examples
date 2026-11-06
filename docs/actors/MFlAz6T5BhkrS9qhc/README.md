@@ -4,16 +4,20 @@
 
 # Bluesky Posts, Profiles, Feeds & Threads Scraper
 
-Scrape **Bluesky** public data without a login, cookies, an API key or a proxy. Search posts by keyword, hashtag, author, mention, domain or URL; read profiles, author feeds, full threads, lists, starter packs, custom feeds, likes, reposts and quotes; and discover trending topics and suggested communities. Every record has flat top-level fields with a few natural nested objects, absolute URLs, ISO dates and omit-empty output.
+Scrape **Bluesky** public data without a login, cookies or an API key. Search posts by keyword, hashtag, author, mention, domain or URL; read profiles, author feeds, full thread reply branches, lists, starter packs, custom feeds, likes, reposts, quotes, actor liked posts and public relationships; and discover trending topics and suggested communities. Every record has flat top-level fields with a few natural nested objects, absolute URLs, ISO dates and omit-empty output.
 
 ## What this actor does
 
-- **20 modes** across posts, accounts, threads, lists, starter packs, feed generators and discovery.
+- **24 modes** across posts, accounts, threads, lists, starter packs, feed generators, relationships and discovery.
 - **Post search with the full public filter surface**: keyword, hashtag, author, mention, domain, URL, date range, language and top/latest ranking.
-- **Search beyond the first page**: `searchSort=latest` walks backwards through time windows, so a query can return far more than the 100-post relevance cap.
-- **Rich records**: engagement counts, languages, mentions, hashtags, links, domains, images, video, external embeds, quoted posts, reposts, reply roots, labels, self-labels, verification, live status, pinned posts and profile counts.
+- **Search beyond the first page**: both `searchSort=latest` and `searchSort=top` walk backwards through time windows. Latest is newest-first; Top preserves engagement ranking within each window. Cursor paging is not used because Bluesky rejects anonymous cursors.
+- **Full thread reply trees**: `threadDepth` walks deeper than the ~10-level per-request limit by fetching truncated reply branches separately. `maxRepliesPerPost` bounds fan-out and `threadTruncated` marks records whose children were cut short.
+- **Actor likes without credentials**: `mode=actorLikes` reads the account's public like records from its personal data server and hydrates the liked posts, with `likedAt` and like-record fields.
+- **More public surfaces**: `mode=actorFeeds` lists an account's feed generators, `mode=starterPackSearch` searches starter packs, and `mode=relationships` checks public follow/block relationships for supplied accounts.
+- **Rich records**: engagement counts, languages, mentions, hashtags, links, domains, images, video, external embeds, quoted posts, reposts, reply roots, labels, self-labels, verification, live status, pinned posts, profile counts and flat author follower counts.
+- **Privacy-aware**: accounts marked `!no-unauthenticated` are skipped by default, and the run status reports how many records were skipped.
 - **Batch-friendly**: multiple profiles, posts, lists, starter packs, feeds and URLs per run, with automatic de-duplication.
-- **No credentials and no proxy setup.** Every mode reads public data.
+- **No credentials required.** Every mode reads public data. If Bluesky temporarily blocks a search request from the actor's network, the actor retries it automatically and reports a clear status if it still fails.
 
 ## Output per record
 
@@ -38,6 +42,8 @@ Every record carries `recordType`, `sourceUrl` and `scrapedAt`. Empty values are
 - `repostedBy` - handle that reposted it
 - `repostUri`, `repostCid`, `repostedAt` - repost metadata
 - `isQuote` - true when the post quotes another post
+- `threadTruncated` - true on a thread record whose direct replies were cut by `maxRepliesPerPost`, `maxItems` or a public-API gap (`mode=postThread`)
+- `likedAt`, `likedBy`, `likedByDid`, `likeUri`, `likeCid` - like-record metadata added by `mode=actorLikes`
 - `quotedPost` - `{uri, cid, text, createdAt, indexedAt, authorHandle, authorDid, authorDisplayName, authorAvatar, url, likeCount, repostCount, replyCount, quoteCount, labels, labelValues, mediaAttachments}`
 - `mentions[]` - mentioned DIDs
 - `tags[]` - hashtags, lowercase
@@ -48,8 +54,10 @@ Every record carries `recordType`, `sourceUrl` and `scrapedAt`. Empty values are
 - `labels[]` - `{val, src, uri, cid, cts, ver}`
 - `labelValues[]` - label values only
 - `selfLabels[]` - author-applied labels
-- `author` - `{did, handle, displayName, avatar, createdAt, profileUrl, labels, labelValues, verification, status}`; with `hydrateAuthors=true` it also includes `description`, `banner`, `followersCount`, `followsCount`, `postsCount`, `indexedAt`, `pinnedPostUri`, `pinnedPostCid`
+- `author` - `{did, handle, displayName, avatar, createdAt, profileUrl, labels, labelValues, verification, status}`; with `hydrateAuthors=true` (the default) it also includes `description`, `banner`, `followersCount`, `followsCount`, `postsCount`, `indexedAt`, `pinnedPostUri`, `pinnedPostCid`. The hydrated profile's `handle` and `did` replace stale values, and `url`, `sourceUrl` and `authorHandle` are recomputed
+- `authorFollowersCount`, `authorFollowsCount`, `authorPostsCount`, `authorVerified` - flat author stats added when `hydrateAuthors=true`
 - `authorHandle` - convenience field
+- `hitsTotal`, `searchHitsTotal` - search-result totals when Bluesky returns them (the value is capped/rounded by the source, so treat it as an estimate)
 
 ### Account records (`recordType=account`, `like`, `listMember`, `repost` or `starterPackMember`)
 
@@ -63,11 +71,13 @@ Every record carries `recordType`, `sourceUrl` and `scrapedAt`. Empty values are
 - `associated` - `{listsCount, feedGeneratorsCount, starterPacksCount, isLabeler, chatAllowIncoming, chatAllowGroupInvites, activitySubscription}`
 - `status` - `{type, createdAt, durationMinutes, expiresAt, isActive, embed}`
 - `pinnedPostUri`, `pinnedPostCid`
-- `relation` - `profile`, `searchMatch`, `follower`, `following`, `liked`, `reposted`, `listMember`, `starterPackMember` or `suggestedFollow`
+- `relation` - `profile`, `searchMatch`, `follower`, `following`, `liked`, `reposted`, `listMember`, `starterPackMember`, `suggestedFollow` or `relationship`
 - `likedAt`, `likedPostUri` - for `mode=getLikes`
 - `repostedPostUri` - for `mode=repostedBy`
 - `listUri`, `listName` - for list members
 - `starterPackUri` - for starter-pack members
+- `relationshipActor`, `isFollowing`, `isFollowedBy`, `isMutualFollow` - for `mode=relationships`
+- `following`, `followedBy`, `blocking`, `blockedBy` - public relationship record URIs when present
 
 ### List records (`recordType=list`)
 
@@ -104,30 +114,33 @@ Every record carries `recordType`, `sourceUrl` and `scrapedAt`. Empty values are
 
 ### Discovery records
 
-- `recordType=trendingTopic`: `topic`, `displayName`, `description`, `link`, `url`, `rank`
-- `recordType=taggedSuggestion`: `tag`, `subjectType`, `subject`, `url`
+- `recordType=trendingTopic`: `topic`, `displayName`, `description`, `link`, `url`, `sourceUrl`, `rank`
+- `recordType=taggedSuggestion`: `tag`, `subjectType`, `subject`, `url`, `sourceUrl`
+
+When a discovery item has no public target URL, `url` and `sourceUrl` fall back to the Bluesky home page so every record still has a source link.
 
 ## Input
 
 | Field | Type | Default | Description |
 |---|---|---|---|
-| `mode` | Enum | `search` | `search` / `profile` / `profiles` / `actorSearch` / `feed` / `postThread` / `urlFetch` / `getPosts` / `follows` / `followers` / `getLikes` / `repostedBy` / `quotes` / `getList` / `listFeed` / `lists` / `getStarterPack` / `feedGenerator` / `feedGeneratorsDiscovery` / `discovery`. `getActorLikes` is accepted as a legacy alias for `profile` |
-| `searchQuery` | String | `bluesky` | Keyword, hashtag, phrase or Lucene-style query. Used by `search`, `actorSearch` and `feedGeneratorsDiscovery` |
-| `searchSort` | Enum | `top` | `top` (engagement) or `latest` (newest first; supports deeper collection) |
+| `mode` | Enum | `search` | `search` / `profile` / `profiles` / `actorSearch` / `feed` / `postThread` / `urlFetch` / `getPosts` / `follows` / `followers` / `getLikes` / `repostedBy` / `quotes` / `actorLikes` / `getList` / `listFeed` / `lists` / `actorFeeds` / `getStarterPack` / `starterPackSearch` / `feedGenerator` / `feedGeneratorsDiscovery` / `relationships` / `discovery` |
+| `searchQuery` | String | `bluesky` | Keyword, hashtag, phrase or Lucene-style query. Used by `search`, `actorSearch`, `starterPackSearch` and `feedGeneratorsDiscovery` |
+| `searchSort` | Enum | `latest` | `latest` (newest first; supports deeper collection) or `top` (engagement-ranked, capped at about 100 posts) |
 | `searchTags` | Array | `[]` | Hashtags without `#`; multiple tags are AND-matched (`mode=search`) |
 | `searchDomain` | String | – | Only posts linking to this domain (`mode=search`) |
 | `searchUrl` | String | – | Only posts linking to this exact URL (`mode=search`) |
 | `mentionsUser` | String | – | Only posts mentioning this handle or DID (`mode=search`) |
 | `fromUser` | String | – | Only posts authored by this handle or DID (`mode=search`) |
-| `since` | String | – | Earliest post date (`YYYY-MM-DD` or ISO datetime) (`mode=search`) |
-| `until` | String | – | Latest post date (`YYYY-MM-DD` or ISO datetime) (`mode=search`) |
+| `since` | String | – | Earliest post date (`YYYY-MM-DD` or ISO datetime); a bare date starts at 00:00 UTC (`mode=search`) |
+| `until` | String | – | Latest post date (`YYYY-MM-DD` or ISO datetime); a bare date includes the whole day through 23:59:59.999999 UTC (`mode=search`) |
 | `language` | Enum | – | ISO 639-1 language filter; empty means no filter |
 | `authorFeedFilter` | Enum | `posts_with_replies` | `posts_with_replies` / `posts_no_replies` / `posts_with_media` / `posts_and_author_threads` (`mode=profile`) |
 | `includePins` | Boolean | `false` | Include the pinned post at the top of the author feed (`mode=profile`) |
 | `includeParents` | Boolean | `false` | Include ancestor posts above the requested post (`mode=postThread`) |
-| `threadDepth` | Integer | `6` | Reply and ancestor levels to walk, 0-1000 (`mode=postThread`) |
-| `actor` | String | – | Handle or DID. Used by `profile`, `follows`, `followers`, `lists` and `discoveryType=suggestedFollows` |
-| `actors` | Array | `[]` | Handles, DIDs or profile URLs (`mode=profiles`) |
+| `threadDepth` | Integer | `6` | Reply and ancestor levels to walk, 0-1000. Depths beyond about 10 reply levels are reached by walking branches across requests (`mode=postThread`) |
+| `maxRepliesPerPost` | Integer | `100` | Maximum direct replies followed under each post while walking a thread, 1-1000 (`mode=postThread`) |
+| `actor` | String | – | Handle or DID. Used by `profile`, `follows`, `followers`, `lists`, `actorLikes`, `actorFeeds`, `relationships` and `discoveryType=suggestedFollows` |
+| `actors` | Array | `[]` | Handles, DIDs or profile URLs for `mode=profiles`; the accounts to check against `actor` for `mode=relationships` |
 | `postUri` | String | – | AT URI of a post. Used by `postThread`, `getLikes`, `repostedBy` and `quotes` |
 | `postUris` | Array | `[]` | AT URIs to hydrate (`mode=getPosts`; fallback for single-post modes) |
 | `postUrls` | Array | `[]` | bsky.app post URLs for `getPosts`; post, profile, list, feed or starter-pack URLs for `urlFetch`; fallback for single-post modes |
@@ -142,7 +155,8 @@ Every record carries `recordType`, `sourceUrl` and `scrapedAt`. Empty values are
 | `excludeReplies` | Boolean | `false` | Drop posts that are replies |
 | `excludeReposts` | Boolean | `false` | Drop reposts |
 | `mediaOnly` | Boolean | `false` | Only posts with at least one image, video or external embed |
-| `excludeLabeled` | Boolean | `false` | Drop posts and accounts that carry labels |
+| `excludeLabeled` | Boolean | `false` | Drop posts and accounts that carry moderation or self-labels, including labels on a post's author |
+| `respectNoUnauthenticated` | Boolean | `true` | Skip records whose author carries `!no-unauthenticated`; the run status reports the skipped count |
 | `verifiedOnly` | Boolean | `false` | Only verified accounts, or posts whose author is verified. Records with no verification object are excluded; post modes hydrate author profiles to check |
 | `minLikes` | Integer | – | Drop posts below this like count, 0-10,000,000 |
 | `minReposts` | Integer | – | Drop posts below this repost count, 0-10,000,000 |
@@ -152,8 +166,10 @@ Every record carries `recordType`, `sourceUrl` and `scrapedAt`. Empty values are
 | `maxFollowers` | Integer | – | Keep accounts with at most this many followers, 0-1,000,000,000 |
 | `includeListMetadata` | Boolean | `false` | Emit a list record before its members (`mode=getList`) |
 | `includeStarterPackMembers` | Boolean | `true` | Emit the pack's member accounts (`mode=getStarterPack`) |
-| `hydrateAuthors` | Boolean | `false` | Fetch full author profiles for post records in batches of 25. Automatically enabled when `verifiedOnly=true` |
+| `hydrateAuthors` | Boolean | `true` | Fetch full author profiles for post records in batches of 25 and add flat author follower, following, post and verification fields. Automatically enabled when `verifiedOnly=true`; the daily profile prefill leaves it off to stay cheap |
 | `maxItems` | Integer | `40` | Hard cap on emitted records, 1-5000. Source exhaustion or Bluesky caps may return fewer; the run status reports a shortfall |
+
+Legacy saved tasks that specify `mode=getActorLikes` are mapped to `actorLikes` with a status message. That mode reads the account's public like records from its personal data server and hydrates the liked posts; no login or app password is used.
 
 ### Example: brand monitoring with filters
 
@@ -181,15 +197,26 @@ Every record carries `recordType`, `sourceUrl` and `scrapedAt`. Empty values are
 }
 ```
 
-### Example: a full thread with parents
+### Example: a thread with parents and replies
 
 ```json
 {
   "mode": "postThread",
   "postUri": "at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.post/3l6oveex3ii2l",
   "includeParents": true,
-  "threadDepth": 8,
+  "threadDepth": 30,
+  "maxRepliesPerPost": 100,
   "maxItems": 200
+}
+```
+
+### Example: posts an account liked
+
+```json
+{
+  "mode": "actorLikes",
+  "actor": "bsky.app",
+  "maxItems": 100
 }
 ```
 
@@ -219,23 +246,29 @@ Every record carries `recordType`, `sourceUrl` and `scrapedAt`. Empty values are
 - **Social listening and brand monitoring** - track keywords, hashtags, mentions, domains and authors with date and engagement filters.
 - **Influencer and KOL research** - combine account search with follower ranges, verification and profile counts.
 - **Audience and lead export** - export followers, follows, likers, reposters, list members and starter-pack members with handles, bios and counts.
-- **Conversation analysis** - capture a post, its ancestors and its full reply tree for sentiment or narrative research.
+- **Conversation analysis** - capture a post, its ancestors and replies up to `threadDepth` for sentiment or narrative research.
 - **Content and LLM datasets** - collect post text, languages, hashtags, links, media metadata and engagement counts.
 - **Community mapping** - explore lists, list feeds, starter packs, custom feeds and trending topics.
 
 ## FAQ
 
 **Do I need a Bluesky account or login?**
-No. Every mode reads public data. No cookies, API keys or proxy configuration are needed.
+No. Every mode reads public data. No cookies or API keys are needed. If Bluesky temporarily blocks a search request from the actor's network, the actor retries it automatically through an Apify connection and reports a clear status if it still fails. No proxy setup is required.
 
 **How far back can a keyword search go?**
-`searchSort=latest` walks backwards through time windows and can return far more than the 100-post relevance cap. `searchSort=top` is relevance-ranked and limited to about 100 posts per query. Search coverage is approximate: use a narrower query or a date range for more predictable volume.
+`searchSort=latest` walks backwards through time windows and can return far more than the 100-post relevance cap. `searchSort=top` is relevance-ranked and limited to about 100 posts per query. Time-window search is approximate: pages can overlap, so results are de-duplicated by post URI, and a narrow or wide date range changes how predictable the volume is. When Bluesky returns a search hit total it is exposed as `hitsTotal`/`searchHitsTotal`, but the source caps and rounds that number.
 
 **Why do some posts have no text?**
 Bluesky allows media-only posts. The actor omits empty `text` and keeps the media metadata.
 
 **Why are some fields missing from an account?**
 Basic account views do not always include a bio, banner, follower counts or a pinned post. The actor hydrates accounts in batches so those fields are present whenever Bluesky publishes them. Labels, verification and live status are conditional by nature.
+
+**Why are some accounts missing from results?**
+Some accounts opt out of unauthenticated access and carry the `!no-unauthenticated` label. They are skipped by default and counted in the run status. Set `respectNoUnauthenticated=false` to include them when Bluesky returns them.
+
+**Why does a follower export contain fewer rows than the profile's follower count?**
+Profile counts are cached totals; deactivated or unindexed accounts can make them larger than the returned list. `!no-unauthenticated` accounts are filtered by this actor by default. The export is complete for what the public API exposes after that policy.
 
 **How are reposts and quote posts handled?**
 A repost is one record with `isRepost=true`, `repostedBy` and the original post's content. A quote post is one record with the quoter's text and a nested `quotedPost` object containing the quoted post's text, author, URL, counts and media.
@@ -252,6 +285,15 @@ No. `feedUri`/`feedUris` win whenever they are supplied. `feedPreset` is only us
 **How does `verifiedOnly` work?**
 It keeps only accounts with a valid Bluesky verification and posts whose author is verified. Records with no verification object are excluded. Post modes hydrate author profiles so verification can be checked, which adds batched profile requests and may return fewer posts than an unfiltered search.
 
+**How do actor likes work without a login?**
+`mode=actorLikes` resolves the account's personal data server from its public DID document, lists the public `app.bsky.feed.like` records stored there, and hydrates each liked post. No credentials are used. Likes whose posts were deleted, or accounts whose DID document does not expose a public data server, return no rows for that part. `mode=getLikes` is the opposite direction: it lists the accounts that liked a given post.
+
+**How deep can a thread go?**
+`threadDepth` can be set up to 1000. The public thread endpoint returns about 10 reply levels per request, so the actor detects reply branches that still have children and fetches those branches separately. `maxRepliesPerPost` caps how many direct replies are followed under each post; when a branch is cut, the affected post carries `threadTruncated=true` and the run status explains why.
+
+**What is `mode=relationships`?**
+It checks public follow and block relationships between `actor` and each account in `actors` (up to batches of 30). Each account record gets `isFollowing`, `isFollowedBy`, `isMutualFollow` and the public relationship record URIs. It is not a replacement for a logged-in viewer's personalised "known followers" list, which needs an account context.
+
 **Why did I get fewer records than `maxItems`?**
 Filters can exclude many candidates, Bluesky can exhaust the source, and some search modes have source caps. The run status message reports the shortfall; it does not silently pretend the result is complete.
 
@@ -266,12 +308,19 @@ No. This is an independent actor that reads public Bluesky data.
 
 ## Limitations
 
-- **Relevance search is capped at about 100 posts per query.** Use `searchSort=latest` for deeper collection. Time-window search is approximate and de-duplicated by post URI.
+- **Top search uses time windows.** `searchSort=top` is engagement-ranked; the actor walks older time windows to collect more than one page, preserving ranking within each window. Results are deduplicated by post URI.
+- **Time-window search is approximate.** The `latest` walk can return posts outside the exact window, can overlap between windows, and is de-duplicated by post URI. The `until` boundary uses the newer of a post's `createdAt` and `indexedAt`, and a date-only `until` includes the whole UTC day.
+- **Search hit totals are estimates.** When Bluesky returns `hitsTotal`/`searchHitsTotal`, the source caps and rounds the number; it is not an exact result count.
+- **Search can be temporarily blocked.** If Bluesky returns HTTP 403 even after the automatic Apify retry, the run stops with a clear status message. Try again later or use `mode=profile`, `mode=feed` or a direct post/list feed.
 - **Search coverage is not exhaustive.** Bluesky's search index is recency-weighted and does not include every post.
-- **Some endpoints are not public.** A user's liked posts, known followers, trending-post lists and suggested-user lists are not available without authentication and are not included.
+- **Thread walking is bounded on purpose.** Each request returns about 10 reply levels, so deeper replies are fetched branch by branch. The walk stops at `threadDepth`, `maxRepliesPerPost`, `maxItems` or the per-run branch budget; affected records carry `threadTruncated=true`. Deleted, blocked, hidden or rate-limited branches still create gaps.
+- **Actor likes depend on the public data server.** The like records are read from the account's personal data server rather than the public feed service. If that server is unreachable, does not appear in the DID document, or no longer stores the like record, those likes cannot be returned. Deleted posts are skipped even when their like record remains.
+- **Personalised known followers need a login.** The public relationship check in `mode=relationships` can tell you whether supplied accounts follow or block a target, but a viewer-specific "followers you know" list requires an authenticated account context, which this actor does not use.
+- **Starter-pack typeahead is not a separate mode.** `mode=starterPackSearch` uses the public starter-pack search endpoint, which covers keyword search and paging; a viewer-boosted typeahead ordering is not exposed without an account context.
+- **Hidden accounts are skipped by default.** Accounts that carry `!no-unauthenticated` are filtered out unless `respectNoUnauthenticated=false`, and the status message reports how many records were skipped.
+- **Follower counts can exceed exported rows.** Profile totals are cached by Bluesky and include accounts that are deactivated or no longer indexed. `!no-unauthenticated` accounts are returned by the API and then filtered by this actor by default, so `followersCount` can exceed the exported rows. Set `respectNoUnauthenticated=false` to include them.
 - **Private data is out of scope.** Direct messages, private accounts, notifications and muted/blocked relationships are not available.
 - **Some fields are conditional.** Labels, verification, live status, pinned posts, banners and media are present only when the source has them.
-- **Deleted or blocked posts create gaps in threads.** The actor skips unavailable nodes and keeps the rest of the thread.
 - **Custom feeds depend on third-party generators.** If a generator is offline, its feed returns no posts.
 - **Follower lists can be very large.** Use `maxItems` to bound a run.
 - **`maxItems` is capped at 5,000 per run.** Larger requests are clamped by the input schema.

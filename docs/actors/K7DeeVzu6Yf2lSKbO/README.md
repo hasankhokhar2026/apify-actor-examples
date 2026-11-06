@@ -6,7 +6,7 @@
 
 Collect the public photo and video gallery of Google Maps places without a login, cookie or API key. Paste place links, Place IDs, feature IDs, CIDs or business names, or search for places by keyword, then receive one dataset row per photo, video or nearby Street View panorama with its image link, dimensions, contributor, upload date, owner/visitor flag and place context.
 
-Google's public gallery exposes a large but finite sample of each place. This actor walks that sample to its natural end — a 30-place survey ranged from 4 to 1,983 media items, median 326 — instead of stopping at the first handful. Every URL in the dataset is a direct Google-hosted image or video link that can be fetched without a Referer or cookie.
+Google's public gallery exposes a finite sample of each place, not the full signed-in gallery. The actor collects media from that sample until it reaches your `maxPhotos` cap or the sample ends. Google sometimes advertises a larger total than the public response actually serves, so treat `maxPhotos`, `advertisedCount` and `photosComplete` as guidance, not a promise of the complete gallery. Every URL in the dataset is a direct Google-hosted image or video link that can be fetched without a Referer or cookie.
 
 ## What this actor does
 
@@ -14,17 +14,20 @@ Google's public gallery exposes a large but finite sample of each place. This ac
 - Searches Google Maps by keyword and reads the gallery of each matching place
 - Filters by photos, videos, business-owner photos, visitor photos or nearby Street View panoramas
 - Adds contributor name, profile link and ID, exact upload date, image dimensions, video download link and video length when Google publishes them
-- Marks owner-uploaded media so official business photos can be separated from customer contributions
+- Marks owner-uploaded media when Google publishes enough contributor metadata to make that call
 - Exposes the place identity, categories, address and coordinates on every row so the data joins cleanly to other Google Maps datasets
+- Reports whether each place's result set is complete (`photosComplete`) and why collection stopped (`stopReason`)
 - Omits a field when Google does not publish it for that item instead of returning null or a guess
 
 ## Output per media item
 
 | Field | Description |
 |---|---|
-| `recordType` | Always `"photo"` for backward compatibility |
-| `photoId` | Google's media identifier; use it to deduplicate |
-| `photoIndex` | 0-based position in the returned media list for that place |
+| `recordType` | Media type: `photo`, `video` or `streetView`; matches `mediaType` |
+| `photoId` | Google's media identifier, unique within a place. The same media can legitimately appear for different places, so deduplicate on place identity plus `photoId` |
+| `photoIndex` | 0-based position in the returned rows for that place |
+| `placePhotoIndex` | 0-based position in the public sample before filters and caps |
+| `collectedCount` | Number of rows returned for that place |
 | `photoUrl` | Highest-resolution image URL (the poster frame for videos) |
 | `thumbnailUrl` | Small preview image URL |
 | `businessName` | Name of the place |
@@ -35,6 +38,9 @@ Google's public gallery exposes a large but finite sample of each place. This ac
 | `mediaType` | `photo`, `video` or `streetView` |
 | `isVideo` | `true` for a video |
 | `isStreetView` | `true` for a nearby Street View panorama |
+| `photosComplete` | `true` only when the whole public sample was read for that place under the selected filter and no cap, safety bound or fetch error cut it short |
+| `stopReason` | Why collection stopped: `requested_cap`, `source_exhausted`, `safety_bound`, `filtered`, `fetch_error` or `street_view_cap` |
+| `advertisedCount` | Total that Google advertises for the place when it returns a plausible number; it can overstate the public sample and is omitted otherwise |
 | `contributorName` | Public contributor name |
 | `contributorUrl` | Contributor profile link |
 | `contributorId` | Contributor profile identifier |
@@ -64,7 +70,7 @@ Google's public gallery exposes a large but finite sample of each place. This ac
 | `placeUrls` | array | `[]` | Place URLs, share links, `ChIJ...` IDs, `0x...:0x...` feature IDs, numeric CIDs or business names (mode=place) |
 | `searchQueries` | array | `[]` | Keyword queries such as `coffee shops in New York` (mode=search) |
 | `maxPlacesPerQuery` | integer | `20` | Places to take from each query (1-100) |
-| `maxPhotos` | integer | `100` | Maximum media items per place (1-10000). The actor stops earlier when Google's public sample ends |
+| `maxPhotos` | integer | `100` | Upper bound on media items per place (1-10000). The actor stops earlier when Google's public sample ends; `photosComplete` and `stopReason` say which happened |
 | `photoCategory` | string | `all` | `all`, `photos`, `videos`, `by_owner`, `by_visitors` or `street_view` |
 | `enrichDetails` | boolean | `true` | Read contributor, exact date, caption, video link and video length |
 | `language` | string | `en` | Language for place names, categories and dates |
@@ -136,19 +142,22 @@ Google's public gallery exposes a large but finite sample of each place. This ac
 No. The actor reads Google Maps' public place and gallery pages. No login, cookie, API key or proxy configuration is needed.
 
 **Why do I get fewer items than `maxPhotos`?**
-Google's signed-out gallery exposes a finite public sample of each place. The actor walks the whole sample it is given (the 30-place survey ranged 4-1,983 items, median 326), but the public sample can be smaller than the requested cap, and some places simply have very few public photos.
+Google's public gallery exposes a finite sample of each place, and some places have very few public photos. The actor collects media from the sample until it reaches your cap or the sample ends. `maxPhotos` is an upper bound, not a promise. Advertised totals are not reliable: the response sometimes advertises a number that is larger than what it actually serves, so `advertisedCount` is informational only. Check `photosComplete` and `stopReason` on each row to see whether the sample was read completely.
 
 **Why are the category tabs from the Google Maps website not all available?**
-The full signed-in gallery and its Menu, Food & drink, Vibe, Rooms and Amenities tabs require a Google login. The public surface exposes media type and public contributor information, so this actor offers `photos`, `videos`, `by_owner`, `by_visitors` and `street_view` filters instead of claiming tabs it cannot read anonymously.
+The Menu, Food & drink, Vibe, Rooms, Amenities, Exterior, Inside and By owner category identifiers are not exposed by the public photo response this actor reads. Anonymous live probes returned only the All category for landmark, restaurant and hotel test places, while the same places exposed more categories only in a cookie-reference session. The current gallery request ignores those category identifiers, the public per-photo metadata response has no photo-category label, and the retired `listentityphotos` route is not reachable anonymously. These tabs are a confirmed limit of the cookieless path, not a missing feature. The actor offers `photos`, `videos`, `by_owner`, `by_visitors` and `street_view` filters instead and does not claim the other tabs.
 
 **How are owner photos identified?**
-Google publishes the business owner's profile separately from the photo contributor. When both are present, `isOwnerPhoto` is `true` or `false`; when Google omits the owner profile, the flag is omitted and media with unknown owner status are not returned by the owner or visitor filter.
+Owner classification depends on Google publishing both the business owner's profile and the contributor profile for an item. When both are present, `isOwnerPhoto` is `true` or `false`; when either is missing, the status is unknown, the flag is omitted and the item is not returned by the owner or visitor filter. The classification is only as reliable as that public contributor metadata.
+
+**Why can the owner or video filter return fewer rows than requested?**
+These filters search the whole public sample, up to a safety bound, instead of stopping after a small fixed window. Even so, the public sample may contain few owner-uploaded or video items, and a place can simply run out of matches. In that case `photosComplete` is `true` when the sample and the required contributor metadata were fully read, while `collectedCount` stays below your cap. If metadata is missing, the rows are reported as incomplete instead.
 
 **Are videos included?**
-Yes. Video rows have `isVideo: true`, a direct `videoUrl` MP4 link when Google provides one, and a video length when it can be read from the file.
+Yes. Video rows have `recordType: "video"`, `isVideo: true`, a direct `videoUrl` MP4 link when Google provides one, and a video length when it can be read from the file.
 
 **What is the `street_view` filter?**
-It returns Street View panoramas near the place's coordinates. These are nearby 360° imagery rather than photos from the place's own gallery; `isStreetView` marks them, and they do not carry the place's `placeId` or `featureId`.
+It returns Street View panoramas near the place's coordinates. These are nearby 360° imagery rather than photos from the place's own gallery; `recordType` and `isStreetView` mark them, and they do not carry the place's `placeId` or `featureId`. The filter returns at most `maxPhotos` panoramas and reports `street_view_cap` when that cap is reached.
 
 **Why is `caption` or `tags` missing on many rows?**
 Most Google Maps photos have no caption or tags. The field appears only when the contributor or Google published it.

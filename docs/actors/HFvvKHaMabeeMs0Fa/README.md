@@ -9,10 +9,14 @@ BuiltIn is a US tech-career and company-research platform where employers publis
 ## What this actor does
 
 - **Three modes:** browse the US company directory, search companies by name, or fetch specific companies by name, slug or BuiltIn URL
+- **Multi-city browse:** pass one or more markets in `locations`; the actor requests each market separately, unions the results and deduplicates companies by BuiltIn ID/slug
+- **Start URLs:** pass BuiltIn directory or company-profile URLs directly (plain strings or request-list-source objects) when you already know the pages you want
 - **Directory filters:** 79 US city/metro markets, 103 industries, 213 technologies, six employee-size bands, hybrid/on-site/fully-remote work arrangements, and companies with open jobs or open remote jobs
 - **Company intelligence:** headcount, industry tags, headquarters, every published office, founding year, website, logo, cover image, full description and tagline
 - **Tech and benefits:** category-tagged technology stack plus the number of published benefits, with optional full benefit lists
 - **Hiring signals:** whether the company is hiring, total open roles, open roles by category, and optional recent job listings
+- **Job freshness:** optionally read each company's public jobs page for up to 20 recent job cards with job ID, title, approximate posted age, location and workplace type; filter them with `postedWithinDays`
+- **Honest signals:** flags when category counts do not add up to the published total, when a listing description is used, when recent jobs are only a sample, and when job ages are approximate or open-ended
 - **Clean records:** empty fields are omitted, not sent as `null`
 
 ## Output per company
@@ -24,10 +28,13 @@ BuiltIn is a US tech-career and company-research platform where employers publis
 - `logoUrl` - company logo image
 - `coverImageUrl` - company cover image
 - `description` - the company's published description
+- `descriptionIsTruncated` - `true` when `description` is the shorter directory-listing copy rather than the full profile description
 - `tagline` - the company's one-line pitch
 - `industries[]` - BuiltIn industry tags
 - `employeeCount` - published employee count
-- `localEmployees` - employees in the selected market when a location filter is used; omitted otherwise
+- `localEmployees` - BuiltIn's published local-employee count when a location filter is used; omitted otherwise
+- `searchLocation` - the market whose browse request produced the record (city/metro title)
+- `matchedLocations[]` - every requested market in which the company appeared; a single record is emitted per company
 - `officeCount` - number of published offices
 - `offices[]` - office locations as readable strings
 - `officeLocations[]` - structured offices with `city`, `state`, `country`, `postalCode`, `streetAddress`, `isHeadquarters`
@@ -50,41 +57,51 @@ BuiltIn is a US tech-career and company-research platform where employers publis
 - `perks[]` - full published benefit list (with `includeBenefits`)
 - `perkCategories[]` - benefit category headings (with `includeBenefits`)
 - `isHiring` - whether the company currently has open roles
-- `openJobsCount` - total open roles shown by BuiltIn
+- `openJobsCount` - total open roles shown by BuiltIn; omitted if BuiltIn does not publish a total (counts are never inferred from categories)
 - `openJobsByCategory` - open roles grouped by category
+- `openJobsByCategoryIsPartial` - `true` when the category counts are published but do not add up to `openJobsCount`
 - `jobsUrl` - the company's BuiltIn jobs page
-- `recentJobs[]` - recent job cards with `title`, `jobId`, `workplaceType` and `location` (with `includeProfile` or in search/company modes)
+- `recentJobs[]` - recent job cards from the company profile with `title`, `jobId`, `workplaceType` and `location` (with `includeProfile` or in search/company modes)
+- `recentJobsSampleSize` - number of recent job cards read from the profile; this is a sample, not the company's total open roles
+- `jobCards[]` - recent job cards from the public `/company/{slug}/jobs` page (with `includeJobCards`): `jobId`, `title`, `url`, `postedAge`, `postedAgeDaysApprox`, `postedAgeIsApproximate`, `postedAgeIsMinimum`, `workplaceType` and `location`
+- `jobCardsSampleSize` - number of `jobCards` returned (can be `0` when `postedWithinDays` removes every card); the jobs page shows up to 20 recent cards, not the company's complete job board
+- `jobCardsIsRecentSample` - `true` because `jobCards` is the recent page sample, not a claim that the full job board was scraped
+- `jobCardsPostedWithinDays` - the `postedWithinDays` window applied to `jobCards`, when set
 - `productAndTechEmployeeCount` - product and technology headcount, when published (with `includeProfile`)
 - `typicalTimeOnSite` - published on-site expectation (with `includeProfile`)
 - `lastUpdated` - BuiltIn's last-updated timestamp
 - `sourceUrl` - the listing or profile page the record was read from
-- `recordType` - `company` for company records, `error` for unresolved byCompany inputs
+- `recordType` - `company` for company records, `error` for unresolved byCompany inputs or invalid start URLs
 - `scrapedAt` - ISO 8601 scrape timestamp
 
-### Error rows (mode=byCompany)
+### Error rows (mode=byCompany and startUrls)
 
-When an input cannot be matched to an exact BuiltIn slug or name, the actor emits an error row with `input`, `error`, `recordType: "error"` and `scrapedAt` instead of returning a different company.
+When a `companyUrls` input cannot be matched to an exact BuiltIn slug or name, the actor emits an error row with `input`, `error`, `recordType: "error"` and `scrapedAt` instead of returning a different company. The same happens for `startUrls` entries that are not BuiltIn directory or company-profile URLs.
 
 ## Input
 
 | Field | Type | Default | Description |
 |---|---|---|---|
-| `mode` | string | `browse` | `browse` walks the directory, `search` looks companies up by name, `byCompany` fetches specific companies. |
+| `mode` | string | `browse` | `browse` walks the directory, `search` looks companies up by name, `byCompany` fetches specific companies. `startUrls` takes precedence when set. |
 | `searchQueries` | array | `[]` | Company names or partial names to search for (mode=`search`). Browse-only filters are ignored in search mode with a warning. |
 | `companyUrls` | array | `[]` | Exact company URLs, slugs or names to fetch (mode=`byCompany`). Unresolved inputs become error rows. |
-| `location` | string | All US | Browse only. US city/metro market. `national` and an empty value also mean all US. Ignored with a warning in search/byCompany. |
+| `startUrls` | array | `[]` | BuiltIn directory (`/companies...`) or company-profile (`/company/...`) URLs. Accepts plain strings or request-list-source objects with a `url` field. Directory URLs are paginated; `?page=` is used as the first page. Other hosts/paths become error rows. |
+| `locations` | array | `[]` | Browse one or more markets. Each market is requested separately and results are unioned/deduplicated. Accepts the same aliases as `location` plus display titles. Overrides `location` when it contains a valid market. Browse only. |
+| `location` | string | All US | Browse only. Single US city/metro market used when `locations` is empty. `national` and an empty value also mean all US. Ignored with a warning in search/byCompany. |
 | `industry` | string | All | Browse only. BuiltIn industry filter. Ignored with a warning in search/byCompany. |
 | `technology` | string | All | Browse only. Technology filter. Ignored with a warning in search/byCompany. |
 | `companySize` | string | All | Browse only. Employee-count band: `1-10`, `11-50`, `51-200`, `201-500`, `501-1000` or `1000`. Ignored with a warning in search/byCompany. |
-| `officeType` | string | All | Browse only. `hybrid`, `on-site` or `remote`. Ignored with a warning in search/byCompany. |
-| `hiringOnly` | boolean | `false` | Browse only. Only companies with at least one open job. Ignored with a warning in search/byCompany. |
+| `officeType` | string | All | Browse only. `hybrid`, `on-site` or `remote`. Values such as `On-Site`, `On Site` and `onsite` normalize to `OnSite`; companies without a published work model are excluded when this filter is set. Ignored with a warning in search/byCompany. |
+| `hiringOnly` | boolean | `false` | Browse only. Only companies with at least one open job; companies without a hiring signal are excluded. Ignored with a warning in search/byCompany. |
 | `remoteJobsOnly` | boolean | `false` | Browse only. Only companies currently listing remote jobs. Ignored with a warning in search/byCompany. |
-| `minEmployees` | integer | - | Drop companies below this published headcount. Companies without a count are kept. |
-| `maxEmployees` | integer | - | Drop companies above this published headcount. Companies without a count are kept. |
+| `minEmployees` | integer | - | Drop companies below this published headcount. Companies without a count are kept. An inverted range (`minEmployees` > `maxEmployees`) stops the run with a clear status message. |
+| `maxEmployees` | integer | - | Drop companies above this published headcount. Companies without a count are kept. An inverted range (`minEmployees` > `maxEmployees`) stops the run with a clear status message. |
 | `includeDetails` | boolean | `true` | Fetch each company's full BuiltIn record for tech stack, offices, headquarters, founding year, website and benefits count. Falls back to the profile page when detail is missing or has no tech stack. |
 | `includeProfile` | boolean | `false` | Also read each profile for recent jobs, on-site expectations and product/tech headcount. |
+| `includeJobCards` | boolean | `false` | Read each company's public `/company/{slug}/jobs` page and attach up to 20 recent job cards with approximate posted age. This is a recent-page sample, not the complete job board. Adds one request per company. |
+| `postedWithinDays` | integer | - | Keep only job cards whose published relative age is within this many days (1-3650). Ages are approximate; cards with an unknown or open-ended age such as `30+ Days Ago` are excluded. Enables `includeJobCards` automatically. |
 | `includeBenefits` | boolean | `false` | Read each company's benefits page and return the full benefit list. |
-| `maxItems` | integer | `100` | Hard cap on company records (1-10,000). Large runs with `includeDetails` on are slow; use `false` for bulk listing. |
+| `maxItems` | integer | `100` | Hard cap on company records (1-10,000). Large runs with `includeDetails` on are slow; use `false` for bulk listing. For more than 10,000 companies, use filtered shards and merge by `companyId`/`slug` (see the FAQ). |
 
 ### Example: fintech companies in Chicago
 
@@ -96,6 +113,21 @@ When an input cannot be matched to an exact BuiltIn slug or name, the actor emit
     "maxItems": 50
 }
 ```
+
+### Example: fintech companies across several markets
+
+BuiltIn does not combine repeated city parameters, so `locations` runs one directory request per market and unions the results:
+
+```json
+{
+    "mode": "browse",
+    "locations": ["chicago", "austin", "new-york-city"],
+    "industry": "fintech",
+    "maxItems": 150
+}
+```
+
+Each company is emitted once. `searchLocation` is the market that produced the record and `matchedLocations` lists every requested market where it appeared.
 
 ### Example: Python companies with 201-500 employees
 
@@ -129,6 +161,34 @@ When an input cannot be matched to an exact BuiltIn slug or name, the actor emit
 }
 ```
 
+### Example: companies with recent job cards
+
+```json
+{
+    "mode": "byCompany",
+    "companyUrls": ["stripe", "notion", "datadog"],
+    "includeJobCards": true,
+    "postedWithinDays": 7
+}
+```
+
+`jobCards` contains up to 20 recent cards from each public jobs page. `postedWithinDays` is applied to BuiltIn's relative age labels, so it is an approximate freshness filter rather than an exact posting-date cutoff.
+
+### Example: start from BuiltIn URLs
+
+```json
+{
+    "mode": "browse",
+    "startUrls": [
+        "https://builtin.com/companies?city=Chicago&industry=fintech",
+        { "url": "https://builtin.com/company/stripe" }
+    ],
+    "maxItems": 50
+}
+```
+
+Directory URLs are paginated from their `?page=` value (or page 1); profile URLs are enriched directly. The actor does not follow non-BuiltIn hosts and emits them as error rows.
+
 ## Use cases
 
 - **Talent acquisition** - build city and industry lists of tech employers with open roles and published work arrangements
@@ -146,8 +206,26 @@ No. The directory, company profiles and search results used here are public. No 
 **Do I need to configure a proxy?**
 No. The actor connects to BuiltIn automatically. Just fill in the input and run it.
 
-**What is the difference between `browse`, `search` and `byCompany`?**
-`browse` walks the directory and applies the filters. `search` matches company names and returns the closest matches. `byCompany` accepts only an exact slug or exact name match; unresolved inputs become error rows rather than a different company.
+**What is the difference between `browse`, `search`, `byCompany` and `startUrls`?**
+`browse` walks the directory and applies the filters. `search` matches company names and returns the closest matches. `byCompany` accepts only an exact slug or exact name match; unresolved inputs become error rows rather than a different company. `startUrls` skips the mode routes and reads the BuiltIn directory/profile URLs you supply.
+
+**Can I browse several cities in one run?**
+Yes. Put the markets in `locations`. BuiltIn does not OR repeated `city` parameters, so the actor makes a separate request per market, unions the companies and deduplicates by BuiltIn ID/slug. `location` remains the single-market fallback when `locations` is empty.
+
+**Why is `openJobsByCategoryIsPartial` set?**
+BuiltIn sometimes shows a total open-roles count that differs from the sum of the category links (for example, the total counts roles in categories the page does not list). The actor reports the published total as-is and sets the flag instead of inventing a new total.
+
+**Why is `descriptionIsTruncated` set?**
+The directory listing shows a shorter description than the full company profile. When `includeDetails` is off, or the profile has no longer description, the actor keeps the listing copy and flags it. A full detail/profile description clears the flag.
+
+**What does `recentJobsSampleSize` mean?**
+It is the number of job cards read from the profile, not the company's total number of open roles. Use `openJobsCount` for the published total.
+
+**What is the difference between `recentJobs` and `jobCards`?**
+`recentJobs` is a small sample read from the company profile with `includeProfile`. `jobCards` is read from the public `/company/{slug}/jobs` page with `includeJobCards` and includes the job's relative posted age. Both are samples; neither claims to be the complete job board.
+
+**Are job posting dates exact?**
+No. BuiltIn publishes relative labels such as `15 Hours Ago`, `2 Days Ago`, `One Month Ago` and `30+ Days Ago`. The actor stores that label as `postedAge`, derives `postedAgeDaysApprox`, and sets `postedAgeIsApproximate: true`. It does not invent an exact `postedAt` timestamp. Open-ended labels keep `postedAgeIsMinimum: true`, and `postedWithinDays` excludes cards whose freshness cannot be confirmed.
 
 **Why do some companies have no `employeeCount`, `founded` or `headquarters`?**
 Those values are self-reported by companies. If a company has not published a value, the field is omitted rather than guessed.
@@ -158,11 +236,29 @@ Those values are self-reported by companies. If a company has not published a va
 **Why do some companies have no tech stack?**
 Companies choose what to publish. Companies with no published stack omit `techStack` and `techStackSize`.
 
-**Why are `recentJobs` or `perks` missing?**
-`recentJobs` requires `includeProfile` (or a search/company lookup). `perks` requires `includeBenefits`. Both add one request per company.
+**Why are `recentJobs`, `jobCards` or `perks` missing?**
+`recentJobs` requires `includeProfile` (or a search/company lookup). `jobCards` requires `includeJobCards` (or `postedWithinDays`, which enables it). `perks` requires `includeBenefits`. Each option adds one request per company.
 
 **How many companies can one run return?**
-`maxItems` supports up to 10,000 records. BuiltIn serves 20 directory companies per page. The actor uses a page safety cap derived from `maxItems` plus a 50-page scan buffer, with a hard safety ceiling of 5,000 pages, and warns if it stops before reaching `maxItems`. Narrow filters help when client-side filters reject many records.
+`maxItems` supports up to 10,000 records per run. BuiltIn serves 20 directory companies per page, and the source directory is larger than 10,000 companies. The cap is intentionally not raised because larger single runs mean thousands of sequential listing requests and a higher chance of an early block. The actor uses a page safety cap derived from `maxItems` plus a 50-page scan buffer, with a hard safety ceiling of 5,000 pages, and warns when it stops because of `maxItems` or the page cap. With multiple `locations`, the page cap applies per market.
+
+**How do I get more than 10,000 companies?**
+Use sharded runs for more than 10,000 companies: run several smaller jobs and merge the datasets by `companyId` (or `slug`). Each shard can use the full 10,000 cap:
+
+```json
+{ "mode": "browse", "locations": ["chicago", "austin"], "industry": "fintech", "maxItems": 10000 }
+```
+
+```json
+{ "mode": "browse", "industry": "software", "technology": "python", "includeDetails": false, "maxItems": 10000 }
+```
+
+Shard by `locations`, `industry`, `technology` or a `startUrls` list. Keep `includeDetails: false` for the fastest listing-only pass, and deduplicate after merging because a company can appear in more than one market or filter. This is a supported workaround, not a claim that one run can enumerate the whole directory.
+
+**Does the actor rely on the `?page=` parameter?**
+Yes. BuiltIn's public directory HTML exposes only 20 companies per page and paginates with `?page=N`, so browse mode uses that parameter. BuiltIn's `robots.txt` for `User-agent: *` contains `Disallow: *?page=` (only `/jobs*?page=` is explicitly allowed), so this is a residual policy risk, not a robots-safe enumeration path. The actor stops a source on 403/429 and reports partial counts in the status message; it does not use translation proxies, mirror hosts, or a robots workaround.
+
+The GraphQL `filterCompanies` endpoint was tested as an alternative on 2026-11-06. A single request works, but `page=1` and `page=2` overlapped by 16 IDs out of 100 and left gaps, `perPage=5000` took about 53 seconds, and `perPage=10000` failed. Because paginated enumeration is not reliable, the actor does not use it. The recent-job-card path reads `/company/{slug}/jobs` without a `?page=` query. If robots compliance is mandatory for your use case, keep each run narrow (a market or industry shard with a low `maxItems`) and verify the current `robots.txt` before running.
 
 **How current is the data?**
 Every run reads BuiltIn live. Company profiles are maintained by the companies themselves, so values reflect what they have published at run time.
@@ -170,8 +266,12 @@ Every run reads BuiltIn live. Company profiles are maintained by the companies t
 **What happens if a `byCompany` name does not match exactly?**
 The actor emits an error row with `input` and `error` instead of guessing. Paste the company's BuiltIn URL if its display name differs from its slug.
 
+**Does `officeType` need extra requests?**
+
+Yes. The work model is published on the company detail/profile, not the listing card. When `officeType` is set and `includeDetails` is off, the actor enables detail enrichment automatically and says so in the status message. Size bands are applied client-side from the published employee count, so the actor does not use BuiltIn's robots-disallowed `/companies/size/...` URLs.
+
 **Can I use the browse filters with `search` or `byCompany`?**
-No. `location`, `industry`, `technology`, `companySize`, `officeType`, `hiringOnly` and `remoteJobsOnly` apply only to `browse`; in the other modes they are ignored with a clear warning in the status message.
+No. `locations`, `location`, `industry`, `technology`, `companySize`, `officeType`, `hiringOnly` and `remoteJobsOnly` apply only to `browse`; in the other modes they are ignored with a clear warning in the status message. For `startUrls`, encode BuiltIn-side filters in the URL itself; the local `minEmployees`, `maxEmployees`, `officeType` and `hiringOnly` checks still apply to directory URLs.
 
 **Is this affiliated with BuiltIn?**
 No. This is an independent, third-party actor that reads BuiltIn's public company directory and profiles. It is not affiliated with or endorsed by BuiltIn.

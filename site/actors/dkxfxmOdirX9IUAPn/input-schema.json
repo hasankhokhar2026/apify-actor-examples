@@ -1,0 +1,160 @@
+{
+  "description": "Scrape Amazon influencer/creator storefronts (/shop/{handle}): profile info, Idea Lists, and creator videos.",
+  "properties": {
+    "crawlIdeaLists": {
+      "default": true,
+      "description": "When true, opens each Idea List (up to `maxLists`) and extracts individual products (up to `maxItemsPerList`). When false, only the list summary cards (title, declared item count, image) are emitted.",
+      "prefill": true,
+      "title": "Crawl Idea List items",
+      "type": "boolean"
+    },
+    "handles": {
+      "default": [],
+      "description": "Amazon influencer handles, e.g. `gearvlogz` (from amazon.com/shop/gearvlogz). Combined with `marketplaceDomain` to build the shop URL.",
+      "editor": "stringList",
+      "prefill": [
+        "gearvlogz"
+      ],
+      "title": "Creator handles",
+      "type": "array"
+    },
+    "marketplaceDomain": {
+      "default": "amazon.com",
+      "description": "Amazon domain to use when building shop URLs from `handles`.",
+      "editor": "select",
+      "enum": [
+        "amazon.com",
+        "amazon.ca",
+        "amazon.com.mx",
+        "amazon.com.br",
+        "amazon.ie",
+        "amazon.es",
+        "amazon.co.uk",
+        "amazon.fr",
+        "amazon.com.be",
+        "amazon.nl",
+        "amazon.de",
+        "amazon.it",
+        "amazon.se",
+        "amazon.co.za",
+        "amazon.pl",
+        "amazon.eg",
+        "amazon.com.tr",
+        "amazon.sa",
+        "amazon.ae",
+        "amazon.in",
+        "amazon.sg",
+        "amazon.com.au",
+        "amazon.co.jp"
+      ],
+      "enumTitles": [
+        "United States (amazon.com)",
+        "Canada (amazon.ca)",
+        "Mexico (amazon.com.mx)",
+        "Brazil (amazon.com.br)",
+        "Ireland (amazon.ie)",
+        "Spain (amazon.es)",
+        "United Kingdom (amazon.co.uk)",
+        "France (amazon.fr)",
+        "Belgium (amazon.com.be)",
+        "Netherlands (amazon.nl)",
+        "Germany (amazon.de)",
+        "Italy (amazon.it)",
+        "Sweden (amazon.se)",
+        "South Africa (amazon.co.za)",
+        "Poland (amazon.pl)",
+        "Egypt (amazon.eg)",
+        "Turkey (amazon.com.tr)",
+        "Saudi Arabia (amazon.sa)",
+        "UAE (amazon.ae)",
+        "India (amazon.in)",
+        "Singapore (amazon.sg)",
+        "Australia (amazon.com.au)",
+        "Japan (amazon.co.jp)"
+      ],
+      "prefill": "amazon.com",
+      "title": "Marketplace domain",
+      "type": "string"
+    },
+    "maxItemsPerList": {
+      "default": 30,
+      "description": "Maximum number of product items to extract per Idea List.",
+      "maximum": 100,
+      "minimum": 1,
+      "prefill": 15,
+      "title": "Max items per Idea List",
+      "type": "integer"
+    },
+    "maxLists": {
+      "default": 10,
+      "description": "Maximum number of Idea Lists to process per shop.",
+      "maximum": 50,
+      "minimum": 1,
+      "prefill": 1,
+      "title": "Max Idea Lists per shop",
+      "type": "integer"
+    },
+    "maxVideos": {
+      "default": 20,
+      "description": "Maximum number of creator videos to extract per shop (tabs=all or videos).",
+      "maximum": 100,
+      "minimum": 1,
+      "prefill": 10,
+      "title": "Max videos per shop",
+      "type": "integer"
+    },
+    "proxyConfiguration": {
+      "default": {
+        "useApifyProxy": true
+      },
+      "description": "Apify proxy configuration. Defaults to the free AUTO (datacenter) group.",
+      "editor": "proxy",
+      "prefill": {
+        "useApifyProxy": true
+      },
+      "title": "Proxy configuration",
+      "type": "object"
+    },
+    "shopUrls": {
+      "default": [],
+      "description": "Full creator storefront URLs, e.g. `https://www.amazon.com/shop/gearvlogz`. Use this for non-default marketplaces or when you already have the exact URL.",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Shop URLs",
+      "type": "array"
+    },
+    "tabs": {
+      "default": "all",
+      "description": "Which tab(s) of the storefront to extract.",
+      "editor": "select",
+      "enum": [
+        "all",
+        "profile",
+        "ideaLists",
+        "videos"
+      ],
+      "enumTitles": [
+        "All (profile + Idea Lists + Videos)",
+        "Profile only",
+        "Idea Lists only",
+        "Videos only"
+      ],
+      "prefill": "all",
+      "title": "Content to scrape",
+      "type": "string"
+    },
+    "useResidentialProxy": {
+      "default": false,
+      "description": "By default the actor uses the free AUTO (datacenter) proxy group with a homepage-priming retry, escalating to residential only after repeated blocks. Enable this to always use residential proxy from the start (higher reliability, uses paid proxy credit).",
+      "prefill": false,
+      "title": "Force residential proxy",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "handles"
+  ],
+  "schemaVersion": 1,
+  "title": "Amazon Creator Shop Scraper Input",
+  "type": "object"
+}

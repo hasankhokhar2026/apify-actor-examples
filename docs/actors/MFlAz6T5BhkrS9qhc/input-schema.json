@@ -1,8 +1,8 @@
 {
-  "description": "Search Bluesky posts with keyword, hashtag, author, mention, domain and URL filters; read profiles, author feeds, threads, custom feeds, lists, starter packs, likes, reposts and quotes; and discover trending topics, feeds and starter packs. All data is public and needs no login, cookies, API key or proxy.",
+  "description": "Search Bluesky posts with keyword, hashtag, author, mention, domain and URL filters; read profiles, author feeds, full reply branches, custom feeds, lists, starter packs, likes, reposts, quotes, actor liked posts and public relationships; and discover trending topics, feeds and starter packs. All data is public and needs no login, cookies or API key.",
   "properties": {
     "actor": {
-      "description": "Bluesky handle or DID. Used by profile, follows, followers, lists, and discoveryType=suggestedFollows.",
+      "description": "Bluesky handle or DID. Used by profile, follows, followers, lists, actorLikes, actorFeeds, relationships, and discoveryType=suggestedFollows.",
       "editor": "textfield",
       "prefill": "bsky.app",
       "title": "Handle or DID",
@@ -10,7 +10,7 @@
     },
     "actors": {
       "default": [],
-      "description": "Handles, DIDs, or profile URLs for batch lookup. (mode=profiles)",
+      "description": "Handles, DIDs, or profile URLs for batch lookup. Used by profiles and by relationships as the accounts to check against `actor`.",
       "editor": "stringList",
       "items": {
         "type": "string"
@@ -63,7 +63,7 @@
     },
     "excludeLabeled": {
       "default": false,
-      "description": "Drop posts and accounts that carry moderation or self-labels.",
+      "description": "Drop posts and accounts that carry moderation or self-labels, including labels on a post's author.",
       "prefill": false,
       "title": "Exclude labeled",
       "type": "boolean"
@@ -137,8 +137,8 @@
       "type": "string"
     },
     "hydrateAuthors": {
-      "default": false,
-      "description": "Fetch full author profiles for post records. Adds one batched profile request per 25 unique authors.",
+      "default": true,
+      "description": "Fetch full author profiles for post records. Adds one batched profile request per 25 unique authors and flat author follower, following, post and verification fields. Enabled by default; the daily profile prefill leaves it off to stay cheap.",
       "prefill": false,
       "title": "Hydrate post authors",
       "type": "boolean"
@@ -586,6 +586,15 @@
       "title": "Max items",
       "type": "integer"
     },
+    "maxRepliesPerPost": {
+      "default": 100,
+      "description": "Maximum direct replies followed under each post while walking a thread. Larger values reach more branches but cost more requests. (mode=postThread)",
+      "maximum": 1000,
+      "minimum": 1,
+      "prefill": 100,
+      "title": "Max replies per post",
+      "type": "integer"
+    },
     "mediaOnly": {
       "default": false,
       "description": "Only emit posts with at least one image, video, or external embed.",
@@ -652,14 +661,17 @@
         "getLikes",
         "repostedBy",
         "quotes",
+        "actorLikes",
         "getList",
         "listFeed",
         "lists",
+        "actorFeeds",
         "getStarterPack",
+        "starterPackSearch",
         "feedGenerator",
         "feedGeneratorsDiscovery",
-        "discovery",
-        "getActorLikes"
+        "relationships",
+        "discovery"
       ],
       "enumTitles": [
         "Search posts - keyword, hashtag, author, mention, domain or URL",
@@ -667,7 +679,7 @@
         "Profiles - batch lookup by handle or DID",
         "Account search - find users by keyword",
         "Feed - custom feed or built-in preset",
-        "Post thread - post, replies, optional parents",
+        "Post thread - post, full reply branches, optional parents",
         "URL fetch - expand bsky.app post, profile, list, feed or starter-pack URLs",
         "Get posts - batch-hydrate AT URIs or post URLs",
         "Follows - accounts a user follows",
@@ -675,16 +687,19 @@
         "Likes - accounts that liked a post",
         "Reposts - accounts that reposted a post",
         "Quotes - posts quoting a post",
+        "Actor likes - posts an account liked, via its public PDS",
         "List members - one or more lists, optional list metadata",
         "List feed - posts in a list",
         "Lists - lists created by an account",
+        "Actor feeds - feed generators created by an account",
         "Starter packs - pack details and members",
+        "Starter-pack search - find starter packs by keyword",
         "Feed generator - details for one or more feeds",
         "Feed discovery - popular feed generators",
-        "Discovery - trending topics, suggested feeds, starter packs, tags, follows",
-        "Actor likes (not available - profile fallback)"
+        "Relationships - public follow/block checks for supplied accounts",
+        "Discovery - trending topics, suggested feeds, starter packs, tags, follows"
       ],
-      "prefill": "search",
+      "prefill": "profile",
       "title": "Mode",
       "type": "string"
     },
@@ -716,6 +731,13 @@
       "title": "Bluesky URLs",
       "type": "array"
     },
+    "respectNoUnauthenticated": {
+      "default": true,
+      "description": "Skip records whose author carries the `!no-unauthenticated` label. The run status reports how many records were skipped.",
+      "prefill": true,
+      "title": "Respect no-unauthenticated accounts",
+      "type": "boolean"
+    },
     "searchDomain": {
       "description": "Only posts linking to this domain, e.g. `github.com`. (mode=search)",
       "editor": "textfield",
@@ -724,15 +746,15 @@
     },
     "searchQuery": {
       "default": "bluesky",
-      "description": "Keyword, hashtag, phrase, or Lucene-style query. Used by search, actorSearch, and feedGeneratorsDiscovery.",
+      "description": "Keyword, hashtag, phrase, or Lucene-style query. Used by search, actorSearch, starterPackSearch, and feedGeneratorsDiscovery.",
       "editor": "textfield",
       "prefill": "bluesky",
       "title": "Search query",
       "type": "string"
     },
     "searchSort": {
-      "default": "top",
-      "description": "Search ranking. `latest` enables time-window pagination beyond 100 posts; `top` is relevance-ranked and capped at about 100.",
+      "default": "latest",
+      "description": "Search ranking. `latest` returns newest first; `top` returns engagement-ranked posts. Both use time-window pagination to collect beyond one page.",
       "editor": "select",
       "enum": [
         "top",
@@ -742,7 +764,7 @@
         "Top - engagement-ranked",
         "Latest - newest first (supports deeper collection)"
       ],
-      "prefill": "top",
+      "prefill": "latest",
       "title": "Search sort",
       "type": "string"
     },
@@ -788,7 +810,7 @@
     },
     "threadDepth": {
       "default": 6,
-      "description": "How many reply levels and ancestor levels to walk. 0 returns only the requested post. (mode=postThread)",
+      "description": "How many reply levels and ancestor levels to walk. Depths beyond about 10 reply levels are reached by walking reply branches across requests. 0 returns only the requested post. (mode=postThread)",
       "maximum": 1000,
       "minimum": 0,
       "prefill": 6,

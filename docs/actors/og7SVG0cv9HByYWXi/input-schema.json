@@ -1,5 +1,5 @@
 {
-  "description": "Search BizBuySell by keyword, state, city, county, industry, price, cash flow, revenue and listing type, or paste search/listing URLs and IDs.",
+  "description": "Search BizBuySell by keyword, state, city, county, industry, price, cash flow, revenue and listing type, paste search/listing URLs and IDs, or monitor new and changed listings across runs with a state key.",
   "properties": {
     "absenteeOwner": {
       "default": false,
@@ -455,6 +455,14 @@
       "title": "County",
       "type": "string"
     },
+    "emitUnchanged": {
+      "default": false,
+      "description": "With stateKey, also emit listings whose tracked fields did not change. Leave off to receive only new or changed listings.",
+      "editor": "checkbox",
+      "prefill": false,
+      "title": "Also emit unchanged listings",
+      "type": "boolean"
+    },
     "enrichDetails": {
       "default": false,
       "description": "Adds full description, gross revenue, employees, established year, inventory, FF&E, rent, facilities, financing and broker phone. Adds one request per listing and is slower.",
@@ -614,6 +622,14 @@
       "title": "Mode",
       "type": "string"
     },
+    "onlyNew": {
+      "default": false,
+      "description": "With stateKey, emit only listing IDs that were never seen in a previous run. New/changed records are emitted by default when stateKey is set.",
+      "editor": "checkbox",
+      "prefill": false,
+      "title": "Only new listings",
+      "type": "boolean"
+    },
     "priceReduced": {
       "default": false,
       "description": "Only listings with a reduced asking price.",
@@ -621,6 +637,12 @@
       "prefill": false,
       "title": "Price reduced only",
       "type": "boolean"
+    },
+    "proxyConfiguration": {
+      "description": "Optional override for advanced users. Leave empty to let the actor connect directly and choose its own fallback route; search works without any proxy setup.",
+      "editor": "proxy",
+      "title": "Proxy configuration (optional)",
+      "type": "object"
     },
     "realEstateIncluded": {
       "default": false,
@@ -800,6 +822,20 @@
       "prefill": "ALL",
       "title": "State",
       "type": "string"
+    },
+    "stateKey": {
+      "description": "Optional. Set the same key on scheduled runs to remember previously seen listings in a named key-value store. Leave empty for stateless scraping.",
+      "editor": "textfield",
+      "title": "Monitoring state key",
+      "type": "string"
+    },
+    "strictFilters": {
+      "default": false,
+      "description": "When a gross-revenue filter is set, trust BizBuySell's source-side filter when detail revenue is unavailable; when enrichDetails successfully reads a detail page, drop records whose detail revenue is still unknown. Default false.",
+      "editor": "checkbox",
+      "prefill": false,
+      "title": "Strict gross-revenue filtering",
+      "type": "boolean"
     }
   },
   "required": [

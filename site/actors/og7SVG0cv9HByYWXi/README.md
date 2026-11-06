@@ -9,6 +9,7 @@ BizBuySell is the largest US marketplace for buying and selling small businesses
 - **Get the financial picture** — asking price, cash flow (SDE), EBITDA, gross revenue, real estate, inventory, FF&E, rent, year established and employee count when the seller discloses them.
 - **Reach the broker** — broker name, phone, company and profile link from the listing and its detail page.
 - **Go deeper on demand** — turn on `enrichDetails` for the full description, facilities, competition, growth, financing, support and reason for selling.
+- **Monitor new and changed listings** — set `stateKey` on scheduled runs to remember what was already seen; `onlyNew` and `emitUnchanged` control whether you receive new, changed or every listing.
 - Empty fields are omitted, never sent as `null`.
 
 ## Output per listing
@@ -34,14 +35,31 @@ BizBuySell is the largest US marketplace for buying and selling small businesses
 - `adLevelId`, `adLevel` — marketplace placement level
 - `category` — industry path, e.g. `Laundromats and Coin Laundry > Dry Cleaners`
 - `image` — primary photo URL; with `mirrorImages` on (the default) this is a public Apify storage URL that opens from any client. If you turn mirroring off, this is the source CDN URL and may return 403.
+- `images` — every photo URL the search result exposes, in source order. These are the original BizBuySell CDN URLs.
 - `imageOriginal` — the source BizBuySell CDN URL, kept for traceability; the CDN may return 403 to a clean shell, so use `image` for customer-facing links
+- `imageStatus` — `mirrored`, `mirror_failed` or `skipped` when image mirroring is requested
 - `recentlyAdded`, `recentlyUpdated`, `priceReduced` — listing freshness flags
+- `daysListedAgo`, `daysModifiedAgo` — days since the listing was added or modified, only when BizBuySell reports them; never calculated from an invented date
+- `hotProperty`, `franchiseResale` — marketplace badges when the search result reports them
+- `leaseRateDuration`, `leaseRatePerSquareFoot` — raw lease terms exactly as the search result reports them
+- `leaseDurationMonths` — lease duration normalized to months only when the raw text states years or months (for example `5 years` → `60`); omitted when the unit is not explicit
+- `leaseRatePerSquareFootNumeric`, `leaseRatePerSquareFootPeriod` — numeric per-square-foot rate and the period (`year`, `month`, `week` or `day`) only when the source text states it; the raw `leaseRatePerSquareFoot` text is retained
+- `listingStatus`, `listingStatusSource`, `listingStatusEvidence`, `statusCheckedAt` — `inactive` tombstone for an explicit listing ID that a successful lookup no longer returns; this is the actor's observed absence, not a BizBuySell sold/expired status
 - `realEstateIncluded` — real estate included in the asking price
 - `sellerFinancing`, `homeBased` — seller terms and operating style, with `enrichDetails`
 - `brokerName`, `brokerPhone`, `brokerCompany`, `brokerProfileUrl` — listing contact
 - `facilities`, `competition`, `growthAndExpansion`, `financing`, `supportAndTraining`, `reasonForSelling` — detail-page narrative, with `enrichDetails`
 - `buildingSquareFeet`, `website` — premises size and business website, with `enrichDetails`
-- `searchUrl` — the search page that produced the listing
+- `detailsRaw` — raw detail-page labels and values (for example `"Cash Flow (SDE)": "$75,000"`), with `enrichDetails`
+- `enriched` — `true` only when the detail page was fetched and merged
+- `detailStatus` — `ok`, `blocked`, `timeout`, `skipped` or `error`; `skipped` covers `enrichDetails` off and the circuit breaker
+- `detailError` — the reason enrichment was blocked, timed out, failed or was skipped by the circuit breaker
+- `searchUrl` — the exact search URL, including every filter and sort used; listing-ID and listing-URL runs use the listing URL as provenance
+- `searchTotal` — the total the source reported for that search, when it returned one
+- `truncated` — `true` when `maxItems` or the 10,000-result window actually cut the result set
+- `searchInput` — the normalized search filters used for the record
+- `isNew`, `changed`, `changedFields`, `previousValues` — incremental-monitoring signals when `stateKey` is set; a new listing has `isNew: true`, a previously seen listing with different tracked fields has `changed: true` and lists them in `changedFields`
+- `firstSeenAt`, `lastSeenAt`, `lastChangedAt`, `monitorStateKey` — actor observation timestamps and the state key used for monitoring; these are not BizBuySell-provided listing dates
 - `recordType: "businessListing"`, `scrapedAt` — UTC ISO 8601 timestamp
 
 ## Input
@@ -67,11 +85,16 @@ BizBuySell is the largest US marketplace for buying and selling small businesses
 | `absenteeOwner` | boolean | `false` | Only absentee-owner listings |
 | `priceReduced` | boolean | `false` | Only price-reduced listings |
 | `franchiseResale` | boolean | `false` | Only franchise resales |
+| `strictFilters` | boolean | `false` | Enforce the gross-revenue filter strictly. The source-side filter is trusted when detail revenue is unavailable; with `enrichDetails`, unknown detail values are dropped |
 | `enrichDetails` | boolean | `false` | Fetch each listing's detail page for full financials and narrative |
 | `mirrorImages` | boolean | `true` | Copy photos into public Apify storage and return stable URLs |
 | `startUrls` | array | `[]` | BizBuySell search, category or listing URLs (mode=byUrls) |
 | `listingIds` | array | `[]` | Numeric listing IDs (mode=byListingIds) |
 | `maxItems` | integer | `50` | Hard cap, 1–10,000 |
+| `stateKey` | string | – | Optional incremental-monitoring key. Reuse the same key on scheduled runs to persist seen listings in a named key-value store |
+| `onlyNew` | boolean | `false` | With `stateKey`, emit only listing IDs never seen in a previous run |
+| `emitUnchanged` | boolean | `false` | With `stateKey`, also emit listings whose tracked fields did not change; leave off for new/changed only |
+| `proxyConfiguration` | object | – | Optional proxy override; leave empty to use the actor's own connection fallback |
 
 ### Example: California laundromats with strong cash flow
 
@@ -123,6 +146,21 @@ BizBuySell is the largest US marketplace for buying and selling small businesses
 }
 ```
 
+### Example: daily monitoring of new California laundromats
+
+```json
+{
+  "mode": "search",
+  "searchQuery": "laundromat",
+  "state": "CA",
+  "maxItems": 50,
+  "stateKey": "ca-laundromats",
+  "onlyNew": true
+}
+```
+
+Run this on a schedule with the same `stateKey`; each run emits only listing IDs that were not seen before. Drop `onlyNew` and keep `emitUnchanged: false` to receive new plus changed listings, or set `emitUnchanged: true` to receive every match with change flags.
+
 ## Use cases
 
 - **Deal sourcing** — build a daily shortlist of businesses for sale by state, county, industry and cash flow.
@@ -142,6 +180,25 @@ No. Every field comes from public listing pages and the public search feed. No l
 
 Each run reads the current search results and listing pages, so the dataset reflects what BizBuySell shows at that moment.
 
+### How does incremental monitoring work?
+
+Set `stateKey` to a stable name, for example `ca-laundromats`, and reuse it on every scheduled run. The actor stores a per-listing field snapshot and observation timestamps in the named Apify key-value store `bizbuysell-monitor-state`, under the `stateKey` record, not in the dataset. Each emitted record then carries `isNew`, `changed`, `changedFields`, `previousValues`, `firstSeenAt`, `lastSeenAt` and `lastChangedAt`.
+
+- `onlyNew: true` emits only listing IDs that were never seen before.
+- With `onlyNew: false` and `emitUnchanged: false` (the default when `stateKey` is set), only new or changed listings are emitted.
+- `emitUnchanged: true` emits every match and still annotates changes.
+- Without `stateKey`, every run is stateless and always emits every matching listing. Use a new `stateKey` to start a fresh baseline.
+
+The tracked fields are search-level (title, price, cash flow, EBITDA, location, listing type, status and freshness flags), so a temporarily unavailable detail page does not create false price-change alerts. Monitoring timestamps are observation times recorded by the actor, not listing dates published by BizBuySell.
+
+### Which date and status fields are available?
+
+BizBuySell's search feed sometimes exposes `daysListedAgo` and `daysModifiedAgo`; the actor emits them only when the source provides them. `recentlyAdded` and `recentlyUpdated` come from the same feed. Detail-page date-listed or sold/expired status is not reliably exposed by BizBuySell; that part is a hard limit, so the actor does not invent one. For explicit `listingIds` or listing URLs, an ID that a successful lookup no longer returns is emitted as a tombstone with `listingStatus: "inactive"`, `listingStatusSource: "listing-id-lookup"` and `statusCheckedAt`. Tombstones keep the ID, status, provenance and observation timestamps but do not invent a title or price. A failed lookup is not treated as an inactive listing.
+
+### How are lease terms normalized?
+
+The raw `leaseRateDuration` and `leaseRatePerSquareFoot` text is always preserved. `leaseDurationMonths` is added only when the raw duration states a year or month unit. `leaseRatePerSquareFootNumeric` is the amount and `leaseRatePerSquareFootPeriod` is set only when the source text names the period. A bare number such as `20` is not assumed to be monthly or annual.
+
 ### Why are some financial fields missing?
 
 Sellers fill in cash flow, revenue, EBITDA, inventory and similar fields voluntarily. If a seller did not disclose a figure, that field is omitted from the record instead of being invented.
@@ -156,11 +213,15 @@ Cash flow (SDE) is the seller's discretionary earnings after owner compensation 
 
 ### How many listings can I get in one run?
 
-BizBuySell returns up to 10,000 results per query. To go deeper, split the market into smaller slices — for example one state, county or category at a time — and combine the runs. `maxItems` is capped at 10,000 for the same reason.
+BizBuySell returns up to 10,000 results per query. To go deeper, split the market into smaller slices — for example one state, county or category at a time — and combine the runs. `maxItems` is capped at 10,000 for the same reason. Each search-mode record carries `searchTotal` when the source reports it, and `truncated` tells you whether `maxItems` or the 10,000-result window actually cut that search short.
 
 ### Does `enrichDetails` always fill every detail field?
 
-It fills what the public detail page shows. The detail page is sometimes rate-limited by the site, so the actor treats enrichment as best-effort: when a detail page is unavailable, the listing is still saved with its search-result fields and the run continues.
+It fills what the public detail page shows. The detail page is sometimes rate-limited by the site, so the actor treats enrichment as best-effort: when a detail page is unavailable, the listing is still saved with its search-result fields and the run continues. Every record states `enriched` and `detailStatus`, with `detailError` when applicable; records skipped after repeated failures are marked `detailStatus: "skipped"` rather than being reported as enriched.
+
+### How does the gross-revenue filter behave when revenue is unknown?
+
+The search feed rarely includes gross revenue, but BizBuySell applies the gross-income range on its own search endpoint. The actor trusts that source-side filter when detail revenue is unavailable. With `enrichDetails`, a missing detail value is included unless `strictFilters: true` is set; strict filtering only drops unknowns when detail data was expected. The run status message states which behavior was used, so the filter is never silently claimed to be complete.
 
 ### Can I search by city or county?
 
@@ -172,7 +233,7 @@ BizBuySell ranks keyword matches by relevance across the listing, including the 
 
 ### Can I get broker email addresses?
 
-No. BizBuySell's public pages expose the broker's name and phone number, not an email address. The actor does not invent or enrich emails.
+No. This is a hard limit. BizBuySell's public search API returns broker name, phone and profile URL only, and the public detail page's broker block exposes name, phone and profile link with no email address. The actor does not invent, guess or enrich emails.
 
 ### Why does `imageOriginal` sometimes fail to open?
 
@@ -188,7 +249,7 @@ Fields such as gross revenue, inventory, FF&E, rent, employees, year established
 
 ### Do I need to set up a proxy?
 
-No. The actor chooses a working connection to BizBuySell automatically. Just fill in the input and run it.
+No. Search works with no proxy at all, and the actor chooses a fallback connection for detail pages automatically. `proxyConfiguration` is an optional override for advanced users only; leaving it empty is the recommended setup.
 
 ### Is this affiliated with BizBuySell?
 

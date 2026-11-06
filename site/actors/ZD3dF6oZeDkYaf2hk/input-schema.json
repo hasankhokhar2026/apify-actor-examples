@@ -1,5 +1,5 @@
 {
-  "description": "Scrape official NCAA team and player leaderboards, ranking polls, conference standings, the school directory, schedules/scores, game details, and championship history.",
+  "description": "Scrape official NCAA team and player leaderboards, ranking polls, conference standings, the school directory, schedules/scores, game details, and championship history. Use listOptions to discover the valid sports, divisions, categories, polls, and conferences without scraping.",
   "properties": {
     "conference": {
       "default": "all",
@@ -89,7 +89,7 @@
     },
     "division": {
       "default": "d1",
-      "description": "NCAA competition division. Football uses FBS/FCS; men's volleyball and women's ice hockey use `nc` (National Collegiate) for polls and history. The actor maps women's ice hockey `nc` schedules to NCAA.com's d1 scoreboard page. Not every division is offered for every sport; an unsupported combination returns a clear status message instead of data.",
+      "description": "NCAA competition division. Football uses FBS/FCS; men's volleyball and women's ice hockey use `nc` (National Collegiate) for polls and history. The actor maps women's ice hockey `nc` schedules to NCAA.com's d1 scoreboard page. Not every division is offered for every sport; an unsupported combination returns a clear status message instead of data. Optional scope for `mode=listOptions`.",
       "editor": "select",
       "enum": [
         "d1",
@@ -135,7 +135,7 @@
     },
     "includeGameDetails": {
       "default": false,
-      "description": "(mode=schedules) Add venue, city/state, linescores, records, and hasBoxscore/hasPbp to each game. Adds one game-page request plus one game-detail request per record.",
+      "description": "(mode=schedules or teamSchedule) Add venue, city/state, linescores, records, and hasBoxscore/hasPbp to each game. Adds one game-page request plus one game-detail request per record.",
       "prefill": false,
       "title": "Enrich schedules with game details",
       "type": "boolean"
@@ -148,9 +148,8 @@
       "type": "boolean"
     },
     "maxItems": {
-      "default": 50,
-      "description": "Hard cap on the number of records emitted in this run. Leaderboard modes are also capped at 2,000 source rows (40 pages); the actor emits a status message if that cap is reached before maxItems.",
-      "maximum": 2000,
+      "description": "Hard cap on the number of records emitted in this run, 1-5,000. When omitted, a mode-aware default is used (2,000 for leaderboards, 1,000 for polls/standings/history, 5,000 for the school directory and listOptions, 500 for schedules and brackets, 100 for teamSchedule and game detail). Leaderboard modes are also capped at 2,000 source rows (40 pages). The actor sets a status message whenever maxItems or the page cap actually truncates the output.",
+      "maximum": 5000,
       "minimum": 1,
       "prefill": 3,
       "title": "Max items",
@@ -165,7 +164,7 @@
     },
     "mode": {
       "default": "teamStats",
-      "description": "What to scrape from NCAA.com.",
+      "description": "What to scrape from NCAA.com. `listOptions` returns the valid modes, sports, divisions, categories, polls, and conferences from the built-in catalog (optionally scoped with `sport`/`division`) without making any NCAA.com requests. `teamSchedule` returns one team's full season (no 31-day limit); `brackets` returns championship / March Madness bracket games from NCAA.com's official championship route.",
       "editor": "select",
       "enum": [
         "teamStats",
@@ -174,8 +173,11 @@
         "standings",
         "teams",
         "schedules",
+        "teamSchedule",
+        "brackets",
         "gameDetail",
-        "history"
+        "history",
+        "listOptions"
       ],
       "enumTitles": [
         "Team statistical leaderboards",
@@ -184,8 +186,11 @@
         "Conference standings",
         "NCAA school directory",
         "Schedules and scores",
+        "Team season schedule (full season, not limited to 31 days)",
+        "Championship / March Madness brackets",
         "Game detail (venue, linescores, box score, play-by-play)",
-        "Championship history"
+        "Championship history",
+        "Available options (modes, sports, divisions, categories, polls, conferences)"
       ],
       "prefill": "teamStats",
       "title": "Mode",
@@ -199,7 +204,7 @@
     },
     "pollSlug": {
       "default": "di-mens-basketball-associated-press",
-      "description": "(mode=rankings) Which NCAA-hosted poll to scrape. The valid set depends on the chosen sport and division. If the default poll is not available for the chosen sport/division, the actor falls back to the first valid poll.",
+      "description": "(mode=rankings) Which NCAA-hosted poll to scrape. The valid set depends on the chosen sport and division. If the default poll is not valid for the chosen sport/division, the actor uses a curated default (AP for D1 basketball and FBS football, AFCA Coaches for FCS, and the primary coaches/RPI/AVCA poll elsewhere) and reports the substitution in the run status. An explicitly unavailable poll returns a clear status message.",
       "editor": "select",
       "enum": [
         "2026-march-madness-womens-seeding",
@@ -298,7 +303,7 @@
       "type": "integer"
     },
     "scheduleDateFrom": {
-      "description": "(mode=schedules) Optional first date in YYYY-MM-DD format. Leave both date fields empty to use NCAA.com's current game date. Date ranges are capped at 31 days.",
+      "description": "(mode=schedules) Optional first date in YYYY-MM-DD format. Leave both date fields empty to use NCAA.com's current game date. Date ranges are capped at 31 days. This field does not apply to `teamSchedule`, which scans the full season.",
       "editor": "textfield",
       "title": "Schedule date from",
       "type": "string"
@@ -311,10 +316,13 @@
     },
     "season": {
       "default": "current",
-      "description": "(mode=teamStats, individualStats, or schedules) Season/year. `Current season` follows whichever season NCAA.com is actively showing. Historical depth varies by sport; unsupported seasons return a clear status message.",
+      "description": "(mode=teamStats, individualStats, teamSchedule, or brackets) Season/year. `Current season` follows whichever season NCAA.com is actively showing. `YYYY-YY` labels such as `2025-26` are accepted and mapped to their starting year for leaderboards and team schedules. For `mode=brackets`, enter the tournament year shown in NCAA.com's bracket URL (for example `2026`); a `YYYY-YY` label tries the ending year first and then the starting year, and `current` tries the current calendar year then the previous year. Historical depth varies by sport; unsupported seasons return a clear status message.",
       "editor": "select",
       "enum": [
         "current",
+        "2026-27",
+        "2025-26",
+        "2024-25",
         "2026",
         "2025",
         "2024",
@@ -328,6 +336,9 @@
       ],
       "enumTitles": [
         "Current season",
+        "2026-27",
+        "2025-26",
+        "2024-25",
         "2026",
         "2025",
         "2024",
@@ -345,7 +356,7 @@
     },
     "sport": {
       "default": "basketball-men",
-      "description": "NCAA sport to scrape. Required for the sport-specific modes; ignored by `mode=teams` and `mode=gameDetail`.",
+      "description": "NCAA sport to scrape. Required for the sport-specific modes; ignored by `mode=teams` and `mode=gameDetail`; optional scope for `mode=listOptions`.",
       "editor": "select",
       "enum": [
         "baseball",
@@ -385,7 +396,7 @@
     },
     "statCategory": {
       "default": "Scoring Offense",
-      "description": "(mode=teamStats or individualStats) The statistic to rank by. Every NCAA.com category is listed; the valid set depends on the chosen sport and mode. If the default category is not available for the chosen sport/mode, the actor falls back to the first valid category.",
+      "description": "(mode=teamStats or individualStats) The statistic to rank by. Every NCAA.com category is listed; the valid set depends on the chosen sport and mode. If the default `Scoring Offense` is not valid for the chosen sport/mode, the actor uses a curated per-sport default (for example Points Per Game for men's/women's basketball players, Passing Yards Per Game for FBS players, Batting Average for baseball/softball) and reports the substitution in the run status. An explicitly unavailable category returns a clear status message.",
       "editor": "select",
       "enum": [
         "3rd Down Conversion Pct",
@@ -476,7 +487,6 @@
         "Goals Per Game",
         "Goals per Game",
         "Goals-Against Average",
-        "Ground Balls",
         "Ground Balls Per Game",
         "Hat Tricks",
         "Hit Batters",
@@ -526,7 +536,6 @@
         "Penalty Killing Percentage",
         "Pitching Appearances",
         "Points",
-        "Points Allowed",
         "Points Per Game",
         "Points per Game",
         "Points Per Set",
@@ -609,7 +618,6 @@
         "Team Faceoff win percentage",
         "Team Goals Against Average",
         "Team Kills",
-        "Team Minutes",
         "Team Passing Efficiency",
         "Team Passing Efficiency Defense",
         "Team Penalty Minutes Per Game",
@@ -671,7 +679,6 @@
         "WHIP",
         "Win Percentage",
         "Winning Percentage",
-        "Winning Streaks(DII&III)",
         "WL Pct",
         "WL Percentage",
         "Won-Lost-Tied Percentage",
@@ -768,7 +775,6 @@
         "Goals Per Game",
         "Goals per Game",
         "Goals-Against Average",
-        "Ground Balls",
         "Ground Balls Per Game",
         "Hat Tricks",
         "Hit Batters",
@@ -818,7 +824,6 @@
         "Penalty Killing Percentage",
         "Pitching Appearances",
         "Points",
-        "Points Allowed",
         "Points Per Game",
         "Points per Game",
         "Points Per Set",
@@ -901,7 +906,6 @@
         "Team Faceoff win percentage",
         "Team Goals Against Average",
         "Team Kills",
-        "Team Minutes",
         "Team Passing Efficiency",
         "Team Passing Efficiency Defense",
         "Team Penalty Minutes Per Game",
@@ -963,7 +967,6 @@
         "WHIP",
         "Win Percentage",
         "Winning Percentage",
-        "Winning Streaks(DII&III)",
         "WL Pct",
         "WL Percentage",
         "Won-Lost-Tied Percentage",
@@ -976,13 +979,13 @@
       "type": "string"
     },
     "team": {
-      "description": "Optional case-insensitive team/school name filter. Applies to leaderboards, polls, standings, schedules, game detail, and the school directory. Leave empty for all teams.",
+      "description": "Optional case-insensitive team/school name or NCAA.com school slug filter. Applies to leaderboards, polls, standings, schedules, teamSchedule, brackets, game detail, and the school directory. `mode=teamSchedule` requires this field; for example `duke` or `Duke` matches either team in each contest. Leave empty for all teams in the other modes.",
       "editor": "textfield",
       "title": "Team filter",
       "type": "string"
     },
     "week": {
-      "description": "(mode=schedules, sport=football) Week number. Football schedules are week-based; leave empty to use the current NCAA.com week.",
+      "description": "(mode=schedules, sport=football) Week number. Football schedules are week-based; leave empty to use the current NCAA.com week. `mode=teamSchedule` uses the full season calendar automatically and does not need this field.",
       "maximum": 20,
       "minimum": 1,
       "title": "Football week",
@@ -993,6 +996,6 @@
     "mode"
   ],
   "schemaVersion": 1,
-  "title": "NCAA Team & Player Leaderboards, Polls & Standings Input",
+  "title": "NCAA Stats & Scores: Team & Player Leaderboards, Polls & Standings Input",
   "type": "object"
 }
