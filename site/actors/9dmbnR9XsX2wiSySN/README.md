@@ -1,79 +1,123 @@
 # YouTube Ad Creative & Advertiser Tracker
 
-Pull the ad creatives a brand is actually running on YouTube, straight from Google's public Ads Transparency Center. Hand it a keyword, an advertiser name, or an advertiser AR-ID and get back every matching ad creative with its thumbnail, format, country, and the dates it was first and last shown.
+Pull the ad creatives a brand is actually running on YouTube, straight from Google's public Ads Transparency Center. Hand it a keyword, a domain, an advertiser name, or an advertiser AR-ID and get back every matching ad creative with its thumbnail, format, queried region, flight dates, and — when Google exposes it — the YouTube `videoId`, watch URL, thumbnail, and duration.
 
 ## What this actor does
 
-- **Two ways in:** pass advertiser names/AR-IDs directly, or give keywords and let the actor discover matching advertisers first
-- **YouTube-scoped:** every creative returned was served on YouTube, not Google's wider display network
-- **Country and date filters:** narrow by ISO-2 country code and by first-shown date window
-- **Multiple export formats:** dataset JSON always, plus optional CSV, Excel, or HTML written to the key-value store
-- **Empty fields are omitted** — a record only carries the values Google actually returned for that creative
+- **Four ways in:** advertiser names, AR-IDs, Transparency Center URLs, or landing domains
+- **Cursor pagination:** follows Google's `response.2` cursor back as `request.4` until `maxAdsPerAdvertiser` or `maxItems` is reached
+- **Server-side filters:** sends the queried region (`3.8`), format (`3.4`), and served-date window (`3.6`/`3.7`) to Google
+- **Correct date semantics:** keeps ads whose flight overlaps the requested window (`firstShown <= dateTo` and `lastShown >= dateFrom`), so `dateTo` no longer drops long-running ads
+- **YouTube metadata from previews:** resolves `videoId`, watch URL, `ytimg` thumbnail, and duration from `content.js` previews first, with `GetCreativeById` as a fallback
+- **Honest country fields:** `countryCode` is the queried region, `advertiserCountryCode` is the advertiser's headquarters, and `servedRegions` comes from Google's per-creative detail when enrichment is on
+- **Diagnostics:** distinguishes blocked, empty, filtered-empty and partial runs, and writes one `advertiser` record per target plus a `run_summary`
+- **Monitor mode:** `onlyNew` + `monitorStoreName` remembers seen ad IDs and outputs only new ads, marked `isNew: true`
+- **Multiple exports:** dataset JSON always, plus optional CSV, Excel, or HTML in the key-value store; every export includes `scrapedAt`
 
-## Output per ad creative
+## Dataset records
 
-- `adId` — the creative's unique ID (e.g. `CR09196456782480801793`)
-- `advertiserId` — the advertiser's AR-ID
-- `advertiserName` — advertiser display name
-- `countryCode` — ISO-2 country this creative was matched under (omitted when advertisers were passed directly by AR-ID)
-- `format` — `VIDEO` or `IMAGE`
-- `mediaType` — `video` or `image`
-- `imageUrl`, `imageWidth`, `imageHeight` — the creative's thumbnail/preview image and its dimensions
-- `videoUrl` — resolved playable video URL, only present when `includeVideoDetails` is enabled and Google exposes it
-- `firstShown`, `lastShown` — timestamps the creative was first and most recently observed running
-- `adCount` — total creative count Google reports for the advertiser at query time
-- `searchTerm` — the keyword that surfaced this advertiser (present only for keyword-discovered results)
-- `sourceUrl` — the Ads Transparency Center page for this exact creative
-- `scrapedAt` — when the actor fetched the record
+Every dataset item has a `recordType`:
 
-When no ad creatives match the input at all, the dataset instead gets a single status row (`recordType: "status"`, `status: "no_ads_found"`) echoing back the `searchTerms`/`countries`/`dateFrom`/`dateTo` that were tried, so an empty dataset always comes with an explanation.
+- `ad` — one YouTube ad creative (the main records)
+- `advertiser` — one row per resolved advertiser/domain with status, pages fetched, and ads collected
+- `run_summary` — one row per run with overall status, counts, filters, and diagnostics
+
+### Ad fields
+
+- `adId` — Google creative ID (e.g. `CR09196456782480801793`)
+- `advertiserId`, `advertiserName` — Google advertiser identity
+- `advertiserCountryCode` — advertiser headquarters country from suggestions, when known
+- `countryCode`, `queriedRegions` — region(s) used for the ad request (e.g. `US`, `anywhere`)
+- `servedRegions` — countries where the creative was served (normally from `includeVideoDetails`; may also appear when preview resolution triggers a detail fetch)
+- `format`, `mediaType` — `TEXT`/`image` mapping from Google's verified codes `1/2/3`
+- `imageUrl`, `imageWidth`, `imageHeight` — archived screenshot/thumbnail
+- `previewUrl` — Google's `content.js` preview bundle
+- `videoId` — YouTube video ID from a preview (`ytimg`/YouTube URL); omitted when Google does not expose it
+- `videoUrl` — direct `googlevideo.com` media URL when the creative exposes one (baseline-compatible)
+- `videoPageUrl` — `https://www.youtube.com/watch?v=<videoId>`
+- `landingUrl` — advertiser click URL decoded from the creative overlay when present
+- `videoThumbnailUrl` — `ytimg.com` thumbnail found in the preview
+- `videoDurationSeconds` — duration parsed from the preview (`dur=` or VAST)
+- `videoIdSource` — e.g. `preview:ytimg`, `detail-preview:youtube`, `item:ytimg`
+- `firstShown`, `lastShown` — observed flight timestamps
+- `daysShown` — inclusive days between first and last shown
+- `lastShownAgeDays` — days since `lastShown` at scrape time
+- `adCount`, `searchTerm`, `sourceUrl`, `scrapedAt`
+- `isNew` — only present in monitor mode
 
 ## Input
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
-| `advertisers` | array | — | Advertiser names or AR-IDs to pull ads for directly (e.g. `Nike, Inc.`, `AR16735076323512287233`). |
-| `searchTerms` | array | – | Keywords used to discover advertisers before pulling their ads. |
-| `countries` | array | – | ISO-2 country codes to match advertisers against. Leave empty for all countries. |
-| `dateFrom` | string | — | Keep only creatives first shown on or after this `YYYY-MM-DD` date. |
-| `dateTo` | string | — | Keep only creatives first shown on or before this `YYYY-MM-DD` date. |
-| `includeVideoDetails` | boolean | `false` | Also fetch each creative's detail page to try to resolve a playable video URL. |
-| `maxAdvertisersPerTerm` | integer | `5` | Advertisers to pull per keyword in `searchTerms` (1–50). |
-| `maxItems` | integer | `100` | Hard cap on total ad creative records returned (1–5000). |
-| `maxConcurrency` | integer | `2` | Advertisers processed in parallel (1–5). |
-| `outputFormat` | string | `json` | Also export to the key-value store as `OUTPUT.csv`, `OUTPUT.xlsx`, or `OUTPUT.html`. |
+| `advertisers` | array | — | Advertiser names, AR-IDs, Transparency URLs, or domains (e.g. `Nike, Inc.`, `AR16735076323512287233`, `nike.com`). Names are matched to the strongest suggestion: exact name first, then prefix/containment, then ad count. |
+| `searchTerms` | array | — | Keywords or domains used to discover advertisers and domain suggestions before scraping. |
+| `countries` | array | — | Queried ISO-2 regions sent to Google. This is the ad-serving region, not the advertiser's HQ country. |
+| `dateFrom` | string | — | Flight-overlap window start (`YYYY-MM-DD`). |
+| `dateTo` | string | — | Flight-overlap window end (`YYYY-MM-DD`). Works correctly even when the ad started earlier. |
+| `format` | string | `all` | `all`, `text`, `image`, or `video`. Sent server-side as Google format codes `1/2/3`. |
+| `includeVideoDetails` | boolean | `false` | Fetch `GetCreativeById` for every creative to enrich last-shown dates, served regions, images, and preview fallbacks. |
+| `resolveVideoIds` | boolean | `true` | Resolve video metadata from previews. Missing IDs are omitted, never fabricated. |
+| `maxAdvertisersPerTerm` | integer | `5` | Advertiser matches (and domain suggestions) per keyword. |
+| `maxAdsPerAdvertiser` | integer | `100` | Cursor-pagination cap per advertiser/domain. |
+| `maxItems` | integer | `100` | Global ad-record cap (1–5000). Advertiser and summary records do not count. |
+| `maxConcurrency` | integer | `2` | Advertisers scraped in parallel (1–5). |
+| `onlyNew` | boolean | `false` | Monitor mode: output only ad IDs not seen in earlier runs. |
+| `monitorStoreName` | string | `youtube-ads-monitor` | Key-value store that remembers seen ad IDs for monitor mode. |
+| `outputFormat` | string | `json` | Also export `OUTPUT.csv`, `OUTPUT.xlsx`, or `OUTPUT.html`. |
 | `proxyConfiguration` | object | — | Optional Apify proxy for higher-volume runs. |
 
 At least one of `advertisers` or `searchTerms` is required.
 
-### Example: discover advertisers by keyword
+### Example: discover by keyword or domain
 
 ```json
 {
-  "searchTerms": ["electric car"],
+  "searchTerms": ["nike.com", "electric car"],
   "countries": ["US"],
+  "format": "video",
   "maxAdvertisersPerTerm": 5,
-  "maxItems": 50
+  "maxAdsPerAdvertiser": 100,
+  "maxItems": 200
 }
 ```
 
-### Example: pull a known advertiser's creatives directly
+### Example: pull a known advertiser directly
 
 ```json
 {
   "advertisers": ["AR16735076323512287233"],
   "countries": ["US", "GB"],
-  "maxItems": 40
+  "dateFrom": "2026-01-01",
+  "dateTo": "2026-10-31",
+  "maxAdsPerAdvertiser": 150,
+  "maxItems": 300
 }
 ```
 
-### Example: narrow window with resolved video URLs
+### Example: monitor a competitor for new ads
+
+```json
+{
+  "advertisers": ["Nike, Inc."],
+  "countries": ["US"],
+  "format": "video",
+  "onlyNew": true,
+  "monitorStoreName": "nike-youtube-monitor",
+  "maxAdsPerAdvertiser": 100
+}
+```
+
+Run once to establish the baseline. Schedule the same input; later runs output only new ad IDs with `isNew: true` and still write the advertiser/run-summary diagnostics.
+
+### Example: window with preview-resolved video IDs
 
 ```json
 {
   "searchTerms": ["nike"],
+  "countries": ["US"],
   "dateFrom": "2026-01-01",
-  "dateTo": "2026-03-31",
+  "dateTo": "2026-06-30",
+  "format": "video",
   "includeVideoDetails": true,
   "outputFormat": "csv"
 }
@@ -81,34 +125,37 @@ At least one of `advertisers` or `searchTerms` is required.
 
 ## Use cases
 
-- **Competitive ad monitoring** — see which creatives a rival brand is currently running on YouTube
-- **Creative swipe files** — collect thumbnails and formats from an industry to spot creative trends
-- **Flight tracking** — watch `firstShown`/`lastShown` to know when a competitor's campaign started or stopped
-- **Agency reporting** — export a client's or competitor's ad library to CSV/Excel for a deck
-- **Market scans** — run a keyword across multiple countries to see who is advertising where
+- **Competitive ad monitoring** — see which creatives a rival is running now
+- **Creative swipe files** — collect thumbnails, formats, durations, and video IDs
+- **Flight tracking** — compare `firstShown`/`lastShown`/`daysShown` across campaigns
+- **Agency reporting** — export to CSV/Excel with `scrapedAt` for provenance
+- **Market scans** — run a keyword or domain across multiple queried regions
 
-## FAQ
+## FAQ and hard limits
 
 **Where does this data come from?**
-Google's own public Ads Transparency Center, filtered to creatives shown on YouTube — the same tool anyone can browse at adstransparency.google.com.
+Google's public Ads Transparency Center, filtered to YouTube creatives. No login or API key is required.
 
-**Do I need an API key, login, or cookies?**
-No. The Transparency Center is public and the actor reads it without any authentication.
+**How many creatives can one advertiser return?**
+More than 40. The actor follows the server cursor (`response.2` → `request.4`) and pages until `maxAdsPerAdvertiser`/`maxItems` or Google stops returning a cursor. Large advertisers can return thousands of creatives.
 
-**Why is there no YouTube video ID or embeddable video for most ads?**
-Google's Transparency Center does not publish the underlying YouTube video ID for most creatives, only a thumbnail and the ad's detail page. Enabling `includeVideoDetails` resolves a playable video URL when Google's detail page exposes one.
+**Do the date filters really work server-side?**
+Yes. `dateFrom`/`dateTo` are sent as `3.6`/`3.7` in `YYYYMMDD` form. The server applies a flight-overlap filter; the actor re-checks the same overlap locally. `dateTo` is no longer compared only against `firstShown`.
 
-**Why is `countryCode` missing on some records?**
-It's only populated when an advertiser was found through keyword search. When you pass an advertiser AR-ID directly, Google's API doesn't expose that advertiser's country, so the field is left out.
+**Does the format filter really work server-side?**
+Yes. Google returns distinct result sets for `TEXT` (1), `IMAGE` (2), and `VIDEO` (3); the actor sends `3.4` and also enforces the format locally.
+
+**Why is `videoId` missing on some video ads?**
+Google only exposes the YouTube ID in some preview bundles. In our live probes about 80% of video creatives yielded an ID from the item preview or the detail preview; the rest had no `ytimg`/YouTube URL at all. Missing IDs are omitted rather than invented. `videoIdSource` tells you which preview produced the ID.
+
+**Why is `countryCode` different from the advertiser's country?**
+`countryCode` is the queried region sent to Google (the market whose ads you asked for). `advertiserCountryCode` is the advertiser's headquarters from Google's suggestions. `servedRegions` (with `includeVideoDetails`) lists the countries Google says the creative ran in.
+
+**What is the difference between blocked, empty, and partial?**
+`run_summary.status` is `blocked` when Google rate-limits/redirects the session, `empty` when the requests succeeded but no ads matched, `partial` when some advertisers/pages failed, and `success` when everything requested was collected. Per-advertiser rows also use `capped` when the per-advertiser or global cap stopped pagination and `filtered_empty` when returned creatives were all removed by the local date/format check. Blocked responses are not reported as empty results.
 
 **How far back does the data go?**
-Google's Transparency Center indexes ads from September 2023 onward, and it isn't a complete archive — older or very low-volume creatives may not appear.
-
-**Is there a limit on how many creatives one advertiser can return?**
-Yes, Google's own library caps each advertiser's results at roughly 40 creatives per query; the actor returns the most recent ones and deduplicates by `adId` across repeated queries.
-
-**What's the difference between the `advertisers` and `searchTerms` inputs?**
-`advertisers` goes straight to a known advertiser's ad library. `searchTerms` runs a keyword search first to find matching advertisers, then pulls each one's ads — useful when you don't already know the advertiser's exact name or AR-ID.
+Google's Transparency Center indexes ads from September 2023 onward and retains roughly the last year of commercial creatives; very old or low-volume creatives may not appear.
 
 **Is this affiliated with Google or YouTube?**
-No. This is an independent actor that reads Google's publicly available Ads Transparency Center data.
+No. This is an independent actor that reads Google's publicly available Transparency Center data.

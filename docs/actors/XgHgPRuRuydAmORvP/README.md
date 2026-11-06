@@ -9,7 +9,10 @@ A Snapchat Spotlight link on its own doesn't give you a file you can save or emb
 ## What this actor does
 
 - Resolves a Spotlight link (including short `t.snapchat.com` links) into a direct, downloadable video URL
+- Extracts data from JSON-LD first, Next.js Flight data second, and legacy `__NEXT_DATA__` last
+- Requires an exact match for the requested snap ID, so a dead or mismatched link never returns another video
 - Captures caption, creator info, and full engagement stats — shares, likes, comments, recommendations
+- Preserves real zero counts instead of dropping them
 - Adds AI-generated title, description, keywords and detected languages, on request
 - Parses the video's WebVTT transcript into timestamped segments, on request
 - Can also pull comment threads and up to 24 related Spotlight stories from the same feed
@@ -30,21 +33,28 @@ A Snapchat Spotlight link on its own doesn't give you a file you can save or emb
 
 ```
 https://www.snapchat.com/spotlight/{id}
+https://snapchat.com/spotlight/{id}
 https://www.snapchat.com/@{username}/spotlight/{id}
-https://t.snapchat.com/{id}
+https://www.snapchat.com/t/{id}
+https://story.snapchat.com/o/{id}
+https://story.snapchat.com/s/{id}
+https://t.snapchat.com/{code}
 ```
 
-Short links (`t.snapchat.com`) are resolved automatically before scraping.
+All forms are normalized to a canonical Spotlight URL. Short links (`t.snapchat.com`) are resolved automatically before scraping, and duplicate snap IDs are skipped within a run.
 
 ## Output Fields
 
-### Core Fields (always present on success)
+### Core Fields
+
+`snapId`, `inputUrl`, `videoUrl`, `availability`, and `scrapedAt` are always present on success. The remaining fields are emitted when the current JSON-LD/Flight/legacy payload exposes them.
 
 | Field | Type | Description |
 |-------|------|-------------|
 | `snapId` | string | Unique Spotlight snap identifier |
 | `inputUrl` | string | The URL you provided as input |
-| `videoUrl` | string | Direct CDN video URL (expires — download promptly) |
+| `videoUrl` | string | Direct CDN video URL |
+| `availability` | string | `available`, `restricted`, `unavailable`, or `unknown` |
 | `thumbnailUrl` | string | Thumbnail image URL |
 | `caption` | string | Caption or description text on the snap |
 | `creatorUsername` | string | Creator's Snapchat username |
@@ -57,11 +67,11 @@ Short links (`t.snapchat.com`) are resolved automatically before scraping.
 | `commentCount` | integer | Number of comments |
 | `likeCount` | integer | Number of likes (boosts) |
 | `recommendCount` | integer | Number of recommendations |
-| `mediaPreviewUrl` | string | Preview/thumbnail variant URL |
+| `mediaPreviewUrl` | string | Preview/thumbnail variant URL (legacy page data only) |
 | `width` | integer | Video width in pixels (video snaps only) |
 | `height` | integer | Video height in pixels (video snaps only) |
-| `restricted` | boolean | Whether the content is age-restricted |
-| `isAttributed` | boolean | Whether the snap is attributed to Snapchat's own feed |
+| `restricted` | boolean | Whether Snapchat marks the content as age- or region-restricted |
+| `isAttributed` | boolean | Whether Snapchat attributes the snap to a creator account rather than an unattributed feed item |
 
 > `viewCount` is omitted for very recent videos — Snapchat returns -1 as a sentinel value for posts still accumulating views.
 
@@ -69,13 +79,13 @@ Short links (`t.snapchat.com`) are resolved automatically before scraping.
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `llmTitle` | string | LLM-generated title for the video |
-| `llmDescription` | string | LLM-generated description of the video content |
-| `llmKeywords` | string[] | LLM-generated keyword tags |
-| `textMetadataKeywords` | string[] | Text-based keyword tags extracted from metadata |
+| `llmTitle` | string | AI title when the page exposes it (legacy pages) |
+| `llmDescription` | string | AI description when the page exposes it |
+| `llmKeywords` | string[] | Keyword tags from the page metadata |
+| `textMetadataKeywords` | string[] | Text-based keyword tags (legacy page data only) |
 | `hashtags` | string[] | Hashtags associated with the snap |
 | `contextCards` | object[] | Context cards shown on the snap (sound info, creator card, etc.) |
-| `detectedLanguages` | object[] | Detected languages with confidence scores (`languageCode`, `score`) |
+| `detectedLanguages` | object[] | Detected languages with confidence scores (legacy page data only) |
 
 ### Transcript (when `includeTranscript: true`)
 
@@ -84,7 +94,7 @@ Short links (`t.snapchat.com`) are resolved automatically before scraping.
 | `transcript` | object[] | Array of `{startTime, endTime, text}` WebVTT segments |
 | `transcriptUrl` | string | URL of the raw WebVTT transcript file |
 
-### Comments (when `includeComments: true`)
+### Comments (when `includeComments: true`, up to 500 via the public cursor API)
 
 Each item in `comments[]`:
 
@@ -108,6 +118,7 @@ Each item in `relatedStories[]`:
 | `storyPageUrl` | string | Full Spotlight URL of the related story |
 | `durationSeconds` | number | Duration of the related story in seconds |
 | `creatorUsername` | string | Creator's username |
+| `caption` | string | Related story caption when present |
 
 ### Error Records
 
@@ -118,7 +129,10 @@ If a URL fails, an error record is saved instead of a video record:
 | `inputUrl` | string | The URL that failed |
 | `snapId` | string | Snap ID if it could be extracted |
 | `error` | string | Human-readable error message |
+| `availability` | string | `unavailable` when the snap was not found, `unknown` for fetch/parse failures |
 | `scrapedAt` | string | ISO 8601 timestamp |
+
+A dead, deleted, or mismatched link returns an `unavailable` record with the requested `snapId` and no `videoUrl`; the actor never substitutes a different video.
 
 ## Example Input
 
@@ -141,6 +155,7 @@ If a URL fails, an error record is saved instead of a video record:
 {
   "snapId": "W7_EDlXWTBiXAEEniNoMPwAAYZG5iaHJuY2phAZ8KF10GAZ8KETc1AAAAAQ",
   "inputUrl": "https://www.snapchat.com/spotlight/W7_EDlXWTBiXAEEniNoMPwAAYZG5iaHJuY2phAZ8KF10GAZ8KETc1AAAAAQ",
+  "availability": "available",
   "videoUrl": "https://bolt-gcdn.sc-cdn.net/v/udlVbjK0wdjHbPx1FRph0.27.IRZXSOY?...",
   "thumbnailUrl": "https://bolt-gcdn.sc-cdn.net/v/udlVbjK0wdjHbPx1FRph0.256.IRZXSOY?...",
   "caption": "Another Spotlight Snap brought to you by Snapchat",
@@ -181,22 +196,37 @@ If a URL fails, an error record is saved instead of a video record:
 No. All data is extracted from public Snapchat Spotlight pages. No login, no cookies, and no proxy are required in most regions.
 
 **Do video URLs expire?**
-Yes. Snapchat CDN URLs include signed tokens that expire after a short period. Download the video as soon as the actor completes — do not store the URL and try to fetch it later.
+There is no fixed expiry that this actor relies on or promises. The returned URL is the CDN URL Snapchat served at scrape time; Snapchat can rotate, restrict, or remove it at any time. Save the file promptly if you need a durable copy.
 
 **Why is `viewCount` missing from some records?**
-Snapchat returns -1 as a sentinel for videos that are too new to have an accurate view count. The actor omits this field rather than storing a misleading -1.
+Snapchat returns -1 as a sentinel for videos that are too new to have an accurate view count. The actor omits this field rather than storing a misleading -1. A real zero is kept as `0`.
 
 **Are `width` and `height` always present?**
 Only for video snaps. Some Spotlight posts are images or have incomplete metadata, in which case these fields are absent.
 
 **Can I scrape a large batch of URLs at once?**
-Yes. Provide all URLs in the `spotlightUrls` array. The actor processes them sequentially with a short delay between requests to stay respectful of rate limits.
+Yes. Provide all URLs in the `spotlightUrls` array. The actor processes them sequentially with a short delay between requests to stay respectful of rate limits. Duplicate snap IDs are skipped after normalization.
 
 **What is the `isAttributed` flag?**
-When `true`, Snapchat itself attributed the snap to its own Discover/Spotlight feed rather than to a specific creator account.
+When `true`, Snapchat attributes the snap to a creator account. When absent, Snapchat did not expose the flag.
 
-**Can I get comments from all videos?**
-Set `includeComments: true`. Comments are decoded from data embedded in the page, so availability depends on what Snapchat includes per snap.
+**What happens when a link is dead or points to a removed snap?**
+The actor verifies the requested snap ID against the page data. If it cannot find that exact ID, it writes an `availability: "unavailable"` record with the error message and no `videoUrl`. It never returns a different video.
+
+**What does `availability` mean?**
+`available` means a video URL was returned. `restricted` means the page only exposed restricted content. `unavailable` means the exact snap was not found. `unknown` means a fetch or parse failure prevented a decision. `restricted: true` means Snapchat marks the content as age- or region-restricted.
+
+**Can I get comments and transcripts from all videos?**
+Set `includeComments` and/or `includeTranscript`. Comments and WebVTT transcripts are only returned when Snapchat exposes them for that snap. Related stories are limited to the first 24 usable entries.
 
 **Is this affiliated with Snapchat?**
 No. This is an independent data extraction tool and has no connection to Snap Inc.
+
+## Limits
+
+- Public Spotlight pages only; no login, cookies, private profiles, or Stories.
+- The requested snap ID must appear in the page data. There is no "first video on the page" fallback.
+- JSON-LD, Flight, and legacy `__NEXT_DATA__` layouts are supported, but Snapchat can change them at any time.
+- Comments, transcripts, AI metadata, and related stories depend on what Snapchat includes for each snap.
+- Short links are resolved over the network; a dead short link becomes an `unavailable` record.
+- CDN URLs are not guaranteed to remain valid after collection.

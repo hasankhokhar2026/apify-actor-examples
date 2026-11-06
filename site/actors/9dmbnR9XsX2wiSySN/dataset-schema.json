@@ -3,7 +3,21 @@
   "fields": {
     "properties": {
       "adCount": {
-        "description": "Advertiser total ad count",
+        "description": "Advertiser total ad count reported on the creative",
+        "type": [
+          "integer",
+          "null"
+        ]
+      },
+      "adCountMax": {
+        "description": "Upper bound of Google's advertiser ad-count range",
+        "type": [
+          "integer",
+          "null"
+        ]
+      },
+      "adCountMin": {
+        "description": "Lower bound of Google's advertiser ad-count range",
         "type": [
           "integer",
           "null"
@@ -11,6 +25,20 @@
       },
       "adId": {
         "description": "Google creative ID (CR...)",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "adsCollected": {
+        "description": "Ads collected for this advertiser",
+        "type": [
+          "integer",
+          "null"
+        ]
+      },
+      "advertiserCountryCode": {
+        "description": "Advertiser headquarters country from SearchSuggestions (not the queried region)",
         "type": [
           "string",
           "null"
@@ -24,28 +52,56 @@
         ]
       },
       "advertiserName": {
-        "description": "Advertiser display name",
+        "description": "Advertiser display name from Google",
         "type": [
           "string",
           "null"
         ]
       },
       "countryCode": {
-        "description": "Advertiser country (ISO-2)",
+        "description": "Queried region(s) used for the ad request, e.g. US or anywhere",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "daysShown": {
+        "description": "Inclusive days between firstShown and lastShown",
+        "type": [
+          "integer",
+          "null"
+        ]
+      },
+      "discoveryMethod": {
+        "description": "advertiser-id / advertiser-name / domain-input / domain-query / keyword-advertiser / keyword-domain",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "domain": {
+        "description": "Landing domain used for discovery",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "error": {
+        "description": "Diagnostic error for this advertiser",
         "type": [
           "string",
           "null"
         ]
       },
       "firstShown": {
-        "description": "First shown date (ISO 8601)",
+        "description": "First shown timestamp (ISO 8601)",
         "type": [
           "string",
           "null"
         ]
       },
       "format": {
-        "description": "Ad format: VIDEO / IMAGE / TEXT",
+        "description": "Ad format: TEXT / IMAGE / VIDEO (Google codes 1/2/3)",
         "type": [
           "string",
           "null"
@@ -59,7 +115,7 @@
         ]
       },
       "imageUrl": {
-        "description": "Ad thumbnail / image URL",
+        "description": "Ad thumbnail / archived screenshot URL",
         "type": [
           "string",
           "null"
@@ -72,31 +128,87 @@
           "null"
         ]
       },
-      "lastShown": {
-        "description": "Last shown date (ISO 8601)",
+      "isNew": {
+        "description": "Monitor mode: ad was not seen in an earlier run",
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "landingUrl": {
+        "description": "Advertiser click URL decoded from the creative overlay when present",
         "type": [
           "string",
           "null"
         ]
       },
+      "lastShown": {
+        "description": "Last shown timestamp (ISO 8601)",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "lastShownAgeDays": {
+        "description": "Days since lastShown relative to the scrape date",
+        "type": [
+          "integer",
+          "null"
+        ]
+      },
       "mediaType": {
-        "description": "image / video / text / unknown",
+        "description": "text / image / video",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "pagesFetched": {
+        "description": "SearchCreatives pages fetched",
+        "type": [
+          "integer",
+          "null"
+        ]
+      },
+      "previewUrl": {
+        "description": "Creative preview bundle URL (content.js)",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "queriedRegions": {
+        "description": "List of ISO-2 queried regions",
+        "type": [
+          "array",
+          "null"
+        ]
+      },
+      "recordType": {
+        "description": "Record kind: ad, advertiser or run_summary",
         "type": [
           "string",
           "null"
         ]
       },
       "scrapedAt": {
-        "description": "ISO 8601 scrape timestamp",
+        "description": "ISO 8601 scrape timestamp (also included in exports)",
         "type": [
           "string",
           "null"
         ]
       },
       "searchTerm": {
-        "description": "Keyword that discovered this ad (search mode)",
+        "description": "Keyword or domain that discovered this ad",
         "type": [
           "string",
+          "null"
+        ]
+      },
+      "servedRegions": {
+        "description": "Countries where Google reports the creative was served (requires detail enrichment)",
+        "type": [
+          "array",
           "null"
         ]
       },
@@ -107,15 +219,50 @@
           "null"
         ]
       },
-      "type": {
-        "description": "ad or advertiser",
+      "status": {
+        "description": "Run or per-advertiser status: success, capped, partial, blocked, empty, filtered_empty, error, skipped, no_new_ads or no_advertisers_found",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "videoDurationSeconds": {
+        "description": "Video duration in seconds parsed from the preview",
+        "type": [
+          "number",
+          "null"
+        ]
+      },
+      "videoId": {
+        "description": "YouTube video ID resolved from the creative preview (omitted when not exposed)",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "videoIdSource": {
+        "description": "Where the video ID came from, e.g. preview:ytimg or detail-preview:youtube",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "videoPageUrl": {
+        "description": "YouTube watch URL for videoId",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "videoThumbnailUrl": {
+        "description": "ytimg.com thumbnail found in the creative preview",
         "type": [
           "string",
           "null"
         ]
       },
       "videoUrl": {
-        "description": "Resolved video URL (video ads, when includeVideoDetails is on)",
+        "description": "Direct googlevideo media URL when exposed by the creative",
         "type": [
           "string",
           "null"
@@ -136,7 +283,7 @@
           },
           "countryCode": {
             "format": "text",
-            "label": "Country"
+            "label": "Queried region"
           },
           "firstShown": {
             "format": "text",
@@ -154,7 +301,15 @@
             "format": "text",
             "label": "Last shown"
           },
-          "videoUrl": {
+          "recordType": {
+            "format": "text",
+            "label": "Record"
+          },
+          "videoId": {
+            "format": "text",
+            "label": "Video ID"
+          },
+          "videoPageUrl": {
             "format": "link",
             "label": "Video"
           }
@@ -163,13 +318,16 @@
       "title": "YouTube Ads Overview",
       "transformation": {
         "fields": [
+          "recordType",
           "advertiserName",
           "countryCode",
           "format",
           "firstShown",
           "lastShown",
           "imageUrl",
-          "videoUrl"
+          "videoId",
+          "videoUrl",
+          "videoPageUrl"
         ]
       }
     }

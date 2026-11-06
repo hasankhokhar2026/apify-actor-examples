@@ -2,20 +2,20 @@
   "description": "Search products, browse categories, get product details with all seller offers, or scrape reviews from Yandex Market.",
   "properties": {
     "categoryUrls": {
-      "description": "Yandex Market category page URLs (mode=browseCategory). Must be market.yandex.ru/catalog URLs.",
+      "description": "Yandex Market category page URLs (mode=browseCategory). Use the /list form, e.g. https://market.yandex.ru/catalog--smartfony/54726/list.",
       "editor": "stringList",
       "items": {
         "type": "string"
       },
       "prefill": [
-        "https://market.yandex.ru/catalog--smartfony/54726"
+        "https://market.yandex.ru/catalog--smartfony/54726/list"
       ],
       "title": "Category URLs",
       "type": "array"
     },
     "maxItems": {
       "default": 50,
-      "description": "Maximum number of records to return per query/URL.",
+      "description": "Maximum number of records to return per query/URL. Also caps offers per product and reviews per URL.",
       "maximum": 1000,
       "minimum": 1,
       "prefill": 5,
@@ -24,12 +24,14 @@
     },
     "maxPrice": {
       "description": "Maximum price filter in Russian rubles. Only applies in searchProducts and browseCategory modes.",
+      "maximum": 1000000000,
       "minimum": 0,
       "title": "Max Price (RUB)",
       "type": "integer"
     },
     "minPrice": {
       "description": "Minimum price filter in Russian rubles. Only applies in searchProducts and browseCategory modes.",
+      "maximum": 1000000000,
       "minimum": 0,
       "title": "Min Price (RUB)",
       "type": "integer"
@@ -82,22 +84,15 @@
         "type": "string"
       },
       "prefill": [
-        "https://market.yandex.ru/product--smartfon-apple-iphone-7/14206636"
+        "https://market.yandex.ru/product--smartfon-apple-iphone-15-6-gb128-gb-chernyy-nano-simesim/6307259609"
       ],
       "title": "Product URLs",
       "type": "array"
     },
     "proxyConfiguration": {
-      "description": "Required. Yandex Market only serves Russian IPs. Use Apify Residential proxy with country=RU for reliable access.",
+      "description": "Optional. No proxy is required: listing modes use cookieless HTTP first. If Yandex Market proves a request is blocked, the actor automatically tries its residential proxy and then a browser fallback. Provide this only to override that automatic fallback.",
       "editor": "proxy",
-      "prefill": {
-        "apifyProxyCountry": "RU",
-        "apifyProxyGroups": [
-          "RESIDENTIAL"
-        ],
-        "useApifyProxy": true
-      },
-      "title": "Proxy Configuration",
+      "title": "Proxy Configuration (optional)",
       "type": "object"
     },
     "reviewsSortOrder": {
@@ -120,7 +115,7 @@
       "type": "string"
     },
     "searchQueries": {
-      "description": "One or more search queries (mode=searchProducts). Examples: 'iPhone 15', 'ноутбук Samsung'.",
+      "description": "One or more search queries (mode=searchProducts). Examples: 'iPhone 15', 'Samsung Galaxy S24', or Russian keywords.",
       "editor": "stringList",
       "items": {
         "type": "string"

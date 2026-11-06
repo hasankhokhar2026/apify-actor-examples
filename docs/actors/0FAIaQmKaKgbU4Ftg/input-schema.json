@@ -13,7 +13,7 @@
       "default": [
         "electronics"
       ],
-      "description": "Amazon category slugs (e.g. `electronics`, `electronics/172541`) or full chart URLs to scrape. Each entry is combined with `chartType` and `domain` to build the chart page.",
+      "description": "Amazon category slugs (e.g. `electronics`, `electronics/172541`) or full chart URLs to scrape. A full chart URL supplies its own chart type and marketplace, e.g. `https://www.amazon.co.uk/gp/new-releases/electronics`.",
       "editor": "stringList",
       "prefill": [
         "electronics"
@@ -23,7 +23,7 @@
     },
     "chartType": {
       "default": "bestSellers",
-      "description": "Which Amazon chart to scrape.",
+      "description": "Which Amazon chart to scrape. A full chart URL pasted into `categoryUrls` overrides this with the URL's own chart type.",
       "editor": "select",
       "enum": [
         "bestSellers",
@@ -45,7 +45,7 @@
     },
     "domain": {
       "default": "amazon.com",
-      "description": "Which Amazon marketplace to scrape the chart from.",
+      "description": "Which Amazon marketplace to scrape the chart from. A full chart URL pasted into `categoryUrls` overrides this with the URL's own marketplace.",
       "editor": "select",
       "enum": [
         "amazon.com",
@@ -97,7 +97,7 @@
     },
     "includeProductDetails": {
       "default": false,
-      "description": "For each chart item, also fetch its product detail page for purchase-option and additional rating data. Slower and bounded by `maxProductDetails`.",
+      "description": "For each chart item, also fetch its product detail page for list-price and in-stock data. Slower and bounded by `maxProductDetails`.",
       "prefill": false,
       "title": "Enrich with product detail page",
       "type": "boolean"
@@ -121,18 +121,27 @@
       "type": "integer"
     },
     "maxItemsPerCategory": {
-      "default": 60,
-      "description": "Hard cap on chart items emitted per category (across all its pages).",
-      "maximum": 500,
+      "default": 100,
+      "description": "Hard cap on chart items emitted per category (across all its pages). Maximum 100; coverage fields still report the full listed-rank range.",
+      "maximum": 100,
       "minimum": 1,
       "prefill": 20,
       "title": "Max items per category",
       "type": "integer"
     },
+    "maxMissingDetailFetches": {
+      "default": 50,
+      "description": "Per-category cap on best-effort product-page fetches used to fill ranks the nextPage response did not cover. Set 0 to disable product-page fill.",
+      "maximum": 100,
+      "minimum": 0,
+      "prefill": 0,
+      "title": "Max missing-detail product fetches",
+      "type": "integer"
+    },
     "maxPages": {
       "default": 2,
-      "description": "Maximum number of chart pages to fetch per category, starting at `startPage`.",
-      "maximum": 20,
+      "description": "Maximum number of chart pages to fetch per category, starting at `startPage`. Capped at 2 (top 100).",
+      "maximum": 2,
       "minimum": 1,
       "prefill": 2,
       "title": "Max pages per category",
@@ -161,8 +170,8 @@
     },
     "startPage": {
       "default": 1,
-      "description": "First chart page to fetch (each page is a separate ranked page on Amazon's site, not a fixed rank count).",
-      "maximum": 20,
+      "description": "First chart page to fetch (1 or 2). Pages are capped at 2 so a chart never exceeds the real top-100 boundary.",
+      "maximum": 2,
       "minimum": 1,
       "prefill": 1,
       "title": "Start page",

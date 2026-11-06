@@ -1,14 +1,18 @@
 # Amazon Best Sellers & Rankings Scraper
 
-Scrape **Amazon's chart family** -- Best Sellers, New Releases, Most Wished For, Most Gifted, and Movers & Shakers -- for any category on any Amazon marketplace. Get rank, ASIN, title, price, rating, and category for every product Amazon currently exposes on a chart, with optional recursion into subcategories and optional product-detail enrichment.
+Scrape **Amazon's chart family** -- Best Sellers, New Releases, Most Wished For, Most Gifted, and Movers & Shakers -- for any category on any Amazon marketplace. The actor reads Amazon's own `data-client-recs-list` as the authoritative rank/ASIN axis, fills missing card details through the public `nextPage` XHR (and product pages as a fallback), and reports honest `ranksListed` / `withDetails` / `missingDetailRanks` coverage for every chart.
 
 ## What this actor does
 
 - **Five chart types:** Best Sellers, New Releases, Most Wished For, Most Gifted, Movers & Shakers
-- **Any category:** pass a category slug (`electronics`), a slug + browse-node ID (`electronics/172541`), or paste a full Amazon chart URL
+- **Authoritative rank axis:** parses Amazon's `data-client-recs-list` (50 listed ranks per page, even when only 30 cards are server-rendered) instead of renumbering whatever badges happen to render
+- **Top-100 bounded:** pages are capped at 2; ranks above 100 are ignored
+- **Missing-detail fill:** uses the page's own public `nextPage` XHR first, then product pages as a best-effort fallback; never invents a rank or ASIN
+- **Any category:** pass a category slug (`electronics`), a slug + browse-node ID (`electronics/172541`), or paste a full Amazon chart URL. A pasted URL supplies its own chart type and marketplace.
 - **Category-tree recursion:** optionally walk each category's subcategory links up to a configurable depth, scraping every subcategory's own chart too
 - **20 Amazon marketplaces:** amazon.com, .co.uk, .de, .fr, .it, .es, .ca, .com.au, .co.jp, .in, .com.br, .com.mx, .nl, .se, .pl, .com.tr, .ae, .sa, .sg, .eg
-- **Honest empty-chart handling:** Movers & Shakers legitimately has no items for many categories -- the actor emits a clear chart-metadata record instead of silently returning zero items or substituting unrelated products
+- **Truthful diagnostics:** distinguishes a blocked/continue-shopping checkpoint, an invalid localized category, an empty-at-source chart, and partial coverage; every run writes a `runSummary` record
+- **Honest empty-chart handling:** a zero-item run is never silently reported as a clean success -- `emptyReason` and `coverageStatus` explain it
 - **Empty fields are omitted**
 
 ## Output per chart item
@@ -18,22 +22,37 @@ Scrape **Amazon's chart family** -- Best Sellers, New Releases, Most Wished For,
 - `title`, `url`, `image`
 - `price` -- `{value, currency, display}` (only emitted when Amazon shows an explicit price)
 - `stars`, `reviewsCount`
-- `badge` -- e.g. `BestSeller`, `AmazonsChoice` (only when Amazon shows one)
+- `badge` -- canonical product badge, e.g. `BestSeller`, `AmazonsChoice`, `OverallPick` (only when the card actually shows one)
+- `isPrime` -- `true` only when the card carries explicit Prime-icon/label evidence (omitted otherwise, never inferred)
+- `offersCount` -- real `"N offers from"` count when Amazon's card shows it
+- `listPrice` -- crossed-out/list price from the card or product page, when explicitly shown
 - `format` -- format/variant summary, e.g. `"Paperback"` or `"4 formats available"` (books/media charts only, when Amazon's card shows one)
+- `brand`, `byline` -- brand/store or author byline when the card (or product-page fallback) shows one
 - `chartType`, `category`, `categoryNodeId`, `categoryUrl`, `page`
 - `rankChangeDirection`, `rankChangeAmount` -- Movers & Shakers only, and only when Amazon's own rank-change marker is present
-- `listPrice`, `inStock` -- only when `includeProductDetails` is enabled, and only when the product's own detail page shows explicit crossed-out list-price or in-stock/out-of-stock evidence (never inferred)
-- `childCategories` -- sibling/child category links `{name, path, url, nodeId}` from the chart page's own category nav, when present (e.g. "Camera & Photo", "Computers & Accessories" under Electronics)
+- `inStock` -- only with explicit product-page evidence (never inferred)
+- `detailSource` -- `chart`, `nextPage`, `productPage`, or `missing`; shows where the item's details came from
+- `childCategories` -- sibling/child category links `{name, path, url, nodeId}` from the chart page's own category nav, when present
 - `recordType: "chartItem"`, `scrapedAt`
 
-## Output: chart metadata record
+## Output: chart metadata + coverage record
 
-Emitted once per category when a chart is empty or a page cannot be loaded, instead of returning zero items silently:
+Emitted once per category, including successful charts:
 
 - `chartType`, `category`, `categoryNodeId`, `categoryUrl`, `domain`
-- `extractedItemCount` -- how many items were actually extracted (0 for an empty/failed chart)
-- `message` -- human-readable explanation (e.g. "No items currently available for this chart/category.")
+- `extractedItemCount` / `itemsEmitted` -- how many chart-item records were actually emitted
+- `ranksListed` -- authoritative ranks Amazon listed (<= 100)
+- `withDetails` -- listed ranks with real card/product details
+- `missingDetailRanks` -- listed ranks whose details could not be filled
+- `coverageStatus` -- `complete`, `partial`, `empty`, `blocked`, `invalid_category`, or `unknown`
+- `emptyReason` -- e.g. `empty_at_source`, `blocked_continue_shopping`, `invalid_localized_category`, `partial_details`, `partial_pages`, `partial_categories`
+- `truncatedByLimit` -- true when a user limit emitted fewer items than the listed ranks
+- `pagesFetched`, `message`
 - `recordType: "chartMetadata"`, `scrapedAt`
+
+## Output: run summary
+
+One `runSummary` record per run aggregates `itemsEmitted`, `ranksListed`, `withDetails`, `missingDetailRanks`, `coverageStatus`, `emptyReason`, and per-category diagnostics. A zero-item run always sets an explicit status message; blocked/invalid/partial/unknown zero-item runs also fail the Actor instead of silently succeeding. A genuinely empty-at-source chart is reported as `empty_at_source` rather than a generic success.
 
 ## Input
 
@@ -41,16 +60,17 @@ Emitted once per category when a chart is empty or a page cannot be loaded, inst
 |---|---|---|---|
 | `chartType` | string | `bestSellers` | `bestSellers` / `newReleases` / `mostWishedFor` / `mostGifted` / `moversAndShakers` |
 | `domain` | string | `amazon.com` | Which Amazon marketplace to scrape |
-| `categoryUrls` | array | `["electronics"]` | Category slugs, slug/nodeId pairs, or full chart URLs |
+| `categoryUrls` | array | `["electronics"]` | Category slugs, slug/nodeId pairs, or full chart URLs (a full URL supplies its own chart type + marketplace) |
 | `categoryNodeIds` | array | `[]` | Additional `rootSlug/nodeId` entries |
 | `maxDepth` | int | `0` | Subcategory recursion depth (0-3) |
-| `startPage` | int | `1` | First chart page to fetch |
-| `maxPages` | int | `2` | Max chart pages to fetch per category |
-| `maxItemsPerCategory` | int | `60` | Hard cap on items per category |
+| `startPage` | int | `1` | First chart page to fetch (1-2) |
+| `maxPages` | int | `2` | Max chart pages per category (1-2; top-100 cap) |
+| `maxItemsPerCategory` | int | `100` | Hard cap on emitted items per category (max 100); coverage still reports all listed ranks |
 | `maxItems` | int | `200` | Hard cap on total items across the run |
-| `includeProductDetails` | boolean | `false` | Enrich items with product-detail-page data |
+| `includeProductDetails` | boolean | `false` | Enrich items with list price and stock from product pages |
 | `maxProductDetails` | int | `10` | Cap on product-detail fetches when enabled |
-| `proxyConfiguration` | object | AUTO | Apify proxy (datacenter by default) |
+| `maxMissingDetailFetches` | int | `50` | Per-category cap on best-effort product-page fill; `0` disables it |
+| `proxyConfiguration` | object | AUTO | Apify proxy (AUTO datacenter by default, RESIDENTIAL fallback on failure) |
 
 ### Example: Best Sellers in Electronics
 
@@ -84,6 +104,15 @@ Emitted once per category when a chart is empty or a page cannot be loaded, inst
 }
 ```
 
+### Example: paste a full chart URL (marketplace + chart type come from the URL)
+
+```json
+{
+  "categoryUrls": ["https://www.amazon.co.uk/gp/new-releases/electronics"],
+  "maxItems": 50
+}
+```
+
 ### Example: Movers & Shakers on the UK marketplace
 
 ```json
@@ -108,10 +137,13 @@ Emitted once per category when a chart is empty or a page cannot be loaded, inst
 No. This is a third-party actor that scrapes Amazon's public chart pages.
 
 **Does the actor guarantee "Top 100" for every category?**
-No. The actor extracts all chart items Amazon currently exposes up to your `maxPages`/`maxItemsPerCategory` limits in a single session. Amazon's own pagination does not reliably expose a fixed rank count on every category, so the actor never claims a guaranteed top-N -- check `extractedItemCount` on the chart-metadata record to see how many items were actually found.
+No. It parses the ranks Amazon actually lists, capped at rank 100 and at 2 chart pages, then reports `ranksListed`, `withDetails`, and `missingDetailRanks` honestly. Amazon itself sometimes lists fewer than 100 ranks (a live amazon.com electronics probe listed 50 on page 1 and only 51-99 on page 2); the actor never fabricates the missing rank 100 or renumbers around gaps. Check the chart-metadata and run-summary records before claiming a full top 100.
 
 **Why is Movers & Shakers sometimes empty?**
-Amazon itself frequently has no movers-and-shakers data for a given category at a given time -- this is a real, documented state on Amazon's own site, not a scraper bug. The actor emits a chart-metadata record explaining this instead of guessing or substituting unrelated recommended products.
+Amazon itself frequently has no movers-and-shakers data for a given category at a given time -- this is a real, documented state on Amazon's own site, not a scraper bug. The actor emits `emptyReason: "empty_at_source"` plus a chart-metadata record instead of guessing or substituting unrelated recommended products.
+
+**What do the diagnostic statuses mean?**
+`blocked_continue_shopping` means Amazon served its "Continue shopping" checkpoint (a soft block), not an empty chart. `invalid_localized_category` means the chart URL/category could not be resolved on that marketplace (e.g. a page title ending in "in undefined"). `partial_details` means some listed ranks could not be filled from the chart cards, nextPage XHR, or product pages. `partial_page` / `layout_unknown` mean the page loaded but did not match a known chart layout.
 
 **Why do some items have no `price` or `rating`?**
 Amazon only shows these when they exist on the chart card. The actor never fabricates a price or rating -- if the field is missing, it's omitted from the record entirely.

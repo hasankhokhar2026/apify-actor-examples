@@ -1,0 +1,37 @@
+{
+  "properties": {
+    "enrichCompany": {
+      "default": true,
+      "description": "Fetch the current employer's own LinkedIn company page for extra detail (size, industry, website, headquarters, logo). Adds one extra request per profile (~30-90s) but is cached per company within a run. Disable for faster runs.",
+      "editor": "checkbox",
+      "title": "Enrich Current Company",
+      "type": "boolean"
+    },
+    "profileUrls": {
+      "description": "LinkedIn profile URLs (https://linkedin.com/in/username) or usernames.",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "prefill": [
+        "https://www.linkedin.com/in/williamhgates",
+        "https://www.linkedin.com/in/satyanadella"
+      ],
+      "title": "Profile URLs",
+      "type": "array"
+    },
+    "proxyConfiguration": {
+      "description": "Optional Apify proxy.",
+      "editor": "proxy",
+      "title": "Proxy Configuration",
+      "type": "object"
+    }
+  },
+  "required": [
+    "profileUrls"
+  ],
+  "schemaVersion": 1,
+  "title": "LinkedIn Profile Scraper Input",
+  "type": "object"
+}

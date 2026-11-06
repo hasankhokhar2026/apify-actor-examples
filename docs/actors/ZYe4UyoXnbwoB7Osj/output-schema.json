@@ -1,13 +1,19 @@
 {
   "actorOutputSchemaVersion": 1,
-  "description": "Snapchat ad and sponsored-content records with headline, creative, call to action, per-country impressions and targeting data.",
+  "description": "Snapchat ad and sponsored-content records plus coverage rows, with normalized impressions, targeting, landing page, media, catalog, story, collection and lens fields.",
   "properties": {
     "records": {
-      "description": "Dataset containing all scraped Snapchat ad and sponsored-content records.",
+      "description": "Default dataset. Ad rows use recordType=ad, sponsored content uses recordType=sponsoredContent, and one coverage row per advertiser/creator uses recordType=coverage.",
       "template": "{{links.apiDefaultDatasetUrl}}/items",
-      "title": "Snapchat ads and sponsored content",
+      "title": "Ads, sponsored content, and coverage rows",
+      "type": "string"
+    },
+    "runSummary": {
+      "description": "Key-value store record with overall status (ok, no_ads, partial, rationed, blocked, invalid, error), result counts, request IDs, notes and errors.",
+      "template": "{{links.apiDefaultKeyValueStoreUrl}}/records/RUN_SUMMARY",
+      "title": "Run summary",
       "type": "string"
     }
   },
-  "title": "Snapchat EU Ads Library Impressions & Targeting Extractor Output"
+  "title": "Snapchat EU + Turkey Ads Library Output"
 }

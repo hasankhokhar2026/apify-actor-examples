@@ -9,42 +9,81 @@ Pull product listings, pricing, and reviews from [Yandex Market](https://market.
 ## What this actor does
 
 - Searches Yandex Market by one or more keywords and returns matching product cards
-- Browses every product listed under a category URL
-- Fetches a single product's full detail page together with every seller's competing offer for that product
+- Browses products listed under a category URL
+- Fetches a single product's full detail page together with competing seller offers
 - Collects reviews for a product or for a seller's storefront
-- Empty fields are omitted from records
+- Uses cookieless HTTP first and parses Yandex Market's SSR `data-zone-data` payloads
+- Retries with fresh sessions on robot/CAPTCHA pages and only then uses its automatic residential-proxy and browser fallbacks
+- Emits diagnostic records for blocked pages and partial products instead of silently returning false empty results
+- Omits empty fields from records
 
 ## Output per product
 
 - `recordType` — always `product`
-- `productId` — Yandex Market's internal product ID
+- `productId` — Yandex Market model ID
+- `marketSku`, `wareId`, `oskuId` — Yandex Market SKU/offer identifiers when present
 - `name`
-- `url` — canonical product page URL
+- `url` — product page URL
 - `categoryPath` — array of category names from top-level down to the product's category (product-detail fetches only)
-- `rating`, `reviewCount`
+- `rating`, `reviewCount` — when the page exposes them (search cards often do not)
 - `price`, `originalPrice`, `discount` — current price, pre-discount price, and discount percentage, in `currency` (`RUB`)
-- `sellerName` — the primary/lead seller shown on a search or category card
-- `deliveryInfo` — delivery estimate text as shown on a search or category card
-- `availability` — `in_stock` or `out_of_stock`
-- `specs` — key/value map of technical specifications (product-detail fetches only, when the page lists any)
+- `sellerName`, `sellerRating`, `sellerUrl` — lead seller details when shown
+- `deliveryInfo`, `deliveryDateFrom`, `deliveryDateTo` — delivery estimate when shown
+- `availability` — `in_stock` or `out_of_stock` when shown
+- `stockCount` — last-stock count when Yandex exposes it
+- `sponsored` — whether the listing card is sponsored
+- `searchPosition` — 1-based position on the search/category page
+- `sourceQuery` — search query for `searchProducts`, or the category URL for `browseCategory`
+- `page` — listing page number
+- `badges` — badge titles shown on the card
+- `specs` — key/value map of technical specifications (product-detail fetches only, when the page lists them)
 - `images` — array of product image URLs
-- `offers` — populated only in product-detail fetches; array of every competing seller's offer for this product (see below)
+- `offers` — populated only in product-detail fetches; array of competing seller offers for this product (see below)
+- `offersUrl`, `offersTotal` — Yandex's offers page URL and the total number of offers it reports when exposed
+- `partial`, `diagnostics` — present when a product page was only partially readable (for example not-on-sale or offers page blocked)
 - `scrapedAt`
 
-## Output per seller offer (nested in `offers`, product-detail fetches only)
+## Output per seller offer
 
-- `sellerName`, `sellerUrl` — when shown on the offer
-- `price`, `originalPrice` — when the offer shows a pre-discount price
+In `getProductDetails` mode each offer is emitted as its own flat `recordType: "offer"` record and is also nested in the product's `offers` array.
+
+- `recordType` — always `offer`
+- `productId`, `name` — the product this offer belongs to
+- `sellerName`, `sellerRating`, `sellerUrl` — when shown on the offer
+- `price`, `originalPrice`, `discount`
+- `condition` — only when Yandex explicitly shows a condition such as resale/used
+- `availability`, `stockCount` — when shown
+- `deliveryInfo`, `deliveryDateFrom`, `deliveryDateTo` — when shown
+- `offerUrl` — direct offer/card URL
+- `offerPosition` — 1-based position on the offers page
+- `marketSku`, `wareId`, `oskuId`, `shopId`, `supplierId` — when present
+- `badges`, `images`
+- `scrapedAt`
 
 ## Output per review
 
 - `recordType` — always `review`
 - `reviewType` — `product` or `seller`
+- `reviewId` — when Yandex exposes it
 - `productId`, `productName`, `productUrl` — present on product reviews
 - `sellerId`, `sellerName`, `sellerUrl` — present on seller reviews
-- `author`, `rating`, `title`, `text` — when the review shows them
+- `author`, `rating`, `title`, `text`, `pros`, `cons` — when the review shows them
 - `date`
+- `helpfulVotes` — agree votes when shown
+- `photos` — review photo URLs when shown
 - `scrapedAt`
+
+Reviews are deduplicated by review ID (or author/date/text fingerprint when no ID is available) and capped by `maxItems`.
+
+## Output diagnostics
+
+When a page is blocked, times out, or returns unusable content, the actor emits a diagnostic record instead of pretending the result was an empty page:
+
+- `recordType` — `diagnostic`
+- `type` — `yandex_market_scraper_error`
+- `mode`, `stage` — for example `search`, `product`, `offers`, or `reviews`
+- `reason` — `captcha`, `vpn_block`, `network_error`, `not_found`, `offers_truncated`, `reviews_truncated`, etc.
+- `message`, `url`, `statusCode`, `captcha`, `attempts`, `scrapedAt`
 
 ## Input
 
@@ -55,13 +94,13 @@ Pull product listings, pricing, and reviews from [Yandex Market](https://market.
 | `categoryUrls` | array | – | `market.yandex.ru/catalog` URLs to browse (mode=browseCategory) |
 | `productUrls` | array | – | Product URLs for detail fetch or product reviews (mode=getProductDetails, getReviews) |
 | `sellerUrls` | array | – | Seller storefront URLs for seller reviews (mode=getReviews) |
-| `maxItems` | integer | `50` | Records per query/URL (1–1000) |
+| `maxItems` | integer | `50` | Records per query/URL (1–1000); also caps offers per product and reviews per URL |
 | `sortOrder` | string | `relevance` | `relevance` / `priceAsc` / `priceDesc` / `rating` / `popularity` |
 | `minPrice` | integer | – | Minimum price in RUB |
 | `maxPrice` | integer | – | Maximum price in RUB |
 | `minRating` | string | `any` | `any` / `3` / `3.5` / `4` / `4.5` |
 | `reviewsSortOrder` | string | `newest` | `newest` / `highestRating` / `lowestRating` / `mostHelpful` |
-| `proxyConfiguration` | object | RESIDENTIAL | Yandex Market blocks plain datacenter traffic, so a residential proxy is set by default |
+| `proxyConfiguration` | object | – | Optional override. No proxy is required; the actor automatically tries its residential proxy only after a proven block |
 
 ### Example: keyword search with price range
 
@@ -90,7 +129,7 @@ Pull product listings, pricing, and reviews from [Yandex Market](https://market.
 ```json
 {
   "mode": "getProductDetails",
-  "productUrls": ["https://market.yandex.ru/product--apple-iphone-15/1926025774"]
+  "productUrls": ["https://market.yandex.ru/product--smartfon-apple-iphone-15-6-gb128-gb-chernyy-nano-simesim/6307259609"]
 }
 ```
 
@@ -99,7 +138,7 @@ Pull product listings, pricing, and reviews from [Yandex Market](https://market.
 ```json
 {
   "mode": "getReviews",
-  "productUrls": ["https://market.yandex.ru/product--apple-iphone-15/1926025774"],
+  "productUrls": ["https://market.yandex.ru/product--smartfon-apple-iphone-15-6-gb128-gb-chernyy-nano-simesim/6307259609"],
   "reviewsSortOrder": "newest",
   "maxItems": 100
 }
@@ -109,7 +148,7 @@ Pull product listings, pricing, and reviews from [Yandex Market](https://market.
 
 - **Price monitoring** — track how a product's price moves across every seller offering it
 - **Seller benchmarking** — compare seller ratings, delivery times, and pricing side by side
-- **Catalog research** — pull a whole category's listings with specs and current prices
+- **Catalog research** — pull a whole category's listings with current prices and availability
 - **Sentiment tracking** — gather product reviews with pros/cons to spot recurring complaints
 - **Market-entry analysis** — scope typical price ranges and seller competition before listing a product
 
@@ -117,14 +156,16 @@ Pull product listings, pricing, and reviews from [Yandex Market](https://market.
 
 **Does `searchQueries` accept Russian text?**  Yes — keywords can be in Russian or English; Yandex Market returns whatever matches on its own site.
 
-**How do I see every seller's price for one product, not just the lead offer?**  Use `mode: "getProductDetails"` with the product URL — the `offers` array on that record lists every competing seller's offer.
+**How do I see every seller's price for one product, not just the lead offer?**  Use `mode: "getProductDetails"` with the product URL. The product record contains the nested `offers` array, and each offer is also emitted as a flat `recordType: "offer"` record. `maxItems` caps how many offers are collected.
 
-**Why does a `searchProducts` record have an empty `offers` field?**  Search and category listing cards only show the lead seller; the full offer comparison is only fetched in `getProductDetails` mode, to avoid an extra request per card during a listing scan.
+**Why does a `searchProducts` record have no `offers` field?**  Search and category listing cards only show the lead offer; the full offer comparison is fetched only in `getProductDetails` mode. Listing cards may also omit rating, seller, or stock when Yandex does not expose them in the SSR payload.
 
 **Can I get reviews for a seller instead of a product?**  Yes — pass a storefront URL in `sellerUrls` with `mode: "getReviews"`; those records carry `reviewType: "seller"` and seller identifying fields instead of product ones.
 
-**Do I need to configure the proxy myself?**  No — `proxyConfiguration` defaults to a residential proxy because Yandex Market blocks plain datacenter traffic; leave the default unless you have your own proxy group to use instead.
+**Do I need to configure the proxy myself?**  No. Listing modes are HTTP-first and cookieless. If a request is proven blocked, the actor automatically tries a residential proxy and then a browser fallback. You can still provide `proxyConfiguration` to override the automatic fallback.
 
-**What happens if a run finds nothing?**  If no product, listing, or review records could be extracted for the whole run, the dataset gets a single informational record (`type: "yandex_market_scraper_error"`) naming the mode and suggesting a residential proxy, instead of leaving the dataset silently empty.
+**What happens if a page is blocked or a run finds nothing?**  Blocked pages produce diagnostic records with the failing stage and reason. Partial products are marked `partial: true` and keep the fields that were readable. If the whole run produces no product, offer, or review records and no diagnostics, the dataset gets a single informational record (`type: "yandex_market_scraper_error"`).
+
+**What are the hard limits?**  Yandex Market SSR usually exposes roughly 8–20 listing cards per page; pagination stops when a page adds no new records. Product, offers, and reviews pages are more CAPTCHA-prone than listing pages, so the actor retries fresh sessions and then escalates to its proxy/browser fallbacks. The SSR offers page repeats its first 16 offers when paginated, so this version can collect at most the offers that page exposes; `maxItems` caps collection below that. Reviews beyond the first SSR reviews page are not available in this version. Prices are in RUB and use the current card price when Yandex shows one, with the regular price as `originalPrice`.
 
 **Is this affiliated with Yandex?**  No. This actor reads Yandex Market's publicly accessible pages and is not affiliated with or endorsed by Yandex.

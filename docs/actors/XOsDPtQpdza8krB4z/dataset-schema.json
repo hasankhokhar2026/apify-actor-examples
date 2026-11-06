@@ -2,10 +2,76 @@
   "actorSpecification": 1,
   "title": "Yandex Market Results",
   "views": {
+    "diagnostics": {
+      "display": {
+        "component": "table",
+        "properties": {
+          "attempts": {
+            "format": "number",
+            "label": "Attempts"
+          },
+          "captcha": {
+            "format": "boolean",
+            "label": "CAPTCHA"
+          },
+          "message": {
+            "format": "text",
+            "label": "Message"
+          },
+          "mode": {
+            "format": "text",
+            "label": "Mode"
+          },
+          "reason": {
+            "format": "text",
+            "label": "Reason"
+          },
+          "recordType": {
+            "format": "text",
+            "label": "Record Type"
+          },
+          "scrapedAt": {
+            "format": "text",
+            "label": "Scraped At"
+          },
+          "stage": {
+            "format": "text",
+            "label": "Stage"
+          },
+          "statusCode": {
+            "format": "number",
+            "label": "HTTP Status"
+          },
+          "url": {
+            "format": "link",
+            "label": "URL"
+          }
+        }
+      },
+      "title": "Diagnostics",
+      "transformation": {
+        "fields": [
+          "recordType",
+          "mode",
+          "stage",
+          "reason",
+          "message",
+          "url",
+          "statusCode",
+          "captcha",
+          "attempts",
+          "scrapedAt"
+        ]
+      }
+    },
     "offers": {
       "display": {
         "component": "table",
         "properties": {
+          "availability": {
+            "format": "text",
+            "label": "Availability"
+          },
           "condition": {
             "format": "text",
             "label": "Condition"
@@ -18,9 +84,17 @@
             "format": "number",
             "label": "Discount %"
           },
+          "marketSku": {
+            "format": "text",
+            "label": "Market SKU"
+          },
           "name": {
             "format": "text",
             "label": "Product Name"
+          },
+          "offerPosition": {
+            "format": "number",
+            "label": "Offer Position"
           },
           "offerUrl": {
             "format": "link",
@@ -38,6 +112,10 @@
             "format": "text",
             "label": "Product ID"
           },
+          "recordType": {
+            "format": "text",
+            "label": "Type"
+          },
           "sellerName": {
             "format": "text",
             "label": "Seller"
@@ -45,21 +123,40 @@
           "sellerRating": {
             "format": "number",
             "label": "Seller Rating"
+          },
+          "sellerUrl": {
+            "format": "link",
+            "label": "Seller URL"
+          },
+          "stockCount": {
+            "format": "number",
+            "label": "Stock"
+          },
+          "wareId": {
+            "format": "text",
+            "label": "Ware ID"
           }
         }
       },
       "title": "Seller Offers",
       "transformation": {
         "fields": [
+          "recordType",
           "productId",
           "name",
           "sellerName",
           "sellerRating",
+          "sellerUrl",
           "price",
           "originalPrice",
           "discount",
           "condition",
+          "availability",
+          "stockCount",
           "deliveryInfo",
+          "offerPosition",
+          "marketSku",
+          "wareId",
           "offerUrl"
         ]
       }
@@ -72,13 +169,17 @@
             "format": "text",
             "label": "Availability"
           },
-          "brand": {
+          "deliveryInfo": {
             "format": "text",
-            "label": "Brand"
+            "label": "Delivery"
           },
           "discount": {
             "format": "number",
             "label": "Discount %"
+          },
+          "marketSku": {
+            "format": "text",
+            "label": "Market SKU"
           },
           "name": {
             "format": "text",
@@ -87,6 +188,14 @@
           "originalPrice": {
             "format": "number",
             "label": "Original Price"
+          },
+          "page": {
+            "format": "number",
+            "label": "Page"
+          },
+          "partial": {
+            "format": "boolean",
+            "label": "Partial"
           },
           "price": {
             "format": "number",
@@ -100,6 +209,10 @@
             "format": "number",
             "label": "Rating"
           },
+          "recordType": {
+            "format": "text",
+            "label": "Type"
+          },
           "reviewCount": {
             "format": "number",
             "label": "Reviews"
@@ -108,9 +221,25 @@
             "format": "text",
             "label": "Scraped At"
           },
+          "searchPosition": {
+            "format": "number",
+            "label": "Search Position"
+          },
           "sellerName": {
             "format": "text",
             "label": "Seller"
+          },
+          "sourceQuery": {
+            "format": "text",
+            "label": "Source Query"
+          },
+          "sponsored": {
+            "format": "boolean",
+            "label": "Sponsored"
+          },
+          "stockCount": {
+            "format": "number",
+            "label": "Stock"
           },
           "url": {
             "format": "link",
@@ -121,9 +250,10 @@
       "title": "Products Overview",
       "transformation": {
         "fields": [
+          "recordType",
           "productId",
+          "marketSku",
           "name",
-          "brand",
           "price",
           "originalPrice",
           "discount",
@@ -131,6 +261,13 @@
           "reviewCount",
           "sellerName",
           "availability",
+          "stockCount",
+          "deliveryInfo",
+          "sponsored",
+          "searchPosition",
+          "sourceQuery",
+          "page",
+          "partial",
           "url",
           "scrapedAt"
         ]
@@ -144,6 +281,10 @@
             "format": "text",
             "label": "Author"
           },
+          "cons": {
+            "format": "text",
+            "label": "Cons"
+          },
           "date": {
             "format": "text",
             "label": "Date"
@@ -152,17 +293,37 @@
             "format": "number",
             "label": "Helpful Votes"
           },
+          "photos": {
+            "format": "text",
+            "label": "Photos"
+          },
           "productName": {
             "format": "text",
             "label": "Product"
+          },
+          "productUrl": {
+            "format": "link",
+            "label": "Product URL"
+          },
+          "pros": {
+            "format": "text",
+            "label": "Pros"
           },
           "rating": {
             "format": "number",
             "label": "Rating"
           },
+          "recordType": {
+            "format": "text",
+            "label": "Record Type"
+          },
+          "reviewId": {
+            "format": "text",
+            "label": "Review ID"
+          },
           "reviewType": {
             "format": "text",
-            "label": "Type"
+            "label": "Review Type"
           },
           "scrapedAt": {
             "format": "text",
@@ -171,6 +332,10 @@
           "sellerName": {
             "format": "text",
             "label": "Seller"
+          },
+          "sellerUrl": {
+            "format": "link",
+            "label": "Seller URL"
           },
           "text": {
             "format": "text",
@@ -185,15 +350,22 @@
       "title": "Reviews",
       "transformation": {
         "fields": [
+          "recordType",
           "reviewType",
+          "reviewId",
           "author",
           "rating",
           "title",
           "text",
+          "pros",
+          "cons",
           "date",
           "helpfulVotes",
+          "photos",
           "productName",
+          "productUrl",
           "sellerName",
+          "sellerUrl",
           "scrapedAt"
         ]
       }

@@ -1,11 +1,17 @@
 {
   "actorOutputSchemaVersion": 1,
-  "description": "Ranked chart items from Amazon's Best Sellers, New Releases, Most Wished For, Most Gifted, and Movers & Shakers pages -- rank, ASIN, title, price, rating, and category.",
+  "description": "Ranked chart items from Amazon's Best Sellers, New Releases, Most Wished For, Most Gifted, and Movers & Shakers pages -- authoritative rank/ASIN axis, details, coverage, and truthful run diagnostics.",
   "properties": {
     "chartItems": {
-      "description": "Dataset containing all scraped Amazon chart items and chart-metadata records.",
+      "description": "Dataset containing chart items plus per-chart coverage/diagnostic metadata records.",
       "template": "{{links.apiDefaultDatasetUrl}}/items",
       "title": "Amazon chart items",
+      "type": "string"
+    },
+    "runSummary": {
+      "description": "The same dataset also contains one runSummary record with ranksListed/withDetails/missingDetailRanks, coverageStatus, and emptyReason.",
+      "template": "{{links.apiDefaultDatasetUrl}}/items?format=json",
+      "title": "Run summary and coverage",
       "type": "string"
     }
   },

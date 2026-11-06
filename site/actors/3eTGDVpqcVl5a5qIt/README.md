@@ -1,0 +1,118 @@
+# LinkedIn Profile Scraper with Company & Credential Data
+
+Feed this actor a list of LinkedIn profile URLs or plain usernames and get back one structured record per person — work history, education, certifications, honors, volunteer work, and the current employer's own company details — without ever logging into LinkedIn.
+
+## What this actor does
+
+- Accepts a list of public LinkedIn profile URLs or bare usernames and normalizes them automatically (`linkedin.com/in/...`, `in/...`, or just the handle).
+- Extracts name, headline, location, summary, work positions, education, and follower count straight from the profile's public page.
+- Pulls the less-common sections most lead lists are missing: certifications, honors & awards, test scores, organization memberships, volunteer experience, personal projects, and website links.
+- Optionally enriches the current employer with that company's own LinkedIn page: headcount, industry, HQ, website, and logo.
+- Omits any field it could not confirm from the page instead of returning a null or placeholder value.
+
+## Output per profile
+
+| Field | Description |
+|---|---|
+| `name` | Full name on the profile |
+| `headline` | Headline text under the name |
+| `location` | Profile location |
+| `summary` | About/bio text |
+| `profileUrl` | Canonical profile URL |
+| `profilePicture` | Profile photo URL |
+| `currentTitle` | Current job title (omitted when LinkedIn redacts it for guests) |
+| `allTitles` | Every job title listed on the profile |
+| `currentCompany` | Current employer object: `name`, `url`, `slug`, and — with company enrichment on — `employeeCount`, `size`, `industry`, `website`, `headquarters`, `organizationType`, `logoUrl`, `specialties` |
+| `currentPositions` | Current work positions (`company`, `companyUrl`, `startDate`, `endDate`, `location`) |
+| `pastPositions` | Past work positions, same sub-fields as above |
+| `experiences` | `currentPositions` and `pastPositions` combined into one list |
+| `education` / `educations` | Education entries (`school`, `schoolUrl`, `startDate`, `endDate`) — duplicated under both keys for convenience |
+| `followersCount` | Follower count |
+| `recentArticles` | Recent posts/articles with title, URL, publish date, and likes |
+| `certifications` | Licenses & certifications: name, issuer, issuer URL, issue date, credential ID, credential URL |
+| `honorsAndAwards` | Honors & awards: title, issuer, date, description |
+| `testScores` | Test scores: name, score, date |
+| `organizations` | Organization memberships: name, position, description |
+| `volunteerExperience` | Volunteer roles: role, organization, description |
+| `projects` | Personal/academic projects: title, date range, description |
+| `websites` | Personal website / portfolio links: label, URL |
+| `inputUrl` | The exact URL or handle you supplied for this row |
+| `order` | Index of this record in your input list |
+| `scrapedAt` | ISO-8601 timestamp of when the record was scraped |
+
+Fields that can't be confirmed on the page (for example a redacted job title, or a profile with no certifications) are left out of the record rather than returned as `null` or an empty placeholder.
+
+If no input profile could be scraped at all, the dataset instead contains one diagnostic record (`_status: "no_data"`) explaining why. If some profiles succeeded and others didn't, one extra diagnostic record (`_status: "partial_results"`) is added alongside the successful profile records, summarizing how many failed and why (profile not found, blocked, restricted by privacy settings, etc.).
+
+## Input
+
+| Field | Type | Default | Description |
+|---|---|---|---|
+| `profileUrls` | array of strings | – (required) | LinkedIn profile URLs (`https://linkedin.com/in/username`) or bare usernames, one per profile to scrape |
+| `enrichCompany` | boolean | `true` | Fetch the current employer's own LinkedIn company page for headcount, industry, website, HQ, and logo. Adds extra time per unique company; disable for faster runs |
+| `proxyConfiguration` | object | – | Reserved for future use; the actor currently manages its own proxy sessions automatically and this value has no effect on a run |
+
+### Example: minimal input
+
+```json
+{
+  "profileUrls": ["https://www.linkedin.com/in/williamhgates"]
+}
+```
+
+### Example: multiple handles, no company enrichment
+
+```json
+{
+  "profileUrls": ["satyanadella", "in/reidhoffman", "https://www.linkedin.com/in/jeffweiner08"],
+  "enrichCompany": false
+}
+```
+
+### Example: batch with company enrichment and proxy
+
+```json
+{
+  "profileUrls": [
+    "https://www.linkedin.com/in/williamhgates",
+    "https://www.linkedin.com/in/satyanadella"
+  ],
+  "enrichCompany": true,
+  "proxyConfiguration": { "useApifyProxy": true }
+}
+```
+
+## Use cases
+
+- **Sales prospecting** — turn a list of prospect profile URLs into enriched records with current role and employer details before outreach.
+- **Recruiting and talent sourcing** — check work history, education, and certifications for a shortlist of candidates in one batch.
+- **CRM enrichment** — append verified job-title and company fields to existing contact records.
+- **Account-based marketing** — pull current employer intelligence (size, industry, HQ) for key people at target accounts.
+- **Academic and market research** — study career paths, credentials, and project history across a set of profiles.
+- **Background and due-diligence checks** — cross-reference public certifications, honors, and volunteer history for a given name.
+
+## FAQ
+
+**Do I need a LinkedIn login or cookies to use this?**
+No. It only reads what LinkedIn already shows to a logged-out visitor — there is no account to connect and no session to manage.
+
+**Can I search for a profile by name instead of URL?**
+No. This actor takes URLs or usernames you already have; it does not search LinkedIn for people.
+
+**Why is `currentTitle` missing from some records?**
+LinkedIn itself sometimes hides job-title and past-employer text from anonymous visitors, depending on the profile owner's settings. When that happens the field is simply left out rather than filled with placeholder text.
+
+**Can this return someone's email or phone number?**
+No. LinkedIn does not show contact details on the public profile page, so none are returned.
+
+**What happens for a fully private profile?**
+If the owner has hidden their profile from logged-out visitors entirely, no record is produced for that URL — this reflects their own privacy setting, not a gap in the actor.
+
+**What's the difference between `education` and `educations`, or `pastPositions` and `experiences`?**
+They carry the same underlying data under two key names (`educations` duplicates `education`; `experiences` combines `currentPositions` and `pastPositions`) so you can consume whichever key matches your pipeline.
+
+**Does `enrichCompany` work for every profile?**
+It applies only to the current employer, and only when that employer has its own LinkedIn company page. Past employers are not enriched.
+
+**Is this affiliated with LinkedIn?**
+No. This actor is an independent tool that reads public LinkedIn pages and is not affiliated with, endorsed by, or connected to LinkedIn Corporation.

@@ -2,12 +2,8 @@
   "description": "Scrape YouTube ads from Google's Ads Transparency Center. Search by advertiser, keyword, or country, and export the results.",
   "properties": {
     "advertisers": {
-      "description": "Advertiser names or AR-IDs to scrape YouTube ads for (e.g. 'Nike, Inc.', 'AR16735076323512287233'). Leave empty to use searchTerms.",
+      "description": "Advertiser names, AR-IDs, Transparency Center URLs, or landing domains to scrape YouTube ads for (e.g. 'Nike, Inc.', 'AR16735076323512287233', 'nike.com'). Names are matched to the strongest suggestion (exact name first, then ad count). Leave empty to use searchTerms.",
       "editor": "stringList",
-      "example": [
-        "Nike, Inc.",
-        "Samsung Electronics America"
-      ],
       "items": {
         "type": "string"
       },
@@ -15,7 +11,7 @@
       "type": "array"
     },
     "countries": {
-      "description": "Country codes to filter ads by (ISO 3166-1 alpha-2).",
+      "description": "ISO 3166-1 alpha-2 queried regions sent to the Transparency Center as the ad filter (e.g. US, GB). This is the region the ads were served in, not the advertiser's headquarters country. The advertiser's own country is reported separately as advertiserCountryCode.",
       "editor": "select",
       "items": {
         "enum": [
@@ -501,33 +497,62 @@
       "prefill": [
         "US"
       ],
-      "title": "Countries",
+      "title": "Countries (queried regions)",
       "type": "array"
     },
     "dateFrom": {
-      "description": "Only return ads first shown on or after this date (YYYY-MM-DD).",
+      "description": "Keep ads whose observed flight overlaps this window. An ad is kept when firstShown <= dateTo and lastShown >= dateFrom, so ads that started earlier but were still running inside the window are included.",
       "editor": "datepicker",
       "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
-      "title": "First shown on/after (YYYY-MM-DD)",
+      "title": "Shown during window: from (YYYY-MM-DD)",
       "type": "string"
     },
     "dateTo": {
-      "description": "Only return ads last shown on or before this date (YYYY-MM-DD).",
+      "description": "Keep ads whose observed flight overlaps this window (inclusive). Works together with dateFrom and is no longer compared only against firstShown.",
       "editor": "datepicker",
       "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
-      "title": "First shown on/before (YYYY-MM-DD)",
+      "title": "Shown during window: to (YYYY-MM-DD)",
+      "type": "string"
+    },
+    "format": {
+      "default": "all",
+      "description": "Server-side creative format filter. TEXT, IMAGE and VIDEO map to Google's verified format codes 1, 2 and 3.",
+      "editor": "select",
+      "enum": [
+        "all",
+        "text",
+        "image",
+        "video"
+      ],
+      "enumTitles": [
+        "All formats",
+        "Text",
+        "Image",
+        "Video"
+      ],
+      "prefill": "all",
+      "title": "Ad format",
       "type": "string"
     },
     "includeVideoDetails": {
       "default": false,
-      "description": "Fetch the ad detail page for each ad to resolve the video URL and format (slower, but gives the actual video asset for video ads).",
+      "description": "Fetch GetCreativeById for every creative to enrich last-shown dates, served regions and preview assets. Video IDs are resolved from previews even when this is off.",
       "prefill": false,
-      "title": "Include video details",
+      "title": "Include creative detail enrichment",
       "type": "boolean"
+    },
+    "maxAdsPerAdvertiser": {
+      "default": 100,
+      "description": "Cursor-pagination cap per advertiser or domain, applied before the global maxItems cap.",
+      "maximum": 5000,
+      "minimum": 1,
+      "prefill": 3,
+      "title": "Max ads per advertiser",
+      "type": "integer"
     },
     "maxAdvertisersPerTerm": {
       "default": 5,
-      "description": "Maximum advertisers to scrape per keyword (when searchTerms is used).",
+      "description": "Maximum advertiser matches (and domain suggestions) to scrape per keyword (when searchTerms is used).",
       "maximum": 50,
       "minimum": 1,
       "prefill": 5,
@@ -545,12 +570,27 @@
     },
     "maxItems": {
       "default": 100,
-      "description": "Hard cap on total ad records returned (1-5000).",
+      "description": "Hard cap on total ad records returned (1-5000). Advertiser and run-summary records do not count toward this cap.",
       "maximum": 5000,
       "minimum": 1,
-      "prefill": 50,
+      "prefill": 3,
       "title": "Max items",
       "type": "integer"
+    },
+    "monitorStoreName": {
+      "default": "youtube-ads-monitor",
+      "description": "Key-value store that remembers seen ad IDs for monitor mode (default: youtube-ads-monitor).",
+      "editor": "textfield",
+      "prefill": "youtube-ads-monitor",
+      "title": "Monitor store name",
+      "type": "string"
+    },
+    "onlyNew": {
+      "default": false,
+      "description": "Output only ad IDs not seen in earlier runs and mark them isNew: true. Reuse the same monitorStoreName for the same competitor list. The first run creates the baseline.",
+      "prefill": false,
+      "title": "Only new ads (monitor mode)",
+      "type": "boolean"
     },
     "outputFormat": {
       "default": "json",
@@ -578,16 +618,23 @@
       "title": "Proxy Configuration",
       "type": "object"
     },
+    "resolveVideoIds": {
+      "default": true,
+      "description": "Extract videoId, watch URL, thumbnail and duration from creative previews (ytimg/youtube URLs). Missing IDs are omitted, never fabricated. Turn off to save preview requests.",
+      "prefill": false,
+      "title": "Resolve YouTube video IDs from previews",
+      "type": "boolean"
+    },
     "searchTerms": {
-      "description": "Keywords or domain names to discover advertisers, then scrape their YouTube ads (e.g. 'electric car', 'nike.com').",
+      "description": "Keywords or domains used to discover advertisers and domains, then scrape their YouTube ads (e.g. 'electric car', 'nike.com'). Keyword searches also use domain suggestions returned by Google.",
       "editor": "stringList",
       "items": {
         "type": "string"
       },
       "prefill": [
-        "electric car"
+        "nike.com"
       ],
-      "title": "Search Terms (keywords)",
+      "title": "Search Terms (keywords or domains)",
       "type": "array"
     }
   },

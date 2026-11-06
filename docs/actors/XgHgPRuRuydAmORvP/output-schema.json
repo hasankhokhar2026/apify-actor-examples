@@ -10,6 +10,16 @@
       "description": "URL to audio transcription object (when available)",
       "type": "string"
     },
+    "availability": {
+      "description": "Whether a usable video URL was returned. 'restricted' means the page only exposed restricted content; 'unavailable' means the requested snap was not found; 'unknown' means a fetch or parse failure prevented a decision.",
+      "enum": [
+        "available",
+        "restricted",
+        "unavailable",
+        "unknown"
+      ],
+      "type": "string"
+    },
     "caption": {
       "description": "Video caption / description text",
       "type": "string"
@@ -17,6 +27,54 @@
     "commentCount": {
       "description": "Total comment count (from engagementStats)",
       "type": "integer"
+    },
+    "comments": {
+      "description": "Comment threads for the snap (when includeComments=true and Snapchat exposes them)",
+      "items": {
+        "properties": {
+          "approvalState": {},
+          "commentId": {
+            "type": "string"
+          },
+          "commenterBitmojiAvatarId": {
+            "type": "string"
+          },
+          "commenterBitmojiSelfieId": {
+            "type": "string"
+          },
+          "commenterDisplayName": {
+            "type": "string"
+          },
+          "postedAt": {
+            "type": "string"
+          },
+          "reactionCounts": {
+            "items": {
+              "properties": {
+                "count": {
+                  "type": "integer"
+                },
+                "reactTypeId": {
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "replyText": {
+            "type": "string"
+          },
+          "reportCount": {
+            "type": "integer"
+          },
+          "snapId": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "type": "array"
     },
     "contextCards": {
       "description": "Context card objects linked to the snap (when include_ai_metadata=true)",
@@ -122,6 +180,10 @@
       "description": "Related spotlight story summaries with thumbnailUrl, storyPageUrl, durationSeconds, creatorUsername",
       "type": "array"
     },
+    "restricted": {
+      "description": "Whether Snapchat marks this snap as age- or region-restricted",
+      "type": "boolean"
+    },
     "scrapedAt": {
       "description": "ISO 8601 UTC timestamp when this record was scraped",
       "type": "string"
@@ -163,7 +225,7 @@
       "type": "string"
     },
     "videoUrl": {
-      "description": "Direct CDN video URL (may expire)",
+      "description": "Direct CDN video URL",
       "type": "string"
     },
     "viewCount": {

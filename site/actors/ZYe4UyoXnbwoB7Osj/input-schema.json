@@ -1,37 +1,60 @@
 {
-  "description": "Scrape Snapchat Ads Library / Ad Gallery for advertiser ads, sponsored content, and creator-sponsored posts.",
+  "description": "Scrape the public Snapchat Ads Library (Ads Gallery) for advertiser ads, sponsored content, and creator-sponsored posts across the EU and Turkey.",
   "properties": {
+    "advertiserMatch": {
+      "default": "contains",
+      "description": "contains (default) uses Snap's partial payer-name search. exact keeps only ads whose paying advertiser exactly equals one of your names, ignoring case and extra whitespace.",
+      "editor": "select",
+      "enum": [
+        "contains",
+        "exact"
+      ],
+      "enumTitles": [
+        "Contains (partial match)",
+        "Exact payer name"
+      ],
+      "prefill": "contains",
+      "title": "Advertiser Match",
+      "type": "string"
+    },
     "countries": {
-      "description": "EU country codes to filter ads by. Leave empty for all regions. Valid codes: de, fr, it, es, pl, nl, be, se, at, pt, cz, ro, hu, dk, fi, sk, bg, hr, lt, lv, lu, si, ee, el, mt, ie, cy. Note: UK (gb) is not supported by the API.",
+      "description": "2-letter country codes to filter ads by. Leave empty for all. Supported: the 27 EU codes at, be, bg, cy, cz, de, dk, ee, el (Greece), es, fi, fr, hr, hu, ie, it, lt, lu, lv, mt, nl, pl, pt, ro, se, si, sk, tr (Turkey). gr is accepted as an alias for el. UK (gb/uk) and US are not in the library.",
       "editor": "stringList",
       "prefill": [],
       "title": "Countries",
       "type": "array"
     },
     "creatorName": {
-      "description": "For creatorSearch mode: creator username or name to search sponsored content",
+      "description": "For creatorSearch mode: creator username or display name used to search sponsored content.",
       "editor": "textfield",
       "prefill": "beauty",
       "title": "Creator Name",
       "type": "string"
     },
     "endDate": {
-      "description": "Filter ads active up to this date (ISO 8601 or YYYY-MM-DD). Leave empty for no end-date filter.",
+      "description": "Filter ads that ran on or before this date (ISO 8601 or YYYY-MM-DD). The API does not publish an ad end date in records.",
       "editor": "textfield",
       "title": "End Date",
       "type": "string"
     },
+    "includeCoverage": {
+      "default": true,
+      "description": "Add one coverage row per advertiser/creator listing matched payer names, status, pages fetched, duplicates removed, countries, and impression coverage.",
+      "prefill": true,
+      "title": "Include Coverage Rows",
+      "type": "boolean"
+    },
     "maxResults": {
       "default": 200,
-      "description": "Maximum number of records to return. Note: adSearch mode returns up to 10 results per advertiser (API limit).",
+      "description": "Maximum records to save per advertiser in adSearch, or total records in sponsoredContent/creatorSearch. The actor paginates the public API automatically (10 ads per request for adSearch, up to 200 items per page for sponsored content).",
       "maximum": 10000,
       "minimum": 1,
-      "title": "Max Results",
+      "title": "Max Results per Advertiser",
       "type": "integer"
     },
     "mode": {
       "default": "adSearch",
-      "description": "Select the scraping mode: adSearch to search ads by advertiser, sponsoredContent to browse all sponsored content, or creatorSearch to search by creator.",
+      "description": "adSearch searches ads by paying advertiser, sponsoredContent browses all live sponsored content, and creatorSearch searches sponsored content by creator.",
       "editor": "select",
       "enum": [
         "adSearch",
@@ -48,28 +71,36 @@
       "type": "string"
     },
     "payingAdvertiserName": {
-      "description": "For adSearch mode: advertiser name to search. Examples: nike, coca-cola, amazon",
+      "description": "Single-advertiser legacy input, still supported. Prefer Advertiser Names. If both are set, the names are merged and deduplicated.",
       "editor": "textfield",
-      "prefill": "nike",
-      "title": "Advertiser Name",
+      "title": "Advertiser Name (single, legacy)",
       "type": "string"
     },
+    "payingAdvertiserNames": {
+      "description": "For adSearch mode: one or more paying-advertiser names, e.g. Nike, Amazon, Zalando. The API matches partial names case-insensitively; set Advertiser Match to exact for case-insensitive exact payer matching.",
+      "editor": "stringList",
+      "prefill": [
+        "nike"
+      ],
+      "title": "Advertiser Names",
+      "type": "array"
+    },
     "proxyConfiguration": {
-      "description": "Optional proxy configuration for requests.",
+      "description": "Optional proxy. The Ads Library API is public and normally works without a proxy; enable one only if your runs keep hitting rate limits.",
       "editor": "proxy",
       "nullable": true,
       "title": "Proxy Configuration",
       "type": "object"
     },
     "startDate": {
-      "description": "Filter ads active from this date (ISO 8601 or YYYY-MM-DD). Leave empty for no start-date filter.",
+      "description": "Filter ads that ran on or after this date (ISO 8601 or YYYY-MM-DD). The library only covers the last 12 months; older dates may return nothing.",
       "editor": "textfield",
       "title": "Start Date",
       "type": "string"
     },
     "status": {
       "default": "ALL",
-      "description": "Filter ads by their current status.",
+      "description": "Filter ads by current status: ACTIVE, PAUSED, or ALL.",
       "editor": "select",
       "enum": [
         "ACTIVE",
