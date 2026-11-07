@@ -1,0 +1,49 @@
+{
+  "properties": {
+    "maxDelayBetweenRequests": {
+      "default": 5,
+      "description": "Maximum delay in seconds between queries to avoid rate limiting.",
+      "example": 5,
+      "maximum": 60,
+      "minimum": 1,
+      "title": "Maximum Delay Between Requests (seconds)",
+      "type": "integer"
+    },
+    "minDelayBetweenRequests": {
+      "default": 2,
+      "description": "Minimum delay in seconds between queries to avoid rate limiting.",
+      "example": 2,
+      "maximum": 30,
+      "minimum": 1,
+      "title": "Minimum Delay Between Requests (seconds)",
+      "type": "integer"
+    },
+    "searchQueries": {
+      "default": [
+        "Eiffel Tower"
+      ],
+      "description": "List of location names or addresses to search for on Google Earth. Each query returns ONE result (the primary location Google Earth identifies). For multiple franchise locations (e.g., 'KFC'), use specific queries like 'KFC New York', 'KFC Los Angeles'.",
+      "editor": "stringList",
+      "example": [
+        "Eiffel Tower",
+        "Grand Canyon",
+        "Tokyo Tower",
+        "Statue of Liberty"
+      ],
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "maxItems": 100,
+      "minItems": 1,
+      "title": "Search Queries",
+      "type": "array"
+    }
+  },
+  "required": [
+    "searchQueries"
+  ],
+  "schemaVersion": 1,
+  "title": "Google Earth Scraper Input",
+  "type": "object"
+}
