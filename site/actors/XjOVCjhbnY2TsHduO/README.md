@@ -1,0 +1,125 @@
+# Amazon All Offers & Buy Box Tracker
+
+Scrape **every seller offer** for one or more Amazon ASINs from the All-Offers-Display panel (the "Other Sellers on Amazon" / "See All Buying Options" list). Get condition, price, seller name and rating, ships-from, delivery estimate, and which offer currently wins the buy box -- for as many products as you need, across multiple marketplaces and destinations.
+
+## What this actor does
+
+- **Input by ASIN or by product URL** -- mix and match freely
+- **Every offer, not just the buy box** -- new, used, and third-party seller offers on the same listing
+- **Condition filter** -- restrict to New, Used, Collectible, or Renewed only, or All (each matched exactly -- a "Used only" filter never silently includes Collectible/Renewed offers)
+- **Fulfillment type filter** -- restrict to Fulfilled by Amazon (FBA), Fulfilled by Merchant (FBM), or sold-and-shipped-by-Amazon
+- **Destination-aware** -- set a delivery country / postal code, since offer sets and delivery estimates change by destination
+- **Buy-box detection** -- the current buy-box winner is explicitly flagged, never guessed from list position
+- **Empty fields are omitted**
+
+## Output per offer
+
+- `productAsin` -- the product ASIN this offer belongs to
+- `offerPosition` -- 1-based order the offer appeared in on the page (buy box is always position 1)
+- `condition`, `subCondition` -- e.g. `"Used"` / `"Like New"`
+- `conditionNote` -- extra condition detail text, when Amazon shows one
+- `price` -- `{ value, currency, display }`
+- `unitPrice` -- `{ value, currency, display }`, when Amazon shows a per-unit price
+- `listPrice` -- `{ value, currency, display }`, the strikethrough "List Price" Amazon shows for this specific offer, only present when Amazon's own DOM carries it (typically the pinned/buy-box offer on a discounted item) -- never derived/computed
+- `savingsPercent` -- integer percent-off (e.g. `30` for "-30%"), only present alongside a real `listPrice`
+- `deliveryEstimate` -- the delivery promise text shown for this offer
+- `isFreeDelivery` -- `true`/`false`, only when the delivery text gives explicit evidence either way (e.g. "FREE delivery..." vs. a stated shipping charge); omitted when ambiguous
+- `shippingPrice` -- `{ value, currency, display }`, only present when Amazon shows an explicit paid-shipping amount
+- `shipsFrom` -- who ships the item
+- `soldBy` -- `{ name, sellerId, profileUrl }`
+- `sellerRating`, `sellerRatingsCount` -- third-party seller reputation, when Amazon shows a rating line for that seller
+- `sellerPositivePercent12m` **or** `sellerPositivePercentLifetime` -- the positive-feedback percentage, exactly one of the two depending on which real period Amazon measured it over (sellers with a full 12-month history get "% positive over last 12 months"; newer sellers get "% positive over lifetime" instead) -- never conflated into one field, since they cover different windows
+- `fulfillmentType` -- `"FBA"` / `"FBM"` / `"AMAZON"`, derived from Amazon's own "Ships from"/"Sold by" labels; omitted when the combination is ambiguous (e.g. a named third-party fulfillment center)
+- `isBuyBoxWinner` -- `true` only for the pinned/buy-box offer, never inferred from position
+- `maxQuantity` -- highest quantity selectable for this offer, when a quantity control is shown
+- `couponText` -- any coupon/promotion text shown on the offer row
+- `marketplace` -- `{ countryCode, domain, marketplaceId, currency, language }`
+- `requestContext` -- `{ productAsin, sourceUrl, canonicalUrl, deliveryCountry, postalCode }`
+- `page` -- `{ classification: "SUCCESS", totalOfferCount, moreOffersAvailable }`. `totalOfferCount` is Amazon's own reported total offer count for the ASIN (when available). The actor automatically expands Amazon's own "See N more options" panel toggle before extracting, which fully recovers every offer on ASINs where Amazon had already rendered them all client-side (just hidden behind that toggle); on ASINs with a substantially larger real offer count, Amazon's client-side reveal itself only carries a further batch (not literally every remaining offer), so `moreOffersAvailable: true` can still appear even when `maxOffersPerProduct` was set higher than `totalOfferCount` -- this remaining gap would require a genuine server-side page-2 fetch the actor does not perform. Check this field rather than assuming `maxOffersPerProduct` was always fully honored.
+- `recordType: "offer"`, `scrapedAt`
+
+## Output: status records
+
+When an ASIN's page can't be classified as a normal offers page (not found, invalid ASIN, sign-in wall, CAPTCHA, rate-limited, or a genuinely empty offers panel), the actor emits one explicit status record instead of silently returning zero rows. Likewise, when offers were found but every single one was removed by the `conditions`/`fulfillmentTypes` filters, one `FILTERED_OUT` status record is emitted (carrying Amazon's real `totalOfferCount`) so an empty result set is never ambiguous:
+
+- `productAsin`, `marketplace`, `requestContext`
+- `page.classification` -- one of `NOT_FOUND`, `INVALID_ASIN`, `AUTH_REQUIRED`, `CAPTCHA`, `ROBOT_CHECK`, `DOG_PAGE_503`, `RATE_LIMITED`, `NO_OFFERS`, `FILTERED_OUT`, etc.
+- `recordType: "status"`, `scrapedAt`
+
+## Input
+
+| Field | Type | Default | Description |
+|---|---|---|---|
+| `asins` | array | – | ASINs to fetch, e.g. `B0DCH8VDXF` |
+| `productUrls` | array | – | Full `/dp/{ASIN}` product URLs (marketplace domain auto-detected) |
+| `conditions` | string | `ALL` | `ALL` / `NEW` / `USED` / `COLLECTIBLE` / `RENEWED` |
+| `fulfillmentTypes` | array | `[]` (no filter) | Any of `FBA` / `FBM` / `AMAZON`; leave empty for no filter |
+| `maxOffersPerProduct` | int | `20` | Hard cap on offers emitted per ASIN (1-50) |
+| `deliveryCountry` | string | – | 2-letter destination country; also picks the default marketplace domain |
+| `postalCode` | string | – | Destination ZIP/postal code |
+| `proxyConfiguration` | object | AUTO | Apify proxy config |
+
+### Example: single ASIN, all conditions
+
+```json
+{
+  "asins": ["B0DCH8VDXF"],
+  "conditions": "ALL",
+  "maxOffersPerProduct": 10
+}
+```
+
+### Example: multiple ASINs, new only, destination-aware
+
+```json
+{
+  "asins": ["B0DXXYS4BJ", "B0DCH8VDXF"],
+  "conditions": "NEW",
+  "deliveryCountry": "US",
+  "postalCode": "10001",
+  "maxOffersPerProduct": 20
+}
+```
+
+### Example: by product URL, UK marketplace
+
+```json
+{
+  "productUrls": ["https://www.amazon.co.uk/dp/B0DCH8VDXF"],
+  "conditions": "ALL"
+}
+```
+
+## Use cases
+
+- **Price monitoring** -- track how many sellers compete on a listing and at what price
+- **Buy-box tracking** -- monitor which seller currently owns the buy box over time
+- **Repricing intelligence** -- see competitor pricing, condition, and shipping terms side by side
+- **Seller research** -- discover which third-party sellers list a given ASIN and their ratings
+- **Arbitrage / reselling** -- compare New vs Used pricing spreads on the same product
+
+## FAQ
+
+**What is the All-Offers-Display panel?** It's the list Amazon shows when you click "See All Buying Options" or "X used & new" on a product page -- every seller currently offering that ASIN, not just the buy-box winner.
+
+**Why do offer sets change by destination?** Amazon only shows offers a seller can actually ship to your delivery address. Setting `deliveryCountry`/`postalCode` makes the results match what a real shopper in that location would see.
+
+**Why is `sellerRating` sometimes missing?** Amazon only shows an independent seller-rating line for third-party sellers. Offers fulfilled and sold directly by Amazon (or "Amazon Resale") don't carry a separate rating line, so the field is correctly omitted rather than fabricated.
+
+**How is `fulfillmentType` determined?** From Amazon's own "Ships from" and "Sold by" labels on each offer row -- `FBA` (Fulfilled by Amazon) when Amazon ships it but a third party sold it, `AMAZON` when Amazon both sold and shipped it, `FBM` (Fulfilled by Merchant) when the ships-from and sold-by names match (the seller ships it themselves). If the combination is ambiguous (e.g. a named third-party fulfillment center), the field is omitted rather than guessed.
+
+**Why is `isFreeDelivery`/`shippingPrice` sometimes missing?** Only set when Amazon's delivery text gives explicit evidence either way ("FREE delivery..." or a stated shipping charge). An ambiguous delivery estimate with no free/paid wording leaves both fields omitted rather than assuming free.
+
+**What's the difference between `USED` and `COLLECTIBLE`/`RENEWED` in the condition filter?** Amazon's own AOD panel surfaces up to 4 distinct top-level condition buckets on the same listing -- `New`, `Used`, `Collectible` (rare/specialty copies, common on books/media), and `Renewed` (Amazon's official refurbishment program). Each `conditions` filter value matches its own bucket exactly -- selecting `USED` will never silently include a `Collectible` or `Renewed` offer. Use `ALL` if you want every condition together.
+
+**Does the `conditions` filter work on non-English marketplaces?** The output `condition` field always shows Amazon's own real, localized text (e.g. Polish "Nowe", Dutch "Nieuw", Italian "Nuovo" for New-condition offers) -- it's never translated or altered. The `conditions` input filter itself recognizes the English bucket names plus a small, evidence-based set of live-verified translations: New-condition words for Polish/Dutch/Italian/German/Japanese/Spanish/French, plus Used/Collectible words for Japanese ("中古商品"/"コレクター商品"), German ("Gebraucht"), Italian ("Usato"/"Da collezione"), Spanish ("De 2ª mano"), and French ("D'occasion"). Filtering by `USED`/`COLLECTIBLE`/`RENEWED` on a marketplace whose offers render those buckets in a language this actor hasn't yet verified a translation for may under-match (real offers in that bucket excluded rather than risking a wrong match) -- use `ALL` and inspect the real `condition` text yourself if you need every bucket on an untranslated marketplace.
+
+**Why did I get a status record instead of offers?** The ASIN's page didn't classify as a normal offers listing -- it may be invalid, geo-restricted, temporarily rate-limited, or genuinely have no additional offers beyond the buy box. The `page.classification` field tells you exactly why.
+
+**I set `maxOffersPerProduct` to 50 but got fewer offers back -- is that a bug?** No -- `maxOffersPerProduct` is a cap, not a guarantee. The actor automatically expands Amazon's own "See N more options" panel toggle before extracting, which recovers every offer on ASINs where Amazon had already rendered them all client-side behind that toggle. On ASINs with a much larger real offer count (popular used-book listings with dozens of sellers are the most common case), Amazon's client-side reveal itself only carries a further batch rather than literally every remaining offer -- reaching the rest would require a genuine server-side page-2 fetch this actor does not perform. Every returned offer record's `page.totalOfferCount`/`page.moreOffersAvailable` fields tell you the real total and whether more exist beyond what was captured, so you can always tell the difference from a genuinely-exhausted result.
+
+**Is this affiliated with Amazon?** No. This is an independent, third-party actor that reads Amazon's publicly viewable product pages.
+
+**How fresh is the data?** Every run fetches the live page at request time -- offers, prices, and the buy-box winner can change within minutes on Amazon, so treat each run as a point-in-time snapshot.
+
+**Why does `sourceUrl` / `soldBy.profileUrl` return an error if I open it with a bare script?** Amazon's edge blocks plain, cookie-less, non-browser requests outright -- a raw request from a clean script with no session/cookies will get a "Service Unavailable" response even though the same URL loads fine for a real shopper. This actor itself reaches these pages successfully; the URLs in the output are the correct, canonical Amazon URLs and will render normally when opened in a browser.

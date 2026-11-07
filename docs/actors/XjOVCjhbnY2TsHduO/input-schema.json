@@ -1,0 +1,160 @@
+{
+  "description": "Scrape every seller offer for one or more Amazon ASINs from the All-Offers-Display (\"Other Sellers on Amazon\") panel.",
+  "properties": {
+    "asins": {
+      "default": [],
+      "description": "Amazon ASINs to fetch offers for, e.g. `B0DCH8VDXF`.",
+      "editor": "stringList",
+      "prefill": [
+        "B0DXXYS4BJ"
+      ],
+      "title": "ASINs",
+      "type": "array"
+    },
+    "conditions": {
+      "default": "ALL",
+      "description": "Only emit offers of this condition. Amazon's offer panel surfaces 4 distinct condition buckets -- New, Used, Collectible, and Renewed (Amazon Renewed program) -- each matched exactly (\"Used only\" never silently includes Collectible/Renewed offers).",
+      "editor": "select",
+      "enum": [
+        "ALL",
+        "NEW",
+        "USED",
+        "COLLECTIBLE",
+        "RENEWED"
+      ],
+      "enumTitles": [
+        "All conditions",
+        "New only",
+        "Used only",
+        "Collectible only",
+        "Renewed only"
+      ],
+      "prefill": "ALL",
+      "title": "Condition filter",
+      "type": "string"
+    },
+    "deliveryCountry": {
+      "default": "",
+      "description": "2-letter destination country. Offer sets are destination-dependent; also selects the default marketplace domain for bare ASINs (ignored when `productUrls` supplies its own domain).",
+      "editor": "select",
+      "enum": [
+        "",
+        "US",
+        "CA",
+        "MX",
+        "BR",
+        "GB",
+        "DE",
+        "FR",
+        "IT",
+        "ES",
+        "NL",
+        "SE",
+        "PL",
+        "TR",
+        "AE",
+        "SA",
+        "IN",
+        "SG",
+        "AU",
+        "JP",
+        "EG",
+        "IE",
+        "BE",
+        "ZA"
+      ],
+      "enumTitles": [
+        "(default - United States)",
+        "United States",
+        "Canada",
+        "Mexico",
+        "Brazil",
+        "United Kingdom",
+        "Germany",
+        "France",
+        "Italy",
+        "Spain",
+        "Netherlands",
+        "Sweden",
+        "Poland",
+        "Turkey",
+        "United Arab Emirates",
+        "Saudi Arabia",
+        "India",
+        "Singapore",
+        "Australia",
+        "Japan",
+        "Egypt",
+        "Ireland",
+        "Belgium",
+        "South Africa"
+      ],
+      "prefill": "US",
+      "title": "Delivery country",
+      "type": "string"
+    },
+    "fulfillmentTypes": {
+      "default": [],
+      "description": "Only emit offers with this fulfillment type. Derived from Amazon's own explicit \"Ships from\"/\"Sold by\" labels: FBA (Fulfilled by Amazon -- ships from Amazon, sold by a third-party seller), AMAZON (sold and shipped by Amazon itself), FBM (Fulfilled by Merchant -- the seller ships it themselves). Leave empty for no filter. Offers where the fulfillment type couldn't be confidently derived are excluded whenever a filter is set (but still included when this filter is empty).",
+      "editor": "select",
+      "items": {
+        "enum": [
+          "FBA",
+          "FBM",
+          "AMAZON"
+        ],
+        "enumTitles": [
+          "Fulfilled by Amazon (FBA)",
+          "Fulfilled by Merchant (FBM)",
+          "Sold and shipped by Amazon"
+        ],
+        "type": "string"
+      },
+      "prefill": [],
+      "title": "Fulfillment type filter",
+      "type": "array"
+    },
+    "maxOffersPerProduct": {
+      "default": 20,
+      "description": "Hard cap on the number of offer records emitted per ASIN (the buy-box/pinned offer counts as one).",
+      "maximum": 50,
+      "minimum": 1,
+      "prefill": 5,
+      "title": "Max offers per ASIN",
+      "type": "integer"
+    },
+    "postalCode": {
+      "description": "Destination postal code to refine delivery estimates. Optional.",
+      "editor": "textfield",
+      "prefill": "10001",
+      "title": "Postal / ZIP code",
+      "type": "string"
+    },
+    "productUrls": {
+      "default": [],
+      "description": "Full Amazon product URLs (any `/dp/{ASIN}` link). The marketplace domain and ASIN are both extracted from each URL.",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Product URLs",
+      "type": "array"
+    },
+    "proxyConfiguration": {
+      "default": {
+        "useApifyProxy": true
+      },
+      "description": "Uses the free AUTO (datacenter) proxy group by default. Some marketplaces (e.g. amazon.co.uk, amazon.de) drop datacenter connections outright, so the actor fast-fails a network-level timeout on a target and automatically retries it once under a RESIDENTIAL session -- a bounded fallback, never the default.",
+      "editor": "proxy",
+      "prefill": {
+        "useApifyProxy": true
+      },
+      "title": "Proxy configuration",
+      "type": "object"
+    }
+  },
+  "required": [
+    "asins"
+  ],
+  "schemaVersion": 1,
+  "title": "Amazon Offers Scraper Input",
+  "type": "object"
+}
