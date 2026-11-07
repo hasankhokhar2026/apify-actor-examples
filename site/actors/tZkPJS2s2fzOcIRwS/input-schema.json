@@ -1,0 +1,226 @@
+{
+  "description": "Scrape Amazon third-party seller profiles and storefront catalogs. Provide one or more seller IDs directly, and/or product URLs to auto-derive the seller ID from the buy-box seller link.",
+  "properties": {
+    "includeBusinessDetails": {
+      "default": true,
+      "description": "If true, includes the seller's publicly-displayed legal business name, business address, and customer-service phone number (data Amazon itself shows on the public seller profile page -- not customer-level personal data).",
+      "prefill": true,
+      "title": "Include Business Details",
+      "type": "boolean"
+    },
+    "marketplace": {
+      "default": "US",
+      "description": "Amazon marketplace/domain to scrape sellers on. Overrides the domain inferred from productUrls when both are provided.",
+      "editor": "select",
+      "enum": [
+        "US",
+        "CA",
+        "MX",
+        "BR",
+        "IE",
+        "ES",
+        "GB",
+        "FR",
+        "BE",
+        "NL",
+        "DE",
+        "IT",
+        "SE",
+        "ZA",
+        "PL",
+        "EG",
+        "TR",
+        "SA",
+        "AE",
+        "IN",
+        "SG",
+        "AU",
+        "JP"
+      ],
+      "enumTitles": [
+        "United States (amazon.com)",
+        "Canada (amazon.ca)",
+        "Mexico (amazon.com.mx)",
+        "Brazil (amazon.com.br)",
+        "Ireland (amazon.ie)",
+        "Spain (amazon.es)",
+        "United Kingdom (amazon.co.uk)",
+        "France (amazon.fr)",
+        "Belgium (amazon.com.be)",
+        "Netherlands (amazon.nl)",
+        "Germany (amazon.de)",
+        "Italy (amazon.it)",
+        "Sweden (amazon.se)",
+        "South Africa (amazon.co.za)",
+        "Poland (amazon.pl)",
+        "Egypt (amazon.eg)",
+        "Turkey (amazon.com.tr)",
+        "Saudi Arabia (amazon.sa)",
+        "United Arab Emirates (amazon.ae)",
+        "India (amazon.in)",
+        "Singapore (amazon.sg)",
+        "Australia (amazon.com.au)",
+        "Japan (amazon.co.jp)"
+      ],
+      "prefill": "US",
+      "title": "Marketplace",
+      "type": "string"
+    },
+    "maxProductPages": {
+      "default": 3,
+      "description": "Maximum number of /s?me= storefront pages to fetch per seller (mode=PRODUCTS or BOTH). Each page holds up to ~16 products.",
+      "maximum": 20,
+      "minimum": 1,
+      "prefill": 1,
+      "title": "Max Storefront Pages Per Seller",
+      "type": "integer"
+    },
+    "mode": {
+      "default": "BOTH",
+      "description": "PROFILE fetches only the seller profile page. PRODUCTS fetches only the seller's storefront catalog. BOTH fetches both for every resolved seller.",
+      "editor": "select",
+      "enum": [
+        "PROFILE",
+        "PRODUCTS",
+        "BOTH"
+      ],
+      "enumTitles": [
+        "Seller profile only",
+        "Seller storefront products only",
+        "Both profile and products"
+      ],
+      "prefill": "BOTH",
+      "title": "Mode",
+      "type": "string"
+    },
+    "productUrls": {
+      "default": [],
+      "description": "Amazon product page URLs (e.g. https://www.amazon.com/dp/ASIN). The seller ID is auto-derived from each product's buy-box \"sold by\" seller link.",
+      "editor": "stringList",
+      "example": [
+        "https://www.amazon.com/dp/B0BTYCRJSS"
+      ],
+      "items": {
+        "type": "string"
+      },
+      "prefill": [],
+      "title": "Product URLs",
+      "type": "array"
+    },
+    "proxyCountry": {
+      "default": "AUTO",
+      "description": "Proxy country for geo-targeting. Use AUTO to automatically select based on the Amazon marketplace/domain.",
+      "editor": "select",
+      "enum": [
+        "AUTO",
+        "US",
+        "CA",
+        "MX",
+        "BR",
+        "IE",
+        "ES",
+        "GB",
+        "FR",
+        "BE",
+        "NL",
+        "DE",
+        "IT",
+        "SE",
+        "ZA",
+        "PL",
+        "EG",
+        "TR",
+        "SA",
+        "AE",
+        "IN",
+        "SG",
+        "AU",
+        "JP"
+      ],
+      "enumTitles": [
+        "Auto (based on marketplace)",
+        "United States",
+        "Canada",
+        "Mexico",
+        "Brazil",
+        "Ireland",
+        "Spain",
+        "United Kingdom",
+        "France",
+        "Belgium",
+        "Netherlands",
+        "Germany",
+        "Italy",
+        "Sweden",
+        "South Africa",
+        "Poland",
+        "Egypt",
+        "Turkey",
+        "Saudi Arabia",
+        "United Arab Emirates",
+        "India",
+        "Singapore",
+        "Australia",
+        "Japan"
+      ],
+      "prefill": "AUTO",
+      "title": "Proxy Country",
+      "type": "string"
+    },
+    "sellerIds": {
+      "default": [],
+      "description": "Amazon seller/merchant IDs (e.g. A294P4X9EWVXLJ). Accepts bare IDs or IDs embedded in a seller/storefront URL.",
+      "editor": "stringList",
+      "example": [
+        "A294P4X9EWVXLJ"
+      ],
+      "items": {
+        "type": "string"
+      },
+      "prefill": [
+        "A294P4X9EWVXLJ"
+      ],
+      "title": "Seller IDs",
+      "type": "array"
+    },
+    "sortBy": {
+      "default": "",
+      "description": "Sort order for the seller's storefront catalog (mode=PRODUCTS or BOTH), matching Amazon's own storefront \"Sort by\" dropdown. Leave blank for Amazon's default (Featured).",
+      "editor": "select",
+      "enum": [
+        "",
+        "relevanceblender",
+        "price-asc-rank",
+        "price-desc-rank",
+        "review-rank",
+        "date-desc-rank",
+        "exact-aware-popularity-rank"
+      ],
+      "enumTitles": [
+        "Default (Featured)",
+        "Featured",
+        "Price: Low to High",
+        "Price: High to Low",
+        "Avg. Customer Review",
+        "Newest Arrivals",
+        "Best Sellers"
+      ],
+      "prefill": "",
+      "title": "Storefront Sort Order",
+      "type": "string"
+    },
+    "useResidentialProxy": {
+      "default": false,
+      "description": "By default the actor uses datacenter (AUTO) proxies with a homepage-priming technique that reliably bypasses Amazon's cold-navigation block, escalating to residential proxies automatically only if repeated blocks occur. Enable this to force residential proxies (more reliable but more expensive) from the start.",
+      "prefill": false,
+      "title": "Use Residential Proxy",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "mode"
+  ],
+  "schemaVersion": 1,
+  "title": "Amazon Seller & Shop Scraper Input",
+  "type": "object"
+}
