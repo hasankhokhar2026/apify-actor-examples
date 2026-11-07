@@ -1,0 +1,1724 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src &#x27;self&#x27;; script-src &#x27;self&#x27; &#x27;sha256-FggTz/AoGqIDHNUkeP62186PsFTr5XIcr/iF6SGB9Vk=&#x27;; style-src &#x27;self&#x27;; img-src &#x27;self&#x27; https: data:; base-uri &#x27;self&#x27;; form-action &#x27;self&#x27;; object-src &#x27;none&#x27;"><title>LinkedIn Jobs Scraper with Salary &amp; Company Enrichment | Nimbryxo Studio</title><meta name="description" content="Search public LinkedIn job listings by keyword, location, salary band, job type and more, with full descriptions, parsed salary ranges, inferred seniority, visa-sponsorship mention"><meta name="robots" content="index,follow"><link rel="canonical" href="https://hasankhokhar2026.github.io/apify-actor-examples/actors/tba8gl0gackXF4x6b/"><meta property="og:title" content="LinkedIn Jobs Scraper with Salary &amp; Company Enrichment | Nimbryxo Studio"><meta property="og:description" content="Search public LinkedIn job listings by keyword, location, salary band, job type and more, with full descriptions, parsed salary ranges, inferred seniority, visa-sponsorship mention"><meta property="og:type" content="website"><meta property="og:url" content="https://hasankhokhar2026.github.io/apify-actor-examples/actors/tba8gl0gackXF4x6b/"><meta property="og:site_name" content="Nimbryxo Studio"><meta name="twitter:card" content="summary"><link rel="icon" href="/apify-actor-examples/assets/mark.svg?v=2d20f9dc334a" type="image/svg+xml"><link rel="stylesheet" href="/apify-actor-examples/assets/site.css?v=39545fd4a399"><link rel="stylesheet" href="/apify-actor-examples/assets/brand.css?v=eb0f935ade25"><link rel="alternate" type="application/rss+xml" title="Nimbryxo Studio guides" href="/apify-actor-examples/feed.xml"><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization","name":"Nimbryxo Studio","url":"https://hasankhokhar2026.github.io/apify-actor-examples/","sameAs":["https://apify.com/nimbryxo-studio"]},{"@type":"WebSite","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#website","name":"Nimbryxo Studio","url":"https://hasankhokhar2026.github.io/apify-actor-examples/","publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"inLanguage":"en"},{"@type":"WebPage","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/tba8gl0gackXF4x6b/#webpage","name":"LinkedIn Jobs Scraper with Salary & Company Enrichment","description":"Search public LinkedIn job listings by keyword, location, salary band, job type and more, with full descriptions, parsed salary ranges, inferred seniority, visa-sponsorship mentions and enriched hiring-company details. No cookies or login required.","url":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/tba8gl0gackXF4x6b/","isPartOf":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#website"},"publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"inLanguage":"en","mainEntity":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/tba8gl0gackXF4x6b/#article"},"breadcrumb":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/tba8gl0gackXF4x6b/#breadcrumb"}},{"@type":"TechArticle","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/tba8gl0gackXF4x6b/#article","headline":"LinkedIn Jobs Scraper with Salary & Company Enrichment","name":"LinkedIn Jobs Scraper with Salary & Company Enrichment","description":"Search public LinkedIn job listings by keyword, location, salary band, job type and more, with full descriptions, parsed salary ranges, inferred seniority, visa-sponsorship mentions and enriched hiring-company details. No cookies or login required.","url":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/tba8gl0gackXF4x6b/","author":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"mainEntityOfPage":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/tba8gl0gackXF4x6b/#webpage"},"inLanguage":"en"},{"@type":"BreadcrumbList","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/tba8gl0gackXF4x6b/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Nimbryxo Studio","item":"https://hasankhokhar2026.github.io/apify-actor-examples/"},{"@type":"ListItem","position":2,"name":"Actors","item":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/"},{"@type":"ListItem","position":3,"name":"LinkedIn Jobs Scraper with Salary & Company Enrichment","item":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/tba8gl0gackXF4x6b/"}]}]}</script><script src="/apify-actor-examples/assets/site.js?v=7cabac48dd31" defer></script></head><body class="theme-studio"><a href="#main" class="skip-link">Skip to content</a><header><div class="inner"><a href="/apify-actor-examples/" class="brand"><img src="/apify-actor-examples/assets/mark.svg?v=2d20f9dc334a" alt="" width="29" height="29">Nimbryxo Studio</a><nav aria-label="Main navigation"><a href="/apify-actor-examples/actors/" aria-current="page">Actors</a><a href="/apify-actor-examples/guides/">Guides</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></nav></div></header><main id="main"><div class="doc-layout"><aside class="contents" aria-label="On this page"><strong>Contents</strong><a href="#overview">Overview</a><a href="#published-readme">Published README</a><a href="#input-schema">Input schema</a><a href="#output-schema">Output schema</a><a href="#dataset-schema">Dataset schema</a><a href="#python-quickstart">Python quickstart</a></aside><article class="prose"><div class="breadcrumb"><a href="/apify-actor-examples/actors/">Actors</a><span>/</span><span>LinkedIn Jobs Scraper with Salary &amp; Company Enrichment</span></div><section id="overview"><h1 class="doc-title">LinkedIn Jobs Scraper with Salary &amp; Company Enrichment</h1><p class="lede">Search public LinkedIn job listings by keyword, location, salary band, job type and more, with full descriptions, parsed salary ranges, inferred seniority, visa-sponsorship mentions and enriched hiring-company details. No cookies or login required.</p><div class="actions"><a class="button" href="https://apify.com/nimbryxo-studio/linkedin-jobs-scraper-with-salary-and-company">Open on Apify</a><a class="text-link" href="https://github.com/hasankhokhar2026/apify-actor-examples/blob/main/docs/actors/tba8gl0gackXF4x6b/README.md">GitHub source</a></div></section><section class="schema-section" id="input-schema"><h2>Input schema</h2><p>Input fields, types, required flags, descriptions, defaults, and prefills come from the published definition. Prefill examples are distinct from defaults.</p><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>keywords</code></td><td>string</td><td>optional</td><td>Job title, skills, or keywords.</td></tr><tr><td><code>location</code></td><td>string</td><td>optional</td><td>City, state, country. Leave empty for worldwide. Ignored if Locations (plural) is set.</td></tr><tr><td><code>locations</code></td><td>array</td><td>optional</td><td>Run the same Job Keywords against multiple locations in one go (e.g. [&#x27;California&#x27;, &#x27;Texas&#x27;, &#x27;New York&#x27;]) and combine the deduplicated results — the best way to get more than LinkedIn&#x27;s ~1,000-result cap for one keyword. Overrides Location when set.</td></tr></tbody></table></div><details><summary>Show all input fields</summary><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>keywords</code></td><td>string</td><td>optional</td><td>Job title, skills, or keywords.</td></tr><tr><td><code>location</code></td><td>string</td><td>optional</td><td>City, state, country. Leave empty for worldwide. Ignored if Locations (plural) is set.</td></tr><tr><td><code>locations</code></td><td>array</td><td>optional</td><td>Run the same Job Keywords against multiple locations in one go (e.g. [&#x27;California&#x27;, &#x27;Texas&#x27;, &#x27;New York&#x27;]) and combine the deduplicated results — the best way to get more than LinkedIn&#x27;s ~1,000-result cap for one keyword. Overrides Location when set.</td></tr><tr><td><code>maxItems</code></td><td>integer</td><td>optional</td><td>Maximum number of jobs to scrape.</td></tr><tr><td><code>scrapeJobDetails</code></td><td>boolean</td><td>optional</td><td>Fetch full description, seniority, type, applicant count from each job page. Slower but more complete.</td></tr><tr><td><code>enrichmentDepth</code></td><td>string</td><td>optional</td><td>Standard fetches LinkedIn&#x27;s lightweight job detail page (fast, low bandwidth). Full also fetches similar jobs, related jobs, related searches, and cleaner company/industry IDs from LinkedIn&#x27;s full job page — but is roughly 5-7x slower per job and does not include the Apply URL, since LinkedIn does not expose it on that page.</td></tr><tr><td><code>timePosted</code></td><td>string</td><td>optional</td><td>Filter by posting date. Applied directly by LinkedIn.</td></tr><tr><td><code>experienceLevel</code></td><td>string</td><td>optional</td><td>Required experience level. Applied by this actor after fetching job details (LinkedIn no longer filters this server-side for public/cookieless searches) — may fetch and check more results than Max Job Listings to find enough matches, increasing run time.</td></tr><tr><td><code>jobType</code></td><td>string</td><td>optional</td><td>Employment type. Applied by this actor after fetching job details (LinkedIn no longer filters this server-side for public/cookieless searches) — may fetch and check more results than Max Job Listings to find enough matches, increasing run time.</td></tr><tr><td><code>workType</code></td><td>string</td><td>optional</td><td>On-site, remote, or hybrid. Best-effort only — LinkedIn no longer exposes a reliable on-site/remote/hybrid signal on public/cookieless pages, so this rarely narrows results today. Check the job title/description for the real work arrangement.</td></tr><tr><td><code>easyApply</code></td><td>boolean</td><td>optional</td><td>Only return jobs with LinkedIn Easy Apply. Applied directly by LinkedIn.</td></tr><tr><td><code>industry</code></td><td>array</td><td>optional</td><td>LinkedIn industry categories to filter by (multi-select). Applied by this actor after fetching job details and company data (LinkedIn&#x27;s cookieless job search no longer applies this filter server-side) — matched against each job&#x27;s company industry, so results reflect real company data rather than a dead query parameter.</td></tr><tr><td><code>companyIds</code></td><td>array</td><td>optional</td><td>Restrict search to specific LinkedIn company IDs. Find the ID in the company page URL. Applied directly by LinkedIn.</td></tr><tr><td><code>function</code></td><td>string</td><td>optional</td><td>Job function category. Applied by this actor after fetching job details (LinkedIn no longer filters this server-side for public/cookieless searches) — may fetch and check more results than Max Job Listings to find enough matches, increasing run time.</td></tr><tr><td><code>salaryMin</code></td><td>integer</td><td>optional</td><td>Minimum salary band. LinkedIn buckets: 1=40k+, 2=60k+, 3=80k+, 4=100k+, 5=120k+, 6=140k+, 7=160k+, 8=180k+, 9=200k+. Applied by this actor after fetching job details, only when LinkedIn&#x27;s own posted salary range is available and yearly — jobs with no listed salary are not excluded. May fetch and check more results than Max Job Listings to find enough matches, increasing run time.</td></tr><tr><td><code>under10Applicants</code></td><td>boolean</td><td>optional</td><td>Only show jobs with fewer than 10 applicants. Applied directly by LinkedIn.</td></tr><tr><td><code>language</code></td><td>string</td><td>optional</td><td>Preferred language for job listings (Accept-Language header).</td></tr><tr><td><code>searchUrls</code></td><td>array</td><td>optional</td><td>Direct LinkedIn job search URLs. Overrides Keywords and Location.</td></tr><tr><td><code>excludeJobIds</code></td><td>array</td><td>optional</td><td>Skip these LinkedIn job IDs (from a previous run&#x27;s `id` field) — useful for incremental runs that only want new postings.</td></tr><tr><td><code>includeTitleKeywords</code></td><td>array</td><td>optional</td><td>Only keep jobs whose title contains at least one of these keywords (case-insensitive).</td></tr><tr><td><code>excludeTitleKeywords</code></td><td>array</td><td>optional</td><td>Skip jobs whose title contains any of these keywords (case-insensitive) — e.g. to filter out &quot;Senior&quot; or &quot;Manager&quot; roles.</td></tr><tr><td><code>proxyConfiguration</code></td><td>object</td><td>optional</td><td>Apify proxy used for every request. Defaults to the free Datacenter (AUTO) group, which is required for reliable results -- LinkedIn&#x27;s guest job pages block requests from an unproxied Apify container IP on nearly every request.</td></tr></tbody></table></div></details><p><a href="input-schema.json">Download the published input schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+  &quot;description&quot;: &quot;Scrape job listings from LinkedIn. Search by keywords and location with filters, or provide direct LinkedIn job search URLs. No login required.&quot;,
+  &quot;properties&quot;: {
+    &quot;companyIds&quot;: {
+      &quot;default&quot;: [],
+      &quot;description&quot;: &quot;Restrict search to specific LinkedIn company IDs. Find the ID in the company page URL. Applied directly by LinkedIn.&quot;,
+      &quot;editor&quot;: &quot;stringList&quot;,
+      &quot;title&quot;: &quot;Company IDs&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;easyApply&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;Only return jobs with LinkedIn Easy Apply. Applied directly by LinkedIn.&quot;,
+      &quot;editor&quot;: &quot;checkbox&quot;,
+      &quot;title&quot;: &quot;Easy Apply Only&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;enrichmentDepth&quot;: {
+      &quot;default&quot;: &quot;standard&quot;,
+      &quot;description&quot;: &quot;Standard fetches LinkedIn&#x27;s lightweight job detail page (fast, low bandwidth). Full also fetches similar jobs, related jobs, related searches, and cleaner company/industry IDs from LinkedIn&#x27;s full job page — but is roughly 5-7x slower per job and does not include the Apply URL, since LinkedIn does not expose it on that page.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;standard&quot;,
+        &quot;full&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;Standard (faster)&quot;,
+        &quot;Full (more data, slower)&quot;
+      ],
+      &quot;title&quot;: &quot;Detail Enrichment Depth&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;excludeJobIds&quot;: {
+      &quot;description&quot;: &quot;Skip these LinkedIn job IDs (from a previous run&#x27;s `id` field) — useful for incremental runs that only want new postings.&quot;,
+      &quot;editor&quot;: &quot;stringList&quot;,
+      &quot;title&quot;: &quot;Exclude Job IDs&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;excludeTitleKeywords&quot;: {
+      &quot;description&quot;: &quot;Skip jobs whose title contains any of these keywords (case-insensitive) — e.g. to filter out \&quot;Senior\&quot; or \&quot;Manager\&quot; roles.&quot;,
+      &quot;editor&quot;: &quot;stringList&quot;,
+      &quot;title&quot;: &quot;Exclude Title Keywords&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;experienceLevel&quot;: {
+      &quot;default&quot;: &quot;&quot;,
+      &quot;description&quot;: &quot;Required experience level. Applied by this actor after fetching job details (LinkedIn no longer filters this server-side for public/cookieless searches) — may fetch and check more results than Max Job Listings to find enough matches, increasing run time.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;&quot;,
+        &quot;1&quot;,
+        &quot;2&quot;,
+        &quot;3&quot;,
+        &quot;4&quot;,
+        &quot;5&quot;,
+        &quot;6&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;Any&quot;,
+        &quot;Internship&quot;,
+        &quot;Entry level&quot;,
+        &quot;Associate&quot;,
+        &quot;Mid-Senior level&quot;,
+        &quot;Director&quot;,
+        &quot;Executive&quot;
+      ],
+      &quot;title&quot;: &quot;Experience Level&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;function&quot;: {
+      &quot;default&quot;: &quot;&quot;,
+      &quot;description&quot;: &quot;Job function category. Applied by this actor after fetching job details (LinkedIn no longer filters this server-side for public/cookieless searches) — may fetch and check more results than Max Job Listings to find enough matches, increasing run time.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;&quot;,
+        &quot;acct&quot;,
+        &quot;adm&quot;,
+        &quot;advr&quot;,
+        &quot;anls&quot;,
+        &quot;art&quot;,
+        &quot;bd&quot;,
+        &quot;cnsl&quot;,
+        &quot;cust&quot;,
+        &quot;dsgn&quot;,
+        &quot;dist&quot;,
+        &quot;edu&quot;,
+        &quot;eng&quot;,
+        &quot;fin&quot;,
+        &quot;genb&quot;,
+        &quot;hcpr&quot;,
+        &quot;hr&quot;,
+        &quot;it&quot;,
+        &quot;lgl&quot;,
+        &quot;mgmt&quot;,
+        &quot;mnfc&quot;,
+        &quot;mrkt&quot;,
+        &quot;ops&quot;,
+        &quot;othr&quot;,
+        &quot;prdm&quot;,
+        &quot;prod&quot;,
+        &quot;prjm&quot;,
+        &quot;pr&quot;,
+        &quot;prch&quot;,
+        &quot;qa&quot;,
+        &quot;rsch&quot;,
+        &quot;sale&quot;,
+        &quot;sci&quot;,
+        &quot;stra&quot;,
+        &quot;supl&quot;,
+        &quot;trng&quot;,
+        &quot;wrt&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;Any&quot;,
+        &quot;Accounting / Auditing&quot;,
+        &quot;Administrative&quot;,
+        &quot;Advertising&quot;,
+        &quot;Analyst&quot;,
+        &quot;Art / Creative&quot;,
+        &quot;Business Development&quot;,
+        &quot;Consulting&quot;,
+        &quot;Customer Service&quot;,
+        &quot;Design&quot;,
+        &quot;Distribution&quot;,
+        &quot;Education&quot;,
+        &quot;Engineering&quot;,
+        &quot;Finance&quot;,
+        &quot;General Business&quot;,
+        &quot;Healthcare Provider&quot;,
+        &quot;Human Resources&quot;,
+        &quot;Information Technology&quot;,
+        &quot;Legal&quot;,
+        &quot;Management&quot;,
+        &quot;Manufacturing&quot;,
+        &quot;Marketing&quot;,
+        &quot;Operations (legacy)&quot;,
+        &quot;Other&quot;,
+        &quot;Product Management&quot;,
+        &quot;Production&quot;,
+        &quot;Project Management&quot;,
+        &quot;Public Relations&quot;,
+        &quot;Purchasing&quot;,
+        &quot;Quality Assurance&quot;,
+        &quot;Research&quot;,
+        &quot;Sales&quot;,
+        &quot;Science&quot;,
+        &quot;Strategy / Planning&quot;,
+        &quot;Supply Chain&quot;,
+        &quot;Training&quot;,
+        &quot;Writing / Editing&quot;
+      ],
+      &quot;title&quot;: &quot;Job Function&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;includeTitleKeywords&quot;: {
+      &quot;description&quot;: &quot;Only keep jobs whose title contains at least one of these keywords (case-insensitive).&quot;,
+      &quot;editor&quot;: &quot;stringList&quot;,
+      &quot;title&quot;: &quot;Include Title Keywords&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;industry&quot;: {
+      &quot;default&quot;: [],
+      &quot;description&quot;: &quot;LinkedIn industry categories to filter by (multi-select). Applied by this actor after fetching job details and company data (LinkedIn&#x27;s cookieless job search no longer applies this filter server-side) — matched against each job&#x27;s company industry, so results reflect real company data rather than a dead query parameter.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;items&quot;: {
+        &quot;enum&quot;: [
+          &quot;Abrasives and Nonmetallic Minerals Manufacturing&quot;,
+          &quot;Accessible Architecture and Design&quot;,
+          &quot;Accessible Hardware Manufacturing&quot;,
+          &quot;Accommodation Services&quot;,
+          &quot;Accounting&quot;,
+          &quot;Administration of Justice&quot;,
+          &quot;Administrative and Support Services&quot;,
+          &quot;Advertising Services&quot;,
+          &quot;Agricultural Chemical Manufacturing&quot;,
+          &quot;Agriculture, Construction, Mining Machinery Manufacturing&quot;,
+          &quot;Air, Water, and Waste Program Management&quot;,
+          &quot;Airlines and Aviation&quot;,
+          &quot;Alternative Dispute Resolution&quot;,
+          &quot;Alternative Fuel Vehicle Manufacturing&quot;,
+          &quot;Alternative Medicine&quot;,
+          &quot;Ambulance Services&quot;,
+          &quot;Amusement Parks and Arcades&quot;,
+          &quot;Animal Feed Manufacturing&quot;,
+          &quot;Animation and Post-production&quot;,
+          &quot;Apparel Manufacturing&quot;,
+          &quot;Appliances, Electrical, and Electronics Manufacturing&quot;,
+          &quot;Architectural and Structural Metal Manufacturing&quot;,
+          &quot;Architecture and Planning&quot;,
+          &quot;Armed Forces&quot;,
+          &quot;Artificial Rubber and Synthetic Fiber Manufacturing&quot;,
+          &quot;Artists and Writers&quot;,
+          &quot;Audio and Video Equipment Manufacturing&quot;,
+          &quot;Automation Machinery Manufacturing&quot;,
+          &quot;Aviation and Aerospace Component Manufacturing&quot;,
+          &quot;Baked Goods Manufacturing&quot;,
+          &quot;Banking&quot;,
+          &quot;Bars, Taverns, and Nightclubs&quot;,
+          &quot;Bed-and-Breakfasts, Hostels, Homestays&quot;,
+          &quot;Beverage Manufacturing&quot;,
+          &quot;Biomass Electric Power Generation&quot;,
+          &quot;Biotechnology Research&quot;,
+          &quot;Blockchain Services&quot;,
+          &quot;Blogs&quot;,
+          &quot;Boilers, Tanks, and Shipping Container Manufacturing&quot;,
+          &quot;Book Publishing&quot;,
+          &quot;Book and Periodical Publishing&quot;,
+          &quot;Breweries&quot;,
+          &quot;Broadcast Media Production and Distribution&quot;,
+          &quot;Building Construction&quot;,
+          &quot;Building Equipment Contractors&quot;,
+          &quot;Building Finishing Contractors&quot;,
+          &quot;Building Structure and Exterior Contractors&quot;,
+          &quot;Business Consulting and Services&quot;,
+          &quot;Business Content&quot;,
+          &quot;Business Intelligence Platforms&quot;,
+          &quot;Cable and Satellite Programming&quot;,
+          &quot;Capital Markets&quot;,
+          &quot;Caterers&quot;,
+          &quot;Chemical Manufacturing&quot;,
+          &quot;Chemical Raw Materials Manufacturing&quot;,
+          &quot;Child Day Care Services&quot;,
+          &quot;Chiropractors&quot;,
+          &quot;Circuses and Magic Shows&quot;,
+          &quot;Civic and Social Organizations&quot;,
+          &quot;Civil Engineering&quot;,
+          &quot;Claims Adjusting, Actuarial Services&quot;,
+          &quot;Clay and Refractory Products Manufacturing&quot;,
+          &quot;Climate Data and Analytics&quot;,
+          &quot;Climate Technology Product Manufacturing&quot;,
+          &quot;Coal Mining&quot;,
+          &quot;Collection Agencies&quot;,
+          &quot;Commercial and Industrial Equipment Rental&quot;,
+          &quot;Commercial and Industrial Machinery Maintenance&quot;,
+          &quot;Commercial and Service Industry Machinery Manufacturing&quot;,
+          &quot;Communications Equipment Manufacturing&quot;,
+          &quot;Community Development and Urban Planning&quot;,
+          &quot;Community Services&quot;,
+          &quot;Computer Games&quot;,
+          &quot;Computer Hardware Manufacturing&quot;,
+          &quot;Computer Networking Products&quot;,
+          &quot;Computer and Network Security&quot;,
+          &quot;Computers and Electronics Manufacturing&quot;,
+          &quot;Conservation Programs&quot;,
+          &quot;Construction&quot;,
+          &quot;Construction Hardware Manufacturing&quot;,
+          &quot;Consumer Goods Rental&quot;,
+          &quot;Consumer Services&quot;,
+          &quot;Correctional Institutions&quot;,
+          &quot;Cosmetology and Barber Schools&quot;,
+          &quot;Courts of Law&quot;,
+          &quot;Credit Intermediation&quot;,
+          &quot;Cutlery and Handtool Manufacturing&quot;,
+          &quot;Dairy Product Manufacturing&quot;,
+          &quot;Dance Companies&quot;,
+          &quot;Data Infrastructure and Analytics&quot;,
+          &quot;Data Security Software Products&quot;,
+          &quot;Defense and Space Manufacturing&quot;,
+          &quot;Dentists&quot;,
+          &quot;Design Services&quot;,
+          &quot;Desktop Computing Software Products&quot;,
+          &quot;Digital Accessibility Services&quot;,
+          &quot;Distilleries&quot;,
+          &quot;E-Learning Providers&quot;,
+          &quot;Economic Programs&quot;,
+          &quot;Education&quot;,
+          &quot;Education Administration Programs&quot;,
+          &quot;Electric Lighting Equipment Manufacturing&quot;,
+          &quot;Electric Power Generation&quot;,
+          &quot;Electric Power Transmission, Control, and Distribution&quot;,
+          &quot;Electrical Equipment Manufacturing&quot;,
+          &quot;Electronic and Precision Equipment Maintenance&quot;,
+          &quot;Embedded Software Products&quot;,
+          &quot;Emergency and Relief Services&quot;,
+          &quot;Engineering Services&quot;,
+          &quot;Engines and Power Transmission Equipment Manufacturing&quot;,
+          &quot;Entertainment Providers&quot;,
+          &quot;Environmental Quality Programs&quot;,
+          &quot;Environmental Services&quot;,
+          &quot;Equipment Rental Services&quot;,
+          &quot;Events Services&quot;,
+          &quot;Executive Offices&quot;,
+          &quot;Executive Search Services&quot;,
+          &quot;Fabricated Metal Products&quot;,
+          &quot;Facilities Services&quot;,
+          &quot;Family Planning Centers&quot;,
+          &quot;Farming&quot;,
+          &quot;Farming, Ranching, Forestry&quot;,
+          &quot;Fashion Accessories Manufacturing&quot;,
+          &quot;Financial Services&quot;,
+          &quot;Fine Arts Schools&quot;,
+          &quot;Fire Protection&quot;,
+          &quot;Fisheries&quot;,
+          &quot;Flight Training&quot;,
+          &quot;Food and Beverage Manufacturing&quot;,
+          &quot;Food and Beverage Retail&quot;,
+          &quot;Food and Beverage Services&quot;,
+          &quot;Footwear Manufacturing&quot;,
+          &quot;Footwear and Leather Goods Repair&quot;,
+          &quot;Forestry and Logging&quot;,
+          &quot;Fossil Fuel Electric Power Generation&quot;,
+          &quot;Freight and Package Transportation&quot;,
+          &quot;Fruit and Vegetable Preserves Manufacturing&quot;,
+          &quot;Fuel Cell Manufacturing&quot;,
+          &quot;Fundraising&quot;,
+          &quot;Funds and Trusts&quot;,
+          &quot;Furniture and Home Furnishings Manufacturing&quot;,
+          &quot;Gambling Facilities and Casinos&quot;,
+          &quot;Geothermal Electric Power Generation&quot;,
+          &quot;Glass Product Manufacturing&quot;,
+          &quot;Glass, Ceramics and Concrete Manufacturing&quot;,
+          &quot;Golf Courses and Country Clubs&quot;,
+          &quot;Government Administration&quot;,
+          &quot;Government Relations Services&quot;,
+          &quot;Graphic Design&quot;,
+          &quot;Ground Passenger Transportation&quot;,
+          &quot;HVAC and Refrigeration Equipment Manufacturing&quot;,
+          &quot;Health and Human Services&quot;,
+          &quot;Higher Education&quot;,
+          &quot;Highway, Street, and Bridge Construction&quot;,
+          &quot;Historical Sites&quot;,
+          &quot;Holding Companies&quot;,
+          &quot;Home Health Care Services&quot;,
+          &quot;Horticulture&quot;,
+          &quot;Hospitality&quot;,
+          &quot;Hospitals&quot;,
+          &quot;Hospitals and Health Care&quot;,
+          &quot;Hotels and Motels&quot;,
+          &quot;Household Appliance Manufacturing&quot;,
+          &quot;Household Services&quot;,
+          &quot;Household and Institutional Furniture Manufacturing&quot;,
+          &quot;Housing Programs&quot;,
+          &quot;Housing and Community Development&quot;,
+          &quot;Human Resources Services&quot;,
+          &quot;Hydroelectric Power Generation&quot;,
+          &quot;IT Services and IT Consulting&quot;,
+          &quot;IT System Custom Software Development&quot;,
+          &quot;IT System Data Services&quot;,
+          &quot;IT System Design Services&quot;,
+          &quot;IT System Installation and Disposal&quot;,
+          &quot;IT System Operations and Maintenance&quot;,
+          &quot;IT System Testing and Evaluation&quot;,
+          &quot;IT System Training and Support&quot;,
+          &quot;Individual and Family Services&quot;,
+          &quot;Industrial Machinery Manufacturing&quot;,
+          &quot;Industry Associations&quot;,
+          &quot;Information Services&quot;,
+          &quot;Insurance&quot;,
+          &quot;Insurance Agencies and Brokerages&quot;,
+          &quot;Insurance Carriers&quot;,
+          &quot;Insurance and Employee Benefit Funds&quot;,
+          &quot;Interior Design&quot;,
+          &quot;International Affairs&quot;,
+          &quot;International Trade and Development&quot;,
+          &quot;Internet Marketplace Platforms&quot;,
+          &quot;Internet News&quot;,
+          &quot;Internet Publishing&quot;,
+          &quot;Interurban and Rural Bus Services&quot;,
+          &quot;Investment Advice&quot;,
+          &quot;Investment Banking&quot;,
+          &quot;Investment Management&quot;,
+          &quot;Janitorial Services&quot;,
+          &quot;Landscaping Services&quot;,
+          &quot;Language Schools&quot;,
+          &quot;Laundry and Drycleaning Services&quot;,
+          &quot;Law Enforcement&quot;,
+          &quot;Law Practice&quot;,
+          &quot;Leasing Non-residential Real Estate&quot;,
+          &quot;Leasing Residential Real Estate&quot;,
+          &quot;Leather Product Manufacturing&quot;,
+          &quot;Legal Services&quot;,
+          &quot;Legislative Offices&quot;,
+          &quot;Libraries&quot;,
+          &quot;Lime and Gypsum Products Manufacturing&quot;,
+          &quot;Loan Brokers&quot;,
+          &quot;Machinery Manufacturing&quot;,
+          &quot;Magnetic and Optical Media Manufacturing&quot;,
+          &quot;Manufacturing&quot;,
+          &quot;Maritime Transportation&quot;,
+          &quot;Market Research&quot;,
+          &quot;Marketing Services&quot;,
+          &quot;Mattress and Blinds Manufacturing&quot;,
+          &quot;Measuring and Control Instrument Manufacturing&quot;,
+          &quot;Meat Products Manufacturing&quot;,
+          &quot;Media &amp; Telecommunications&quot;,
+          &quot;Media Production&quot;,
+          &quot;Medical Equipment Manufacturing&quot;,
+          &quot;Medical Practices&quot;,
+          &quot;Medical and Diagnostic Laboratories&quot;,
+          &quot;Mental Health Care&quot;,
+          &quot;Metal Ore Mining&quot;,
+          &quot;Metal Treatments&quot;,
+          &quot;Metal Valve, Ball, and Roller Manufacturing&quot;,
+          &quot;Metalworking Machinery Manufacturing&quot;,
+          &quot;Military and International Affairs&quot;,
+          &quot;Mining&quot;,
+          &quot;Mobile Computing Software Products&quot;,
+          &quot;Mobile Food Services&quot;,
+          &quot;Mobile Gaming Apps&quot;,
+          &quot;Motor Vehicle Manufacturing&quot;,
+          &quot;Motor Vehicle Parts Manufacturing&quot;,
+          &quot;Movies and Sound Recording&quot;,
+          &quot;Movies, Videos and Sound&quot;,
+          &quot;Museums&quot;,
+          &quot;Museums, Historical Sites, and Zoos&quot;,
+          &quot;Musicians&quot;,
+          &quot;Nanotechnology Research&quot;,
+          &quot;Natural Gas Distribution&quot;,
+          &quot;Natural Gas Extraction&quot;,
+          &quot;Newspaper Publishing&quot;,
+          &quot;Non-profit Organizations&quot;,
+          &quot;Nonmetallic Mineral Mining&quot;,
+          &quot;Nonresidential Building Construction&quot;,
+          &quot;Nuclear Electric Power Generation&quot;,
+          &quot;Nursing Homes and Residential Care Facilities&quot;,
+          &quot;Office Administration&quot;,
+          &quot;Office Furniture and Fixtures Manufacturing&quot;,
+          &quot;Oil Extraction&quot;,
+          &quot;Oil and Coal Product Manufacturing&quot;,
+          &quot;Oil and Gas&quot;,
+          &quot;Oil, Gas, and Mining&quot;,
+          &quot;Online Audio and Video Media&quot;,
+          &quot;Online and Mail Order Retail&quot;,
+          &quot;Operations Consulting&quot;,
+          &quot;Optometrists&quot;,
+          &quot;Outpatient Care Centers&quot;,
+          &quot;Outsourcing and Offshoring Consulting&quot;,
+          &quot;Packaging and Containers Manufacturing&quot;,
+          &quot;Paint, Coating, and Adhesive Manufacturing&quot;,
+          &quot;Paper and Forest Product Manufacturing&quot;,
+          &quot;Pension Funds&quot;,
+          &quot;Performing Arts&quot;,
+          &quot;Performing Arts and Spectator Sports&quot;,
+          &quot;Periodical Publishing&quot;,
+          &quot;Personal Care Product Manufacturing&quot;,
+          &quot;Personal Care Services&quot;,
+          &quot;Personal and Laundry Services&quot;,
+          &quot;Pet Services&quot;,
+          &quot;Pharmaceutical Manufacturing&quot;,
+          &quot;Philanthropic Fundraising Services&quot;,
+          &quot;Photography&quot;,
+          &quot;Physical, Occupational and Speech Therapists&quot;,
+          &quot;Physicians&quot;,
+          &quot;Pipeline Transportation&quot;,
+          &quot;Plastics Manufacturing&quot;,
+          &quot;Plastics and Rubber Product Manufacturing&quot;,
+          &quot;Political Organizations&quot;,
+          &quot;Postal Services&quot;,
+          &quot;Primary Metal Manufacturing&quot;,
+          &quot;Primary and Secondary Education&quot;,
+          &quot;Printing Services&quot;,
+          &quot;Professional Organizations&quot;,
+          &quot;Professional Services&quot;,
+          &quot;Professional Training and Coaching&quot;,
+          &quot;Public Assistance Programs&quot;,
+          &quot;Public Health&quot;,
+          &quot;Public Policy Offices&quot;,
+          &quot;Public Relations and Communications Services&quot;,
+          &quot;Public Safety&quot;,
+          &quot;Racetracks&quot;,
+          &quot;Radio and Television Broadcasting&quot;,
+          &quot;Rail Transportation&quot;,
+          &quot;Railroad Equipment Manufacturing&quot;,
+          &quot;Ranching&quot;,
+          &quot;Ranching and Fisheries&quot;,
+          &quot;Real Estate&quot;,
+          &quot;Real Estate Agents and Brokers&quot;,
+          &quot;Real Estate and Equipment Rental Services&quot;,
+          &quot;Recreational Facilities&quot;,
+          &quot;Regenerative Design&quot;,
+          &quot;Religious Institutions&quot;,
+          &quot;Renewable Energy Equipment Manufacturing&quot;,
+          &quot;Renewable Energy Power Generation&quot;,
+          &quot;Renewable Energy Semiconductor Manufacturing&quot;,
+          &quot;Repair and Maintenance&quot;,
+          &quot;Research Services&quot;,
+          &quot;Residential Building Construction&quot;,
+          &quot;Restaurants&quot;,
+          &quot;Retail&quot;,
+          &quot;Retail Apparel and Fashion&quot;,
+          &quot;Retail Appliances, Electrical, and Electronic Equipment&quot;,
+          &quot;Retail Art Dealers&quot;,
+          &quot;Retail Art Supplies&quot;,
+          &quot;Retail Books and Printed News&quot;,
+          &quot;Retail Building Materials and Garden Equipment&quot;,
+          &quot;Retail Florists&quot;,
+          &quot;Retail Furniture and Home Furnishings&quot;,
+          &quot;Retail Gasoline&quot;,
+          &quot;Retail Groceries&quot;,
+          &quot;Retail Health and Personal Care Products&quot;,
+          &quot;Retail Luxury Goods and Jewelry&quot;,
+          &quot;Retail Motor Vehicles&quot;,
+          &quot;Retail Musical Instruments&quot;,
+          &quot;Retail Office Equipment&quot;,
+          &quot;Retail Office Supplies and Gifts&quot;,
+          &quot;Retail Pharmacies&quot;,
+          &quot;Retail Recyclable Materials &amp; Used Merchandise&quot;,
+          &quot;Reupholstery and Furniture Repair&quot;,
+          &quot;Robot Manufacturing&quot;,
+          &quot;Robotics Engineering&quot;,
+          &quot;Rubber Products Manufacturing&quot;,
+          &quot;Satellite Telecommunications&quot;,
+          &quot;Savings Institutions&quot;,
+          &quot;School and Employee Bus Services&quot;,
+          &quot;Seafood Product Manufacturing&quot;,
+          &quot;Secretarial Schools&quot;,
+          &quot;Securities and Commodity Exchanges&quot;,
+          &quot;Security Guards and Patrol Services&quot;,
+          &quot;Security Systems Services&quot;,
+          &quot;Security and Investigations&quot;,
+          &quot;Semiconductor Manufacturing&quot;,
+          &quot;Services for Renewable Energy&quot;,
+          &quot;Services for the Elderly and Disabled&quot;,
+          &quot;Sheet Music Publishing&quot;,
+          &quot;Shipbuilding&quot;,
+          &quot;Shuttles and Special Needs Transportation Services&quot;,
+          &quot;Sightseeing Transportation&quot;,
+          &quot;Skiing Facilities&quot;,
+          &quot;Smart Meter Manufacturing&quot;,
+          &quot;Soap and Cleaning Product Manufacturing&quot;,
+          &quot;Social Networking Platforms&quot;,
+          &quot;Software Development&quot;,
+          &quot;Solar Electric Power Generation&quot;,
+          &quot;Sound Recording&quot;,
+          &quot;Space Research and Technology&quot;,
+          &quot;Specialty Trade Contractors&quot;,
+          &quot;Spectator Sports&quot;,
+          &quot;Sporting Goods Manufacturing&quot;,
+          &quot;Sports Teams and Clubs&quot;,
+          &quot;Sports and Recreation Instruction&quot;,
+          &quot;Spring and Wire Product Manufacturing&quot;,
+          &quot;Staffing and Recruiting&quot;,
+          &quot;Steam and Air-Conditioning Supply&quot;,
+          &quot;Strategic Management Services&quot;,
+          &quot;Subdivision of Land&quot;,
+          &quot;Sugar and Confectionery Product Manufacturing&quot;,
+          &quot;Surveying and Mapping Services&quot;,
+          &quot;Taxi and Limousine Services&quot;,
+          &quot;Technical and Vocational Training&quot;,
+          &quot;Technology, Information and Internet&quot;,
+          &quot;Technology, Information and Media&quot;,
+          &quot;Telecommunications&quot;,
+          &quot;Telecommunications Carriers&quot;,
+          &quot;Telephone Call Centers&quot;,
+          &quot;Temporary Help Services&quot;,
+          &quot;Textile Manufacturing&quot;,
+          &quot;Theater Companies&quot;,
+          &quot;Think Tanks&quot;,
+          &quot;Tobacco Manufacturing&quot;,
+          &quot;Translation and Localization&quot;,
+          &quot;Transportation Equipment Manufacturing&quot;,
+          &quot;Transportation Programs&quot;,
+          &quot;Transportation, Logistics, Supply Chain and Storage&quot;,
+          &quot;Travel Arrangements&quot;,
+          &quot;Truck Transportation&quot;,
+          &quot;Trusts and Estates&quot;,
+          &quot;Turned Products and Fastener Manufacturing&quot;,
+          &quot;Urban Transit Services&quot;,
+          &quot;Utilities&quot;,
+          &quot;Utilities Administration&quot;,
+          &quot;Utility System Construction&quot;,
+          &quot;Vehicle Repair and Maintenance&quot;,
+          &quot;Venture Capital and Private Equity Principals&quot;,
+          &quot;Veterinary Services&quot;,
+          &quot;Vocational Rehabilitation Services&quot;,
+          &quot;Warehousing and Storage&quot;,
+          &quot;Waste Collection&quot;,
+          &quot;Waste Treatment and Disposal&quot;,
+          &quot;Water Supply and Irrigation Systems&quot;,
+          &quot;Water, Waste, Steam, and Air Conditioning Services&quot;,
+          &quot;Wellness and Fitness Services&quot;,
+          &quot;Wholesale&quot;,
+          &quot;Wholesale Alcoholic Beverages&quot;,
+          &quot;Wholesale Apparel and Sewing Supplies&quot;,
+          &quot;Wholesale Appliances, Electrical, and Electronics&quot;,
+          &quot;Wholesale Building Materials&quot;,
+          &quot;Wholesale Chemical and Allied Products&quot;,
+          &quot;Wholesale Computer Equipment&quot;,
+          &quot;Wholesale Drugs and Sundries&quot;,
+          &quot;Wholesale Food and Beverage&quot;,
+          &quot;Wholesale Footwear&quot;,
+          &quot;Wholesale Furniture and Home Furnishings&quot;,
+          &quot;Wholesale Hardware, Plumbing, Heating Equipment&quot;,
+          &quot;Wholesale Import and Export&quot;,
+          &quot;Wholesale Luxury Goods and Jewelry&quot;,
+          &quot;Wholesale Machinery&quot;,
+          &quot;Wholesale Metals and Minerals&quot;,
+          &quot;Wholesale Motor Vehicles and Parts&quot;,
+          &quot;Wholesale Paper Products&quot;,
+          &quot;Wholesale Petroleum and Petroleum Products&quot;,
+          &quot;Wholesale Photography Equipment and Supplies&quot;,
+          &quot;Wholesale Raw Farm Products&quot;,
+          &quot;Wholesale Recyclable Materials&quot;,
+          &quot;Wind Electric Power Generation&quot;,
+          &quot;Wineries&quot;,
+          &quot;Wireless Services&quot;,
+          &quot;Women&#x27;s Handbag Manufacturing&quot;,
+          &quot;Wood Product Manufacturing&quot;,
+          &quot;Writing and Editing&quot;,
+          &quot;Zoos and Botanical Gardens&quot;
+        ],
+        &quot;enumTitles&quot;: [
+          &quot;Abrasives and Nonmetallic Minerals Manufacturing&quot;,
+          &quot;Accessible Architecture and Design&quot;,
+          &quot;Accessible Hardware Manufacturing&quot;,
+          &quot;Accommodation Services&quot;,
+          &quot;Accounting&quot;,
+          &quot;Administration of Justice&quot;,
+          &quot;Administrative and Support Services&quot;,
+          &quot;Advertising Services&quot;,
+          &quot;Agricultural Chemical Manufacturing&quot;,
+          &quot;Agriculture, Construction, Mining Machinery Manufacturing&quot;,
+          &quot;Air, Water, and Waste Program Management&quot;,
+          &quot;Airlines and Aviation&quot;,
+          &quot;Alternative Dispute Resolution&quot;,
+          &quot;Alternative Fuel Vehicle Manufacturing&quot;,
+          &quot;Alternative Medicine&quot;,
+          &quot;Ambulance Services&quot;,
+          &quot;Amusement Parks and Arcades&quot;,
+          &quot;Animal Feed Manufacturing&quot;,
+          &quot;Animation and Post-production&quot;,
+          &quot;Apparel Manufacturing&quot;,
+          &quot;Appliances, Electrical, and Electronics Manufacturing&quot;,
+          &quot;Architectural and Structural Metal Manufacturing&quot;,
+          &quot;Architecture and Planning&quot;,
+          &quot;Armed Forces&quot;,
+          &quot;Artificial Rubber and Synthetic Fiber Manufacturing&quot;,
+          &quot;Artists and Writers&quot;,
+          &quot;Audio and Video Equipment Manufacturing&quot;,
+          &quot;Automation Machinery Manufacturing&quot;,
+          &quot;Aviation and Aerospace Component Manufacturing&quot;,
+          &quot;Baked Goods Manufacturing&quot;,
+          &quot;Banking&quot;,
+          &quot;Bars, Taverns, and Nightclubs&quot;,
+          &quot;Bed-and-Breakfasts, Hostels, Homestays&quot;,
+          &quot;Beverage Manufacturing&quot;,
+          &quot;Biomass Electric Power Generation&quot;,
+          &quot;Biotechnology Research&quot;,
+          &quot;Blockchain Services&quot;,
+          &quot;Blogs&quot;,
+          &quot;Boilers, Tanks, and Shipping Container Manufacturing&quot;,
+          &quot;Book Publishing&quot;,
+          &quot;Book and Periodical Publishing&quot;,
+          &quot;Breweries&quot;,
+          &quot;Broadcast Media Production and Distribution&quot;,
+          &quot;Building Construction&quot;,
+          &quot;Building Equipment Contractors&quot;,
+          &quot;Building Finishing Contractors&quot;,
+          &quot;Building Structure and Exterior Contractors&quot;,
+          &quot;Business Consulting and Services&quot;,
+          &quot;Business Content&quot;,
+          &quot;Business Intelligence Platforms&quot;,
+          &quot;Cable and Satellite Programming&quot;,
+          &quot;Capital Markets&quot;,
+          &quot;Caterers&quot;,
+          &quot;Chemical Manufacturing&quot;,
+          &quot;Chemical Raw Materials Manufacturing&quot;,
+          &quot;Child Day Care Services&quot;,
+          &quot;Chiropractors&quot;,
+          &quot;Circuses and Magic Shows&quot;,
+          &quot;Civic and Social Organizations&quot;,
+          &quot;Civil Engineering&quot;,
+          &quot;Claims Adjusting, Actuarial Services&quot;,
+          &quot;Clay and Refractory Products Manufacturing&quot;,
+          &quot;Climate Data and Analytics&quot;,
+          &quot;Climate Technology Product Manufacturing&quot;,
+          &quot;Coal Mining&quot;,
+          &quot;Collection Agencies&quot;,
+          &quot;Commercial and Industrial Equipment Rental&quot;,
+          &quot;Commercial and Industrial Machinery Maintenance&quot;,
+          &quot;Commercial and Service Industry Machinery Manufacturing&quot;,
+          &quot;Communications Equipment Manufacturing&quot;,
+          &quot;Community Development and Urban Planning&quot;,
+          &quot;Community Services&quot;,
+          &quot;Computer Games&quot;,
+          &quot;Computer Hardware Manufacturing&quot;,
+          &quot;Computer Networking Products&quot;,
+          &quot;Computer and Network Security&quot;,
+          &quot;Computers and Electronics Manufacturing&quot;,
+          &quot;Conservation Programs&quot;,
+          &quot;Construction&quot;,
+          &quot;Construction Hardware Manufacturing&quot;,
+          &quot;Consumer Goods Rental&quot;,
+          &quot;Consumer Services&quot;,
+          &quot;Correctional Institutions&quot;,
+          &quot;Cosmetology and Barber Schools&quot;,
+          &quot;Courts of Law&quot;,
+          &quot;Credit Intermediation&quot;,
+          &quot;Cutlery and Handtool Manufacturing&quot;,
+          &quot;Dairy Product Manufacturing&quot;,
+          &quot;Dance Companies&quot;,
+          &quot;Data Infrastructure and Analytics&quot;,
+          &quot;Data Security Software Products&quot;,
+          &quot;Defense and Space Manufacturing&quot;,
+          &quot;Dentists&quot;,
+          &quot;Design Services&quot;,
+          &quot;Desktop Computing Software Products&quot;,
+          &quot;Digital Accessibility Services&quot;,
+          &quot;Distilleries&quot;,
+          &quot;E-Learning Providers&quot;,
+          &quot;Economic Programs&quot;,
+          &quot;Education&quot;,
+          &quot;Education Administration Programs&quot;,
+          &quot;Electric Lighting Equipment Manufacturing&quot;,
+          &quot;Electric Power Generation&quot;,
+          &quot;Electric Power Transmission, Control, and Distribution&quot;,
+          &quot;Electrical Equipment Manufacturing&quot;,
+          &quot;Electronic and Precision Equipment Maintenance&quot;,
+          &quot;Embedded Software Products&quot;,
+          &quot;Emergency and Relief Services&quot;,
+          &quot;Engineering Services&quot;,
+          &quot;Engines and Power Transmission Equipment Manufacturing&quot;,
+          &quot;Entertainment Providers&quot;,
+          &quot;Environmental Quality Programs&quot;,
+          &quot;Environmental Services&quot;,
+          &quot;Equipment Rental Services&quot;,
+          &quot;Events Services&quot;,
+          &quot;Executive Offices&quot;,
+          &quot;Executive Search Services&quot;,
+          &quot;Fabricated Metal Products&quot;,
+          &quot;Facilities Services&quot;,
+          &quot;Family Planning Centers&quot;,
+          &quot;Farming&quot;,
+          &quot;Farming, Ranching, Forestry&quot;,
+          &quot;Fashion Accessories Manufacturing&quot;,
+          &quot;Financial Services&quot;,
+          &quot;Fine Arts Schools&quot;,
+          &quot;Fire Protection&quot;,
+          &quot;Fisheries&quot;,
+          &quot;Flight Training&quot;,
+          &quot;Food and Beverage Manufacturing&quot;,
+          &quot;Food and Beverage Retail&quot;,
+          &quot;Food and Beverage Services&quot;,
+          &quot;Footwear Manufacturing&quot;,
+          &quot;Footwear and Leather Goods Repair&quot;,
+          &quot;Forestry and Logging&quot;,
+          &quot;Fossil Fuel Electric Power Generation&quot;,
+          &quot;Freight and Package Transportation&quot;,
+          &quot;Fruit and Vegetable Preserves Manufacturing&quot;,
+          &quot;Fuel Cell Manufacturing&quot;,
+          &quot;Fundraising&quot;,
+          &quot;Funds and Trusts&quot;,
+          &quot;Furniture and Home Furnishings Manufacturing&quot;,
+          &quot;Gambling Facilities and Casinos&quot;,
+          &quot;Geothermal Electric Power Generation&quot;,
+          &quot;Glass Product Manufacturing&quot;,
+          &quot;Glass, Ceramics and Concrete Manufacturing&quot;,
+          &quot;Golf Courses and Country Clubs&quot;,
+          &quot;Government Administration&quot;,
+          &quot;Government Relations Services&quot;,
+          &quot;Graphic Design&quot;,
+          &quot;Ground Passenger Transportation&quot;,
+          &quot;HVAC and Refrigeration Equipment Manufacturing&quot;,
+          &quot;Health and Human Services&quot;,
+          &quot;Higher Education&quot;,
+          &quot;Highway, Street, and Bridge Construction&quot;,
+          &quot;Historical Sites&quot;,
+          &quot;Holding Companies&quot;,
+          &quot;Home Health Care Services&quot;,
+          &quot;Horticulture&quot;,
+          &quot;Hospitality&quot;,
+          &quot;Hospitals&quot;,
+          &quot;Hospitals and Health Care&quot;,
+          &quot;Hotels and Motels&quot;,
+          &quot;Household Appliance Manufacturing&quot;,
+          &quot;Household Services&quot;,
+          &quot;Household and Institutional Furniture Manufacturing&quot;,
+          &quot;Housing Programs&quot;,
+          &quot;Housing and Community Development&quot;,
+          &quot;Human Resources Services&quot;,
+          &quot;Hydroelectric Power Generation&quot;,
+          &quot;IT Services and IT Consulting&quot;,
+          &quot;IT System Custom Software Development&quot;,
+          &quot;IT System Data Services&quot;,
+          &quot;IT System Design Services&quot;,
+          &quot;IT System Installation and Disposal&quot;,
+          &quot;IT System Operations and Maintenance&quot;,
+          &quot;IT System Testing and Evaluation&quot;,
+          &quot;IT System Training and Support&quot;,
+          &quot;Individual and Family Services&quot;,
+          &quot;Industrial Machinery Manufacturing&quot;,
+          &quot;Industry Associations&quot;,
+          &quot;Information Services&quot;,
+          &quot;Insurance&quot;,
+          &quot;Insurance Agencies and Brokerages&quot;,
+          &quot;Insurance Carriers&quot;,
+          &quot;Insurance and Employee Benefit Funds&quot;,
+          &quot;Interior Design&quot;,
+          &quot;International Affairs&quot;,
+          &quot;International Trade and Development&quot;,
+          &quot;Internet Marketplace Platforms&quot;,
+          &quot;Internet News&quot;,
+          &quot;Internet Publishing&quot;,
+          &quot;Interurban and Rural Bus Services&quot;,
+          &quot;Investment Advice&quot;,
+          &quot;Investment Banking&quot;,
+          &quot;Investment Management&quot;,
+          &quot;Janitorial Services&quot;,
+          &quot;Landscaping Services&quot;,
+          &quot;Language Schools&quot;,
+          &quot;Laundry and Drycleaning Services&quot;,
+          &quot;Law Enforcement&quot;,
+          &quot;Law Practice&quot;,
+          &quot;Leasing Non-residential Real Estate&quot;,
+          &quot;Leasing Residential Real Estate&quot;,
+          &quot;Leather Product Manufacturing&quot;,
+          &quot;Legal Services&quot;,
+          &quot;Legislative Offices&quot;,
+          &quot;Libraries&quot;,
+          &quot;Lime and Gypsum Products Manufacturing&quot;,
+          &quot;Loan Brokers&quot;,
+          &quot;Machinery Manufacturing&quot;,
+          &quot;Magnetic and Optical Media Manufacturing&quot;,
+          &quot;Manufacturing&quot;,
+          &quot;Maritime Transportation&quot;,
+          &quot;Market Research&quot;,
+          &quot;Marketing Services&quot;,
+          &quot;Mattress and Blinds Manufacturing&quot;,
+          &quot;Measuring and Control Instrument Manufacturing&quot;,
+          &quot;Meat Products Manufacturing&quot;,
+          &quot;Media &amp; Telecommunications&quot;,
+          &quot;Media Production&quot;,
+          &quot;Medical Equipment Manufacturing&quot;,
+          &quot;Medical Practices&quot;,
+          &quot;Medical and Diagnostic Laboratories&quot;,
+          &quot;Mental Health Care&quot;,
+          &quot;Metal Ore Mining&quot;,
+          &quot;Metal Treatments&quot;,
+          &quot;Metal Valve, Ball, and Roller Manufacturing&quot;,
+          &quot;Metalworking Machinery Manufacturing&quot;,
+          &quot;Military and International Affairs&quot;,
+          &quot;Mining&quot;,
+          &quot;Mobile Computing Software Products&quot;,
+          &quot;Mobile Food Services&quot;,
+          &quot;Mobile Gaming Apps&quot;,
+          &quot;Motor Vehicle Manufacturing&quot;,
+          &quot;Motor Vehicle Parts Manufacturing&quot;,
+          &quot;Movies and Sound Recording&quot;,
+          &quot;Movies, Videos and Sound&quot;,
+          &quot;Museums&quot;,
+          &quot;Museums, Historical Sites, and Zoos&quot;,
+          &quot;Musicians&quot;,
+          &quot;Nanotechnology Research&quot;,
+          &quot;Natural Gas Distribution&quot;,
+          &quot;Natural Gas Extraction&quot;,
+          &quot;Newspaper Publishing&quot;,
+          &quot;Non-profit Organizations&quot;,
+          &quot;Nonmetallic Mineral Mining&quot;,
+          &quot;Nonresidential Building Construction&quot;,
+          &quot;Nuclear Electric Power Generation&quot;,
+          &quot;Nursing Homes and Residential Care Facilities&quot;,
+          &quot;Office Administration&quot;,
+          &quot;Office Furniture and Fixtures Manufacturing&quot;,
+          &quot;Oil Extraction&quot;,
+          &quot;Oil and Coal Product Manufacturing&quot;,
+          &quot;Oil and Gas&quot;,
+          &quot;Oil, Gas, and Mining&quot;,
+          &quot;Online Audio and Video Media&quot;,
+          &quot;Online and Mail Order Retail&quot;,
+          &quot;Operations Consulting&quot;,
+          &quot;Optometrists&quot;,
+          &quot;Outpatient Care Centers&quot;,
+          &quot;Outsourcing and Offshoring Consulting&quot;,
+          &quot;Packaging and Containers Manufacturing&quot;,
+          &quot;Paint, Coating, and Adhesive Manufacturing&quot;,
+          &quot;Paper and Forest Product Manufacturing&quot;,
+          &quot;Pension Funds&quot;,
+          &quot;Performing Arts&quot;,
+          &quot;Performing Arts and Spectator Sports&quot;,
+          &quot;Periodical Publishing&quot;,
+          &quot;Personal Care Product Manufacturing&quot;,
+          &quot;Personal Care Services&quot;,
+          &quot;Personal and Laundry Services&quot;,
+          &quot;Pet Services&quot;,
+          &quot;Pharmaceutical Manufacturing&quot;,
+          &quot;Philanthropic Fundraising Services&quot;,
+          &quot;Photography&quot;,
+          &quot;Physical, Occupational and Speech Therapists&quot;,
+          &quot;Physicians&quot;,
+          &quot;Pipeline Transportation&quot;,
+          &quot;Plastics Manufacturing&quot;,
+          &quot;Plastics and Rubber Product Manufacturing&quot;,
+          &quot;Political Organizations&quot;,
+          &quot;Postal Services&quot;,
+          &quot;Primary Metal Manufacturing&quot;,
+          &quot;Primary and Secondary Education&quot;,
+          &quot;Printing Services&quot;,
+          &quot;Professional Organizations&quot;,
+          &quot;Professional Services&quot;,
+          &quot;Professional Training and Coaching&quot;,
+          &quot;Public Assistance Programs&quot;,
+          &quot;Public Health&quot;,
+          &quot;Public Policy Offices&quot;,
+          &quot;Public Relations and Communications Services&quot;,
+          &quot;Public Safety&quot;,
+          &quot;Racetracks&quot;,
+          &quot;Radio and Television Broadcasting&quot;,
+          &quot;Rail Transportation&quot;,
+          &quot;Railroad Equipment Manufacturing&quot;,
+          &quot;Ranching&quot;,
+          &quot;Ranching and Fisheries&quot;,
+          &quot;Real Estate&quot;,
+          &quot;Real Estate Agents and Brokers&quot;,
+          &quot;Real Estate and Equipment Rental Services&quot;,
+          &quot;Recreational Facilities&quot;,
+          &quot;Regenerative Design&quot;,
+          &quot;Religious Institutions&quot;,
+          &quot;Renewable Energy Equipment Manufacturing&quot;,
+          &quot;Renewable Energy Power Generation&quot;,
+          &quot;Renewable Energy Semiconductor Manufacturing&quot;,
+          &quot;Repair and Maintenance&quot;,
+          &quot;Research Services&quot;,
+          &quot;Residential Building Construction&quot;,
+          &quot;Restaurants&quot;,
+          &quot;Retail&quot;,
+          &quot;Retail Apparel and Fashion&quot;,
+          &quot;Retail Appliances, Electrical, and Electronic Equipment&quot;,
+          &quot;Retail Art Dealers&quot;,
+          &quot;Retail Art Supplies&quot;,
+          &quot;Retail Books and Printed News&quot;,
+          &quot;Retail Building Materials and Garden Equipment&quot;,
+          &quot;Retail Florists&quot;,
+          &quot;Retail Furniture and Home Furnishings&quot;,
+          &quot;Retail Gasoline&quot;,
+          &quot;Retail Groceries&quot;,
+          &quot;Retail Health and Personal Care Products&quot;,
+          &quot;Retail Luxury Goods and Jewelry&quot;,
+          &quot;Retail Motor Vehicles&quot;,
+          &quot;Retail Musical Instruments&quot;,
+          &quot;Retail Office Equipment&quot;,
+          &quot;Retail Office Supplies and Gifts&quot;,
+          &quot;Retail Pharmacies&quot;,
+          &quot;Retail Recyclable Materials &amp; Used Merchandise&quot;,
+          &quot;Reupholstery and Furniture Repair&quot;,
+          &quot;Robot Manufacturing&quot;,
+          &quot;Robotics Engineering&quot;,
+          &quot;Rubber Products Manufacturing&quot;,
+          &quot;Satellite Telecommunications&quot;,
+          &quot;Savings Institutions&quot;,
+          &quot;School and Employee Bus Services&quot;,
+          &quot;Seafood Product Manufacturing&quot;,
+          &quot;Secretarial Schools&quot;,
+          &quot;Securities and Commodity Exchanges&quot;,
+          &quot;Security Guards and Patrol Services&quot;,
+          &quot;Security Systems Services&quot;,
+          &quot;Security and Investigations&quot;,
+          &quot;Semiconductor Manufacturing&quot;,
+          &quot;Services for Renewable Energy&quot;,
+          &quot;Services for the Elderly and Disabled&quot;,
+          &quot;Sheet Music Publishing&quot;,
+          &quot;Shipbuilding&quot;,
+          &quot;Shuttles and Special Needs Transportation Services&quot;,
+          &quot;Sightseeing Transportation&quot;,
+          &quot;Skiing Facilities&quot;,
+          &quot;Smart Meter Manufacturing&quot;,
+          &quot;Soap and Cleaning Product Manufacturing&quot;,
+          &quot;Social Networking Platforms&quot;,
+          &quot;Software Development&quot;,
+          &quot;Solar Electric Power Generation&quot;,
+          &quot;Sound Recording&quot;,
+          &quot;Space Research and Technology&quot;,
+          &quot;Specialty Trade Contractors&quot;,
+          &quot;Spectator Sports&quot;,
+          &quot;Sporting Goods Manufacturing&quot;,
+          &quot;Sports Teams and Clubs&quot;,
+          &quot;Sports and Recreation Instruction&quot;,
+          &quot;Spring and Wire Product Manufacturing&quot;,
+          &quot;Staffing and Recruiting&quot;,
+          &quot;Steam and Air-Conditioning Supply&quot;,
+          &quot;Strategic Management Services&quot;,
+          &quot;Subdivision of Land&quot;,
+          &quot;Sugar and Confectionery Product Manufacturing&quot;,
+          &quot;Surveying and Mapping Services&quot;,
+          &quot;Taxi and Limousine Services&quot;,
+          &quot;Technical and Vocational Training&quot;,
+          &quot;Technology, Information and Internet&quot;,
+          &quot;Technology, Information and Media&quot;,
+          &quot;Telecommunications&quot;,
+          &quot;Telecommunications Carriers&quot;,
+          &quot;Telephone Call Centers&quot;,
+          &quot;Temporary Help Services&quot;,
+          &quot;Textile Manufacturing&quot;,
+          &quot;Theater Companies&quot;,
+          &quot;Think Tanks&quot;,
+          &quot;Tobacco Manufacturing&quot;,
+          &quot;Translation and Localization&quot;,
+          &quot;Transportation Equipment Manufacturing&quot;,
+          &quot;Transportation Programs&quot;,
+          &quot;Transportation, Logistics, Supply Chain and Storage&quot;,
+          &quot;Travel Arrangements&quot;,
+          &quot;Truck Transportation&quot;,
+          &quot;Trusts and Estates&quot;,
+          &quot;Turned Products and Fastener Manufacturing&quot;,
+          &quot;Urban Transit Services&quot;,
+          &quot;Utilities&quot;,
+          &quot;Utilities Administration&quot;,
+          &quot;Utility System Construction&quot;,
+          &quot;Vehicle Repair and Maintenance&quot;,
+          &quot;Venture Capital and Private Equity Principals&quot;,
+          &quot;Veterinary Services&quot;,
+          &quot;Vocational Rehabilitation Services&quot;,
+          &quot;Warehousing and Storage&quot;,
+          &quot;Waste Collection&quot;,
+          &quot;Waste Treatment and Disposal&quot;,
+          &quot;Water Supply and Irrigation Systems&quot;,
+          &quot;Water, Waste, Steam, and Air Conditioning Services&quot;,
+          &quot;Wellness and Fitness Services&quot;,
+          &quot;Wholesale&quot;,
+          &quot;Wholesale Alcoholic Beverages&quot;,
+          &quot;Wholesale Apparel and Sewing Supplies&quot;,
+          &quot;Wholesale Appliances, Electrical, and Electronics&quot;,
+          &quot;Wholesale Building Materials&quot;,
+          &quot;Wholesale Chemical and Allied Products&quot;,
+          &quot;Wholesale Computer Equipment&quot;,
+          &quot;Wholesale Drugs and Sundries&quot;,
+          &quot;Wholesale Food and Beverage&quot;,
+          &quot;Wholesale Footwear&quot;,
+          &quot;Wholesale Furniture and Home Furnishings&quot;,
+          &quot;Wholesale Hardware, Plumbing, Heating Equipment&quot;,
+          &quot;Wholesale Import and Export&quot;,
+          &quot;Wholesale Luxury Goods and Jewelry&quot;,
+          &quot;Wholesale Machinery&quot;,
+          &quot;Wholesale Metals and Minerals&quot;,
+          &quot;Wholesale Motor Vehicles and Parts&quot;,
+          &quot;Wholesale Paper Products&quot;,
+          &quot;Wholesale Petroleum and Petroleum Products&quot;,
+          &quot;Wholesale Photography Equipment and Supplies&quot;,
+          &quot;Wholesale Raw Farm Products&quot;,
+          &quot;Wholesale Recyclable Materials&quot;,
+          &quot;Wind Electric Power Generation&quot;,
+          &quot;Wineries&quot;,
+          &quot;Wireless Services&quot;,
+          &quot;Women&#x27;s Handbag Manufacturing&quot;,
+          &quot;Wood Product Manufacturing&quot;,
+          &quot;Writing and Editing&quot;,
+          &quot;Zoos and Botanical Gardens&quot;
+        ],
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;title&quot;: &quot;Industry&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;jobType&quot;: {
+      &quot;default&quot;: &quot;&quot;,
+      &quot;description&quot;: &quot;Employment type. Applied by this actor after fetching job details (LinkedIn no longer filters this server-side for public/cookieless searches) — may fetch and check more results than Max Job Listings to find enough matches, increasing run time.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;&quot;,
+        &quot;F&quot;,
+        &quot;P&quot;,
+        &quot;C&quot;,
+        &quot;T&quot;,
+        &quot;I&quot;,
+        &quot;V&quot;,
+        &quot;O&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;Any&quot;,
+        &quot;Full-time&quot;,
+        &quot;Part-time&quot;,
+        &quot;Contract&quot;,
+        &quot;Temporary&quot;,
+        &quot;Internship&quot;,
+        &quot;Volunteer&quot;,
+        &quot;Other&quot;
+      ],
+      &quot;title&quot;: &quot;Job Type&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;keywords&quot;: {
+      &quot;description&quot;: &quot;Job title, skills, or keywords.&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;prefill&quot;: &quot;Python Developer&quot;,
+      &quot;title&quot;: &quot;Job Keywords&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;language&quot;: {
+      &quot;default&quot;: &quot;en&quot;,
+      &quot;description&quot;: &quot;Preferred language for job listings (Accept-Language header).&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;en&quot;,
+        &quot;es&quot;,
+        &quot;fr&quot;,
+        &quot;de&quot;,
+        &quot;pt&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;English&quot;,
+        &quot;Spanish&quot;,
+        &quot;French&quot;,
+        &quot;German&quot;,
+        &quot;Portuguese&quot;
+      ],
+      &quot;title&quot;: &quot;Language&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;location&quot;: {
+      &quot;description&quot;: &quot;City, state, country. Leave empty for worldwide. Ignored if Locations (plural) is set.&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;prefill&quot;: &quot;United States&quot;,
+      &quot;title&quot;: &quot;Location&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;locations&quot;: {
+      &quot;description&quot;: &quot;Run the same Job Keywords against multiple locations in one go (e.g. [&#x27;California&#x27;, &#x27;Texas&#x27;, &#x27;New York&#x27;]) and combine the deduplicated results — the best way to get more than LinkedIn&#x27;s ~1,000-result cap for one keyword. Overrides Location when set.&quot;,
+      &quot;editor&quot;: &quot;stringList&quot;,
+      &quot;title&quot;: &quot;Locations (multiple)&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;maxItems&quot;: {
+      &quot;default&quot;: 100,
+      &quot;description&quot;: &quot;Maximum number of jobs to scrape.&quot;,
+      &quot;editor&quot;: &quot;number&quot;,
+      &quot;maximum&quot;: 1000,
+      &quot;minimum&quot;: 1,
+      &quot;title&quot;: &quot;Max Job Listings&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;proxyConfiguration&quot;: {
+      &quot;default&quot;: {
+        &quot;useApifyProxy&quot;: true
+      },
+      &quot;description&quot;: &quot;Apify proxy used for every request. Defaults to the free Datacenter (AUTO) group, which is required for reliable results -- LinkedIn&#x27;s guest job pages block requests from an unproxied Apify container IP on nearly every request.&quot;,
+      &quot;editor&quot;: &quot;proxy&quot;,
+      &quot;prefill&quot;: {
+        &quot;useApifyProxy&quot;: true
+      },
+      &quot;title&quot;: &quot;Proxy Configuration&quot;,
+      &quot;type&quot;: &quot;object&quot;
+    },
+    &quot;salaryMin&quot;: {
+      &quot;default&quot;: 0,
+      &quot;description&quot;: &quot;Minimum salary band. LinkedIn buckets: 1=40k+, 2=60k+, 3=80k+, 4=100k+, 5=120k+, 6=140k+, 7=160k+, 8=180k+, 9=200k+. Applied by this actor after fetching job details, only when LinkedIn&#x27;s own posted salary range is available and yearly — jobs with no listed salary are not excluded. May fetch and check more results than Max Job Listings to find enough matches, increasing run time.&quot;,
+      &quot;editor&quot;: &quot;number&quot;,
+      &quot;maximum&quot;: 9,
+      &quot;minimum&quot;: 0,
+      &quot;title&quot;: &quot;Minimum Salary&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;scrapeJobDetails&quot;: {
+      &quot;default&quot;: true,
+      &quot;description&quot;: &quot;Fetch full description, seniority, type, applicant count from each job page. Slower but more complete.&quot;,
+      &quot;editor&quot;: &quot;checkbox&quot;,
+      &quot;title&quot;: &quot;Scrape Job Details&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;searchUrls&quot;: {
+      &quot;description&quot;: &quot;Direct LinkedIn job search URLs. Overrides Keywords and Location.&quot;,
+      &quot;editor&quot;: &quot;stringList&quot;,
+      &quot;title&quot;: &quot;LinkedIn Search URLs&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;timePosted&quot;: {
+      &quot;default&quot;: &quot;&quot;,
+      &quot;description&quot;: &quot;Filter by posting date. Applied directly by LinkedIn.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;&quot;,
+        &quot;r86400&quot;,
+        &quot;r604800&quot;,
+        &quot;r2592000&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;Any time&quot;,
+        &quot;Past 24 hours&quot;,
+        &quot;Past week&quot;,
+        &quot;Past month&quot;
+      ],
+      &quot;title&quot;: &quot;Time Posted&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;under10Applicants&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;Only show jobs with fewer than 10 applicants. Applied directly by LinkedIn.&quot;,
+      &quot;editor&quot;: &quot;checkbox&quot;,
+      &quot;title&quot;: &quot;Under 10 Applicants&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;workType&quot;: {
+      &quot;default&quot;: &quot;&quot;,
+      &quot;description&quot;: &quot;On-site, remote, or hybrid. Best-effort only — LinkedIn no longer exposes a reliable on-site/remote/hybrid signal on public/cookieless pages, so this rarely narrows results today. Check the job title/description for the real work arrangement.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;&quot;,
+        &quot;1&quot;,
+        &quot;2&quot;,
+        &quot;3&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;Any&quot;,
+        &quot;On-site&quot;,
+        &quot;Remote&quot;,
+        &quot;Hybrid&quot;
+      ],
+      &quot;title&quot;: &quot;Work Type&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    }
+  },
+  &quot;required&quot;: [],
+  &quot;schemaVersion&quot;: 1,
+  &quot;title&quot;: &quot;LinkedIn Jobs Scraper Ultra Input&quot;,
+  &quot;type&quot;: &quot;object&quot;
+}
+</code></pre></details></section><section class="schema-section" id="output-schema"><h2>Output schema</h2><p>Published result links and storage locations. This schema is not an exhaustive contract for every field in a dataset record.</p><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>jobs</code></td><td>string</td><td>optional</td><td>Dataset containing scraped job listings</td></tr></tbody></table></div><p><a href="output-schema.json">Download the published output schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+  &quot;actorOutputSchemaVersion&quot;: 1,
+  &quot;description&quot;: &quot;LinkedIn job listings with parsed salary ranges, seniority, descriptions and enriched hiring-company details.&quot;,
+  &quot;properties&quot;: {
+    &quot;jobs&quot;: {
+      &quot;description&quot;: &quot;Dataset containing scraped job listings&quot;,
+      &quot;template&quot;: &quot;{{links.apiDefaultDatasetUrl}}/items&quot;,
+      &quot;title&quot;: &quot;Job Listings&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    }
+  },
+  &quot;title&quot;: &quot;LinkedIn Jobs Scraper with Salary &amp; Company Enrichment Output&quot;
+}
+</code></pre></details></section><section class="schema-section" id="dataset-schema"><h2>Dataset schema</h2><p>Published dataset views and any declared field definitions. A view can select only a subset of the returned record fields.</p><p><a href="dataset-schema.json">Download the published dataset schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+  &quot;actorSpecification&quot;: 1,
+  &quot;views&quot;: {
+    &quot;overview&quot;: {
+      &quot;display&quot;: {
+        &quot;component&quot;: &quot;table&quot;,
+        &quot;properties&quot;: {
+          &quot;companyName&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Company&quot;
+          },
+          &quot;employmentType&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Type&quot;
+          },
+          &quot;jobUrl&quot;: {
+            &quot;format&quot;: &quot;link&quot;,
+            &quot;label&quot;: &quot;Job URL&quot;
+          },
+          &quot;location&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Location&quot;
+          },
+          &quot;postedDate&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Posted&quot;
+          },
+          &quot;salary&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Salary&quot;
+          },
+          &quot;seniorityLevel&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Seniority&quot;
+          },
+          &quot;title&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Job Title&quot;
+          }
+        }
+      },
+      &quot;title&quot;: &quot;Overview&quot;,
+      &quot;transformation&quot;: {
+        &quot;fields&quot;: [
+          &quot;title&quot;,
+          &quot;companyName&quot;,
+          &quot;location&quot;,
+          &quot;salary&quot;,
+          &quot;employmentType&quot;,
+          &quot;seniorityLevel&quot;,
+          &quot;postedDate&quot;,
+          &quot;jobUrl&quot;
+        ]
+      }
+    }
+  }
+}
+</code></pre></details></section><section class="schema-section" id="key-value-schema"><h2>Key-value schema</h2><p>Published key-value store definitions, when provided by this build.</p><p>This definition is not present in the default published build. See the published README for available documentation.</p></section><section id="published-readme"><h2>Published README</h2><details><summary>Read the full published documentation</summary><h2 id="readme-linkedin-jobs-scraper-with-salary-company-enrichment">LinkedIn Jobs Scraper with Salary &amp; Company Enrichment</h2>
+<p>Pull job listings from LinkedIn's public job search without logging in. Enter keywords and a location, apply optional filters, and get back structured job data with parsed salary ranges, inferred seniority, visa-sponsorship mentions, and hiring-company details — ready for analysis, lead generation, or job market research.</p>
+<h2 id="readme-what-this-actor-does">What this actor does</h2>
+<p>This actor extracts job listings from LinkedIn's public job search. Simply enter keywords and a location, apply optional filters, and it returns structured job data ready for analysis, lead generation, or job market research.</p>
+<h2 id="readme-features">Features</h2>
+<ul>
+<li><strong>Search by keywords and location</strong> — Find jobs matching any title, skill, or company name</li>
+<li><strong>Full job descriptions</strong> — Get both HTML and plain text versions for NLP or analysis</li>
+<li><strong>Rich metadata</strong> — Seniority level, employment type, job function, industry, salary, applicant count</li>
+<li><strong>Advanced filters</strong> — Time posted, experience level, job type, remote/hybrid/on-site, Easy Apply, company, salary band, and more</li>
+<li><strong>Salary normalization</strong> — Structured min/max/currency/interval plus a normalized yearly figure, with false-positive sanity-checking</li>
+<li><strong>Inferred seniority &amp; years of experience</strong> — Falls back to a title/description heuristic (clearly flagged as inferred) when LinkedIn's own seniority field is missing</li>
+<li><strong>Visa sponsorship &amp; ATS detection</strong> — Flags whether a posting mentions visa sponsorship (negation-aware) and which applicant-tracking platform the apply link resolves to</li>
+<li><strong>Incremental-run friendly</strong> — Exclude previously-seen job IDs or filter by title keywords without re-scraping everything</li>
+<li><strong>Direct URL support</strong> — Paste LinkedIn search URLs with your own custom filters</li>
+<li><strong>Automatic deduplication</strong> — No duplicate listings when combining multiple searches</li>
+<li><strong>No login required</strong> — Uses LinkedIn's public job search, no account or cookies needed</li>
+<li><strong>Proxy included by default</strong> — Requests route through Apify's proxy automatically; no extra setup needed on your part</li>
+</ul>
+<h2 id="readme-use-cases">Use Cases</h2>
+<ul>
+<li><strong>Job market research</strong> — Analyze hiring trends, salary ranges, and in-demand skills</li>
+<li><strong>Lead generation</strong> — Find companies actively hiring in your target industry</li>
+<li><strong>Competitive analysis</strong> — Monitor competitor hiring patterns and open roles</li>
+<li><strong>Career monitoring</strong> — Track new job postings matching your criteria</li>
+<li><strong>Recruitment intelligence</strong> — Identify companies expanding in specific locations or functions</li>
+<li><strong>Salary benchmarking</strong> — Compare compensation data across companies and locations</li>
+</ul>
+<h2 id="readme-input">Input</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>keywords</code></td>
+<td>String</td>
+<td>–</td>
+<td>Job title, skills, or company to search (e.g., &quot;software engineer&quot;, &quot;data scientist&quot;)</td>
+</tr>
+<tr>
+<td><code>location</code></td>
+<td>String</td>
+<td>–</td>
+<td>City, state, country, or &quot;remote&quot;. <strong>Always in English</strong> — e.g. &quot;Germany&quot;, not &quot;Deutschland&quot; — LinkedIn does not resolve non-English place names. Ignored if <code>locations</code> (plural) is set.</td>
+</tr>
+<tr>
+<td><code>locations</code></td>
+<td>Array</td>
+<td>–</td>
+<td>Run the same <code>keywords</code> against several locations in one go (e.g. <code>[&quot;California&quot;, &quot;Texas&quot;, &quot;New York&quot;]</code>) and combine the deduplicated results — the way to get more than LinkedIn's ~1,000-result cap for one keyword. Overrides <code>location</code>.</td>
+</tr>
+<tr>
+<td><code>maxItems</code></td>
+<td>Integer</td>
+<td><code>100</code></td>
+<td>Max job listings to scrape (1-1000). LinkedIn limits ~1000 results per query — use <code>locations</code> to combine multiple queries for more.</td>
+</tr>
+<tr>
+<td><code>scrapeJobDetails</code></td>
+<td>Boolean</td>
+<td><code>true</code></td>
+<td>Fetch full descriptions, seniority, employment type, etc. Disable for faster runs.</td>
+</tr>
+<tr>
+<td><code>enrichmentDepth</code></td>
+<td>String (select)</td>
+<td><code>standard</code></td>
+<td><code>standard</code> is fast and covers everything above. <code>full</code> also fetches similar jobs, related searches, and cleaner company/industry IDs, but is ~5-7x slower per job and doesn't include the Apply URL.</td>
+</tr>
+<tr>
+<td><code>timePosted</code></td>
+<td>String (select)</td>
+<td><code>&quot;&quot;</code></td>
+<td>Filter: Past 24 hours (<code>r86400</code>), Past week (<code>r604800</code>), Past month (<code>r2592000</code>). Applied directly by LinkedIn.</td>
+</tr>
+<tr>
+<td><code>experienceLevel</code></td>
+<td>String (select)</td>
+<td><code>&quot;&quot;</code></td>
+<td>Filter: Internship, Entry, Associate, Mid-Senior, Director, Executive. Applied by this actor after fetching each job's detail page (LinkedIn no longer filters this server-side) — may increase run time.</td>
+</tr>
+<tr>
+<td><code>jobType</code></td>
+<td>String (select)</td>
+<td><code>&quot;&quot;</code></td>
+<td>Filter: Full-time, Part-time, Contract, Temporary, Internship, Volunteer, Other. Same as above — applied after detail fetch.</td>
+</tr>
+<tr>
+<td><code>workType</code></td>
+<td>String (select)</td>
+<td><code>&quot;&quot;</code></td>
+<td>Filter: On-site, Remote, Hybrid. Best-effort only — LinkedIn no longer exposes a reliable on-site/remote/hybrid signal on public pages, so this rarely narrows results; check the job title/description for the real work arrangement.</td>
+</tr>
+<tr>
+<td><code>easyApply</code></td>
+<td>Boolean</td>
+<td><code>false</code></td>
+<td>Only show jobs with LinkedIn Easy Apply. Applied directly by LinkedIn.</td>
+</tr>
+<tr>
+<td><code>industry</code></td>
+<td>Array (multi-select)</td>
+<td><code>[]</code></td>
+<td>Dropdown covering all of LinkedIn's official industry categories — select one or more. Applied by this actor after fetching job details and company data (LinkedIn no longer honors this filter server-side) — matched against each job's real company industry, so it genuinely narrows results rather than being decorative.</td>
+</tr>
+<tr>
+<td><code>companyIds</code></td>
+<td>Array</td>
+<td><code>[]</code></td>
+<td>Restrict to specific LinkedIn company IDs. Applied directly by LinkedIn.</td>
+</tr>
+<tr>
+<td><code>function</code></td>
+<td>String (select)</td>
+<td><code>&quot;&quot;</code></td>
+<td>Dropdown covering all 36 of LinkedIn's official job-function categories (Engineering, Sales, Accounting/Auditing, etc). Applied by this actor after fetching each job's detail page — may increase run time.</td>
+</tr>
+<tr>
+<td><code>salaryMin</code></td>
+<td>Integer</td>
+<td><code>0</code></td>
+<td>LinkedIn salary band (1=$40k+ ... 9=$200k+). Applied after detail fetch, only for jobs with a posted yearly salary.</td>
+</tr>
+<tr>
+<td><code>under10Applicants</code></td>
+<td>Boolean</td>
+<td><code>false</code></td>
+<td>Only show jobs with fewer than 10 applicants. Applied directly by LinkedIn.</td>
+</tr>
+<tr>
+<td><code>language</code></td>
+<td>String (select)</td>
+<td><code>en</code></td>
+<td>Accept-Language for LinkedIn's response — does not translate the <code>location</code> field.</td>
+</tr>
+<tr>
+<td><code>searchUrls</code></td>
+<td>Array</td>
+<td>–</td>
+<td>Direct LinkedIn job search URLs with filters pre-applied. Overrides <code>keywords</code> and <code>location</code>.</td>
+</tr>
+<tr>
+<td><code>excludeJobIds</code></td>
+<td>Array</td>
+<td>–</td>
+<td>Skip specific job IDs (e.g. from a previous run's <code>id</code> field) — useful for incremental scraping.</td>
+</tr>
+<tr>
+<td><code>includeTitleKeywords</code></td>
+<td>Array</td>
+<td>–</td>
+<td>Only keep jobs whose title contains at least one of these keywords (case-insensitive).</td>
+</tr>
+<tr>
+<td><code>excludeTitleKeywords</code></td>
+<td>Array</td>
+<td>–</td>
+<td>Skip jobs whose title contains any of these keywords (case-insensitive).</td>
+</tr>
+<tr>
+<td><code>proxyConfiguration</code></td>
+<td>Object</td>
+<td><code>{&quot;useApifyProxy&quot;: true}</code></td>
+<td>Used for every request by default — LinkedIn's guest job pages block requests from an unproxied IP on nearly every attempt.</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Note:</strong> At least one of <code>keywords</code> or <code>searchUrls</code> must be provided.</p>
+<h3 id="readme-example-input-basic-search">Example input — Basic search</h3>
+<pre><code class="language-json">{
+    &quot;keywords&quot;: &quot;software engineer&quot;,
+    &quot;location&quot;: &quot;United States&quot;,
+    &quot;maxItems&quot;: 50
+}
+</code></pre>
+<h3 id="readme-example-input-filtered-search">Example input — Filtered search</h3>
+<pre><code class="language-json">{
+    &quot;keywords&quot;: &quot;data scientist&quot;,
+    &quot;location&quot;: &quot;New York&quot;,
+    &quot;jobType&quot;: &quot;F&quot;,
+    &quot;workType&quot;: &quot;2&quot;,
+    &quot;experienceLevel&quot;: &quot;4&quot;,
+    &quot;timePosted&quot;: &quot;r604800&quot;,
+    &quot;maxItems&quot;: 100
+}
+</code></pre>
+<h3 id="readme-example-input-direct-url">Example input — Direct URL</h3>
+<pre><code class="language-json">{
+    &quot;searchUrls&quot;: [
+        { &quot;url&quot;: &quot;https://www.linkedin.com/jobs/search/?keywords=python%20developer&amp;location=London&amp;f_JT=F&amp;f_WT=2&quot; }
+    ],
+    &quot;maxItems&quot;: 50
+}
+</code></pre>
+<h2 id="readme-output">Output</h2>
+<p>Each job listing produces one item in the output dataset. Empty/unavailable fields are omitted rather than returned as <code>null</code>.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>id</td>
+<td>String</td>
+<td>LinkedIn's unique job identifier</td>
+</tr>
+<tr>
+<td>title</td>
+<td>String</td>
+<td>Job position title</td>
+</tr>
+<tr>
+<td>companyName</td>
+<td>String</td>
+<td>Hiring company name</td>
+</tr>
+<tr>
+<td>companyUrl, companyId, companyLogo</td>
+<td>String</td>
+<td>Company page, LinkedIn company ID, and logo URL</td>
+</tr>
+<tr>
+<td>companyIndustry, companyFollowersCount, companySize</td>
+<td>String/Number</td>
+<td>Company metadata, fetched directly from each unique company's own LinkedIn page (see below)</td>
+</tr>
+<tr>
+<td>companyWebsite, companyType, companyHeadquarters, companySpecialties, companyDescription</td>
+<td>String/Array</td>
+<td>Fetched directly from each unique company's own LinkedIn page — see below</td>
+</tr>
+<tr>
+<td>location, workplaceType, remoteAllowed</td>
+<td>String/Boolean</td>
+<td>Job location and remote/hybrid/on-site signal</td>
+</tr>
+<tr>
+<td>salary</td>
+<td>String</td>
+<td>Raw salary text as shown by LinkedIn (e.g., &quot;$150,000.00/yr - $200,000.00/yr&quot;)</td>
+</tr>
+<tr>
+<td>salaryRange</td>
+<td>Object</td>
+<td>Structured <code>{min, max, currency, interval, minYearly, maxYearly}</code> parsed from <code>salary</code>, sanity-checked to reject implausible parses</td>
+</tr>
+<tr>
+<td>postedDate, postedAt, postedDateText</td>
+<td>String</td>
+<td>Posting date (ISO where available) and relative text (e.g., &quot;3 days ago&quot;)</td>
+</tr>
+<tr>
+<td>applicantCount, applicantInsights</td>
+<td>String/Array</td>
+<td>Applicant count text and any early-applicant/recent-activity insights</td>
+</tr>
+<tr>
+<td>easyApply, isReposted</td>
+<td>Boolean</td>
+<td>Easy Apply and reposted-listing flags</td>
+</tr>
+<tr>
+<td>jobUrl, applyUrl</td>
+<td>String</td>
+<td>LinkedIn job page and apply destination. <code>applyUrl</code> is only available with the default Standard enrichment depth.</td>
+</tr>
+<tr>
+<td>atsPlatform</td>
+<td>String</td>
+<td>Applicant-tracking platform resolved from <code>applyUrl</code> (Workday, Greenhouse, Lever, etc.), when detectable</td>
+</tr>
+<tr>
+<td>descriptionHtml, descriptionText</td>
+<td>String</td>
+<td>Full job description, HTML and plain text</td>
+</tr>
+<tr>
+<td>seniorityLevel, employmentType, jobFunction(s), industries/industriesList</td>
+<td>String/Array</td>
+<td>Criteria as LinkedIn presents them</td>
+</tr>
+<tr>
+<td>inferredSeniorityLevel</td>
+<td>String</td>
+<td>LinkedIn's own seniority when available, otherwise a title-based inference</td>
+</tr>
+<tr>
+<td>experienceYearsMin, experienceYearsMax</td>
+<td>Number</td>
+<td>Years of experience parsed from the description text (e.g., &quot;5+ years&quot;), when stated</td>
+</tr>
+<tr>
+<td>visaSponsorshipMentioned, visaSponsorshipPhrase</td>
+<td>Boolean/String</td>
+<td>Whether the description mentions visa sponsorship — <code>true</code> if offered, <code>false</code> if explicitly <strong>not</strong> offered, omitted if not mentioned</td>
+</tr>
+<tr>
+<td>responsibilities, qualifications, preferredQualifications</td>
+<td>Array</td>
+<td>Bulleted description sections, when the posting uses a recognizable &quot;What You'll Do&quot;/&quot;Qualifications&quot;-style heading — best-effort, present on most but not all postings</td>
+</tr>
+<tr>
+<td>skillsRequired, benefits</td>
+<td>Array</td>
+<td>Listed skills and benefits, when present</td>
+</tr>
+<tr>
+<td>recruiter</td>
+<td>Object</td>
+<td>Recruiter/poster card <code>{name, title, profileUrl}</code>, when shown</td>
+</tr>
+<tr>
+<td>industryIds, titleId, similarJobs, peopleAlsoViewed, similarSearches, titleCategoryLabel, titleCategoryUrl</td>
+<td>—</td>
+<td>Only present with <strong>Detail Enrichment Depth = Full</strong> — see below</td>
+</tr>
+<tr>
+<td>scrapedAt</td>
+<td>String</td>
+<td>ISO timestamp when data was collected</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="readme-full-enrichment-depth-extra-fields">Full enrichment depth: extra fields</h3>
+<p>Setting <strong>Detail Enrichment Depth</strong> to <code>full</code> fetches LinkedIn's richer job page and adds:</p>
+<ul>
+<li><code>similarJobs[]</code> / <code>peopleAlsoViewed[]</code> — related job cards <code>{jobId, title, companyName, location, postedDateText, jobUrl}</code></li>
+<li><code>similarSearches[]</code> — related search terms with live open-job counts <code>{searchTerm, searchUrl, openJobsCount}</code></li>
+<li><code>industryIds</code>, <code>titleId</code> — LinkedIn's own internal taxonomy IDs, cleaner than the URL-derived <code>companyId</code></li>
+<li><code>titleCategoryLabel</code> / <code>titleCategoryUrl</code> — LinkedIn's own normalized title-category grouping for this posting</li>
+</ul>
+<p>This mode does not include <code>applyUrl</code> (LinkedIn's Apply button there is a client-side action with no static link) and is roughly 5-7x slower per job — use it only when you need the extra fields.</p>
+<h3 id="readme-company-page-enrichment">Company page enrichment</h3>
+<p>Every run fetches each unique company's own LinkedIn page (once per company — jobs from the same employer share one fetch, run concurrently) and adds:</p>
+<ul>
+<li><code>companyWebsite</code> — the company's real external website (unwrapped from LinkedIn's redirect link)</li>
+<li><code>companyType</code> — e.g. &quot;Public Company&quot;, &quot;Privately Held&quot;</li>
+<li><code>companyHeadquarters</code> — the company's stated HQ location</li>
+<li><code>companySpecialties[]</code> — the list of specialties LinkedIn shows on the company page</li>
+<li><code>companyDescription</code> — the company's tagline</li>
+<li>Reliable <code>companyIndustry</code>, <code>companyFollowersCount</code>, <code>companySize</code>, and <code>companyLogo</code>, taken directly from the company page rather than scraped incidentally off the job page</li>
+</ul>
+<p>This adds one extra request per unique company in your results, so a run with many different employers takes longer than one dominated by a few large companies.</p>
+<h3 id="readme-sample-output">Sample output</h3>
+<pre><code class="language-json">{
+    &quot;id&quot;: &quot;3876543210&quot;,
+    &quot;title&quot;: &quot;Senior Software Engineer&quot;,
+    &quot;companyName&quot;: &quot;Google&quot;,
+    &quot;companyUrl&quot;: &quot;https://www.linkedin.com/company/google&quot;,
+    &quot;companyId&quot;: &quot;1441&quot;,
+    &quot;location&quot;: &quot;Mountain View, CA&quot;,
+    &quot;salary&quot;: &quot;$150,000.00/yr - $200,000.00/yr&quot;,
+    &quot;salaryRange&quot;: {
+        &quot;min&quot;: 150000,
+        &quot;max&quot;: 200000,
+        &quot;currency&quot;: &quot;USD&quot;,
+        &quot;interval&quot;: &quot;yearly&quot;,
+        &quot;minYearly&quot;: 150000,
+        &quot;maxYearly&quot;: 200000
+    },
+    &quot;postedDate&quot;: &quot;2026-03-20&quot;,
+    &quot;postedDateText&quot;: &quot;4 days ago&quot;,
+    &quot;applicantCount&quot;: &quot;Over 200 applicants&quot;,
+    &quot;jobUrl&quot;: &quot;https://www.linkedin.com/jobs/view/3876543210&quot;,
+    &quot;applyUrl&quot;: &quot;https://www.linkedin.com/jobs/view/3876543210&quot;,
+    &quot;descriptionHtml&quot;: &quot;&lt;p&gt;We are looking for a Senior Software Engineer...&lt;/p&gt;&quot;,
+    &quot;descriptionText&quot;: &quot;We are looking for a Senior Software Engineer to join our team...&quot;,
+    &quot;seniorityLevel&quot;: &quot;Mid-Senior level&quot;,
+    &quot;inferredSeniorityLevel&quot;: &quot;Mid-Senior level&quot;,
+    &quot;experienceYearsMin&quot;: 5,
+    &quot;employmentType&quot;: &quot;Full-time&quot;,
+    &quot;jobFunction&quot;: &quot;Engineering and Information Technology&quot;,
+    &quot;industries&quot;: &quot;Technology, Information and Internet&quot;,
+    &quot;scrapedAt&quot;: &quot;2026-03-24T10:30:00.000000+00:00&quot;
+}
+</code></pre>
+<h2 id="readme-how-to-use">How to use</h2>
+<h3 id="readme-quick-start">Quick start</h3>
+<ol>
+<li>Enter a job title or keyword in the <strong>Search Keywords</strong> field</li>
+<li>Enter a location (city, country, or &quot;remote&quot;)</li>
+<li>Set <strong>Maximum Jobs</strong> to control how many listings to scrape</li>
+<li>Click <strong>Start</strong> and wait for results</li>
+</ol>
+<h3 id="readme-use-filters-for-targeted-results">Use filters for targeted results</h3>
+<p>Apply filters like <strong>Job Type</strong> (Full-time), <strong>Experience Level</strong> (Mid-Senior), or <strong>Time Posted</strong> (Past week) to narrow your search. This mirrors the filters available on LinkedIn's job search page.</p>
+<h3 id="readme-use-linkedin-search-urls">Use LinkedIn search URLs</h3>
+<ol>
+<li>Go to <a href="https://www.linkedin.com/jobs/">LinkedIn Jobs</a> in your browser</li>
+<li>Search for jobs and apply any filters you want</li>
+<li>Copy the URL from your browser's address bar</li>
+<li>Paste it into the <strong>Search URLs</strong> field</li>
+</ol>
+<h3 id="readme-combine-both-modes">Combine both modes</h3>
+<p>You can provide both keywords and search URLs. The scraper processes all searches and deduplicates results automatically.</p>
+<h2 id="readme-how-many-jobs-can-i-scrape">How many jobs can I scrape?</h2>
+<p>LinkedIn limits public search results to approximately <strong>1,000 jobs per unique search query</strong>. To get more results:</p>
+<ul>
+<li>Use <strong>Locations (multiple)</strong> to run the same keywords against several locations in one run (e.g. <code>[&quot;California&quot;, &quot;Texas&quot;, &quot;New York&quot;]</code>) — results are combined and deduplicated automatically, the single best way to beat the cap</li>
+<li>Use different keyword variations (e.g., &quot;software engineer&quot; and &quot;software developer&quot;)</li>
+<li>Apply different filters to get distinct result sets</li>
+<li>Use multiple search URLs with different parameters</li>
+</ul>
+<h2 id="readme-tips">Tips</h2>
+<ul>
+<li><strong>Start small</strong> — Use <code>maxItems: 10</code> for your first run to verify the output format</li>
+<li><strong>Disable details for speed</strong> — Set <code>scrapeJobDetails: false</code> for a 5-10x faster run when you only need titles, companies, and locations</li>
+<li><strong>Use specific keywords</strong> — Narrow keywords produce more relevant results</li>
+<li><strong>Combine with location</strong> — Adding a location improves result quality significantly</li>
+</ul>
+<h2 id="readme-faq">FAQ</h2>
+<p><strong>Do I need a LinkedIn account?</strong>
+No. The scraper uses LinkedIn's public job search which is accessible without any login.</p>
+<p><strong>Do I need a proxy?</strong>
+No setup needed — Apify's proxy is used automatically for every run, since LinkedIn's guest job pages block most requests from an unproxied IP. If a request still gets blocked, the actor escalates to a stronger proxy tier and retries automatically.</p>
+<p><strong>How fast is the scraper?</strong>
+With job details enabled: approximately 25 jobs per 15-20 seconds. Without details: 25 jobs per 3-5 seconds.</p>
+<p><strong>Why are some fields empty?</strong>
+Fields like <code>salary</code> and <code>applicantCount</code> depend on whether the employer provided that information. LinkedIn only shows salary when the employer explicitly includes a pay range in the listing.</p>
+<p><strong>What is &quot;Scrape Full Job Details&quot;?</strong>
+When enabled (default), the scraper visits each job's detail page to get the full description, seniority level, employment type, job function, and industry. Disabling it returns only the data visible in search results (title, company, location, date, salary).</p>
+<p><strong>Can I scrape jobs from a specific company?</strong>
+Yes. Search for the company name as a keyword, or use the <strong>Company IDs</strong> input with the company's numeric LinkedIn ID (found in its <code>/company/{id}/</code> URL) — this filter is applied directly by LinkedIn, so it's exact.</p>
+<p><strong>Can I run this repeatedly without re-scraping the same jobs?</strong>
+Yes. Save the <code>id</code> values from a previous run and pass them as <strong>Exclude Job IDs</strong> on the next run to only fetch newly-posted jobs. Combine with <strong>Include/Exclude Title Keywords</strong> to narrow further without needing a full LinkedIn filter.</p>
+<p><strong>Why did I get fewer jobs than maxItems?</strong>
+LinkedIn may have fewer matching jobs than your limit, or the search may have hit LinkedIn's ~1000 result cap. Try broader keywords or different locations. If you set <strong>Experience Level</strong>, <strong>Job Type</strong>, <strong>Work Type</strong>, <strong>Job Function</strong>, <strong>Industry</strong>, or <strong>Minimum Salary</strong>, this is also expected more often than with other filters — LinkedIn no longer applies these server-side, so this actor fetches extra candidates and filters them itself; if very few jobs match, fewer than your limit may be genuinely available within a reasonable fetch window.</p>
+<p><strong>Are <code>companyFollowersCount</code> and <code>companySize</code> reliable?</strong>
+Yes. Every run fetches each unique company's own LinkedIn page directly (once per company, not per job) and returns the real numbers, plus website, headquarters, company type, and specialties.</p>
+<p><strong>How do I get more than 1,000 jobs for one search?</strong>
+LinkedIn caps any single keyword+location query at roughly 1,000 results. Use <strong>Locations (multiple)</strong> to run the same <strong>Job Keywords</strong> against several locations in one run (e.g. <code>[&quot;California&quot;, &quot;Texas&quot;, &quot;New York&quot;]</code>) — results are combined and deduplicated automatically, the same way multiple <strong>LinkedIn Search URLs</strong> already work.</p>
+<p><strong>Are the salary/experience/seniority/visa fields exact, or inferred?</strong>
+<code>salary</code> and <code>seniorityLevel</code> (etc.) are LinkedIn's own stated values when the employer provided them. <code>salaryRange</code> is a structured parse of that same text with sanity-checking (implausible values are dropped rather than returned wrong) plus a normalized <code>minYearly</code>/<code>maxYearly</code> for cross-comparison across pay periods. <code>inferredSeniorityLevel</code> uses LinkedIn's own field when available and only falls back to a job-title keyword heuristic when it's missing — compare it against <code>seniorityLevel</code> if you need to know which. <code>experienceYearsMin</code>/<code>Max</code> and <code>visaSponsorshipMentioned</code> are both parsed from the job description text with pattern matching, including explicit negation-handling for visa sponsorship (a posting that says it will <strong>not</strong> sponsor visas is never reported the same as one that will) — they're omitted, not guessed, when the description doesn't mention either topic.</p>
+<p><strong>What does &quot;Detail Enrichment Depth: Full&quot; add, and is it worth the extra time?</strong>
+It's worth it only if you specifically need related-jobs data, related searches, or the cleanest possible company/industry IDs — otherwise stick with Standard. Full fetches a much larger page per job (roughly 7x the data, 5-7x the time) to add <code>similarJobs</code>, <code>peopleAlsoViewed</code>, <code>similarSearches</code>, and <code>titleCategory</code> fields, and it does not return <code>applyUrl</code> (LinkedIn doesn't expose a static apply link on that page).</p>
+<p><strong>Why are <code>salary</code>, <code>benefits</code>, <code>skillsRequired</code>, and <code>visaSponsorshipMentioned</code> empty on most jobs?</strong>
+Because most employers genuinely don't include that information in the posting — LinkedIn itself only shows salary on a minority of listings outside pay-transparency-mandated regions, and most postings never mention benefits, a skills list, or visa sponsorship at all. This actor never fabricates a value for these — they're omitted rather than guessed, so an empty field means the data wasn't there to extract, not a scraping failure. <code>responsibilities</code>/<code>qualifications</code>/<code>preferredQualifications</code> and <code>inferredSeniorityLevel</code>, by contrast, are actively-extracted fields with retry/fallback logic behind them — genuinely absent far less often.</p>
+<p><strong>How does the Industry filter actually work?</strong>
+LinkedIn's own industry search parameter is dead server-side (confirmed live — it no longer narrows results at all), so this actor re-implements it itself: after fetching each job's details and company page, it matches your selected industries against that job's real company industry. This means the Industry filter always requires <strong>Scrape Job Details</strong> (enabled automatically if you set it) and takes longer than a plain search, but it genuinely narrows results using real company data instead of a non-functional LinkedIn parameter.</p>
+</details></section><section id="python-quickstart"><h2>Python quickstart</h2><p>Use a schema-derived input and the Python standard library to start a run. An Apify account and token are required for execution.</p><p><a href="/apify-actor-examples/guides/tba8gl0gackXF4x6b/">Open the step-by-step Python guide →</a></p></section><p class="source-note">Source build <code>ePVRoWCh1kE19DZ2U</code>. Documentation is regenerated from the default published build; private drafts are not included.</p></article></div></main><footer class="footer"><strong>Nimbryxo Studio</strong><div class="footer-links"><a href="/apify-actor-examples/topics/">Topics</a><a href="/apify-actor-examples/sources/">Documentation sources</a><a href="https://apify.com/nimbryxo-studio">Apify</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></div></footer></body></html>
