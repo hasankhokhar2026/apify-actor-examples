@@ -1,0 +1,110 @@
+# Google Workspace Marketplace App Review Extractor by App ID
+
+Pull public reviews for a specific app on the [Google Workspace Marketplace](https://workspace.google.com/marketplace) — no API key, no login, no proxy required.
+
+Provide a numeric App ID and get back reviewer names, star ratings, review text, dates, and helpful counts. Filter by minimum rating and sort by recency or helpfulness.
+
+## What this actor does
+
+- **Single-app focus** — pulls reviews for one app at a time, identified by its numeric App ID
+- **Minimum-rating filter** — drop reviews below a star-rating threshold
+- **Sort control** — most relevant, newest first, highest rated first, or lowest rated first
+- **Empty fields are omitted** from every record — a review with zero helpful votes simply omits `helpfulCount` rather than showing `0`
+
+## Output per review
+
+| Field | Description | Example |
+|---|---|---|
+| `reviewId` | Unique review identifier | `06060438314121439815` |
+| `appId` | Numeric app identifier | `992310177365` |
+| `appName` | Name of the app | `Timer + AI Proctor Limiter for Forms` |
+| `appUrl` | Link to the app's Marketplace listing | `https://workspace.google.com/...` |
+| `reviewerName` | Name of the reviewer | `John Doe` |
+| `rating` | Star rating (1–5 integer) | `5` |
+| `reviewText` | Full review text | `Great tool for online exams!` |
+| `reviewDate` | Date the review was posted | `2026-04-21` |
+| `helpfulCount` | Number of helpful votes | `3` |
+| `recordType` | Always `"workspace_review"` | `workspace_review` |
+| `scrapedAt` | ISO timestamp of when the record was scraped | `2026-05-20T10:00:00+00:00` |
+
+## Input Options
+
+| Field | Type | Required | Default | Description |
+|---|---|---|---|---|
+| `appId` | string | Yes | – | Numeric App ID from the Marketplace URL |
+| `maxItems` | integer | No | `100` | Maximum reviews to collect (1–500) |
+| `minRating` | integer | No | — | Only return reviews at this star rating or above (1–5) |
+| `sortBy` | select | No | `MostRelevant` | Sort order for reviews |
+
+### sortBy Options
+
+| Value | Description |
+|---|---|
+| `MostRelevant` | Google's default ranking |
+| `Newest` | Most recently posted reviews first |
+| `HighestRated` | 5-star reviews first |
+| `LowestRated` | 1-star reviews first |
+
+### How to Find the App ID
+
+The App ID is the numeric portion at the end of a Marketplace app URL:
+
+```
+https://workspace.google.com/marketplace/app/autocrat/539341275670
+                                                       ^^^^^^^^^^^^^
+                                                       This is the App ID
+```
+
+---
+
+## Example Output
+
+```json
+{
+  "reviewId": "06060438314121439815",
+  "appId": "992310177365",
+  "appName": "Timer + AI Proctor Limiter for Forms | Quilgo",
+  "appUrl": "https://workspace.google.com/marketplace/app/timer_+_ai.../992310177365",
+  "reviewerName": "SUDHANSHU VERMA",
+  "rating": 5,
+  "reviewText": "Good",
+  "reviewDate": "2026-04-21",
+  "helpfulCount": 1,
+  "recordType": "workspace_review",
+  "scrapedAt": "2026-05-20T10:00:00.000000+00:00"
+}
+```
+
+## Use cases
+
+- **Product feedback analysis** — read what users actually say about an add-on before adopting it
+- **Competitive research** — monitor a competitor's app reviews for recurring complaints or praise
+- **Support prioritization** — surface low-rated reviews to identify bugs or missing features
+- **Marketing proof** — pull top-rated reviews to feature as testimonials
+- **Vendor due diligence** — check real user sentiment before recommending an app to a team
+
+## FAQ
+
+**Does this require a Google account?**
+No. Reviews on the Google Workspace Marketplace are publicly visible without any login.
+
+**How many reviews can I collect per run?**
+The Google Workspace Marketplace serves approximately 10 reviews per initial page load. The actor collects these reviews from the embedded page data. Set `maxItems` to control how many are returned (up to 500, though the actual yield depends on the app).
+
+**Can I filter by star rating?**
+Yes. Use `minRating` to only return reviews at or above a specific star count. For example, `minRating: 4` returns only 4-star and 5-star reviews.
+
+**What does `helpfulCount` represent?**
+The number of other users who marked the review as helpful.
+
+**Why might `reviewText` be short (e.g. just "Good")?**
+Many Workspace Marketplace reviewers leave very brief ratings. This is real data — the scraper faithfully captures what's on the page.
+
+**What is the `sortBy` field?**
+Controls the order reviews are returned. `Newest` gives you the most recent reviews, `HighestRated`/`LowestRated` let you target extreme ratings. `MostRelevant` uses Google's default ranking algorithm.
+
+**Why might some fields be absent?**
+The actor uses an omit-empty policy: fields with no value (e.g. a review with 0 helpful votes) are omitted rather than set to null or zero.
+
+**Is this affiliated with Google?**
+No. This is an independent, third-party actor that reads the Google Workspace Marketplace's public review pages; it is not operated by or affiliated with Google.

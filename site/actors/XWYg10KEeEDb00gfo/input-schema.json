@@ -1,0 +1,54 @@
+{
+  "description": "Scrape user reviews for a Google Workspace Marketplace app by its App ID.",
+  "properties": {
+    "appId": {
+      "description": "Numeric App ID from Google Workspace Marketplace URL (e.g. 539341275670 for Autocrat).",
+      "editor": "textfield",
+      "prefill": "539341275670",
+      "title": "App ID",
+      "type": "string"
+    },
+    "maxItems": {
+      "default": 100,
+      "description": "Maximum number of reviews to collect.",
+      "maximum": 500,
+      "minimum": 1,
+      "prefill": 100,
+      "title": "Max reviews",
+      "type": "integer"
+    },
+    "minRating": {
+      "description": "Only include reviews with this star rating or higher (1–5). Leave blank for all ratings.",
+      "maximum": 5,
+      "minimum": 1,
+      "title": "Minimum star rating",
+      "type": "integer"
+    },
+    "sortBy": {
+      "default": "MostRelevant",
+      "description": "Order in which to return reviews.",
+      "editor": "select",
+      "enum": [
+        "MostRelevant",
+        "Newest",
+        "HighestRated",
+        "LowestRated"
+      ],
+      "enumTitles": [
+        "Most relevant",
+        "Newest first",
+        "Highest rated first",
+        "Lowest rated first"
+      ],
+      "prefill": "MostRelevant",
+      "title": "Sort reviews by",
+      "type": "string"
+    }
+  },
+  "required": [
+    "appId"
+  ],
+  "schemaVersion": 1,
+  "title": "Google Workspace Marketplace Reviews Scraper Input",
+  "type": "object"
+}
