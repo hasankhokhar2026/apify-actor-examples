@@ -1,0 +1,128 @@
+# Snapchat Discover Publisher Show Extractor
+
+Snapchat's Discover feed surfaces premium publisher shows to visitors without requiring an account. This actor reads that public feed and returns each featured show's title, creator profile, cover art, publish timestamp, and a preview snap with its playable media URL.
+
+## What This Actor Does
+
+- Fetches Snapchat's public `snapchat.com/discover` page
+- Extracts all embedded publisher story and creator entities from the page's normalized data cache
+- Returns one structured record per Discover story with creator profile, preview snap, and media URLs
+- Works without login, cookies, or a browser — no authentication needed
+
+## Input
+
+| Field | Type | Required | Default | Description |
+|-------|------|----------|---------|-------------|
+| `maxStories` | integer | No | `50` | Maximum number of Discover stories to extract (1–200). Snapchat typically embeds 8–12 stories per page load. |
+| `proxyConfiguration` | object | No | — | Optional proxy settings. Leave empty to run without a proxy first. |
+
+### Example Input
+
+```json
+{
+  "maxStories": 20
+}
+```
+
+## Output
+
+One record per Discover story. Snapchat typically serves 8–12 stories per page, so actual output count may be lower than `maxStories`.
+
+### Top-Level Story Fields
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `storyId` | string | Unique story identifier |
+| `storyType` | string | Story content type — typically `SHOW` for publisher shows |
+| `title` | string | Story or episode title |
+| `thumbnailUrl` | string | CDN URL for the story cover image |
+| `publishedAt` | string | ISO 8601 UTC timestamp of when the story was published |
+| `videoTrackUrl` | string | HLS `.m3u8` playlist URL for the story's video stream |
+| `tapId` | string | Internal Snapchat tap/interaction identifier |
+| `totalSnaps` | integer | Total number of snaps in the full story |
+| `scrapedAt` | string | ISO 8601 UTC timestamp of when this record was collected |
+
+### `creator` Object
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `businessProfileId` | string | Unique publisher profile identifier (UUID) |
+| `title` | string | Publisher or show name |
+| `bio` | string | Publisher description or show tagline |
+| `snapcodeImageUrl` | string | URL to the publisher's Snapcode image |
+| `profilePictureUrl` | string | Publisher logo or profile picture CDN URL |
+| `squareHeroImageUrl` | string | Square hero banner image CDN URL |
+| `primaryColor` | string | Brand hex color code (e.g. `#9B55A0`) |
+| `username` | string | Publisher's Snapchat username, when set |
+| `badge` | string | Publisher badge type, when Snapchat assigns one |
+
+### `previewSnap` Object
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `snapId` | string | Unique snap identifier |
+| `mediaUrl` | string | CDN media URL for the preview snap (video or image) |
+| `mediaPreviewUrl` | string | Low-resolution thumbnail CDN URL for the preview snap |
+| `mediaType` | string | Media type: `VIDEO` or `IMAGE` |
+
+### Example Output
+
+```json
+{
+  "storyId": "1536443087702016",
+  "storyType": "SHOW",
+  "title": "Like Mom Like Daughter",
+  "thumbnailUrl": "https://cf-st.sc-cdn.net/aps/bolt_df/aHR0cHM6Ly9jZi...",
+  "publishedAt": "2025-08-04T01:00:28+00:00",
+  "videoTrackUrl": "https://cf-st.sc-cdn.net/d/3nHzLWe4SUg168m5tmr4G.1202.m3u8?...",
+  "tapId": "5207393312001032846",
+  "totalSnaps": 10,
+  "creator": {
+    "businessProfileId": "b538d529-753e-4e99-ae2f-3f2138f628f9",
+    "title": "On The Streets",
+    "bio": "This show is all about making someone's day better. Here you will see public challenges, street tricks, and fun activities.",
+    "snapcodeImageUrl": "https://www.snapchat.com/deeplink/discover/snapcode/L3AvYjUzOGQ1MjktNzUzZS...",
+    "profilePictureUrl": "https://cf-st.sc-cdn.net/aps/bolt_df/aHR0cHM6Ly9jZi...",
+    "squareHeroImageUrl": "https://cf-st.sc-cdn.net/aps/bolt_df/aHR0cHM6Ly9jZi...",
+    "primaryColor": "#9B55A0"
+  },
+  "previewSnap": {
+    "snapId": "1536443087702022",
+    "mediaUrl": "https://cf-st.sc-cdn.net/d/6pgLhPB8xRrQsrCGPQ9gY.111?...",
+    "mediaPreviewUrl": "https://cf-st.sc-cdn.net/d/zmYKO5bnRhvpPox3yegdM.380?...",
+    "mediaType": "VIDEO"
+  },
+  "scrapedAt": "2026-06-28T06:58:20.757222+00:00"
+}
+```
+
+## Use Cases
+
+- **Publisher research** — compile a database of Snapchat Discover publishers, their bios, brand colors, and show metadata
+- **Content trend analysis** — track which types of shows appear in Discover and monitor publish patterns over time
+- **Media archiving** — collect story thumbnails, preview snap URLs, and HLS stream links for content documentation
+- **Marketing intelligence** — identify active publishers in specific content verticals (fitness, comedy, news, etc.)
+- **Developer integrations** — use `videoTrackUrl` HLS links and creator profile data to build Discover-aware applications
+
+## FAQ
+
+**Do I need a Snapchat account or cookies?**
+No. Snapchat's Discover page is publicly accessible without login or authentication. The actor fetches the page as an anonymous visitor.
+
+**Why does the output have fewer stories than `maxStories`?**
+Snapchat's Discover page typically embeds 8–12 stories per page load. The `maxStories` limit caps the output if more were somehow available — it does not trigger multiple page fetches. The actual count depends on how many stories Snapchat has embedded at the time of the run.
+
+**How often does the Discover feed change?**
+Snapchat refreshes its Discover feed throughout the day. Running the actor at different times will produce different stories, publisher selections, and episode titles.
+
+**What is `videoTrackUrl`?**
+An `.m3u8` HLS (HTTP Live Streaming) playlist URL for the story's video content. This can be played directly with any HLS-compatible player (e.g. VLC, ffmpeg, or a web `<video>` element with an HLS library). It represents the full multi-quality adaptive bitrate stream for the story.
+
+**What is `tapId`?**
+An internal Snapchat identifier used to reference this story in Snapchat's interaction tracking system. It is included for completeness and may be useful for cross-referencing with Snapchat's engagement APIs.
+
+**What happens if no stories are found?**
+If the page's embedded data cache is missing, malformed, has fewer than 3 entities, or contains no recognizable story entities, the actor emits a single record with `"status": "no_content"` and a reason explaining the condition, instead of story records. If the page itself can't be fetched at all, it emits a `"status": "error"` record instead. Either way, downstream systems can detect and handle empty runs.
+
+**Does this actor need a proxy?**
+No proxy is required for standard use. Snapchat's Discover page is publicly accessible. For high-frequency or scheduled runs, adding a proxy can improve reliability.
