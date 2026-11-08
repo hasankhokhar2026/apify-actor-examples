@@ -4,116 +4,146 @@
 
 # Reddit Keyword Search with Advanced Filters
 
-Search Reddit for one or more keywords and get back matching posts, narrowed down with subreddit allow/block lists, a minimum score, a date range, an NSFW toggle, and an author blocklist — so the dataset you export only contains the posts that actually matter to you.
+Search Reddit for one or more keywords and get back matching posts plus optional keyword-matched comments, narrowed down with subreddit allow/block lists, a minimum score, a relative or absolute date window, an NSFW toggle, and an author blocklist.
+
+Reddit's anonymous old.reddit and public JSON endpoints are blocked, so this actor uses a multi-source transport with explicit provenance instead of pretending a blocked page was an empty successful run.
 
 ## What this actor does
 
-- Runs a separate Reddit search for each keyword you provide and tags every post with the keyword that found it
-- Keeps or drops posts by subreddit (allowlist or blocklist), minimum score, maximum age in days, or an explicit date range
-- Can require that a post's title/content contain every keyword at once instead of matching any single one
-- Drops NSFW posts and posts from specific authors on request
-- Omits any field Reddit's listing didn't provide for a post rather than returning it empty
+- Runs a separate search for each keyword and tags every record with the keyword that found it
+- Uses a source cascade: Google Translate `community-more-posts` partial (subreddit-scoped live listing), Reddit RSS `search.rss?type=link` (global/subreddit search), Redlib (search, comment search, opaque cursors), Arctic Shift archive (backfill/hydration), and an optional user-supplied OAuth token
+- Adds `source`, `sourceUrl`, `retrievedAt`, `dataFreshness`, `scoreAsOf`, `upvoteRatioAsOf` and `archiveLagSeconds` to every record so live metrics are never confused with archive snapshots
+- Searches comment bodies with `searchComments` via Redlib, with RSS `type=comment` parent discovery plus hydration as fallback
+- Supports `onlyNew` + `monitorId` watermarks for scheduled monitoring, including relative windows (`hour` … `all`)
+- Applies subreddit, score, age, date range, NSFW, author and multi-keyword AND filters
+- Does not treat unknown NSFW flags or missing score metrics as safe/passing; it emits a typed status instead
+- De-duplicates posts by `t3_id` and comments by `t1_id` across keywords and sources, merging provenance and preferring live metrics over archive snapshots
+- Fails loudly when every source fails; a working source with zero matches emits `no_results`, not an error
 
-## Output per post
+## Output records
 
-- `keyword` — the keyword that matched this post
-- `post_id`, `post_name` — Reddit's post ID and fullname (`t3_...`)
-- `title`, `content` — post title and self-text snippet, when the post has one
-- `author`, `author_fullname`
-- `subreddit`, `subreddit_prefixed` — e.g. `r/geopolitics`
-- `score`, `num_comments`, `num_crossposts`, `gilded_count`
-- `url`, `permalink`, `external_url` — external link target, only present when it differs from the Reddit permalink
-- `thumbnail_url`, `link_flair`
-- `created_utc`, `created_at`
-- `is_self`, `is_stickied`, `is_nsfw`, `is_spoiler`, `is_promoted`, `is_original_content`
-- `post_hint` — rough content type (`self`, `image`, `gallery`, `link`, `hosted:video`, `rich:video`)
-- `title_word_count`, `post_age_seconds`
-- `crosspost_parent` — the original post's ID, title, author, subreddit, score, and comment count, present only when this post is a crosspost
+### Post records (`recordType: "post"`)
 
-## Output when nothing is returned
+Legacy fields are preserved: `keyword`, `post_id`, `post_name`, `title`, `author`, `author_fullname`, `subreddit`, `subreddit_prefixed`, `content`, `score`, `num_comments`, `url`, `permalink`, `external_url`, `thumbnail_url`, `link_flair`, `created_utc`, `created_at`, `is_self`, `is_stickied`, `is_nsfw`, `is_spoiler`, `is_promoted`, `is_original_content`, `gilded_count`, `num_crossposts`, `crosspost_parent`, `post_hint`, `title_word_count`, `post_age_seconds`.
 
-If `keywords` is empty, or every post the search found was rejected by your filters (or no posts were found at all), the actor emits a single `recordType: "error"` record instead of post records, with `reason` (`no_keywords` or `all_filters_dropped_results`), a human-readable `message`, and — for the filters case — the `keywords` searched and an `appliedFilters` summary of every filter value you set, so you can see why nothing came through.
+Added fields include: `keywords`, `upvote_ratio`, `source`, `sourceUrl`, `retrievedAt`, `dataFreshness`, `scoreAsOf`, `upvoteRatioAsOf`, `archiveLagSeconds`, `metricsAvailable`, `isNsfwKnown`, `isGallery`, `galleryItems`, `mediaUrls`, `videoUrl`, `removedByCategory`, `removalType`, `wasDeletedLater`, `subreddit_id`, `postType` and `provenance`.
+
+`subreddit` is the bare name (`Python`); `subreddit_prefixed` is `r/Python`.
+
+### Comment records (`recordType: "comment"`)
+
+`keyword`, `keywords`, `commentId`, `comment_id`, `post_id`, `link_id`, `parentId`, `depth`, `body`, `author`, `author_fullname`, `subreddit`, `subreddit_prefixed`, `score`, `created_utc`, `created_at`, `permalink`, `isSubmitter`, `stickied`, `distinguished`, `scoreHidden`, `edited`, `collapsed`, `source`, `sourceUrl`, `retrievedAt`, `dataFreshness`, `scoreAsOf` and `provenance`.
+
+### Status/error records (`recordType: "status"` or `"error"`)
+
+Emitted when sources partially fail, are rate-limited, return no results, cannot supply a requested metric/NSFW flag, or when every source fails. They include `reason`, `message`, `keywords`, `sources`, `attemptedSources`, `counts`, `appliedFilters`, `sourceFailures` and `retryAfterSecs`.
+
+Typed reasons include: `invalid_input`, `all_sources_failed`, `transport_blocked`, `login_required`, `challenge_required`, `rate_limited`, `source_timeout`, `source_unavailable`, `metrics_unavailable`, `nsfw_status_unavailable`, `all_filters_dropped_results`, `partial_results` and `no_results`.
 
 ## Input
 
 | Field | Type | Default | Description |
 |---|---|---|---|
-| `keywords` | array | – | Keywords to search; each one runs as its own search (required) |
-| `resultLimit` | integer | `500` | Max posts to return per keyword (1-1000) |
-| `sort` | string (select) | `relevance` | `relevance`, `hot`, `top`, `new`, or `comments` |
-| `subredditFilter` | array | `[]` | Only keep posts from these subreddits (no `r/` prefix); empty keeps all |
-| `subredditBlocklist` | array | `[]` | Drop posts from these subreddits |
-| `minScore` | integer | – | Drop posts with a score below this number |
-| `maxAgeDays` | integer | – | Drop posts older than this many days |
-| `excludeNsfw` | boolean | `false` | Drop posts marked NSFW |
-| `authorBlocklist` | array | `[]` | Drop posts from these usernames (case-insensitive) |
-| `keywordRequireAll` | boolean | `false` | With multiple keywords, keep only posts whose title/content contains all of them, instead of any one |
-| `dateFrom` | string | – | Drop posts created before this date (`YYYY-MM-DD`, inclusive) |
-| `dateTo` | string | – | Drop posts created after this date (`YYYY-MM-DD`, inclusive of the full day) |
+| `keywords` | array | – | Keywords to search; each runs as its own search (required) |
+| `resultLimit` | integer | `100` | Max posts per keyword (1-1000). Source caps are real: RSS 100/request, Translate 24/page, Redlib 7/page, Arctic 100/page |
+| `sort` | string | `relevance` | `relevance`, `hot`, `top`, `new`, or `comments` |
+| `relativeWindow` | string | `all` | `hour`, `day`, `week`, `month`, `year`, or `all` |
+| `onlyNew` | boolean | `false` | Emit only records newer than the stored watermark |
+| `monitorId` | string | – | Stable key for the onlyNew watermark/seen IDs |
+| `searchComments` | boolean | `false` | Search comment bodies and emit `recordType=comment` records |
+| `commentLimit` | integer | `50` | Max matching comments per keyword |
+| `subredditFilter` | array | `[]` | Only keep posts/comments from these subreddits (with or without `r/`) |
+| `subredditBlocklist` | array | `[]` | Drop posts/comments from these subreddits |
+| `minScore` | integer | – | Drop records below this score; skipped/reported when no reliable score is available |
+| `maxAgeDays` | integer | – | Drop records older than N days |
+| `excludeNsfw` | boolean | `false` | Drop NSFW records; unknown flags are reported, not silently passed |
+| `authorBlocklist` | array | `[]` | Drop these usernames (case-insensitive) |
+| `keywordRequireAll` | boolean | `false` | With multiple keywords, keep only records containing all of them |
+| `dateFrom` | string | – | Earliest `created_at` (inclusive, `YYYY-MM-DD` or ISO) |
+| `dateTo` | string | – | Latest `created_at` (inclusive end-of-day) |
+| `includeArchive` | boolean | `true` | Use Arctic Shift for subreddit backfill/comment hydration |
+| `redditOAuthToken` | secret | – | Optional user OAuth Bearer token; never required |
+| `redlibInstances` | array | `[]` | Optional Redlib hostnames in priority order |
+| `resolveChallenges` | boolean | `true` | Best-effort Playwright solve for Redlib Anubis challenges |
+| `proxyConfiguration` | object | – | Optional Apify proxy configuration |
 
-### Example: single keyword, top posts of all time
+### Example: single keyword, top posts
 
 ```json
 {
   "keywords": ["machine learning"],
   "resultLimit": 100,
-  "sort": "top"
+  "sort": "top",
+  "relativeWindow": "month"
 }
 ```
 
-### Example: brand mentions, excluding NSFW and low-score noise
+### Example: brand monitoring with only-new watermarks
 
 ```json
 {
   "keywords": ["mybrand", "mybrand review"],
-  "minScore": 5,
-  "excludeNsfw": true,
-  "subredditBlocklist": ["spam"],
-  "resultLimit": 200
+  "resultLimit": 100,
+  "sort": "new",
+  "onlyNew": true,
+  "monitorId": "mybrand-daily",
+  "relativeWindow": "day",
+  "excludeNsfw": true
 }
 ```
 
-### Example: posts from the last 30 days that mention two terms together
+### Example: subreddit-scoped comments
 
 ```json
 {
-  "keywords": ["layoffs", "tech"],
-  "keywordRequireAll": true,
+  "keywords": ["layoffs"],
+  "subredditFilter": ["technology", "cscareerquestions"],
+  "searchComments": true,
+  "commentLimit": 50,
   "maxAgeDays": 30,
-  "sort": "new"
+  "resultLimit": 50
 }
 ```
 
-## Use cases
+## Source behavior and limits
 
-- Brand and product monitoring — track mentions while filtering out low-score or NSFW noise
-- Lead and sentiment research — pull threads matching two or more terms at once with `keywordRequireAll`
-- Subreddit-scoped research — restrict a broad keyword search to a hand-picked set of communities
-- Trend tracking — compare `new` vs `top` results for the same keyword over a rolling date window
-- Moderation or spam review — drop known problem authors or subreddits before they reach your dataset
+- **Translate partial**: live, subreddit-scoped listing; 24 posts/page with opaque cursors; keyword matching is client-side on title/body. No per-post NSFW/locked/spoiler flags. All gallery images found in the post element are exposed through `mediaUrls`/`galleryItems`.
+- **Reddit RSS**: live global/subreddit search; max 100 entries per request, no pagination, roughly one request per minute per IP, and no score/comment/ratio metrics. Expected to be retired by Reddit.
+- **Redlib**: live third-party front-end; 7 posts / 10 comments per page with opaque cursors; Anubis challenges and upstream rate limits are common. This is the primary cookieless comment-body search. Default instances are `redlib-1.privadency.com` and `red.artemislena.eu`; override with `redlibInstances`.
+- **Arctic Shift**: archive, not a monitor. Scoped keyword searches may return HTTP 422 “Timeout”; score/comment/ratio values are snapshots (`dataFreshness` and `scoreAsOf` say which). Used for subreddit-scoped backfill/hydration and as the third comment-body rung via `comments/search?subreddit=...&body=...`.
+- **OAuth**: only when you supply a token; the actor never obtains one. `oauth.reddit.com` without a token returns a login/block page, so there is no fake “cookieless OAuth”.
+
+### Hard limits (2026-11)
+
+- **old.reddit.com**: anonymous requests redirect to a login wall (`/login/?reason=lor2`). The actor does not use old.reddit.
+- **Reddit RSS retirement**: RSS search is scheduled to stop on **2026-11-13**. Until then it is best-effort; afterwards global live search depends on Redlib and the intermittent Translate path.
+- **Global Arctic search**: `posts/search?query=` and `comments/search?body=` without `subreddit`, `author`, `link_id`, or `parent_id` return HTTP 400. Global keyword/comment search cannot use Arctic; only subreddit-scoped archive queries are supported.
+- **Arctic archive staleness**: scores, comment counts, upvote ratios and removal flags are snapshots, not live. Check `dataFreshness`, `scoreAsOf`, `upvoteRatioAsOf` and `archiveLagSeconds` before treating archive engagement as current; removed/deleted flags may lag live Reddit state.
+- **Legal/ToS**: Reddit requires approved API access and prohibits unapproved scraping and commercialization. Arctic Shift, Redlib and the Translate proxy are third-party services and do not create Reddit authorization. Get legal/product sign-off and provide provenance and removal handling; this actor is not affiliated with Reddit.
+
+## Local development
+
+```bash
+pip install -r requirements.txt
+python -m pytest -q
+python -m src
+```
+
+`python -m src` needs an input; with Apify local storage use `.actor/INPUT.json` or `APIFY_LOCAL_STORAGE_DIR` with a key-value store `INPUT.json`.
 
 ## FAQ
 
-**How is this different from a plain keyword search?**
-Every filter here (subreddit allow/block, score floor, date range, NSFW exclusion, author blocklist, multi-keyword AND matching) is applied after the search, so the dataset you get already reflects your criteria instead of needing to be cleaned up afterward.
-
-**What happens when I give several keywords?**
-By default each keyword runs as an independent search and results are combined (OR). Set `keywordRequireAll` to `true` to instead keep only posts whose title or content contains every keyword you listed.
-
-**Why do some posts have no `content`?**
-Link posts and posts without a text body don't have self-text; `content` is only present for text (self) posts that have one.
-
-**What does `external_url` mean, and why is it sometimes missing?**
-It's the destination of a link post when that destination differs from the Reddit permalink. Self-posts, and link posts that just point back at Reddit, don't get this field.
-
-**Can I combine `dateFrom`/`dateTo` with `maxAgeDays`?**
-Yes — both filters are applied together, so the post must satisfy whichever ones you set.
-
-**Does `subredditFilter` and `subredditBlocklist` work together?**
-Yes. A post must pass both: it's dropped if it's in the blocklist, and dropped if an allowlist is set and the post's subreddit isn't in it.
-
 **Do I need a Reddit account or API credentials?**
-No — this actor reads Reddit's public search results directly, without a login.
+No. The cookieless cascade works without credentials. An optional OAuth token improves live metrics if you have one.
+
+**Why are some posts missing `score` or `num_comments`?**
+RSS does not expose them. Records from RSS carry `metricsAvailable: false`; requesting a score filter causes a typed metrics status instead of silently passing rows.
+
+**Why did I get fewer results than `resultLimit`?**
+Source caps are real (RSS 100 with no pagination; Translate 24/page; Redlib 7/page; Arctic 100/page). A partial result is reported in the status record rather than silently hidden.
+
+**What does `dataFreshness` mean?**
+`live` for RSS/Translate/Redlib/OAuth; `archive_initial` or `archive_second_snapshot` for Arctic. Check `scoreAsOf`, `upvoteRatioAsOf` and `archiveLagSeconds` before treating archive engagement as current.
 
 **Is this affiliated with Reddit?**
-No. This is an independent actor that reads Reddit's publicly available search pages.
+No. This is an independent actor. Reddit's terms, the Responsible Builder Policy, and third-party service terms still apply; get legal/product approval for commercial or automated collection.

@@ -1,0 +1,124 @@
+{
+  "description": "Search Redfin for real estate listings — for sale, recently sold, or rental properties.",
+  "properties": {
+    "listingUrl": {
+      "description": "Full Redfin listing URL, e.g. `https://www.redfin.com/TX/Austin/123-Main-St-78701/home/12345678`.",
+      "editor": "textfield",
+      "title": "Listing URL (mode=byUrl)",
+      "type": "string"
+    },
+    "location": {
+      "default": "Austin, TX",
+      "description": "City, ZIP code, neighborhood, or address to search (e.g. `Austin, TX`, `90210`, `Brooklyn, NY`).",
+      "editor": "textfield",
+      "prefill": "Austin, TX",
+      "title": "Location",
+      "type": "string"
+    },
+    "maxItems": {
+      "default": 20,
+      "description": "Hard cap on emitted records.",
+      "maximum": 500,
+      "minimum": 1,
+      "prefill": 20,
+      "title": "Max items",
+      "type": "integer"
+    },
+    "maxPrice": {
+      "description": "Maximum listing price in USD.",
+      "maximum": 100000000,
+      "minimum": 0,
+      "title": "Max price ($)",
+      "type": "integer"
+    },
+    "maxSqft": {
+      "description": "Maximum interior square footage.",
+      "maximum": 100000,
+      "minimum": 0,
+      "title": "Max square footage",
+      "type": "integer"
+    },
+    "minBaths": {
+      "description": "Minimum number of bathrooms.",
+      "maximum": 20,
+      "minimum": 0,
+      "title": "Min bathrooms",
+      "type": "integer"
+    },
+    "minBeds": {
+      "description": "Minimum number of bedrooms.",
+      "maximum": 20,
+      "minimum": 0,
+      "title": "Min bedrooms",
+      "type": "integer"
+    },
+    "minPrice": {
+      "description": "Minimum listing price in USD.",
+      "maximum": 100000000,
+      "minimum": 0,
+      "title": "Min price ($)",
+      "type": "integer"
+    },
+    "minSqft": {
+      "description": "Minimum interior square footage.",
+      "maximum": 100000,
+      "minimum": 0,
+      "title": "Min square footage",
+      "type": "integer"
+    },
+    "mode": {
+      "default": "forSale",
+      "description": "What type of listings to fetch.",
+      "editor": "select",
+      "enum": [
+        "forSale",
+        "recentlySold",
+        "forRent",
+        "search",
+        "byUrl"
+      ],
+      "enumTitles": [
+        "For Sale — active listings",
+        "Recently Sold — sold within 180 days",
+        "For Rent — rental listings",
+        "Search — keyword/address search",
+        "By URL — fetch a single Redfin listing URL"
+      ],
+      "prefill": "forSale",
+      "title": "Mode",
+      "type": "string"
+    },
+    "propertyType": {
+      "default": "all",
+      "description": "Filter by property type.",
+      "editor": "select",
+      "enum": [
+        "all",
+        "house",
+        "condo",
+        "townhouse",
+        "multifamily",
+        "land",
+        "other"
+      ],
+      "enumTitles": [
+        "All types",
+        "House",
+        "Condo / Apartment",
+        "Townhouse",
+        "Multi-family",
+        "Land",
+        "Other"
+      ],
+      "prefill": "all",
+      "title": "Property type",
+      "type": "string"
+    }
+  },
+  "required": [
+    "mode"
+  ],
+  "schemaVersion": 1,
+  "title": "Redfin Scraper Input",
+  "type": "object"
+}

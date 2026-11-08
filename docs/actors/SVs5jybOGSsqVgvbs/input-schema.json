@@ -1,8 +1,23 @@
 {
   "properties": {
+    "enableYtdlpFallback": {
+      "default": false,
+      "description": "When the direct HTTP media download or Whisper transcription fails, try yt-dlp (requires ffmpeg). Off by default so runs stay fast, deterministic and HTTP-only.",
+      "sectionCaption": "Advanced",
+      "sectionDescription": "Optional settings for large or repeated runs.",
+      "title": "Enable yt-dlp fallback",
+      "type": "boolean"
+    },
+    "includeQuotedVideo": {
+      "default": true,
+      "description": "When a quote post has no video of its own, transcribe the video of the quoted post. The row keeps the quote post's metadata and records quotedTweetId.",
+      "prefill": true,
+      "title": "Transcribe quoted video when the post has none",
+      "type": "boolean"
+    },
     "includeTweetMetadata": {
       "default": true,
-      "description": "Attach the post's author, text and publish date to every transcript row.",
+      "description": "Attach the full post and author metadata (text, counts, bio, followers, quote/repost details) to every row.",
       "prefill": true,
       "title": "Include post details",
       "type": "boolean"
@@ -15,16 +30,40 @@
       "type": "boolean"
     },
     "language": {
-      "description": "Optional language code for AI transcription, for example en, es, fr or ur. Improves accuracy when the spoken language is known. Leave empty to detect it automatically. Ignored when native captions are used.",
+      "description": "Optional language code, for example en, es, fr or ur. Native captions prefer this language when several tracks exist; AI transcription uses it as a spoken-language hint. Leave empty to detect automatically.",
       "editor": "textfield",
       "example": "en",
       "nullable": true,
-      "title": "Spoken language hint (AI only)",
+      "title": "Spoken/caption language hint",
       "type": "string"
+    },
+    "maxDownloadMb": {
+      "default": 200,
+      "description": "Largest media download allowed for AI transcription. The actor picks the audio-only or lowest-bitrate rendition first, then stops with a media_too_large status row if the limit is exceeded. Defaults to 200 MB.",
+      "minimum": 1,
+      "sectionCaption": "Limits",
+      "title": "Max download size (MB)",
+      "type": "integer"
+    },
+    "maxDurationSeconds": {
+      "default": 1200,
+      "description": "Videos longer than this are skipped for AI transcription and get a media_too_large status row. Built-in captions are still returned when available. Defaults to 1200 seconds (20 minutes).",
+      "minimum": 1,
+      "sectionCaption": "Limits",
+      "title": "Max video duration (seconds)",
+      "type": "integer"
+    },
+    "maxVideosPerProfile": {
+      "default": 10,
+      "description": "How many recent video posts to transcribe per profile input. Defaults to 10.",
+      "minimum": 1,
+      "sectionCaption": "Limits",
+      "title": "Max video posts per profile",
+      "type": "integer"
     },
     "outputFormat": {
       "default": "segments",
-      "description": "Segments gives timestamped lines, full text gives one transcript string, and both gives you both in the same row.",
+      "description": "Segments gives timestamped lines, full text gives one transcript string, and both gives both plus SRT and WebVTT text and download links. SRT and WebVTT modes return the subtitle text and a signed download link.",
       "editor": "select",
       "enum": [
         "segments",
@@ -36,7 +75,7 @@
       "enumTitles": [
         "Timestamped segments",
         "Full transcript text",
-        "Both segments and full text",
+        "Segments + full text + SRT/VTT",
         "SRT subtitle file text (downloadable)",
         "WebVTT subtitle file text (downloadable)"
       ],
@@ -45,25 +84,25 @@
       "type": "string"
     },
     "postUrls": {
-      "description": "One or more Twitter/X post links that contain a video or GIF. Both x.com and twitter.com links are accepted. Profile links or usernames also work: the actor transcribes the profile's latest video post.",
+      "description": "Post links or bare post IDs that contain a video or GIF. Accepts x.com and twitter.com links, /i/status and /i/web/status links, /video/N links, and bare numeric IDs. Profile links or usernames are accepted too and are treated like profile inputs. Provide this or Profile links — at least one of the two is required.",
       "editor": "stringList",
       "example": [
         "https://x.com/NASA/status/2107095768821576019",
-        "https://twitter.com/elonmusk/status/1519480761749016577",
+        "https://twitter.com/elonmusk/status/1519480761749016577/video/1",
+        "2107095768821576019",
         "NASA"
       ],
       "items": {
         "type": "string"
       },
-      "minItems": 1,
       "prefill": [
-        "https://x.com/NASA/status/2107095768821576019"
+        "https://x.com/firesidealpha/status/2118737977824395524"
       ],
-      "title": "Post links",
+      "title": "Post links or IDs",
       "type": "array"
     },
     "profileUrls": {
-      "description": "Optional. Transcribe the latest video post from these profiles. Paste x.com profile links or bare usernames.",
+      "description": "Optional. Transcribe recent video posts from these profiles. Paste x.com profile links, @handles or bare usernames. Works without Post links.",
       "editor": "stringList",
       "example": [
         "NASA",
@@ -115,13 +154,13 @@
         "Built-in captions only — skip videos without captions",
         "AI (Whisper) only — always transcribe the audio"
       ],
-      "prefill": "auto",
+      "prefill": "captions",
       "title": "How to transcribe",
       "type": "string"
     },
     "whisperModel": {
       "default": "base",
-      "description": "Whisper model used for AI transcription. Larger models are more accurate but slower and need more memory (medium and large-v2 need a run memory of at least 4096 MB and 8192 MB respectively). Base is a good balance for most videos. If the selected model does not fit the run memory, the actor automatically falls back to the next smaller model. Long videos are split into 10-minute chunks automatically, so there is no length limit.",
+      "description": "Whisper model used for AI transcription. Larger models are more accurate but slower and need more memory (medium and large-v2 need a run memory of at least 4096 MB and 8192 MB respectively). Base is a good balance for most videos. If the selected model does not fit the run memory, the actor automatically falls back to the next smaller model.",
       "editor": "select",
       "enum": [
         "tiny",
@@ -142,9 +181,6 @@
       "type": "string"
     }
   },
-  "required": [
-    "postUrls"
-  ],
   "schemaVersion": 1,
   "title": "Twitter / X Video Transcript Scraper",
   "type": "object"

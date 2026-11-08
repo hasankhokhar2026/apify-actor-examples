@@ -1,9 +1,16 @@
 {
-  "description": "Look up Google Fonts families by name, browse by category, or list the entire library.",
+  "description": "Look up Google Fonts families by name, browse by category, list the entire library, or list Material icon metadata. Search, filter, sort, and optionally enrich records with license/attribution and self-hosting file URLs.",
   "properties": {
+    "brandOnly": {
+      "default": false,
+      "description": "Keep only families where the upstream `isBrandFont` flag is true. In the current catalog this flag equals `isNoto`; it is not a generic brand filter.",
+      "prefill": false,
+      "title": "Google-branded flag only",
+      "type": "boolean"
+    },
     "category": {
       "default": "Sans Serif",
-      "description": "Filter the library to a single font category.",
+      "description": "Filter the library to a single font category. Defaults to `Sans Serif` when empty. An unknown category emits a typed `invalid_category` error record.",
       "editor": "select",
       "enum": [
         "Sans Serif",
@@ -23,11 +30,26 @@
       "title": "Category (mode=byCategory)",
       "type": "string"
     },
+    "colorOnly": {
+      "default": false,
+      "description": "Keep only families with color font capabilities (COLRV0/COLRV1/OTSVG).",
+      "prefill": false,
+      "title": "Color fonts only",
+      "type": "boolean"
+    },
+    "designers": {
+      "default": [],
+      "description": "Only keep families whose designer/foundry list contains every listed value (case-insensitive substring match).",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Designers",
+      "type": "array"
+    },
     "families": {
       "default": [
         "Roboto"
       ],
-      "description": "Exact font family names, e.g. `Roboto`, `Open Sans`, `Lora`, `Playfair Display`. Case-insensitive.",
+      "description": "Font family names, e.g. `Roboto`, `Open Sans`, `Lora`, `Playfair Display`. Case-insensitive; `displayName` aliases and duplicates are handled. Defaults to `Roboto` when empty.",
       "editor": "stringList",
       "prefill": [
         "Roboto"
@@ -35,32 +57,115 @@
       "title": "Font families (mode=byFamily)",
       "type": "array"
     },
-    "maxItems": {
-      "default": 50,
-      "description": "Hard cap on the number of font records emitted.",
-      "maximum": 2000,
+    "includeFiles": {
+      "description": "Fetch the full CSS2 stylesheet (woff2/unicode-range) and the download manifest (TTF URLs). Capped by `maxFilesPerFamily`. CSS2 output depends on the user agent: the actor requests a modern Chrome UA and retries once with Safari when Chrome receives only TTF. Large CJK families can exceed the file cap. When omitted, defaults to on for `byFamily` and off for `byCategory`/`listAll`/`icons`; set false explicitly to disable it. Ignored in `icons` mode.",
+      "prefill": false,
+      "title": "Include font file URLs",
+      "type": "boolean"
+    },
+    "includeLicense": {
+      "description": "Enrich each family with license, license URL, copyright, source repository, source date, languages, unicode coverage, and description. Uses the per-family metadata endpoint, then METADATA.pb, then the download manifest. When omitted, defaults to on for `byFamily` and off for `byCategory`/`listAll`/`icons`; set false explicitly to disable it. The catalog-level `languages` array is always empty upstream, so `languages` can only come from this per-family enrichment. Ignored in `icons` mode.",
+      "prefill": false,
+      "sectionCaption": "License & self-hosting enrichment",
+      "title": "Include license & attribution",
+      "type": "boolean"
+    },
+    "maxFilesPerFamily": {
+      "default": 200,
+      "description": "Cap applied separately to `fontFiles` (CSS2) and `ttfFiles` (manifest). CJK families can expose hundreds of files; for example M PLUS 1p has 882 CSS2 blocks, so the 200 default truncates it and `filesTruncated` is set. Raise to 1000 to keep them all.",
+      "maximum": 1000,
       "minimum": 1,
-      "prefill": 50,
+      "prefill": 10,
+      "title": "Max files per family",
+      "type": "integer"
+    },
+    "maxItems": {
+      "default": 5000,
+      "description": "Hard cap on records emitted per run (1-5000). Defaults to 5000 so the whole font catalog (~1,959 families) fits without truncation. The icon endpoint currently reports about 6,139 icons, so `icons` mode can truncate at the cap.",
+      "maximum": 5000,
+      "minimum": 1,
+      "prefill": 3,
       "title": "Max items",
       "type": "integer"
     },
     "mode": {
       "default": "byFamily",
-      "description": "What to fetch from the Google Fonts library.",
+      "description": "What to fetch from Google Fonts. `icons` fetches the separate Material icon metadata document once and emits icon records; it does not return font-family records.",
       "editor": "select",
       "enum": [
         "byFamily",
         "byCategory",
-        "listAll"
+        "listAll",
+        "icons"
       ],
       "enumTitles": [
         "Lookup specific font families by name",
         "Browse a font category",
-        "List the entire library"
+        "List the entire library",
+        "List Material icon metadata (one request)"
       ],
       "prefill": "byFamily",
+      "sectionCaption": "What to fetch",
       "title": "Mode",
       "type": "string"
+    },
+    "notoOnly": {
+      "default": false,
+      "description": "Keep only families in the Noto collection.",
+      "prefill": false,
+      "title": "Noto families only",
+      "type": "boolean"
+    },
+    "search": {
+      "default": "",
+      "description": "Free-text search over family, display name, category, classifications, subsets, designers, and primary script/language. In `icons` mode it searches icon name, categories, tags, and supported families. All space-separated tokens must match.",
+      "editor": "textfield",
+      "prefill": "",
+      "sectionCaption": "Search & filters",
+      "title": "Search text",
+      "type": "string"
+    },
+    "sortBy": {
+      "default": "default",
+      "description": "Order the matched families. `popularity` and `trending` are sparse upstream snapshot ranks where lower is better (not dense 1..N positions); `dateAdded` and `lastModified` put newest first. In `icons` mode only `popularity` and `name` change the order; other values keep upstream order.",
+      "editor": "select",
+      "enum": [
+        "default",
+        "popularity",
+        "trending",
+        "dateAdded",
+        "lastModified",
+        "name",
+        "defaultSort"
+      ],
+      "enumTitles": [
+        "Catalog order (default)",
+        "Popularity rank (lower = more popular)",
+        "Trending rank (lower = more trending)",
+        "Newest added first",
+        "Recently modified first",
+        "Alphabetical",
+        "Undocumented blended catalog order"
+      ],
+      "prefill": "default",
+      "sectionCaption": "Sorting",
+      "title": "Sort by",
+      "type": "string"
+    },
+    "subsets": {
+      "default": [],
+      "description": "Only keep families that include every listed subset, e.g. `latin`, `cyrillic`, `greek`, `vietnamese`. The synthetic `menu` subset is present on every family.",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Language subsets",
+      "type": "array"
+    },
+    "variableOnly": {
+      "default": false,
+      "description": "Keep only families that ship a variable font with one or more axes.",
+      "prefill": false,
+      "title": "Variable fonts only",
+      "type": "boolean"
     }
   },
   "required": [

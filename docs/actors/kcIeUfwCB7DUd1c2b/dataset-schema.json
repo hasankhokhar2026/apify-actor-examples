@@ -2,6 +2,11 @@
   "actorSpecification": 1,
   "fields": {
     "properties": {
+      "accessState": {
+        "description": "public, protected, deleted, not_found or login_wall",
+        "title": "Access state",
+        "type": "string"
+      },
       "authorFollowers": {
         "description": "Post author follower count (when Include post/profile details is on)",
         "title": "Author followers",
@@ -22,26 +27,77 @@
         "title": "Author",
         "type": "string"
       },
+      "billable": {
+        "description": "True only for captured screenshot rows; status and summary rows are not billable",
+        "title": "Billable",
+        "type": "boolean"
+      },
+      "billableScreenshots": {
+        "description": "Number of captured, billable screenshots in the run",
+        "title": "Billable screenshots (run summary)",
+        "type": "number"
+      },
+      "canonicalUrl": {
+        "description": "The canonical X URL X actually served",
+        "format": "link",
+        "title": "Canonical URL",
+        "type": "string"
+      },
       "captureMode": {
-        "description": "postCard, profileHeader or fullProfilePage",
+        "description": "postCard, thread, profileHeader (header only) or fullProfilePage (loaded preview)",
         "title": "Capture mode",
         "type": "string"
+      },
+      "captured": {
+        "description": "Screenshots captured in the run",
+        "title": "Captured (run summary)",
+        "type": "number"
       },
       "capturedAt": {
         "description": "ISO timestamp when the screenshot was taken",
         "title": "Captured at",
         "type": "string"
       },
+      "capturedPostCount": {
+        "description": "Posts rendered in the profile capture",
+        "title": "Captured posts",
+        "type": "number"
+      },
+      "code": {
+        "description": "Typed failure code: not_found, protected, deleted, login_wall, wrong_author, wrong_target, selector_miss, media_error, browser_crash, network_error, invalid_input or capture_error",
+        "title": "Status code",
+        "type": "string"
+      },
+      "communityNote": {
+        "description": "Readers-added-context note id and text when X shows one (when Include post/profile details is on)",
+        "title": "Community note",
+        "type": "object"
+      },
       "deviceScaleFactor": {
-        "description": "Device scale factor used for the capture",
+        "description": "Device scale factor used for the capture (effective value)",
         "title": "Pixel density",
         "type": "number"
       },
       "downloadUrl": {
-        "description": "Public signed URL to download the screenshot file",
+        "description": "Public signed HTTPS URL to download the screenshot file (omitted for local file:// URLs and when signing fails)",
         "format": "link",
         "title": "Download URL",
         "type": "string"
+      },
+      "effectiveScale": {
+        "description": "Actual image pixels per CSS pixel (image width / clipped CSS width)",
+        "title": "Effective scale",
+        "type": "number"
+      },
+      "failed": {
+        "description": "Targets that failed with a typed status code",
+        "title": "Failed (run summary)",
+        "type": "number"
+      },
+      "failureCodes": {
+        "description": "Count of each typed failure code",
+        "title": "Failure codes (run summary)",
+        "type": "object"
       },
       "fileSizeBytes": {
         "description": "Size of the saved screenshot in bytes",
@@ -51,6 +107,11 @@
       "filename": {
         "description": "File name of the screenshot in the key-value store",
         "title": "File name",
+        "type": "string"
+      },
+      "finishedAt": {
+        "description": "ISO timestamp when the run finished",
+        "title": "Finished at (run summary)",
         "type": "string"
       },
       "followers": {
@@ -73,14 +134,44 @@
         "title": "Height",
         "type": "number"
       },
+      "invalidInputs": {
+        "description": "Inputs dropped during validation with a reason",
+        "title": "Invalid inputs (run summary)",
+        "type": "array"
+      },
+      "message": {
+        "description": "Human-readable failure message",
+        "title": "Message",
+        "type": "string"
+      },
       "name": {
         "description": "Profile display name (when Include post/profile details is on)",
         "title": "Profile name",
         "type": "string"
       },
+      "poll": {
+        "description": "Poll choices, percentages, vote total and finality when X renders or syndicates poll data (when Include post/profile details is on)",
+        "title": "Poll",
+        "type": "object"
+      },
       "postCount": {
         "description": "Profile post count (when Include post/profile details is on)",
         "title": "Posts",
+        "type": "number"
+      },
+      "previewLimitReason": {
+        "description": "Why the profile capture is a preview rather than the full timeline",
+        "title": "Preview limit reason",
+        "type": "string"
+      },
+      "previewLimited": {
+        "description": "True when a profile capture hit the logged-out preview cap",
+        "title": "Preview limited",
+        "type": "boolean"
+      },
+      "profilePostCount": {
+        "description": "Post count shown in the profile header",
+        "title": "Profile posts",
         "type": "number"
       },
       "profileUrl": {
@@ -94,8 +185,29 @@
         "title": "Quality",
         "type": "number"
       },
+      "requested": {
+        "description": "Targets requested in the run",
+        "title": "Requested (run summary)",
+        "type": "number"
+      },
+      "requestedUrl": {
+        "description": "The input URL as requested, when the canonical URL differs",
+        "format": "link",
+        "title": "Requested URL",
+        "type": "string"
+      },
+      "skipped": {
+        "description": "Inputs dropped during validation",
+        "title": "Skipped (run summary)",
+        "type": "number"
+      },
+      "startedAt": {
+        "description": "ISO timestamp when the run started",
+        "title": "Started at (run summary)",
+        "type": "string"
+      },
       "status": {
-        "description": "Result status (success or error details)",
+        "description": "Result status (success or a friendly error description)",
         "title": "Status",
         "type": "string"
       },
@@ -110,6 +222,31 @@
         "title": "Text snippet",
         "type": "string"
       },
+      "theme": {
+        "description": "dark, light or system",
+        "title": "Theme",
+        "type": "string"
+      },
+      "thread": {
+        "description": "Thread capture details: focalIndex, threadAuthor, threadLength, threadParts, gateIndex, threadComplete, truncatedReason (non_author_reply, gate, max_height, dpr_height_limit or no_parts)",
+        "title": "Thread",
+        "type": "object"
+      },
+      "threadId": {
+        "description": "Focal post id for a thread capture",
+        "title": "Thread ID",
+        "type": "string"
+      },
+      "totalBytes": {
+        "description": "Combined size of all captured images",
+        "title": "Total bytes (run summary)",
+        "type": "number"
+      },
+      "totalDurationMs": {
+        "description": "Total capture duration in milliseconds",
+        "title": "Duration (run summary)",
+        "type": "number"
+      },
       "tweetId": {
         "description": "Numeric post id (when Include post/profile details is on)",
         "title": "Post ID",
@@ -121,7 +258,7 @@
         "type": "string"
       },
       "type": {
-        "description": "screenshot for a captured image, status for a run message.",
+        "description": "screenshot for a captured image, status for a failure/run message, runSummary for end-of-run totals.",
         "title": "Row type",
         "type": "string"
       },
@@ -145,6 +282,10 @@
       "display": {
         "component": "table",
         "properties": {
+          "billable": {
+            "format": "text",
+            "label": "Billable"
+          },
           "captureMode": {
             "format": "text",
             "label": "Mode"
@@ -152,6 +293,10 @@
           "capturedAt": {
             "format": "date",
             "label": "Captured At"
+          },
+          "code": {
+            "format": "text",
+            "label": "Code"
           },
           "downloadUrl": {
             "format": "link",
@@ -198,6 +343,8 @@
           "targetUrl",
           "captureMode",
           "status",
+          "code",
+          "billable",
           "format",
           "width",
           "height",

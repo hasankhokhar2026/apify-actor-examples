@@ -1,39 +1,53 @@
 {
-  "description": "Search Reddit by keywords with advanced filters. Pro adds: subreddit filter/blocklist, dateFrom/dateTo, minScore, maxAgeDays, excludeNsfw, authorBlocklist, keywordRequireAll.",
+  "description": "Search Reddit by keywords with advanced filters, multi-source live/archive fallbacks, comment search, and only-new monitoring. Sources: Google Translate community partial, Reddit RSS, Redlib, Arctic Shift archive, optional user OAuth token.",
   "properties": {
     "authorBlocklist": {
       "default": [],
-      "description": "Drop posts by these usernames (case-insensitive).",
+      "description": "Drop posts/comments by these usernames (case-insensitive).",
       "editor": "stringList",
       "title": "Author blocklist",
       "type": "array"
     },
+    "commentLimit": {
+      "default": 50,
+      "description": "Maximum matching comments per keyword when searchComments is enabled (1-1000).",
+      "maximum": 1000,
+      "minimum": 1,
+      "title": "Comment limit per keyword",
+      "type": "integer"
+    },
     "dateFrom": {
-      "description": "Drop posts with `created_at` before this date (inclusive). Format: YYYY-MM-DD.",
+      "description": "Drop records with `created_at` before this date (inclusive). Format: YYYY-MM-DD or ISO timestamp.",
       "editor": "textfield",
       "title": "Date from (YYYY-MM-DD)",
       "type": "string"
     },
     "dateTo": {
-      "description": "Drop posts with `created_at` after this date (inclusive end-of-day). Format: YYYY-MM-DD.",
+      "description": "Drop records with `created_at` after this date (inclusive end-of-day). Format: YYYY-MM-DD or ISO timestamp.",
       "editor": "textfield",
       "title": "Date to (YYYY-MM-DD)",
       "type": "string"
     },
     "excludeNsfw": {
       "default": false,
-      "description": "Drop NSFW posts.",
+      "description": "Drop NSFW records. When the available source cannot expose a per-post NSFW flag, unknown rows are not emitted as safe; the run reports nsfw_status_unavailable.",
       "title": "Exclude NSFW",
+      "type": "boolean"
+    },
+    "includeArchive": {
+      "default": true,
+      "description": "Use Arctic Shift for subreddit-scoped backfill and comment hydration when live sources fail. Archive metrics are snapshots, not live.",
+      "title": "Include Arctic Shift archive fallback",
       "type": "boolean"
     },
     "keywordRequireAll": {
       "default": false,
-      "description": "When multiple keywords given, also dedupe & only emit posts whose title/content contains ALL of them. Default: each keyword runs independently (OR).",
+      "description": "When multiple keywords are given, keep only records whose title/content contains ALL of them. Default: each keyword runs independently (OR).",
       "title": "Require all keywords (AND)",
       "type": "boolean"
     },
     "keywords": {
-      "description": "List of keywords to search. Each runs as a separate Reddit search.",
+      "description": "List of keywords to search. Each runs as a separate search.",
       "editor": "stringList",
       "minItems": 1,
       "prefill": [
@@ -43,26 +57,95 @@
       "type": "array"
     },
     "maxAgeDays": {
-      "description": "Drop posts older than N days.",
+      "description": "Drop records older than N days.",
       "maximum": 36500,
       "minimum": 1,
       "title": "Max post age in days (filter)",
       "type": "integer"
     },
     "minScore": {
-      "description": "Drop posts with score below this number.",
+      "description": "Drop records below this score. Applied only when the source exposes a live or explicitly timestamped score; otherwise the run reports metrics_unavailable instead of silently passing/dropping.",
       "maximum": 10000000,
       "minimum": -10000,
       "title": "Min score (filter)",
       "type": "integer"
     },
+    "monitorId": {
+      "description": "Key used to store the onlyNew watermark and seen IDs. Use the same value on every scheduled run of the same monitor.",
+      "editor": "textfield",
+      "title": "Monitor ID",
+      "type": "string"
+    },
+    "onlyNew": {
+      "default": false,
+      "description": "Emit only records newer than the stored watermark for this monitorId. Requires a stable monitorId for scheduled runs.",
+      "title": "Only new since last run",
+      "type": "boolean"
+    },
+    "proxyConfiguration": {
+      "default": {
+        "useApifyProxy": false
+      },
+      "description": "Optional Apify proxy configuration. Live HTML/Redlib/RSS availability varies by IP; residential proxies improve success on datacenter runs.",
+      "editor": "proxy",
+      "title": "Proxy configuration",
+      "type": "object"
+    },
+    "redditOAuthToken": {
+      "description": "Optional user-supplied OAuth Bearer token. Never required; when present, oauth.reddit.com is tried first for live metrics. The actor does not obtain tokens for you.",
+      "editor": "textfield",
+      "isSecret": true,
+      "title": "Optional Reddit OAuth token",
+      "type": "string"
+    },
+    "redlibInstances": {
+      "default": [],
+      "description": "Optional Redlib hostnames to try in order (without https://). Defaults to safereddit.com, redlib.catsarch.com, redlib.perennialte.ch.",
+      "editor": "stringList",
+      "title": "Redlib instances",
+      "type": "array"
+    },
+    "relativeWindow": {
+      "default": "all",
+      "description": "Restrict results to a relative window. Maps to Reddit's t= and Arctic after= filters. Use all for no window.",
+      "enum": [
+        "hour",
+        "day",
+        "week",
+        "month",
+        "year",
+        "all"
+      ],
+      "enumTitles": [
+        "Past hour",
+        "Past day",
+        "Past week",
+        "Past month",
+        "Past year",
+        "All time"
+      ],
+      "title": "Relative time window",
+      "type": "string"
+    },
+    "resolveChallenges": {
+      "default": true,
+      "description": "Allow a best-effort Playwright browser solve when a Redlib instance returns an Anubis challenge. Disable to keep runs HTTP-only.",
+      "title": "Resolve Redlib Anubis challenges",
+      "type": "boolean"
+    },
     "resultLimit": {
-      "default": 500,
-      "description": "Max posts per keyword (1-1000).",
+      "default": 100,
+      "description": "Max posts per keyword (1-1000). Default 100. Source caps are real: RSS 100/request with no pagination, Translate partial 24/page, Redlib 7/page, Arctic 100/page. Fewer results are reported as partial rather than silently truncated.",
       "maximum": 1000,
       "minimum": 1,
       "title": "Result limit per keyword",
       "type": "integer"
+    },
+    "searchComments": {
+      "default": false,
+      "description": "Also search comment bodies via Redlib, with RSS parent-post discovery + hydration as fallback. Emits recordType=comment records.",
+      "title": "Search comments by keyword",
+      "type": "boolean"
     },
     "sort": {
       "default": "relevance",
@@ -86,14 +169,14 @@
     },
     "subredditBlocklist": {
       "default": [],
-      "description": "Drop posts from these subreddits.",
+      "description": "Drop posts/comments from these subreddits.",
       "editor": "stringList",
       "title": "Subreddit blocklist",
       "type": "array"
     },
     "subredditFilter": {
       "default": [],
-      "description": "Only emit posts from these subreddits (without `r/` prefix). Empty = all.",
+      "description": "Only emit posts/comments from these subreddits (with or without `r/`). Empty = all. When set, the engine prefers the subreddit-scoped Translate listing.",
       "editor": "stringList",
       "title": "Subreddit filter (allowlist)",
       "type": "array"

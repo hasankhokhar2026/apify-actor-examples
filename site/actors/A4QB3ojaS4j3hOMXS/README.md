@@ -1,71 +1,163 @@
 # Google Fonts Library Metadata Extractor
 
-Get structured metadata for Google's free, open-source font library instead of reading it off the fonts.google.com catalog by hand. Look a family up by name, pull every family in one of the five categories, or export the whole library at once, with weights, variable-font axes, language subsets, designer credits, and ready-to-paste specimen and CSS embed URLs.
+Get structured metadata for Google's free, open-source font library instead of reading it off the fonts.google.com catalog by hand. Look a family up by name, browse a category, search/filter/sort the whole library, and optionally pull license/attribution plus self-hosting file URLs (woff2, unicode ranges, TTF).
+
+No login, API key, cookie, or proxy configuration is required.
 
 ## What this actor does
 
-- **Three modes:** `byFamily`, `byCategory`, `listAll`
-- **Every family:** weights, style variants, variable-font axes, language subsets, designers
-- **Ranking signals:** popularity and trending positions across the whole library
-- **Ready-to-use URLs:** a specimen page URL and a `css2` embed URL for each family
+- **Four modes:** `byFamily`, `byCategory`, `listAll`, `icons`
+- **Search and filters:** free text, language subsets, designers, variable-only, color-only, brand/Noto flags
+- **Sorting:** catalog order, popularity, trending, date added, last modified, alphabetical (`icons`: popularity or name)
+- **Every family:** weights, style variants, variable-font axes, subsets, designers, popularity/trending, dates
+- **Icons:** Material Icons/Symbols names, codepoints, versions, categories, tags, sizes, supported/unsupported families from one request
+- **Optional license pack:** license id/name/URL, copyright, source repository/commit, source date, languages, unicode coverage, description
+- **Optional self-hosting pack:** full CSS2 URL, woff2 files with unicode ranges, and TTF download URLs
+- **Safe defaults:** missing `families` or `category` fall back to `Roboto` / `Sans Serif`; empty runs are prevented
+- **Typed errors:** `missing_input`, `not_found`, `invalid_category`, `fetch_failed`, `css_failed`
 - **Empty fields are always omitted** — records only contain data that actually exists
 
 ## Output per font family
 
 | Field | Description |
 |---|---|
-| `family` | Font family name (e.g. `Roboto`, `Open Sans`) |
-| `displayName` | A display-friendly variant of the family name, when Google Fonts publishes one separate from `family` |
+| `family` | Canonical family name (e.g. `Roboto`, `Open Sans`) |
+| `displayName` | Display alias published by Google Fonts, when present |
 | `category` | `Sans Serif` / `Serif` / `Display` / `Handwriting` / `Monospace` |
-| `stroke` | Stroke classification when present (e.g. `Sans Serif`, `Slab Serif`) |
+| `stroke` | Stroke classification when present |
 | `classifications` | Secondary tags (e.g. `Display`, `Monospace`, `Symbols`) |
-| `subsets` | Language / script subsets (e.g. `latin`, `cyrillic`, `greek`, `vietnamese`) |
+| `subsets` | All subsets, including the synthetic `menu` subset |
+| `languageSubsets` | `subsets` with the synthetic `menu` entry removed |
+| `hasMenuSubset` | `true` when the family has the synthetic `menu` subset |
 | `weights` | Distinct numeric weights (e.g. `["100","400","700","900"]`) |
-| `variants` | All style variants incl. italics (e.g. `["400","400i","700"]`) |
+| `variants` | Every shipped style, including italics (e.g. `400`, `400i`) |
 | `axes` | Variable-font axes: `[{tag, min, max, defaultValue}]` |
+| `axisDetails` | Axis display names/descriptions joined from the catalog registry |
 | `isVariable` | `true` when the family ships a variable font |
-| `designers` | List of designer / foundry names |
-| `popularity` | Popularity rank across the library (lower = more popular) |
-| `trending` | Trending rank across the library |
-| `dateAdded` | Date the family was first added to Google Fonts |
-| `lastModified` | Date the family was last updated |
+| `designers` | Designer / foundry names |
+| `popularity` | Sparse popularity rank (lower = more popular) |
+| `trending` | Sparse growth/trend rank (lower = more trending) |
+| `defaultSort` | Undocumented dense catalog order (1..N) |
+| `dateAdded` | Catalog date the family was added/re-introduced |
+| `lastModified` | Catalog date the family was last updated |
 | `primaryScript` / `primaryLanguage` | Primary script / language when set |
 | `colorCapabilities` | Color-font tech when present (e.g. `COLRV1`, `OTSVG`) |
-| `isOpenSource` | `true` when Google Fonts marks the family open source in its metadata (true on virtually every family, since the whole library is open source) |
-| `isBrandFont` | `true` when Google Fonts flags this family as a brand font |
-| `isNoto` | `true` when the family is part of the Noto font collection |
+| `isOpenSource` | `true` when Google Fonts marks the family open source |
+| `isBrandFont` | Upstream flag; in the current catalog it equals `isNoto` (not a generic brand filter) |
+| `isNoto` | `true` for the Noto collection |
 | `googleFontsUrl` | Specimen page, e.g. `https://fonts.google.com/specimen/Open+Sans` |
-| `cssUrl` | Embed stylesheet, e.g. `https://fonts.googleapis.com/css2?family=Open+Sans` |
+| `cssUrl` | Backward-compatible simple CSS2 URL (weight 400 only) |
+| `css2UrlFull` | Full CSS2 URL covering every weight/style/variable axis |
 | `recordType` | `font` |
 | `scrapedAt` | ISO-8601 timestamp of the scrape |
 
-## Output per failed lookup (recordType = `error`)
+## Output per icon (`mode = "icons"`)
 
-When a requested family name in `families` doesn't match any family in the library (mode=`byFamily`), the actor emits a typed error record instead of silently skipping it:
+`icons` reads `https://fonts.google.com/metadata/icons?incomplete=true` exactly once; there are no per-icon requests and no font-family records in this mode. The endpoint currently reports about 6,139 icons across 9 Material Icons/Symbols families.
 
 | Field | Description |
 |---|---|
-| `error` | Short error type, e.g. `not_found` |
+| `name` | Icon name (e.g. `10k`) |
+| `codepoint` | Decimal codepoint |
+| `codepointHex` | Unicode notation (e.g. `U+E951`) |
+| `version` | Upstream icon version |
+| `popularity` | Sparse icon popularity rank (lower = more popular) |
+| `categories` | Upstream categories |
+| `tags` | Search tags |
+| `sizesPx` | Available pixel sizes |
+| `unsupportedFamilies` | Material families that do not include this icon |
+| `supportedFamilies` | Material families that include this icon |
+| `recordType` | `icon` |
+| `scrapedAt` | ISO-8601 timestamp of the scrape |
+
+`maxItems` also applies to icons (default and maximum 5,000), so a full icon run returns at most 5,000 records. Use `search` and `sortBy` to target the rest.
+
+## Optional license & attribution fields (`includeLicense`)
+
+License enrichment uses three cookieless sources in order: the per-family metadata endpoint, `METADATA.pb` in the `google/fonts` repository, then the download manifest. The main catalog's `languages` array is always empty upstream, so `languages` is populated only by the per-family enrichment path.
+
+| Field | Description |
+|---|---|
+| `license` | `ofl`, `apache2`, or `ufl` |
+| `licenseName` | Human-readable license name |
+| `licenseUrl` | Official license URL |
+| `licenseSource` | Where the license came from: `per_family`, `metadata_pb`, or `download_list` |
+| `copyright` | Unique copyright line(s) |
+| `sourceRepositoryUrl` | Upstream source repository from `METADATA.pb` |
+| `sourceCommit` | Source repository commit when published |
+| `sourceDateAdded` | Source-repository date; distinct from catalog `dateAdded` |
+| `languages` | Language codes from the per-family endpoint |
+| `languageCount` | Number of language codes |
+| `unicodeCoverage` | Subset -> decimal codepoint ranges |
+| `description` | Family description as plain text |
+| `minisiteUrl` | Family minisite when published |
+
+## Optional self-hosting fields (`includeFiles`)
+
+| Field | Description |
+|---|---|
+| `fontFiles` | `[{url, format, style, weight, stretch, unicodeRange, subset}]` parsed from CSS2 |
+| `fileCount` | Total CSS2 `@font-face` files before capping |
+| `filesTruncated` | `true` when `fileCount` exceeded `maxFilesPerFamily` |
+| `ttfFiles` | `[{url, filename, format: "ttf"}]` from the download manifest |
+| `ttfFileCount` | Total TTF files before capping |
+| `ttfFilesTruncated` | `true` when the TTF list exceeded `maxFilesPerFamily` |
+
+CSS2 is user-agent dependent. The actor requests woff2 with a modern Chrome UA and retries once with a Safari UA when Chrome is served TTF only (for example Chiron Sung HK). Legacy user agents would receive TTF/WOFF without unicode ranges, so the actor does not expose a user-agent input. HTTP errors are surfaced as `css_failed` error records instead of crashing the run.
+
+CJK families can be large: M PLUS 1p emits 882 CSS2 blocks, Noto Sans SC 101, Noto Sans JP 124, Noto Sans HK 109, and Chiron Sung HK 236. `maxFilesPerFamily` defaults to 200 and is capped at 1,000; when a family exceeds the cap, `filesTruncated` / `ttfFilesTruncated` is `true` and `fileCount` / `ttfFileCount` still report the uncapped total.
+
+## Output per error (`recordType = "error"`)
+
+| Field | Description |
+|---|---|
+| `error` | `missing_input`, `not_found`, `invalid_category`, `fetch_failed`, or `css_failed` |
 | `message` | Human-readable explanation |
-| `input` | The family name that didn't match |
-| `sourceUrl` | The Google Fonts metadata endpoint queried |
+| `input` | The input value that caused the error |
+| `sourceUrl` | Endpoint involved |
 | `scrapedAt` | ISO-8601 timestamp |
 
 ## Input
 
 | Field | Type | Default | Description |
 |---|---|---|---|
-| `mode` | string | `byFamily` | `byFamily` / `byCategory` / `listAll` |
-| `families` | array | `["Roboto"]` | Exact family names (mode=byFamily), case-insensitive |
+| `mode` | string | `byFamily` | `byFamily` / `byCategory` / `listAll` / `icons` |
+| `families` | array | `["Roboto"]` | Family names (mode=byFamily), case-insensitive; `displayName` aliases work |
 | `category` | string | `Sans Serif` | One category (mode=byCategory) |
-| `maxItems` | integer | `50` | Hard cap on emitted records (1–2000) |
+| `maxItems` | integer | `5000` | Hard cap on records (1–5000); the font catalog fits, the ~6,139-icon endpoint can truncate |
+| `search` | string | empty | Free-text search over names, designers, subsets, classifications, category; in `icons` mode over name/categories/tags/families |
+| `subsets` | array | `[]` | Keep families that include every listed subset |
+| `designers` | array | `[]` | Keep families matching every listed designer/foundry |
+| `variableOnly` | boolean | `false` | Keep only variable fonts |
+| `colorOnly` | boolean | `false` | Keep only color fonts |
+| `brandOnly` | boolean | `false` | Keep only families with the upstream `isBrandFont` flag (currently equals `isNoto`) |
+| `notoOnly` | boolean | `false` | Keep only Noto families |
+| `sortBy` | string | `default` | `popularity` / `trending` / `dateAdded` / `lastModified` / `name` / `defaultSort`; `icons` mode uses `popularity` or `name` |
+| `includeLicense` | boolean | `byFamily`: on, otherwise off | No schema default; omitted uses the mode default, explicit `false` disables |
+| `includeFiles` | boolean | `byFamily`: on, otherwise off | No schema default; omitted uses the mode default, explicit `false` disables |
+| `maxFilesPerFamily` | integer | `200` | Cap applied separately to CSS2 and TTF files (1–1000) |
 
 ### Example: look up specific families
 
 ```json
 {
   "mode": "byFamily",
-  "families": ["Roboto", "Open Sans", "Playfair Display", "JetBrains Mono"]
+  "families": ["Roboto", "Open Sans", "UNAL Ancizar Sans", "Playfair Display"]
+}
+```
+
+`UNAL Ancizar Sans` resolves through its `displayName` alias to the canonical `Ancizar Sans` family.
+
+### Example: search variable color fonts
+
+```json
+{
+  "mode": "listAll",
+  "search": "sans",
+  "variableOnly": true,
+  "colorOnly": true,
+  "sortBy": "popularity",
+  "maxItems": 100
 }
 ```
 
@@ -75,44 +167,80 @@ When a requested family name in `families` doesn't match any family in the libra
 {
   "mode": "byCategory",
   "category": "Monospace",
+  "maxItems": 500
+}
+```
+
+### Example: list Material icon metadata
+
+```json
+{
+  "mode": "icons",
+  "search": "home",
+  "sortBy": "popularity",
   "maxItems": 100
 }
 ```
 
-### Example: export the whole library
+`icons` makes one request to `https://fonts.google.com/metadata/icons?incomplete=true` and emits icon records only.
+
+### Example: export the whole library with license and files
 
 ```json
 {
   "mode": "listAll",
-  "maxItems": 2000
+  "maxItems": 5000,
+  "includeLicense": true,
+  "includeFiles": true,
+  "maxFilesPerFamily": 100
 }
 ```
+
+For a full-library run, license/file enrichment is off unless explicitly enabled: one request per family would add thousands of requests. Use `byFamily` for the richest per-family packs.
 
 ## Use cases
 
 - **Design systems** — build a searchable, filterable font picker from live Google Fonts data
-- **Web performance** — pull the exact `css2` URLs and weights you need before self-hosting
-- **Typography research** — analyse the library by category, popularity, or variable-font support
-- **App onboarding** — offer users a curated font list without hand-maintaining metadata
-- **SEO / content tooling** — enrich articles and galleries with accurate font specifications
+- **Self-hosting / GDPR reviews** — pull license, copyright, source repo, woff2/unicode-range, and TTF URLs
+- **Web performance** — request only the weights/styles and file URLs you need before self-hosting
+- **Typography research** — analyse the library by category, popularity, trend, variable/color support, or date
+- **Icon catalogs** — export Material icon names, codepoints, categories, tags, sizes, and family support
 - **Localization** — filter families by language subset (Cyrillic, Greek, Vietnamese, and more)
 
 ## FAQ
 
-**Where does the data come from?**  The official public Google Fonts metadata catalog that powers [fonts.google.com](https://fonts.google.com). No login or API key is required.
+**Where does the data come from?** The public Google Fonts metadata catalog that powers [fonts.google.com](https://fonts.google.com), plus the public per-family metadata endpoint, the `google/fonts` repository, the public download manifest, and (for `icons`) the public icon metadata endpoint. No login or API key is required.
 
-**How many fonts are covered?**  The entire library — over 1,900 families and growing. `listAll` returns all of them (up to `maxItems`).
+**How many fonts are covered?** The entire library — about 1,959 families today. `listAll` returns all of them up to `maxItems` (default 5,000; maximum 5,000). `icons` mode covers a separate Material icon catalog of about 6,139 icons, also capped by `maxItems`.
 
-**What are the categories?**  `Sans Serif`, `Serif`, `Display`, `Handwriting`, and `Monospace`.
+**What are the categories?** `Sans Serif`, `Serif`, `Display`, `Handwriting`, and `Monospace`.
 
-**What's the difference between `weights` and `variants`?**  `weights` lists the distinct numeric weights (e.g. `400`, `700`). `variants` lists every shipped style, including italics (e.g. `400`, `400i`, `700`, `700i`).
+**What's the difference between `weights` and `variants`?** `weights` lists distinct numeric weights (e.g. `400`, `700`). `variants` lists every shipped style, including italics (e.g. `400`, `400i`, `700`, `700i`).
 
-**What are `axes`?**  For variable fonts, the adjustable axes — such as `wght` (weight), `wdth` (width), `slnt` (slant), or `opsz` (optical size) — each with its `min`, `max`, and `defaultValue`.
+**What are `axes` and `axisDetails`?** `axes` lists the variable-font controls (`wght`, `wdth`, `slnt`, `opsz`, and custom tags) with `min`, `max`, and `defaultValue`. `axisDetails` adds the catalog's display name and description for those axis tags.
 
-**How do I embed a font?**  Use the `cssUrl` in a `<link>` tag, then reference the `family` in your CSS `font-family`. You can add `:wght@...` to the URL to request specific weights.
+**What's the difference between `cssUrl` and `css2UrlFull`?** `cssUrl` is the legacy family-only URL, which serves only weight 400. `css2UrlFull` encodes every shipped weight/style and variable axis range, e.g. `family=Roboto:ital,wdth,wght@0,75..100,100..900;1,75..100,100..900&display=swap`.
 
-**Are these fonts free to use?**  Yes. Every Google Font is open source (licensed under the SIL Open Font License or Apache License 2.0) and free for commercial and personal use.
+**Does `includeFiles` return both woff2 and TTF?** Yes. `fontFiles` comes from CSS2 and contains woff2 URLs with unicode ranges. `ttfFiles` comes from the download manifest. Both are capped by `maxFilesPerFamily`.
 
-**How fresh is the data?**  Live — the actor fetches the current metadata document on every run, so new families and updates appear as soon as Google publishes them.
+**Why is `menu` in `subsets`?** It is a synthetic subset Google adds to every family; `languageSubsets` removes it. About 110 menu-only families have no unicode-range/coverage data.
 
-**Is this affiliated with Google?**  No. This is an independent, third-party actor that reads Google Fonts' publicly available library metadata and is not affiliated with or endorsed by Google.
+**Is `isBrandFont` a generic brand filter?** No. In the current catalog it is true only for the Noto families and equals `isNoto`. Google Sans and TikTok Sans are `false`.
+
+**Are these fonts free to use?** Yes. The catalog currently contains about 1,919 SIL Open Font License families, 35 Apache-2.0 families, and 5 Ubuntu Font Licence families. Use `includeLicense` for exact per-family data.
+
+**What does the license enrichment cost?** One to three cookieless requests per family. It is enabled by default for `byFamily` and disabled by default for `byCategory`/`listAll`/`icons`. The schema intentionally has no `default` for `includeLicense`/`includeFiles`, so an omitted value can use the mode default; an explicit `false` always disables enrichment.
+
+**Why is `languages` empty or missing?** The main catalog's `languages` array is empty for all 1,959 families upstream. The actor therefore does not publish it from the catalog. `includeLicense` enrichment fetches the per-family endpoint (one request per family) and writes `languages` there; even then, a few families (Noto Color Emoji, Noto Emoji, Allkin) have no language list.
+
+**Why are `popularity` and `trending` not 1..N?** They are sparse snapshot ranks from an opaque upstream universe, not catalog positions. In the current snapshot `popularity` has gaps and values above 2,000, and `trending` has hundreds of gaps and values above 2,400; both change day to day. Use `defaultSort` or `name` when you need deterministic ordering, and treat the ranks as relative signals only.
+
+**Why do some file lists stop at 200?** `maxFilesPerFamily` defaults to 200. Large CJK families emit hundreds of CSS2 blocks (M PLUS 1p: 882), so the list is capped and `filesTruncated` / `ttfFilesTruncated` is set while `fileCount` / `ttfFileCount` report the full total. Raise the cap to 1,000 to keep more. CSS2 output is also user-agent dependent; the actor uses Chrome with a Safari retry so woff2 is returned where possible.
+
+**How does `icons` mode work?** It fetches `https://fonts.google.com/metadata/icons?incomplete=true` once and emits one record per icon with codepoint, version, popularity, categories, tags, sizes, and supported/unsupported Material families. It does not fetch font-family metadata and does not make per-icon requests. Because the endpoint has about 6,139 icons and `maxItems` is capped at 5,000, use `search`/`sortBy` to target subsets.
+
+**How fresh is the data?** Live — the actor fetches the current metadata document on every run, so new families and updates appear as soon as Google publishes them.
+
+**What are the known upstream limits?** The metadata endpoints (including `metadata/icons`) are undocumented and have no SLA; `popularity`/`trending` are sparse ranks with gaps; main metadata `languages` is always empty (the per-family endpoint is used instead); `isBrandFont` exactly equals `isNoto` in the current catalog and is not a generic brand flag; `dateAdded` is the catalog date while `sourceDateAdded` is the source-repository date; CSS2 output is user-agent and CJK-payload dependent; and the upstream `size` field is not a downloadable file size, so it is not published.
+
+**Is this affiliated with Google?** No. This is an independent, third-party actor that reads Google Fonts' publicly available metadata and is not affiliated with or endorsed by Google.

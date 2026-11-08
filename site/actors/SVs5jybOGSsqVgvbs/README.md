@@ -1,14 +1,19 @@
-# X Video Subtitle & Caption Transcript Converter
+# Twitter (X) Video Transcript Scraper — SRT/VTT, Captions & AI
 
 Public X (Twitter) videos either already carry captions or need speech-to-text to become searchable text. This actor turns either case into a clean, timestamped transcript — reusing the video's own captions when they exist, and running AI speech-to-text when they don't — and can hand back ready-to-use SRT or WebVTT subtitle files, not just raw text. No login or cookies are needed.
 
 ## What this actor does
 
-- **Captions first:** uses the video's own captions when the uploader or X provides them
+- **Many input forms:** post links, `/video/N` links, bare post IDs, profile links and `@handles`
+- **Captions first:** uses the video's own captions when the uploader or X provides them, and labels them `manual` or `auto-generated`
 - **Whisper AI fallback:** automatically transcribes videos without captions, in any language
+- **Multi-video posts:** one row per video with `videoIndex`
+- **Quotes and reposts:** transcribes the quoted video when a quote post has none, and the original video of a repost while preserving `quotedTweetId` / `retweetedTweetId`
+- **Audio-aware AI path:** prefers an audio-only HLS rendition, then the lowest-bitrate MP4, with byte and duration caps
 - **Three granularities:** raw segments, sentences, or real per-word timings when available
-- **Five output formats:** timestamped segments, full text, both, SRT or WebVTT — with SRT/VTT files saved for download
-- **Explicit outcomes:** every post produces a row; posts with no transcript get `transcriptAvailable: false` and a clear message
+- **Five output formats:** timestamped segments, full text, both (which now also includes SRT + VTT), SRT or WebVTT — with SRT/VTT files saved for download
+- **Transcript extras:** `wordCount`, `timestampedText` and RAG-ready `chunks`
+- **Typed outcomes:** every input produces a row; failures carry `errorCode` and `retryable`, and a run summary is written to the key-value store
 - **Empty fields are omitted**
 
 ## Output per transcript
@@ -17,11 +22,22 @@ Each row has a `type`: `video transcript` when a transcript was produced, otherw
 
 | Field | Description |
 |---|---|
-| `tweetUrl`, `tweetId` | Post URL and ID |
-| `authorUsername`, `authorName`, `authorFollowers` | Post author details (when Include post details is on) |
-| `tweetText`, `publishedAt` | Post text and publish time (when Include post details is on) |
+| `tweetUrl`, `tweetId` | Post URL and ID (the requested post) |
+| `videoIndex` | 0-based index of the video inside the post |
+| `videoSource` | `post`, `quotedTweet` or `retweetedTweet` |
+| `transcriptTweetId` | Post that actually owns the transcribed video (present when it differs) |
+| `mediaId`, `mediaDurationSeconds`, `mediaSource` | Media identity, duration and the rendition used for AI (`mp4`, `hls`, `hls-audio`, `yt-dlp`) |
+| `metadataSource` | Richest resolver that supplied the post metadata (`rsc`, `graphql`, `syndication`, `fxtwitter`) |
+| `authorUsername`, `authorName`, `authorId`, `authorFollowers` | Post author details (when Include post details is on) |
+| `authorBio`, `authorProfileImageUrl`, `authorVerified`, `authorVerifiedType`, `authorFollowing`, `authorPostCount`, `authorLocation`, `authorProtected`, `authorCreatedAt` | Full author metadata (when Include post details is on) |
+| `tweetText`, `publishedAt` | Full post text and publish time (when Include post details is on) |
+| `likeCount`, `replyCount`, `retweetCount`, `quoteCount`, `bookmarkCount`, `viewCount` | Engagement counters |
+| `conversationId`, `inReplyToTweetId`, `inReplyToUsername`, `isReply`, `isQuote`, `isRetweet`, `isNoteTweet` | Conversation/quote/repost metadata |
+| `hashtags`, `mentions`, `urls`, `possiblySensitive`, `place`, `poll`, `card`, `postedFrom` | Entities and optional post metadata |
+| `quotedTweetId`, `quotedTweet`, `retweetedTweetId`, `retweetedTweet` | Quoted/reposted post details |
 | `engagementRate` | Derived engagement in percent (when Include post details is on) |
-| `language` | Detected or requested language code |
+| `language` | Caption language or detected/requested spoken language |
+| `captionSource`, `captionLanguage`, `captionTrackName` | Native caption transparency: `manual` / `auto-generated`, track language and name |
 | `transcriptionMethod` | `captions`, `ai` or `none` |
 | `transcriptAvailable` | `true` when a transcript was produced |
 | `modelUsed` | Whisper model actually used for AI transcripts |
@@ -29,32 +45,65 @@ Each row has a `type`: `video transcript` when a transcript was produced, otherw
 | `segmentGranularity` | `segment`, `sentence` or `word` — granularity actually applied |
 | `granularityRequested` | Present when the requested granularity could not be applied |
 | `granularityNote` | Explanation when a granularity fell back to raw segments |
-| `segmentCount` | Number of timed segments |
+| `segmentCount`, `wordCount` | Number of timed segments and words |
 | `segments` | `[{index, start, end, text}]`; includes real `words[{word, start, end}]` timings when available |
 | `fullTranscript` | Joined transcript text |
+| `timestampedText` | One line per segment: `[HH:MM:SS.mmm --> HH:MM:SS.mmm] text` |
+| `chunks` | RAG-ready chunks: `[{index, start, end, text, wordCount}]` |
 | `srt`, `srtUrl` | SRT subtitle text and a signed download link for the `.srt` file |
 | `vtt`, `vttUrl` | WebVTT subtitle text and a signed download link for the `.vtt` file |
-| `message` | Explanation when no transcript could be produced |
+| `errorCode`, `retryable`, `message` | Typed status reason for `status` rows |
+| `spaceId` | Present on `spaces_not_supported` status rows |
 | `collectedAt` | UTC timestamp |
 
-Unavailable transcripts are `status` rows with `transcriptAvailable: false`, `transcriptionMethod: "none"` and a `message` explaining the reason. When the failure happens while resolving a profile input (instead of a post), the row carries `profileUrl` (and `profileUsername`, when known) instead of `tweetUrl`/`tweetId`.
+Unavailable transcripts are `status` rows with `transcriptAvailable: false`, `transcriptionMethod: "none"` and a typed `errorCode`. When the failure happens while resolving a profile input (instead of a post), the row carries `profileUrl` (and `profileUsername`, when known) instead of `tweetUrl`/`tweetId`.
+
+### Error codes
+
+| `errorCode` | Meaning | Retryable |
+|---|---|---|
+| `no_input` | No post or profile input was provided | no |
+| `invalid_url` | The value is not a post link/ID | no |
+| `invalid_profile` | The value is not a profile link/username | no |
+| `not_found` | Post deleted, hidden or never existed | no |
+| `protected` | Post is protected; only approved followers can view it | no |
+| `spaces_not_supported` | Input is an X Space; audio Spaces are not transcribed | no |
+| `blocked` | X temporarily limited the request | yes |
+| `no_video` | Post, quote and repost have no video/GIF | no |
+| `no_captions` | Captions-only mode but no native captions exist | no |
+| `no_audio` | GIF/silent media with no audio stream | no |
+| `no_speech` | Audio is music-only or contains no speech | no |
+| `media_too_large` | Video exceeds `maxDurationSeconds` or `maxDownloadMb` | no |
+| `transcription_failed` | Download/transcription failed for another reason | yes |
+| `profile_not_found` | Profile could not be loaded | yes |
+| `profile_no_video` | Profile's recent posts have no video | no |
+| `profile_protected` | Profile is protected; its posts are follower-only | no |
+
+The actor also writes a `RUN_SUMMARY` key-value record (and sets the status message) with requested/transcript/status/caption/AI counts and counts per `errorCode`.
 
 ## Input
 
 | Field | Type | Default | Description |
 |---|---|---|---|
-| `postUrls` | array | – | Required. Post links (`x.com` or `twitter.com`) that contain a video or GIF. Profile links or usernames are accepted too — the actor transcribes the profile's latest video post |
-| `profileUrls` | array | – | Additional profiles to transcribe (latest video post each) |
+| `postUrls` | array | – | Post links or bare post IDs. Accepts `x.com`/`twitter.com`, `/i/status`, `/i/web/status`, `/video/N` and numeric IDs. Profile links/usernames here are treated as profile inputs |
+| `profileUrls` | array | – | Profiles to transcribe (`NASA`, `@NASA`, or `https://x.com/NASA`). Works without `postUrls` |
+| `maxVideosPerProfile` | integer | `10` | Recent video posts to transcribe per profile |
+| `maxDurationSeconds` | integer | `1200` | AI transcription duration cap; longer videos get `media_too_large` (native captions still work) |
+| `maxDownloadMb` | integer | `200` | Media download cap for AI transcription |
 | `transcriptionMethod` | string | `auto` | `auto` (captions first, AI fallback), `captions` (skip videos without captions), `ai` (always Whisper) |
 | `whisperModel` | string | `base` | `tiny`, `base`, `small`, `medium`, `large-v2` |
-| `language` | string | – | Optional spoken-language hint for AI (e.g. `en`, `es`, `ur`); ignored for native captions |
+| `language` | string | – | Language hint; native captions prefer this track, AI uses it as a spoken-language hint |
 | `outputFormat` | string | `segments` | `segments`, `fullText`, `both`, `srt`, `vtt` |
 | `segmentGranularity` | string | `segment` | `segment` (raw cues), `sentence`, `word` (only when real word timings exist) |
 | `includeWordTimestamps` | boolean | `false` | Add real per-word start/end times to AI segments |
-| `includeTweetMetadata` | boolean | `true` | Attach author, post text and publish date to each row |
+| `includeTweetMetadata` | boolean | `true` | Attach full post and author metadata to each row |
+| `includeQuotedVideo` | boolean | `true` | Transcribe the quoted video when the post itself has none |
+| `enableYtdlpFallback` | boolean | `false` | Optional yt-dlp fallback when direct HTTP download/transcription fails |
 | `proxyConfiguration` | object | – | Optional, for large or repeated runs |
 
-### Example: captions first, AI fallback
+At least one of `postUrls` or `profileUrls` is required at runtime; neither is required by the schema so profile-only runs work.
+
+### Example: captions first, AI fallback, segments + SRT/VTT
 
 ```json
 {
@@ -64,17 +113,26 @@ Unavailable transcripts are `status` rows with `transcriptAvailable: false`, `tr
 }
 ```
 
-### Example: always use AI with an English hint
+### Example: profiles only, capped
+
+```json
+{
+  "profileUrls": ["NASA", "https://x.com/SpaceX"],
+  "maxVideosPerProfile": 5,
+  "maxDurationSeconds": 600,
+  "maxDownloadMb": 100
+}
+```
+
+### Example: bare IDs and `/video/N`
 
 ```json
 {
   "postUrls": [
-    "https://x.com/elonmusk/status/1519480761749016577",
-    "NASA"
+    "2107095768821576019",
+    "https://x.com/elonmusk/status/1519480761749016577/video/1"
   ],
-  "transcriptionMethod": "ai",
-  "whisperModel": "small",
-  "language": "en"
+  "transcriptionMethod": "captions"
 }
 ```
 
@@ -88,17 +146,6 @@ Unavailable transcripts are `status` rows with `transcriptAvailable: false`, `tr
 }
 ```
 
-### Example: word-level timestamps
-
-```json
-{
-  "postUrls": ["https://x.com/NASA/status/2107095768821576019"],
-  "transcriptionMethod": "ai",
-  "segmentGranularity": "word",
-  "includeWordTimestamps": true
-}
-```
-
 ### Example record
 
 ```json
@@ -106,14 +153,27 @@ Unavailable transcripts are `status` rows with `transcriptAvailable: false`, `tr
   "type": "video transcript",
   "tweetUrl": "https://x.com/NASA/status/2107095768821576019",
   "tweetId": "2107095768821576019",
+  "videoIndex": 0,
+  "videoSource": "post",
   "authorUsername": "NASA",
   "authorName": "NASA",
+  "authorFollowers": 92276527,
+  "tweetText": "It's World Space Week!",
+  "publishedAt": "2026-10-05T13:09:13+00:00",
+  "likeCount": 1234,
+  "replyCount": 56,
+  "retweetCount": 78,
+  "quoteCount": 9,
+  "bookmarkCount": 10,
+  "viewCount": 100000,
   "language": "en",
-  "transcriptionMethod": "ai",
+  "captionSource": "manual",
+  "captionLanguage": "en",
+  "transcriptionMethod": "captions",
   "transcriptAvailable": true,
-  "modelUsed": "base",
   "segmentGranularity": "segment",
   "segmentCount": 1,
+  "wordCount": 21,
   "segments": [
     {
       "index": 0,
@@ -123,10 +183,36 @@ Unavailable transcripts are `status` rows with `transcriptAvailable: false`, `tr
     }
   ],
   "fullTranscript": "One, booster ignition, and liftoff, the crew of Artemis II, now bound for the moon, humanity's next great voyage begins.",
-  "publishedAt": "2026-10-05T13:09:13+00:00",
+  "timestampedText": "[00:00:00.000 --> 00:00:11.000] One, booster ignition, and liftoff, the crew of Artemis II, now bound for the moon, humanity's next great voyage begins.",
+  "chunks": [
+    {
+      "index": 0,
+      "start": 0.0,
+      "end": 11.0,
+      "text": "One, booster ignition, and liftoff, the crew of Artemis II, now bound for the moon, humanity's next great voyage begins.",
+      "wordCount": 21
+    }
+  ],
   "collectedAt": "2026-10-06T18:54:33+00:00"
 }
 ```
+
+## SRT/VTT downloads and multi-video posts
+
+SRT and VTT exports are stored in the run's key-value store as `transcript_<tweetId>_<videoIndex>.<fmt>`, so multiple videos in one post never overwrite each other. The row carries both the subtitle text (`srt`/`vtt`) and a signed download URL (`srtUrl`/`vttUrl`) when the storage returns one. In local runs the URL may be a `file://` path; cloud runs return a signed public URL.
+
+The `srtUrl`/`vttUrl` links point at the run's default (unnamed) key-value store, so they follow that run store's retention policy and are convenience links rather than permanent hosting. The complete SRT/VTT text always remains in the dataset row (`srt`, `vtt`); persist the dataset if you need durable copies, or copy the exports to a named store.
+
+## Resolution and reliability
+
+The actor tries the richest cookieless source first and degrades gracefully:
+
+1. **RSC SSR** on `x.com` (full text, all counts, author bio/followers, quote/repost originals)
+2. **Guest GraphQL** with the exact query id and variables the RSC page used (including the relay-provider variables X validates)
+3. **Syndication CDN** (fast, no auth, but truncated long text and missing counts — used only to fill gaps)
+4. **FxTwitter** (third-party last resort for identity/text basics)
+
+No cookies, login, browser or proxy are required. Proxies are optional for large or repeated runs.
 
 ## Whisper models and memory
 
@@ -138,7 +224,7 @@ Unavailable transcripts are `status` rows with `transcriptAvailable: false`, `tr
 | `medium` | Slow | High | 4096 MB |
 | `large-v2` | Slowest | Best | 8192 MB |
 
-Long videos are split into 10-minute chunks automatically, so there is no video length limit. The actor runs with 8192 MB by default and never below 2048 MB. If the selected model does not fit the available memory, it automatically uses the next smaller model and records the substitution in `modelNote` instead of crashing. Caption-only runs have no meaningful memory requirement.
+Long videos are split into 10-minute chunks automatically. The actor runs with 8192 MB by default and never below 2048 MB. If the selected model does not fit the available memory, it automatically uses the next smaller model and records the substitution in `modelNote` instead of crashing. Caption-only runs have no meaningful memory requirement.
 
 ## Use cases
 
@@ -147,26 +233,31 @@ Long videos are split into 10-minute chunks automatically, so there is no video 
 - **Research** — build text corpora from public video content for analysis
 - **Newsrooms** — quote-check and index video statements quickly
 - **Podcast and clip workflows** — repurpose spoken content into articles or show notes
+- **RAG / AI pipelines** — use `chunks` and `timestampedText` directly
 - **Social listening** — combine transcripts with engagement data to track narratives
 
 ## FAQ
 
 **Do I need an account or cookies?** No. There is no cookie input; public posts, captions and media are read without login.
 
-**What happens when a video has no captions?** With `transcriptionMethod: auto` (the default) the actor transcribes the audio with Whisper, so you still get a transcript. With `captions` it emits a row with `transcriptAvailable: false` and a message.
+**What happens when a video has no captions?** With `transcriptionMethod: auto` (the default) the actor transcribes the audio with Whisper, so you still get a transcript. With `captions` it emits a `no_captions` status row.
 
-**Can I transcribe multiple videos in one run?** Yes — add links to `postUrls`, or point the actor at profiles and it transcribes the latest video post of each.
+**Can I transcribe multiple videos in one run?** Yes — add links/IDs to `postUrls`, or point the actor at profiles. Multi-video posts produce one row per video with `videoIndex`.
 
-**Which output format should I choose?** `segments` for timestamped lines, `fullText` for one clean block of text, `both` for both, and `srt`/`vtt` when you need subtitle files (both the subtitle text and a signed download link are returned).
+**Does it work with quote posts and reposts?** Yes. A quote post with no video of its own transcribes the quoted video (`includeQuotedVideo`, default on) and records `quotedTweetId`. A repost transcribes the original video and records `retweetedTweetId`.
+
+**Which output format should I choose?** `segments` for timestamped lines, `fullText` for one clean block of text, `both` for segments + full text + SRT/VTT, and `srt`/`vtt` when you only need subtitle files. Subtitle text and a download link are returned.
 
 **When does word-level granularity work?** Word rows are emitted only when real per-word timings exist — Whisper can produce them, and some X captions include them. When they are missing, the row falls back to raw segments and explains why in `granularityNote`. Timings are never invented.
 
 **Can I transcribe videos in other languages?** Yes — native captions work in any language X provides them; for AI, add a language hint (for example `es`, `fr`, `ur`) or leave it empty to detect automatically.
 
-**Does this support Twitter Spaces?** No — this actor handles video and GIF posts only, not live audio Spaces.
+**What are the limits?** AI transcription skips videos longer than `maxDurationSeconds` (default 20 minutes) and stops downloads above `maxDownloadMb` (default 200 MB) with a `media_too_large` status. Native captions are still returned for long videos.
 
-**Why is a row missing `segments` or `fullTranscript`?** `outputFormat` controls which fields are filled, and unavailable transcripts never contain transcript fields — they are `status` rows with a message.
+**Does this support Twitter Spaces?** No — Space links produce a typed `spaces_not_supported` status row. This actor handles video and GIF posts only, not live or replay audio Spaces.
 
-**Can a deleted or protected post be transcribed?** No, only videos on public, currently-live posts can be read.
+**Why is a row missing `segments` or `fullTranscript`?** `outputFormat` controls which fields are filled, and unavailable transcripts never contain transcript fields — they are `status` rows with an `errorCode` and message.
+
+**Can a deleted or protected post be transcribed?** No. Deleted or never-existing posts return `not_found`; protected posts and profiles return `protected` / `profile_protected` because only approved followers can read them.
 
 **Is this affiliated with X?** No. This is an independent tool and is not affiliated with, endorsed by, or sponsored by X Corp.

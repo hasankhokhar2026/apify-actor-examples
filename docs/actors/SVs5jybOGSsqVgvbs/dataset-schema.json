@@ -8,6 +8,9 @@
           "authorUsername": {
             "label": "Author"
           },
+          "captionSource": {
+            "label": "Caption Source"
+          },
           "end": {
             "format": "number",
             "label": "End (s)"
@@ -32,6 +35,10 @@
           "tweetUrl": {
             "format": "link",
             "label": "Post URL"
+          },
+          "videoIndex": {
+            "format": "number",
+            "label": "Video #"
           }
         }
       },
@@ -39,8 +46,10 @@
       "transformation": {
         "fields": [
           "tweetUrl",
+          "videoIndex",
           "authorUsername",
           "transcriptionMethod",
+          "captionSource",
           "language",
           "index",
           "start",
@@ -62,9 +71,18 @@
           "authorUsername": {
             "label": "Author"
           },
+          "captionLanguage": {
+            "label": "Caption Language"
+          },
+          "captionSource": {
+            "label": "Caption Source"
+          },
           "collectedAt": {
             "format": "date",
             "label": "Data collected at"
+          },
+          "errorCode": {
+            "label": "Error Code"
           },
           "fullTranscript": {
             "label": "Full Transcript"
@@ -72,15 +90,37 @@
           "language": {
             "label": "Language"
           },
+          "mediaDurationSeconds": {
+            "format": "number",
+            "label": "Video Duration (s)"
+          },
+          "mediaSource": {
+            "label": "Media Source"
+          },
+          "message": {
+            "label": "Message"
+          },
+          "metadataSource": {
+            "label": "Metadata Source"
+          },
           "modelUsed": {
             "label": "Whisper Model"
           },
           "publishedAt": {
             "label": "Published"
           },
+          "quotedTweetId": {
+            "label": "Quoted Post ID"
+          },
+          "retweetedTweetId": {
+            "label": "Retweeted Post ID"
+          },
           "transcriptAvailable": {
             "format": "boolean",
             "label": "Available"
+          },
+          "transcriptTweetId": {
+            "label": "Transcribed Post ID"
           },
           "transcriptionMethod": {
             "label": "Method"
@@ -94,6 +134,17 @@
           },
           "type": {
             "label": "Row Type"
+          },
+          "videoIndex": {
+            "format": "number",
+            "label": "Video #"
+          },
+          "videoSource": {
+            "label": "Video Source"
+          },
+          "wordCount": {
+            "format": "number",
+            "label": "Words"
           }
         }
       },
@@ -103,13 +154,26 @@
           "type",
           "tweetUrl",
           "tweetId",
+          "videoIndex",
+          "videoSource",
           "authorUsername",
           "authorName",
           "language",
+          "captionSource",
+          "captionLanguage",
+          "metadataSource",
+          "mediaSource",
           "transcriptionMethod",
           "transcriptAvailable",
+          "transcriptTweetId",
+          "quotedTweetId",
+          "retweetedTweetId",
+          "wordCount",
+          "mediaDurationSeconds",
           "fullTranscript",
           "modelUsed",
+          "errorCode",
+          "message",
           "publishedAt",
           "collectedAt"
         ]

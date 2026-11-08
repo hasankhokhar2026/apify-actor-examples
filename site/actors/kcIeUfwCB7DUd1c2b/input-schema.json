@@ -3,17 +3,19 @@
   "properties": {
     "captureMode": {
       "default": "postCard",
-      "description": "What to capture. Post links always produce a single post card; this mode applies to profile links.",
+      "description": "What to capture. Post links produce a single post card or a thread image; profile modes apply to profile links (and convert post links to the author profile).",
       "editor": "select",
       "enum": [
         "postCard",
+        "thread",
         "profileHeader",
         "fullProfilePage"
       ],
       "enumTitles": [
         "Post card (one post)",
-        "Profile header (header + first posts)",
-        "Full profile page (scrollable page)"
+        "Thread (root + contiguous author replies)",
+        "Profile header (header only)",
+        "Full profile page (loaded preview)"
       ],
       "prefill": "postCard",
       "title": "Capture mode",
@@ -76,6 +78,17 @@
       "title": "Include post/profile details",
       "type": "boolean"
     },
+    "maxThreadHeight": {
+      "default": 8000,
+      "description": "Maximum thread column height in CSS pixels; the saved image is DPR times taller. The value is clamped so the image cannot exceed the 32,767 px screenshot ceiling (10,922 CSS px at 3x). Taller threads are clipped and the row reports threadComplete=false with the truncation reason.",
+      "maximum": 20000,
+      "minimum": 500,
+      "prefill": 8000,
+      "sectionCaption": "Advanced",
+      "sectionDescription": "Optional settings for large or repeated runs.",
+      "title": "Max thread image height (pixels)",
+      "type": "integer"
+    },
     "postUrls": {
       "description": "Posts to capture as clean post cards. Paste x.com or twitter.com links, bare numeric post IDs, profile links or bare usernames. Any input works in every list.",
       "editor": "stringList",
@@ -91,7 +104,7 @@
       "type": "array"
     },
     "profileUrls": {
-      "description": "Optional. Profiles to capture (header and first posts). Paste profile links, bare usernames, post links or post IDs and the actor routes them to the right capture. Use capture mode to choose header-only or the full page.",
+      "description": "Optional. Profiles to capture. Paste profile links, bare usernames, post links or post IDs and the actor routes them to the right capture. Use capture mode to choose the header only or the loaded profile preview.",
       "editor": "stringList",
       "example": [
         "https://x.com/apify",

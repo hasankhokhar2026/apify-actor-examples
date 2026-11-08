@@ -1,14 +1,20 @@
 {
   "actorOutputSchemaVersion": 1,
-  "description": "Per-post transcript records with timestamped segments, full transcript text, and optional SRT/VTT subtitle output.",
+  "description": "Per-video transcript records with timestamped segments, full transcript text, timestamped text, RAG chunks, SRT/VTT subtitle output and complete post/author metadata. Status records carry a typed errorCode.",
   "properties": {
+    "runSummary": {
+      "description": "Requested/transcript/status/caption/AI counts for the run.",
+      "template": "{{links.apiDefaultKeyValueStoreUrl}}/records/RUN_SUMMARY",
+      "title": "Run summary",
+      "type": "string"
+    },
     "transcripts": {
-      "description": "One row per post, with transcript segments and/or the full transcript text.",
+      "description": "One row per video (and typed status rows), with transcript segments, full transcript, SRT/VTT text and metadata.",
       "template": "{{links.apiDefaultDatasetUrl}}/items",
       "title": "Transcripts",
       "type": "string"
     }
   },
-  "title": "X Video Subtitle & Caption Transcript Converter Output",
+  "title": "Twitter (X) Video Transcript Scraper Output",
   "type": "object"
 }

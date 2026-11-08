@@ -5,17 +5,21 @@ Give this actor a list of keywords, phrases or hashtags and it pulls back matchi
 ## What this actor does
 
 - Runs each entry in `keywords` as its own independent search, so a single job can cover several unrelated topics at once.
-- Targets up to 1,000 posts per keyword via `maxTweets`; how many actually come back depends on how much volume that keyword has on X.
-- Lets you sort by `Top` (most engagement) or `Latest` (newest first), and narrow by language, a date window, retweets/replies, verification, media presence, and minimum like/retweet/reply counts.
-- Stamps every row with `searchTerm` so a multi-keyword run stays easy to split apart afterward.
-- Emits a one-line `status` record for a keyword that returns nothing, rather than leaving you guessing why a keyword is missing from the dataset.
+- Targets up to 1,000 posts per keyword via `maxTweets`; how many actually come back depends on how much volume that keyword has on X. Phase 6 measured **300 unique rows for a 300-row target** (297 s); 500/1,000 are not verified, so treat `maxTweets` as a target, not a promise.
+- Runs several X search lanes (`latest`, `media`, opt-in `media-product`, `links`, optionally `replies`) and walks backwards through `since_time`/`until_time` windows. Guest search has **no cursor paging**; time-window backfill is the only way past the ~20-row page cap (a `product=Media` page can return 41-45 rows).
+- `Latest` returns newest-first. `Top` is **engagement-ranked output, not X's real Top timeline**: X never serves Top to logged-out callers, so the actor collects Latest pages and sorts them by like count client-side.
+- Narrows by language, date window, retweets/replies, verification, media presence, quotes, mentions, author, reply target, conversation id, and minimum like/retweet/reply counts.
+- Supports multi-word `matchMode` (`all`, `any`, `exact`) and `excludeWords`.
+- With `onlyNew` enabled, returns only posts newer than the previous run for the same `monitorId` + keyword. The actor persists a numeric snowflake watermark and an overlap window in the key-value store.
+- Stamps every row with `searchTerm`, `source` (`x-search` or `bing-news`), `sourceLane` (`latest` / `media` / `media-product` / `links` / `replies` / `window` / `bing` / `bing-title-only`) and `degraded`.
+- Emits a typed `status` row for a keyword that needs attention and one `summary` row per run.
 - Drops any field with no data for that post — you will never see `null`, an empty string, or an empty array/object in the output.
 
 ## Output per post
 
-Core fields on every post record: `id`, `url`, `text`, `createdAt`, `language` (when X reports one), and `searchTerm`.
+Core fields on every post record: `id`, `url`, `text`, `createdAt`, `language` (when X reports one), `searchTerm`, `source`, `sourceLane`, `degraded`, `type: "post"` and `collectedAt`.
 
-Engagement comes through `replyCount`, `retweetCount`, `likeCount`, `quoteCount`, `bookmarkCount`, and `viewCount`, plus a computed `engagementRate` — `(likes + retweets + replies + quotes) ÷ followers` — included only once the author's follower count is known and nonzero.
+Engagement comes through `replyCount`, `retweetCount`, `likeCount`, `quoteCount`, `bookmarkCount`, and `viewCount`, plus a computed `engagementRate` — `(likes + retweets + replies + quotes) ÷ followers` — included only once the author's follower count is known and nonzero. Missing retweets/quotes/bookmarks/views/followers/bio are backfilled from the FxTwitter mirror after the X refresh; X values always win and only missing fields are copied.
 
 Post-type context: `isReply`, `isRetweet`, `isQuote`, `isNoteTweet`, and, for replies, `conversationId`, `inReplyToTweetId`, `inReplyToUserId`, `inReplyToUsername`, `parentTweet` (a nested summary of the post being replied to, when available).
 
@@ -24,8 +28,6 @@ Entities parsed out of the text: `hashtags`, `mentions`, `urls`, `cashtags`.
 Attachments and extras, when present: `media` (one entry per photo/video/GIF with `type`, `url`, `previewImageUrl`, pixel dimensions, `durationSeconds`, `viewCount`, `altText`, `variants`), `quotedTweet` / `quotedTweetId`, `poll`, `card`, `possiblySensitive`, `withheldInCountries`, `place`, `postedFrom`, `isEdited`, `editControl` (edit history metadata), `newsActionType`.
 
 The author rides along as a nested `author` object — `id`, `username`, `name`, `bio`, `followers`, `isBlueVerified`, `verified`, `profileImageUrl`, and more.
-
-Every post closes with `type: "post"` and `collectedAt`.
 
 ### Sample record
 
@@ -38,6 +40,9 @@ Every post closes with `type: "post"` and `collectedAt`.
   "createdAt": "2026-06-02T09:15:00+00:00",
   "language": "en",
   "searchTerm": "buildinpublic",
+  "source": "x-search",
+  "sourceLane": "latest",
+  "degraded": false,
   "replyCount": 34,
   "retweetCount": 112,
   "likeCount": 1870,
@@ -61,7 +66,59 @@ Every post closes with `type: "post"` and `collectedAt`.
 
 ## Output per status row
 
-When a keyword comes back empty, the actor pushes exactly one record carrying `type: "status"`, `status`, `message`, `searchTerm` (which keyword it's reporting on), and `collectedAt` — a signal, not a silent zero.
+When a keyword needs attention, the actor pushes one typed record:
+
+```json
+{
+  "type": "status",
+  "status": "blocked",
+  "message": "X guest search refused this network right now...",
+  "searchTerm": "apify",
+  "collectedAt": "2026-06-02T10:03:41+00:00",
+  "source": "none",
+  "sourcesTried": ["x-search", "bing-news"],
+  "xAttempts": 96,
+  "xOk": 0,
+  "xLastStatus": 404,
+  "bingDiscovered": 0,
+  "bingHydrated": 0,
+  "bingTitleOnly": 0,
+  "bingRows": 0,
+  "targetRows": 20,
+  "uniqueRows": 0,
+  "budgetSeconds": 105,
+  "budgetExhausted": false,
+  "degraded": true,
+  "partial": false
+}
+```
+
+Statuses:
+
+| Status | Meaning |
+|---|---|
+| `noInput` | No keywords were provided. |
+| `noResults` | A source answered and returned zero matching posts (or every collected row was already seen by `onlyNew`). |
+| `blocked` | No source answered: X refused and Bing was unavailable or skipped because the query uses operators. |
+| `partial` | Rows were returned but the target was **not** reached (budget/limits stopped the walk, a full page appeared at the oldest edge, or X was blocked and Bing supplied fewer rows than requested). Reaching the target exactly is `ok`, even when rows are `degraded`. |
+| `budgetExhausted` | The per-keyword budget ran out before any source answered. |
+| `enrichmentPartial` | Rows were returned, but one or more per-tweet enrichment lookups failed. |
+
+`xOk` counts only X bursts that returned a parseable page of posts. An HTTP 200 with an empty payload or an empty timeline is treated as a refusal/no-answer, so it cannot mask `blocked` or `budgetExhausted`.
+
+Every run also ends with one `type: "summary"` row carrying `keywords`, `postRows`, `statusRows`, `bySource`, `sourcesTried`, aggregate `xAttempts` / `xOk` / `bingDiscovered` / `bingHydrated` / `bingTitleOnly`, `degradedKeywords`, `partialKeywords`, `blockedKeywords`, `durationSeconds`, `monitorId` and `onlyNew`. Consumers that count `type: "post"` are never confused by status or summary rows.
+
+## Known hard limits
+
+Measured directly (no proxy, no cookies, no browser) during the Phase 6 probes on 2026-11-08:
+
+- **Guest search is a lottery.** Only ~6% of Latest bursts answered in a 32-attempt probe, and the 300-row backfill used 5,259 attempts / 20 answered bursts (0.38%). The same query can return 20 rows in seconds later, but there is no SLA.
+- **No real `Top`.** X serves Top only to signed-in callers, so `Top` output is a client-side like-sort of the Latest rows that were collected.
+- **No cursor paging.** One answered page is ~20 rows; `product=Media` can return 41-45. Backfill beyond one page is time-window walking only.
+- **300 rows is the measured backfill ceiling.** 300/300 was reached on `bitcoin`; 500 and 1,000 are unverified targets.
+- **Bing News is stale and shallow.** It discovers newsworthy posts only (0/65 sampled rows were <24 h old, 53/65 were <7 d) and walks at most 5 RSS pages (~50 unique ids). It cannot honour operator queries.
+- **Monitoring is duplicate suppression, not complete coverage.** `onlyNew` plus the overlap window protects the page boundary; posts published between runs can be missed when a keyword produces more than one page per interval.
+- **Enrichment depends on one third-party mirror.** FxTwitter fills retweets/quotes/bookmarks/views/author fields; vxtwitter/fxwitter/fixupx were unusable in the same environment. If FxTwitter fails, those fields stay absent; rows are still returned.
 
 ## Input
 
@@ -70,19 +127,36 @@ When a keyword comes back empty, the actor pushes exactly one record carrying `t
 | `keywords` | array | – | **Required.** Words, phrases, hashtags or full search queries; each runs separately. |
 | `maxTweets` | integer | `20` | Target number of posts per keyword (1–1000). |
 | `maxItems` | integer | – | Same as `maxTweets` — use whichever name you prefer. |
-| `searchType` | string | `Top` | `Top` for the most engaged posts, `Latest` for newest-first. |
+| `searchType` | string | `Top` | `Top` = engagement-ranked (client-side like-sort of Latest); `Latest` = newest-first. |
 | `sort` | string | – | Same as `searchType`. |
 | `language` | string | `Any language` | Restrict to one of 40 common X language codes, e.g. `en`, `es`, `ja`. |
 | `dateFrom` | date | – | Earliest post date to include. |
-| `dateTo` | date | – | Latest post date to include. |
+| `dateTo` | date | – | Latest post date to include (inclusive). |
 | `excludeRetweets` | boolean | `false` | Drop retweets/reposts, keep only original posts. |
 | `excludeReplies` | boolean | `false` | Drop replies, keep only top-level posts. |
 | `onlyVerifiedUsers` | boolean | `false` | Keep only posts from verified accounts. |
 | `onlyImages` | boolean | `false` | Keep only posts containing at least one image. |
 | `onlyVideos` | boolean | `false` | Keep only posts containing at least one video or GIF. |
+| `onlyQuotes` | boolean | `false` | Keep only quote tweets. |
+| `mentioning` | string | – | Keep posts that mention this account. |
+| `author` | string | – | Keep posts written by this account. |
+| `inReplyTo` | string | – | Keep replies addressed to this account. |
+| `conversationId` | string | – | Keep posts in this conversation. |
+| `matchMode` | string | `all` | `all` (AND), `any` (OR) or `exact` (quoted phrase) for multi-word keywords. |
+| `excludeWords` | array | – | Words/phrases to exclude (`-word`, `-"two words"`). |
+| `includeLanes` | array | – | `latest`, `media`, `media-product`, `links`, `replies`. Default is latest + media + links; replies is added for 100+ row jobs. `media-product` asks for X's `product=Media` page directly (opt-in; 41-45 rows when it answers). |
+| `maxWindows` | integer | `0` | Cap backwards time-window passes per keyword; `0` = no explicit cap. |
+| `maxPasses` | integer | `0` | Cap total X search passes (core + windows); `0` = no explicit cap. |
 | `minimumLikes` | integer | – | Floor on like count. |
 | `minimumRetweets` | integer | – | Floor on retweet count. |
 | `minimumReplies` | integer | – | Floor on reply count. |
+| `onlyNew` | boolean | `false` | Return only posts newer than the previous run for this keyword. |
+| `monitoringEnabled` | boolean | `false` | Alias that enables `onlyNew` when `onlyNew` is not provided. |
+| `monitorId` | string | `default` | Namespace for the saved watermark; use different ids for independent schedules. `monitoringStateKey` is accepted as an alias. |
+| `overlapMinutes` | integer | `10` | Search this far before the previous run so late-arriving posts are not missed. |
+| `maxAgeDays` | integer | `90` | Never walk further back than this, even after a long gap. |
+| `sinceTime` | string | – | Backfill lower bound: ISO 8601 or Unix epoch seconds. |
+| `untilTime` | string | – | Backfill upper bound: ISO 8601 or Unix epoch seconds. |
 | `proxyConfiguration` | object | – | Optional; useful for large or repeated runs from the same IP. |
 | `startDate` / `endDate` | string | – | Older aliases for `dateFrom` / `dateTo` (`YYYY-MM-DD`). |
 
@@ -108,6 +182,33 @@ When a keyword comes back empty, the actor pushes exactly one record carrying `t
 }
 ```
 
+### Example: scheduled only-new monitoring
+
+```json
+{
+  "keywords": ["#YourBrand", "@yourbrand"],
+  "searchType": "Latest",
+  "maxTweets": 200,
+  "onlyNew": true,
+  "monitorId": "brand-watch",
+  "overlapMinutes": 15,
+  "maxAgeDays": 30
+}
+```
+
+### Example: bounded backfill without a cursor
+
+```json
+{
+  "keywords": ["artificial intelligence"],
+  "maxTweets": 500,
+  "sinceTime": "2026-01-01T00:00:00Z",
+  "untilTime": "2026-06-30T23:59:59Z",
+  "includeLanes": ["latest", "media", "links"],
+  "maxWindows": 40
+}
+```
+
 ### Example: top posts in a date window, above an engagement floor
 
 ```json
@@ -123,9 +224,9 @@ When a keyword comes back empty, the actor pushes exactly one record carrying `t
 
 ## Use cases
 
-- **Brand monitoring** — catch new mentions of a product, campaign or handle as they post.
+- **Brand monitoring** — schedule the actor with `onlyNew` to catch new mentions without repeating old rows.
 - **Trend and topic tracking** — measure how a subject's volume and engagement shift over weeks or months.
-- **Breaking-news watch** — pair `Latest` with a tight date range to follow a fast-moving story.
+- **Breaking-news watch** — pair `Latest` with a tight date range or `sinceTime`/`untilTime` to follow a fast-moving story.
 - **Content research** — surface the highest-engagement posts around a theme for inspiration.
 - **Academic or policy research** — assemble a dataset of public discourse on a topic, language or time period.
 - **Competitor comparison** — run several competing keywords side by side and compare volume and engagement.
@@ -136,19 +237,25 @@ When a keyword comes back empty, the actor pushes exactly one record carrying `t
 No — there's no credential field in the input at all. The actor reads what any logged-out visitor can already see on X's own search.
 
 **How many posts will I actually get per keyword?**
-Up to `maxTweets`, but that's a ceiling, not a promise. A trending keyword might fill close to 500 rows; an obscure one may return only a handful, because that's genuinely all X's search surface has for it.
+Up to `maxTweets`, but that's a ceiling, not a promise. Guest search answers intermittently and returns ~20 rows per answered page (41-45 on an answered `product=Media` page). The actor multiplies those pages with lanes and time windows. Phase 6 measured **300 unique rows for a 300-row target**; targets above 300 are unverified. An obscure keyword may return only a handful.
 
 **Why did I get a different count on a second identical run?**
-X's logged-out search doesn't expose stable, full pagination, and what it surfaces can shift between requests. If you need more rows, try again or narrow the date window rather than assuming something broke.
+X's logged-out search doesn't expose stable, full pagination, and what it surfaces can shift between requests. If you need more rows, use `onlyNew: false`, narrow the date window, or add lanes rather than assuming something broke.
 
 **Should I use `Top` or `Latest`?**
-`Latest` for anything time-sensitive — breaking news, live mentions, a campaign in progress. `Top` when you want the posts with the strongest engagement regardless of when they went up.
+`Latest` for anything time-sensitive — breaking news, live mentions, a campaign in progress. `Top` gives you the strongest engagement among the rows the actor could collect, but it is a client-side like-sort of Latest results, not X's real Top timeline (X does not serve Top to guests).
+
+**How does only-new monitoring work without a cursor?**
+The actor saves `lastMaxId` (numeric 19-digit snowflake), `lastRunAt` and the last 1,000 seen ids in the key-value store under `xkw:<sha1(monitorId + keyword)>`. Each run searches from `lastRunAt - overlapMinutes` (capped by `maxAgeDays`) and keeps rows with an id numerically above the watermark or created inside the overlap window and not already seen. A blocked run never advances the watermark. Bing-only fallback rows are remembered as seen so they are not re-emitted, but they leave the X gap open for the next run.
 
 **Is a proxy required?**
 No, it's optional. Add one mainly if you're running large or frequent jobs from the same IP and want extra headroom against rate limiting.
 
 **How current is the data?**
-Fully live — each run queries X at the moment it executes. Put the actor on a schedule for ongoing monitoring.
+Fully live — each run queries X at the moment it executes. Put the actor on a schedule with `onlyNew` for ongoing monitoring. Bing News fallback rows are not real-time: in live probes only 1.2% were under 24 hours old.
+
+**Why is a row marked `degraded: true`?**
+It came from the Bing News fallback (hydrated or title-only). Those rows are newsworthy-only, can be days or years old, and lack retweets/quotes/views/bookmarks/followers until the enrichment layer fills what it can.
 
 **How do I get the results into another tool?**
 Pull the dataset from the run page or the Apify API, wire up a webhook, or connect it to Zapier, Make, Google Sheets, or similar no-code tools.

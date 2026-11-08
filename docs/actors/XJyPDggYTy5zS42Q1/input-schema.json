@@ -1,5 +1,19 @@
 {
   "properties": {
+    "author": {
+      "description": "Only return posts written by this account, e.g. openai or @openai.",
+      "editor": "textfield",
+      "nullable": true,
+      "title": "From account",
+      "type": "string"
+    },
+    "conversationId": {
+      "description": "Only return posts in this conversation (the numeric id of the root post).",
+      "editor": "textfield",
+      "nullable": true,
+      "title": "Conversation ID",
+      "type": "string"
+    },
     "dateFrom": {
       "description": "Only return tweets posted on or after this date. Leave empty for no lower bound.",
       "editor": "datepicker",
@@ -8,7 +22,7 @@
       "type": "string"
     },
     "dateTo": {
-      "description": "Only return tweets posted on or before this date. Leave empty for no upper bound.",
+      "description": "Only return tweets posted on or before this date (inclusive). Leave empty for no upper bound.",
       "editor": "datepicker",
       "nullable": true,
       "title": "End date",
@@ -34,6 +48,33 @@
       "prefill": false,
       "title": "Exclude retweets (reposts)",
       "type": "boolean"
+    },
+    "excludeWords": {
+      "description": "Words or phrases to exclude from every search, compiled to -word / -\"two words\" tokens.",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "nullable": true,
+      "title": "Exclude words",
+      "type": "array"
+    },
+    "inReplyTo": {
+      "description": "Only return replies addressed to this account, e.g. elonmusk or @elonmusk.",
+      "editor": "textfield",
+      "nullable": true,
+      "title": "In reply to account",
+      "type": "string"
+    },
+    "includeLanes": {
+      "description": "Which X search lanes to run: latest, media, media-product, links, replies. Leave empty for the default latest + media + links (replies is added automatically for jobs of 100+ rows). media-product asks for X's product=Media page directly and is opt-in.",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "nullable": true,
+      "title": "Search lanes",
+      "type": "array"
     },
     "keywords": {
       "description": "Words, phrases, hashtags or full X search queries to monitor. Each keyword is searched separately, and every result row tells you which keyword found it (searchTerm).",
@@ -147,6 +188,32 @@
       "title": "Language",
       "type": "string"
     },
+    "matchMode": {
+      "default": "all",
+      "description": "How to combine the words in each keyword: all = X's default AND, any = (word1 OR word2), exact = quoted phrase.",
+      "editor": "select",
+      "enum": [
+        "all",
+        "any",
+        "exact"
+      ],
+      "enumTitles": [
+        "All words (AND)",
+        "Any word (OR)",
+        "Exact phrase"
+      ],
+      "prefill": "all",
+      "title": "Multi-word match mode",
+      "type": "string"
+    },
+    "maxAgeDays": {
+      "default": 90,
+      "description": "Never walk further back than this many days, even when catching up after a long gap.",
+      "maximum": 3650,
+      "minimum": 1,
+      "title": "Maximum age (days)",
+      "type": "integer"
+    },
     "maxItems": {
       "description": "Alias of Maximum tweets per keyword. The actor accepts either name.",
       "maximum": 1000,
@@ -154,44 +221,75 @@
       "title": "Maximum tweets per keyword (alias)",
       "type": "integer"
     },
+    "maxPasses": {
+      "default": 0,
+      "description": "Cap the total number of X search passes (core lanes + time windows) per keyword. 0 means no explicit cap.",
+      "maximum": 5000,
+      "minimum": 0,
+      "title": "Maximum search passes",
+      "type": "integer"
+    },
     "maxTweets": {
       "default": 20,
-      "description": "Stop after this many tweets for each keyword.",
+      "description": "Stop after this many tweets for each keyword. This is a target, not a guarantee: guest X search returns ~20 posts per answered page, the Phase 6 probes measured 300 unique rows for a 300-row target, and 500/1,000 are unverified.",
       "maximum": 1000,
       "minimum": 1,
       "prefill": 20,
       "title": "Maximum tweets per keyword",
       "type": "integer"
     },
-    "minimumLikes": {
-      "description": "Only return tweets with at least this many likes. Leave empty for no minimum.",
-      "maximum": 100000000,
+    "maxWindows": {
+      "default": 0,
+      "description": "Cap the number of backwards time-window passes per keyword. 0 means no explicit cap (the wall-clock budget still applies).",
+      "maximum": 1000,
       "minimum": 0,
-      "nullable": true,
-      "title": "Minimum likes",
+      "title": "Maximum time windows",
       "type": "integer"
     },
-    "minimumReplies": {
-      "description": "Only return tweets with at least this many replies. Leave empty for no minimum.",
-      "maximum": 100000000,
-      "minimum": 0,
+    "mentioning": {
+      "description": "Only return posts that mention this account, e.g. apify or @apify.",
+      "editor": "textfield",
       "nullable": true,
-      "title": "Minimum replies",
-      "type": "integer"
+      "title": "Mentioning account",
+      "type": "string"
     },
-    "minimumRetweets": {
-      "description": "Only return tweets with at least this many retweets. Leave empty for no minimum.",
-      "maximum": 100000000,
-      "minimum": 0,
+    "monitorId": {
+      "description": "Namespace for the saved watermark. Use different ids to keep independent schedules for the same keyword. Defaults to 'default'. The legacy alias 'monitoringStateKey' is also accepted.",
+      "editor": "textfield",
       "nullable": true,
-      "title": "Minimum retweets",
-      "type": "integer"
+      "title": "Monitor ID",
+      "type": "string"
+    },
+    "monitoringEnabled": {
+      "default": false,
+      "description": "Alias that enables onlyNew when onlyNew itself is not provided. Prefer the Only new posts field.",
+      "prefill": false,
+      "title": "Enable monitoring (alias)",
+      "type": "boolean"
     },
     "onlyImages": {
       "default": false,
       "description": "Only return tweets that contain at least one image.",
       "prefill": false,
       "title": "Tweets with images only",
+      "type": "boolean"
+    },
+    "onlyNew": {
+      "default": false,
+      "description": "Return only posts newer than the previous run for this keyword. The actor stores a numeric tweet-id watermark plus an overlap window in the key-value store, so scheduled runs do not repeat old rows.",
+      "prefill": false,
+      "sectionCaption": "Monitoring (only new posts)",
+      "sectionDescription": "Use these fields when the actor runs on a schedule and should return only fresh posts. X guest search has no since_id, so the actor compares 19-digit snowflake ids numerically and walks an overlap window.",
+      "title": "Only new posts (monitoring)",
+      "type": "boolean"
+    },
+    "onlyQuotes": {
+      "default": false,
+      "description": "Only return quote tweets (filter:quote).",
+      "prefill": false,
+      "sectionCaption": "More search filters",
+      "sectionDescription": "Optional operator-style filters. Operator queries use the X guest search only; the Bing News fallback cannot honour them.",
+      "title": "Quote tweets only",
       "type": "boolean"
     },
     "onlyVerifiedUsers": {
@@ -208,6 +306,14 @@
       "title": "Tweets with videos only",
       "type": "boolean"
     },
+    "overlapMinutes": {
+      "default": 10,
+      "description": "How far back before the previous run to search, so posts published during the last walk are not missed. Already-seen ids are still filtered out.",
+      "maximum": 1440,
+      "minimum": 0,
+      "title": "Overlap window (minutes)",
+      "type": "integer"
+    },
     "proxyConfiguration": {
       "description": "Optional. Use a proxy if you run large jobs or see frequent IP-based rate limits.",
       "editor": "proxy",
@@ -219,18 +325,25 @@
     },
     "searchType": {
       "default": "Top",
-      "description": "Top returns the most relevant and popular tweets. Latest returns the newest tweets first — best for real-time monitoring.",
+      "description": "Latest returns the newest posts first. Top is engagement-ranked output: X's logged-out search never serves the real Top timeline, so the actor collects Latest pages and sorts them by like count client-side.",
       "editor": "select",
       "enum": [
         "Top",
         "Latest"
       ],
       "enumTitles": [
-        "Top — most relevant and popular",
+        "Top — engagement-ranked (client-side like-sort of Latest)",
         "Latest — newest first"
       ],
-      "prefill": "Top",
+      "prefill": "Latest",
       "title": "Result order",
+      "type": "string"
+    },
+    "sinceTime": {
+      "description": "Optional lower bound for a backfill run: ISO 8601 timestamp or Unix epoch seconds. Uses X's epoch since_time operator, not day-granular since:.",
+      "editor": "textfield",
+      "nullable": true,
+      "title": "Since time (backfill)",
       "type": "string"
     },
     "sort": {
@@ -241,7 +354,7 @@
         "Latest"
       ],
       "enumTitles": [
-        "Top — most relevant and popular",
+        "Top — engagement-ranked (client-side like-sort of Latest)",
         "Latest — newest first"
       ],
       "title": "Result order (alias)",
@@ -254,6 +367,13 @@
       "sectionCaption": "Advanced (legacy)",
       "sectionDescription": "Deprecated aliases kept for backwards compatibility. Prefer the fields above.",
       "title": "Start date (legacy)",
+      "type": "string"
+    },
+    "untilTime": {
+      "description": "Optional upper bound for a backfill run: ISO 8601 timestamp or Unix epoch seconds. Uses X's epoch until_time operator.",
+      "editor": "textfield",
+      "nullable": true,
+      "title": "Until time (backfill)",
       "type": "string"
     }
   },

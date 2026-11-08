@@ -11,6 +11,22 @@
       "title": "Companies",
       "type": "array"
     },
+    "dateFrom": {
+      "default": "",
+      "description": "Keep reviews posted on or after this date (YYYY-MM-DD). Applied client-side and forces newest-first order.",
+      "editor": "textfield",
+      "prefill": "",
+      "title": "Date from",
+      "type": "string"
+    },
+    "dateTo": {
+      "default": "",
+      "description": "Keep reviews posted on or before this date (YYYY-MM-DD). Applied client-side and forces newest-first order.",
+      "editor": "textfield",
+      "prefill": "",
+      "title": "Date to",
+      "type": "string"
+    },
     "employmentType": {
       "default": "any",
       "description": "Only keep reviews with this employment status.",
@@ -37,6 +53,17 @@
       "title": "Employment type",
       "type": "string"
     },
+    "employmentTypes": {
+      "default": [],
+      "description": "Keep reviews with any of these employment statuses: regular, part_time, intern, contract, freelance, temporary. Leave empty to use the single employment type filter.",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "prefill": [],
+      "title": "Employment types",
+      "type": "array"
+    },
     "includeCompanyProfile": {
       "default": false,
       "description": "Add company profile fields such as website, headquarters, size, revenue, industry, CEO, and company sub-ratings to each review. This makes one extra request per company.",
@@ -44,6 +71,13 @@
       "sectionCaption": "Company profile",
       "sectionDescription": "Optional company context. Leave this off for the smallest and fastest run.",
       "title": "Include company profile",
+      "type": "boolean"
+    },
+    "includeCompanySummary": {
+      "default": false,
+      "description": "Add one companySummary record per company with saved, available, siteTotal, stopReason, logo, rating, and URL. Summary records are marked with recordType=companySummary.",
+      "prefill": false,
+      "title": "Include company summary records",
       "type": "boolean"
     },
     "includeWorldwideReviews": {
@@ -157,6 +191,17 @@
       "title": "Review language",
       "type": "string"
     },
+    "languages": {
+      "default": [],
+      "description": "Collect reviews in any of these languages: eng, fra, deu, nld, por, spa, ita. Leave empty to use the single language filter.",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "prefill": [],
+      "title": "Review languages",
+      "type": "array"
+    },
     "location": {
       "default": "",
       "description": "City, state, metro area, or country to filter reviews by, such as New York, NY or London. Leave empty for all locations. The value is resolved automatically through Glassdoor's location search.",
@@ -223,7 +268,7 @@
     },
     "rating": {
       "default": "any",
-      "description": "Only keep reviews with this exact overall star rating.",
+      "description": "Only keep reviews with this exact overall star rating. Use ratings to select several stars.",
       "editor": "select",
       "enum": [
         "any",
@@ -244,6 +289,17 @@
       "prefill": "any",
       "title": "Star rating",
       "type": "string"
+    },
+    "ratings": {
+      "default": [],
+      "description": "Keep reviews with any of these exact star ratings: 1, 2, 3, 4, 5. Leave empty to use the single rating filter.",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "prefill": [],
+      "title": "Star ratings",
+      "type": "array"
     },
     "sortBy": {
       "default": "mostRecent",
