@@ -4,7 +4,7 @@
 
 # Twitter (X) Screenshot Generator
 
-Capture clean screenshots of public X posts, threads and profiles — **no login, no cookies, no API key**. Paste post links to get pixel-perfect post cards or a contiguous thread image, or profile links to get the profile header or the loaded profile preview. Choose dark, light or system theme, PNG/JPEG/WEBP output, and 1x–3x pixel density.
+Capture clean screenshots of public X posts, threads and profiles — **no login, no cookies, no API key**. Paste post links to get pixel-perfect post cards or a contiguous thread image, or profile links to get the profile header or the loaded profile preview. Choose dark, light or system theme, PNG/JPEG/WEBP output, and 1x–3x pixel density. Capture dark and light in one run, and optionally save a verifiable evidence pack (gzipped DOM snapshot + JSON manifest with SHA-256 hashes).
 
 ## What this actor does
 
@@ -15,6 +15,8 @@ Capture clean screenshots of public X posts, threads and profiles — **no login
 - **Image control:** PNG, JPEG or WEBP, quality setting for JPEG/WEBP, and real 1x/2x/3x pixel density (Firefox DPR pref) with `effectiveScale` reported
 - **Custom viewport:** width and height from 320×240 up to 3840×2160
 - **Optional details:** post ID, URL, author handle, text snippet, and profile or author follower counts when X shows them
+- **Both themes in one run:** `bothThemes` captures dark and light versions with unique files and one row per theme
+- **Evidence pack:** `includeEvidence` saves a gzipped DOM snapshot and a JSON manifest to the key-value store, and reports `screenshotSha256`, `domSnapshotSha256`, `evidenceKey` and `manifestKey` on each row
 - **Run summary:** one `runSummary` row reports requested/captured/failed/billable counts, typed failure codes and dropped inputs
 - **Empty fields are omitted**
 
@@ -46,8 +48,13 @@ Each row has a `type`: `screenshot` for a capture, `status` for a failure/run me
 | `communityNote` | Readers-added-context id and text (`includeMetadata` only) |
 | `capturedAt`, `collectedAt` | ISO timestamps of the capture |
 | `profileUrl` | The profile URL, on profile captures |
+| `theme` | The theme captured in this row (`dark` or `light`) |
+| `screenshotSha256` | SHA-256 of the saved image bytes (`includeEvidence` only) |
+| `domSnapshotSha256` | SHA-256 of the raw DOM snapshot before gzip (`includeEvidence` only) |
+| `evidenceKey` | Key-value store key of the gzipped DOM snapshot (`includeEvidence` only) |
+| `manifestKey` | Key-value store key of the JSON evidence manifest (`includeEvidence` only) |
 
-The `runSummary` row contains `requested`, `captured`, `failed`, `skipped`, `billable`, `failureCodes`, `invalidInputs`, `theme`, `format`, `deviceScaleFactor`, `captureMode`, `totalBytes`, `totalDurationMs`, `startedAt` and `finishedAt`.
+The `runSummary` row contains `requested`, `captured`, `failed`, `skipped`, `billable`, `failureCodes`, `invalidInputs`, `theme`, `themes`, `format`, `deviceScaleFactor`, `captureMode`, `totalBytes`, `totalDurationMs`, `startedAt` and `finishedAt`. With **Both themes** on, `requested`/`captured` count both theme captures and `themes` is `["dark", "light"]`.
 
 With **Include post/profile details** on, post rows also carry `tweetId`, `tweetUrl`, `authorUsername`, `textSnippet`, `poll`, `communityNote`, `authorFollowers`, `authorFollowing` and `authorPostCount`; profile rows carry `username`, `name`, `followers`, `following` and `postCount`. Counts and poll/note fields are only added when X shows them.
 
@@ -60,6 +67,8 @@ With **Include post/profile details** on, post rows also carry `tweetId`, `tweet
 | `profileUrls` | array | – | Profiles to capture (header or full page, depending on capture mode) |
 | `captureMode` | string | `postCard` | `postCard`, `thread`, `profileHeader` or `fullProfilePage`. In profile modes, post links capture the post's author profile instead |
 | `theme` | string | `dark` | `dark`, `light` or `system` |
+| `bothThemes` | boolean | `false` | Capture dark and light versions of every target in one run; one row per theme and unique files |
+| `includeEvidence` | boolean | `false` | Save a gzipped DOM snapshot and JSON manifest to the key-value store and add SHA-256/evidence fields to rows |
 | `fullPage` | boolean | `false` | Capture the clipped post/profile column instead of just the card or header |
 | `hideReplies` | boolean | `true` | Hide reply posts so captures stay focused (ignored in `thread` mode, which keeps contiguous author parts) |
 | `includeMetadata` | boolean | `false` | Add post/profile details and counts to each row |
@@ -129,6 +138,19 @@ At least one post link or profile link is required. Any input works in any list 
 }
 ```
 
+### Example: both themes + evidence pack
+
+```json
+{
+  "postUrls": ["https://x.com/NASA/status/2107095768821576019"],
+  "bothThemes": true,
+  "includeEvidence": true,
+  "includeMetadata": true
+}
+```
+
+This produces two screenshot rows (`theme: "dark"` and `theme: "light"`), each with its own image, `screenshotSha256`, `domSnapshotSha256`, `evidenceKey` and `manifestKey`. The evidence files live in the same key-value store as the images.
+
 ### Example record
 
 ```json
@@ -137,14 +159,19 @@ At least one post link or profile link is required. Any input works in any list 
   "targetUrl": "https://x.com/NASA/status/2107095768821576019",
   "targetType": "post",
   "captureMode": "postCard",
+  "theme": "dark",
   "status": "success",
   "width": 1440,
   "height": 810,
   "format": "png",
   "fileSizeBytes": 412345,
   "filename": "screenshot_2107095768821576019_postcard_dark_png_1x.png",
-  "downloadUrl": "https://api.apify.com/v2/key-value-stores/{STORE_ID}/records/screenshot_2107095768821576019.png?signature=...",
+  "downloadUrl": "https://api.apify.com/v2/key-value-stores/{STORE_ID}/records/screenshot_2107095768821576019_postcard_dark_png_1x.png?signature=...",
   "deviceScaleFactor": 1,
+  "screenshotSha256": "5f2b...",
+  "domSnapshotSha256": "a91c...",
+  "evidenceKey": "evidence_screenshot_2107095768821576019_postcard_dark_png_1x.html.gz",
+  "manifestKey": "manifest_screenshot_2107095768821576019_postcard_dark_png_1x.json",
   "capturedAt": "2026-10-06T10:30:00+00:00",
   "tweetId": "2107095768821576019",
   "tweetUrl": "https://x.com/NASA/status/2107095768821576019",
@@ -160,7 +187,7 @@ At least one post link or profile link is required. Any input works in any list 
 - **Community management** — capture profile pages for creator or partner reviews
 - **Research** — build image datasets of public posts with consistent framing and theme
 - **Content creation** — generate post images for roundups without manual screenshotting
-- **Legal and compliance** — timestamped captures of public posts with source URLs
+- **Legal and compliance** — timestamped captures of public posts with source URLs, SHA-256 hashes and a DOM snapshot as an evidence trail
 
 ## FAQ
 
@@ -180,6 +207,10 @@ At least one post link or profile link is required. Any input works in any list 
 
 **What if a link is invalid or the post was deleted?** The row gets a typed `code` and a friendly `status` instead of a screenshot, marked `billable: false`. Protected, deleted, missing and login-walled pages are detected before the selector timeouts, and the run never crashes. The final `runSummary` row lists the counts and reasons.
 
+**Can I capture dark and light in one run?** Yes. Turn on **Both themes** and every target is captured twice, once dark and once light. Files include the theme in the name, so nothing is overwritten, and each theme gets its own dataset row and `theme` value. The run summary counts both captures and lists `themes: ["dark", "light"]`.
+
+**What is the evidence pack?** With **Include evidence pack** on, each capture also writes `evidence_<key>.html.gz` (the rendered DOM, gzipped) and `manifest_<key>.json` (target, capture metadata, dimensions, SHA-256 hashes, and failure state when the capture failed) to the key-value store. Rows get `screenshotSha256`, `domSnapshotSha256`, `evidenceKey` and `manifestKey`. Evidence is typically ~7% of the screenshot size; failures still get a manifest even when no image was produced.
+
 **How long do download links last?** They follow your Apify key-value store retention (typically 7 days on the free tier). Copy the images to your own storage for permanent archival.
 
 **Is this affiliated with X?** No. This is a third-party actor that captures publicly visible pages.
@@ -196,3 +227,6 @@ At least one post link or profile link is required. Any input works in any list 
 - A bare short post ID can collide with an older post id. When the requested handle does not match the canonical author, the row fails with `wrong_author` rather than capturing the wrong post.
 - Metadata counts, poll and community-note fields are added only when X displays them.
 - Capture failures (for example a deleted post) produce a typed `status` row plus a `runSummary`, so a run is never silently empty or billed as a success.
+- **Both themes** doubles runtime, screenshots and dataset rows; files and evidence keys remain unique per theme.
+- **Include evidence pack** adds the DOM snapshot (gzipped, typically ~7% of the screenshot size) and a manifest per capture. The DOM is the post-hide rendered markup, not the raw HTTP response.
+- Evidence manifests are still written for failed captures (with `failure.code`, `failure.message` and `failure.accessState`) when the page is available; a crashed page may leave only the manifest.

@@ -78,6 +78,11 @@
         "title": "Pixel density",
         "type": "number"
       },
+      "domSnapshotSha256": {
+        "description": "SHA-256 of the raw DOM snapshot before gzip (when Include evidence pack is on)",
+        "title": "DOM snapshot SHA-256",
+        "type": "string"
+      },
       "downloadUrl": {
         "description": "Public signed HTTPS URL to download the screenshot file (omitted for local file:// URLs and when signing fails)",
         "format": "link",
@@ -88,6 +93,16 @@
         "description": "Actual image pixels per CSS pixel (image width / clipped CSS width)",
         "title": "Effective scale",
         "type": "number"
+      },
+      "evidenceError": {
+        "description": "Why the evidence files could not be written, when Include evidence pack is on",
+        "title": "Evidence error",
+        "type": "string"
+      },
+      "evidenceKey": {
+        "description": "Key-value store key of the gzipped DOM snapshot (when Include evidence pack is on)",
+        "title": "Evidence key",
+        "type": "string"
       },
       "failed": {
         "description": "Targets that failed with a typed status code",
@@ -138,6 +153,11 @@
         "description": "Inputs dropped during validation with a reason",
         "title": "Invalid inputs (run summary)",
         "type": "array"
+      },
+      "manifestKey": {
+        "description": "Key-value store key of the JSON evidence manifest (when Include evidence pack is on)",
+        "title": "Manifest key",
+        "type": "string"
       },
       "message": {
         "description": "Human-readable failure message",
@@ -196,6 +216,11 @@
         "title": "Requested URL",
         "type": "string"
       },
+      "screenshotSha256": {
+        "description": "SHA-256 of the saved screenshot bytes (when Include evidence pack is on)",
+        "title": "Screenshot SHA-256",
+        "type": "string"
+      },
       "skipped": {
         "description": "Inputs dropped during validation",
         "title": "Skipped (run summary)",
@@ -223,9 +248,17 @@
         "type": "string"
       },
       "theme": {
-        "description": "dark, light or system",
+        "description": "dark, light or system (the captured theme on each row)",
         "title": "Theme",
         "type": "string"
+      },
+      "themes": {
+        "description": "Themes captured in the run; both dark and light when Both themes is on",
+        "items": {
+          "type": "string"
+        },
+        "title": "Themes (run summary)",
+        "type": "array"
       },
       "thread": {
         "description": "Thread capture details: focalIndex, threadAuthor, threadLength, threadParts, gateIndex, threadComplete, truncatedReason (non_author_reply, gate, max_height, dpr_height_limit or no_parts)",
@@ -326,6 +359,10 @@
             "format": "link",
             "label": "Target URL"
           },
+          "theme": {
+            "format": "text",
+            "label": "Theme"
+          },
           "type": {
             "format": "text",
             "label": "Row Type"
@@ -342,6 +379,7 @@
           "type",
           "targetUrl",
           "captureMode",
+          "theme",
           "status",
           "code",
           "billable",

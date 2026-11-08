@@ -27,6 +27,13 @@
       "title": "Date to",
       "type": "string"
     },
+    "emitUnchanged": {
+      "default": false,
+      "description": "With onlyNew, also emit previously seen reviews that have not changed. Each emitted review gets isNew=false and its original firstSeenAt. Leave off to avoid duplicate dataset records.",
+      "prefill": false,
+      "title": "Also emit unchanged reviews",
+      "type": "boolean"
+    },
     "employmentType": {
       "default": "any",
       "description": "Only keep reviews with this employment status.",
@@ -228,11 +235,28 @@
       "title": "Maximum reviews per company",
       "type": "integer"
     },
+    "monitorId": {
+      "default": "glassdoor-reviews",
+      "description": "Name of the named key-value store that holds monitoring state. Use the same value on every scheduled run. Default glassdoor-reviews.",
+      "editor": "textfield",
+      "prefill": "glassdoor-reviews",
+      "title": "Monitor id",
+      "type": "string"
+    },
     "onlyCurrentEmployees": {
       "default": false,
       "description": "Only keep reviews written by current employees.",
       "prefill": false,
       "title": "Current employees only",
+      "type": "boolean"
+    },
+    "onlyNew": {
+      "default": false,
+      "description": "Remember previously seen reviews in a named key-value store and emit only reviews that are new since the last run. Uses newest-first order and stops at the stored review-id watermark. Set the same monitorId on every scheduled run.",
+      "prefill": false,
+      "sectionCaption": "Incremental monitoring",
+      "sectionDescription": "Run on a schedule with onlyNew to receive new reviews only. The actor stores a per-company review-id watermark and seen set after each successful dataset push.",
+      "title": "Only new reviews",
       "type": "boolean"
     },
     "onlyWithEmployerResponses": {

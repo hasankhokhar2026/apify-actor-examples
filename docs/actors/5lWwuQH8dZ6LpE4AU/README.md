@@ -15,6 +15,7 @@ Collect employee reviews from Glassdoor companies by URL, company name, or emplo
 - Keeps the 25 fields from the previous version and adds canonical review URLs, company logo, language data, employer responses, company context, and optional firmographics.
 - Applies an exact post-filter when keyword and star rating are combined, because Glassdoor treats that server-side rating as a minimum, not an exact match.
 - Reports a completeness contract (`saved`, `available`, `siteTotal`, `stopReason`) in the run status and in the `RUN_SUMMARY` key-value record.
+- Supports incremental monitoring with `onlyNew` and a named `monitorId` state store: per-company review-id watermarks and seen sets, `isNew`/`firstSeenAt` output, optional `emitUnchanged`, and state updates only after a successful dataset push.
 - Resolves company and location names with exact/unique matching. Ambiguous or invalid values produce typed warnings instead of silently taking the first autocomplete row.
 - Omits fields that Glassdoor does not provide for a review instead of writing empty strings, nulls, or zero placeholders.
 
@@ -46,6 +47,9 @@ Typical uses: employer-brand research, culture and sentiment analysis, HR benchm
 | `includeWorldwideReviews` | boolean | false | Remove Glassdoor's default review criteria and include reviews from all countries. |
 | `includeCompanySummary` | boolean | false | Add one `companySummary` record per company with saved, available, site total, stop reason, logo, rating, and URL. |
 | `includeCompanyProfile` | boolean | false | Add website, headquarters, size, revenue, industry, CEO, and company sub-ratings to each review. |
+| `onlyNew` | boolean | false | Emit only reviews that were not seen in a previous run. Stores a per-company review-id watermark and seen set in the named `monitorId` key-value store. Forces newest-first order. |
+| `monitorId` | string | `glassdoor-reviews` | Name of the key-value store that holds monitoring state. Use the same value on every scheduled run. |
+| `emitUnchanged` | boolean | false | With `onlyNew`, also emit previously seen reviews that have not changed. Each emitted review gets `isNew: false` and its original `firstSeenAt`. |
 
 ### Examples
 
@@ -119,6 +123,17 @@ All languages, worldwide, with company profile:
 }
 ```
 
+Scheduled incremental monitoring:
+
+```json
+{
+  "companies": ["https://www.glassdoor.com/Reviews/Google-Reviews-E9079.htm"],
+  "maxItems": 500,
+  "onlyNew": true,
+  "monitorId": "google-reviews"
+}
+```
+
 ## Output
 
 Each dataset item is one review. The actor keeps these existing fields with the same names:
@@ -148,6 +163,16 @@ New fields are added beside them:
 | `sourceDomain` | Glassdoor domain used for the data. |
 | `scrapedAt` | Run timestamp in UTC. |
 
+When `onlyNew` is on, each emitted review also gets these monitoring fields:
+
+| Field | Description |
+|---|---|
+| `isNew` | `true` when the review id was never seen by this monitor, `false` for a previously seen review emitted because `emitUnchanged` is on. |
+| `firstSeenAt` | UTC timestamp of the first run that saw this review. |
+| `lastSeenAt` | UTC timestamp of the current run that saw this review. |
+| `changed` | `true` when a previously seen review's tracked content changed since the stored snapshot. |
+| `lastChangedAt` | UTC timestamp of the first or latest detected content change. |
+
 When `includeCompanyProfile` is on, each review also gets `companyWebsite`, `companyHeadquarters`, `companySize`, `companyRevenue`, `companyType`, `companyFoundedYear`, `companyIndustry`, `companyCeo`, and `companySubRatings`.
 
 `companySubRatings` keeps the six category ratings on Glassdoor's 1-5 scale (`overall`, `workLifeBalance`, `cultureAndValues`, `diversityAndInclusion`, `seniorManagement`, `careerOpportunities`, `compensationAndBenefits`) and converts the three fraction fields to 0-100 percentages: `ceoApprovalPct`, `recommendToFriendPct`, and `businessOutlookPct`. A `scale` string documents both scales.
@@ -165,9 +190,26 @@ Every run reports a completeness contract in the status message and in the `RUN_
 | `saved` | Reviews written to the dataset. |
 | `available` | Server-side review count for the exact filter set, when it is exact. `null` when a client-side filter (keyword + rating, multi-star, date window) makes the server count non-exact. |
 | `siteTotal` | Glassdoor's total review count across the processed companies. |
-| `stopReason` | Why scraping stopped: `maxItems`, `maxReviewsPerCompany`, `postedWithinDays`, `dateFrom`, `source exhausted`, `error`, or `completed`. |
+| `stopReason` | Why scraping stopped: `maxItems`, `maxReviewsPerCompany`, `postedWithinDays`, `dateFrom`, `onlyNew`, `source exhausted`, `error`, or `completed`. |
 
-When `includeCompanySummary` is on, the actor also writes one record per company with `recordType: "companySummary"` and the same `saved`/`available`/`siteTotal`/`stopReason` fields plus company id, name, logo, rating, URL, and the resolved location. Filter on `recordType` to separate summaries from reviews.
+When `includeCompanySummary` is on, the actor also writes one record per company with `recordType: "companySummary"` and the same `saved`/`available`/`siteTotal`/`stopReason` fields plus company id, name, logo, rating, URL, and the resolved location. With `onlyNew`, summaries also include `newReviews`, `unchangedReviews`, `monitorId`, and the stored `watermark`. Filter on `recordType` to separate summaries from reviews.
+
+## Incremental monitoring
+
+Set `onlyNew` to run the actor on a schedule and receive only reviews that are new since the previous run. Monitoring state lives in a named key-value store whose name is `monitorId` (default `glassdoor-reviews`). Use the same `monitorId` on every run that belongs to the same monitor.
+
+How it works:
+
+- Each company has its own state record with a numeric `reviewId` watermark and a `seen` set of review ids, first-seen timestamps, last-seen timestamps, and content hashes.
+- The first run emits all matching reviews (up to `maxItems`) as `isNew: true` and records their ids.
+- Later runs read newest first and stop as soon as they reach the stored watermark, so they do not page through the entire history. A run that stops this way reports `stopReason: "onlyNew"`.
+- A review is emitted only when its id is not in the seen set. Previously seen reviews are skipped by default, so they are not billed twice.
+- `emitUnchanged` re-emits previously seen reviews with `isNew: false`, their original `firstSeenAt`, and `changed` set when the tracked review content differs from the stored hash.
+- State is written only after the dataset push succeeds. If a push fails, the affected ids are not marked as seen, so the next run retries them.
+- `maxItems` and `maxReviewsPerCompany` stop the run early without advancing the watermark past unseen reviews. The next run resumes where the previous one stopped.
+- Monitoring state is tied to the current filter set (ratings, employment types, keyword, location, language, date window, and so on). Changing filters starts a fresh baseline for that company.
+
+Only reviews above the stored watermark are read, so edits to older reviews are not detected unless `emitUnchanged` is used on a review that is re-encountered. To start over, use a new `monitorId` or delete the named key-value store.
 
 ## How far back and how many reviews
 
@@ -200,7 +242,7 @@ Yes. Set `dateFrom` and `dateTo` (`YYYY-MM-DD`). Glassdoor's endpoint does not a
 Yes. Use the `ratings`, `languages`, and `employmentTypes` lists. Multi-star and date filters are applied client-side, so the run status marks the server count as non-exact instead of claiming it is the final count.
 
 **Can I monitor only new reviews?**
-Run the actor on a schedule with Newest first and deduplicate by `reviewId` in your workflow. The actor does not keep state between runs yet.
+Yes. Run the actor on a schedule with `onlyNew: true` and the same `monitorId`. The actor stores a per-company review-id watermark and seen set in the named key-value store, emits only reviews it has not seen before, and reports `stopReason: "onlyNew"` when it reaches the watermark. Set `emitUnchanged: true` to also receive previously seen reviews with `isNew: false` and change flags. Use a new `monitorId` to start a fresh baseline.
 
 **What happens with an ambiguous or invalid company or location?**
 The actor no longer silently takes the first autocomplete row. Company names require an exact or unique match; ambiguous names are skipped with a warning that lists candidates. Location candidates are ranked (city/country before state), ambiguous choices are reported, and a zero-result location falls back to the next candidate. An unresolved location is ignored with a warning instead of failing the whole run.
@@ -219,5 +261,5 @@ No. This actor collects public review data and is not affiliated with, endorsed 
 - Keyword + exact rating filtering is also client-side because Glassdoor treats the server rating as a minimum. Newest-first order may page through many non-matching reviews; highest-rated or lowest-rated order is faster for sparse exact ratings.
 - Company names are resolved through Glassdoor autocomplete with exact/unique matching. For ambiguous names, use the company URL or employer id.
 - Regional Glassdoor URLs are accepted for company resolution, but review data still comes from Glassdoor's global endpoint; `sourceDomain` records the input domain.
-- Monitoring state (`onlyNew`) is not implemented yet; deduplicate by `reviewId` in your workflow.
+- Monitoring state is stored in a named key-value store. Use the same `monitorId` across scheduled runs; a different id starts a fresh baseline. State is tied to the current filter set, and edits to reviews older than the stored watermark are not re-read.
 - Glassdoor can change its public endpoints without notice. The actor rotates sessions and escalates direct → datacenter → residential proxies on repeated blocks. If a run reports a block or an endpoint error, re-run later or contact support with the run id.

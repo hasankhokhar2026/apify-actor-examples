@@ -1,6 +1,13 @@
 {
   "description": "Capture clean PNG screenshots of public X posts and profiles. No login or cookies required.",
   "properties": {
+    "bothThemes": {
+      "default": false,
+      "description": "When on, every target is captured twice: once in dark and once in light. Files and rows are unique per theme (one screenshot row per theme) and the run summary reports both themes. Overrides the Theme selection.",
+      "prefill": false,
+      "title": "Capture both dark and light themes",
+      "type": "boolean"
+    },
     "captureMode": {
       "default": "postCard",
       "description": "What to capture. Post links produce a single post card or a thread image; profile modes apply to profile links (and convert post links to the author profile).",
@@ -69,6 +76,13 @@
       "description": "Hide reply posts so screenshots stay focused on original posts.",
       "prefill": true,
       "title": "Hide replies",
+      "type": "boolean"
+    },
+    "includeEvidence": {
+      "default": false,
+      "description": "Save a gzipped DOM snapshot and a JSON manifest to the key-value store for every capture, and add screenshotSha256, domSnapshotSha256, evidenceKey and manifestKey to each row. Failures still get a manifest with the typed failure state.",
+      "prefill": false,
+      "title": "Include evidence pack (DOM snapshot + manifest)",
       "type": "boolean"
     },
     "includeMetadata": {
