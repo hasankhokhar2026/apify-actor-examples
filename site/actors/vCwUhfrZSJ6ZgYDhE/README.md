@@ -1,0 +1,150 @@
+# IMDb Top Charts & Advanced Title Search
+
+IMDb's own site spreads charts, search and title pages across separate views with no bulk export. This actor brings five of them into one dataset: free-text search, direct lookup by IMDb ID, the Top 250 and regional charts, a "popular now" feed, and a filtered advanced search by genre, year, rating and vote count.
+
+## What this actor does
+
+- Searches IMDb titles by free-text query
+- Fetches specific titles directly by their IMDb ID
+- Pulls one of nine IMDb charts, including the Top 250, Top 250 TV, Bottom 100, and regional-language charts
+- Returns IMDb's currently trending/popular titles
+- Runs an advanced search filtered by title type, genre, release year, minimum rating and minimum vote count, with a chosen sort order
+- Omits a field from the record when IMDb didn't publish a value for it
+
+## Output per title
+
+| Field | Description |
+|---|---|
+| `imdbId` | IMDb title ID, e.g. `tt0111161` |
+| `title` | Title as currently displayed |
+| `originalTitle` | Original-language title, when different from `title` |
+| `type` | Title type, e.g. `movie`, `tvSeries` |
+| `year` | Release year |
+| `endYear` | Final year on air, for ended TV series |
+| `rating` | IMDb rating out of 10 |
+| `ratingCount` | Number of ratings behind the score |
+| `metascore` | Metacritic score, when IMDb has one |
+| `plot` | Plot summary |
+| `genres` | List of genres |
+| `runtime` | Runtime in minutes |
+| `certificate` | Content/age rating certificate |
+| `posterUrl` | Poster image URL |
+| `releaseDate` | Full release date, when more precise than the year |
+| `countries` | Countries of origin |
+| `languages` | Spoken languages |
+| `directors` | Up to 5 directors, each `{ name, imdbId }` |
+| `writers` | Up to 5 writers, each `{ name, imdbId }` |
+| `cast` | Up to 10 cast members, each `{ name, imdbId, character }` |
+| `imdbUrl` | Link to the title's IMDb page |
+| `topRatedRank` | Chart position, present only on `topRated` mode records |
+| `scrapedAt` | UTC timestamp of when the record was captured |
+
+## Input
+
+| Field | Type | Default | Description |
+|---|---|---|---|
+| `mode` | string (select) | `topRated` | `search`, `byId`, `topRated`, `popular`, or `advanced` |
+| `searchQuery` | string | – | Free-text title query (mode `search`) |
+| `imdbIds` | array | `[]` | IMDb title IDs to fetch directly (mode `byId`) |
+| `topRatedChart` | string (select) | `TOP_250` | Which chart to fetch (mode `topRated`) — see chart list below |
+| `titleType` | string (select) | – (all types) | `movie`, `tvSeries`, `short`, `tvMiniSeries`, `tvMovie`, `tvSpecial`, `videoGame`, or `podcastSeries` |
+| `genres` | array | `[]` | Genres to filter by (combined with AND); e.g. `Drama`, `Thriller`, `Sci-Fi` |
+| `yearMin` / `yearMax` | integer | – | Release year range (1880–2030) |
+| `minRating` | number | – | Minimum IMDb rating (1–10) |
+| `minVotes` | integer | – | Minimum vote count |
+| `sortBy` | string (select) | `RANKING` | `RANKING`, `USER_RATING`, `USER_RATING_COUNT`, `RELEASE_DATE`, `TITLE_REGIONAL`, or `METACRITIC_SCORE` |
+| `sortOrder` | string (select) | `DESC` | `DESC` or `ASC` |
+| `maxItems` | integer | 50 | Maximum number of records to return (1–500) |
+
+### Example: Top 250 movies
+
+```json
+{
+  "mode": "topRated",
+  "topRatedChart": "TOP_250",
+  "maxItems": 50
+}
+```
+
+### Example: search for a title
+
+```json
+{
+  "mode": "search",
+  "searchQuery": "The Dark Knight",
+  "maxItems": 10
+}
+```
+
+### Example: fetch specific titles by ID
+
+```json
+{
+  "mode": "byId",
+  "imdbIds": ["tt0111161", "tt0468569", "tt1375666"]
+}
+```
+
+### Example: advanced search for recent, well-voted sci-fi
+
+```json
+{
+  "mode": "advanced",
+  "titleType": "movie",
+  "genres": ["Sci-Fi"],
+  "yearMin": 2010,
+  "minRating": 7.5,
+  "minVotes": 50000,
+  "sortBy": "USER_RATING",
+  "sortOrder": "DESC",
+  "maxItems": 100
+}
+```
+
+## Available chart types
+
+| Value | Description |
+|---|---|
+| `TOP_250` | Top 250 movies of all time |
+| `TOP_250_ENGLISH` | Top 250 English-language movies |
+| `TOP_250_TV` | Top 250 TV series |
+| `BOTTOM_100` | Bottom 100 lowest-rated movies |
+| `TOP_50_BENGALI` | Top 50 Bengali-language films |
+| `TOP_50_MALAYALAM` | Top 50 Malayalam-language films |
+| `TOP_50_TAMIL` | Top 50 Tamil-language films |
+| `TOP_50_TELUGU` | Top 50 Telugu-language films |
+| `TOP_250_INDIA` | Top 250 Indian films overall |
+
+## Use cases
+
+- **Recommendation engines** — export a chart with full metadata to seed a ratings model
+- **Catalog enrichment** — fetch metadata for a known list of IMDb IDs to fill in a media database
+- **Genre and era research** — run an advanced search to study which years or genres rate highest
+- **Watchlist building** — combine genre, rating and vote filters to find well-reviewed titles you've missed
+- **Regional content discovery** — pull a language-specific chart like Tamil or Malayalam alongside the global Top 250
+
+## FAQ
+
+**Is this affiliated with IMDb?**
+No. This is an independent data extraction tool and has no connection to IMDb.com or Amazon.
+
+**Do I need an IMDb account or API key?**
+No — nothing needs to be configured beyond the mode and filters above.
+
+**How fresh is the data?**
+Each run reads IMDb's current data at the time it executes, so ratings and vote counts reflect that moment.
+
+**Can I get individual TV episode records?**
+Not through this actor's modes — records are series-level. Use `byId` with an episode's own IMDb ID if you have one and want just that episode.
+
+**Why is the cast list capped at 10 people?**
+To keep records a manageable size while still covering the top-billed cast, which is the most commonly needed slice.
+
+**How do I find a title's IMDb ID?**
+It's in the title's IMDb page URL, e.g. `imdb.com/title/tt0111161/` — pass it with or without the `tt` prefix.
+
+**Why do some titles have no `metascore` or `certificate`?**
+Not every title has a Metacritic score or a published content rating; the actor leaves those fields out rather than guessing.
+
+**What's the difference between `topRated` and `advanced`?**
+`topRated` returns one of IMDb's own fixed chart lists in chart order; `advanced` runs a filtered, sortable search across IMDb's full catalog using the criteria you specify.

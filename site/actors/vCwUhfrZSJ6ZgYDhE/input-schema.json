@@ -1,0 +1,193 @@
+{
+  "description": "Search movies/TV shows on IMDb, fetch by ID, browse charts, or run advanced searches.",
+  "properties": {
+    "genres": {
+      "default": [],
+      "description": "Filter by genres. Multiple genres are combined with AND. Valid values: Action, Adventure, Animation, Biography, Comedy, Crime, Documentary, Drama, Family, Fantasy, Film-Noir, History, Horror, Music, Musical, Mystery, Romance, Sci-Fi, Sport, Thriller, War, Western.",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Genres",
+      "type": "array"
+    },
+    "imdbIds": {
+      "default": [],
+      "description": "One or more IMDb title IDs (e.g. tt0111161). Used only for byId mode.",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "IMDb IDs (byId mode)",
+      "type": "array"
+    },
+    "maxItems": {
+      "default": 50,
+      "description": "Maximum number of records to return.",
+      "maximum": 500,
+      "minimum": 1,
+      "prefill": 50,
+      "title": "Max Items",
+      "type": "integer"
+    },
+    "minRating": {
+      "description": "Only include titles with at least this IMDb rating (1–10).",
+      "maximum": 10,
+      "minimum": 1,
+      "title": "Minimum IMDb Rating",
+      "type": "number"
+    },
+    "minVotes": {
+      "description": "Only include titles with at least this many IMDb votes.",
+      "maximum": 10000000,
+      "minimum": 0,
+      "title": "Minimum Vote Count",
+      "type": "integer"
+    },
+    "mode": {
+      "default": "topRated",
+      "description": "What to fetch from IMDb.",
+      "editor": "select",
+      "enum": [
+        "search",
+        "byId",
+        "topRated",
+        "popular",
+        "advanced"
+      ],
+      "enumTitles": [
+        "Search Titles",
+        "Fetch by IMDb ID",
+        "Top 250",
+        "Popular Now",
+        "Advanced Search"
+      ],
+      "prefill": "topRated",
+      "title": "Mode",
+      "type": "string"
+    },
+    "searchQuery": {
+      "description": "Free-text query for search mode (e.g. 'inception', 'breaking bad').",
+      "editor": "textfield",
+      "prefill": "inception",
+      "title": "Search Query",
+      "type": "string"
+    },
+    "sortBy": {
+      "default": "RANKING",
+      "description": "How to sort results in advanced/search mode.",
+      "editor": "select",
+      "enum": [
+        "RANKING",
+        "USER_RATING",
+        "USER_RATING_COUNT",
+        "RELEASE_DATE",
+        "TITLE_REGIONAL",
+        "METACRITIC_SCORE"
+      ],
+      "enumTitles": [
+        "Relevance",
+        "Highest Rated",
+        "Most Votes",
+        "Release Date (Newest)",
+        "Alphabetical",
+        "Metacritic Score"
+      ],
+      "prefill": "RANKING",
+      "title": "Sort By",
+      "type": "string"
+    },
+    "sortOrder": {
+      "default": "DESC",
+      "description": "Sort direction.",
+      "editor": "select",
+      "enum": [
+        "DESC",
+        "ASC"
+      ],
+      "enumTitles": [
+        "Descending",
+        "Ascending"
+      ],
+      "prefill": "DESC",
+      "title": "Sort Order",
+      "type": "string"
+    },
+    "titleType": {
+      "default": "",
+      "description": "Filter results to a specific content type.",
+      "editor": "select",
+      "enum": [
+        "",
+        "movie",
+        "tvSeries",
+        "short",
+        "tvMiniSeries",
+        "tvMovie",
+        "tvSpecial",
+        "videoGame",
+        "podcastSeries"
+      ],
+      "enumTitles": [
+        "All Types",
+        "Feature Film",
+        "TV Series",
+        "Short Film",
+        "Mini-Series",
+        "TV Movie",
+        "TV Special",
+        "Video Game",
+        "Podcast Series"
+      ],
+      "prefill": "",
+      "title": "Title Type Filter",
+      "type": "string"
+    },
+    "topRatedChart": {
+      "default": "TOP_250",
+      "description": "Which IMDb chart to fetch in topRated mode.",
+      "editor": "select",
+      "enum": [
+        "TOP_250",
+        "TOP_250_ENGLISH",
+        "TOP_250_TV",
+        "BOTTOM_100",
+        "TOP_50_BENGALI",
+        "TOP_50_MALAYALAM",
+        "TOP_50_TAMIL",
+        "TOP_50_TELUGU",
+        "TOP_250_INDIA"
+      ],
+      "enumTitles": [
+        "Top 250 Movies (All Languages)",
+        "Top 250 English-Language Movies",
+        "Top 250 TV Shows",
+        "Bottom 100 Movies",
+        "Top 50 Bengali Movies",
+        "Top 50 Malayalam Movies",
+        "Top 50 Tamil Movies",
+        "Top 50 Telugu Movies",
+        "Top 250 Indian Movies"
+      ],
+      "prefill": "TOP_250",
+      "title": "Top Rated Chart",
+      "type": "string"
+    },
+    "yearMax": {
+      "description": "Include only titles released on or before this year.",
+      "maximum": 2030,
+      "minimum": 1880,
+      "title": "Release Year (max)",
+      "type": "integer"
+    },
+    "yearMin": {
+      "description": "Include only titles released on or after this year.",
+      "maximum": 2030,
+      "minimum": 1880,
+      "title": "Release Year (min)",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "mode"
+  ],
+  "schemaVersion": 1,
+  "title": "IMDb Scraper Input",
+  "type": "object"
+}
