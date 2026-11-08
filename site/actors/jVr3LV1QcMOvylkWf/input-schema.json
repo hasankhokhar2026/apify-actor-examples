@@ -1,0 +1,82 @@
+{
+  "description": "Scrape Reddit post comments with advanced filters and Pro output enrichment.",
+  "properties": {
+    "authorFilter": {
+      "description": "Only emit comments by this author (case-insensitive substring match).",
+      "editor": "textfield",
+      "title": "Author filter (substring)",
+      "type": "string"
+    },
+    "excludeDeleted": {
+      "default": false,
+      "description": "Drop comments where author is `[deleted]` or text is `[removed]`.",
+      "title": "Exclude deleted/removed",
+      "type": "boolean"
+    },
+    "expandThreads": {
+      "default": true,
+      "description": "Auto-expand collapsed comment threads and 'load more' sections.",
+      "title": "Expand collapsed threads",
+      "type": "boolean"
+    },
+    "keywordFilter": {
+      "description": "Only emit comments whose body contains this substring (case-insensitive). Prefix with `!` to invert (`!spam` drops comments mentioning spam).",
+      "editor": "textfield",
+      "title": "Keyword filter (substring in body)",
+      "type": "string"
+    },
+    "maxComments": {
+      "default": 100,
+      "description": "Max comments per post.",
+      "maximum": 10000,
+      "minimum": 1,
+      "title": "Max comments per post",
+      "type": "integer"
+    },
+    "maxDepth": {
+      "description": "Drop comments deeper than N levels (0 = top-level only).",
+      "maximum": 50,
+      "minimum": 0,
+      "title": "Max comment depth",
+      "type": "integer"
+    },
+    "maxWordCount": {
+      "description": "Drop walls of text — useful when surveying short reactions only.",
+      "editor": "number",
+      "maximum": 100000,
+      "minimum": 1,
+      "title": "Max word count",
+      "type": "integer"
+    },
+    "minScore": {
+      "description": "Drop comments with score below this number.",
+      "maximum": 10000000,
+      "minimum": -10000,
+      "title": "Min score (filter)",
+      "type": "integer"
+    },
+    "minWordCount": {
+      "description": "Drop one-liner comments. Counts whitespace-separated tokens in the body.",
+      "editor": "number",
+      "maximum": 100000,
+      "minimum": 0,
+      "title": "Min word count",
+      "type": "integer"
+    },
+    "postUrls": {
+      "description": "List of Reddit post URLs to scrape comments from.",
+      "editor": "stringList",
+      "prefill": [
+        "https://www.reddit.com/r/programming/comments/1s9jkzi/announcement_temporary_llm_content_ban/"
+      ],
+      "title": "Reddit post URLs",
+      "type": "array"
+    }
+  },
+  "required": [
+    "postUrls"
+  ],
+  "schemaVersion": 1,
+  "title": "Reddit Comment Scraper Pro Input",
+  "type": "object"
+}
