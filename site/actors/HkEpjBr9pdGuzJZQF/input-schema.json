@@ -1,0 +1,119 @@
+{
+  "description": "Search the LinkedIn Learning course catalog by keyword. No authentication required.",
+  "properties": {
+    "assetType": {
+      "default": "COURSE",
+      "description": "Type of learning content to search for.",
+      "editor": "select",
+      "enum": [
+        "COURSE",
+        "LEARNING_PATH",
+        "VIDEO"
+      ],
+      "enumTitles": [
+        "Course",
+        "Learning Path",
+        "Video"
+      ],
+      "prefill": "COURSE",
+      "title": "Asset type",
+      "type": "string"
+    },
+    "difficultyLevel": {
+      "default": "",
+      "description": "Filter by course difficulty level. Leave empty to return all levels.",
+      "editor": "select",
+      "enum": [
+        "",
+        "BEGINNER",
+        "INTERMEDIATE",
+        "ADVANCED"
+      ],
+      "enumTitles": [
+        "All levels",
+        "Beginner",
+        "Intermediate",
+        "Advanced"
+      ],
+      "prefill": "",
+      "title": "Difficulty level",
+      "type": "string"
+    },
+    "language": {
+      "default": "en",
+      "description": "Filter by course language. Also selects the matching LinkedIn Learning locale.",
+      "editor": "select",
+      "enum": [
+        "en",
+        "es",
+        "fr",
+        "de",
+        "pt"
+      ],
+      "enumTitles": [
+        "English",
+        "Spanish",
+        "French",
+        "German",
+        "Portuguese"
+      ],
+      "prefill": "en",
+      "title": "Course Language",
+      "type": "string"
+    },
+    "maxResults": {
+      "default": 50,
+      "description": "Maximum number of courses to return.",
+      "maximum": 500,
+      "minimum": 1,
+      "prefill": 50,
+      "title": "Max results",
+      "type": "integer"
+    },
+    "proxyConfiguration": {
+      "description": "Optional proxy settings. Not required for most queries.",
+      "editor": "proxy",
+      "prefill": {
+        "useApifyProxy": false
+      },
+      "title": "Proxy configuration",
+      "type": "object"
+    },
+    "searchQuery": {
+      "default": "Python machine learning",
+      "description": "Keyword or skill to search for (e.g. 'Python machine learning', 'project management', 'data analysis').",
+      "editor": "textfield",
+      "prefill": "Python machine learning",
+      "title": "Search query",
+      "type": "string"
+    },
+    "sortBy": {
+      "default": "RELEVANCE",
+      "description": "How to sort the results.",
+      "editor": "select",
+      "enum": [
+        "RELEVANCE",
+        "RECENCY"
+      ],
+      "enumTitles": [
+        "Relevance",
+        "Most recent"
+      ],
+      "prefill": "RELEVANCE",
+      "title": "Sort by",
+      "type": "string"
+    },
+    "topic": {
+      "description": "Narrow results to a specific learning topic (e.g., 'Cloud Computing', 'Web Development'). Combined with the search query.",
+      "editor": "textfield",
+      "title": "Topic",
+      "type": "string"
+    }
+  },
+  "required": [
+    "searchQuery"
+  ],
+  "schemaVersion": 1,
+  "title": "LinkedIn Learning Courses Scraper Input",
+  "type": "object"
+}
