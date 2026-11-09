@@ -1,0 +1,125 @@
+# Realtor.com Listing & Property Detail Extractor
+
+Pull structured property data straight from Realtor.com — run a location search for active, rental, or recently-sold listings, or hand it specific property URLs and get back the full detail page: pricing, agent contacts, nearby schools, price/tax history, and environmental risk scores.
+
+## What this actor does
+
+- **Location search in three modes** — for-sale (`BUY`), for-rent (`RENT`), or recently-sold (`SOLD`), by city/state, ZIP code, or neighborhood
+- **Direct URL input** — paste Realtor.com property or search-result URLs instead of (or alongside) a location search; results from both sources are deduplicated
+- **Two scrape depths** — search-result fields only for speed, or full detail-page enrichment (schools, history, risk data, long description) when `scrapeDetails` is on
+- **Detail enrichment** — nearby school ratings, flood/noise/wildfire risk scores, price and tax history, and listing-agent contact info
+- **Honest gaps** — a field the source doesn't publish for a given property (e.g. no tax records on a brand-new build) comes back blank instead of a guessed value
+
+## Output per property
+
+- `url`, `id`, `listingId`, `permalink` — property identity and detail-page link
+- `status` — e.g. `for_sale`, `for_rent`, `sold`, `pending`
+- `listPrice`, `lastSoldPrice`, `soldOn`, `priceReduced`
+- `beds`, `baths`, `bathsFull`, `bathsHalf`, `sqft`, `lotSqft`, `yearBuilt`, `garage`, `stories`
+- `type`, `subType`, `name` — property type/sub-type and community name
+- `text` — full marketing description (detail pages only)
+- `listDate` — date the listing went live
+- `address.street`, `address.city`, `address.state`, `address.postalCode`
+- `coordinates.lat`, `coordinates.lng`
+- `photos` — array of photo URLs
+- `agents[].name`, `agents[].email`, `agents[].phone`, `agents[].office`, `agents[].type`
+- `flags.isNewListing`, `flags.isPriceReduced`, `flags.isForeclosure`, `flags.isNewConstruction`, `flags.isPending`, `flags.isContingent`
+- `features` — categorized property features (cooling, heating, roofing, construction, pool, fireplace, zoning, etc.), detail pages only
+- `nearbySchools[].name`, `.rating`, `.distance`, `.grades`, `.type`, `.levels`, `.studentCount`, detail pages only
+- `local.flood.floodFactorScore`, `.severity`, `.femaZone`, `.insuranceRequired`, detail pages only
+- `local.noise.score`, `.categories`, detail pages only
+- `local.wildfire.fireFactorScore`, `.severity`, detail pages only
+- `history[].date`, `.event`, `.price`, `.pricePerSqft`, `.source` — price/listing event timeline, detail pages only
+- `taxHistory[].year`, `.tax`, `.assessmentTotal`, `.assessmentLand`, `.assessmentBuilding`, `.marketTotal`, `.marketLand`, `.marketBuilding`, detail pages only
+- `yearRenovated`, `rooms`, `units`, detail pages only
+- `scrapedAt` — ISO timestamp the record was collected
+
+## Input
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `search` | String | – | City and state to search, e.g. `Houston, TX`, `San Francisco, CA` |
+| `mode` | String (select) | `BUY` | `BUY` (for sale), `RENT` (for rent), or `SOLD` (recently sold) |
+| `maxItems` | Integer | `50` | Maximum property listings to scrape (1–500) |
+| `endPage` | Integer | `5` | Maximum search-result pages per search (1–20); each page holds up to 42 properties |
+| `scrapeDetails` | Boolean | `true` | Fetch each property's detail page for description, schools, history, tax, and risk data. Turn off for faster, search-only runs |
+| `startUrls` | Array | – | Direct Realtor.com property or search-page URLs |
+
+At least one of `search` or `startUrls` must be supplied.
+
+### Example: search for active listings
+
+```json
+{
+    "search": "Houston, TX",
+    "mode": "BUY",
+    "maxItems": 50,
+    "scrapeDetails": true
+}
+```
+
+### Example: rental search without detail enrichment
+
+```json
+{
+    "search": "Miami, FL",
+    "mode": "RENT",
+    "maxItems": 25,
+    "scrapeDetails": false
+}
+```
+
+### Example: recently-sold properties for comps
+
+```json
+{
+    "search": "Denver, CO",
+    "mode": "SOLD",
+    "maxItems": 30
+}
+```
+
+### Example: scrape listed URLs directly
+
+```json
+{
+    "startUrls": [
+        { "url": "https://www.realtor.com/realestateandhomes-detail/46-Kingwood-Greens-Dr_Kingwood_TX_77339_M71671-24763" }
+    ],
+    "scrapeDetails": true
+}
+```
+
+## Use cases
+
+- **Comparable-sales research** — pull `SOLD` listings in a neighborhood to build a comps set with sale price, date, and price-per-sqft
+- **Buyer due diligence** — check a shortlist of addresses for flood/wildfire/noise scores and nearby school ratings before making an offer
+- **Rental market tracking** — monitor `RENT` listings across a city to watch asking-price trends over time
+- **Investor screening** — combine tax-assessment history with current list price to spot under- or over-assessed properties
+- **Agent and brokerage mapping** — collect listing-agent names, offices, and contact details active in a given market
+
+## FAQ
+
+**Does this need a Realtor.com account or API key?**
+No. Both the location search and direct-URL modes work against publicly listed pages.
+
+**What's the difference between `BUY`, `RENT`, and `SOLD`?**
+`BUY` returns active for-sale listings, `RENT` returns rental listings, and `SOLD` returns properties that have already closed, including their final sale price and sale date.
+
+**Can I target a ZIP code or specific neighborhood instead of a city?**
+Yes — `search` accepts anything Realtor.com's own location search accepts, including a ZIP code (e.g. `77339`) or a neighborhood plus state (e.g. `Kingwood, TX`).
+
+**Why are some detail fields empty for a property I scraped?**
+Detail-page sections like schools, tax history, and risk scores exist only when Realtor.com itself publishes them for that listing — new construction or off-market properties often lack tax or sale history, and not every area has flood/wildfire/noise scoring.
+
+**Why would I turn off `scrapeDetails`?**
+Search-only runs skip the per-property detail page, so they return core fields (price, beds/baths, sqft, address, photos, agents) much faster when you don't need schools, history, or risk data.
+
+**Why did I get fewer results than `maxItems`?**
+The search location may simply have fewer matching listings than requested, or the result set ran out of pages before `endPage`/`maxItems` was reached.
+
+**Can I mix a location search with direct URLs in the same run?**
+Yes — supply both `search` and `startUrls`; results from each source are merged and deduplicated by property.
+
+**Is this tool affiliated with Realtor.com or Move, Inc.?**
+No. It is an independent actor that reads property pages Realtor.com already makes public; it isn't operated by or affiliated with Realtor.com.
