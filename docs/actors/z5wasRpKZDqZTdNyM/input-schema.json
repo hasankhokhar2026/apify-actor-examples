@@ -1,0 +1,91 @@
+{
+  "description": "Search Coursera courses and specializations, browse by difficulty, or filter by partner/university.",
+  "properties": {
+    "difficultyLevel": {
+      "default": "",
+      "description": "Only return courses of this difficulty level.",
+      "editor": "select",
+      "enum": [
+        "",
+        "BEGINNER",
+        "INTERMEDIATE",
+        "ADVANCED",
+        "MIXED"
+      ],
+      "enumTitles": [
+        "Any level",
+        "Beginner",
+        "Intermediate",
+        "Advanced",
+        "Mixed (varies by module)"
+      ],
+      "prefill": "",
+      "title": "Difficulty level",
+      "type": "string"
+    },
+    "freeOnly": {
+      "default": false,
+      "description": "Only return courses where enrollmentType is AUDIT (free to audit).",
+      "prefill": false,
+      "title": "Free/auditable only",
+      "type": "boolean"
+    },
+    "maxItems": {
+      "default": 5,
+      "description": "Maximum number of records to return.",
+      "maximum": 1000,
+      "minimum": 1,
+      "prefill": 5,
+      "title": "Max items",
+      "type": "integer"
+    },
+    "mode": {
+      "default": "search",
+      "description": "What to fetch from Coursera.",
+      "editor": "select",
+      "enum": [
+        "search",
+        "searchSpecializations",
+        "bySlug",
+        "byPartner",
+        "browse"
+      ],
+      "enumTitles": [
+        "Search courses by keyword",
+        "Search specializations (bundled course series)",
+        "Single course or specialization by slug",
+        "Courses from a specific university/partner",
+        "Browse courses by difficulty level"
+      ],
+      "prefill": "search",
+      "title": "Mode",
+      "type": "string"
+    },
+    "partner": {
+      "description": "Filter courses to this university/organization (substring match). E.g. `Stanford`, `Google`, `DeepLearning.AI`.",
+      "editor": "textfield",
+      "title": "Partner name filter",
+      "type": "string"
+    },
+    "query": {
+      "default": "machine learning",
+      "description": "Keyword to search for (search/searchSpecializations/byPartner modes).",
+      "editor": "textfield",
+      "prefill": "machine learning",
+      "title": "Search query",
+      "type": "string"
+    },
+    "slug": {
+      "description": "Coursera course or specialization slug, e.g. `machine-learning` or `deep-learning`.",
+      "editor": "textfield",
+      "title": "Course/Specialization slug (mode=bySlug)",
+      "type": "string"
+    }
+  },
+  "required": [
+    "mode"
+  ],
+  "schemaVersion": 1,
+  "title": "Coursera Course Scraper Input",
+  "type": "object"
+}
