@@ -5,7 +5,7 @@
       "default": false,
       "description": "When on, every target is captured twice: once in dark and once in light. Files and rows are unique per theme (one screenshot row per theme) and the run summary reports both themes. Overrides the Theme selection.",
       "prefill": false,
-      "title": "Capture both dark and light themes",
+      "title": "Both themes",
       "type": "boolean"
     },
     "captureMode": {
@@ -68,7 +68,7 @@
       "default": false,
       "description": "When on, the whole page is captured instead of just the post card or the visible profile header.",
       "prefill": false,
-      "title": "Capture the full scrollable page",
+      "title": "Full-page capture",
       "type": "boolean"
     },
     "hideReplies": {
@@ -82,7 +82,7 @@
       "default": false,
       "description": "Save a gzipped DOM snapshot and a JSON manifest to the key-value store for every capture, and add screenshotSha256, domSnapshotSha256, evidenceKey and manifestKey to each row. Failures still get a manifest with the typed failure state.",
       "prefill": false,
-      "title": "Include evidence pack (DOM snapshot + manifest)",
+      "title": "Include evidence pack",
       "type": "boolean"
     },
     "includeMetadata": {
@@ -100,17 +100,13 @@
       "prefill": 8000,
       "sectionCaption": "Advanced",
       "sectionDescription": "Optional settings for large or repeated runs.",
-      "title": "Max thread image height (pixels)",
+      "title": "Max thread height (px)",
       "type": "integer"
     },
     "postUrls": {
+      "default": [],
       "description": "Posts to capture as clean post cards. Paste x.com or twitter.com links, bare numeric post IDs, profile links or bare usernames. Any input works in every list.",
       "editor": "stringList",
-      "example": [
-        "https://x.com/NASA/status/2107095768821576019",
-        "2107095768821576019",
-        "@apify"
-      ],
       "prefill": [
         "https://x.com/NASA/status/2107095768821576019"
       ],
@@ -118,12 +114,9 @@
       "type": "array"
     },
     "profileUrls": {
+      "default": [],
       "description": "Optional. Profiles to capture. Paste profile links, bare usernames, post links or post IDs and the actor routes them to the right capture. Use capture mode to choose the header only or the loaded profile preview.",
       "editor": "stringList",
-      "example": [
-        "https://x.com/apify",
-        "apify"
-      ],
       "title": "X profile links or usernames",
       "type": "array"
     },
@@ -162,6 +155,7 @@
       "type": "string"
     },
     "tweetUrls": {
+      "default": [],
       "description": "Alias of X post links. Accepts tweet links, bare tweet IDs, profile links and bare usernames.",
       "editor": "stringList",
       "title": "Tweet links (alias)",

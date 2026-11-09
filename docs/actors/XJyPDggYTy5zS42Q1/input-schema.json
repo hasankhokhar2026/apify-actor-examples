@@ -50,6 +50,7 @@
       "type": "boolean"
     },
     "excludeWords": {
+      "default": [],
       "description": "Words or phrases to exclude from every search, compiled to -word / -\"two words\" tokens.",
       "editor": "stringList",
       "items": {
@@ -67,6 +68,7 @@
       "type": "string"
     },
     "includeLanes": {
+      "default": [],
       "description": "Which X search lanes to run: latest, media, media-product, links, replies. Leave empty for the default latest + media + links (replies is added automatically for jobs of 100+ rows). media-product asks for X's product=Media page directly and is opt-in.",
       "editor": "stringList",
       "items": {
@@ -77,13 +79,9 @@
       "type": "array"
     },
     "keywords": {
+      "default": [],
       "description": "Words, phrases, hashtags or full X search queries to monitor. Each keyword is searched separately, and every result row tells you which keyword found it (searchTerm).",
       "editor": "stringList",
-      "example": [
-        "web scraping",
-        "data mining",
-        "#AI"
-      ],
       "items": {
         "type": "string"
       },
@@ -218,7 +216,7 @@
       "description": "Alias of Maximum tweets per keyword. The actor accepts either name.",
       "maximum": 1000,
       "minimum": 1,
-      "title": "Maximum tweets per keyword (alias)",
+      "title": "Max tweets per keyword",
       "type": "integer"
     },
     "maxPasses": {

@@ -13,7 +13,7 @@
       &quot;default&quot;: true,
       &quot;description&quot;: &quot;When a quote post has no video of its own, transcribe the video of the quoted post. The row keeps the quote post&#x27;s metadata and records quotedTweetId.&quot;,
       &quot;prefill&quot;: true,
-      &quot;title&quot;: &quot;Transcribe quoted video when the post has none&quot;,
+      &quot;title&quot;: &quot;Include quoted video&quot;,
       &quot;type&quot;: &quot;boolean&quot;
     },
     &quot;includeTweetMetadata&quot;: {
@@ -33,7 +33,6 @@
     &quot;language&quot;: {
       &quot;description&quot;: &quot;Optional language code, for example en, es, fr or ur. Native captions prefer this language when several tracks exist; AI transcription uses it as a spoken-language hint. Leave empty to detect automatically.&quot;,
       &quot;editor&quot;: &quot;textfield&quot;,
-      &quot;example&quot;: &quot;en&quot;,
       &quot;nullable&quot;: true,
       &quot;title&quot;: &quot;Spoken/caption language hint&quot;,
       &quot;type&quot;: &quot;string&quot;
@@ -86,14 +85,9 @@
       &quot;type&quot;: &quot;string&quot;
     },
     &quot;postUrls&quot;: {
+      &quot;default&quot;: [],
       &quot;description&quot;: &quot;Post links or bare post IDs that contain a video or GIF. Accepts x.com and twitter.com links, /i/status and /i/web/status links, /video/N links, and bare numeric IDs. Profile links or usernames are accepted too and are treated like profile inputs. Provide this or Profile links — at least one of the two is required.&quot;,
       &quot;editor&quot;: &quot;stringList&quot;,
-      &quot;example&quot;: [
-        &quot;https://x.com/NASA/status/2107095768821576019&quot;,
-        &quot;https://twitter.com/elonmusk/status/1519480761749016577/video/1&quot;,
-        &quot;2107095768821576019&quot;,
-        &quot;NASA&quot;
-      ],
       &quot;items&quot;: {
         &quot;type&quot;: &quot;string&quot;
       },
@@ -104,12 +98,9 @@
       &quot;type&quot;: &quot;array&quot;
     },
     &quot;profileUrls&quot;: {
+      &quot;default&quot;: [],
       &quot;description&quot;: &quot;Optional. Transcribe recent video posts from these profiles. Paste x.com profile links, @handles or bare usernames. Works without Post links.&quot;,
       &quot;editor&quot;: &quot;stringList&quot;,
-      &quot;example&quot;: [
-        &quot;NASA&quot;,
-        &quot;https://x.com/elonmusk&quot;
-      ],
       &quot;items&quot;: {
         &quot;type&quot;: &quot;string&quot;
       },
@@ -543,7 +534,19 @@
 <td>Present on <code>spaces_not_supported</code> status rows</td>
 </tr>
 <tr>
-<td><code>collectedAt</code></td>
+<td><code>type</code></td>
+<td><code>video transcript</code> or <code>status</code></td>
+</tr>
+<tr>
+<td><code>recordType</code></td>
+<td>Standard alias: <code>transcript</code> or <code>status</code></td>
+</tr>
+<tr>
+<td><code>sourceUrl</code></td>
+<td>Canonical post URL (omitted when the input had no valid URL)</td>
+</tr>
+<tr>
+<td><code>collectedAt</code>, <code>scrapedAt</code></td>
 <td>UTC timestamp</td>
 </tr>
 </tbody>
@@ -904,4 +907,4 @@
 <p><strong>Why is a row missing <code>segments</code> or <code>fullTranscript</code>?</strong> <code>outputFormat</code> controls which fields are filled, and unavailable transcripts never contain transcript fields — they are <code>status</code> rows with an <code>errorCode</code> and message.</p>
 <p><strong>Can a deleted or protected post be transcribed?</strong> No. Deleted or never-existing posts return <code>not_found</code>; protected posts and profiles return <code>protected</code> / <code>profile_protected</code> because only approved followers can read them.</p>
 <p><strong>Is this affiliated with X?</strong> No. This is an independent tool and is not affiliated with, endorsed by, or sponsored by X Corp.</p>
-</details></section><section id="python-quickstart"><h2>Python quickstart</h2><p>Use a schema-derived input and the Python standard library to start a run. An Apify account and token are required for execution.</p><p><a href="/apify-actor-examples/guides/SVs5jybOGSsqVgvbs/">Open the step-by-step Python guide →</a></p></section><p class="source-note">Source build <code>4sy27ND57LQ36jC4Y</code>. Documentation is regenerated from the default published build; private drafts are not included.</p></article></div></main><footer class="footer"><strong>Nimbryxo Studio</strong><div class="footer-links"><a href="/apify-actor-examples/topics/">Topics</a><a href="/apify-actor-examples/sources/">Documentation sources</a><a href="https://apify.com/nimbryxo-studio">Apify</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></div></footer></body></html>
+</details></section><section id="python-quickstart"><h2>Python quickstart</h2><p>Use a schema-derived input and the Python standard library to start a run. An Apify account and token are required for execution.</p><p><a href="/apify-actor-examples/guides/SVs5jybOGSsqVgvbs/">Open the step-by-step Python guide →</a></p></section><p class="source-note">Source build <code>Q5AGTxVSf5y446qRf</code>. Documentation is regenerated from the default published build; private drafts are not included.</p></article></div></main><footer class="footer"><strong>Nimbryxo Studio</strong><div class="footer-links"><a href="/apify-actor-examples/topics/">Topics</a><a href="/apify-actor-examples/sources/">Documentation sources</a><a href="https://apify.com/nimbryxo-studio">Apify</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></div></footer></body></html>

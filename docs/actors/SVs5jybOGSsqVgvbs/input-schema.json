@@ -13,7 +13,7 @@
       "default": true,
       "description": "When a quote post has no video of its own, transcribe the video of the quoted post. The row keeps the quote post's metadata and records quotedTweetId.",
       "prefill": true,
-      "title": "Transcribe quoted video when the post has none",
+      "title": "Include quoted video",
       "type": "boolean"
     },
     "includeTweetMetadata": {
@@ -33,7 +33,6 @@
     "language": {
       "description": "Optional language code, for example en, es, fr or ur. Native captions prefer this language when several tracks exist; AI transcription uses it as a spoken-language hint. Leave empty to detect automatically.",
       "editor": "textfield",
-      "example": "en",
       "nullable": true,
       "title": "Spoken/caption language hint",
       "type": "string"
@@ -86,14 +85,9 @@
       "type": "string"
     },
     "postUrls": {
+      "default": [],
       "description": "Post links or bare post IDs that contain a video or GIF. Accepts x.com and twitter.com links, /i/status and /i/web/status links, /video/N links, and bare numeric IDs. Profile links or usernames are accepted too and are treated like profile inputs. Provide this or Profile links — at least one of the two is required.",
       "editor": "stringList",
-      "example": [
-        "https://x.com/NASA/status/2107095768821576019",
-        "https://twitter.com/elonmusk/status/1519480761749016577/video/1",
-        "2107095768821576019",
-        "NASA"
-      ],
       "items": {
         "type": "string"
       },
@@ -104,12 +98,9 @@
       "type": "array"
     },
     "profileUrls": {
+      "default": [],
       "description": "Optional. Transcribe recent video posts from these profiles. Paste x.com profile links, @handles or bare usernames. Works without Post links.",
       "editor": "stringList",
-      "example": [
-        "NASA",
-        "https://x.com/elonmusk"
-      ],
       "items": {
         "type": "string"
       },

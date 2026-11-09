@@ -18,6 +18,7 @@ Collect employee reviews from Glassdoor companies by URL, company name, or emplo
 - Supports incremental monitoring with `onlyNew` and a named `monitorId` state store: per-company review-id watermarks and seen sets, `isNew`/`firstSeenAt` output, optional `emitUnchanged`, and state updates only after a successful dataset push.
 - Resolves company and location names with exact/unique matching. Ambiguous or invalid values produce typed warnings instead of silently taking the first autocomplete row.
 - Omits fields that Glassdoor does not provide for a review instead of writing empty strings, nulls, or zero placeholders.
+- **Empty fields are omitted:** never null, empty strings or empty arrays/objects.
 
 Typical uses: employer-brand research, culture and sentiment analysis, HR benchmarking, due diligence, recruiting research, and building review datasets for analytics.
 
@@ -51,9 +52,7 @@ Typical uses: employer-brand research, culture and sentiment analysis, HR benchm
 | `monitorId` | string | `glassdoor-reviews` | Name of the key-value store that holds monitoring state. Use the same value on every scheduled run. |
 | `emitUnchanged` | boolean | false | With `onlyNew`, also emit previously seen reviews that have not changed. Each emitted review gets `isNew: false` and its original `firstSeenAt`. |
 
-### Examples
-
-One company by URL:
+### Example: one company by URL
 
 ```json
 {
@@ -63,7 +62,7 @@ One company by URL:
 }
 ```
 
-Several companies by name or id:
+### Example: several companies by name or id
 
 ```json
 {
@@ -74,7 +73,7 @@ Several companies by name or id:
 }
 ```
 
-Recent five-star reviews from current employees:
+### Example: recent five-star reviews from current employees
 
 ```json
 {
@@ -86,7 +85,7 @@ Recent five-star reviews from current employees:
 }
 ```
 
-Exact date range with several star ratings and languages:
+### Example: exact date range with several star ratings and languages
 
 ```json
 {
@@ -99,7 +98,7 @@ Exact date range with several star ratings and languages:
 }
 ```
 
-New York engineers with employer responses:
+### Example: New York engineers with employer responses
 
 ```json
 {
@@ -111,7 +110,7 @@ New York engineers with employer responses:
 }
 ```
 
-All languages, worldwide, with company profile:
+### Example: all languages, worldwide, with company profile
 
 ```json
 {
@@ -123,7 +122,7 @@ All languages, worldwide, with company profile:
 }
 ```
 
-Scheduled incremental monitoring:
+### Example: scheduled incremental monitoring
 
 ```json
 {
@@ -161,6 +160,8 @@ New fields are added beside them:
 | `companyUrl` | Company's Glassdoor reviews page. |
 | `companyRatingDistribution` | Company's star distribution by rating category. |
 | `sourceDomain` | Glassdoor domain used for the data. |
+| `recordType` | `review` for review rows; `companySummary` for summary rows. |
+| `sourceUrl` | Canonical review URL (`reviewUrl`); for company summaries, the company reviews URL. |
 | `scrapedAt` | Run timestamp in UTC. |
 
 When `onlyNew` is on, each emitted review also gets these monitoring fields:
@@ -177,7 +178,7 @@ When `includeCompanyProfile` is on, each review also gets `companyWebsite`, `com
 
 `companySubRatings` keeps the six category ratings on Glassdoor's 1-5 scale (`overall`, `workLifeBalance`, `cultureAndValues`, `diversityAndInclusion`, `seniorManagement`, `careerOpportunities`, `compensationAndBenefits`) and converts the three fraction fields to 0-100 percentages: `ceoApprovalPct`, `recommendToFriendPct`, and `businessOutlookPct`. A `scale` string documents both scales.
 
-`lengthOfEmployment` is Glassdoor's tenure bucket; `0` means less than one year, not missing.
+`lengthOfEmployment` is Glassdoor's tenure bucket; `0` means less than one year, not missing. `ratingRecommendToFriend` uses Glassdoor's values such as `RECOMMEND`, `WONT_RECOMMEND` and `NO_OPINION` when present.
 
 Missing values are omitted. For example, a review without advice has no `advice` key, and a review without sub-ratings has no sub-rating keys. Booleans such as `isCurrentJob`, `isFeatured`, and `hasEmployerResponse` are always present.
 
@@ -221,6 +222,27 @@ Glassdoor still counts a small number of reviews it does not serve. The actor re
 
 Glassdoor stores reviews in language buckets. Set `language` to collect English, French, German, Dutch, Portuguese, Spanish, Italian, or all languages, or list several values in `languages`. Region-specific Glassdoor URLs are accepted, but the data comes from Glassdoor's global review endpoint; the country domain alone does not create a separate review set. `sourceDomain` records the domain from the input URL.
 
+## Use cases
+
+- **Employer-brand and culture research** - compare pros, cons and sub-ratings across companies or locations.
+- **HR and recruiting benchmarking** - measure compensation, work-life balance and leadership sentiment by job function or tenure.
+- **Due diligence and investment research** - export structured review history, ratings and employer responses for analysis.
+- **Voice-of-employee monitoring** - schedule `onlyNew` runs and route new reviews to HR, ops or customer-experience teams.
+- **Labor-market datasets** - build review corpora with canonical URLs, language buckets and first-seen timestamps.
+
+## Data source and limitations
+
+- Data source: Glassdoor's public review and company endpoints.
+- No user credentials, cookies, or proxy configuration are required.
+- Reviewer names are not exposed by Glassdoor's public review data. The actor does not attempt to identify reviewers.
+- Employer responses are optional and appear only when Glassdoor provides them. Use onlyWithEmployerResponses to keep response-bearing reviews only.
+- Glassdoor does not expose original-language or translation text for the sampled reviews; those fields are omitted unless the source provides them.
+- Arbitrary date ranges are applied client-side, so very old ranges may require paging through newer reviews first.
+- Keyword + exact rating filtering is also client-side because Glassdoor treats the server rating as a minimum. Newest-first order may page through many non-matching reviews; highest-rated or lowest-rated order is faster for sparse exact ratings.
+- Company names are resolved through Glassdoor autocomplete with exact/unique matching. For ambiguous names, use the company URL or employer id.
+- Regional Glassdoor URLs are accepted for company resolution, but review data still comes from Glassdoor's global endpoint; `sourceDomain` records the input domain.
+- Monitoring state is stored in a named key-value store. Use the same `monitorId` across scheduled runs; a different id starts a fresh baseline. State is tied to the current filter set, and edits to reviews older than the stored watermark are not re-read.
+- Glassdoor can change its public endpoints without notice. The actor rotates sessions and escalates direct → datacenter → residential proxies on repeated blocks. If a run reports a block or an endpoint error, re-run later or contact support with the run id.
 ## FAQ
 
 **Do I need a Glassdoor account or cookie?**
@@ -249,17 +271,3 @@ The actor no longer silently takes the first autocomplete row. Company names req
 
 **Is this affiliated with Glassdoor?**
 No. This actor collects public review data and is not affiliated with, endorsed by, or sponsored by Glassdoor.
-
-## Data source and limitations
-
-- Data source: Glassdoor's public review and company endpoints.
-- No user credentials, cookies, or proxy configuration are required.
-- Reviewer names are not exposed by Glassdoor's public review data. The actor does not attempt to identify reviewers.
-- Employer responses are optional and appear only when Glassdoor provides them. Use onlyWithEmployerResponses to keep response-bearing reviews only.
-- Glassdoor does not expose original-language or translation text for the sampled reviews; those fields are omitted unless the source provides them.
-- Arbitrary date ranges are applied client-side, so very old ranges may require paging through newer reviews first.
-- Keyword + exact rating filtering is also client-side because Glassdoor treats the server rating as a minimum. Newest-first order may page through many non-matching reviews; highest-rated or lowest-rated order is faster for sparse exact ratings.
-- Company names are resolved through Glassdoor autocomplete with exact/unique matching. For ambiguous names, use the company URL or employer id.
-- Regional Glassdoor URLs are accepted for company resolution, but review data still comes from Glassdoor's global endpoint; `sourceDomain` records the input domain.
-- Monitoring state is stored in a named key-value store. Use the same `monitorId` across scheduled runs; a different id starts a fresh baseline. State is tied to the current filter set, and edits to reviews older than the stored watermark are not re-read.
-- Glassdoor can change its public endpoints without notice. The actor rotates sessions and escalates direct → datacenter → residential proxies on repeated blocks. If a run reports a block or an endpoint error, re-run later or contact support with the run id.

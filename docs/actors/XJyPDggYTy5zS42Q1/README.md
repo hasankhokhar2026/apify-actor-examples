@@ -9,7 +9,7 @@ Give this actor a list of keywords, phrases or hashtags and it pulls back matchi
 ## What this actor does
 
 - Runs each entry in `keywords` as its own independent search, so a single job can cover several unrelated topics at once.
-- Targets up to 1,000 posts per keyword via `maxTweets`; how many actually come back depends on how much volume that keyword has on X. Phase 6 measured **300 unique rows for a 300-row target** (297 s); 500/1,000 are not verified, so treat `maxTweets` as a target, not a promise.
+- Targets up to 1,000 posts per keyword via `maxTweets`; how many actually come back depends on how much volume that keyword has on X. A 300-row target has been verified (about 297 s); 500/1,000 are not verified, so treat `maxTweets` as a target, not a promise.
 - Runs several X search lanes (`latest`, `media`, opt-in `media-product`, `links`, optionally `replies`) and walks backwards through `since_time`/`until_time` windows. Guest search has **no cursor paging**; time-window backfill is the only way past the ~20-row page cap (a `product=Media` page can return 41-45 rows).
 - `Latest` returns newest-first. `Top` is **engagement-ranked output, not X's real Top timeline**: X never serves Top to logged-out callers, so the actor collects Latest pages and sorts them by like count client-side.
 - Narrows by language, date window, retweets/replies, verification, media presence, quotes, mentions, author, reply target, conversation id, and minimum like/retweet/reply counts.
@@ -17,7 +17,7 @@ Give this actor a list of keywords, phrases or hashtags and it pulls back matchi
 - With `onlyNew` enabled, returns only posts newer than the previous run for the same `monitorId` + keyword. The actor persists a numeric snowflake watermark and an overlap window in the key-value store.
 - Stamps every row with `searchTerm`, `source` (`x-search` or `bing-news`), `sourceLane` (`latest` / `media` / `media-product` / `links` / `replies` / `window` / `bing` / `bing-title-only`) and `degraded`.
 - Emits a typed `status` row for a keyword that needs attention and one `summary` row per run.
-- Drops any field with no data for that post — you will never see `null`, an empty string, or an empty array/object in the output.
+- **Empty fields are omitted:** never `null`, empty strings or empty arrays/objects in the output.
 
 ## Output per post
 
@@ -25,13 +25,13 @@ Core fields on every post record: `id`, `url`, `text`, `createdAt`, `language` (
 
 Engagement comes through `replyCount`, `retweetCount`, `likeCount`, `quoteCount`, `bookmarkCount`, and `viewCount`, plus a computed `engagementRate` — `(likes + retweets + replies + quotes) ÷ followers` — included only once the author's follower count is known and nonzero. Missing retweets/quotes/bookmarks/views/followers/bio are backfilled from the FxTwitter mirror after the X refresh; X values always win and only missing fields are copied.
 
-Post-type context: `isReply`, `isRetweet`, `isQuote`, `isNoteTweet`, and, for replies, `conversationId`, `inReplyToTweetId`, `inReplyToUserId`, `inReplyToUsername`, `parentTweet` (a nested summary of the post being replied to, when available).
+Post-type context: `isReply`, `isRetweet`, `isQuote`, `isNoteTweet`, and, for replies, `conversationId`, `inReplyToTweetId`, `inReplyToUserId`, `inReplyToUsername`, `parentTweet` (a nested summary of the post being replied to, when available). Every post row also carries `recordType: "post"`, `sourceUrl` (the canonical post URL) and `scrapedAt`.
 
 Entities parsed out of the text: `hashtags`, `mentions`, `urls`, `cashtags`.
 
-Attachments and extras, when present: `media` (one entry per photo/video/GIF with `type`, `url`, `previewImageUrl`, pixel dimensions, `durationSeconds`, `viewCount`, `altText`, `variants`), `quotedTweet` / `quotedTweetId`, `poll`, `card`, `possiblySensitive`, `withheldInCountries`, `place`, `postedFrom`, `isEdited`, `editControl` (edit history metadata), `newsActionType`.
+Attachments and extras, when present: `media` (one entry per photo/video/GIF with `type`, `url`, `previewImageUrl`, `width`, `height`, `durationSeconds`, `viewCount`, `altText`, `mediaKey`, `canMediaTag`, `focusRects`, `variants` with `url`/`contentType`/`bitrate`), `quotedTweet` / `quotedTweetId`, `poll`, `card`, `possiblySensitive`, `withheldInCountries`, `place`, `postedFrom`, `isEdited`, `editControl` (edit history metadata), `newsActionType`.
 
-The author rides along as a nested `author` object — `id`, `username`, `name`, `bio`, `followers`, `isBlueVerified`, `verified`, `profileImageUrl`, and more.
+The author rides along as a nested `author` object: `id`, `username`, `name`, `bio`, `bioLinks`, `location`, `website`, `followers`, `following`, `likesGiven`, `postCount`, `mediaCount`, `createdAt`, `profileImageUrl`, `bannerUrl`, `profileImageShape`, `isBlueVerified`, `verified`, `verifiedType`, `isProtected`, `professionalType`, `superFollowEligible`, `superFollowedBy`, `superFollowing`, `hasGraduatedAccess`, `translatorType` and `pinnedTweetIds`. Fields X does not expose for a post are omitted.
 
 ### Sample record
 
@@ -110,11 +110,11 @@ Statuses:
 
 `xOk` counts only X bursts that returned a parseable page of posts. An HTTP 200 with an empty payload or an empty timeline is treated as a refusal/no-answer, so it cannot mask `blocked` or `budgetExhausted`.
 
-Every run also ends with one `type: "summary"` row carrying `keywords`, `postRows`, `statusRows`, `bySource`, `sourcesTried`, aggregate `xAttempts` / `xOk` / `bingDiscovered` / `bingHydrated` / `bingTitleOnly`, `degradedKeywords`, `partialKeywords`, `blockedKeywords`, `durationSeconds`, `monitorId` and `onlyNew`. Consumers that count `type: "post"` are never confused by status or summary rows.
+Every run also ends with one `type: "summary"` row carrying `recordType: "runSummary"`, `scrapedAt`, `startedAt`, `finishedAt`, `keywords`, `postRows`, `statusRows`, `bySource`, `sourcesTried`, aggregate `xAttempts` / `xOk` / `bingDiscovered` / `bingHydrated` / `bingTitleOnly`, `degradedKeywords`, `partialKeywords`, `blockedKeywords`, `durationSeconds`, `monitorId` and `onlyNew`. Consumers that count `type: "post"` are never confused by status or summary rows.
 
 ## Known hard limits
 
-Measured directly (no proxy, no cookies, no browser) during the Phase 6 probes on 2026-11-08:
+Measured directly (no proxy, no cookies, no browser) in live probes on 2026-11-08:
 
 - **Guest search is a lottery.** Only ~6% of Latest bursts answered in a 32-attempt probe, and the 300-row backfill used 5,259 attempts / 20 answered bursts (0.38%). The same query can return 20 rows in seconds later, but there is no SLA.
 - **No real `Top`.** X serves Top only to signed-in callers, so `Top` output is a client-side like-sort of the Latest rows that were collected.
@@ -241,7 +241,7 @@ Measured directly (no proxy, no cookies, no browser) during the Phase 6 probes o
 No — there's no credential field in the input at all. The actor reads what any logged-out visitor can already see on X's own search.
 
 **How many posts will I actually get per keyword?**
-Up to `maxTweets`, but that's a ceiling, not a promise. Guest search answers intermittently and returns ~20 rows per answered page (41-45 on an answered `product=Media` page). The actor multiplies those pages with lanes and time windows. Phase 6 measured **300 unique rows for a 300-row target**; targets above 300 are unverified. An obscure keyword may return only a handful.
+Up to `maxTweets`, but that's a ceiling, not a promise. Guest search answers intermittently and returns ~20 rows per answered page (41-45 on an answered `product=Media` page). The actor multiplies those pages with lanes and time windows. A 300-row target has been verified; targets above 300 are unverified. An obscure keyword may return only a handful.
 
 **Why did I get a different count on a second identical run?**
 X's logged-out search doesn't expose stable, full pagination, and what it surfaces can shift between requests. If you need more rows, use `onlyNew: false`, narrow the date window, or add lanes rather than assuming something broke.

@@ -5,7 +5,7 @@
       &quot;default&quot;: false,
       &quot;description&quot;: &quot;When on, every target is captured twice: once in dark and once in light. Files and rows are unique per theme (one screenshot row per theme) and the run summary reports both themes. Overrides the Theme selection.&quot;,
       &quot;prefill&quot;: false,
-      &quot;title&quot;: &quot;Capture both dark and light themes&quot;,
+      &quot;title&quot;: &quot;Both themes&quot;,
       &quot;type&quot;: &quot;boolean&quot;
     },
     &quot;captureMode&quot;: {
@@ -68,7 +68,7 @@
       &quot;default&quot;: false,
       &quot;description&quot;: &quot;When on, the whole page is captured instead of just the post card or the visible profile header.&quot;,
       &quot;prefill&quot;: false,
-      &quot;title&quot;: &quot;Capture the full scrollable page&quot;,
+      &quot;title&quot;: &quot;Full-page capture&quot;,
       &quot;type&quot;: &quot;boolean&quot;
     },
     &quot;hideReplies&quot;: {
@@ -82,7 +82,7 @@
       &quot;default&quot;: false,
       &quot;description&quot;: &quot;Save a gzipped DOM snapshot and a JSON manifest to the key-value store for every capture, and add screenshotSha256, domSnapshotSha256, evidenceKey and manifestKey to each row. Failures still get a manifest with the typed failure state.&quot;,
       &quot;prefill&quot;: false,
-      &quot;title&quot;: &quot;Include evidence pack (DOM snapshot + manifest)&quot;,
+      &quot;title&quot;: &quot;Include evidence pack&quot;,
       &quot;type&quot;: &quot;boolean&quot;
     },
     &quot;includeMetadata&quot;: {
@@ -100,17 +100,13 @@
       &quot;prefill&quot;: 8000,
       &quot;sectionCaption&quot;: &quot;Advanced&quot;,
       &quot;sectionDescription&quot;: &quot;Optional settings for large or repeated runs.&quot;,
-      &quot;title&quot;: &quot;Max thread image height (pixels)&quot;,
+      &quot;title&quot;: &quot;Max thread height (px)&quot;,
       &quot;type&quot;: &quot;integer&quot;
     },
     &quot;postUrls&quot;: {
+      &quot;default&quot;: [],
       &quot;description&quot;: &quot;Posts to capture as clean post cards. Paste x.com or twitter.com links, bare numeric post IDs, profile links or bare usernames. Any input works in every list.&quot;,
       &quot;editor&quot;: &quot;stringList&quot;,
-      &quot;example&quot;: [
-        &quot;https://x.com/NASA/status/2107095768821576019&quot;,
-        &quot;2107095768821576019&quot;,
-        &quot;@apify&quot;
-      ],
       &quot;prefill&quot;: [
         &quot;https://x.com/NASA/status/2107095768821576019&quot;
       ],
@@ -118,12 +114,9 @@
       &quot;type&quot;: &quot;array&quot;
     },
     &quot;profileUrls&quot;: {
+      &quot;default&quot;: [],
       &quot;description&quot;: &quot;Optional. Profiles to capture. Paste profile links, bare usernames, post links or post IDs and the actor routes them to the right capture. Use capture mode to choose the header only or the loaded profile preview.&quot;,
       &quot;editor&quot;: &quot;stringList&quot;,
-      &quot;example&quot;: [
-        &quot;https://x.com/apify&quot;,
-        &quot;apify&quot;
-      ],
       &quot;title&quot;: &quot;X profile links or usernames&quot;,
       &quot;type&quot;: &quot;array&quot;
     },
@@ -162,6 +155,7 @@
       &quot;type&quot;: &quot;string&quot;
     },
     &quot;tweetUrls&quot;: {
+      &quot;default&quot;: [],
       &quot;description&quot;: &quot;Alias of X post links. Accepts tweet links, bare tweet IDs, profile links and bare usernames.&quot;,
       &quot;editor&quot;: &quot;stringList&quot;,
       &quot;title&quot;: &quot;Tweet links (alias)&quot;,
@@ -619,11 +613,12 @@
 <li><strong>Verified targets:</strong> the canonical post id and author handle are checked, so a short ID that resolves to another author is reported as <code>wrong_author</code> instead of a false success</li>
 <li><strong>Honest failure states:</strong> protected, deleted, missing and login-walled pages return typed, non-billable status rows</li>
 <li><strong>Clean captures:</strong> headers, sidebars, login prompts, the late &quot;Continue to X&quot; gate, sticky top bars, video player chrome and community notes are hidden automatically; the overlay hide is repeated after a 2.5s settle</li>
-<li><strong>Image control:</strong> PNG, JPEG or WEBP, quality setting for JPEG/WEBP, and real 1x/2x/3x pixel density (Firefox DPR pref) with <code>effectiveScale</code> reported</li>
+<li><strong>Image control:</strong> PNG, JPEG or WEBP, quality setting for JPEG/WEBP, and real 1x/2x/3x pixel density with <code>effectiveScale</code> reported</li>
 <li><strong>Custom viewport:</strong> width and height from 320×240 up to 3840×2160</li>
 <li><strong>Optional details:</strong> post ID, URL, author handle, text snippet, and profile or author follower counts when X shows them</li>
 <li><strong>Both themes in one run:</strong> <code>bothThemes</code> captures dark and light versions with unique files and one row per theme</li>
 <li><strong>Evidence pack:</strong> <code>includeEvidence</code> saves a gzipped DOM snapshot and a JSON manifest to the key-value store, and reports <code>screenshotSha256</code>, <code>domSnapshotSha256</code>, <code>evidenceKey</code> and <code>manifestKey</code> on each row</li>
+<li><strong>Empty fields are omitted:</strong> never null, empty strings or empty arrays/objects.</li>
 <li><strong>Run summary:</strong> one <code>runSummary</code> row reports requested/captured/failed/billable counts, typed failure codes and dropped inputs</li>
 <li><strong>Empty fields are omitted</strong></li>
 </ul>
@@ -718,8 +713,16 @@
 <td>Readers-added-context id and text (<code>includeMetadata</code> only)</td>
 </tr>
 <tr>
-<td><code>capturedAt</code>, <code>collectedAt</code></td>
+<td><code>capturedAt</code>, <code>collectedAt</code>, <code>scrapedAt</code></td>
 <td>ISO timestamps of the capture</td>
+</tr>
+<tr>
+<td><code>recordType</code></td>
+<td><code>screenshot</code>, <code>status</code> or <code>runSummary</code></td>
+</tr>
+<tr>
+<td><code>sourceUrl</code></td>
+<td>Canonical target URL (<code>targetUrl</code>) when one exists</td>
 </tr>
 <tr>
 <td><code>profileUrl</code></td>
@@ -747,7 +750,7 @@
 </tr>
 </tbody>
 </table></div>
-<p>The <code>runSummary</code> row contains <code>requested</code>, <code>captured</code>, <code>failed</code>, <code>skipped</code>, <code>billable</code>, <code>failureCodes</code>, <code>invalidInputs</code>, <code>theme</code>, <code>themes</code>, <code>format</code>, <code>deviceScaleFactor</code>, <code>captureMode</code>, <code>totalBytes</code>, <code>totalDurationMs</code>, <code>startedAt</code> and <code>finishedAt</code>. With <strong>Both themes</strong> on, <code>requested</code>/<code>captured</code> count both theme captures and <code>themes</code> is <code>[&quot;dark&quot;, &quot;light&quot;]</code>.</p>
+<p>The <code>runSummary</code> row contains <code>requested</code>, <code>captured</code>, <code>failed</code>, <code>skipped</code>, <code>billable</code>, <code>billableScreenshots</code>, <code>failureCodes</code>, <code>invalidInputs</code>, <code>theme</code>, <code>themes</code>, <code>format</code>, <code>deviceScaleFactor</code>, <code>captureMode</code>, <code>totalBytes</code>, <code>totalDurationMs</code>, <code>startedAt</code> and <code>finishedAt</code>. With <strong>Both themes</strong> on, <code>requested</code>/<code>captured</code> count both theme captures and <code>themes</code> is <code>[&quot;dark&quot;, &quot;light&quot;]</code>.</p>
 <p>With <strong>Include post/profile details</strong> on, post rows also carry <code>tweetId</code>, <code>tweetUrl</code>, <code>authorUsername</code>, <code>textSnippet</code>, <code>poll</code>, <code>communityNote</code>, <code>authorFollowers</code>, <code>authorFollowing</code> and <code>authorPostCount</code>; profile rows carry <code>username</code>, <code>name</code>, <code>followers</code>, <code>following</code> and <code>postCount</code>. Counts and poll/note fields are only added when X shows them.</p>
 <h2 id="readme-input">Input</h2>
 <div class="table-wrap"><table>
@@ -836,7 +839,7 @@
 <td><code>deviceScaleFactor</code></td>
 <td>string</td>
 <td><code>1x</code></td>
-<td><code>1x</code>, <code>2x</code> or <code>3x</code> pixel density applied through the Firefox DPR pref</td>
+<td><code>1x</code>, <code>2x</code> or <code>3x</code> pixel density reported as <code>effectiveScale</code></td>
 </tr>
 <tr>
 <td><code>viewportWidth</code></td>
@@ -941,6 +944,22 @@
   &quot;textSnippet&quot;: &quot;It's World Space Week! ...&quot;
 }
 </code></pre>
+<h2 id="readme-limits">Limits</h2>
+<ul>
+<li>Public content only — protected accounts return a <code>protected</code> status row and cannot be captured.</li>
+<li>Logged-out profiles show a loaded preview of roughly 5–10 posts (observed 5–10; it never grows with scrolling). <code>fullProfilePage</code> is that preview, not the infinite timeline, and rows set <code>previewLimited: true</code>. <code>profileHeader</code> is header-only by design.</li>
+<li>Logged-out post pages render only the first ~4–10 replies. The <code>See all the replies / Continue to X</code> gate appears after scrolling; <code>/replies</code> is a 404/login redirect for guests, so deeper reply paging is not available.</li>
+<li>Thread captures only contain the articles X renders in the logged-out DOM. A gate is reported as truncation only when its DOM position is before or inside the last captured part; a gate appended after the last article is the normal end of the preview. Non-author replies stop the contiguous block. Full unroll is not guaranteed.</li>
+<li><code>maxThreadHeight</code> is expressed in CSS pixels and is clamped automatically so the DPR-scaled image cannot exceed the 32,767 px screenshot ceiling (32,767 / 16,383 / 10,922 CSS px at 1x/2x/3x). Clipped threads report <code>threadComplete: false</code> with <code>truncatedReason: max_height</code> or <code>dpr_height_limit</code>.</li>
+<li>Poll metadata is limited to the choices X renders or syndication binds (2–4 choices). Quote counts, places, full follower lists and sensitive flags are not available cookieless.</li>
+<li>Community-note text is captured as text; the note is hidden from the image. The note id is included when the syndication/DOM link exposes it.</li>
+<li>A bare short post ID can collide with an older post id. When the requested handle does not match the canonical author, the row fails with <code>wrong_author</code> rather than capturing the wrong post.</li>
+<li>Metadata counts, poll and community-note fields are added only when X displays them.</li>
+<li>Capture failures (for example a deleted post) produce a typed <code>status</code> row plus a <code>runSummary</code>, so a run is never silently empty or billed as a success.</li>
+<li><strong>Both themes</strong> doubles runtime, screenshots and dataset rows; files and evidence keys remain unique per theme.</li>
+<li><strong>Include evidence pack</strong> adds the DOM snapshot (gzipped, typically ~7% of the screenshot size) and a manifest per capture. The DOM is the post-hide rendered markup, not the raw HTTP response.</li>
+<li>Evidence manifests are still written for failed captures (with <code>failure.code</code>, <code>failure.message</code> and <code>failure.accessState</code>) when the page is available; a crashed page may leave only the manifest.</li>
+</ul>
 <h2 id="readme-use-cases">Use cases</h2>
 <ul>
 <li><strong>Social media reporting</strong> — embed clean post captures in decks, newsletters and blogs</li>
@@ -963,20 +982,4 @@
 <p><strong>What is the evidence pack?</strong> With <strong>Include evidence pack</strong> on, each capture also writes <code>evidence_&lt;key&gt;.html.gz</code> (the rendered DOM, gzipped) and <code>manifest_&lt;key&gt;.json</code> (target, capture metadata, dimensions, SHA-256 hashes, and failure state when the capture failed) to the key-value store. Rows get <code>screenshotSha256</code>, <code>domSnapshotSha256</code>, <code>evidenceKey</code> and <code>manifestKey</code>. Evidence is typically ~7% of the screenshot size; failures still get a manifest even when no image was produced.</p>
 <p><strong>How long do download links last?</strong> They follow your Apify key-value store retention (typically 7 days on the free tier). Copy the images to your own storage for permanent archival.</p>
 <p><strong>Is this affiliated with X?</strong> No. This is a third-party actor that captures publicly visible pages.</p>
-<h2 id="readme-limits">Limits</h2>
-<ul>
-<li>Public content only — protected accounts return a <code>protected</code> status row and cannot be captured.</li>
-<li>Logged-out profiles show a loaded preview of roughly 5–10 posts (observed 5–10; it never grows with scrolling). <code>fullProfilePage</code> is that preview, not the infinite timeline, and rows set <code>previewLimited: true</code>. <code>profileHeader</code> is header-only by design.</li>
-<li>Logged-out post pages render only the first ~4–10 replies. The <code>See all the replies / Continue to X</code> gate appears after scrolling; <code>/replies</code> is a 404/login redirect for guests, so deeper reply paging is not available.</li>
-<li>Thread captures only contain the articles X renders in the logged-out DOM. A gate is reported as truncation only when its DOM position is before or inside the last captured part; a gate appended after the last article is the normal end of the preview. Non-author replies stop the contiguous block. Full unroll is not guaranteed.</li>
-<li><code>maxThreadHeight</code> is expressed in CSS pixels and is clamped automatically so the DPR-scaled image cannot exceed the 32,767 px screenshot ceiling (32,767 / 16,383 / 10,922 CSS px at 1x/2x/3x). Clipped threads report <code>threadComplete: false</code> with <code>truncatedReason: max_height</code> or <code>dpr_height_limit</code>.</li>
-<li>Poll metadata is limited to the choices X renders or syndication binds (2–4 choices). Quote counts, places, full follower lists and sensitive flags are not available cookieless.</li>
-<li>Community-note text is captured as text; the note is hidden from the image. The note id is included when the syndication/DOM link exposes it.</li>
-<li>A bare short post ID can collide with an older post id. When the requested handle does not match the canonical author, the row fails with <code>wrong_author</code> rather than capturing the wrong post.</li>
-<li>Metadata counts, poll and community-note fields are added only when X displays them.</li>
-<li>Capture failures (for example a deleted post) produce a typed <code>status</code> row plus a <code>runSummary</code>, so a run is never silently empty or billed as a success.</li>
-<li><strong>Both themes</strong> doubles runtime, screenshots and dataset rows; files and evidence keys remain unique per theme.</li>
-<li><strong>Include evidence pack</strong> adds the DOM snapshot (gzipped, typically ~7% of the screenshot size) and a manifest per capture. The DOM is the post-hide rendered markup, not the raw HTTP response.</li>
-<li>Evidence manifests are still written for failed captures (with <code>failure.code</code>, <code>failure.message</code> and <code>failure.accessState</code>) when the page is available; a crashed page may leave only the manifest.</li>
-</ul>
-</details></section><section id="python-quickstart"><h2>Python quickstart</h2><p>Use a schema-derived input and the Python standard library to start a run. An Apify account and token are required for execution.</p><p><a href="/apify-actor-examples/guides/kcIeUfwCB7DUd1c2b/">Open the step-by-step Python guide →</a></p></section><p class="source-note">Source build <code>TvdNS2NnZF9J6nHuS</code>. Documentation is regenerated from the default published build; private drafts are not included.</p></article></div></main><footer class="footer"><strong>Nimbryxo Studio</strong><div class="footer-links"><a href="/apify-actor-examples/topics/">Topics</a><a href="/apify-actor-examples/sources/">Documentation sources</a><a href="https://apify.com/nimbryxo-studio">Apify</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></div></footer></body></html>
+</details></section><section id="python-quickstart"><h2>Python quickstart</h2><p>Use a schema-derived input and the Python standard library to start a run. An Apify account and token are required for execution.</p><p><a href="/apify-actor-examples/guides/kcIeUfwCB7DUd1c2b/">Open the step-by-step Python guide →</a></p></section><p class="source-note">Source build <code>ieif6txGzSc3k8mk0</code>. Documentation is regenerated from the default published build; private drafts are not included.</p></article></div></main><footer class="footer"><strong>Nimbryxo Studio</strong><div class="footer-links"><a href="/apify-actor-examples/topics/">Topics</a><a href="/apify-actor-examples/sources/">Documentation sources</a><a href="https://apify.com/nimbryxo-studio">Apify</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></div></footer></body></html>

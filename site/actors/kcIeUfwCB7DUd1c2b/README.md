@@ -8,11 +8,12 @@ Capture clean screenshots of public X posts, threads and profiles — **no login
 - **Verified targets:** the canonical post id and author handle are checked, so a short ID that resolves to another author is reported as `wrong_author` instead of a false success
 - **Honest failure states:** protected, deleted, missing and login-walled pages return typed, non-billable status rows
 - **Clean captures:** headers, sidebars, login prompts, the late "Continue to X" gate, sticky top bars, video player chrome and community notes are hidden automatically; the overlay hide is repeated after a 2.5s settle
-- **Image control:** PNG, JPEG or WEBP, quality setting for JPEG/WEBP, and real 1x/2x/3x pixel density (Firefox DPR pref) with `effectiveScale` reported
+- **Image control:** PNG, JPEG or WEBP, quality setting for JPEG/WEBP, and real 1x/2x/3x pixel density with `effectiveScale` reported
 - **Custom viewport:** width and height from 320×240 up to 3840×2160
 - **Optional details:** post ID, URL, author handle, text snippet, and profile or author follower counts when X shows them
 - **Both themes in one run:** `bothThemes` captures dark and light versions with unique files and one row per theme
 - **Evidence pack:** `includeEvidence` saves a gzipped DOM snapshot and a JSON manifest to the key-value store, and reports `screenshotSha256`, `domSnapshotSha256`, `evidenceKey` and `manifestKey` on each row
+- **Empty fields are omitted:** never null, empty strings or empty arrays/objects.
 - **Run summary:** one `runSummary` row reports requested/captured/failed/billable counts, typed failure codes and dropped inputs
 - **Empty fields are omitted**
 
@@ -42,7 +43,9 @@ Each row has a `type`: `screenshot` for a capture, `status` for a failure/run me
 | `thread` | Thread parts, length, gate position, completion and truncation reason (`thread` mode) |
 | `poll` | Poll choices with percentages and, when syndication is reachable, exact vote counts (`includeMetadata` only) |
 | `communityNote` | Readers-added-context id and text (`includeMetadata` only) |
-| `capturedAt`, `collectedAt` | ISO timestamps of the capture |
+| `capturedAt`, `collectedAt`, `scrapedAt` | ISO timestamps of the capture |
+| `recordType` | `screenshot`, `status` or `runSummary` |
+| `sourceUrl` | Canonical target URL (`targetUrl`) when one exists |
 | `profileUrl` | The profile URL, on profile captures |
 | `theme` | The theme captured in this row (`dark` or `light`) |
 | `screenshotSha256` | SHA-256 of the saved image bytes (`includeEvidence` only) |
@@ -50,7 +53,7 @@ Each row has a `type`: `screenshot` for a capture, `status` for a failure/run me
 | `evidenceKey` | Key-value store key of the gzipped DOM snapshot (`includeEvidence` only) |
 | `manifestKey` | Key-value store key of the JSON evidence manifest (`includeEvidence` only) |
 
-The `runSummary` row contains `requested`, `captured`, `failed`, `skipped`, `billable`, `failureCodes`, `invalidInputs`, `theme`, `themes`, `format`, `deviceScaleFactor`, `captureMode`, `totalBytes`, `totalDurationMs`, `startedAt` and `finishedAt`. With **Both themes** on, `requested`/`captured` count both theme captures and `themes` is `["dark", "light"]`.
+The `runSummary` row contains `requested`, `captured`, `failed`, `skipped`, `billable`, `billableScreenshots`, `failureCodes`, `invalidInputs`, `theme`, `themes`, `format`, `deviceScaleFactor`, `captureMode`, `totalBytes`, `totalDurationMs`, `startedAt` and `finishedAt`. With **Both themes** on, `requested`/`captured` count both theme captures and `themes` is `["dark", "light"]`.
 
 With **Include post/profile details** on, post rows also carry `tweetId`, `tweetUrl`, `authorUsername`, `textSnippet`, `poll`, `communityNote`, `authorFollowers`, `authorFollowing` and `authorPostCount`; profile rows carry `username`, `name`, `followers`, `following` and `postCount`. Counts and poll/note fields are only added when X shows them.
 
@@ -70,7 +73,7 @@ With **Include post/profile details** on, post rows also carry `tweetId`, `tweet
 | `includeMetadata` | boolean | `false` | Add post/profile details and counts to each row |
 | `format` | string | `png` | `png` (lossless), `jpeg` or `webp` |
 | `quality` | integer | `90` | Quality for JPEG/WEBP (1–100); ignored for PNG |
-| `deviceScaleFactor` | string | `1x` | `1x`, `2x` or `3x` pixel density applied through the Firefox DPR pref |
+| `deviceScaleFactor` | string | `1x` | `1x`, `2x` or `3x` pixel density reported as `effectiveScale` |
 | `viewportWidth` | integer | `1440` | Browser width used for the capture (320–3840) |
 | `viewportHeight` | integer | `900` | Browser height used for the capture (240–2160) |
 | `maxThreadHeight` | integer | `8000` | Maximum thread image height; taller threads are clipped and marked incomplete |
@@ -176,6 +179,21 @@ This produces two screenshot rows (`theme: "dark"` and `theme: "light"`), each w
 }
 ```
 
+## Limits
+
+- Public content only — protected accounts return a `protected` status row and cannot be captured.
+- Logged-out profiles show a loaded preview of roughly 5–10 posts (observed 5–10; it never grows with scrolling). `fullProfilePage` is that preview, not the infinite timeline, and rows set `previewLimited: true`. `profileHeader` is header-only by design.
+- Logged-out post pages render only the first ~4–10 replies. The `See all the replies / Continue to X` gate appears after scrolling; `/replies` is a 404/login redirect for guests, so deeper reply paging is not available.
+- Thread captures only contain the articles X renders in the logged-out DOM. A gate is reported as truncation only when its DOM position is before or inside the last captured part; a gate appended after the last article is the normal end of the preview. Non-author replies stop the contiguous block. Full unroll is not guaranteed.
+- `maxThreadHeight` is expressed in CSS pixels and is clamped automatically so the DPR-scaled image cannot exceed the 32,767 px screenshot ceiling (32,767 / 16,383 / 10,922 CSS px at 1x/2x/3x). Clipped threads report `threadComplete: false` with `truncatedReason: max_height` or `dpr_height_limit`.
+- Poll metadata is limited to the choices X renders or syndication binds (2–4 choices). Quote counts, places, full follower lists and sensitive flags are not available cookieless.
+- Community-note text is captured as text; the note is hidden from the image. The note id is included when the syndication/DOM link exposes it.
+- A bare short post ID can collide with an older post id. When the requested handle does not match the canonical author, the row fails with `wrong_author` rather than capturing the wrong post.
+- Metadata counts, poll and community-note fields are added only when X displays them.
+- Capture failures (for example a deleted post) produce a typed `status` row plus a `runSummary`, so a run is never silently empty or billed as a success.
+- **Both themes** doubles runtime, screenshots and dataset rows; files and evidence keys remain unique per theme.
+- **Include evidence pack** adds the DOM snapshot (gzipped, typically ~7% of the screenshot size) and a manifest per capture. The DOM is the post-hide rendered markup, not the raw HTTP response.
+- Evidence manifests are still written for failed captures (with `failure.code`, `failure.message` and `failure.accessState`) when the page is available; a crashed page may leave only the manifest.
 ## Use cases
 
 - **Social media reporting** — embed clean post captures in decks, newsletters and blogs
@@ -210,19 +228,3 @@ This produces two screenshot rows (`theme: "dark"` and `theme: "light"`), each w
 **How long do download links last?** They follow your Apify key-value store retention (typically 7 days on the free tier). Copy the images to your own storage for permanent archival.
 
 **Is this affiliated with X?** No. This is a third-party actor that captures publicly visible pages.
-
-## Limits
-
-- Public content only — protected accounts return a `protected` status row and cannot be captured.
-- Logged-out profiles show a loaded preview of roughly 5–10 posts (observed 5–10; it never grows with scrolling). `fullProfilePage` is that preview, not the infinite timeline, and rows set `previewLimited: true`. `profileHeader` is header-only by design.
-- Logged-out post pages render only the first ~4–10 replies. The `See all the replies / Continue to X` gate appears after scrolling; `/replies` is a 404/login redirect for guests, so deeper reply paging is not available.
-- Thread captures only contain the articles X renders in the logged-out DOM. A gate is reported as truncation only when its DOM position is before or inside the last captured part; a gate appended after the last article is the normal end of the preview. Non-author replies stop the contiguous block. Full unroll is not guaranteed.
-- `maxThreadHeight` is expressed in CSS pixels and is clamped automatically so the DPR-scaled image cannot exceed the 32,767 px screenshot ceiling (32,767 / 16,383 / 10,922 CSS px at 1x/2x/3x). Clipped threads report `threadComplete: false` with `truncatedReason: max_height` or `dpr_height_limit`.
-- Poll metadata is limited to the choices X renders or syndication binds (2–4 choices). Quote counts, places, full follower lists and sensitive flags are not available cookieless.
-- Community-note text is captured as text; the note is hidden from the image. The note id is included when the syndication/DOM link exposes it.
-- A bare short post ID can collide with an older post id. When the requested handle does not match the canonical author, the row fails with `wrong_author` rather than capturing the wrong post.
-- Metadata counts, poll and community-note fields are added only when X displays them.
-- Capture failures (for example a deleted post) produce a typed `status` row plus a `runSummary`, so a run is never silently empty or billed as a success.
-- **Both themes** doubles runtime, screenshots and dataset rows; files and evidence keys remain unique per theme.
-- **Include evidence pack** adds the DOM snapshot (gzipped, typically ~7% of the screenshot size) and a manifest per capture. The DOM is the post-hide rendered markup, not the raw HTTP response.
-- Evidence manifests are still written for failed captures (with `failure.code`, `failure.message` and `failure.accessState`) when the page is available; a crashed page may leave only the manifest.

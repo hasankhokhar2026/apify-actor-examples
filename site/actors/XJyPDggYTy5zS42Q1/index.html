@@ -50,6 +50,7 @@
       &quot;type&quot;: &quot;boolean&quot;
     },
     &quot;excludeWords&quot;: {
+      &quot;default&quot;: [],
       &quot;description&quot;: &quot;Words or phrases to exclude from every search, compiled to -word / -\&quot;two words\&quot; tokens.&quot;,
       &quot;editor&quot;: &quot;stringList&quot;,
       &quot;items&quot;: {
@@ -67,6 +68,7 @@
       &quot;type&quot;: &quot;string&quot;
     },
     &quot;includeLanes&quot;: {
+      &quot;default&quot;: [],
       &quot;description&quot;: &quot;Which X search lanes to run: latest, media, media-product, links, replies. Leave empty for the default latest + media + links (replies is added automatically for jobs of 100+ rows). media-product asks for X&#x27;s product=Media page directly and is opt-in.&quot;,
       &quot;editor&quot;: &quot;stringList&quot;,
       &quot;items&quot;: {
@@ -77,13 +79,9 @@
       &quot;type&quot;: &quot;array&quot;
     },
     &quot;keywords&quot;: {
+      &quot;default&quot;: [],
       &quot;description&quot;: &quot;Words, phrases, hashtags or full X search queries to monitor. Each keyword is searched separately, and every result row tells you which keyword found it (searchTerm).&quot;,
       &quot;editor&quot;: &quot;stringList&quot;,
-      &quot;example&quot;: [
-        &quot;web scraping&quot;,
-        &quot;data mining&quot;,
-        &quot;#AI&quot;
-      ],
       &quot;items&quot;: {
         &quot;type&quot;: &quot;string&quot;
       },
@@ -218,7 +216,7 @@
       &quot;description&quot;: &quot;Alias of Maximum tweets per keyword. The actor accepts either name.&quot;,
       &quot;maximum&quot;: 1000,
       &quot;minimum&quot;: 1,
-      &quot;title&quot;: &quot;Maximum tweets per keyword (alias)&quot;,
+      &quot;title&quot;: &quot;Max tweets per keyword&quot;,
       &quot;type&quot;: &quot;integer&quot;
     },
     &quot;maxPasses&quot;: {
@@ -509,7 +507,7 @@
 <h2 id="readme-what-this-actor-does">What this actor does</h2>
 <ul>
 <li>Runs each entry in <code>keywords</code> as its own independent search, so a single job can cover several unrelated topics at once.</li>
-<li>Targets up to 1,000 posts per keyword via <code>maxTweets</code>; how many actually come back depends on how much volume that keyword has on X. Phase 6 measured <strong>300 unique rows for a 300-row target</strong> (297 s); 500/1,000 are not verified, so treat <code>maxTweets</code> as a target, not a promise.</li>
+<li>Targets up to 1,000 posts per keyword via <code>maxTweets</code>; how many actually come back depends on how much volume that keyword has on X. A 300-row target has been verified (about 297 s); 500/1,000 are not verified, so treat <code>maxTweets</code> as a target, not a promise.</li>
 <li>Runs several X search lanes (<code>latest</code>, <code>media</code>, opt-in <code>media-product</code>, <code>links</code>, optionally <code>replies</code>) and walks backwards through <code>since_time</code>/<code>until_time</code> windows. Guest search has <strong>no cursor paging</strong>; time-window backfill is the only way past the ~20-row page cap (a <code>product=Media</code> page can return 41-45 rows).</li>
 <li><code>Latest</code> returns newest-first. <code>Top</code> is <strong>engagement-ranked output, not X's real Top timeline</strong>: X never serves Top to logged-out callers, so the actor collects Latest pages and sorts them by like count client-side.</li>
 <li>Narrows by language, date window, retweets/replies, verification, media presence, quotes, mentions, author, reply target, conversation id, and minimum like/retweet/reply counts.</li>
@@ -517,15 +515,15 @@
 <li>With <code>onlyNew</code> enabled, returns only posts newer than the previous run for the same <code>monitorId</code> + keyword. The actor persists a numeric snowflake watermark and an overlap window in the key-value store.</li>
 <li>Stamps every row with <code>searchTerm</code>, <code>source</code> (<code>x-search</code> or <code>bing-news</code>), <code>sourceLane</code> (<code>latest</code> / <code>media</code> / <code>media-product</code> / <code>links</code> / <code>replies</code> / <code>window</code> / <code>bing</code> / <code>bing-title-only</code>) and <code>degraded</code>.</li>
 <li>Emits a typed <code>status</code> row for a keyword that needs attention and one <code>summary</code> row per run.</li>
-<li>Drops any field with no data for that post — you will never see <code>null</code>, an empty string, or an empty array/object in the output.</li>
+<li><strong>Empty fields are omitted:</strong> never <code>null</code>, empty strings or empty arrays/objects in the output.</li>
 </ul>
 <h2 id="readme-output-per-post">Output per post</h2>
 <p>Core fields on every post record: <code>id</code>, <code>url</code>, <code>text</code>, <code>createdAt</code>, <code>language</code> (when X reports one), <code>searchTerm</code>, <code>source</code>, <code>sourceLane</code>, <code>degraded</code>, <code>type: &quot;post&quot;</code> and <code>collectedAt</code>.</p>
 <p>Engagement comes through <code>replyCount</code>, <code>retweetCount</code>, <code>likeCount</code>, <code>quoteCount</code>, <code>bookmarkCount</code>, and <code>viewCount</code>, plus a computed <code>engagementRate</code> — <code>(likes + retweets + replies + quotes) ÷ followers</code> — included only once the author's follower count is known and nonzero. Missing retweets/quotes/bookmarks/views/followers/bio are backfilled from the FxTwitter mirror after the X refresh; X values always win and only missing fields are copied.</p>
-<p>Post-type context: <code>isReply</code>, <code>isRetweet</code>, <code>isQuote</code>, <code>isNoteTweet</code>, and, for replies, <code>conversationId</code>, <code>inReplyToTweetId</code>, <code>inReplyToUserId</code>, <code>inReplyToUsername</code>, <code>parentTweet</code> (a nested summary of the post being replied to, when available).</p>
+<p>Post-type context: <code>isReply</code>, <code>isRetweet</code>, <code>isQuote</code>, <code>isNoteTweet</code>, and, for replies, <code>conversationId</code>, <code>inReplyToTweetId</code>, <code>inReplyToUserId</code>, <code>inReplyToUsername</code>, <code>parentTweet</code> (a nested summary of the post being replied to, when available). Every post row also carries <code>recordType: &quot;post&quot;</code>, <code>sourceUrl</code> (the canonical post URL) and <code>scrapedAt</code>.</p>
 <p>Entities parsed out of the text: <code>hashtags</code>, <code>mentions</code>, <code>urls</code>, <code>cashtags</code>.</p>
-<p>Attachments and extras, when present: <code>media</code> (one entry per photo/video/GIF with <code>type</code>, <code>url</code>, <code>previewImageUrl</code>, pixel dimensions, <code>durationSeconds</code>, <code>viewCount</code>, <code>altText</code>, <code>variants</code>), <code>quotedTweet</code> / <code>quotedTweetId</code>, <code>poll</code>, <code>card</code>, <code>possiblySensitive</code>, <code>withheldInCountries</code>, <code>place</code>, <code>postedFrom</code>, <code>isEdited</code>, <code>editControl</code> (edit history metadata), <code>newsActionType</code>.</p>
-<p>The author rides along as a nested <code>author</code> object — <code>id</code>, <code>username</code>, <code>name</code>, <code>bio</code>, <code>followers</code>, <code>isBlueVerified</code>, <code>verified</code>, <code>profileImageUrl</code>, and more.</p>
+<p>Attachments and extras, when present: <code>media</code> (one entry per photo/video/GIF with <code>type</code>, <code>url</code>, <code>previewImageUrl</code>, <code>width</code>, <code>height</code>, <code>durationSeconds</code>, <code>viewCount</code>, <code>altText</code>, <code>mediaKey</code>, <code>canMediaTag</code>, <code>focusRects</code>, <code>variants</code> with <code>url</code>/<code>contentType</code>/<code>bitrate</code>), <code>quotedTweet</code> / <code>quotedTweetId</code>, <code>poll</code>, <code>card</code>, <code>possiblySensitive</code>, <code>withheldInCountries</code>, <code>place</code>, <code>postedFrom</code>, <code>isEdited</code>, <code>editControl</code> (edit history metadata), <code>newsActionType</code>.</p>
+<p>The author rides along as a nested <code>author</code> object: <code>id</code>, <code>username</code>, <code>name</code>, <code>bio</code>, <code>bioLinks</code>, <code>location</code>, <code>website</code>, <code>followers</code>, <code>following</code>, <code>likesGiven</code>, <code>postCount</code>, <code>mediaCount</code>, <code>createdAt</code>, <code>profileImageUrl</code>, <code>bannerUrl</code>, <code>profileImageShape</code>, <code>isBlueVerified</code>, <code>verified</code>, <code>verifiedType</code>, <code>isProtected</code>, <code>professionalType</code>, <code>superFollowEligible</code>, <code>superFollowedBy</code>, <code>superFollowing</code>, <code>hasGraduatedAccess</code>, <code>translatorType</code> and <code>pinnedTweetIds</code>. Fields X does not expose for a post are omitted.</p>
 <h3 id="readme-sample-record">Sample record</h3>
 <pre><code class="language-json">{
   &quot;type&quot;: &quot;post&quot;,
@@ -619,9 +617,9 @@
 </tbody>
 </table></div>
 <p><code>xOk</code> counts only X bursts that returned a parseable page of posts. An HTTP 200 with an empty payload or an empty timeline is treated as a refusal/no-answer, so it cannot mask <code>blocked</code> or <code>budgetExhausted</code>.</p>
-<p>Every run also ends with one <code>type: &quot;summary&quot;</code> row carrying <code>keywords</code>, <code>postRows</code>, <code>statusRows</code>, <code>bySource</code>, <code>sourcesTried</code>, aggregate <code>xAttempts</code> / <code>xOk</code> / <code>bingDiscovered</code> / <code>bingHydrated</code> / <code>bingTitleOnly</code>, <code>degradedKeywords</code>, <code>partialKeywords</code>, <code>blockedKeywords</code>, <code>durationSeconds</code>, <code>monitorId</code> and <code>onlyNew</code>. Consumers that count <code>type: &quot;post&quot;</code> are never confused by status or summary rows.</p>
+<p>Every run also ends with one <code>type: &quot;summary&quot;</code> row carrying <code>recordType: &quot;runSummary&quot;</code>, <code>scrapedAt</code>, <code>startedAt</code>, <code>finishedAt</code>, <code>keywords</code>, <code>postRows</code>, <code>statusRows</code>, <code>bySource</code>, <code>sourcesTried</code>, aggregate <code>xAttempts</code> / <code>xOk</code> / <code>bingDiscovered</code> / <code>bingHydrated</code> / <code>bingTitleOnly</code>, <code>degradedKeywords</code>, <code>partialKeywords</code>, <code>blockedKeywords</code>, <code>durationSeconds</code>, <code>monitorId</code> and <code>onlyNew</code>. Consumers that count <code>type: &quot;post&quot;</code> are never confused by status or summary rows.</p>
 <h2 id="readme-known-hard-limits">Known hard limits</h2>
-<p>Measured directly (no proxy, no cookies, no browser) during the Phase 6 probes on 2026-11-08:</p>
+<p>Measured directly (no proxy, no cookies, no browser) in live probes on 2026-11-08:</p>
 <ul>
 <li><strong>Guest search is a lottery.</strong> Only ~6% of Latest bursts answered in a 32-attempt probe, and the 300-row backfill used 5,259 attempts / 20 answered bursts (0.38%). The same query can return 20 rows in seconds later, but there is no SLA.</li>
 <li><strong>No real <code>Top</code>.</strong> X serves Top only to signed-in callers, so <code>Top</code> output is a client-side like-sort of the Latest rows that were collected.</li>
@@ -914,7 +912,7 @@
 <p><strong>Do I need an X account or developer credentials?</strong>
 No — there's no credential field in the input at all. The actor reads what any logged-out visitor can already see on X's own search.</p>
 <p><strong>How many posts will I actually get per keyword?</strong>
-Up to <code>maxTweets</code>, but that's a ceiling, not a promise. Guest search answers intermittently and returns ~20 rows per answered page (41-45 on an answered <code>product=Media</code> page). The actor multiplies those pages with lanes and time windows. Phase 6 measured <strong>300 unique rows for a 300-row target</strong>; targets above 300 are unverified. An obscure keyword may return only a handful.</p>
+Up to <code>maxTweets</code>, but that's a ceiling, not a promise. Guest search answers intermittently and returns ~20 rows per answered page (41-45 on an answered <code>product=Media</code> page). The actor multiplies those pages with lanes and time windows. A 300-row target has been verified; targets above 300 are unverified. An obscure keyword may return only a handful.</p>
 <p><strong>Why did I get a different count on a second identical run?</strong>
 X's logged-out search doesn't expose stable, full pagination, and what it surfaces can shift between requests. If you need more rows, use <code>onlyNew: false</code>, narrow the date window, or add lanes rather than assuming something broke.</p>
 <p><strong>Should I use <code>Top</code> or <code>Latest</code>?</strong>
@@ -931,4 +929,4 @@ It came from the Bing News fallback (hydrated or title-only). Those rows are new
 Pull the dataset from the run page or the Apify API, wire up a webhook, or connect it to Zapier, Make, Google Sheets, or similar no-code tools.</p>
 <p><strong>Is this affiliated with X?</strong>
 No. This is an independent, third-party actor that reads publicly available X search results.</p>
-</details></section><section id="python-quickstart"><h2>Python quickstart</h2><p>Use a schema-derived input and the Python standard library to start a run. An Apify account and token are required for execution.</p><p><a href="/apify-actor-examples/guides/XJyPDggYTy5zS42Q1/">Open the step-by-step Python guide →</a></p></section><p class="source-note">Source build <code>lQvSu4JAN3oOeYb96</code>. Documentation is regenerated from the default published build; private drafts are not included.</p></article></div></main><footer class="footer"><strong>Nimbryxo Studio</strong><div class="footer-links"><a href="/apify-actor-examples/topics/">Topics</a><a href="/apify-actor-examples/sources/">Documentation sources</a><a href="https://apify.com/nimbryxo-studio">Apify</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></div></footer></body></html>
+</details></section><section id="python-quickstart"><h2>Python quickstart</h2><p>Use a schema-derived input and the Python standard library to start a run. An Apify account and token are required for execution.</p><p><a href="/apify-actor-examples/guides/XJyPDggYTy5zS42Q1/">Open the step-by-step Python guide →</a></p></section><p class="source-note">Source build <code>0DLSgXAaZoP4YhOHR</code>. Documentation is regenerated from the default published build; private drafts are not included.</p></article></div></main><footer class="footer"><strong>Nimbryxo Studio</strong><div class="footer-links"><a href="/apify-actor-examples/topics/">Topics</a><a href="/apify-actor-examples/sources/">Documentation sources</a><a href="https://apify.com/nimbryxo-studio">Apify</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></div></footer></body></html>

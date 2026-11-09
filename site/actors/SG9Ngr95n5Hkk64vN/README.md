@@ -15,6 +15,7 @@ Reddit's anonymous old.reddit and public JSON endpoints are blocked, so this act
 - Does not treat unknown NSFW flags or missing score metrics as safe/passing; it emits a typed status instead
 - De-duplicates posts by `t3_id` and comments by `t1_id` across keywords and sources, merging provenance and preferring live metrics over archive snapshots
 - Fails loudly when every source fails; a working source with zero matches emits `no_results`, not an error
+- **Empty fields are omitted:** never null, empty strings or empty arrays/objects
 
 ## Output records
 
@@ -24,7 +25,7 @@ Legacy fields are preserved: `keyword`, `post_id`, `post_name`, `title`, `author
 
 Added fields include: `keywords`, `upvote_ratio`, `source`, `sourceUrl`, `retrievedAt`, `dataFreshness`, `scoreAsOf`, `upvoteRatioAsOf`, `archiveLagSeconds`, `metricsAvailable`, `isNsfwKnown`, `isGallery`, `galleryItems`, `mediaUrls`, `videoUrl`, `removedByCategory`, `removalType`, `wasDeletedLater`, `subreddit_id`, `postType` and `provenance`.
 
-`subreddit` is the bare name (`Python`); `subreddit_prefixed` is `r/Python`.
+`subreddit` is the bare name (`Python`); `subreddit_prefixed` is `r/Python`. `domain` is the linked domain for link posts. Every pushed record also carries `scrapedAt` (the run timestamp) in addition to source provenance.
 
 ### Comment records (`recordType: "comment"`)
 
@@ -117,15 +118,13 @@ Typed reasons include: `invalid_input`, `all_sources_failed`, `transport_blocked
 - **Arctic archive staleness**: scores, comment counts, upvote ratios and removal flags are snapshots, not live. Check `dataFreshness`, `scoreAsOf`, `upvoteRatioAsOf` and `archiveLagSeconds` before treating archive engagement as current; removed/deleted flags may lag live Reddit state.
 - **Legal/ToS**: Reddit requires approved API access and prohibits unapproved scraping and commercialization. Arctic Shift, Redlib and the Translate proxy are third-party services and do not create Reddit authorization. Get legal/product sign-off and provide provenance and removal handling; this actor is not affiliated with Reddit.
 
-## Local development
+## Use cases
 
-```bash
-pip install -r requirements.txt
-python -m pytest -q
-python -m src
-```
-
-`python -m src` needs an input; with Apify local storage use `.actor/INPUT.json` or `APIFY_LOCAL_STORAGE_DIR` with a key-value store `INPUT.json`.
+- **Brand and product monitoring** - track new Reddit discussions about a product, feature or competitor across subreddits.
+- **Community research** - collect posts and comment bodies for a niche to understand recurring questions, pain points and language.
+- **Trend discovery** - compare keyword volumes and engagement across time windows and sort orders.
+- **Support and risk triage** - find comments mentioning outages, billing issues or safety concerns and route them to the right team.
+- **Dataset building** - export provenance-rich posts/comments with live or archive freshness labels for analytics and NLP.
 
 ## FAQ
 

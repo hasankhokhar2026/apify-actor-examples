@@ -54,7 +54,10 @@ Each row has a `type`: `video transcript` when a transcript was produced, otherw
 | `vtt`, `vttUrl` | WebVTT subtitle text and a signed download link for the `.vtt` file |
 | `errorCode`, `retryable`, `message` | Typed status reason for `status` rows |
 | `spaceId` | Present on `spaces_not_supported` status rows |
-| `collectedAt` | UTC timestamp |
+| `type` | `video transcript` or `status` |
+| `recordType` | Standard alias: `transcript` or `status` |
+| `sourceUrl` | Canonical post URL (omitted when the input had no valid URL) |
+| `collectedAt`, `scrapedAt` | UTC timestamp |
 
 Unavailable transcripts are `status` rows with `transcriptAvailable: false`, `transcriptionMethod: "none"` and a typed `errorCode`. When the failure happens while resolving a profile input (instead of a post), the row carries `profileUrl` (and `profileUsername`, when known) instead of `tweetUrl`/`tweetId`.
 

@@ -58,13 +58,15 @@
       "type": "array"
     },
     "includeFiles": {
-      "description": "Fetch the full CSS2 stylesheet (woff2/unicode-range) and the download manifest (TTF URLs). Capped by `maxFilesPerFamily`. CSS2 output depends on the user agent: the actor requests a modern Chrome UA and retries once with Safari when Chrome receives only TTF. Large CJK families can exceed the file cap. When omitted, defaults to on for `byFamily` and off for `byCategory`/`listAll`/`icons`; set false explicitly to disable it. Ignored in `icons` mode.",
+      "default": false,
+      "description": "Fetch the full CSS2 stylesheet (woff2/unicode-range) and the download manifest (TTF URLs). Capped by `maxFilesPerFamily`. CSS2 output depends on the user agent: the actor requests a modern Chrome UA and retries once with Safari when Chrome receives only TTF. Large CJK families can exceed the file cap. Off by default; enable it to add these fields. Raw API calls that omit the key retain the legacy `byFamily` auto-enable. Ignored in `icons` mode.",
       "prefill": false,
       "title": "Include font file URLs",
       "type": "boolean"
     },
     "includeLicense": {
-      "description": "Enrich each family with license, license URL, copyright, source repository, source date, languages, unicode coverage, and description. Uses the per-family metadata endpoint, then METADATA.pb, then the download manifest. When omitted, defaults to on for `byFamily` and off for `byCategory`/`listAll`/`icons`; set false explicitly to disable it. The catalog-level `languages` array is always empty upstream, so `languages` can only come from this per-family enrichment. Ignored in `icons` mode.",
+      "default": false,
+      "description": "Enrich each family with license, license URL, copyright, source repository, source date, languages, unicode coverage, and description. Uses the per-family metadata endpoint, then METADATA.pb, then the download manifest. Off by default; enable it to add these fields. Raw API calls that omit the key retain the legacy `byFamily` auto-enable. The catalog-level `languages` array is always empty upstream, so `languages` can only come from this per-family enrichment. Ignored in `icons` mode.",
       "prefill": false,
       "sectionCaption": "License & self-hosting enrichment",
       "title": "Include license & attribution",

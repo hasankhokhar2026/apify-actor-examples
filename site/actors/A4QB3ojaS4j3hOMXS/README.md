@@ -15,7 +15,7 @@ No login, API key, cookie, or proxy configuration is required.
 - **Optional self-hosting pack:** full CSS2 URL, woff2 files with unicode ranges, and TTF download URLs
 - **Safe defaults:** missing `families` or `category` fall back to `Roboto` / `Sans Serif`; empty runs are prevented
 - **Typed errors:** `missing_input`, `not_found`, `invalid_category`, `fetch_failed`, `css_failed`
-- **Empty fields are always omitted** — records only contain data that actually exists
+- **Empty fields are omitted:** records only contain data that actually exists.
 
 ## Output per font family
 
@@ -28,6 +28,8 @@ No login, API key, cookie, or proxy configuration is required.
 | `classifications` | Secondary tags (e.g. `Display`, `Monospace`, `Symbols`) |
 | `subsets` | All subsets, including the synthetic `menu` subset |
 | `languageSubsets` | `subsets` with the synthetic `menu` entry removed |
+
+Common `subsets` values include `latin`, `latin-ext`, `cyrillic`, `cyrillic-ext`, `greek`, `greek-ext`, `vietnamese`, `math`, `symbols` and script-specific CJK buckets.
 | `hasMenuSubset` | `true` when the family has the synthetic `menu` subset |
 | `weights` | Distinct numeric weights (e.g. `["100","400","700","900"]`) |
 | `variants` | Every shipped style, including italics (e.g. `400`, `400i`) |
@@ -133,8 +135,8 @@ CJK families can be large: M PLUS 1p emits 882 CSS2 blocks, Noto Sans SC 101, No
 | `brandOnly` | boolean | `false` | Keep only families with the upstream `isBrandFont` flag (currently equals `isNoto`) |
 | `notoOnly` | boolean | `false` | Keep only Noto families |
 | `sortBy` | string | `default` | `popularity` / `trending` / `dateAdded` / `lastModified` / `name` / `defaultSort`; `icons` mode uses `popularity` or `name` |
-| `includeLicense` | boolean | `byFamily`: on, otherwise off | No schema default; omitted uses the mode default, explicit `false` disables |
-| `includeFiles` | boolean | `byFamily`: on, otherwise off | No schema default; omitted uses the mode default, explicit `false` disables |
+| `includeLicense` | boolean | `false` | Enable license, attribution, language and coverage fields |
+| `includeFiles` | boolean | `false` | Enable CSS2/woff2 and TTF file URLs |
 | `maxFilesPerFamily` | integer | `200` | Cap applied separately to CSS2 and TTF files (1–1000) |
 
 ### Example: look up specific families
@@ -229,7 +231,7 @@ For a full-library run, license/file enrichment is off unless explicitly enabled
 
 **Are these fonts free to use?** Yes. The catalog currently contains about 1,919 SIL Open Font License families, 35 Apache-2.0 families, and 5 Ubuntu Font Licence families. Use `includeLicense` for exact per-family data.
 
-**What does the license enrichment cost?** One to three cookieless requests per family. It is enabled by default for `byFamily` and disabled by default for `byCategory`/`listAll`/`icons`. The schema intentionally has no `default` for `includeLicense`/`includeFiles`, so an omitted value can use the mode default; an explicit `false` always disables enrichment.
+**What does the license enrichment cost?** One to three cookieless requests per family. It is off by default; enable `includeLicense` and/or `includeFiles` when you need those fields. Raw API calls that omit both keys keep the legacy `byFamily` auto-enable for backward compatibility.
 
 **Why is `languages` empty or missing?** The main catalog's `languages` array is empty for all 1,959 families upstream. The actor therefore does not publish it from the catalog. `includeLicense` enrichment fetches the per-family endpoint (one request per family) and writes `languages` there; even then, a few families (Noto Color Emoji, Noto Emoji, Allkin) have no language list.
 

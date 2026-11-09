@@ -84,7 +84,7 @@
       &quot;default&quot;: false,
       &quot;description&quot;: &quot;Add one companySummary record per company with saved, available, siteTotal, stopReason, logo, rating, and URL. Summary records are marked with recordType=companySummary.&quot;,
       &quot;prefill&quot;: false,
-      &quot;title&quot;: &quot;Include company summary records&quot;,
+      &quot;title&quot;: &quot;Include company summaries&quot;,
       &quot;type&quot;: &quot;boolean&quot;
     },
     &quot;includeWorldwideReviews&quot;: {
@@ -263,7 +263,7 @@
       &quot;default&quot;: false,
       &quot;description&quot;: &quot;Only keep reviews that have an official employer response.&quot;,
       &quot;prefill&quot;: false,
-      &quot;title&quot;: &quot;Only reviews with employer responses&quot;,
+      &quot;title&quot;: &quot;Only with responses&quot;,
       &quot;type&quot;: &quot;boolean&quot;
     },
     &quot;postedWithinDays&quot;: {
@@ -533,6 +533,7 @@
 <li>Supports incremental monitoring with <code>onlyNew</code> and a named <code>monitorId</code> state store: per-company review-id watermarks and seen sets, <code>isNew</code>/<code>firstSeenAt</code> output, optional <code>emitUnchanged</code>, and state updates only after a successful dataset push.</li>
 <li>Resolves company and location names with exact/unique matching. Ambiguous or invalid values produce typed warnings instead of silently taking the first autocomplete row.</li>
 <li>Omits fields that Glassdoor does not provide for a review instead of writing empty strings, nulls, or zero placeholders.</li>
+<li><strong>Empty fields are omitted:</strong> never null, empty strings or empty arrays/objects.</li>
 </ul>
 <p>Typical uses: employer-brand research, culture and sentiment analysis, HR benchmarking, due diligence, recruiting research, and building review datasets for analytics.</p>
 <h2 id="readme-input">Input</h2>
@@ -698,15 +699,14 @@
 </tr>
 </tbody>
 </table></div>
-<h3 id="readme-examples">Examples</h3>
-<p>One company by URL:</p>
+<h3 id="readme-example-one-company-by-url">Example: one company by URL</h3>
 <pre><code class="language-json">{
   &quot;companies&quot;: [&quot;https://www.glassdoor.com/Reviews/Google-Reviews-E9079.htm&quot;],
   &quot;maxItems&quot;: 50,
   &quot;sortBy&quot;: &quot;mostRecent&quot;
 }
 </code></pre>
-<p>Several companies by name or id:</p>
+<h3 id="readme-example-several-companies-by-name-or-id">Example: several companies by name or id</h3>
 <pre><code class="language-json">{
   &quot;companies&quot;: [&quot;Microsoft&quot;, &quot;Amazon&quot;, &quot;9079&quot;],
   &quot;maxItems&quot;: 300,
@@ -714,7 +714,7 @@
   &quot;language&quot;: &quot;eng&quot;
 }
 </code></pre>
-<p>Recent five-star reviews from current employees:</p>
+<h3 id="readme-example-recent-five-star-reviews-from-current-employees">Example: recent five-star reviews from current employees</h3>
 <pre><code class="language-json">{
   &quot;companies&quot;: [&quot;https://www.glassdoor.com/Reviews/Google-Reviews-E9079.htm&quot;],
   &quot;maxItems&quot;: 100,
@@ -723,7 +723,7 @@
   &quot;postedWithinDays&quot;: &quot;90&quot;
 }
 </code></pre>
-<p>Exact date range with several star ratings and languages:</p>
+<h3 id="readme-example-exact-date-range-with-several-star-ratings-and-languages">Example: exact date range with several star ratings and languages</h3>
 <pre><code class="language-json">{
   &quot;companies&quot;: [&quot;https://www.glassdoor.com/Reviews/Google-Reviews-E9079.htm&quot;],
   &quot;maxItems&quot;: 200,
@@ -733,7 +733,7 @@
   &quot;languages&quot;: [&quot;eng&quot;, &quot;fra&quot;]
 }
 </code></pre>
-<p>New York engineers with employer responses:</p>
+<h3 id="readme-example-new-york-engineers-with-employer-responses">Example: New York engineers with employer responses</h3>
 <pre><code class="language-json">{
   &quot;companies&quot;: [&quot;https://www.glassdoor.com/Reviews/Google-Reviews-E9079.htm&quot;],
   &quot;maxItems&quot;: 50,
@@ -742,7 +742,7 @@
   &quot;onlyWithEmployerResponses&quot;: true
 }
 </code></pre>
-<p>All languages, worldwide, with company profile:</p>
+<h3 id="readme-example-all-languages-worldwide-with-company-profile">Example: all languages, worldwide, with company profile</h3>
 <pre><code class="language-json">{
   &quot;companies&quot;: [&quot;https://www.glassdoor.com/Reviews/Siemens-Reviews-E3510.htm&quot;],
   &quot;maxItems&quot;: 200,
@@ -751,7 +751,7 @@
   &quot;includeCompanyProfile&quot;: true
 }
 </code></pre>
-<p>Scheduled incremental monitoring:</p>
+<h3 id="readme-example-scheduled-incremental-monitoring">Example: scheduled incremental monitoring</h3>
 <pre><code class="language-json">{
   &quot;companies&quot;: [&quot;https://www.glassdoor.com/Reviews/Google-Reviews-E9079.htm&quot;],
   &quot;maxItems&quot;: 500,
@@ -840,6 +840,14 @@
 <td>Glassdoor domain used for the data.</td>
 </tr>
 <tr>
+<td><code>recordType</code></td>
+<td><code>review</code> for review rows; <code>companySummary</code> for summary rows.</td>
+</tr>
+<tr>
+<td><code>sourceUrl</code></td>
+<td>Canonical review URL (<code>reviewUrl</code>); for company summaries, the company reviews URL.</td>
+</tr>
+<tr>
 <td><code>scrapedAt</code></td>
 <td>Run timestamp in UTC.</td>
 </tr>
@@ -878,7 +886,7 @@
 </table></div>
 <p>When <code>includeCompanyProfile</code> is on, each review also gets <code>companyWebsite</code>, <code>companyHeadquarters</code>, <code>companySize</code>, <code>companyRevenue</code>, <code>companyType</code>, <code>companyFoundedYear</code>, <code>companyIndustry</code>, <code>companyCeo</code>, and <code>companySubRatings</code>.</p>
 <p><code>companySubRatings</code> keeps the six category ratings on Glassdoor's 1-5 scale (<code>overall</code>, <code>workLifeBalance</code>, <code>cultureAndValues</code>, <code>diversityAndInclusion</code>, <code>seniorManagement</code>, <code>careerOpportunities</code>, <code>compensationAndBenefits</code>) and converts the three fraction fields to 0-100 percentages: <code>ceoApprovalPct</code>, <code>recommendToFriendPct</code>, and <code>businessOutlookPct</code>. A <code>scale</code> string documents both scales.</p>
-<p><code>lengthOfEmployment</code> is Glassdoor's tenure bucket; <code>0</code> means less than one year, not missing.</p>
+<p><code>lengthOfEmployment</code> is Glassdoor's tenure bucket; <code>0</code> means less than one year, not missing. <code>ratingRecommendToFriend</code> uses Glassdoor's values such as <code>RECOMMEND</code>, <code>WONT_RECOMMEND</code> and <code>NO_OPINION</code> when present.</p>
 <p>Missing values are omitted. For example, a review without advice has no <code>advice</code> key, and a review without sub-ratings has no sub-rating keys. Booleans such as <code>isCurrentJob</code>, <code>isFeatured</code>, and <code>hasEmployerResponse</code> are always present.</p>
 <h2 id="readme-completeness-and-company-summaries">Completeness and company summaries</h2>
 <p>Every run reports a completeness contract in the status message and in the <code>RUN_SUMMARY</code> key-value record:</p>
@@ -928,6 +936,28 @@
 <p>Glassdoor still counts a small number of reviews it does not serve. The actor reports the available count and the site total in the run status, so you can see the gap instead of guessing. Set <code>language</code> to all (or list every <code>languages</code> value) and <code>includeWorldwideReviews</code> to true to reach the broadest set.</p>
 <h2 id="readme-languages-and-countries">Languages and countries</h2>
 <p>Glassdoor stores reviews in language buckets. Set <code>language</code> to collect English, French, German, Dutch, Portuguese, Spanish, Italian, or all languages, or list several values in <code>languages</code>. Region-specific Glassdoor URLs are accepted, but the data comes from Glassdoor's global review endpoint; the country domain alone does not create a separate review set. <code>sourceDomain</code> records the domain from the input URL.</p>
+<h2 id="readme-use-cases">Use cases</h2>
+<ul>
+<li><strong>Employer-brand and culture research</strong> - compare pros, cons and sub-ratings across companies or locations.</li>
+<li><strong>HR and recruiting benchmarking</strong> - measure compensation, work-life balance and leadership sentiment by job function or tenure.</li>
+<li><strong>Due diligence and investment research</strong> - export structured review history, ratings and employer responses for analysis.</li>
+<li><strong>Voice-of-employee monitoring</strong> - schedule <code>onlyNew</code> runs and route new reviews to HR, ops or customer-experience teams.</li>
+<li><strong>Labor-market datasets</strong> - build review corpora with canonical URLs, language buckets and first-seen timestamps.</li>
+</ul>
+<h2 id="readme-data-source-and-limitations">Data source and limitations</h2>
+<ul>
+<li>Data source: Glassdoor's public review and company endpoints.</li>
+<li>No user credentials, cookies, or proxy configuration are required.</li>
+<li>Reviewer names are not exposed by Glassdoor's public review data. The actor does not attempt to identify reviewers.</li>
+<li>Employer responses are optional and appear only when Glassdoor provides them. Use onlyWithEmployerResponses to keep response-bearing reviews only.</li>
+<li>Glassdoor does not expose original-language or translation text for the sampled reviews; those fields are omitted unless the source provides them.</li>
+<li>Arbitrary date ranges are applied client-side, so very old ranges may require paging through newer reviews first.</li>
+<li>Keyword + exact rating filtering is also client-side because Glassdoor treats the server rating as a minimum. Newest-first order may page through many non-matching reviews; highest-rated or lowest-rated order is faster for sparse exact ratings.</li>
+<li>Company names are resolved through Glassdoor autocomplete with exact/unique matching. For ambiguous names, use the company URL or employer id.</li>
+<li>Regional Glassdoor URLs are accepted for company resolution, but review data still comes from Glassdoor's global endpoint; <code>sourceDomain</code> records the input domain.</li>
+<li>Monitoring state is stored in a named key-value store. Use the same <code>monitorId</code> across scheduled runs; a different id starts a fresh baseline. State is tied to the current filter set, and edits to reviews older than the stored watermark are not re-read.</li>
+<li>Glassdoor can change its public endpoints without notice. The actor rotates sessions and escalates direct → datacenter → residential proxies on repeated blocks. If a run reports a block or an endpoint error, re-run later or contact support with the run id.</li>
+</ul>
 <h2 id="readme-faq">FAQ</h2>
 <p><strong>Do I need a Glassdoor account or cookie?</strong>
 No. The actor reads public review data without a login, cookie, or user-supplied proxy.</p>
@@ -947,18 +977,4 @@ Yes. Run the actor on a schedule with <code>onlyNew: true</code> and the same <c
 The actor no longer silently takes the first autocomplete row. Company names require an exact or unique match; ambiguous names are skipped with a warning that lists candidates. Location candidates are ranked (city/country before state), ambiguous choices are reported, and a zero-result location falls back to the next candidate. An unresolved location is ignored with a warning instead of failing the whole run.</p>
 <p><strong>Is this affiliated with Glassdoor?</strong>
 No. This actor collects public review data and is not affiliated with, endorsed by, or sponsored by Glassdoor.</p>
-<h2 id="readme-data-source-and-limitations">Data source and limitations</h2>
-<ul>
-<li>Data source: Glassdoor's public review and company endpoints.</li>
-<li>No user credentials, cookies, or proxy configuration are required.</li>
-<li>Reviewer names are not exposed by Glassdoor's public review data. The actor does not attempt to identify reviewers.</li>
-<li>Employer responses are optional and appear only when Glassdoor provides them. Use onlyWithEmployerResponses to keep response-bearing reviews only.</li>
-<li>Glassdoor does not expose original-language or translation text for the sampled reviews; those fields are omitted unless the source provides them.</li>
-<li>Arbitrary date ranges are applied client-side, so very old ranges may require paging through newer reviews first.</li>
-<li>Keyword + exact rating filtering is also client-side because Glassdoor treats the server rating as a minimum. Newest-first order may page through many non-matching reviews; highest-rated or lowest-rated order is faster for sparse exact ratings.</li>
-<li>Company names are resolved through Glassdoor autocomplete with exact/unique matching. For ambiguous names, use the company URL or employer id.</li>
-<li>Regional Glassdoor URLs are accepted for company resolution, but review data still comes from Glassdoor's global endpoint; <code>sourceDomain</code> records the input domain.</li>
-<li>Monitoring state is stored in a named key-value store. Use the same <code>monitorId</code> across scheduled runs; a different id starts a fresh baseline. State is tied to the current filter set, and edits to reviews older than the stored watermark are not re-read.</li>
-<li>Glassdoor can change its public endpoints without notice. The actor rotates sessions and escalates direct → datacenter → residential proxies on repeated blocks. If a run reports a block or an endpoint error, re-run later or contact support with the run id.</li>
-</ul>
-</details></section><section id="python-quickstart"><h2>Python quickstart</h2><p>Use a schema-derived input and the Python standard library to start a run. An Apify account and token are required for execution.</p><p><a href="/apify-actor-examples/guides/5lWwuQH8dZ6LpE4AU/">Open the step-by-step Python guide →</a></p></section><p class="source-note">Source build <code>qzsjlw72az5KIbfro</code>. Documentation is regenerated from the default published build; private drafts are not included.</p></article></div></main><footer class="footer"><strong>Nimbryxo Studio</strong><div class="footer-links"><a href="/apify-actor-examples/topics/">Topics</a><a href="/apify-actor-examples/sources/">Documentation sources</a><a href="https://apify.com/nimbryxo-studio">Apify</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></div></footer></body></html>
+</details></section><section id="python-quickstart"><h2>Python quickstart</h2><p>Use a schema-derived input and the Python standard library to start a run. An Apify account and token are required for execution.</p><p><a href="/apify-actor-examples/guides/5lWwuQH8dZ6LpE4AU/">Open the step-by-step Python guide →</a></p></section><p class="source-note">Source build <code>xTNWFWMUeKS0bj8HD</code>. Documentation is regenerated from the default published build; private drafts are not included.</p></article></div></main><footer class="footer"><strong>Nimbryxo Studio</strong><div class="footer-links"><a href="/apify-actor-examples/topics/">Topics</a><a href="/apify-actor-examples/sources/">Documentation sources</a><a href="https://apify.com/nimbryxo-studio">Apify</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></div></footer></body></html>

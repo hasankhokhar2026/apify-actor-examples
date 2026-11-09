@@ -1,0 +1,82 @@
+{
+  "description": "Configure the Vrbo scraper to search vacation rentals by destination, dates, and guest count. Returns property details, prices, ratings, amenities, host info and images.",
+  "properties": {
+    "adults": {
+      "default": 2,
+      "description": "Number of adult guests. Affects pricing and availability.",
+      "maximum": 16,
+      "minimum": 1,
+      "prefill": 2,
+      "title": "Number of Adults",
+      "type": "integer"
+    },
+    "checkIn": {
+      "description": "Check-in date in YYYY-MM-DD format. If left empty or in the past, the scraper will use today + 30 days automatically.",
+      "editor": "textfield",
+      "title": "Check-in Date",
+      "type": "string"
+    },
+    "checkOut": {
+      "description": "Check-out date in YYYY-MM-DD format. If left empty or in the past, the scraper will use check-in + 2 days automatically.",
+      "editor": "textfield",
+      "title": "Check-out Date",
+      "type": "string"
+    },
+    "children": {
+      "default": 0,
+      "description": "Number of child guests. Affects pricing and availability.",
+      "maximum": 20,
+      "minimum": 0,
+      "prefill": 0,
+      "title": "Number of Children",
+      "type": "integer"
+    },
+    "destination": {
+      "default": "Orlando, FL",
+      "description": "Destination city, region or area to search (e.g., 'Orlando, FL', 'Paris, France', 'Miami Beach').",
+      "editor": "textfield",
+      "prefill": "Orlando, FL",
+      "sectionCaption": "Search Settings",
+      "title": "Destination",
+      "type": "string"
+    },
+    "maxItems": {
+      "default": 3,
+      "description": "Maximum number of properties to scrape from search results.",
+      "maximum": 500,
+      "minimum": 1,
+      "prefill": 3,
+      "sectionCaption": "Limits",
+      "title": "Maximum Properties",
+      "type": "integer"
+    },
+    "proxyConfiguration": {
+      "default": {
+        "apifyProxyCountry": "US",
+        "apifyProxyGroups": [
+          "RESIDENTIAL"
+        ],
+        "useApifyProxy": true
+      },
+      "description": "Required. Vrbo is Akamai-protected and blocks all datacenter IPs. Must use Apify RESIDENTIAL proxy group with country US (requires a paid Apify plan). The default prefill already configures this.",
+      "editor": "proxy",
+      "prefill": {
+        "apifyProxyCountry": "US",
+        "apifyProxyGroups": [
+          "RESIDENTIAL"
+        ],
+        "useApifyProxy": true
+      },
+      "sectionCaption": "Proxy and Browser Settings",
+      "title": "Proxy Configuration",
+      "type": "object"
+    }
+  },
+  "required": [
+    "destination",
+    "proxyConfiguration"
+  ],
+  "schemaVersion": 1,
+  "title": "Vrbo Vacation Rentals Input",
+  "type": "object"
+}
