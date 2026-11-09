@@ -1,9 +1,24 @@
 {
-  "description": "Search movies/TV shows on IMDb, fetch by ID, browse charts, or run advanced searches.",
+  "description": "Search IMDb titles, fetch titles by ID, browse charts, run advanced searches, export user reviews, or list every episode of a TV series.",
   "properties": {
+    "countries": {
+      "default": [],
+      "description": "Filter by country-of-origin codes, e.g. US, GB, IN, JP. Multiple countries are combined with OR. Used in search and advanced modes.",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Countries of Origin",
+      "type": "array"
+    },
+    "excludeSpoilers": {
+      "default": false,
+      "description": "Skip reviews flagged as containing spoilers.",
+      "prefill": false,
+      "title": "Exclude Spoiler Reviews",
+      "type": "boolean"
+    },
     "genres": {
       "default": [],
-      "description": "Filter by genres. Multiple genres are combined with AND. Valid values: Action, Adventure, Animation, Biography, Comedy, Crime, Documentary, Drama, Family, Fantasy, Film-Noir, History, Horror, Music, Musical, Mystery, Romance, Sci-Fi, Sport, Thriller, War, Western.",
+      "description": "Filter by genres, e.g. Drama, Thriller, Sci-Fi. Multiple genres are combined with AND. Used in search and advanced modes.",
       "editor": "stringList",
       "prefill": [],
       "title": "Genres",
@@ -11,23 +26,35 @@
     },
     "imdbIds": {
       "default": [],
-      "description": "One or more IMDb title IDs (e.g. tt0111161). Used only for byId mode.",
+      "description": "IMDb title IDs (e.g. tt0111161) or title URLs. Used by byId, reviews and episodes modes. In episodes mode, pass TV series IDs.",
       "editor": "stringList",
       "prefill": [],
-      "title": "IMDb IDs (byId mode)",
+      "sectionCaption": "IMDb IDs",
+      "sectionDescription": "Used by byId, reviews and episodes modes. Accepts bare IDs (tt0111161), numbers (111161), or full IMDb title URLs.",
+      "title": "IMDb Title IDs",
+      "type": "array"
+    },
+    "languages": {
+      "default": [],
+      "description": "Filter by spoken-language codes, e.g. en, fr, hi, ta. Multiple languages are combined with OR. Used in search and advanced modes.",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Spoken Languages",
       "type": "array"
     },
     "maxItems": {
       "default": 50,
-      "description": "Maximum number of records to return.",
-      "maximum": 500,
+      "description": "Maximum number of records to return across all requested IDs (1-1000). Each review or episode is one record. Results are paginated, so the upstream 50-reviews-per-request limit does not cap this.",
+      "maximum": 1000,
       "minimum": 1,
-      "prefill": 50,
+      "prefill": 3,
+      "sectionCaption": "Output",
+      "sectionDescription": "Keep the daily test run small; increase this for real exports.",
       "title": "Max Items",
       "type": "integer"
     },
     "minRating": {
-      "description": "Only include titles with at least this IMDb rating (1–10).",
+      "description": "Only include titles with at least this IMDb rating (1-10).",
       "maximum": 10,
       "minimum": 1,
       "title": "Minimum IMDb Rating",
@@ -42,36 +69,94 @@
     },
     "mode": {
       "default": "topRated",
-      "description": "What to fetch from IMDb.",
+      "description": "What to fetch from IMDb: title search, direct IDs, a chart, the popularity meter, a filtered search, user reviews, or TV episodes.",
       "editor": "select",
       "enum": [
+        "topRated",
         "search",
         "byId",
-        "topRated",
         "popular",
-        "advanced"
+        "advanced",
+        "reviews",
+        "episodes"
       ],
       "enumTitles": [
+        "Top 250 & Other Charts",
         "Search Titles",
         "Fetch by IMDb ID",
-        "Top 250",
-        "Popular Now",
-        "Advanced Search"
+        "Popular Now (IMDb Meter)",
+        "Advanced Search",
+        "User Reviews",
+        "TV Series Episodes"
       ],
       "prefill": "topRated",
       "title": "Mode",
       "type": "string"
     },
+    "reviewSortBy": {
+      "default": "HELPFULNESS_SCORE",
+      "description": "How to order reviews in reviews mode.",
+      "editor": "select",
+      "enum": [
+        "HELPFULNESS_SCORE",
+        "USER_RATING",
+        "SUBMISSION_DATE",
+        "TOTAL_VOTES"
+      ],
+      "enumTitles": [
+        "Most Helpful",
+        "Highest Reviewer Rating",
+        "Newest Submission",
+        "Most Helpfulness Votes"
+      ],
+      "prefill": "HELPFULNESS_SCORE",
+      "sectionCaption": "Review options",
+      "sectionDescription": "Only used in reviews mode.",
+      "title": "Review Sort Order",
+      "type": "string"
+    },
+    "reviewSortOrder": {
+      "default": "DESC",
+      "description": "Ascending or descending order for the review sort.",
+      "editor": "select",
+      "enum": [
+        "DESC",
+        "ASC"
+      ],
+      "enumTitles": [
+        "Descending",
+        "Ascending"
+      ],
+      "prefill": "DESC",
+      "title": "Review Sort Direction",
+      "type": "string"
+    },
+    "runtimeMax": {
+      "description": "Only include titles at most this many minutes long. Used in search and advanced modes.",
+      "maximum": 1440,
+      "minimum": 1,
+      "title": "Runtime (max minutes)",
+      "type": "integer"
+    },
+    "runtimeMin": {
+      "description": "Only include titles at least this many minutes long. Used in search and advanced modes.",
+      "maximum": 1440,
+      "minimum": 1,
+      "title": "Runtime (min minutes)",
+      "type": "integer"
+    },
     "searchQuery": {
-      "description": "Free-text query for search mode (e.g. 'inception', 'breaking bad').",
+      "description": "Free-text title search, e.g. 'inception' or 'breaking bad'. Used in search mode.",
       "editor": "textfield",
       "prefill": "inception",
+      "sectionCaption": "Search titles",
+      "sectionDescription": "Used by search mode. The query is matched against IMDb's full title catalog.",
       "title": "Search Query",
       "type": "string"
     },
     "sortBy": {
       "default": "RANKING",
-      "description": "How to sort results in advanced/search mode.",
+      "description": "Sort field for search and advanced modes.",
       "editor": "select",
       "enum": [
         "RANKING",
@@ -95,7 +180,7 @@
     },
     "sortOrder": {
       "default": "DESC",
-      "description": "Sort direction.",
+      "description": "Sort direction for search and advanced modes.",
       "editor": "select",
       "enum": [
         "DESC",
@@ -106,12 +191,12 @@
         "Ascending"
       ],
       "prefill": "DESC",
-      "title": "Sort Order",
+      "title": "Sort Direction",
       "type": "string"
     },
     "titleType": {
       "default": "",
-      "description": "Filter results to a specific content type.",
+      "description": "Restrict results to one content type. Used in search, popular and advanced modes.",
       "editor": "select",
       "enum": [
         "",
@@ -136,7 +221,9 @@
         "Podcast Series"
       ],
       "prefill": "",
-      "title": "Title Type Filter",
+      "sectionCaption": "Filters",
+      "sectionDescription": "Filters apply to search, advanced, popular and chart modes where noted. Reviews and episodes modes use only the IDs list.",
+      "title": "Title Type",
       "type": "string"
     },
     "topRatedChart": {
@@ -166,7 +253,9 @@
         "Top 250 Indian Movies"
       ],
       "prefill": "TOP_250",
-      "title": "Top Rated Chart",
+      "sectionCaption": "Chart",
+      "sectionDescription": "Used by topRated mode only. For the current most popular titles, use Popular Now mode.",
+      "title": "Chart",
       "type": "string"
     },
     "yearMax": {

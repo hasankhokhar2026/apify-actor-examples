@@ -1,0 +1,88 @@
+# Capterra Software Pricing & Feature Extractor
+
+Look up any software product listed on Capterra and get back its pricing plans, feature and integration lists, rating, pros/cons summary, and vendor information. Give it direct product URLs, or a product name and it resolves the matching Capterra page for you.
+
+## What this actor does
+
+- **Direct URL lookup** — paste one or more Capterra product URLs (`byProductUrls` mode) and get each product's full detail
+- **Name-based lookup** — give it a product or category name (`bySearchQueries` mode) and it resolves the matching Capterra product page before scraping
+- **Pricing detail** — starting price, pricing model, periodicity, free-trial/free-version flags, and individual pricing plans with their own attributes
+- **Capability data** — categories, feature list and count, integrations list and count, supported platforms, support/training options, and typical customer segments
+- **Only real values are returned** — a field Capterra doesn't publish for a given product (e.g. no listed pricing) is left out of that record instead of sent as blank or zero
+
+## Output per product
+
+- `productId`, `slug`, `url`, `reviewsUrl` — Capterra product identity and links
+- `siteName` — always `Capterra`
+- `name`, `tagline`, `description`, `overview`, `logo`
+- `rating`, `reviewCount`
+- `priceCurrency`, `pricePeriodicity`, `pricingModel`, `startingPrice`, `freeTrial`, `freeVersion`, `licensingModel`
+- `pricingPlans[].name`, `.startingPrice`, `.attributes` — individual plan tiers, when published (up to 8)
+- `categories`, `primaryCategory`
+- `features`, `featureCount`
+- `integrations`, `integrationsCount`
+- `platforms`, `supportOptions`, `trainingOptions`, `typicalCustomers`
+- `pros[].topic`, `.sentiment`, `.summary` and `cons[].topic`, `.sentiment`, `.summary` — summarized reviewer sentiment themes (up to 10 each)
+- `screenshots` — product screenshot URLs (up to 20)
+- `vendorName`, `vendorCity`, `vendorState`, `vendorCountry`, `vendorWebsite`, `vendorFoundedYear`
+- `recordType` — always `software`
+- `scrapedAt` — ISO timestamp the record was collected
+
+## Input
+
+| Field | Type | Default | Description |
+|---|---|---|---|
+| `mode` | string (select) | `byProductUrls` | `byProductUrls` to scrape specific products, `bySearchQueries` to resolve products by name first |
+| `productUrls` | array | `["https://www.capterra.com/p/135003/Slack/"]` | Capterra product URLs to scrape (mode=`byProductUrls`) |
+| `searchQueries` | array | `[]` | Product names or broad category terms to resolve to real Capterra products, e.g. `Slack`, `CRM software` (mode=`bySearchQueries`) |
+| `maxItems` | integer | `10` | Maximum number of products to return (1–250) |
+
+### Example: scrape specific products by URL
+
+```json
+{
+  "mode": "byProductUrls",
+  "productUrls": [
+    "https://www.capterra.com/p/135003/Slack/",
+    "https://www.capterra.com/p/228385/Notion/"
+  ],
+  "maxItems": 3
+}
+```
+
+### Example: resolve products by name
+
+```json
+{
+  "mode": "bySearchQueries",
+  "searchQueries": ["Slack", "Notion", "Asana"],
+  "maxItems": 3
+}
+```
+
+## Use cases
+
+- **Vendor comparison** — pull pricing and feature lists for several competing tools into one dataset
+- **Procurement research** — check starting price, free-trial availability, and supported platforms before a buying decision
+- **Market mapping** — collect category, integration, and typical-customer data across a set of products in a space
+- **Sales enablement** — build a quick-reference sheet of a competitor's listed pros/cons and vendor details
+
+## FAQ
+
+**What product data does this cover?**
+Each run returns product-level metadata — identity, pricing, features, integrations, pros/cons themes, and vendor info. It does not return the full text of individual user reviews.
+
+**What's the difference between the two modes?**
+`byProductUrls` scrapes the exact products you list by URL. `bySearchQueries` takes a product name or category term, finds the matching Capterra product(s), and scrapes those.
+
+**Why did a product get skipped?**
+A product is skipped (and not emitted as a placeholder) when its URL doesn't resolve to a valid Capterra listing, or when the listing is missing its product name — this keeps the dataset free of incomplete or guessed records.
+
+**Why are some pricing or integration fields missing from a product?**
+Capterra doesn't publish every field for every product — a tool with unlisted pricing or no pricing plans, for example, simply won't have those fields in its record.
+
+**Can I get all reviews for a product, or browse a whole category page?**
+Not currently — this actor is scoped to product-level metadata resolved by URL or by name, not bulk category browsing or full review text.
+
+**Is this affiliated with Capterra or Gartner?**
+No. This is an independent actor that reads publicly available Capterra product data; it is not operated by or affiliated with Capterra or Gartner.

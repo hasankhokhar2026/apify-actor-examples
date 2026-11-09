@@ -4,24 +4,35 @@
 
 # YouTube Channel Video Feed Quick Scraper
 
-Point this actor at one or more YouTube channels and get back their current video list — newest, most popular or oldest first — plus the channel's own profile numbers, without opening a browser tab for each one. It's built for runs where you need a lot of channels processed quickly rather than every last enrichment field.
+Point this actor at one or more YouTube channels and get back their video list — newest, most popular or oldest first — with exact publish dates, exact like counts, categories, tags and a full channel profile. It reads YouTube's own public pages, so there is no API key and no login.
 
 ## What this actor does
 
 - Accepts any mix of channel handles (`@name`), full channel URLs, or raw channel IDs across a single run
-- Lists each channel's videos sorted newest, most popular, or oldest first, up to a per-channel cap
-- Optionally also pulls the channel's About-page data (total views, join date, location, external links), Shorts tab, Playlists tab, and Live/Streams tab
-- Returns a channel-info-only row (no video fields) when `maxVideos` is set to `0`, for lightweight profile lookups
-- Localizes results to a market/country code, affecting what YouTube itself serves for that region
-- Omits any field YouTube didn't expose for that video or channel — it never fills a gap with an empty string or a made-up value
+- Reads the Videos tab, the channel's uploads playlist (`UU{channelId}`), or both; the uploads playlist is a complete chronological feed that also includes Shorts and uploads the Videos tab omits. "Both" merges the sources, de-duplicated by video ID, then applies the chosen sort
+- Returns exact `publishDate`, `likeCount`, `category` and `tags` for each video from YouTube's player response
+- Optionally resolves exact public comment counts per video
+- Sorts videos newest, most popular, or oldest first; Shorts have their own Latest/Popular/Oldest filter
+- Can emit only videos that are new since the previous monitor run
+- Adds derived channel analytics: last upload date, average views, upload gap in days and sample size
+- Optionally pulls the channel's About-page data (total views, join date, location, social links), Shorts, Playlists, and Live/Streams tabs
+- Returns a channel-info-only row (no video fields) when `maxVideos` is set to `0`
+- Applies a country and interface language to every request, including pagination and player endpoints
+- Omits any field YouTube did not expose for that video or channel — it never fills a gap with an empty string or a made-up value
 
 ## Output per video row
 
-Every row carries one video's fields plus the full `authorMetadata` object for its channel.
+Every video row has `recordType: "video"` and `sourceUrl` set to its watch URL, plus the full `authorMetadata` object for its channel. A channel-info-only row (`maxVideos: 0` or a channel with no listed videos) has `recordType: "channel"` and `sourceUrl` set to the channel URL. A failed channel emits `recordType: "error"`.
 
-- `videoId`, `title`, `url`
+- `recordType`, `sourceUrl`, `videoId`, `title`, `url`
 - `viewCount` — only when YouTube's own data exposes an exact integer; a rounded label like "93K views" stays in `viewCountText` and is never converted into a fake exact number
-- `viewCountText`, `publishedTimeText`
+- `viewCountText`, `publishedTimeText` — the relative label exactly as YouTube displays it
+- `likeCount` — exact integer from the player response, when YouTube exposes it
+- `commentCount` — exact integer, only when `includeCommentCounts` is on and the video has a public comment section
+- `publishDate` — exact ISO 8601 publish timestamp with YouTube's original UTC offset
+- `uploadDate` — only when it differs from `publishDate`
+- `category` — YouTube's category label, e.g. `"Science & Technology"`
+- `tags` — the creator's video tags, when any were set
 - `duration` — may be the literal string `"LIVE"` for an ongoing stream; `durationSeconds` is only present once YouTube reports a finite length
 - `thumbnailUrl`, `description`
 - `isLive`, `isShort`
@@ -39,6 +50,7 @@ Every row carries one video's fields plus the full `authorMetadata` object for i
 - `country`, `location` — `location` and `totalViews`/`totalViewsText`/`joinedDateText` come from the About page (`includeAbout`)
 - `joinedDateText`, `totalViews`, `totalViewsText`
 - `externalLinks[]` — links listed on the About page (`includeAbout`); `channelLinks[]` — links shown directly on the channel header
+- `lastUploadDate`, `averageViews`, `uploadFrequencyDays`, `videosAnalyzed` — channel analytics derived from the exact rows returned by this run
 - `rssUrl`, `avatarUrl`, `bannerUrl`
 - `isVerified`, `isFamilySafe`
 - `isOfficialArtistChannel` — only present when the channel carries YouTube's official-artist badge
@@ -49,16 +61,21 @@ Every row carries one video's fields plus the full `authorMetadata` object for i
 | Field | Type | Default | Description |
 |---|---|---|---|
 | `channelUrls` | array | – | Channel URLs, handles or channel IDs, any mix |
-| `maxVideos` | integer | `50` | Max videos per channel (0–10000); `0` returns channel info only |
+| `maxVideos` | integer | `50` | Max videos per channel (0–10000; 10,000 is a policy cap, `0` returns channel info only). Exact player metadata refresh has a 900-second budget per run; beyond it rows keep listing metadata |
+| `videoSource` | string | `videosTab` | `videosTab`, `uploadsPlaylist` (catches Shorts and omissions) or `both` |
 | `sortVideosBy` | string | `newest` | `newest`, `popular` or `oldest` |
-| `includeAbout` | boolean | `true` | Pull total views, join date, location and external links from the About page |
+| `sortShortsBy` | string | `latest` | `latest`, `popular` or `oldest` for the Shorts tab |
+| `includeCommentCounts` | boolean | `false` | Fetch exact comment counts (up to two extra requests per video; the description `/next` response is reused when available) |
+| `onlyNewVideos` | boolean | `false` | Monitor mode: emit only videos not seen by a previous run |
+| `includeAbout` | boolean | `true` | Pull total views, join date, location, links and analytics |
 | `includePlaylists` | boolean | `false` | Include the channel's Playlists tab |
 | `maxPlaylists` | integer | `20` | Max playlists to return when `includePlaylists` is on (1–500) |
-| `includeShorts` | boolean | `false` | Include the channel's Shorts tab |
+| `includeShorts` | boolean | `false` | Include the channel's Shorts tab and mark matching videos with `isShort` |
 | `maxShorts` | integer | `20` | Max Shorts to return when `includeShorts` is on (1–2000) |
 | `includeLiveVideos` | boolean | `false` | Include the channel's Live/Streams tab |
 | `maxLiveVideos` | integer | `20` | Max live/stream videos to return (1–500) |
-| `market` | string | `US` | Country code controlling localized content (one of 31 supported) |
+| `market` | string | `US` | Country code (`gl`) applied to every request (31 supported) |
+| `language` | string | `en` | Interface language (`hl`), 30 supported |
 
 ### Example: a few channels' latest uploads
 
@@ -70,14 +87,36 @@ Every row carries one video's fields plus the full `authorMetadata` object for i
 }
 ```
 
-### Example: most popular videos with full channel profile data
+### Example: uploads playlist to include Shorts and omitted uploads
+
+```json
+{
+  "channelUrls": ["@mkbhd"],
+  "maxVideos": 100,
+  "videoSource": "both",
+  "includeShorts": true,
+  "sortShortsBy": "popular"
+}
+```
+
+### Example: recent videos with exact engagement metrics
+
+```json
+{
+  "channelUrls": ["@MrBeast"],
+  "maxVideos": 20,
+  "includeCommentCounts": true
+}
+```
+
+### Example: monitor a channel for new uploads
 
 ```json
 {
   "channelUrls": ["@Fireship"],
-  "maxVideos": 20,
-  "sortVideosBy": "popular",
-  "includeAbout": true
+  "maxVideos": 10,
+  "onlyNewVideos": true,
+  "videoSource": "uploadsPlaylist"
 }
 ```
 
@@ -90,25 +129,14 @@ Every row carries one video's fields plus the full `authorMetadata` object for i
 }
 ```
 
-### Example: including Shorts and playlists
-
-```json
-{
-  "channelUrls": ["@mkbhd"],
-  "maxVideos": 25,
-  "includeShorts": true,
-  "maxShorts": 15,
-  "includePlaylists": true,
-  "maxPlaylists": 10
-}
-```
-
 ## Use cases
 
 - **Bulk channel monitoring** — track upload activity across a long list of channels on a recurring schedule
-- **Competitor benchmarking** — compare view counts and posting cadence across several creators in a niche at once
-- **Influencer shortlisting** — pull subscriber counts and verification status for a batch of candidate channels
-- **Content inventory** — build a catalog of a channel's videos, Shorts and playlists for cataloging or archival
+- **New-upload alerts** — `onlyNewVideos` emits just the videos published since the previous run
+- **Competitor benchmarking** — compare exact view/like counts and posting cadence across several creators in a niche
+- **Influencer shortlisting** — pull subscriber counts, verification status and social links for a batch of candidate channels
+- **Content inventory** — build a catalog of a channel's videos, Shorts and playlists, including uploads the Videos tab hides
+- **Engagement analysis** — export exact like/comment counts and category/tag metadata for a published date range
 - **Growth tracking** — re-run on a schedule to watch subscriber and view counts change over time
 
 ## FAQ
@@ -117,10 +145,16 @@ Every row carries one video's fields plus the full `authorMetadata` object for i
 No — this actor reads YouTube's own public channel and video pages and needs no API key or login.
 
 **Which channel reference formats work?**
-A `@handle`, a full `/channel/UC...` URL, a full `@handle` URL, or a raw channel ID all resolve to the same channel — use whichever you already have.
+A `@handle`, a full `/channel/UC...` URL, a full `@handle` URL, or a raw channel ID all resolve to the same channel.
 
-**Can it reach private or members-only channels?**
-No, only publicly accessible channels are supported; content requiring a logged-in session isn't reachable.
+**What is the difference between the Videos tab and the uploads playlist?**
+The Videos tab is a curated 30-per-page list. The uploads playlist (`UU` + the channel ID without its `UC` prefix) is the complete chronological feed and returns 100 videos per page. It also includes Shorts and other uploads the Videos tab omits. Use `videoSource: "uploadsPlaylist"` when coverage matters.
+
+**Are like counts exact?**
+Yes. `likeCount` comes from YouTube's player response as an exact integer. The rounded label YouTube shows in the interface is not used.
+
+**Why is `commentCount` missing?**
+Comment counts are opt-in (`includeCommentCounts`). They cost up to two extra requests per video: a `/next` seed request and, when the seed does not already contain the count, a comments-continuation request. When the actor already fetched `/next` for the description, that response is reused so no second seed request is made. The field is omitted when the video has comments disabled or no public comment section. A count of `0` is a real value and is kept.
 
 **Why is `viewCount` sometimes missing even though `viewCountText` shows a number?**
 YouTube's video-card label is often rounded (e.g. "93K views"). This actor only fills `viewCount` when the underlying data gives an exact figure, rather than reverse-engineering an approximate one.
@@ -128,11 +162,29 @@ YouTube's video-card label is often rounded (e.g. "93K views"). This actor only 
 **Why would `duration` show `"LIVE"` with no `durationSeconds`?**
 That's an ongoing live stream — its length isn't final yet, so there's nothing finite to report until the broadcast ends.
 
-**How fresh is the data?**
-Every run reads the channel live, so results reflect whatever YouTube is currently showing — there's no caching layer.
+**Does "popular" or "oldest" sort the whole uploads playlist?**
+No. The uploads playlist has no server-side sort menu, so those orders are applied client-side to a scan window of `max(maxVideos, min(2 × maxVideos, 60))` videos. For a full-history Popular/Oldest sort, use `videoSource: "videosTab"`, which has YouTube's native sort chips.
 
-**Does `market` change which videos are returned?**
-It sets the country/language context YouTube uses when rendering the page, which can affect things like localized text and regionally restricted content, not which channel you're looking at.
+**Can I filter by exact publish date?**
+Not in this version. Exact dates come from YouTube's player response, which is frequently unavailable to guest requests; exposing a date filter would silently return 0 videos. Use the channel's video list and filter downstream by `publishDate` when it is present, or use `onlyNewVideos` for ongoing monitoring.
+
+**How does monitor mode store what it has seen?**
+`onlyNewVideos` keeps a per-channel list of video IDs in the actor's named `youtube-channel-monitor` key-value store, which persists across runs. The first run returns the normal window; later runs emit only new IDs. Only the rows actually returned are marked as seen, so a `maxVideos` cap pauses the remaining new videos instead of skipping them permanently.
+
+**Does `market` or `language` change which videos are returned?**
+`market` sends the country context (`gl`) and `language` sends the interface language (`hl`) on every page and InnerTube request, including pagination, player and comment calls. They affect localized labels, relative dates, and regionally restricted content. Neither changes which channel you look up.
 
 **Can I fetch 5,000+ videos from one channel?**
-Yes — `maxVideos` goes up to 10,000; the actor keeps paging through the channel's video list until it reaches your cap or runs out of videos.
+Yes — `maxVideos` goes up to 10,000. With `videoSource: "uploadsPlaylist"` the actor pages 100 videos at a time until it reaches your cap or the channel's uploads run out. The 10,000 cap is an intentional policy limit, and the exact player-metadata pass has a 900-second budget per run: if that budget runs out on a very large request, the remaining rows keep their listing data (title, view label, relative date) and the run still completes with the full dataset.
+
+**What about members-only, age-restricted or private videos?**
+Public listing cards for members-only and age-restricted videos can still be returned, but YouTube gates their playback to signed-in viewers, so playback-only fields (exact metrics, description) may be missing for those rows. Private and deleted videos cannot be fetched at all.
+
+**What is `recordType`?**
+It tells rows apart without inspecting which fields are present: `video` for normal video rows, `channel` for the channel-info-only row, and `error` for a channel that could not be fetched.
+
+**Can I get the channel's public business email?**
+No. YouTube only reveals a business email after a Google sign-in and shows a "Sign in to see email address" gate to logged-out visitors. Public social and website links are still returned in `externalLinks`.
+
+**Why are subscriber counts sometimes rounded?**
+YouTube displays subscriber and video counts as rounded labels (e.g. "21.4M subscribers"). The actor keeps that text in `subscriberCountText`/`videoCountText` and only fills the integer when YouTube exposes an exact value.

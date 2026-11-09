@@ -1,54 +1,107 @@
 {
-  "description": "Search US importers and global suppliers using ImportYeti.com's public trade database.",
+  "description": "Search US importers and global suppliers, load US import/export and Mexico company profiles, or explore an HS code page. Public data only; no ImportYeti account required.",
   "properties": {
+    "addressContains": {
+      "description": "Optional case-insensitive filter on the company or supplier address, e.g. a state, city, or street keyword.",
+      "editor": "textfield",
+      "title": "Address contains",
+      "type": "string"
+    },
+    "hsCode": {
+      "description": "For searchByHsCode: 2-10 digits. 2-digit chapters (84) and 4-digit headings (8418) load their page directly; 6+ digit subheadings use the HS search API (e.g. 841810 or 8418.10). 8- and 10-digit HTS codes fall back to the 6-digit subheading when needed.",
+      "editor": "textfield",
+      "title": "HS Code",
+      "type": "string"
+    },
+    "includeShipments": {
+      "default": false,
+      "description": "Add one record per recent bill of lading with recordType=shipment. US import profiles expose up to 100 recent BOLs (two 50-row views merged by BOL); US export and Mexico profiles expose up to 50. In search modes this costs one extra profile request per company.",
+      "prefill": false,
+      "sectionCaption": "Profile and shipment options",
+      "sectionDescription": "Optional filters and shipment rows. All fields are omit-empty.",
+      "title": "Include shipment rows",
+      "type": "boolean"
+    },
     "maxItems": {
       "default": 20,
-      "description": "Maximum number of results to return.",
+      "description": "Maximum number of dataset records across companies, HS summaries, and shipment rows.",
       "maximum": 500,
       "minimum": 1,
-      "prefill": 20,
-      "title": "Max Items",
+      "prefill": 3,
+      "title": "Max Records",
       "type": "integer"
     },
     "mode": {
       "default": "searchImporters",
-      "description": "What to search for.",
+      "description": "What to do. Search by keyword, load specific company/supplier profiles, or explore an HS code.",
       "editor": "select",
       "enum": [
         "searchImporters",
-        "searchSuppliers"
+        "searchSuppliers",
+        "companyProfile",
+        "searchByHsCode"
       ],
       "enumTitles": [
-        "Search US Importers (by company name or product)",
-        "Search Global Suppliers (by company name)"
+        "Search US importers by company or product keyword",
+        "Search global suppliers by company name",
+        "Load company/supplier profiles from URLs or slugs (US import, US export, Mexico)",
+        "Search companies and suppliers by HS code"
       ],
       "prefill": "searchImporters",
       "title": "Mode",
       "type": "string"
     },
     "proxyConfiguration": {
-      "description": "Proxy settings. ImportYeti enforces a 25-request-per-IP limit, so proxy is required on Apify cloud to avoid rate-limiting.",
+      "default": {
+        "useApifyProxy": true
+      },
+      "description": "Optional proxy settings. ImportYeti allows about 25 requests per IP before a login wall; Apify Proxy AUTO (included in the plan) rotates exit IPs. No residential proxy is required.",
       "editor": "proxy",
       "prefill": {
         "useApifyProxy": true
       },
+      "sectionCaption": "Proxy",
+      "sectionDescription": "AUTO datacenter proxy is enough. Leave the default for cloud runs.",
       "title": "Proxy Configuration",
       "type": "object"
     },
     "query": {
       "default": "electronics",
-      "description": "Company name or product keyword to search for.",
+      "description": "Company name or product keyword for searchImporters/searchSuppliers. Optional in companyProfile (a profile URL here is used when startUrls is empty) and in searchByHsCode (a numeric HS code here is used when hsCode is empty).",
       "editor": "textfield",
       "prefill": "electronics",
       "title": "Search Query",
       "type": "string"
+    },
+    "since": {
+      "description": "Optional recency filter, YYYY-MM-DD or DD/MM/YYYY. Applies to shipment dates and to a company's most recent shipment date. Records without a date are excluded when this is set.",
+      "editor": "textfield",
+      "title": "Only on/after date",
+      "type": "string"
+    },
+    "startUrls": {
+      "default": [],
+      "description": "For companyProfile: ImportYeti profile URLs or paths. Accepts company/..., supplier/..., us-export/company/..., mx/company/..., and mx/supplier/... (e.g. https://www.importyeti.com/company/samsung-electronics-america or supplier/foxconn). Bare slugs are treated as US company profiles.",
+      "editor": "requestListSources",
+      "items": {
+        "properties": {
+          "url": {
+            "description": "ImportYeti company or supplier profile URL.",
+            "title": "Profile URL",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "prefill": [],
+      "title": "Company / Supplier URLs",
+      "type": "array"
     }
   },
   "required": [
-    "mode",
-    "query"
+    "mode"
   ],
   "schemaVersion": 1,
-  "title": "ImportYeti US Trade & Supplier Data Scraper Input",
+  "title": "ImportYeti Trade, Supplier & Shipment Data Scraper Input",
   "type": "object"
 }

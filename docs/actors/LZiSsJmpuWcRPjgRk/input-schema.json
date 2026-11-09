@@ -1,0 +1,56 @@
+{
+  "description": "Scrape Capterra products by direct product URLs or by broad search queries that resolve to real product pages.",
+  "properties": {
+    "maxItems": {
+      "default": 10,
+      "description": "Maximum number of products to scrape.",
+      "maximum": 250,
+      "minimum": 1,
+      "prefill": 3,
+      "title": "Max Items",
+      "type": "integer"
+    },
+    "mode": {
+      "default": "byProductUrls",
+      "description": "How to resolve the Capterra products to scrape.",
+      "editor": "select",
+      "enum": [
+        "byProductUrls",
+        "bySearchQueries"
+      ],
+      "enumTitles": [
+        "Direct product URLs",
+        "Search queries"
+      ],
+      "prefill": "byProductUrls",
+      "title": "Mode",
+      "type": "string"
+    },
+    "productUrls": {
+      "default": [
+        "https://www.capterra.com/p/135003/Slack/"
+      ],
+      "description": "List of Capterra product URLs to scrape. Example: https://www.capterra.com/p/135003/Slack/",
+      "editor": "stringList",
+      "prefill": [
+        "https://www.capterra.com/p/135003/Slack/"
+      ],
+      "title": "Product URLs",
+      "type": "array"
+    },
+    "searchQueries": {
+      "default": [],
+      "description": "Broad positive-yield queries such as `Slack`, `project management software`, or `CRM software`. Used only when mode=bySearchQueries.",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Search queries",
+      "type": "array"
+    }
+  },
+  "required": [
+    "mode"
+  ],
+  "schemaVersion": 1,
+  "title": "Capterra Scraper Input",
+  "type": "object"
+}

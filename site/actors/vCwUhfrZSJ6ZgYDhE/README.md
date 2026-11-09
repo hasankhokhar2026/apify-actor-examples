@@ -1,62 +1,157 @@
-# IMDb Top Charts & Advanced Title Search
+# IMDb Search, Charts, Reviews & Episodes Scraper
 
-IMDb's own site spreads charts, search and title pages across separate views with no bulk export. This actor brings five of them into one dataset: free-text search, direct lookup by IMDb ID, the Top 250 and regional charts, a "popular now" feed, and a filtered advanced search by genre, year, rating and vote count.
+IMDb spreads search, charts, title details, user reviews and episode lists across separate pages with no bulk export. This actor collects them into one dataset: search results, direct title lookups, nine official charts, the popularity meter, filtered advanced searches, user reviews, and episode lists for TV series — each row carrying the metadata IMDb publishes for it.
 
 ## What this actor does
 
-- Searches IMDb titles by free-text query
-- Fetches specific titles directly by their IMDb ID
-- Pulls one of nine IMDb charts, including the Top 250, Top 250 TV, Bottom 100, and regional-language charts
-- Returns IMDb's currently trending/popular titles
-- Runs an advanced search filtered by title type, genre, release year, minimum rating and minimum vote count, with a chosen sort order
-- Omits a field from the record when IMDb didn't publish a value for it
+- Searches IMDb's full title catalog by keyword, with optional type, genre, year, rating and vote filters
+- Fetches specific titles directly by IMDb ID or title URL
+- Pulls one of nine IMDb charts, including Top 250, Top 250 TV, Bottom 100, English-language and regional Indian charts
+- Returns IMDb's current popularity-meter titles
+- Runs a filtered, sortable advanced search by title type, genre, country, language, runtime, release year, minimum rating and minimum vote count
+- Exports user reviews with reviewer name, reviewer rating, review title and body, helpfulness votes, spoiler flag and submission date
+- Lists episodes of a TV series with season and episode numbers, episode rating, plot, runtime, certificate, poster and credits
+- Enriches title rows with rating breakdown, keywords, production companies, alternative titles (AKAs), detailed release dates, trailers, awards, box office (including worldwide gross) and popularity rank
+- Omits a field when IMDb did not publish a value for it
 
-## Output per title
+## One dataset, three row types
+
+Every row has a `recordType`:
+
+| `recordType` | What the row represents |
+|---|---|
+| `title` | A movie, TV series, short, video game or other title |
+| `review` | One IMDb user review of a title |
+| `episode` | One episode of a TV series |
+
+### Title row fields
 
 | Field | Description |
 |---|---|
+| `recordType` | `title` |
 | `imdbId` | IMDb title ID, e.g. `tt0111161` |
-| `title` | Title as currently displayed |
+| `title` | Display title |
 | `originalTitle` | Original-language title, when different from `title` |
-| `type` | Title type, e.g. `movie`, `tvSeries` |
+| `type` | Title type, e.g. `movie`, `tvSeries`, `tvEpisode` |
 | `year` | Release year |
 | `endYear` | Final year on air, for ended TV series |
 | `rating` | IMDb rating out of 10 |
 | `ratingCount` | Number of ratings behind the score |
 | `metascore` | Metacritic score, when IMDb has one |
+| `ratingBreakdown` | Vote counts per score: list of `{ rating, voteCount }` from 1 to 10 |
 | `plot` | Plot summary |
 | `genres` | List of genres |
 | `runtime` | Runtime in minutes |
 | `certificate` | Content/age rating certificate |
 | `posterUrl` | Poster image URL |
-| `releaseDate` | Full release date, when more precise than the year |
+| `releaseDate` | Primary release date, when more precise than the year |
+| `releaseDates` | Detailed release dates: list of `{ date, country }` |
 | `countries` | Countries of origin |
 | `languages` | Spoken languages |
 | `directors` | Up to 5 directors, each `{ name, imdbId }` |
 | `writers` | Up to 5 writers, each `{ name, imdbId }` |
 | `cast` | Up to 10 cast members, each `{ name, imdbId, character }` |
+| `keywords` | Up to 10 plot keywords |
+| `companies` | Up to 10 production/distribution credits, each `{ name, companyId, category }` |
+| `akas` | Up to 10 alternative titles, each `{ title, country, countryCode, language }` |
+| `trailers` | Up to 50 trailers/clips, each `{ videoId, url, title, type, thumbnailUrl, runtimeSeconds }` |
+| `budget` | Production budget as `{ amount, currency }`, when IMDb publishes one |
+| `domesticLifetimeGross` | Domestic lifetime gross as `{ amount, currency }` |
+| `internationalLifetimeGross` | International lifetime gross as `{ amount, currency }` |
+| `worldwideLifetimeGross` | Worldwide lifetime gross as `{ amount, currency }` |
+| `openingWeekend` | `{ date, theaters, gross: { amount, currency } }` for the domestic opening weekend |
+| `internationalOpeningWeekend` | `{ date, theaters, gross: { amount, currency } }` for the international opening weekend |
+| `awards` | Total competitive `{ wins, nominations }` |
+| `prestigiousAwards` | Major-award summary `{ wins, nominations }` (for example Oscars) |
+| `popularityRank` | Current IMDb popularity-meter position |
 | `imdbUrl` | Link to the title's IMDb page |
-| `topRatedRank` | Chart position, present only on `topRated` mode records |
-| `scrapedAt` | UTC timestamp of when the record was captured |
+| `sourceUrl` | Same as `imdbUrl` for title rows |
+| `topRatedRank` | Chart position, present only on chart rows |
+| `scrapedAt` | UTC timestamp of when the row was captured |
+
+### Review row fields
+
+| Field | Description |
+|---|---|
+| `recordType` | `review` |
+| `imdbId` | IMDb ID of the reviewed title |
+| `title` | Title name |
+| `type` | Title type |
+| `year` | Title release year |
+| `imdbUrl` | Link to the title's IMDb page |
+| `reviewId` | IMDb review ID, e.g. `rw6606154` |
+| `reviewTitle` | Review headline |
+| `reviewText` | Full review body |
+| `author` | Reviewer display name |
+| `authorId` | Reviewer profile ID |
+| `authorRating` | Rating the reviewer gave the title (1–10), when supplied |
+| `submissionDate` | Review submission date |
+| `helpfulUpVotes` | Helpful votes received |
+| `helpfulDownVotes` | Not-helpful votes received |
+| `spoiler` | `true` when the review is flagged as containing spoilers |
+| `reviewUrl` | Link to the review on IMDb |
+| `sourceUrl` | Same as `reviewUrl` for review rows |
+| `scrapedAt` | UTC timestamp of when the row was captured |
+
+### Episode row fields
+
+| Field | Description |
+|---|---|
+| `recordType` | `episode` |
+| `imdbId` | IMDb ID of the episode itself |
+| `title` | Episode title |
+| `originalTitle` | Original-language episode title, when different |
+| `type` | `tvEpisode` |
+| `year` | Episode release year |
+| `rating` | Episode IMDb rating |
+| `ratingCount` | Number of episode ratings |
+| `metascore` | Episode Metacritic score, when IMDb has one |
+| `ratingBreakdown` | Vote counts per score: list of `{ rating, voteCount }` |
+| `plot` | Episode plot summary |
+| `genres` | Episode genres |
+| `runtime` | Episode runtime in minutes |
+| `certificate` | Episode content rating |
+| `posterUrl` | Episode image URL |
+| `releaseDate` | Episode release date |
+| `countries` | Countries of origin |
+| `languages` | Spoken languages |
+| `directors` / `writers` / `cast` | Episode credits |
+| `popularityRank` | Current IMDb popularity-meter position |
+| `seriesId` | IMDb ID of the parent series |
+| `seriesTitle` | Parent series name |
+| `seriesUrl` | Link to the parent series |
+| `seasonNumber` | Season number |
+| `episodeNumber` | Episode number within the season |
+| `imdbUrl` | Link to the episode's IMDb page |
+| `sourceUrl` | Same as `imdbUrl` for episode rows |
+| `scrapedAt` | UTC timestamp of when the row was captured |
 
 ## Input
 
 | Field | Type | Default | Description |
 |---|---|---|---|
-| `mode` | string (select) | `topRated` | `search`, `byId`, `topRated`, `popular`, or `advanced` |
+| `mode` | string (select) | `topRated` | `topRated`, `search`, `byId`, `popular`, `advanced`, `reviews`, or `episodes` |
 | `searchQuery` | string | – | Free-text title query (mode `search`) |
-| `imdbIds` | array | `[]` | IMDb title IDs to fetch directly (mode `byId`) |
+| `imdbIds` | array | `[]` | IMDb title IDs or URLs for `byId`, `reviews`, and `episodes` modes |
+| `reviewSortBy` | string (select) | `HELPFULNESS_SCORE` | Review ordering: `HELPFULNESS_SCORE`, `USER_RATING`, `SUBMISSION_DATE`, or `TOTAL_VOTES` |
+| `reviewSortOrder` | string (select) | `DESC` | `DESC` or `ASC` |
+| `excludeSpoilers` | boolean | `false` | Skip reviews flagged as spoilers |
 | `topRatedChart` | string (select) | `TOP_250` | Which chart to fetch (mode `topRated`) — see chart list below |
 | `titleType` | string (select) | – (all types) | `movie`, `tvSeries`, `short`, `tvMiniSeries`, `tvMovie`, `tvSpecial`, `videoGame`, or `podcastSeries` |
 | `genres` | array | `[]` | Genres to filter by (combined with AND); e.g. `Drama`, `Thriller`, `Sci-Fi` |
+| `languages` | array | `[]` | Spoken-language codes to filter by (combined with OR); e.g. `en`, `fr`, `hi`, `ta` |
+| `countries` | array | `[]` | Country-of-origin codes to filter by (combined with OR); e.g. `US`, `GB`, `IN`, `JP` |
+| `runtimeMin` / `runtimeMax` | integer | – | Runtime range in minutes (1–1440) |
 | `yearMin` / `yearMax` | integer | – | Release year range (1880–2030) |
 | `minRating` | number | – | Minimum IMDb rating (1–10) |
 | `minVotes` | integer | – | Minimum vote count |
 | `sortBy` | string (select) | `RANKING` | `RANKING`, `USER_RATING`, `USER_RATING_COUNT`, `RELEASE_DATE`, `TITLE_REGIONAL`, or `METACRITIC_SCORE` |
 | `sortOrder` | string (select) | `DESC` | `DESC` or `ASC` |
-| `maxItems` | integer | 50 | Maximum number of records to return (1–500) |
+| `maxItems` | integer | 50 | Maximum records to return (1–1000). Reviews and episodes are one record each |
 
-### Example: Top 250 movies
+## Examples
+
+### Top 250 movies
 
 ```json
 {
@@ -66,7 +161,7 @@ IMDb's own site spreads charts, search and title pages across separate views wit
 }
 ```
 
-### Example: search for a title
+### Search for a title
 
 ```json
 {
@@ -76,7 +171,7 @@ IMDb's own site spreads charts, search and title pages across separate views wit
 }
 ```
 
-### Example: fetch specific titles by ID
+### Fetch specific titles by ID
 
 ```json
 {
@@ -85,7 +180,7 @@ IMDb's own site spreads charts, search and title pages across separate views wit
 }
 ```
 
-### Example: advanced search for recent, well-voted sci-fi
+### Advanced search for recent, well-voted sci-fi
 
 ```json
 {
@@ -98,6 +193,53 @@ IMDb's own site spreads charts, search and title pages across separate views wit
   "sortBy": "USER_RATING",
   "sortOrder": "DESC",
   "maxItems": 100
+}
+```
+
+### Advanced search by country, language and runtime
+
+```json
+{
+  "mode": "advanced",
+  "titleType": "movie",
+  "countries": ["IN"],
+  "languages": ["ta"],
+  "runtimeMin": 90,
+  "runtimeMax": 180,
+  "sortBy": "USER_RATING",
+  "maxItems": 50
+}
+```
+
+### Export reviews for two titles
+
+```json
+{
+  "mode": "reviews",
+  "imdbIds": ["tt0111161", "tt0468569"],
+  "reviewSortBy": "HELPFULNESS_SCORE",
+  "reviewSortOrder": "DESC",
+  "excludeSpoilers": true,
+  "maxItems": 100
+}
+```
+
+### List every episode of a series
+
+```json
+{
+  "mode": "episodes",
+  "imdbIds": ["tt0903747"],
+  "maxItems": 100
+}
+```
+
+### Current popularity meter
+
+```json
+{
+  "mode": "popular",
+  "maxItems": 50
 }
 ```
 
@@ -117,11 +259,14 @@ IMDb's own site spreads charts, search and title pages across separate views wit
 
 ## Use cases
 
-- **Recommendation engines** — export a chart with full metadata to seed a ratings model
-- **Catalog enrichment** — fetch metadata for a known list of IMDb IDs to fill in a media database
-- **Genre and era research** — run an advanced search to study which years or genres rate highest
-- **Watchlist building** — combine genre, rating and vote filters to find well-reviewed titles you've missed
+- **Recommendation engines** — export a chart with ratings, genres, keywords and rating breakdowns to seed a model
+- **Catalog enrichment** — fetch metadata for a known list of IMDb IDs and fill in cast, companies, AKAs, release dates and box office including worldwide gross
+- **Review analysis** — export reviews with reviewer ratings, helpfulness votes and spoiler flags for sentiment or topic research
+- **TV episode guides** — list every episode of a series with season/episode numbers, ratings, plots and credits
+- **Genre, language and era research** — run a filtered advanced search by genre, country, language, runtime, year or vote level to study which titles rate highest
+- **Watchlist building** — combine type, genre, rating and vote filters to find well-reviewed titles you have missed
 - **Regional content discovery** — pull a language-specific chart like Tamil or Malayalam alongside the global Top 250
+- **Awards and box office research** — compare wins, nominations, budgets, domestic/international/worldwide grosses and opening weekends
 
 ## FAQ
 
@@ -132,19 +277,37 @@ No. This is an independent data extraction tool and has no connection to IMDb.co
 No — nothing needs to be configured beyond the mode and filters above.
 
 **How fresh is the data?**
-Each run reads IMDb's current data at the time it executes, so ratings and vote counts reflect that moment.
+Each run reads IMDb's current data at the time it executes, so ratings, vote counts and chart positions reflect that moment.
+
+**How many reviews can I export?**
+`maxItems` caps the total rows per run (up to 1000). When you pass several IMDb IDs, the budget is shared across them. Reviews are paginated 50 at a time, so titles with many reviews can fill large exports. Sort and spoiler filters apply to every requested title.
+
+**Why do some reviews have no `authorRating`?**
+IMDb allows reviewers to submit text without a numeric score; those reviews simply omit the field.
+
+**Why does episodes mode return nothing?**
+Episodes mode expects TV series IDs. A movie ID has no episode list. Try a series such as `tt0903747`.
 
 **Can I get individual TV episode records?**
-Not through this actor's modes — records are series-level. Use `byId` with an episode's own IMDb ID if you have one and want just that episode.
+Yes — use episodes mode with the series ID. You can also fetch a known episode ID directly with `byId`.
 
-**Why is the cast list capped at 10 people?**
-To keep records a manageable size while still covering the top-billed cast, which is the most commonly needed slice.
+**Why are some titles missing box office, awards or trailers?**
+IMDb does not publish every field for every title. Box office is a theatrical-film field, so TV series and streaming titles normally have none; older, regional or obscure releases may also lack it. The actor leaves those fields out instead of guessing.
+
+**Why is the cast list capped?**
+To keep rows a manageable size while covering the top-billed cast, which is the most commonly needed slice. Episode rows use the same cast cap.
+
+**Are trailer playback URLs included?**
+No. Trailer rows include a stable IMDb video page URL, title, type, thumbnail and runtime, not expiring video-file links.
+
+**What is `popularityRank`?**
+It is the title's current position on IMDb's popularity meter; lower numbers mean more popular.
+
+**What is the difference between `topRated` and `advanced`?**
+`topRated` returns one of IMDb's fixed chart lists in chart order; `advanced` runs a filtered, sortable search across IMDb's full catalog using the criteria you specify.
 
 **How do I find a title's IMDb ID?**
-It's in the title's IMDb page URL, e.g. `imdb.com/title/tt0111161/` — pass it with or without the `tt` prefix.
+It is in the title's IMDb page URL, e.g. `imdb.com/title/tt0111161/` — pass it with or without the `tt` prefix, or paste the full URL.
 
-**Why do some titles have no `metascore` or `certificate`?**
-Not every title has a Metacritic score or a published content rating; the actor leaves those fields out rather than guessing.
-
-**What's the difference between `topRated` and `advanced`?**
-`topRated` returns one of IMDb's own fixed chart lists in chart order; `advanced` runs a filtered, sortable search across IMDb's full catalog using the criteria you specify.
+**Can I mix title, review and episode rows in one run?**
+Each run uses one mode and produces one row type, except that `byId` can return any title-shaped record. Use the `recordType` field when combining exports from several runs.

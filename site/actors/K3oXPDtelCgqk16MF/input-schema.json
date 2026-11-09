@@ -15,9 +15,18 @@
     },
     "includeAbout": {
       "default": true,
-      "description": "Extract total views, join date, location, and external links from the channel About page.",
+      "description": "Extract total views, join date, location, external links and channel analytics from the channel About page and video sample.",
       "prefill": true,
+      "sectionCaption": "Channel sections",
+      "sectionDescription": "Optional extra channel tabs. Toggle off for the fastest run.",
       "title": "Include About Page Data",
+      "type": "boolean"
+    },
+    "includeCommentCounts": {
+      "default": false,
+      "description": "Fetch the exact public comment count for every video. Costs up to two extra requests per video: a /next seed (reused from the description-enrichment call when that already ran) plus a comments-continuation request when the count is not in the seed. The field is skipped for videos with comments disabled.",
+      "prefill": false,
+      "title": "Include Exact Comment Counts",
       "type": "boolean"
     },
     "includeLiveVideos": {
@@ -36,14 +45,86 @@
     },
     "includeShorts": {
       "default": false,
-      "description": "Scrape the channel Shorts tab and include Shorts in the output.",
+      "description": "Scrape the channel Shorts tab and include Shorts in the output. Also marks matching uploads-playlist videos with isShort.",
       "prefill": false,
       "title": "Include Channel Shorts",
       "type": "boolean"
     },
+    "language": {
+      "default": "en",
+      "description": "Interface language (hl) for labels and relative dates. Titles and descriptions stay in the creator's language.",
+      "editor": "select",
+      "enum": [
+        "en",
+        "es",
+        "fr",
+        "de",
+        "pt",
+        "it",
+        "nl",
+        "pl",
+        "ru",
+        "ja",
+        "ko",
+        "zh",
+        "hi",
+        "ar",
+        "tr",
+        "id",
+        "th",
+        "vi",
+        "sv",
+        "no",
+        "da",
+        "fi",
+        "cs",
+        "el",
+        "he",
+        "uk",
+        "ro",
+        "hu",
+        "ms",
+        "bn"
+      ],
+      "enumTitles": [
+        "English",
+        "Spanish",
+        "French",
+        "German",
+        "Portuguese",
+        "Italian",
+        "Dutch",
+        "Polish",
+        "Russian",
+        "Japanese",
+        "Korean",
+        "Chinese",
+        "Hindi",
+        "Arabic",
+        "Turkish",
+        "Indonesian",
+        "Thai",
+        "Vietnamese",
+        "Swedish",
+        "Norwegian",
+        "Danish",
+        "Finnish",
+        "Czech",
+        "Greek",
+        "Hebrew",
+        "Ukrainian",
+        "Romanian",
+        "Hungarian",
+        "Malay",
+        "Bengali"
+      ],
+      "prefill": "en",
+      "title": "Language",
+      "type": "string"
+    },
     "market": {
       "default": "US",
-      "description": "Country code for localized content (affects gl/hl URL parameters).",
+      "description": "Country context (gl) applied to every page and InnerTube request, including pagination, player and comment endpoints.",
       "editor": "select",
       "enum": [
         "US",
@@ -111,6 +192,9 @@
         "Colombia",
         "Chile"
       ],
+      "prefill": "US",
+      "sectionCaption": "Localization",
+      "sectionDescription": "Country and language context sent to YouTube for every request.",
       "title": "Market / Region",
       "type": "string"
     },
@@ -119,6 +203,7 @@
       "description": "Maximum live/stream videos to return.",
       "maximum": 500,
       "minimum": 1,
+      "prefill": 20,
       "title": "Max Live Videos",
       "type": "integer"
     },
@@ -127,6 +212,7 @@
       "description": "Maximum number of playlists to scrape (when includePlaylists is enabled).",
       "maximum": 500,
       "minimum": 1,
+      "prefill": 20,
       "title": "Max Playlists",
       "type": "integer"
     },
@@ -135,12 +221,13 @@
       "description": "Maximum number of Shorts to return (when includeShorts is enabled).",
       "maximum": 2000,
       "minimum": 1,
+      "prefill": 20,
       "title": "Max Shorts",
       "type": "integer"
     },
     "maxVideos": {
       "default": 50,
-      "description": "Maximum number of videos to scrape per channel. Set to 0 to get only channel info without videos.",
+      "description": "Maximum number of videos to scrape per channel. Set to 0 to get only channel info without videos. The 10,000 cap is an intentional policy limit for a bounded run. Exact player metadata refresh has a 900-second budget per actor run; if that budget is reached, remaining rows keep the listing metadata (title, view text, relative date) and the run still emits the full dataset.",
       "editor": "number",
       "maximum": 10000,
       "minimum": 0,
@@ -148,9 +235,34 @@
       "title": "Max Videos Per Channel",
       "type": "integer"
     },
+    "onlyNewVideos": {
+      "default": false,
+      "description": "Monitor mode: return only videos not returned by an earlier run for the same channel. State is kept in the actor's named key-value store, which persists across runs. Only emitted rows are marked seen, so maxVideos pauses the remainder instead of skipping it.",
+      "prefill": false,
+      "title": "Only New Videos Since Last Run",
+      "type": "boolean"
+    },
+    "sortShortsBy": {
+      "default": "latest",
+      "description": "Order of the Shorts tab when 'Include Channel Shorts' is on. The Shorts tab exposes Latest, Popular and Oldest filters.",
+      "editor": "select",
+      "enum": [
+        "latest",
+        "popular",
+        "oldest"
+      ],
+      "enumTitles": [
+        "Latest first",
+        "Most popular",
+        "Oldest first"
+      ],
+      "prefill": "latest",
+      "title": "Sort Shorts By",
+      "type": "string"
+    },
     "sortVideosBy": {
       "default": "newest",
-      "description": "How to sort the channel's video listings.",
+      "description": "How to order the channel's videos. The uploads playlist is already newest-first; Popular/Oldest are applied client-side to a scan window of max(maxVideos, min(2 * maxVideos, 60)) videos. The Videos tab uses YouTube's native sort chips across its full history.",
       "editor": "select",
       "enum": [
         "newest",
@@ -162,7 +274,28 @@
         "Most popular",
         "Oldest first"
       ],
+      "prefill": "newest",
       "title": "Sort Videos By",
+      "type": "string"
+    },
+    "videoSource": {
+      "default": "videosTab",
+      "description": "Where to read the video list from. The uploads playlist is a complete chronological feed that also includes Shorts and uploads the Videos tab omits. 'Both' merges the two sources, de-duplicated by video ID, then applies the chosen sort.",
+      "editor": "select",
+      "enum": [
+        "videosTab",
+        "uploadsPlaylist",
+        "both"
+      ],
+      "enumTitles": [
+        "Videos tab (default)",
+        "Uploads playlist (catches Shorts and omissions)",
+        "Both (Videos tab first, then uploads-only videos)"
+      ],
+      "prefill": "videosTab",
+      "sectionCaption": "Video source, sorting & details",
+      "sectionDescription": "Choose where the video list comes from, how it is ordered, and whether exact comment counts are fetched. The uploads playlist uses the channel's UU playlist ID and returns 100 videos per page.",
+      "title": "Video Source",
       "type": "string"
     }
   },

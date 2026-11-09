@@ -1,68 +1,352 @@
 {
-  "description": "Scrape property listings from Realtor.com. Search by location for sale, rent, or sold properties, or provide direct property URLs.",
+  "description": "Search Realtor.com listings by city, ZIP, address, map radius or GeoJSON polygon, or pull full property/agent records. Filter by status, beds, baths, price, size, year, type, keywords, open houses and listing dates.",
   "properties": {
+    "agentName": {
+      "description": "Agent or team name to search in agent mode, e.g. `Pedro Casanova`. Leave empty to search agents by the location above.",
+      "editor": "textfield",
+      "title": "Agent name (agent mode)",
+      "type": "string"
+    },
+    "bathsMax": {
+      "description": "Maximum bathrooms.",
+      "maximum": 30,
+      "minimum": 0,
+      "title": "Baths (max)",
+      "type": "integer"
+    },
+    "bathsMin": {
+      "description": "Minimum bathrooms.",
+      "maximum": 30,
+      "minimum": 0,
+      "title": "Baths (min)",
+      "type": "integer"
+    },
+    "bedsMax": {
+      "description": "Maximum bedrooms.",
+      "maximum": 30,
+      "minimum": 0,
+      "title": "Beds (max)",
+      "type": "integer"
+    },
+    "bedsMin": {
+      "description": "Minimum bedrooms. Applied server-side, then verified on each record.",
+      "maximum": 30,
+      "minimum": 0,
+      "sectionCaption": "Search filters",
+      "sectionDescription": "Optional property filters. They apply in property mode when searching by location, address, ZIP or map radius.",
+      "title": "Beds (min)",
+      "type": "integer"
+    },
+    "boundary": {
+      "description": "Search inside a GeoJSON Polygon instead of a named location. Coordinates are [longitude, latitude]; rings may be open and are closed automatically. Example: {\"type\":\"Polygon\",\"coordinates\":[[[-95.6,29.6],[-95.0,29.6],[-95.0,30.1],[-95.6,30.1],[-95.6,29.6]]]}.",
+      "editor": "json",
+      "title": "Polygon boundary (GeoJSON)",
+      "type": "object"
+    },
+    "comingSoonOnly": {
+      "default": false,
+      "description": "Apply the source's coming-soon filter to for-sale modes. `COMING_SOON` mode enables it automatically.",
+      "prefill": false,
+      "title": "Only coming-soon listings",
+      "type": "boolean"
+    },
     "endPage": {
-      "default": 5,
-      "description": "Maximum search result pages to scrape per search (1-20). Each page has up to 42 properties.",
-      "maximum": 20,
+      "default": 50,
+      "description": "Maximum GraphQL result pages per search. Each page holds up to 200 properties; set 50 to reach the 10,000-row search cap. Agents use their own page size.",
+      "maximum": 50,
       "minimum": 1,
-      "prefill": 5,
-      "title": "Maximum Pages",
+      "prefill": 1,
+      "title": "Maximum search pages",
+      "type": "integer"
+    },
+    "hasPhotos": {
+      "default": false,
+      "description": "Exclude listings that have no photos.",
+      "prefill": false,
+      "title": "Only listings with photos",
+      "type": "boolean"
+    },
+    "keywords": {
+      "default": [],
+      "description": "Free-text keywords matched by Realtor.com, e.g. `pool`, `waterfront`, `garage`, `new construction`.",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Keywords",
+      "type": "array"
+    },
+    "latitude": {
+      "description": "Latitude for a radius search. Combine with longitude and radius miles.",
+      "maximum": 90,
+      "minimum": -90,
+      "title": "Latitude",
+      "type": "number"
+    },
+    "listedSince": {
+      "description": "Only listings added on or after this date (YYYY-MM-DD). Useful for delta monitoring.",
+      "editor": "textfield",
+      "title": "Listed since",
+      "type": "string"
+    },
+    "longitude": {
+      "description": "Longitude for a radius search. Combine with latitude and radius miles.",
+      "maximum": 180,
+      "minimum": -180,
+      "title": "Longitude",
+      "type": "number"
+    },
+    "lotSqftMax": {
+      "description": "Maximum lot size in square feet.",
+      "maximum": 100000000,
+      "minimum": 0,
+      "title": "Lot sqft (max)",
+      "type": "integer"
+    },
+    "lotSqftMin": {
+      "description": "Minimum lot size in square feet.",
+      "maximum": 100000000,
+      "minimum": 0,
+      "title": "Lot sqft (min)",
       "type": "integer"
     },
     "maxItems": {
-      "default": 50,
-      "description": "Maximum number of property listings to scrape (1-500).",
-      "maximum": 500,
+      "default": 100,
+      "description": "Maximum property or agent records to emit (1-10000). Property searches are limited by the source to 10,000 addressable rows per search.",
+      "maximum": 10000,
       "minimum": 1,
-      "prefill": 50,
-      "title": "Maximum Properties",
+      "prefill": 3,
+      "title": "Maximum records",
       "type": "integer"
     },
     "mode": {
       "default": "BUY",
-      "description": "Type of property search — for sale, for rent, or recently sold.",
+      "description": "Property status to search. `BUY` is active for-sale, `RENT` is for-rent, `SOLD` is recently sold, `PENDING`/`CONTINGENT` are under contract, `COMING_SOON` is not-yet-active inventory, `OFF_MARKET` is delisted and `READY_TO_BUILD` is new construction. Used in property mode; ignored in agent mode.",
       "editor": "select",
       "enum": [
         "BUY",
         "RENT",
-        "SOLD"
+        "SOLD",
+        "PENDING",
+        "CONTINGENT",
+        "COMING_SOON",
+        "OFF_MARKET",
+        "READY_TO_BUILD"
       ],
       "enumTitles": [
-        "For Sale (Buy)",
-        "For Rent",
-        "Recently Sold"
+        "For sale",
+        "For rent",
+        "Recently sold",
+        "Pending",
+        "Contingent",
+        "Coming soon",
+        "Off market",
+        "Ready to build"
       ],
-      "title": "Search Mode",
+      "prefill": "BUY",
+      "title": "Listing status",
+      "type": "string"
+    },
+    "openHouseFrom": {
+      "description": "Only listings with an open house on or after this date (YYYY-MM-DD).",
+      "editor": "textfield",
+      "sectionCaption": "Open houses & map",
+      "sectionDescription": "Optional open-house date window and map-radius search.",
+      "title": "Open house from",
+      "type": "string"
+    },
+    "openHouseTo": {
+      "description": "Only listings with an open house on or before this date (YYYY-MM-DD).",
+      "editor": "textfield",
+      "title": "Open house to",
+      "type": "string"
+    },
+    "priceMax": {
+      "description": "Maximum list price in US dollars.",
+      "maximum": 1000000000,
+      "minimum": 0,
+      "title": "Price (max)",
+      "type": "integer"
+    },
+    "priceMin": {
+      "description": "Minimum list price in US dollars.",
+      "maximum": 1000000000,
+      "minimum": 0,
+      "title": "Price (min)",
+      "type": "integer"
+    },
+    "propertyTypes": {
+      "default": [],
+      "description": "Limit results to one or more Realtor.com property types.",
+      "editor": "select",
+      "items": {
+        "enum": [
+          "apartment",
+          "commercial",
+          "cond_op",
+          "condo",
+          "condo_townhome",
+          "condo_townhome_rowhome_coop",
+          "condop",
+          "condos",
+          "coop",
+          "duplex_triplex",
+          "farm",
+          "investment",
+          "land",
+          "mobile",
+          "multi_family",
+          "other",
+          "rental",
+          "single_family",
+          "townhomes",
+          "townhouse"
+        ],
+        "enumTitles": [
+          "Apartment",
+          "Commercial",
+          "Cond-op",
+          "Condo",
+          "Condo/townhome",
+          "Condo/townhome/rowhome/co-op",
+          "Condop",
+          "Condos",
+          "Co-op",
+          "Duplex/triplex",
+          "Farm",
+          "Investment",
+          "Land",
+          "Mobile",
+          "Multi-family",
+          "Other",
+          "Rental",
+          "Single family",
+          "Townhomes",
+          "Townhouse"
+        ],
+        "type": "string"
+      },
+      "prefill": [],
+      "title": "Property types",
+      "type": "array",
+      "uniqueItems": true
+    },
+    "radiusMiles": {
+      "description": "Search radius in miles around the latitude/longitude point.",
+      "maximum": 100,
+      "minimum": 1,
+      "title": "Radius (miles)",
+      "type": "integer"
+    },
+    "recordType": {
+      "default": "PROPERTIES",
+      "description": "Collect property listings or real-estate agent directory records.",
+      "editor": "select",
+      "enum": [
+        "PROPERTIES",
+        "AGENTS"
+      ],
+      "enumTitles": [
+        "Properties",
+        "Agents"
+      ],
+      "prefill": "PROPERTIES",
+      "title": "What to collect",
       "type": "string"
     },
     "scrapeDetails": {
       "default": true,
-      "description": "Fetch each property's detail page for full description, schools, tax history, listing history, environmental risk data, and more. Disable for faster runs with only search-level data.",
-      "sectionCaption": "Options",
-      "title": "Scrape Full Details",
+      "description": "Fetch each property's full detail record: description, HOA, mortgage estimate, assigned schools, open houses, tours, photo tags, tax and price history, risk scores and extra agent contacts. In agent mode it also fetches each agent's profile phone numbers.",
+      "prefill": false,
+      "title": "Scrape full details",
       "type": "boolean"
     },
     "search": {
-      "description": "City and state to search for properties (e.g., 'Houston, TX', 'San Francisco, CA', 'Miami, FL').",
+      "description": "City and state (`Houston, TX`), ZIP code (`77002`), neighborhood, county or a street address (`16142 Maladi Dr`). In agent mode this may be a city/state or ZIP.",
       "editor": "textfield",
       "prefill": "Houston, TX",
-      "sectionCaption": "Search Settings",
-      "sectionDescription": "Enter a location and choose a search mode. At least one of Search Location or Start URLs is required.",
-      "title": "Search Location",
+      "title": "Location or address",
       "type": "string"
     },
+    "soldSince": {
+      "description": "In SOLD mode, only sales on or after this date (YYYY-MM-DD).",
+      "editor": "textfield",
+      "title": "Sold since",
+      "type": "string"
+    },
+    "sortBy": {
+      "default": "relevant",
+      "description": "Result ordering.",
+      "editor": "select",
+      "enum": [
+        "relevant",
+        "newest",
+        "price_low",
+        "price_high",
+        "sqft_high",
+        "beds_high"
+      ],
+      "enumTitles": [
+        "Most relevant",
+        "Newest listings",
+        "Price: low to high",
+        "Price: high to low",
+        "Largest living area",
+        "Most bedrooms"
+      ],
+      "prefill": "relevant",
+      "title": "Sort results",
+      "type": "string"
+    },
+    "sqftMax": {
+      "description": "Maximum living area in square feet.",
+      "maximum": 1000000,
+      "minimum": 0,
+      "title": "Living area sqft (max)",
+      "type": "integer"
+    },
+    "sqftMin": {
+      "description": "Minimum living area in square feet.",
+      "maximum": 1000000,
+      "minimum": 0,
+      "title": "Living area sqft (min)",
+      "type": "integer"
+    },
     "startUrls": {
-      "description": "Direct Realtor.com property detail URLs or search page URLs. Paste URLs from your browser.",
+      "default": [],
+      "description": "Realtor.com property detail URLs or search-result URLs. Detail URLs are resolved directly; search URLs reuse their location, mode and page.",
       "editor": "requestListSources",
-      "sectionCaption": "Direct URLs",
-      "sectionDescription": "Provide Realtor.com URLs directly instead of or in addition to location search.",
+      "items": {
+        "properties": {
+          "url": {
+            "description": "Realtor.com property or search URL.",
+            "title": "Listing URL",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "prefill": [],
       "title": "Start URLs",
       "type": "array"
+    },
+    "yearBuiltMax": {
+      "description": "Maximum construction year.",
+      "maximum": 2100,
+      "minimum": 1700,
+      "title": "Year built (max)",
+      "type": "integer"
+    },
+    "yearBuiltMin": {
+      "description": "Minimum construction year.",
+      "maximum": 2100,
+      "minimum": 1700,
+      "title": "Year built (min)",
+      "type": "integer"
     }
   },
-  "required": [],
+  "required": [
+    "mode"
+  ],
   "schemaVersion": 1,
-  "title": "Realtor.com Property Scraper",
+  "title": "Realtor.com Property & Agent Scraper",
   "type": "object"
 }

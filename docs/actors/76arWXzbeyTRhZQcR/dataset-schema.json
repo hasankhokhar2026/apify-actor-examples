@@ -1,6 +1,48 @@
 {
   "actorSpecification": 1,
   "views": {
+    "agents": {
+      "display": {
+        "component": "table",
+        "properties": {
+          "languages": {
+            "format": "text",
+            "label": "Languages"
+          },
+          "licenseNumber": {
+            "format": "text",
+            "label": "License"
+          },
+          "name": {
+            "format": "text",
+            "label": "Name"
+          },
+          "officeName": {
+            "format": "text",
+            "label": "Office"
+          },
+          "phone": {
+            "format": "text",
+            "label": "Phone"
+          },
+          "profileUrl": {
+            "format": "link",
+            "label": "Profile"
+          }
+        }
+      },
+      "title": "Agents",
+      "transformation": {
+        "fields": [
+          "name",
+          "officeName",
+          "phone",
+          "licenseNumber",
+          "languages",
+          "profileUrl"
+        ]
+      }
+    },
     "overview": {
       "display": {
         "component": "table",
@@ -17,9 +59,21 @@
             "format": "number",
             "label": "Beds"
           },
+          "daysOnMarket": {
+            "format": "number",
+            "label": "Days on market"
+          },
           "listPrice": {
             "format": "number",
             "label": "Price"
+          },
+          "mlsId": {
+            "format": "text",
+            "label": "MLS #"
+          },
+          "pricePerSqft": {
+            "format": "number",
+            "label": "$/Sqft"
           },
           "sqft": {
             "format": "number",
@@ -51,9 +105,12 @@
           "beds",
           "baths",
           "sqft",
+          "pricePerSqft",
           "type",
           "status",
+          "mlsId",
           "yearBuilt",
+          "daysOnMarket",
           "url"
         ]
       }

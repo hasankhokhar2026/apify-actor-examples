@@ -1,9 +1,9 @@
 {
   "actorOutputSchemaVersion": 1,
-  "description": "Channel video rows with author metadata, subscriber count and optional Shorts, playlists and live-stream data.",
+  "description": "One row per video with recordType/sourceUrl, exact publish date, like count, category, tags, optional comment count, view/like metrics, Shorts and live flags, plus the channel's authorMetadata with subscriber counts, About-page links and derived channel analytics (lastUploadDate, averageViews, uploadFrequencyDays, videosAnalyzed). recordType is 'video' for video rows, 'channel' for the channel-info-only row (maxVideos=0 or no videos), and 'error' for a failed channel. Optional shorts, playlists and liveVideos arrays are attached to the first row when their include... input is enabled.",
   "properties": {
     "videos": {
-      "description": "Dataset containing all scraped channel info, author metadata, and video rows.",
+      "description": "Dataset containing video rows plus authorMetadata. Standard fields: recordType ('video' | 'channel' | 'error') and sourceUrl (the video watch URL or channel URL). Video fields: videoId, title, url, viewCount, viewCountText, likeCount, commentCount, publishDate, uploadDate, category, tags, publishedTimeText, duration, durationSeconds, thumbnailUrl, description, isLive, isShort, badges, scrapedAt. Channel fields under authorMetadata: channelId, channelName, handle, channelUrl, subscriberCount, subscriberCountText, videoCount, videoCountText, country, location, totalViews, totalViewsText, joinedDateText, externalLinks, channelLinks, description, aboutDescription, keywords, rssUrl, avatarUrl, bannerUrl, isVerified, isFamilySafe, isOfficialArtistChannel, lastUploadDate, averageViews, uploadFrequencyDays, videosAnalyzed.",
       "template": "{{links.apiDefaultDatasetUrl}}/items",
       "title": "YouTube channel videos",
       "type": "string"

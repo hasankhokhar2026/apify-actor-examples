@@ -1,13 +1,13 @@
 {
   "actorOutputSchemaVersion": 1,
-  "description": "One record per matched US importer or overseas supplier, with country, address, shipment counts, recency, and trademarks.",
+  "description": "One dataset with recordType=company or supplier (US import, US export, and Mexico profile/search data), recordType=hsCode (HS code summary), and optional recordType=shipment rows (one per recent bill of lading).",
   "properties": {
     "results": {
-      "description": "Dataset containing all scraped ImportYeti importer and supplier records.",
+      "description": "Dataset containing company, supplier, HS-code summary, and shipment records. Use the recordType field to split record kinds.",
       "template": "{{links.apiDefaultDatasetUrl}}/items",
-      "title": "ImportYeti Companies",
+      "title": "ImportYeti records",
       "type": "string"
     }
   },
-  "title": "ImportYeti US Importer & Global Supplier Search Output"
+  "title": "ImportYeti Trade, Supplier & Shipment Data Output"
 }

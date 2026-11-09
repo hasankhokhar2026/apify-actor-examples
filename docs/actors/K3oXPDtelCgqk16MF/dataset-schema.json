@@ -13,6 +13,10 @@
             "format": "link",
             "label": "Avatar URL"
           },
+          "authorMetadata.averageViews": {
+            "format": "number",
+            "label": "Avg Views (sample)"
+          },
           "authorMetadata.bannerUrl": {
             "format": "link",
             "label": "Banner URL"
@@ -65,6 +69,10 @@
             "format": "text",
             "label": "Keywords"
           },
+          "authorMetadata.lastUploadDate": {
+            "format": "text",
+            "label": "Last Upload"
+          },
           "authorMetadata.location": {
             "format": "text",
             "label": "Location"
@@ -89,6 +97,10 @@
             "format": "text",
             "label": "Total Views Text"
           },
+          "authorMetadata.uploadFrequencyDays": {
+            "format": "number",
+            "label": "Upload Gap (days)"
+          },
           "authorMetadata.videoCount": {
             "format": "number",
             "label": "Video Count"
@@ -97,9 +109,21 @@
             "format": "text",
             "label": "Videos Text"
           },
+          "authorMetadata.videosAnalyzed": {
+            "format": "number",
+            "label": "Videos Analyzed"
+          },
           "badges": {
             "format": "text",
             "label": "Badges"
+          },
+          "category": {
+            "format": "text",
+            "label": "Category"
+          },
+          "commentCount": {
+            "format": "number",
+            "label": "Comments (exact)"
           },
           "description": {
             "format": "text",
@@ -121,6 +145,10 @@
             "format": "boolean",
             "label": "Short"
           },
+          "likeCount": {
+            "format": "number",
+            "label": "Likes (exact)"
+          },
           "liveVideos": {
             "format": "text",
             "label": "Live Videos"
@@ -129,9 +157,17 @@
             "format": "text",
             "label": "Playlists"
           },
+          "publishDate": {
+            "format": "text",
+            "label": "Published (exact)"
+          },
           "publishedTimeText": {
             "format": "text",
-            "label": "Published"
+            "label": "Published (relative)"
+          },
+          "recordType": {
+            "format": "text",
+            "label": "Record Type"
           },
           "scrapedAt": {
             "format": "text",
@@ -141,6 +177,14 @@
             "format": "text",
             "label": "Shorts"
           },
+          "sourceUrl": {
+            "format": "link",
+            "label": "Source URL"
+          },
+          "tags": {
+            "format": "text",
+            "label": "Tags"
+          },
           "thumbnailUrl": {
             "format": "link",
             "label": "Thumbnail"
@@ -148,6 +192,10 @@
           "title": {
             "format": "text",
             "label": "Title"
+          },
+          "uploadDate": {
+            "format": "text",
+            "label": "Uploaded (exact)"
           },
           "url": {
             "format": "link",
@@ -170,11 +218,19 @@
       "title": "Detailed",
       "transformation": {
         "fields": [
+          "recordType",
+          "sourceUrl",
           "videoId",
           "title",
           "url",
           "viewCount",
           "viewCountText",
+          "likeCount",
+          "commentCount",
+          "publishDate",
+          "uploadDate",
+          "category",
+          "tags",
           "publishedTimeText",
           "duration",
           "durationSeconds",
@@ -206,6 +262,10 @@
           "authorMetadata.totalViews",
           "authorMetadata.location",
           "authorMetadata.externalLinks",
+          "authorMetadata.lastUploadDate",
+          "authorMetadata.averageViews",
+          "authorMetadata.uploadFrequencyDays",
+          "authorMetadata.videosAnalyzed",
           "shorts",
           "playlists",
           "liveVideos",
@@ -232,9 +292,25 @@
             "format": "text",
             "label": "Duration"
           },
-          "publishedTimeText": {
+          "isShort": {
+            "format": "boolean",
+            "label": "Short"
+          },
+          "likeCount": {
+            "format": "number",
+            "label": "Likes"
+          },
+          "publishDate": {
             "format": "text",
-            "label": "Published"
+            "label": "Published (exact)"
+          },
+          "recordType": {
+            "format": "text",
+            "label": "Record Type"
+          },
+          "sourceUrl": {
+            "format": "link",
+            "label": "Source URL"
           },
           "title": {
             "format": "text",
@@ -257,12 +333,16 @@
       "title": "Overview",
       "transformation": {
         "fields": [
+          "recordType",
           "title",
           "videoId",
           "viewCount",
+          "likeCount",
+          "publishDate",
           "duration",
-          "publishedTimeText",
           "url",
+          "sourceUrl",
+          "isShort",
           "authorMetadata.channelName",
           "authorMetadata.subscriberCount"
         ],

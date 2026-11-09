@@ -1,15 +1,28 @@
 {
   "description": "Search Redfin for real estate listings — for sale, recently sold, or rental properties.",
   "properties": {
+    "includeDetails": {
+      "default": false,
+      "description": "Fetch each listing's below-the-fold detail payload: price history, tax history, public records (APN, county, year renovated), and amenities. Adds one request per emitted listing.",
+      "prefill": false,
+      "title": "Include detail enrichment",
+      "type": "boolean"
+    },
+    "keyword": {
+      "description": "Case-insensitive keyword matched against address, description, listing tags, key facts, subdivision, and building name. Required in `search` mode and optional in other modes.",
+      "editor": "textfield",
+      "title": "Keyword",
+      "type": "string"
+    },
     "listingUrl": {
-      "description": "Full Redfin listing URL, e.g. `https://www.redfin.com/TX/Austin/123-Main-St-78701/home/12345678`.",
+      "description": "Full Redfin listing URL containing `/home/<id>`, e.g. `https://www.redfin.com/TX/Austin/123-Main-St-78701/home/12345678`.",
       "editor": "textfield",
       "title": "Listing URL (mode=byUrl)",
       "type": "string"
     },
     "location": {
       "default": "Austin, TX",
-      "description": "City, ZIP code, neighborhood, or address to search (e.g. `Austin, TX`, `90210`, `Brooklyn, NY`).",
+      "description": "City and state (`Austin, TX`), ZIP (`90210`, `10001`, `78701`), neighborhood (`South Congress, Austin, TX`), Redfin search URL, or a region token such as `6_30818` (city region 30818).",
       "editor": "textfield",
       "prefill": "Austin, TX",
       "title": "Location",
@@ -17,15 +30,17 @@
     },
     "maxItems": {
       "default": 20,
-      "description": "Hard cap on emitted records.",
-      "maximum": 500,
+      "description": "Hard cap on emitted records (1-20,000). This is a self-imposed cap; Redfin returned homes at a start offset of 19,950 in verification. Deep offsets in very large regions can return an empty page.",
+      "maximum": 20000,
       "minimum": 1,
-      "prefill": 20,
+      "prefill": 3,
+      "sectionCaption": "Output",
+      "sectionDescription": "How many records to return.",
       "title": "Max items",
       "type": "integer"
     },
     "maxPrice": {
-      "description": "Maximum listing price in USD.",
+      "description": "Maximum sale price, or maximum monthly rent in forRent mode.",
       "maximum": 100000000,
       "minimum": 0,
       "title": "Max price ($)",
@@ -53,7 +68,7 @@
       "type": "integer"
     },
     "minPrice": {
-      "description": "Minimum listing price in USD.",
+      "description": "Minimum sale price, or minimum monthly rent in forRent mode.",
       "maximum": 100000000,
       "minimum": 0,
       "title": "Min price ($)",
@@ -79,9 +94,9 @@
       ],
       "enumTitles": [
         "For Sale — active listings",
-        "Recently Sold — sold within 180 days",
+        "Recently Sold — sold within the chosen window",
         "For Rent — rental listings",
-        "Search — keyword/address search",
+        "Search — keyword filter within a location",
         "By URL — fetch a single Redfin listing URL"
       ],
       "prefill": "forSale",
@@ -90,7 +105,7 @@
     },
     "propertyType": {
       "default": "all",
-      "description": "Filter by property type.",
+      "description": "Filter by property type. Applied server-side where Redfin supports it and re-checked in the actor.",
       "editor": "select",
       "enum": [
         "all",
@@ -111,7 +126,55 @@
         "Other"
       ],
       "prefill": "all",
+      "sectionCaption": "Filters",
+      "sectionDescription": "Optional price, bedroom, bathroom, size, and sold-window filters.",
       "title": "Property type",
+      "type": "string"
+    },
+    "soldWithinDays": {
+      "default": "180",
+      "description": "How far back to search in recentlySold mode. Ignored in other modes.",
+      "editor": "select",
+      "enum": [
+        "30",
+        "90",
+        "180",
+        "365",
+        "1095",
+        "1825"
+      ],
+      "enumTitles": [
+        "Last 30 days",
+        "Last 90 days",
+        "Last 180 days",
+        "Last year",
+        "Last 3 years",
+        "Last 5 years"
+      ],
+      "prefill": "180",
+      "title": "Sold within (days)",
+      "type": "string"
+    },
+    "sort": {
+      "default": "recommended",
+      "description": "Result ordering. Verified against Redfin's GIS and rental APIs.",
+      "editor": "select",
+      "enum": [
+        "recommended",
+        "newest",
+        "oldest",
+        "priceLowToHigh",
+        "priceHighToLow"
+      ],
+      "enumTitles": [
+        "Recommended",
+        "Newest (least time on Redfin)",
+        "Oldest (most time on Redfin)",
+        "Price: low to high",
+        "Price: high to low"
+      ],
+      "prefill": "recommended",
+      "title": "Sort order",
       "type": "string"
     }
   },
