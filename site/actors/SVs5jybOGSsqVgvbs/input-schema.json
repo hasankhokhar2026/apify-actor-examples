@@ -3,6 +3,7 @@
     "enableYtdlpFallback": {
       "default": false,
       "description": "When the direct HTTP media download or Whisper transcription fails, try yt-dlp (requires ffmpeg). Off by default so runs stay fast, deterministic and HTTP-only.",
+      "prefill": false,
       "sectionCaption": "Advanced",
       "sectionDescription": "Optional settings for large or repeated runs.",
       "title": "Enable yt-dlp fallback",
@@ -40,22 +41,23 @@
     "maxDownloadMb": {
       "default": 200,
       "description": "Largest media download allowed for AI transcription. The actor picks the audio-only or lowest-bitrate rendition first, then stops with a media_too_large status row if the limit is exceeded. Defaults to 200 MB.",
+      "maximum": 2048,
       "minimum": 1,
-      "sectionCaption": "Limits",
       "title": "Max download size (MB)",
       "type": "integer"
     },
     "maxDurationSeconds": {
       "default": 1200,
       "description": "Videos longer than this are skipped for AI transcription and get a media_too_large status row. Built-in captions are still returned when available. Defaults to 1200 seconds (20 minutes).",
+      "maximum": 43200,
       "minimum": 1,
-      "sectionCaption": "Limits",
       "title": "Max video duration (seconds)",
       "type": "integer"
     },
     "maxVideosPerProfile": {
       "default": 10,
       "description": "How many recent video posts to transcribe per profile input. Defaults to 10.",
+      "maximum": 100,
       "minimum": 1,
       "sectionCaption": "Limits",
       "title": "Max video posts per profile",
@@ -117,8 +119,6 @@
     "proxyConfiguration": {
       "description": "Optional. Use an Apify proxy if you plan large runs or see frequent rate limits.",
       "editor": "proxy",
-      "sectionCaption": "Advanced",
-      "sectionDescription": "Optional settings for large or repeated runs.",
       "title": "Proxy configuration",
       "type": "object"
     },

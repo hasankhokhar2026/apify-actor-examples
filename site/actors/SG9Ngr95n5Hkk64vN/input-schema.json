@@ -31,18 +31,21 @@
     "excludeNsfw": {
       "default": false,
       "description": "Drop NSFW records. When the available source cannot expose a per-post NSFW flag, unknown rows are not emitted as safe; the run reports nsfw_status_unavailable.",
+      "prefill": false,
       "title": "Exclude NSFW",
       "type": "boolean"
     },
     "includeArchive": {
       "default": true,
       "description": "Use Arctic Shift for subreddit-scoped backfill and comment hydration when live sources fail. Archive metrics are snapshots, not live.",
+      "prefill": true,
       "title": "Include Arctic Shift archive fallback",
       "type": "boolean"
     },
     "keywordRequireAll": {
       "default": false,
       "description": "When multiple keywords are given, keep only records whose title/content contains ALL of them. Default: each keyword runs independently (OR).",
+      "prefill": false,
       "title": "Require all keywords (AND)",
       "type": "boolean"
     },
@@ -79,6 +82,7 @@
     "onlyNew": {
       "default": false,
       "description": "Emit only records newer than the stored watermark for this monitorId. Requires a stable monitorId for scheduled runs.",
+      "prefill": false,
       "title": "Only new since last run",
       "type": "boolean"
     },
@@ -108,6 +112,7 @@
     "relativeWindow": {
       "default": "all",
       "description": "Restrict results to a relative window. Maps to Reddit's t= and Arctic after= filters. Use all for no window.",
+      "editor": "select",
       "enum": [
         "hour",
         "day",
@@ -130,6 +135,7 @@
     "resolveChallenges": {
       "default": true,
       "description": "Allow a best-effort Playwright browser solve when a Redlib instance returns an Anubis challenge. Disable to keep runs HTTP-only.",
+      "prefill": true,
       "title": "Resolve Redlib Anubis challenges",
       "type": "boolean"
     },
@@ -144,12 +150,14 @@
     "searchComments": {
       "default": false,
       "description": "Also search comment bodies via Redlib, with RSS parent-post discovery + hydration as fallback. Emits recordType=comment records.",
+      "prefill": false,
       "title": "Search comments by keyword",
       "type": "boolean"
     },
     "sort": {
       "default": "relevance",
       "description": "How to sort the search results.",
+      "editor": "select",
       "enum": [
         "relevance",
         "hot",

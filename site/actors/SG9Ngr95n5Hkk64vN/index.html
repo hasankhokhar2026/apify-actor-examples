@@ -31,18 +31,21 @@
     &quot;excludeNsfw&quot;: {
       &quot;default&quot;: false,
       &quot;description&quot;: &quot;Drop NSFW records. When the available source cannot expose a per-post NSFW flag, unknown rows are not emitted as safe; the run reports nsfw_status_unavailable.&quot;,
+      &quot;prefill&quot;: false,
       &quot;title&quot;: &quot;Exclude NSFW&quot;,
       &quot;type&quot;: &quot;boolean&quot;
     },
     &quot;includeArchive&quot;: {
       &quot;default&quot;: true,
       &quot;description&quot;: &quot;Use Arctic Shift for subreddit-scoped backfill and comment hydration when live sources fail. Archive metrics are snapshots, not live.&quot;,
+      &quot;prefill&quot;: true,
       &quot;title&quot;: &quot;Include Arctic Shift archive fallback&quot;,
       &quot;type&quot;: &quot;boolean&quot;
     },
     &quot;keywordRequireAll&quot;: {
       &quot;default&quot;: false,
       &quot;description&quot;: &quot;When multiple keywords are given, keep only records whose title/content contains ALL of them. Default: each keyword runs independently (OR).&quot;,
+      &quot;prefill&quot;: false,
       &quot;title&quot;: &quot;Require all keywords (AND)&quot;,
       &quot;type&quot;: &quot;boolean&quot;
     },
@@ -79,6 +82,7 @@
     &quot;onlyNew&quot;: {
       &quot;default&quot;: false,
       &quot;description&quot;: &quot;Emit only records newer than the stored watermark for this monitorId. Requires a stable monitorId for scheduled runs.&quot;,
+      &quot;prefill&quot;: false,
       &quot;title&quot;: &quot;Only new since last run&quot;,
       &quot;type&quot;: &quot;boolean&quot;
     },
@@ -108,6 +112,7 @@
     &quot;relativeWindow&quot;: {
       &quot;default&quot;: &quot;all&quot;,
       &quot;description&quot;: &quot;Restrict results to a relative window. Maps to Reddit&#x27;s t= and Arctic after= filters. Use all for no window.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
       &quot;enum&quot;: [
         &quot;hour&quot;,
         &quot;day&quot;,
@@ -130,6 +135,7 @@
     &quot;resolveChallenges&quot;: {
       &quot;default&quot;: true,
       &quot;description&quot;: &quot;Allow a best-effort Playwright browser solve when a Redlib instance returns an Anubis challenge. Disable to keep runs HTTP-only.&quot;,
+      &quot;prefill&quot;: true,
       &quot;title&quot;: &quot;Resolve Redlib Anubis challenges&quot;,
       &quot;type&quot;: &quot;boolean&quot;
     },
@@ -144,12 +150,14 @@
     &quot;searchComments&quot;: {
       &quot;default&quot;: false,
       &quot;description&quot;: &quot;Also search comment bodies via Redlib, with RSS parent-post discovery + hydration as fallback. Emits recordType=comment records.&quot;,
+      &quot;prefill&quot;: false,
       &quot;title&quot;: &quot;Search comments by keyword&quot;,
       &quot;type&quot;: &quot;boolean&quot;
     },
     &quot;sort&quot;: {
       &quot;default&quot;: &quot;relevance&quot;,
       &quot;description&quot;: &quot;How to sort the search results.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
       &quot;enum&quot;: [
         &quot;relevance&quot;,
         &quot;hot&quot;,
@@ -463,4 +471,4 @@ Source caps are real (RSS 100 with no pagination; Translate 24/page; Redlib 7/pa
 <code>live</code> for RSS/Translate/Redlib/OAuth; <code>archive_initial</code> or <code>archive_second_snapshot</code> for Arctic. Check <code>scoreAsOf</code>, <code>upvoteRatioAsOf</code> and <code>archiveLagSeconds</code> before treating archive engagement as current.</p>
 <p><strong>Is this affiliated with Reddit?</strong>
 No. This is an independent actor. Reddit's terms, the Responsible Builder Policy, and third-party service terms still apply; get legal/product approval for commercial or automated collection.</p>
-</details></section><section id="python-quickstart"><h2>Python quickstart</h2><p>Use a schema-derived input and the Python standard library to start a run. An Apify account and token are required for execution.</p><p><a href="/apify-actor-examples/guides/SG9Ngr95n5Hkk64vN/">Open the step-by-step Python guide →</a></p></section><p class="source-note">Source build <code>aFY7eJy2LQBHKy6jb</code>. Documentation is regenerated from the default published build; private drafts are not included.</p></article></div></main><footer class="footer"><strong>Nimbryxo Studio</strong><div class="footer-links"><a href="/apify-actor-examples/topics/">Topics</a><a href="/apify-actor-examples/sources/">Documentation sources</a><a href="https://apify.com/nimbryxo-studio">Apify</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></div></footer></body></html>
+</details></section><section id="python-quickstart"><h2>Python quickstart</h2><p>Use a schema-derived input and the Python standard library to start a run. An Apify account and token are required for execution.</p><p><a href="/apify-actor-examples/guides/SG9Ngr95n5Hkk64vN/">Open the step-by-step Python guide →</a></p></section><p class="source-note">Source build <code>FqWpVF9VHll65aVYc</code>. Documentation is regenerated from the default published build; private drafts are not included.</p></article></div></main><footer class="footer"><strong>Nimbryxo Studio</strong><div class="footer-links"><a href="/apify-actor-examples/topics/">Topics</a><a href="/apify-actor-examples/sources/">Documentation sources</a><a href="https://apify.com/nimbryxo-studio">Apify</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></div></footer></body></html>

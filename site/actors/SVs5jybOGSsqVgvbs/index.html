@@ -3,6 +3,7 @@
     &quot;enableYtdlpFallback&quot;: {
       &quot;default&quot;: false,
       &quot;description&quot;: &quot;When the direct HTTP media download or Whisper transcription fails, try yt-dlp (requires ffmpeg). Off by default so runs stay fast, deterministic and HTTP-only.&quot;,
+      &quot;prefill&quot;: false,
       &quot;sectionCaption&quot;: &quot;Advanced&quot;,
       &quot;sectionDescription&quot;: &quot;Optional settings for large or repeated runs.&quot;,
       &quot;title&quot;: &quot;Enable yt-dlp fallback&quot;,
@@ -40,22 +41,23 @@
     &quot;maxDownloadMb&quot;: {
       &quot;default&quot;: 200,
       &quot;description&quot;: &quot;Largest media download allowed for AI transcription. The actor picks the audio-only or lowest-bitrate rendition first, then stops with a media_too_large status row if the limit is exceeded. Defaults to 200 MB.&quot;,
+      &quot;maximum&quot;: 2048,
       &quot;minimum&quot;: 1,
-      &quot;sectionCaption&quot;: &quot;Limits&quot;,
       &quot;title&quot;: &quot;Max download size (MB)&quot;,
       &quot;type&quot;: &quot;integer&quot;
     },
     &quot;maxDurationSeconds&quot;: {
       &quot;default&quot;: 1200,
       &quot;description&quot;: &quot;Videos longer than this are skipped for AI transcription and get a media_too_large status row. Built-in captions are still returned when available. Defaults to 1200 seconds (20 minutes).&quot;,
+      &quot;maximum&quot;: 43200,
       &quot;minimum&quot;: 1,
-      &quot;sectionCaption&quot;: &quot;Limits&quot;,
       &quot;title&quot;: &quot;Max video duration (seconds)&quot;,
       &quot;type&quot;: &quot;integer&quot;
     },
     &quot;maxVideosPerProfile&quot;: {
       &quot;default&quot;: 10,
       &quot;description&quot;: &quot;How many recent video posts to transcribe per profile input. Defaults to 10.&quot;,
+      &quot;maximum&quot;: 100,
       &quot;minimum&quot;: 1,
       &quot;sectionCaption&quot;: &quot;Limits&quot;,
       &quot;title&quot;: &quot;Max video posts per profile&quot;,
@@ -117,8 +119,6 @@
     &quot;proxyConfiguration&quot;: {
       &quot;description&quot;: &quot;Optional. Use an Apify proxy if you plan large runs or see frequent rate limits.&quot;,
       &quot;editor&quot;: &quot;proxy&quot;,
-      &quot;sectionCaption&quot;: &quot;Advanced&quot;,
-      &quot;sectionDescription&quot;: &quot;Optional settings for large or repeated runs.&quot;,
       &quot;title&quot;: &quot;Proxy configuration&quot;,
       &quot;type&quot;: &quot;object&quot;
     },
@@ -904,4 +904,4 @@
 <p><strong>Why is a row missing <code>segments</code> or <code>fullTranscript</code>?</strong> <code>outputFormat</code> controls which fields are filled, and unavailable transcripts never contain transcript fields — they are <code>status</code> rows with an <code>errorCode</code> and message.</p>
 <p><strong>Can a deleted or protected post be transcribed?</strong> No. Deleted or never-existing posts return <code>not_found</code>; protected posts and profiles return <code>protected</code> / <code>profile_protected</code> because only approved followers can read them.</p>
 <p><strong>Is this affiliated with X?</strong> No. This is an independent tool and is not affiliated with, endorsed by, or sponsored by X Corp.</p>
-</details></section><section id="python-quickstart"><h2>Python quickstart</h2><p>Use a schema-derived input and the Python standard library to start a run. An Apify account and token are required for execution.</p><p><a href="/apify-actor-examples/guides/SVs5jybOGSsqVgvbs/">Open the step-by-step Python guide →</a></p></section><p class="source-note">Source build <code>LH6F07Dej9hibl4z7</code>. Documentation is regenerated from the default published build; private drafts are not included.</p></article></div></main><footer class="footer"><strong>Nimbryxo Studio</strong><div class="footer-links"><a href="/apify-actor-examples/topics/">Topics</a><a href="/apify-actor-examples/sources/">Documentation sources</a><a href="https://apify.com/nimbryxo-studio">Apify</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></div></footer></body></html>
+</details></section><section id="python-quickstart"><h2>Python quickstart</h2><p>Use a schema-derived input and the Python standard library to start a run. An Apify account and token are required for execution.</p><p><a href="/apify-actor-examples/guides/SVs5jybOGSsqVgvbs/">Open the step-by-step Python guide →</a></p></section><p class="source-note">Source build <code>4sy27ND57LQ36jC4Y</code>. Documentation is regenerated from the default published build; private drafts are not included.</p></article></div></main><footer class="footer"><strong>Nimbryxo Studio</strong><div class="footer-links"><a href="/apify-actor-examples/topics/">Topics</a><a href="/apify-actor-examples/sources/">Documentation sources</a><a href="https://apify.com/nimbryxo-studio">Apify</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></div></footer></body></html>
