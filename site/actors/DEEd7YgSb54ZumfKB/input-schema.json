@@ -54,6 +54,7 @@
     },
     "maxItems": {
       "description": "Optional limit across all accounts in this run. Leave empty for no overall limit.",
+      "maximum": 10000,
       "minimum": 1,
       "title": "Max posts in total",
       "type": "integer"
@@ -81,11 +82,13 @@
         "Only posts with TikTok's clickable tag",
         "Every search result, labelled"
       ],
+      "prefill": "all",
       "title": "Which posts to keep",
       "type": "string"
     },
     "minPlayCount": {
       "description": "Skip posts with fewer views than this. Leave empty to keep posts of any size.",
+      "maximum": 2147483647,
       "minimum": 0,
       "title": "Minimum views",
       "type": "integer"
@@ -246,11 +249,6 @@
     "usernames": {
       "description": "Brand or creator accounts whose mentions you want. Type a handle (nike), a handle with @ (@nike) or paste a profile link (https://www.tiktok.com/@nike). One account per line; duplicates are merged.",
       "editor": "stringList",
-      "example": [
-        "nike",
-        "@gymshark",
-        "https://www.tiktok.com/@sephora"
-      ],
       "prefill": [
         "billieeilish"
       ],

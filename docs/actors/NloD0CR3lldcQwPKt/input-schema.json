@@ -1,0 +1,57 @@
+{
+  "description": "Look up eBay seller feedback and reputation stats by seller username or store URL, optionally filtered by rating type.",
+  "properties": {
+    "maxItems": {
+      "default": 25,
+      "description": "Maximum number of feedback rows to return, across all requested sellers combined.",
+      "editor": "number",
+      "maximum": 1000,
+      "minimum": 1,
+      "prefill": 25,
+      "title": "Max items",
+      "type": "integer"
+    },
+    "ratingType": {
+      "default": "All",
+      "description": "Filter feedback rows by rating.",
+      "editor": "select",
+      "enum": [
+        "All",
+        "Positive",
+        "Neutral",
+        "Negative"
+      ],
+      "enumTitles": [
+        "All",
+        "Positive only",
+        "Neutral only",
+        "Negative only"
+      ],
+      "prefill": "All",
+      "title": "Rating type",
+      "type": "string"
+    },
+    "sellerUsernames": {
+      "default": [],
+      "description": "eBay seller usernames to fetch feedback for, e.g. \"musicmagpie\". At least one of sellerUsernames or storeUrls must be given.",
+      "editor": "stringList",
+      "prefill": [
+        "musicmagpie"
+      ],
+      "title": "Seller usernames",
+      "type": "array"
+    },
+    "storeUrls": {
+      "default": [],
+      "description": "Full eBay store URLs (https://www.ebay.com/str/<seller>) — resolved to the same seller's feedback page. Accepted as an alternative or supplement to sellerUsernames.",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Store URLs",
+      "type": "array"
+    }
+  },
+  "required": [],
+  "schemaVersion": 1,
+  "title": "eBay Seller Feedback Scraper Input",
+  "type": "object"
+}
