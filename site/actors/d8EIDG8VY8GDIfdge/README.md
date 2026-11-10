@@ -1,46 +1,85 @@
 # Google Workspace Marketplace App Search & Category Browser
 
-Pull app listings from the [Google Workspace Marketplace](https://workspace.google.com/marketplace), with no Google account, API key, or proxy needed. Search by keyword, browse an entire category, or fetch full details for specific app IDs you already know.
+Explore the public [Google Workspace Marketplace](https://workspace.google.com/marketplace) without a Google account, API key, cookie, or proxy. Search by keyword, browse any of the 27 category views, sweep the entire Marketplace, look up exact apps by ID or URL, find every app from a publisher, or export reviews.
 
 ## What this actor does
 
-- **Keyword search** across the whole marketplace, enriched with full listing detail
-- **Category browsing** across 26 categories and subcategories (popular apps, top rated, business tools, productivity, education, and more)
-- **Direct app lookup** by numeric app ID, with no practical limit on how many you can fetch
-- **Multi-language results** — choose the language the listing page is read in
-- Fields with no value for a given app (e.g. no reviews yet, unlisted pricing) are omitted rather than returned as `null`
+- **Six modes:** `search`, `byCategory`, `browseAll`, `byAppId`, `byDeveloper`, `reviews`
+- **Full catalogue coverage:** `browseAll` enumerates every category view and deduplicates by app ID (~1,500 apps)
+- **Exact app lookup:** numeric Marketplace IDs, full app URLs, or a developer name
+- **Filters:** Works-with product, price option, exact price class, minimum rating, ratings count and installs
+- **Review export:** rating range and date filters, with attached reviews or standalone review rows
+- **Optional detail enrichment:** OAuth permissions, exact Works-with icons and written-review counts
+- **Empty fields are omitted** - never `null`, blank or placeholder values
+
+## Modes
+
+| Mode | What it does | Required field | Result ceiling |
+|---|---|---|---|
+| `search` | Keyword search across the Marketplace | `searchQuery` | 100 apps per query |
+| `byCategory` | Browse one of 27 categories/subcategories | `category` | 100 apps per category |
+| `browseAll` | Walk every category, deduplicate by app ID | — | ~1,500 apps |
+| `byAppId` | Fetch exact apps from numeric IDs or Marketplace URLs | `appIds` | no practical limit |
+| `byDeveloper` | Find every app from a publisher (keyword search plus all 27 category pages, deduplicated) | `developerName` | ~1,500 apps |
+| `reviews` | Export review rows for apps, with optional rating/date filters | `appIds` | up to `maxReviewsPerApp` per app |
 
 ## Output per app
 
-- `appId` — numeric app identifier
-- `name` — app display name
-- `developer` — publisher/developer name
-- `shortDescription` — one-line app summary
-- `description` — full app description
-- `rating` — average star rating, 0–5
-- `reviewCount` — total number of ratings
-- `installCount` — install count, when the listing publishes one
-- `pricingModel` — `Free`, `Freemium`, or `Paid`
-- `categories` — official Marketplace categories the app belongs to
-- `worksWith` — Google products the app integrates with (e.g. Google Docs, Google Drive)
-- `lastUpdated` — date of the listing's most recent update
-- `appUrl` — direct link to the app's Marketplace listing
-- `iconUrl` — app icon image, hosted by Google
-- `recordType` — always `"workspace_app"`
-- `scrapedAt` — ISO timestamp of the scrape
+- `appId`, `slug`, `name`, `developer`
+- `shortDescription` and full `description`
+- `rating` (0–5), `reviewCount` (number of ratings), `textReviewCount` (number of written reviews, filled in `byAppId` mode and when `includeReviews` is on)
+- `installCount` (exact integer) and `installCountText` (`46M+`)
+- `pricingModel` — `Free`, `Freemium`, or `Paid` when the listing publishes a price
+- `worksWith` — Google products the app integrates with (Docs, Sheets, Slides, Forms, Gmail, Calendar, Chat, Meet, Classroom, Drive, Workspace Studio)
+- `developerWebsite`, `developerEmail`, `developerAddress`
+- `termsUrl`, `privacyUrl`, `supportUrl`
+- `iconUrl`, `bannerUrl`, `screenshotUrls`
+- `lastUpdated` (ISO date), `appUrl` (canonical listing URL)
+- `permissions` — OAuth scopes with human-readable names (`includeDetails`)
+- `reviews` — review objects with rating, text, date, author (`includeReviews`)
+- `recordType` (`"workspace_app"`), `scrapedAt` (ISO timestamp)
+
+Review rows in `reviews` mode contain `appId`, `appName`, `appUrl`, `reviewId`, `rating`, `text`, `publishedAt`, `authorName` and `authorAvatarUrl`, with `recordType` set to `"workspace_app_review"`.
+
+## Filters
+
+- **Works with** — `drive`, `docs`, `sheets`, `slides`, `forms`, `gmail`, `calendar`, `chat`, `classroom`, `meet`
+- **Price option** — `free` (app has a free option) or `paid` (app has a paid option)
+- **Exact price class** — `Free`, `Freemium`, `Paid`
+- **Minimum rating**, **minimum ratings count**, **minimum installs**
+- **Review rating range** — `minReviewRating` / `maxReviewRating`
+- **Reviews since** — ISO date (`YYYY-MM-DD`)
+
+App filters are applied consistently to search, category, all-marketplace, developer and exact-app results. Review filters apply to `reviews` mode and to reviews attached with `includeReviews`; they are evaluated client-side because the review endpoint only supports sort and paging.
 
 ## Input
 
 | Field | Type | Default | Description |
 |---|---|---|---|
-| `mode` | string | `search` | `search`, `byCategory`, or `byAppId` |
-| `searchQuery` | string | `mail merge` | Keyword to search for (mode=search) |
-| `category` | string | `popular-apps` | Category path to browse (mode=byCategory) |
-| `appIds` | array | `[]` | Numeric app IDs to fetch (mode=byAppId) |
-| `maxItems` | integer | `50` | Maximum records to emit (1–200) |
-| `language` | string | `en` | Language for search/category pages |
+| `mode` | select | `search` | `search` / `byCategory` / `browseAll` / `byAppId` / `byDeveloper` / `reviews` |
+| `searchQuery` | string | `mail merge` | Keyword search (mode=`search`) |
+| `category` | select | `popular-apps` | One of the 27 category views (mode=`byCategory`) |
+| `appIds` | array | `[]` | Numeric app IDs or full Marketplace URLs (mode=`byAppId` / `reviews`) |
+| `developerName` | string | – | Publisher/developer name (mode=`byDeveloper`) |
+| `worksWith` | select | `any` | Keep apps that integrate with this Google product; applies to every app mode |
+| `pricing` | select | `any` | `any` / `free` / `paid` price option |
+| `pricingModel` | select | `any` | `any` / `Free` / `Freemium` / `Paid` exact class |
+| `minRating` | number | `0` | Drop apps rated below this (0-5) |
+| `minReviews` | integer | `0` | Drop apps with fewer ratings |
+| `minInstalls` | integer | `0` | Drop apps with fewer exact installs |
+| `includeDetails` | boolean | `false` | Fetch OAuth permissions, exact Works-with icons and written-review totals (one extra request per app) |
+| `includeReviews` | boolean | `false` | Attach reviews to each app record |
+| `maxReviewsPerApp` | integer | `30` | Reviews attached per app, or exported per app in `reviews` mode (1-500) |
+| `reviewSort` | select | `recent` | `recent` / `helpful` |
+| `minReviewRating` | integer | `0` | Keep reviews at or above this rating (0-5) |
+| `maxReviewRating` | integer | `0` | Keep reviews at or below this rating (0-5) |
+| `reviewsSince` | string | – | Drop reviews before this date (`YYYY-MM-DD`) |
+| `maxItems` | integer | `50` | Maximum records to emit (1-2,000) |
+| `language` | select | `en` | Language for listing and review text (25 options) |
 
-### Example: keyword search
+## Examples
+
+### Search
 
 ```json
 {
@@ -50,7 +89,7 @@ Pull app listings from the [Google Workspace Marketplace](https://workspace.goog
 }
 ```
 
-### Example: browse a category
+### Browse a category
 
 ```json
 {
@@ -60,48 +99,104 @@ Pull app listings from the [Google Workspace Marketplace](https://workspace.goog
 }
 ```
 
-### Example: fetch specific apps by ID
+### Enumerate the whole Marketplace
+
+```json
+{
+  "mode": "browseAll",
+  "worksWith": "docs",
+  "pricing": "paid",
+  "maxItems": 500
+}
+```
+
+### Fetch apps by ID or URL
 
 ```json
 {
   "mode": "byAppId",
-  "appIds": ["7081045131", "218858140275"]
+  "appIds": [
+    "7081045131",
+    "https://workspace.google.com/marketplace/app/zip_extractor/824911851129"
+  ],
+  "includeDetails": true
 }
 ```
 
-### Example: search results in Spanish
+### Export reviews
+
+```json
+{
+  "mode": "reviews",
+  "appIds": ["7081045131"],
+  "maxReviewsPerApp": 50,
+  "reviewSort": "recent",
+  "maxItems": 50
+}
+```
+
+### Export only recent one-star reviews
+
+```json
+{
+  "mode": "reviews",
+  "appIds": ["7081045131"],
+  "reviewSort": "recent",
+  "maxReviewRating": 1,
+  "reviewsSince": "2026-01-01",
+  "maxItems": 50
+}
+```
+
+### Search in German
 
 ```json
 {
   "mode": "search",
   "searchQuery": "crm",
-  "language": "es",
+  "language": "de",
   "maxItems": 20
 }
 ```
 
+## Output rules
+
+Records are omit-empty: a field the Marketplace does not publish for an app is left out rather than emitted as `null`, `""`, or a placeholder. URLs are absolute and use the scheme the listing publishes.
+
 ## Use cases
 
-- **IT and procurement evaluation** — compare pricing models, ratings and Google-product compatibility before approving an app
-- **Competitive research** — track where your app or a competitor's ranks within a category
-- **Market mapping** — enumerate every app in a category (e.g. all CRM or accounting tools) for a landscape report
-- **Vendor and partner discovery** — find developers building for a specific Workspace product
-- **App directory sites** — populate a curated listing page with live Marketplace data
+- **Market mapping** - enumerate the whole Marketplace to size a category or find every app in a workflow niche
+- **Competitive research** - compare installs, ratings, pricing and feature positioning across rivals
+- **Vendor and lead discovery** - collect developer names, websites and support contacts from app listings
+- **Review monitoring** - export recent low-star reviews for product-quality or support analysis
+- **Ecosystem tracking** - follow a publisher's app portfolio and detect new listings
+
+## Limits
+
+- A search or category page returns at most **100** apps; the Marketplace ignores pagination, sort and offset parameters. Use a narrower query or `browseAll` for wider coverage.
+- `browseAll` and `byDeveloper` can reach roughly **1,500** distinct apps across the 27 category views. Apps that appear in neither the category pages nor the search index cannot be discovered.
+- The Marketplace UI offers **Workspace Studio** and **Gemini** filters, but the corresponding `host` values are inert upstream, so they are not exposed.
+- Per-app category names are not published anywhere on the Marketplace; category membership is only visible by browsing category pages, so no `categories` field is emitted.
+- The review endpoint only supports sort order and 10-review offsets. Rating/date filters are applied client-side with a 50-page scan cap per app.
+- Change tracking and market reports are not provided: this actor is stateless and does not persist snapshots between runs.
+- Publisher links (support, privacy, terms, website) point to third-party sites; some of those sites block automated requests even though the link is valid.
 
 ## FAQ
 
-**Does this need a Google account or API key?** No — the Marketplace is publicly browsable, and this actor reads it without any authentication, cookies, or proxy.
+**Does this need a Google account or API key?** No. The Marketplace is public and the actor reads it with no authentication, cookies, or proxy.
 
-**How many apps can one run return?** Search and category pages return up to 100 apps per query (the marketplace's own natural limit); `maxItems` controls how many of those are emitted. `byAppId` mode has no such limit since it fetches exact listings.
+**Why is a search limited to 100 apps?** The Marketplace serves a fixed top-100 list per query and ignores pagination parameters. Use a narrower query, or use `browseAll` to enumerate the whole catalogue.
 
-**What does `pricingModel` mean?** `Free` means no cost at all; `Freemium` covers listings marked "free with paid features" or offering a free trial; `Paid` means payment is required to use the app.
+**Why did an app's price disappear?** The listing publishes a price class only for some apps. When it says "Not available", the field is omitted instead of guessing.
 
-**What is `worksWith`?** The Google products the app integrates with (e.g. Google Drive, Gmail, Sheets, Slides, Docs, Calendar, Forms, Chat), taken directly from the listing.
+**Why are categories not in the output?** The Marketplace does not expose per-app category names on an app's page or in its data. Category membership is only visible by browsing category pages, so the actor does not invent it.
 
-**Why might `rating`, `reviewCount`, or `installCount` be missing?** New or lightly used listings may not have published figures yet; the field is omitted rather than shown as zero.
+**How fresh are reviews?** Reviews are fetched live in 10-review pages, newest or most helpful first. `reviewCount` counts ratings; `textReviewCount` counts written reviews.
 
-**Are reviews included in this actor's output?** No — this actor covers app listing data only; review text is out of scope here.
+**Can I filter reviews by date or rating?** Yes — use `minReviewRating`, `maxReviewRating` and `reviewsSince`. The Marketplace review endpoint itself only supports sort order and paging, so the actor pages through reviews and filters them client-side, scanning up to 50 pages (500 reviews) per app. A very restrictive filter can therefore return fewer rows than requested.
 
-**Are the icon URLs publicly accessible?** Yes — icons are hosted at `lh3.googleusercontent.com` and load without authentication.
+**How complete is `byDeveloper`?** The Marketplace has no developer-search endpoint, so the actor combines keyword searches for the publisher name with a scan of all 27 category pages and keeps records whose developer matches the name. That reaches every app exposed by either surface; apps that appear on neither surface cannot be discovered.
 
-**Is this affiliated with Google?** No — this is an independent actor reading the public Google Workspace Marketplace; it is not operated by or affiliated with Google.
+**Are screenshots and icons publicly accessible?** Yes — Google hosts them at `lh3.googleusercontent.com` and they return images from a clean client. Publisher websites linked from a listing can block automated requests with a 403; open those links in a browser.
+
+**Is this affiliated with Google?** No. This is an independent actor reading the public Google Workspace Marketplace and is not operated by or affiliated with Google.

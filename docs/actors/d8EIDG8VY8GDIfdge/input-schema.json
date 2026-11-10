@@ -1,17 +1,17 @@
 {
-  "description": "Search apps, browse by category, or fetch details for specific app IDs from Google Workspace Marketplace.",
+  "description": "Search apps, browse categories, enumerate the whole Marketplace, fetch apps by ID or URL, list a developer's apps, or export reviews.",
   "properties": {
     "appIds": {
       "default": [],
-      "description": "Numeric App IDs to fetch (e.g. 218858140275). Required for mode=byAppId.",
+      "description": "Numeric Marketplace app IDs or full app URLs. Required for byAppId and reviews modes.",
       "editor": "stringList",
       "prefill": [],
-      "title": "App IDs (mode=byAppId)",
+      "title": "App IDs or URLs (mode=byAppId / reviews)",
       "type": "array"
     },
     "category": {
       "default": "popular-apps",
-      "description": "Category path to browse. Required for mode=byCategory.",
+      "description": "Category or subcategory to browse. Required in byCategory mode.",
       "editor": "select",
       "enum": [
         "popular-apps",
@@ -22,6 +22,7 @@
         "business-essentials",
         "apps-to-discover",
         "google-apps",
+        "connectors",
         "business-tools",
         "business-tools/accounting-and-finance",
         "business-tools/administration-and-management",
@@ -50,6 +51,7 @@
         "Business essentials",
         "Apps to discover",
         "Built by Google",
+        "Connectors (formerly Integrations)",
         "Business tools (all)",
         "Business tools / Accounting & finance",
         "Business tools / Administration & management",
@@ -73,9 +75,31 @@
       "title": "Category (mode=byCategory)",
       "type": "string"
     },
+    "developerName": {
+      "description": "Publisher/developer name to look up, e.g. `Lucid Software`. Required in byDeveloper mode.",
+      "editor": "textfield",
+      "title": "Developer name (mode=byDeveloper)",
+      "type": "string"
+    },
+    "includeDetails": {
+      "default": false,
+      "description": "Fetch each app's detail page to add OAuth permissions, exact Works-with icons and the text-review total. Adds one request per emitted app.",
+      "prefill": false,
+      "sectionCaption": "Details & reviews",
+      "sectionDescription": "Optional enrichment. Both options add extra requests per app; leave them off for the fastest, cheapest runs.",
+      "title": "Include permissions and detail enrichment",
+      "type": "boolean"
+    },
+    "includeReviews": {
+      "default": false,
+      "description": "Attach reviews to each app record. The rating and date filters below also apply. Ignored by reviews mode, which always emits review rows.",
+      "prefill": false,
+      "title": "Include reviews on each app",
+      "type": "boolean"
+    },
     "language": {
       "default": "en",
-      "description": "Optional language for search/category pages.",
+      "description": "Language for listing text and review content.",
       "editor": "select",
       "enum": [
         "en",
@@ -137,37 +161,196 @@
     },
     "maxItems": {
       "default": 50,
-      "description": "Maximum number of records to emit.",
-      "maximum": 200,
+      "description": "Maximum records to emit. Search and category pages hold at most 100 apps each; browseAll can reach about 1,500 apps. In reviews mode this caps review rows.",
+      "maximum": 2000,
       "minimum": 1,
-      "prefill": 50,
+      "prefill": 3,
+      "sectionCaption": "Output",
+      "sectionDescription": "How much data to return and which language the listing pages are read in.",
       "title": "Max items",
+      "type": "integer"
+    },
+    "maxReviewRating": {
+      "default": 0,
+      "description": "Drop reviews rated above this value (0-5). 0 = no maximum. Applies to reviews mode and includeReviews.",
+      "maximum": 5,
+      "minimum": 0,
+      "prefill": 0,
+      "title": "Maximum review rating",
+      "type": "integer"
+    },
+    "maxReviewsPerApp": {
+      "default": 30,
+      "description": "How many matching reviews to attach in includeReviews, or how many to export per app in reviews mode.",
+      "maximum": 500,
+      "minimum": 1,
+      "prefill": 3,
+      "title": "Max reviews per app",
+      "type": "integer"
+    },
+    "minInstalls": {
+      "default": 0,
+      "description": "Drop apps installed fewer times than this (exact count). 0 = no minimum.",
+      "maximum": 10000000000,
+      "minimum": 0,
+      "prefill": 0,
+      "title": "Minimum installs",
+      "type": "integer"
+    },
+    "minRating": {
+      "default": 0,
+      "description": "Drop apps rated below this value (0–5). 0 = no minimum.",
+      "maximum": 5,
+      "minimum": 0,
+      "prefill": 0,
+      "title": "Minimum rating",
+      "type": "number"
+    },
+    "minReviewRating": {
+      "default": 0,
+      "description": "Drop reviews rated below this value (0-5). 0 = no minimum. Applies to reviews mode and includeReviews; filtering happens client-side over fetched review pages.",
+      "maximum": 5,
+      "minimum": 0,
+      "prefill": 0,
+      "title": "Minimum review rating",
+      "type": "integer"
+    },
+    "minReviews": {
+      "default": 0,
+      "description": "Drop apps with fewer ratings than this. 0 = no minimum.",
+      "maximum": 10000000,
+      "minimum": 0,
+      "prefill": 0,
+      "title": "Minimum ratings count",
       "type": "integer"
     },
     "mode": {
       "default": "search",
-      "description": "What to scrape. search=keyword search, byCategory=browse a category, byAppId=fetch specific apps.",
+      "description": "What to fetch. search=keyword search; byCategory=one category; browseAll=every category (deduplicated); byAppId=exact apps; byDeveloper=apps by publisher name (keyword search plus all category pages); reviews=review rows with optional rating/date filters.",
       "editor": "select",
       "enum": [
         "search",
         "byCategory",
-        "byAppId"
+        "browseAll",
+        "byAppId",
+        "byDeveloper",
+        "reviews"
       ],
       "enumTitles": [
         "Search by keyword",
-        "Browse by category",
-        "Fetch by App ID(s)"
+        "Browse one category",
+        "Enumerate the whole Marketplace",
+        "Fetch specific apps by ID or URL",
+        "Find apps by developer",
+        "Export app reviews"
       ],
       "prefill": "search",
       "title": "Mode",
       "type": "string"
     },
+    "pricing": {
+      "default": "any",
+      "description": "Marketplace price facet: free = the app has a free option; paid = the app has a paid option. Applied to every app mode, including byAppId. Use the next field for an exact price class.",
+      "editor": "select",
+      "enum": [
+        "any",
+        "free",
+        "paid"
+      ],
+      "enumTitles": [
+        "Any price",
+        "Has a free option",
+        "Has a paid option"
+      ],
+      "prefill": "any",
+      "title": "Price option",
+      "type": "string"
+    },
+    "pricingModel": {
+      "default": "any",
+      "description": "Keep only apps with this exact published price class. Apps with no published price are omitted when a class is selected.",
+      "editor": "select",
+      "enum": [
+        "any",
+        "Free",
+        "Freemium",
+        "Paid"
+      ],
+      "enumTitles": [
+        "Any class",
+        "Free",
+        "Freemium (free tier + paid features)",
+        "Paid"
+      ],
+      "prefill": "any",
+      "title": "Exact price class",
+      "type": "string"
+    },
+    "reviewSort": {
+      "default": "recent",
+      "description": "Order of exported/attached reviews.",
+      "editor": "select",
+      "enum": [
+        "recent",
+        "helpful"
+      ],
+      "enumTitles": [
+        "Most recent",
+        "Most helpful"
+      ],
+      "prefill": "recent",
+      "title": "Review sort",
+      "type": "string"
+    },
+    "reviewsSince": {
+      "default": "",
+      "description": "Drop reviews published before this date (YYYY-MM-DD). Leave empty for no date limit. Applies to reviews mode and includeReviews.",
+      "editor": "textfield",
+      "title": "Reviews since",
+      "type": "string"
+    },
     "searchQuery": {
       "default": "mail merge",
-      "description": "Keyword to search for apps. Required for mode=search.",
+      "description": "Keyword to search for. Required in search mode. The Marketplace returns at most 100 apps per query.",
       "editor": "textfield",
       "prefill": "mail merge",
       "title": "Search query (mode=search)",
+      "type": "string"
+    },
+    "worksWith": {
+      "default": "any",
+      "description": "Keep only apps that integrate with this Google product. Applied to every app mode: search, byCategory, browseAll, byDeveloper and byAppId.",
+      "editor": "select",
+      "enum": [
+        "any",
+        "drive",
+        "docs",
+        "sheets",
+        "slides",
+        "forms",
+        "gmail",
+        "calendar",
+        "chat",
+        "classroom",
+        "meet"
+      ],
+      "enumTitles": [
+        "Any Google product",
+        "Google Drive",
+        "Google Docs",
+        "Google Sheets",
+        "Google Slides",
+        "Google Forms",
+        "Gmail",
+        "Google Calendar",
+        "Google Chat",
+        "Google Classroom",
+        "Google Meet"
+      ],
+      "prefill": "any",
+      "sectionCaption": "Filters",
+      "sectionDescription": "Optional filters applied to every app mode, including byAppId records.",
+      "title": "Works with",
       "type": "string"
     }
   },

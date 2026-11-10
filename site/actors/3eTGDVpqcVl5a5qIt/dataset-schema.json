@@ -1,13 +1,85 @@
 {
   "actorSpecification": 1,
   "views": {
+    "company": {
+      "display": {
+        "component": "table",
+        "properties": {
+          "currentCompany": {
+            "format": "object",
+            "label": "Company Data"
+          },
+          "name": {
+            "format": "text",
+            "label": "Name"
+          },
+          "profileUrl": {
+            "format": "link",
+            "label": "Profile URL"
+          },
+          "scrapedAt": {
+            "format": "text",
+            "label": "Scraped At"
+          }
+        }
+      },
+      "title": "Current company",
+      "transformation": {
+        "fields": [
+          "name",
+          "currentCompany",
+          "profileUrl",
+          "scrapedAt"
+        ]
+      }
+    },
     "detailed": {
       "display": {
         "component": "table",
         "properties": {
+          "allTitles": {
+            "format": "array",
+            "label": "All Titles"
+          },
+          "badges": {
+            "format": "array",
+            "label": "Badges"
+          },
+          "certifications": {
+            "format": "array",
+            "label": "Certifications"
+          },
+          "connectionsCount": {
+            "format": "number",
+            "label": "Connections"
+          },
+          "connectionsText": {
+            "format": "text",
+            "label": "Connections (text)"
+          },
+          "courses": {
+            "format": "array",
+            "label": "Courses"
+          },
+          "currentCompany": {
+            "format": "object",
+            "label": "Current Company"
+          },
+          "currentPositions": {
+            "format": "array",
+            "label": "Current Positions"
+          },
+          "currentSchool": {
+            "format": "object",
+            "label": "Current School"
+          },
           "currentTitle": {
             "format": "text",
             "label": "Current Title"
+          },
+          "education": {
+            "format": "array",
+            "label": "Education"
           },
           "followersCount": {
             "format": "number",
@@ -21,6 +93,14 @@
             "format": "text",
             "label": "Input URL"
           },
+          "instructorCourses": {
+            "format": "array",
+            "label": "Instructor Courses"
+          },
+          "languages": {
+            "format": "array",
+            "label": "Languages"
+          },
           "location": {
             "format": "text",
             "label": "Location"
@@ -33,6 +113,14 @@
             "format": "number",
             "label": "Order"
           },
+          "pastPositions": {
+            "format": "array",
+            "label": "Past Positions"
+          },
+          "patents": {
+            "format": "array",
+            "label": "Patents"
+          },
           "profilePicture": {
             "format": "link",
             "label": "Photo"
@@ -41,13 +129,45 @@
             "format": "link",
             "label": "Profile URL"
           },
+          "profileUrn": {
+            "format": "text",
+            "label": "Member URN"
+          },
+          "publicIdentifier": {
+            "format": "text",
+            "label": "Public Identifier"
+          },
+          "publications": {
+            "format": "array",
+            "label": "Publications"
+          },
+          "recentArticles": {
+            "format": "array",
+            "label": "Recent Articles"
+          },
+          "recentPosts": {
+            "format": "array",
+            "label": "Recent Posts"
+          },
+          "recommendations": {
+            "format": "array",
+            "label": "Recommendations"
+          },
           "scrapedAt": {
             "format": "text",
             "label": "Scraped At"
           },
+          "skills": {
+            "format": "array",
+            "label": "Skills"
+          },
           "summary": {
             "format": "text",
             "label": "Summary"
+          },
+          "websites": {
+            "format": "array",
+            "label": "Websites"
           }
         }
       },
@@ -60,8 +180,30 @@
           "summary",
           "profileUrl",
           "profilePicture",
+          "profileUrn",
+          "publicIdentifier",
           "currentTitle",
+          "currentCompany",
+          "currentSchool",
+          "allTitles",
+          "currentPositions",
+          "pastPositions",
+          "education",
           "followersCount",
+          "connectionsCount",
+          "connectionsText",
+          "recentPosts",
+          "recentArticles",
+          "certifications",
+          "recommendations",
+          "languages",
+          "publications",
+          "patents",
+          "courses",
+          "instructorCourses",
+          "skills",
+          "badges",
+          "websites",
           "inputUrl",
           "order",
           "scrapedAt"
@@ -72,6 +214,22 @@
       "display": {
         "component": "table",
         "properties": {
+          "connectionsCount": {
+            "format": "number",
+            "label": "Connections"
+          },
+          "connectionsText": {
+            "format": "text",
+            "label": "Connections (text)"
+          },
+          "currentCompany": {
+            "format": "object",
+            "label": "Current Company"
+          },
+          "currentTitle": {
+            "format": "text",
+            "label": "Current Title"
+          },
           "followersCount": {
             "format": "number",
             "label": "Followers"
@@ -104,8 +262,12 @@
           "name",
           "headline",
           "location",
-          "profileUrl",
+          "currentTitle",
+          "currentCompany",
           "followersCount",
+          "connectionsCount",
+          "connectionsText",
+          "profileUrl",
           "scrapedAt"
         ]
       }
