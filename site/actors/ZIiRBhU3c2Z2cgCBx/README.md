@@ -1,0 +1,94 @@
+# Zillow Market Trends Scraper
+
+Zillow publishes market-level housing metrics for US cities and states — home values, listing and sale prices, inventory, and rental rates. This actor reads that data for any city or state you specify and returns one structured record per location, with as much monthly history as you need.
+
+## What this actor does
+
+- **City or state input** — e.g. `Austin, TX`, `Texas`, or `TX`
+- **Home value tracking** — latest Zillow Home Value Index (ZHVI) with year-over-year change
+- **Listing and sale metrics** — median listing price, median sale price, for-sale inventory, new listings
+- **Market speed and leverage** — sale-to-list ratio, share of homes selling above/below list, median days to pending
+- **Rental index and history** — latest Zillow Observed Rent Index (ZORI) plus a monthly rent history series
+- **Multiple locations per run**, each with a configurable number of months of historical trend data
+- Empty fields are omitted from records — a field only appears when Zillow published that value for the location
+
+## Output per location
+
+- `location` — the location string as you provided it
+- `locationType` — `city` or `state`
+- `slug`, `url` — Zillow's URL slug and the home-values page the record was read from
+- `regionId`, `regionName`, `regionType` — Zillow's internal region identifiers
+- `zhviLatest`, `zhviYoY`, `zhviAsOf` — latest Home Value Index, its year-over-year change (decimal, e.g. `-0.057` = -5.7%), and the date it's as of
+- `medianListingPrice`, `forSaleInventory`, `newListings`, `listingAsOf` — current listing-side metrics
+- `medianSalePrice`, `saleAsOf` — current sale-side metrics
+- `saleToListRatio`, `pctSellingAboveList`, `pctSellingBelowList` — how sale prices compare to list prices
+- `medianDaysToPending` — typical time from listing to going under contract
+- `zoriLatest`, `zoriAsOf` — latest Zillow Observed Rent Index and its as-of date
+- `zhviHistory[]` — monthly `{date, value}` home-value history, up to `historyMonths` entries
+- `rentalHistory[]` — monthly `{date, zori}` rent history, up to `historyMonths` entries
+- `scrapedAt` — ISO 8601 timestamp of the scrape
+
+## Input
+
+| Field | Type | Default | Description |
+|---|---|---|---|
+| `locations` | array | – | City (`"Austin, TX"`) or state (`"Texas"` / `"TX"`) names to look up |
+| `historyMonths` | integer | `24` | Months of historical trend data to include per metric (1–120) |
+
+### Example: single city, one year of history
+
+```json
+{
+  "locations": ["Austin, TX"],
+  "historyMonths": 12
+}
+```
+
+### Example: compare several states
+
+```json
+{
+  "locations": ["TX", "FL", "CA", "NY"],
+  "historyMonths": 60
+}
+```
+
+### Example: metro-level comparison with full history
+
+```json
+{
+  "locations": ["Seattle, WA", "Portland, OR", "Denver, CO"],
+  "historyMonths": 120
+}
+```
+
+## Use cases
+
+- **Investor research** — rank markets by ZHVI growth, sale-to-list ratio, and days to pending
+- **Real estate dashboards** — feed Zillow's own metrics into BI tools without manual exports
+- **Comparative market analysis** — pull many cities or states in one run for cross-market reports
+- **Trend modeling** — use the history arrays for year-over-year or quarter-over-quarter analysis
+- **Rental yield estimation** — combine `zoriLatest` and `zhviLatest` for a market to estimate gross rental yield
+
+## FAQ
+
+**Is this affiliated with Zillow?**
+No, this is an independent, third-party actor that reads Zillow's publicly published market-trend pages.
+
+**What locations are supported?**
+Any US city or state with a Zillow home-values page (`zillow.com/{slug}/home-values/`). ZIP codes are not supported by these pages — use a city name instead. International locations aren't covered.
+
+**What is ZHVI?**
+The Zillow Home Value Index is Zillow's estimate of the typical home value for a region. `zhviYoY` is the year-over-year change expressed as a decimal.
+
+**What is ZORI?**
+The Zillow Observed Rent Index tracks typical market-rate rent for a region. It's available for most, but not all, cities and states.
+
+**Why are some fields missing for a location?**
+Zillow's data coverage varies by market size — smaller markets sometimes lack a metric (e.g. no `zoriLatest`). The actor returns whatever Zillow actually publishes for that location rather than filling in a placeholder.
+
+**Why is a history array shorter than my `historyMonths` value?**
+Zillow may not have that many months of history for a given market; the actor returns up to `historyMonths` entries, capped at what's actually available.
+
+**How many locations can I request per run?**
+There's no fixed cap — pass as many locations as you need, and each is looked up in turn.

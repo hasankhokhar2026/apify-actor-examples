@@ -1,0 +1,198 @@
+{
+  "actorSpecification": 1,
+  "fields": {
+    "properties": {
+      "forSaleInventory": {
+        "description": "Active for-sale inventory count",
+        "nullable": true,
+        "type": "number"
+      },
+      "listingAsOf": {
+        "description": "Date of latest listing metrics (YYYY-MM-DD)",
+        "nullable": true,
+        "type": "string"
+      },
+      "location": {
+        "description": "Input location string",
+        "type": "string"
+      },
+      "locationType": {
+        "description": "city or state",
+        "type": "string"
+      },
+      "medianDaysToPending": {
+        "description": "Median days to pending",
+        "nullable": true,
+        "type": "number"
+      },
+      "medianListingPrice": {
+        "description": "Median listing price ($)",
+        "nullable": true,
+        "type": "number"
+      },
+      "medianListingPriceHistory": {
+        "description": "Monthly median listing price history: [{date, value}]",
+        "nullable": true,
+        "type": "array"
+      },
+      "medianSalePrice": {
+        "description": "Median sale price ($)",
+        "nullable": true,
+        "type": "number"
+      },
+      "newListings": {
+        "description": "New listings count",
+        "nullable": true,
+        "type": "number"
+      },
+      "pctSellingAboveList": {
+        "description": "Fraction of homes selling above list price",
+        "nullable": true,
+        "type": "number"
+      },
+      "pctSellingBelowList": {
+        "description": "Fraction of homes selling below list price",
+        "nullable": true,
+        "type": "number"
+      },
+      "regionId": {
+        "description": "Zillow region ID",
+        "nullable": true,
+        "type": "number"
+      },
+      "regionName": {
+        "description": "Zillow region display name",
+        "nullable": true,
+        "type": "string"
+      },
+      "regionType": {
+        "description": "city or state",
+        "nullable": true,
+        "type": "string"
+      },
+      "rentalHistory": {
+        "description": "Monthly rental index history: [{date, zori}]",
+        "nullable": true,
+        "type": "array"
+      },
+      "saleAsOf": {
+        "description": "Date of latest sale metrics (YYYY-MM-DD)",
+        "nullable": true,
+        "type": "string"
+      },
+      "saleToListRatio": {
+        "description": "Median sale-to-list price ratio",
+        "nullable": true,
+        "type": "number"
+      },
+      "scrapedAt": {
+        "description": "ISO 8601 scrape timestamp",
+        "type": "string"
+      },
+      "slug": {
+        "description": "Zillow URL slug",
+        "type": "string"
+      },
+      "url": {
+        "description": "Zillow home-values page URL",
+        "type": "string"
+      },
+      "zhviAsOf": {
+        "description": "Date of latest ZHVI value (YYYY-MM-DD)",
+        "nullable": true,
+        "type": "string"
+      },
+      "zhviHistory": {
+        "description": "Monthly ZHVI history: [{date, value}]",
+        "nullable": true,
+        "type": "array"
+      },
+      "zhviLatest": {
+        "description": "Latest Zillow Home Value Index ($)",
+        "nullable": true,
+        "type": "number"
+      },
+      "zhviYoY": {
+        "description": "ZHVI year-over-year change (decimal, e.g. -0.057 = -5.7%)",
+        "nullable": true,
+        "type": "number"
+      },
+      "zoriAsOf": {
+        "description": "Date of latest ZORI value (YYYY-MM-DD)",
+        "nullable": true,
+        "type": "string"
+      },
+      "zoriLatest": {
+        "description": "Latest Zillow Observed Rent Index ($)",
+        "nullable": true,
+        "type": "number"
+      }
+    },
+    "type": "object"
+  },
+  "title": "Zillow Market Trends",
+  "views": {
+    "overview": {
+      "display": {
+        "component": "table",
+        "properties": {
+          "forSaleInventory": {
+            "format": "number",
+            "label": "Inventory"
+          },
+          "location": {
+            "format": "text",
+            "label": "Location"
+          },
+          "locationType": {
+            "format": "text",
+            "label": "Type"
+          },
+          "medianDaysToPending": {
+            "format": "number",
+            "label": "Days to Pending"
+          },
+          "medianListingPrice": {
+            "format": "number",
+            "label": "Median List Price $"
+          },
+          "medianSalePrice": {
+            "format": "number",
+            "label": "Median Sale Price $"
+          },
+          "saleToListRatio": {
+            "format": "number",
+            "label": "Sale/List Ratio"
+          },
+          "scrapedAt": {
+            "format": "text",
+            "label": "Scraped At"
+          },
+          "zhviLatest": {
+            "format": "number",
+            "label": "Home Value Index $"
+          },
+          "zhviYoY": {
+            "format": "number",
+            "label": "ZHVI YoY"
+          }
+        }
+      },
+      "title": "Market Overview",
+      "transformation": {
+        "fields": [
+          "location",
+          "locationType",
+          "zhviLatest",
+          "zhviYoY",
+          "medianListingPrice",
+          "medianSalePrice",
+          "forSaleInventory",
+          "medianDaysToPending",
+          "saleToListRatio",
+          "scrapedAt"
+        ]
+      }
+    }
+  }
+}

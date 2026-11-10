@@ -1,32 +1,35 @@
 {
-  "description": "Monitor TikTok LIVE streams. Without a sessionCookie: emits one room-metadata row per live user (title, viewer count, stream URLs, host stats). With a sessionCookie: captures real-time events (chat, gifts, likes, follows, joins).",
+  "description": "Check TikTok creators for a LIVE broadcast and export room metadata, playback URLs, host and audience stats — or attach to a live room and capture chat, gifts, likes, follows, joins and viewer-count updates. No login, cookie or API key is needed.",
   "properties": {
     "connectionDuration": {
       "default": 60,
-      "description": "How long to stay connected to each LIVE stream and collect events.",
+      "description": "How long to stay attached to each LIVE room and collect events (mode=liveEvents). A short window is enough for a status check; events need a longer window.",
       "maximum": 3600,
       "minimum": 10,
       "prefill": 10,
-      "title": "Connection Duration (Seconds)",
+      "sectionCaption": "Live event capture (mode=liveEvents)",
+      "sectionDescription": "These settings apply only when Mode is 'Live events'.",
+      "title": "Connection duration (seconds)",
       "type": "integer"
     },
     "eventCap": {
       "default": 500,
-      "description": "Stop collecting events from a stream after capturing this many. Applies per stream.",
+      "description": "Stop collecting from a stream after this many events. Applies per stream (mode=liveEvents).",
       "maximum": 10000,
       "minimum": 1,
       "prefill": 100,
-      "title": "Event Cap",
+      "title": "Event cap",
       "type": "integer"
     },
     "eventTypes": {
       "default": [
         "all"
       ],
-      "description": "Which event types to capture and push to the dataset. Use 'all' to capture every event type.",
+      "description": "Which event categories to keep (mode=liveEvents). 'All' keeps every category. 'Other' keeps TikTok message types that do not map to a named category.",
       "editor": "select",
       "items": {
         "enum": [
+          "all",
           "chat",
           "gift",
           "like",
@@ -34,34 +37,68 @@
           "share",
           "join",
           "stats",
-          "all"
+          "other"
+        ],
+        "enumTitles": [
+          "All events",
+          "Chat messages",
+          "Gifts",
+          "Likes",
+          "Follows",
+          "Shares",
+          "Joins",
+          "Viewer counts",
+          "Other message types"
         ],
         "type": "string"
       },
       "prefill": [
         "all"
       ],
-      "title": "Event Type Filter",
+      "title": "Event types",
       "type": "array"
     },
+    "includeOffline": {
+      "default": false,
+      "description": "When on, every valid creator produces a row even when they are not LIVE (status 'offline', with public profile data). This makes scheduled watchlists and the daily test reliable (mode=roomStatus; ignored in live-events mode).",
+      "prefill": true,
+      "title": "Include offline creators",
+      "type": "boolean"
+    },
+    "includeStreamUrls": {
+      "default": true,
+      "description": "Add the HLS/FLV playback URL map (and its expiry) for LIVE creators (mode=roomStatus). These URLs are signed by TikTok and stop working when the signature or the stream ends.",
+      "prefill": true,
+      "title": "Include stream URLs",
+      "type": "boolean"
+    },
     "liveUrls": {
-      "description": "Direct TikTok LIVE URLs (e.g. https://www.tiktok.com/@username/live). Alternative to usernames.",
+      "description": "Direct TikTok URLs such as https://www.tiktok.com/@creator/live (or a profile URL). An alternative to usernames; both lists are merged.",
       "editor": "stringList",
       "items": {
         "type": "string"
       },
-      "title": "Live Stream URLs",
+      "title": "LIVE URLs",
       "type": "array"
     },
-    "sessionCookie": {
-      "description": "Optional. Value of the TikTok `sessionid` cookie from a logged-in browser session. When provided, the actor captures real-time events (chat, gifts, likes, follows, joins) from the LIVE stream. Without this, the actor runs in room-metadata mode (1 row per live user: title, viewer count, stream URLs, host profile). To obtain: open TikTok in a browser → DevTools → Application → Cookies → copy the `sessionid` value.",
-      "editor": "textfield",
-      "isSecret": true,
-      "title": "Session Cookie (sessionid) — for event-stream mode",
+    "mode": {
+      "default": "roomStatus",
+      "description": "What to collect. 'Room status' returns one row per creator (live or offline). 'Live events' attaches to a live room and returns one row per chat/gift/like/follow/share/join/viewer event.",
+      "editor": "select",
+      "enum": [
+        "roomStatus",
+        "liveEvents"
+      ],
+      "enumTitles": [
+        "Room status (one row per creator)",
+        "Live events (real-time chat and audience events)"
+      ],
+      "prefill": "roomStatus",
+      "title": "Mode",
       "type": "string"
     },
     "usernames": {
-      "description": "TikTok usernames to watch for LIVE streams (without the @ symbol). The actor will check each username for an active LIVE session. Note: the prefill account may not always be live — runs during off-hours may produce 0 rows. This is expected behavior.",
+      "description": "TikTok creators to monitor: bare usernames, @handles, profile URLs or LIVE URLs. Duplicates are removed. The prefill checks the National Geographic account.",
       "editor": "stringList",
       "items": {
         "type": "string"
@@ -69,12 +106,16 @@
       "prefill": [
         "natgeo"
       ],
+      "sectionCaption": "Creators to check",
+      "sectionDescription": "Add one entry per creator. Both bare handles and full TikTok URLs are accepted.",
       "title": "Usernames",
       "type": "array"
     }
   },
-  "required": [],
+  "required": [
+    "mode"
+  ],
   "schemaVersion": 1,
-  "title": "TikTok LIVE Scraper Input",
+  "title": "TikTok LIVE Room Status & Event Capture Input",
   "type": "object"
 }

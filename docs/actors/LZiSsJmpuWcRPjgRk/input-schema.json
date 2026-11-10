@@ -1,26 +1,107 @@
 {
-  "description": "Scrape Capterra products by direct product URLs or by broad search queries that resolve to real product pages.",
+  "description": "Extract Capterra software profiles (pricing, features, integrations, alternatives, FAQs, media, ratings), browse category listings, search by name, and export reviews. No cookies, API keys or proxy setup needed.",
   "properties": {
+    "_probeBrowser": {
+      "default": false,
+      "description": "Internal diagnostic mode. Tests the transport matrix and writes one probe record per combination; no product records are produced.",
+      "editor": "hidden",
+      "title": "Diagnostic probe",
+      "type": "boolean"
+    },
+    "_probeTransport": {
+      "default": "full",
+      "description": "Internal. `full` tests every transport already probed; `auto` tests only the free AUTO datacenter rung.",
+      "editor": "hidden",
+      "title": "Diagnostic probe scope",
+      "type": "string"
+    },
+    "categoryUrls": {
+      "default": [],
+      "description": "Capterra category pages or slugs to browse (mode=byCategoryUrls), e.g. https://www.capterra.com/team-communication-software/ or `team-communication-software`. Use spaces or hyphens in the slug.",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Category URLs",
+      "type": "array"
+    },
+    "fetchAllReviews": {
+      "default": false,
+      "description": "Also walk the dedicated reviews pages to collect more reviews than the product page shows, up to Max reviews. Adds one request per review page.",
+      "prefill": false,
+      "title": "Fetch more reviews",
+      "type": "boolean"
+    },
+    "includeAlternatives": {
+      "default": true,
+      "description": "Attach the products Capterra lists as alternatives (name, rating, price, URL).",
+      "prefill": false,
+      "title": "Include alternatives",
+      "type": "boolean"
+    },
+    "includeFaqs": {
+      "default": true,
+      "description": "Attach the product FAQ entries shown on the Capterra profile.",
+      "prefill": false,
+      "title": "Include FAQs",
+      "type": "boolean"
+    },
+    "includeReviews": {
+      "default": true,
+      "description": "Attach the latest reviews that Capterra publishes on the product page. Set false for the smallest possible run.",
+      "prefill": false,
+      "title": "Include reviews",
+      "type": "boolean"
+    },
     "maxItems": {
       "default": 10,
-      "description": "Maximum number of products to scrape.",
+      "description": "Maximum number of product records to emit.",
       "maximum": 250,
       "minimum": 1,
-      "prefill": 3,
-      "title": "Max Items",
+      "prefill": 1,
+      "sectionCaption": "Output options",
+      "sectionDescription": "Control how many products and how much extra data each record contains.",
+      "title": "Max products",
+      "type": "integer"
+    },
+    "maxReviewRating": {
+      "default": 0,
+      "description": "Keep only reviews with at most this star rating. 0 means no maximum.",
+      "maximum": 5,
+      "minimum": 0,
+      "prefill": 0,
+      "title": "Maximum review rating",
+      "type": "integer"
+    },
+    "maxReviews": {
+      "default": 20,
+      "description": "Maximum reviews attached to each product record (used when Include reviews is on).",
+      "maximum": 100,
+      "minimum": 1,
+      "prefill": 5,
+      "title": "Max reviews per product",
+      "type": "integer"
+    },
+    "minReviewRating": {
+      "default": 0,
+      "description": "Keep only reviews with at least this star rating. 0 means no minimum.",
+      "maximum": 5,
+      "minimum": 0,
+      "prefill": 0,
+      "title": "Minimum review rating",
       "type": "integer"
     },
     "mode": {
       "default": "byProductUrls",
-      "description": "How to resolve the Capterra products to scrape.",
+      "description": "What to scrape. Product URLs give the full profile; search queries resolve up to 20 products per query; category URLs walk a ranked category listing.",
       "editor": "select",
       "enum": [
         "byProductUrls",
-        "bySearchQueries"
+        "bySearchQueries",
+        "byCategoryUrls"
       ],
       "enumTitles": [
-        "Direct product URLs",
-        "Search queries"
+        "Scrape product URLs",
+        "Search by product or category name",
+        "Browse category listings"
       ],
       "prefill": "byProductUrls",
       "title": "Mode",
@@ -30,7 +111,7 @@
       "default": [
         "https://www.capterra.com/p/135003/Slack/"
       ],
-      "description": "List of Capterra product URLs to scrape. Example: https://www.capterra.com/p/135003/Slack/",
+      "description": "Capterra product pages to scrape (mode=byProductUrls). Paste full URLs such as https://www.capterra.com/p/135003/Slack/ , /p/id/slug paths, or compare URLs (both products are expanded). Regional capterra.* domains are accepted.",
       "editor": "stringList",
       "prefill": [
         "https://www.capterra.com/p/135003/Slack/"
@@ -38,13 +119,53 @@
       "title": "Product URLs",
       "type": "array"
     },
+    "reviewSort": {
+      "default": "most_recent",
+      "description": "How attached reviews are ordered before the per-product limit is applied.",
+      "editor": "select",
+      "enum": [
+        "most_recent",
+        "highest_rated",
+        "lowest_rated",
+        "most_helpful"
+      ],
+      "enumTitles": [
+        "Most recent",
+        "Highest rated",
+        "Lowest rated",
+        "Most helpful (Capterra order)"
+      ],
+      "prefill": "most_recent",
+      "title": "Review sort",
+      "type": "string"
+    },
     "searchQueries": {
       "default": [],
-      "description": "Broad positive-yield queries such as `Slack`, `project management software`, or `CRM software`. Used only when mode=bySearchQueries.",
+      "description": "Product names or category terms to search on Capterra (mode=bySearchQueries), e.g. `Slack`, `project management software`, `CRM`. Capterra returns up to 20 products per query.",
       "editor": "stringList",
       "prefill": [],
       "title": "Search queries",
       "type": "array"
+    },
+    "sortBy": {
+      "default": "featured",
+      "description": "Order of products inside a category listing (mode=byCategoryUrls).",
+      "editor": "select",
+      "enum": [
+        "featured",
+        "most_reviews",
+        "highest_rated",
+        "alphabetical"
+      ],
+      "enumTitles": [
+        "Featured (Capterra default)",
+        "Most reviews",
+        "Highest rated",
+        "Alphabetical"
+      ],
+      "prefill": "featured",
+      "title": "Category sort",
+      "type": "string"
     }
   },
   "required": [
