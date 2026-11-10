@@ -1,0 +1,43 @@
+{
+  "description": "Browse Coursera courses and specializations via the public v1 API.",
+  "properties": {
+    "maxItems": {
+      "default": 20,
+      "description": "Maximum number of courses to return.",
+      "maximum": 200,
+      "minimum": 1,
+      "prefill": 20,
+      "title": "Max items",
+      "type": "integer"
+    },
+    "mode": {
+      "default": "courses",
+      "description": "Select what data to fetch from Coursera.",
+      "editor": "select",
+      "enum": [
+        "courses",
+        "specializations"
+      ],
+      "enumTitles": [
+        "Browse courses",
+        "Browse specializations"
+      ],
+      "prefill": "courses",
+      "title": "Mode",
+      "type": "string"
+    },
+    "searchQuery": {
+      "description": "Optional keyword to filter results by title or description (client-side).",
+      "editor": "textfield",
+      "prefill": "machine learning",
+      "title": "Search query (keyword filter)",
+      "type": "string"
+    }
+  },
+  "required": [
+    "mode"
+  ],
+  "schemaVersion": 1,
+  "title": "Coursera Course Scraper Input",
+  "type": "object"
+}
