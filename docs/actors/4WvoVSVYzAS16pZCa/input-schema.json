@@ -1,0 +1,118 @@
+{
+  "description": "Scrape tours, activities, and things to do from Booking.com by city.",
+  "properties": {
+    "customCity": {
+      "description": "City slug as in Booking.com URLs (e.g., 'san-francisco', 'kuala-lumpur'). Lowercase with hyphens.",
+      "editor": "textfield",
+      "title": "Custom City (if destination = Custom)",
+      "type": "string"
+    },
+    "customCountry": {
+      "description": "Two-letter country code (e.g., 'us', 'my', 'br').",
+      "editor": "textfield",
+      "title": "Custom Country Code (if destination = Custom)",
+      "type": "string"
+    },
+    "destination": {
+      "default": "fr/paris",
+      "description": "Select a popular destination or choose 'Custom' and enter your own city/country below.",
+      "editor": "select",
+      "enum": [
+        "fr/paris",
+        "gb/london",
+        "us/new-york",
+        "it/rome",
+        "es/barcelona",
+        "nl/amsterdam",
+        "de/berlin",
+        "at/vienna",
+        "cz/prague",
+        "pt/lisbon",
+        "gr/athens",
+        "tr/istanbul",
+        "ae/dubai",
+        "th/bangkok",
+        "jp/tokyo",
+        "sg/singapore",
+        "au/sydney",
+        "us/los-angeles",
+        "us/san-francisco",
+        "us/las-vegas",
+        "us/miami",
+        "gb/edinburgh",
+        "ie/dublin",
+        "dk/copenhagen",
+        "se/stockholm",
+        "hu/budapest",
+        "pl/krakow",
+        "hr/dubrovnik",
+        "eg/cairo",
+        "ma/marrakech",
+        "custom"
+      ],
+      "enumTitles": [
+        "Paris, France",
+        "London, UK",
+        "New York, USA",
+        "Rome, Italy",
+        "Barcelona, Spain",
+        "Amsterdam, Netherlands",
+        "Berlin, Germany",
+        "Vienna, Austria",
+        "Prague, Czech Republic",
+        "Lisbon, Portugal",
+        "Athens, Greece",
+        "Istanbul, Turkey",
+        "Dubai, UAE",
+        "Bangkok, Thailand",
+        "Tokyo, Japan",
+        "Singapore",
+        "Sydney, Australia",
+        "Los Angeles, USA",
+        "San Francisco, USA",
+        "Las Vegas, USA",
+        "Miami, USA",
+        "Edinburgh, UK",
+        "Dublin, Ireland",
+        "Copenhagen, Denmark",
+        "Stockholm, Sweden",
+        "Budapest, Hungary",
+        "Krakow, Poland",
+        "Dubrovnik, Croatia",
+        "Cairo, Egypt",
+        "Marrakech, Morocco",
+        "Custom (enter below)"
+      ],
+      "prefill": "fr/paris",
+      "title": "Destination",
+      "type": "string"
+    },
+    "maxResults": {
+      "default": 50,
+      "description": "Maximum number of attractions to scrape.",
+      "maximum": 200,
+      "minimum": 1,
+      "prefill": 10,
+      "title": "Maximum Results",
+      "type": "integer"
+    },
+    "proxyConfiguration": {
+      "description": "Proxy configuration. Residential proxy recommended for reliability.",
+      "editor": "proxy",
+      "prefill": {
+        "apifyProxyGroups": [
+          "RESIDENTIAL"
+        ],
+        "useApifyProxy": true
+      },
+      "title": "Proxy Configuration",
+      "type": "object"
+    }
+  },
+  "required": [
+    "destination"
+  ],
+  "schemaVersion": 1,
+  "title": "Booking.com Attractions Scraper Input",
+  "type": "object"
+}

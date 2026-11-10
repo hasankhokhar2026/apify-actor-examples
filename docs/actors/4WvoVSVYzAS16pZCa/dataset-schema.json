@@ -1,0 +1,103 @@
+{
+  "actorSpecification": 1,
+  "fields": {
+    "properties": {
+      "city": {
+        "description": "City name",
+        "type": "string"
+      },
+      "currency": {
+        "description": "Price currency",
+        "nullable": true,
+        "type": "string"
+      },
+      "freeCancellation": {
+        "description": "Free cancellation available",
+        "type": "boolean"
+      },
+      "name": {
+        "description": "Attraction/activity name",
+        "type": "string"
+      },
+      "photoUrl": {
+        "description": "Main photo URL",
+        "nullable": true,
+        "type": "string"
+      },
+      "price": {
+        "description": "Price per person",
+        "nullable": true,
+        "type": "number"
+      },
+      "rating": {
+        "description": "Guest rating",
+        "nullable": true,
+        "type": "number"
+      },
+      "reviewCount": {
+        "description": "Number of reviews",
+        "nullable": true,
+        "type": "integer"
+      },
+      "scrapedAt": {
+        "description": "Scrape timestamp (ISO 8601)",
+        "type": "string"
+      },
+      "url": {
+        "description": "Booking.com attraction URL",
+        "type": "string"
+      }
+    },
+    "type": "object"
+  },
+  "title": "Booking.com Attractions",
+  "views": {
+    "overview": {
+      "display": {
+        "component": "table",
+        "properties": {
+          "currency": {
+            "format": "text",
+            "label": "Currency"
+          },
+          "freeCancellation": {
+            "format": "text",
+            "label": "Free Cancel"
+          },
+          "name": {
+            "format": "text",
+            "label": "Attraction"
+          },
+          "price": {
+            "format": "number",
+            "label": "Price"
+          },
+          "rating": {
+            "format": "number",
+            "label": "Rating"
+          },
+          "reviewCount": {
+            "format": "number",
+            "label": "Reviews"
+          },
+          "url": {
+            "format": "link",
+            "label": "URL"
+          }
+        }
+      },
+      "title": "Attractions",
+      "transformation": {
+        "fields": [
+          "name",
+          "price",
+          "currency",
+          "rating",
+          "reviewCount",
+          "freeCancellation",
+          "url"
+        ]
+      }
+    }
+  }
+}
