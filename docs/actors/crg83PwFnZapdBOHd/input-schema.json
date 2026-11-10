@@ -1,0 +1,106 @@
+{
+  "description": "Configure search terms, locations, direct URLs, and extraction options for scraping Yelp business data, reviews, hours, menu, services, photos, and owner replies.",
+  "properties": {
+    "directUrls": {
+      "description": "List of direct Yelp business page URLs to scrape. Use this to scrape specific businesses without searching.",
+      "editor": "requestListSources",
+      "example": [
+        {
+          "url": "https://www.yelp.com/biz/prince-street-pizza-new-york-2"
+        }
+      ],
+      "title": "Direct URLs",
+      "type": "array"
+    },
+    "fetchHours": {
+      "default": true,
+      "description": "Extract hours of operation for each day of the week.",
+      "prefill": true,
+      "title": "Extract Hours of Operation",
+      "type": "boolean"
+    },
+    "fetchMenu": {
+      "default": false,
+      "description": "Attempt to extract menu items for restaurants. Adds one extra request per business. Yelp's menu feature is US-only and not available for every restaurant.",
+      "prefill": false,
+      "title": "Extract Menu (Restaurants)",
+      "type": "boolean"
+    },
+    "fetchPhotos": {
+      "default": true,
+      "description": "Extract all gallery photos grouped by category (food, inside, outside, menu) when available.",
+      "prefill": true,
+      "title": "Extract Photo Galleries",
+      "type": "boolean"
+    },
+    "locations": {
+      "description": "List of locations to search in (e.g., 'New York, NY', 'Los Angeles, CA'). Each search term is combined with each location.",
+      "editor": "stringList",
+      "example": [
+        "New York, NY",
+        "San Francisco, CA"
+      ],
+      "prefill": [
+        "New York, NY"
+      ],
+      "title": "Locations",
+      "type": "array"
+    },
+    "proxy": {
+      "default": {
+        "apifyProxyGroups": [
+          "RESIDENTIAL"
+        ],
+        "useApifyProxy": true
+      },
+      "description": "REQUIRED. Yelp uses Cloudflare protection. Residential proxy is mandatory; datacenter IPs are reliably blocked.",
+      "editor": "proxy",
+      "prefill": {
+        "apifyProxyGroups": [
+          "RESIDENTIAL"
+        ],
+        "useApifyProxy": true
+      },
+      "title": "Proxy Configuration",
+      "type": "object"
+    },
+    "reviewLimit": {
+      "default": 5,
+      "description": "Maximum number of reviews to collect per business. Set to 0 to skip review extraction. Yelp publicly exposes approximately 30 reviews per business.",
+      "maximum": 50,
+      "minimum": 0,
+      "prefill": 3,
+      "title": "Reviews per Business",
+      "type": "integer"
+    },
+    "searchLimit": {
+      "default": 10,
+      "description": "Maximum number of business results to collect per search query. Lower values mean faster runs.",
+      "maximum": 100,
+      "minimum": 1,
+      "prefill": 3,
+      "title": "Search Results Limit",
+      "type": "integer"
+    },
+    "searchTerms": {
+      "description": "List of search queries (e.g., 'pizza', 'plumber', 'hair salon'). Used together with Locations to find businesses on Yelp.",
+      "editor": "stringList",
+      "example": [
+        "pizza",
+        "sushi",
+        "coffee"
+      ],
+      "prefill": [
+        "pizza"
+      ],
+      "title": "Search Terms",
+      "type": "array"
+    }
+  },
+  "required": [
+    "proxy"
+  ],
+  "schemaVersion": 1,
+  "title": "Yelp Scraper Pro Input",
+  "type": "object"
+}
