@@ -1,9 +1,9 @@
 {
-  "description": "Scrape every seller offer for one or more Amazon ASINs from the All-Offers-Display (\"Other Sellers on Amazon\") panel.",
+  "description": "Scrape every seller offer for one or more Amazon ASINs from the All-Offers-Display (\"Other Sellers on Amazon\") panel. Provide ASINs and/or full product URLs.",
   "properties": {
     "asins": {
       "default": [],
-      "description": "Amazon ASINs to fetch offers for, e.g. `B0DCH8VDXF`.",
+      "description": "Amazon ASINs to fetch offers for, e.g. `B0DCH8VDXF`. Provide at least one ASIN or product URL.",
       "editor": "stringList",
       "prefill": [
         "B0DXXYS4BJ"
@@ -116,7 +116,7 @@
     },
     "maxOffersPerProduct": {
       "default": 20,
-      "description": "Hard cap on the number of offer records emitted per ASIN (the buy-box/pinned offer counts as one).",
+      "description": "Hard cap on the number of offer records emitted per ASIN (the buy-box/pinned offer counts as one). The actor pages through Amazon's offer list 10 offers at a time until this cap, Amazon's reported total, or a bounded 10-page safety ceiling is reached.",
       "maximum": 50,
       "minimum": 1,
       "prefill": 5,
@@ -132,7 +132,7 @@
     },
     "productUrls": {
       "default": [],
-      "description": "Full Amazon product URLs (any `/dp/{ASIN}` link). The marketplace domain and ASIN are both extracted from each URL.",
+      "description": "Full Amazon product URLs (any `/dp/{ASIN}` link). The marketplace domain and ASIN are both extracted from each URL. Provide at least one ASIN or product URL.",
       "editor": "stringList",
       "prefill": [],
       "title": "Product URLs",
@@ -151,9 +151,7 @@
       "type": "object"
     }
   },
-  "required": [
-    "asins"
-  ],
+  "required": [],
   "schemaVersion": 1,
   "title": "Amazon Offers Scraper Input",
   "type": "object"

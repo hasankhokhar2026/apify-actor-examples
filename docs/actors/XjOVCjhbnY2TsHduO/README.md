@@ -9,7 +9,7 @@ Scrape **every seller offer** for one or more Amazon ASINs from the All-Offers-D
 ## What this actor does
 
 - **Input by ASIN or by product URL** -- mix and match freely
-- **Every offer, not just the buy box** -- new, used, and third-party seller offers on the same listing
+- **Every offer, not just the buy box** -- new, used, and third-party seller offers on the same listing, paged through Amazon's own 10-at-a-time offer list up to your cap
 - **Condition filter** -- restrict to New, Used, Collectible, or Renewed only, or All (each matched exactly -- a "Used only" filter never silently includes Collectible/Renewed offers)
 - **Fulfillment type filter** -- restrict to Fulfilled by Amazon (FBA), Fulfilled by Merchant (FBM), or sold-and-shipped-by-Amazon
 - **Destination-aware** -- set a delivery country / postal code, since offer sets and delivery estimates change by destination
@@ -21,14 +21,16 @@ Scrape **every seller offer** for one or more Amazon ASINs from the All-Offers-D
 - `productAsin` -- the product ASIN this offer belongs to
 - `offerPosition` -- 1-based order the offer appeared in on the page (buy box is always position 1)
 - `condition`, `subCondition` -- e.g. `"Used"` / `"Like New"`
+- `conditionBucket` -- normalized `"NEW"` / `"USED"` / `"COLLECTIBLE"` / `"RENEWED"` bucket, derived from the localized condition heading only when this actor has live-verified that word (never guessed)
 - `conditionNote` -- extra condition detail text, when Amazon shows one
 - `price` -- `{ value, currency, display }`
 - `unitPrice` -- `{ value, currency, display }`, when Amazon shows a per-unit price
 - `listPrice` -- `{ value, currency, display }`, the strikethrough "List Price" Amazon shows for this specific offer, only present when Amazon's own DOM carries it (typically the pinned/buy-box offer on a discounted item) -- never derived/computed
 - `savingsPercent` -- integer percent-off (e.g. `30` for "-30%"), only present alongside a real `listPrice`
 - `deliveryEstimate` -- the delivery promise text shown for this offer
-- `isFreeDelivery` -- `true`/`false`, only when the delivery text gives explicit evidence either way (e.g. "FREE delivery..." vs. a stated shipping charge); omitted when ambiguous
-- `shippingPrice` -- `{ value, currency, display }`, only present when Amazon shows an explicit paid-shipping amount
+- `isFreeDelivery` -- `true`/`false`, only when Amazon gives explicit evidence either way (a stated shipping charge, a zero delivery price, or "FREE delivery"); omitted when ambiguous
+- `shippingPrice` -- `{ value, currency, display }`, only present when Amazon shows an explicit paid-shipping amount (read from Amazon's own structured delivery-price field when the visible text omits the amount)
+- `isPrime` -- `true` when Amazon's own delivery-benefit flag says Prime, `false` when it explicitly says paid shipping; omitted when the flag is absent/unknown
 - `shipsFrom` -- who ships the item
 - `soldBy` -- `{ name, sellerId, profileUrl }`
 - `sellerRating`, `sellerRatingsCount` -- third-party seller reputation, when Amazon shows a rating line for that seller
@@ -39,7 +41,7 @@ Scrape **every seller offer** for one or more Amazon ASINs from the All-Offers-D
 - `couponText` -- any coupon/promotion text shown on the offer row
 - `marketplace` -- `{ countryCode, domain, marketplaceId, currency, language }`
 - `requestContext` -- `{ productAsin, sourceUrl, canonicalUrl, deliveryCountry, postalCode }`
-- `page` -- `{ classification: "SUCCESS", totalOfferCount, moreOffersAvailable }`. `totalOfferCount` is Amazon's own reported total offer count for the ASIN (when available). The actor automatically expands Amazon's own "See N more options" panel toggle before extracting, which fully recovers every offer on ASINs where Amazon had already rendered them all client-side (just hidden behind that toggle); on ASINs with a substantially larger real offer count, Amazon's client-side reveal itself only carries a further batch (not literally every remaining offer), so `moreOffersAvailable: true` can still appear even when `maxOffersPerProduct` was set higher than `totalOfferCount` -- this remaining gap would require a genuine server-side page-2 fetch the actor does not perform. Check this field rather than assuming `maxOffersPerProduct` was always fully honored.
+- `page` -- `{ classification: "SUCCESS", totalOfferCount, moreOffersAvailable }`. `totalOfferCount` is Amazon's own reported total offer count for the ASIN (when available). The actor repeatedly expands Amazon's "See N more options" panel toggle, which pages through the same server-side offer list 10 offers at a time, until Amazon's own total, the requested `maxOffersPerProduct` headroom, or a bounded 10-page ceiling is reached. `moreOffersAvailable: true` therefore means the listing genuinely has more offers than the actor captured (typically a very large used-book listing beyond 100 candidates); check this field rather than assuming the cap was always fully honored.
 - `recordType: "offer"`, `scrapedAt`
 
 ## Output: status records
@@ -62,6 +64,16 @@ When an ASIN's page can't be classified as a normal offers page (not found, inva
 | `deliveryCountry` | string | – | 2-letter destination country; also picks the default marketplace domain |
 | `postalCode` | string | – | Destination ZIP/postal code |
 | `proxyConfiguration` | object | AUTO | Apify proxy config |
+
+At least one of `asins` or `productUrls` must be provided.
+
+## Limitations
+
+- The All-Offers-Display list is followed for up to 10 pages / 100 candidates per ASIN; `page.moreOffersAvailable` reports when more exist.
+- Stock quantity is not published on offer rows; only `maxQuantity` from the quantity selector is available.
+- Identical offers (same seller, price, condition and note) are collapsed as duplicates.
+- Condition words outside the live-verified translation set can under-match `USED`/`COLLECTIBLE`/`RENEWED` filters on non-English marketplaces; use `ALL` to inspect the real condition text.
+- Amazon page URLs are canonical but may return 503 to bare scripted requests; they render normally in a browser.
 
 ### Example: single ASIN, all conditions
 
@@ -120,7 +132,9 @@ When an ASIN's page can't be classified as a normal offers page (not found, inva
 
 **Why did I get a status record instead of offers?** The ASIN's page didn't classify as a normal offers listing -- it may be invalid, geo-restricted, temporarily rate-limited, or genuinely have no additional offers beyond the buy box. The `page.classification` field tells you exactly why.
 
-**I set `maxOffersPerProduct` to 50 but got fewer offers back -- is that a bug?** No -- `maxOffersPerProduct` is a cap, not a guarantee. The actor automatically expands Amazon's own "See N more options" panel toggle before extracting, which recovers every offer on ASINs where Amazon had already rendered them all client-side behind that toggle. On ASINs with a much larger real offer count (popular used-book listings with dozens of sellers are the most common case), Amazon's client-side reveal itself only carries a further batch rather than literally every remaining offer -- reaching the rest would require a genuine server-side page-2 fetch this actor does not perform. Every returned offer record's `page.totalOfferCount`/`page.moreOffersAvailable` fields tell you the real total and whether more exist beyond what was captured, so you can always tell the difference from a genuinely-exhausted result.
+**I set `maxOffersPerProduct` to 50 but got fewer offers back -- is that a bug?** No -- `maxOffersPerProduct` is a cap, not a guarantee. The actor pages through Amazon's own offer list (10 offers per page) until it reaches your cap, Amazon's reported total, or the 10-page (100-candidate) safety ceiling, so ordinary listings are fully covered. Popular used-book listings can genuinely have more offers than that ceiling, and a filter can remove some captured rows. Every returned offer record's `page.totalOfferCount`/`page.moreOffersAvailable` fields tell you the real total and whether more exist beyond what was captured, so you can always tell the difference from a genuinely-exhausted result.
+
+**What does `isPrime` mean?** It comes from Amazon's own machine-readable delivery-benefit flag on the offer row: `true` for Prime delivery, `false` when Amazon explicitly labels the row as paid shipping. If Amazon does not expose the flag for a row, the field is omitted rather than guessed. It is independent of `shippingPrice`: an offer can be Prime-eligible and still show a shipping charge in some destinations/marketplaces.
 
 **Is this affiliated with Amazon?** No. This is an independent, third-party actor that reads Amazon's publicly viewable product pages.
 

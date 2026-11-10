@@ -2,8 +2,92 @@
   "actorSpecification": 1,
   "fields": {
     "properties": {
+      "change12mPct": {
+        "description": "Percent change vs 12 months earlier",
+        "nullable": true,
+        "type": "number"
+      },
+      "change1mPct": {
+        "description": "Percent change vs 1 month earlier",
+        "nullable": true,
+        "type": "number"
+      },
+      "change3mPct": {
+        "description": "Percent change vs 3 months earlier",
+        "nullable": true,
+        "type": "number"
+      },
+      "change6mPct": {
+        "description": "Percent change vs 6 months earlier",
+        "nullable": true,
+        "type": "number"
+      },
+      "city": {
+        "description": "City name",
+        "nullable": true,
+        "type": "string"
+      },
+      "county": {
+        "description": "County name",
+        "nullable": true,
+        "type": "string"
+      },
+      "dataSource": {
+        "description": "Zillow or Zillow Research",
+        "type": "string"
+      },
+      "dataset": {
+        "description": "marketScan dataset key",
+        "nullable": true,
+        "type": "string"
+      },
+      "datasetLabel": {
+        "description": "Human-readable dataset label",
+        "nullable": true,
+        "type": "string"
+      },
+      "date": {
+        "description": "Observation month-end date (history rows)",
+        "nullable": true,
+        "type": "string"
+      },
       "forSaleInventory": {
         "description": "Active for-sale inventory count",
+        "nullable": true,
+        "type": "number"
+      },
+      "forecast1MonthPct": {
+        "description": "1-month forecast growth, percent (ZHVF)",
+        "nullable": true,
+        "type": "number"
+      },
+      "forecast1YearPct": {
+        "description": "1-year forecast growth, percent (ZHVF)",
+        "nullable": true,
+        "type": "number"
+      },
+      "forecast3MonthPct": {
+        "description": "3-month forecast growth, percent (ZHVF)",
+        "nullable": true,
+        "type": "number"
+      },
+      "geography": {
+        "description": "marketScan geography: metro, state, county, city, zip, neighborhood or us",
+        "nullable": true,
+        "type": "string"
+      },
+      "historyMonths": {
+        "description": "Number of monthly history entries included",
+        "nullable": true,
+        "type": "integer"
+      },
+      "latestDate": {
+        "description": "Date of the latest value (YYYY-MM-DD)",
+        "nullable": true,
+        "type": "string"
+      },
+      "latestValue": {
+        "description": "Latest value in the selected Zillow Research series",
         "nullable": true,
         "type": "number"
       },
@@ -13,11 +97,11 @@
         "type": "string"
       },
       "location": {
-        "description": "Input location string",
+        "description": "Input location string (region modes)",
         "type": "string"
       },
       "locationType": {
-        "description": "city or state",
+        "description": "city, state, county, zip, neighborhood or country",
         "type": "string"
       },
       "medianDaysToPending": {
@@ -31,7 +115,7 @@
         "type": "number"
       },
       "medianListingPriceHistory": {
-        "description": "Monthly median listing price history: [{date, value}]",
+        "description": "Monthly median listing price history when published: [{date, value}]",
         "nullable": true,
         "type": "array"
       },
@@ -40,8 +124,33 @@
         "nullable": true,
         "type": "number"
       },
+      "metric": {
+        "description": "Metric key (zhvi, zori, marketHeatIndex, ...)",
+        "nullable": true,
+        "type": "string"
+      },
+      "metro": {
+        "description": "Metro or CBSA name",
+        "nullable": true,
+        "type": "string"
+      },
+      "nationalZhviLatest": {
+        "description": "National ZHVI benchmark ($)",
+        "nullable": true,
+        "type": "number"
+      },
       "newListings": {
         "description": "New listings count",
+        "nullable": true,
+        "type": "number"
+      },
+      "parentCountyZhviLatest": {
+        "description": "Parent county ZHVI benchmark ($)",
+        "nullable": true,
+        "type": "number"
+      },
+      "parentStateZhviLatest": {
+        "description": "Parent state ZHVI benchmark ($)",
         "nullable": true,
         "type": "number"
       },
@@ -55,6 +164,30 @@
         "nullable": true,
         "type": "number"
       },
+      "propertyType": {
+        "description": "Housing cut: allHomes, singleFamily, condo, multiFamily, bottomTier, topTier, bedrooms1-5",
+        "nullable": true,
+        "type": "string"
+      },
+      "rank": {
+        "description": "1-based rank over all matching rows",
+        "nullable": true,
+        "type": "number"
+      },
+      "rankedBy": {
+        "description": "Sort key used for rank",
+        "nullable": true,
+        "type": "string"
+      },
+      "recordType": {
+        "description": "regionMarketTrends, marketHistoryObservation or marketObservation",
+        "type": "string"
+      },
+      "regionDisplayName": {
+        "description": "Display name with state, e.g. Austin, TX",
+        "nullable": true,
+        "type": "string"
+      },
       "regionId": {
         "description": "Zillow region ID",
         "nullable": true,
@@ -66,12 +199,12 @@
         "type": "string"
       },
       "regionType": {
-        "description": "city or state",
+        "description": "Zillow region type",
         "nullable": true,
         "type": "string"
       },
       "rentalHistory": {
-        "description": "Monthly rental index history: [{date, zori}]",
+        "description": "Monthly rental index history, newest first: [{date, zori}]",
         "nullable": true,
         "type": "array"
       },
@@ -89,21 +222,115 @@
         "description": "ISO 8601 scrape timestamp",
         "type": "string"
       },
+      "sizeRank": {
+        "description": "Zillow market size rank",
+        "nullable": true,
+        "type": "number"
+      },
       "slug": {
         "description": "Zillow URL slug",
+        "type": "string"
+      },
+      "sourceUrl": {
+        "description": "Canonical source URL",
+        "type": "string"
+      },
+      "state": {
+        "description": "Full state name",
+        "nullable": true,
+        "type": "string"
+      },
+      "stateCode": {
+        "description": "Two-letter state code",
+        "nullable": true,
+        "type": "string"
+      },
+      "unit": {
+        "description": "USD, USD/month, USD/year, USD/sqft, percent, fraction, ratio, count, days, index or years",
+        "nullable": true,
         "type": "string"
       },
       "url": {
         "description": "Zillow home-values page URL",
         "type": "string"
       },
+      "value": {
+        "description": "Observation value (history rows)",
+        "nullable": true,
+        "type": "number"
+      },
+      "value12MonthsAgo": {
+        "description": "Value 12 months before latestDate",
+        "nullable": true,
+        "type": "number"
+      },
+      "value1MonthAgo": {
+        "description": "Value 1 month before latestDate",
+        "nullable": true,
+        "type": "number"
+      },
+      "value3MonthsAgo": {
+        "description": "Value 3 months before latestDate",
+        "nullable": true,
+        "type": "number"
+      },
+      "value6MonthsAgo": {
+        "description": "Value 6 months before latestDate",
+        "nullable": true,
+        "type": "number"
+      },
+      "vsCountyPct": {
+        "description": "Percent difference from the parent county ZHVI",
+        "nullable": true,
+        "type": "number"
+      },
+      "vsNationalPct": {
+        "description": "Percent difference from the national ZHVI",
+        "nullable": true,
+        "type": "number"
+      },
+      "vsStatePct": {
+        "description": "Percent difference from the parent state ZHVI",
+        "nullable": true,
+        "type": "number"
+      },
+      "zhvfAsOf": {
+        "description": "Forecast period end date (YYYY-MM-DD)",
+        "nullable": true,
+        "type": "string"
+      },
+      "zhvfGrowth1YrPct": {
+        "description": "Zillow 1-year home value forecast, percent",
+        "nullable": true,
+        "type": "number"
+      },
       "zhviAsOf": {
         "description": "Date of latest ZHVI value (YYYY-MM-DD)",
         "nullable": true,
         "type": "string"
       },
+      "zhviChange12mPct": {
+        "description": "ZHVI change vs 12 months earlier, percent",
+        "nullable": true,
+        "type": "number"
+      },
+      "zhviChange1mPct": {
+        "description": "ZHVI change vs 1 month earlier, percent",
+        "nullable": true,
+        "type": "number"
+      },
+      "zhviChange3mPct": {
+        "description": "ZHVI change vs 3 months earlier, percent",
+        "nullable": true,
+        "type": "number"
+      },
+      "zhviChange6mPct": {
+        "description": "ZHVI change vs 6 months earlier, percent",
+        "nullable": true,
+        "type": "number"
+      },
       "zhviHistory": {
-        "description": "Monthly ZHVI history: [{date, value}]",
+        "description": "Monthly ZHVI history, newest first: [{date, value}]",
         "nullable": true,
         "type": "array"
       },
@@ -122,24 +349,134 @@
         "nullable": true,
         "type": "string"
       },
+      "zoriChange12mPct": {
+        "description": "ZORI change vs 12 months earlier, percent",
+        "nullable": true,
+        "type": "number"
+      },
+      "zoriChange1mPct": {
+        "description": "ZORI change vs 1 month earlier, percent",
+        "nullable": true,
+        "type": "number"
+      },
+      "zoriChange3mPct": {
+        "description": "ZORI change vs 3 months earlier, percent",
+        "nullable": true,
+        "type": "number"
+      },
+      "zoriChange6mPct": {
+        "description": "ZORI change vs 6 months earlier, percent",
+        "nullable": true,
+        "type": "number"
+      },
       "zoriLatest": {
-        "description": "Latest Zillow Observed Rent Index ($)",
+        "description": "Latest Zillow Observed Rent Index ($/month)",
         "nullable": true,
         "type": "number"
       }
     },
     "type": "object"
   },
-  "title": "Zillow Market Trends",
+  "title": "Zillow Housing Data",
   "views": {
-    "overview": {
+    "history": {
       "display": {
         "component": "table",
         "properties": {
-          "forSaleInventory": {
-            "format": "number",
-            "label": "Inventory"
+          "date": {
+            "format": "text",
+            "label": "Date"
           },
+          "location": {
+            "format": "text",
+            "label": "Location"
+          },
+          "metric": {
+            "format": "text",
+            "label": "Metric"
+          },
+          "regionId": {
+            "format": "number",
+            "label": "Region ID"
+          },
+          "unit": {
+            "format": "text",
+            "label": "Unit"
+          },
+          "value": {
+            "format": "number",
+            "label": "Value"
+          }
+        }
+      },
+      "title": "History",
+      "transformation": {
+        "fields": [
+          "location",
+          "metric",
+          "date",
+          "value",
+          "unit",
+          "regionId"
+        ]
+      }
+    },
+    "marketScan": {
+      "display": {
+        "component": "table",
+        "properties": {
+          "change12mPct": {
+            "format": "number",
+            "label": "12m change %"
+          },
+          "datasetLabel": {
+            "format": "text",
+            "label": "Dataset"
+          },
+          "geography": {
+            "format": "text",
+            "label": "Geography"
+          },
+          "latestDate": {
+            "format": "text",
+            "label": "As of"
+          },
+          "latestValue": {
+            "format": "number",
+            "label": "Latest value"
+          },
+          "rank": {
+            "format": "number",
+            "label": "Rank"
+          },
+          "regionName": {
+            "format": "text",
+            "label": "Region"
+          },
+          "state": {
+            "format": "text",
+            "label": "State"
+          }
+        }
+      },
+      "title": "Market Scan",
+      "transformation": {
+        "fields": [
+          "geography",
+          "datasetLabel",
+          "regionName",
+          "state",
+          "latestValue",
+          "latestDate",
+          "change12mPct",
+          "rank"
+        ]
+      }
+    },
+    "marketTrends": {
+      "display": {
+        "component": "table",
+        "properties": {
           "location": {
             "format": "text",
             "label": "Location"
@@ -150,44 +487,48 @@
           },
           "medianDaysToPending": {
             "format": "number",
-            "label": "Days to Pending"
-          },
-          "medianListingPrice": {
-            "format": "number",
-            "label": "Median List Price $"
+            "label": "Days to pending"
           },
           "medianSalePrice": {
             "format": "number",
-            "label": "Median Sale Price $"
+            "label": "Median sale $"
+          },
+          "regionName": {
+            "format": "text",
+            "label": "Zillow region"
           },
           "saleToListRatio": {
             "format": "number",
-            "label": "Sale/List Ratio"
+            "label": "Sale/list"
           },
           "scrapedAt": {
             "format": "text",
-            "label": "Scraped At"
+            "label": "Scraped at"
+          },
+          "zhviChange12mPct": {
+            "format": "number",
+            "label": "12m change %"
           },
           "zhviLatest": {
             "format": "number",
-            "label": "Home Value Index $"
+            "label": "Home value $"
           },
-          "zhviYoY": {
+          "zoriLatest": {
             "format": "number",
-            "label": "ZHVI YoY"
+            "label": "Rent $/mo"
           }
         }
       },
-      "title": "Market Overview",
+      "title": "Market Trends",
       "transformation": {
         "fields": [
           "location",
           "locationType",
+          "regionName",
           "zhviLatest",
-          "zhviYoY",
-          "medianListingPrice",
+          "zhviChange12mPct",
+          "zoriLatest",
           "medianSalePrice",
-          "forSaleInventory",
           "medianDaysToPending",
           "saleToListRatio",
           "scrapedAt"

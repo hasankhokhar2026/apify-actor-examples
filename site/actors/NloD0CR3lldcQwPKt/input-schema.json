@@ -1,15 +1,168 @@
 {
-  "description": "Look up eBay seller feedback and reputation stats by seller username or store URL, optionally filtered by rating type.",
+  "description": "Look up eBay seller feedback, seller reputation, Detailed Seller Ratings, replies and store metadata by username or store URL.",
   "properties": {
+    "feedbackType": {
+      "default": "All",
+      "description": "Which side of the seller's feedback ledger to read.",
+      "editor": "select",
+      "enum": [
+        "All",
+        "Seller",
+        "Buyer",
+        "LeftForOthers"
+      ],
+      "enumTitles": [
+        "All received feedback",
+        "Received as seller",
+        "Received as buyer",
+        "Left for others"
+      ],
+      "prefill": "All",
+      "sectionCaption": "Feedback filters",
+      "sectionDescription": "Optional filters applied to the feedback list. The rating and period filters are applied by eBay where possible and checked again in the actor.",
+      "title": "Feedback role",
+      "type": "string"
+    },
+    "imagesOnly": {
+      "default": false,
+      "description": "Return only feedback entries where the buyer attached a photo.",
+      "prefill": false,
+      "title": "Only feedback with photos",
+      "type": "boolean"
+    },
+    "includeAutomated": {
+      "default": true,
+      "description": "Include eBay's automated positive feedback entries. Turn off to keep only feedback written by buyers.",
+      "prefill": true,
+      "title": "Include automated feedback",
+      "type": "boolean"
+    },
+    "includePhotos": {
+      "default": false,
+      "description": "Fetch every buyer photo for feedback entries that have more than one. Adds one public feedback-detail request per such entry.",
+      "prefill": false,
+      "title": "Include full photo galleries",
+      "type": "boolean"
+    },
+    "itemSearch": {
+      "default": "",
+      "description": "Only feedback for matching items. eBay searches the last 5 years and cannot combine this with its period or rating filters; the rating filter is checked by the actor instead.",
+      "editor": "textfield",
+      "prefill": "",
+      "title": "Item title or ID search",
+      "type": "string"
+    },
+    "marketplace": {
+      "default": "US",
+      "description": "eBay site used for plain usernames and as the default for store URLs.",
+      "editor": "select",
+      "enum": [
+        "US",
+        "UK",
+        "DE",
+        "AU",
+        "CA",
+        "FR",
+        "IT",
+        "ES",
+        "IE",
+        "NL",
+        "PL",
+        "CH",
+        "AT",
+        "BE"
+      ],
+      "enumTitles": [
+        "United States (ebay.com)",
+        "United Kingdom (ebay.co.uk)",
+        "Germany (ebay.de)",
+        "Australia (ebay.com.au)",
+        "Canada (ebay.ca)",
+        "France (ebay.fr)",
+        "Italy (ebay.it)",
+        "Spain (ebay.es)",
+        "Ireland (ebay.ie)",
+        "Netherlands (ebay.nl)",
+        "Poland (ebay.pl)",
+        "Switzerland (ebay.ch)",
+        "Austria (ebay.at)",
+        "Belgium (ebay.be)"
+      ],
+      "prefill": "US",
+      "sectionCaption": "Marketplace",
+      "sectionDescription": "Choose the eBay site whose language, currency and feedback profile you want to read.",
+      "title": "Marketplace",
+      "type": "string"
+    },
+    "maxFeedbackPerSeller": {
+      "default": 500,
+      "description": "Per-seller cap. The global maxItems cap also applies.",
+      "editor": "number",
+      "maximum": 10000,
+      "minimum": 1,
+      "prefill": 500,
+      "title": "Max feedback rows per seller",
+      "type": "integer"
+    },
     "maxItems": {
       "default": 25,
-      "description": "Maximum number of feedback rows to return, across all requested sellers combined.",
+      "description": "Maximum number of feedback rows to return across all sellers.",
       "editor": "number",
-      "maximum": 1000,
+      "maximum": 10000,
       "minimum": 1,
-      "prefill": 25,
-      "title": "Max items",
+      "prefill": 3,
+      "sectionCaption": "Limits",
+      "sectionDescription": "Control how many rows and pages are collected.",
+      "title": "Max feedback rows",
       "type": "integer"
+    },
+    "maxPages": {
+      "default": 20,
+      "description": "Safety cap on feedback pages followed per seller. eBay usually serves 25, 50 or 100 rows per page.",
+      "editor": "number",
+      "maximum": 100,
+      "minimum": 1,
+      "prefill": 20,
+      "title": "Max pages per seller",
+      "type": "integer"
+    },
+    "mode": {
+      "default": "feedback",
+      "description": "Choose feedback rows, one seller profile summary per seller, or both.",
+      "editor": "select",
+      "enum": [
+        "feedback",
+        "sellerProfile",
+        "both"
+      ],
+      "enumTitles": [
+        "Feedback rows",
+        "Seller profile summaries",
+        "Feedback rows + seller profiles"
+      ],
+      "prefill": "feedback",
+      "title": "Mode",
+      "type": "string"
+    },
+    "period": {
+      "default": "All",
+      "description": "Only feedback left in this period. eBay applies this within the last 12 months.",
+      "editor": "select",
+      "enum": [
+        "All",
+        "PastMonth",
+        "Past6Months",
+        "Past12Months"
+      ],
+      "enumTitles": [
+        "All time",
+        "Past month",
+        "Past 6 months",
+        "Past 12 months"
+      ],
+      "prefill": "All",
+      "title": "Period",
+      "type": "string"
     },
     "ratingType": {
       "default": "All",
@@ -22,7 +175,7 @@
         "Negative"
       ],
       "enumTitles": [
-        "All",
+        "All ratings",
         "Positive only",
         "Neutral only",
         "Negative only"
@@ -33,7 +186,7 @@
     },
     "sellerUsernames": {
       "default": [],
-      "description": "eBay seller usernames to fetch feedback for, e.g. \"musicmagpie\". At least one of sellerUsernames or storeUrls must be given.",
+      "description": "eBay seller usernames or profile URLs, e.g. \"musicmagpie\" or https://www.ebay.com/usr/musicmagpie. At least one of sellerUsernames or storeUrls must be given.",
       "editor": "stringList",
       "prefill": [
         "musicmagpie"
@@ -41,16 +194,42 @@
       "title": "Seller usernames",
       "type": "array"
     },
+    "sortBy": {
+      "default": "Newest",
+      "description": "Newest first is best for monitoring; relevance follows eBay's own ranking.",
+      "editor": "select",
+      "enum": [
+        "Newest",
+        "Relevance"
+      ],
+      "enumTitles": [
+        "Newest first",
+        "Most relevant"
+      ],
+      "prefill": "Newest",
+      "title": "Sort order",
+      "type": "string"
+    },
+    "stopAtFeedbackIds": {
+      "default": [],
+      "description": "Optional feedback IDs from an earlier run. Each seller stops when one of these IDs is reached (the known row is not returned). Requires newest-first sorting.",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Stop at known feedback IDs",
+      "type": "array"
+    },
     "storeUrls": {
       "default": [],
-      "description": "Full eBay store URLs (https://www.ebay.com/str/<seller>) — resolved to the same seller's feedback page. Accepted as an alternative or supplement to sellerUsernames.",
+      "description": "Full eBay store URLs (https://www.ebay.com/str/<seller>). The URL's eBay site is used for that seller.",
       "editor": "stringList",
       "prefill": [],
       "title": "Store URLs",
       "type": "array"
     }
   },
-  "required": [],
+  "required": [
+    "mode"
+  ],
   "schemaVersion": 1,
   "title": "eBay Seller Feedback Scraper Input",
   "type": "object"

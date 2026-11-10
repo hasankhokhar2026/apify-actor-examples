@@ -1,123 +1,250 @@
 # Coursera Course & Specialization Catalog Scraper
 
-Coursera's catalog spans thousands of courses and multi-course specializations from universities and companies worldwide. This actor searches that catalog by keyword, difficulty level or partner institution, or looks up one course/specialization directly by its slug, returning rating, learner count, enrollment type and a direct link for each result.
+Coursera publishes tens of thousands of learning products: individual courses, multi-course
+specializations, professional certificates, guided projects, degrees and shorter credentials. This
+actor turns that public catalog into structured records you can filter, compare and export. Give it
+a keyword, a category, a university, a slug or a URL, and it returns the matching products with
+ratings, skills, providers, level, duration, language coverage, access flags and direct links.
+
+Optional detail enrichment adds the parts that only exist on each product page: instructors,
+module-by-module syllabus, lecture durations, total enrollment, monthly page views, star
+distribution, top reviews, learning objectives and recommended background.
 
 ## What this actor does
 
-- Searches courses or specializations by keyword
-- Browses courses by difficulty level (Beginner / Intermediate / Advanced / Mixed) without a keyword
-- Filters results to a specific partner university or organization by name
-- Looks up a single course or specialization directly by its Coursera slug
-- Optionally keeps only courses that can be audited for free
-- Empty fields are omitted from records
+- Keyword search across every Coursera learning product type
+- Category (topic) browse and partner/university browse
+- Slug, URL and product-ID lookups
+- All 10 live product types: courses, specializations, guided projects, projects, professional
+  certificates, degrees, graduate certificates, MasterTrack certificates, university certificates
+  and postgraduate diplomas
+- Filters for level, duration band, cost label, topic, content language, subtitle language,
+  hands-on learning format, tool/software, partner, skill and Coursera Plus inclusion
+- Best-match and newest ordering
+- Optional instructor, syllabus, enrollment, page-view, rating-breakdown and review fields
+- Search rank and page metadata so repeated runs can be compared
 
-## Output per course
+## Modes
 
-- `courseId`, `slug` — Coursera's internal ID and URL slug
-- `name`, `description` — course title and description
-- `partnerName`, `partnerId` — the university or organization offering the course
-- `difficultyLevel` — `BEGINNER` / `INTERMEDIATE` / `ADVANCED` / `MIXED`
-- `avgRating`, `numRatings` — average learner rating and how many ratings back it
-- `learnerCount` — learner count as published, e.g. "4.8M students"
-- `enrollmentType` — e.g. `VERIFIED`, `AUDIT`
-- `photoUrl` — course cover image
-- `courseUrl` — direct link to the course on coursera.org
-- `recordType: "course"`, `siteName: "Coursera"`, `scrapedAt`
+| Mode | Required input | What it does |
+|---|---|---|
+| `search` | `query` | Keyword search with every filter |
+| `byCategory` | `topics` | Browse one or more subject areas; query is optional |
+| `byPartner` | `partners` | Browse a university or company; query is optional |
+| `bySlug` | `slugs` | Look up products by slug (a full URL also works) |
+| `byUrl` | `startUrls` | Product URLs return one detail record; search or `/courses?query=` URLs become catalog queries |
+| `byIds` | `productIds` | Look up `course~...` and `s12n~...` product IDs |
+| `browse` | none | Top products with filters and no keyword |
+| `searchSpecializations` | `query` | Legacy alias for a search limited to specializations and professional certificates |
 
-## Output per specialization
-
-- `specializationId`, `slug` — Coursera's internal ID and URL slug
-- `name`, `tagline` — specialization title and short tagline
-- `partnerName`, `partnerId` — the university or organization offering it
-- `numCourses`, `courseIds[]` — how many courses make up the specialization and their IDs
-- `logoUrl` — specialization logo image
-- `specializationUrl` — direct link to the specialization on coursera.org
-- `recordType: "specialization"`, `siteName: "Coursera"`, `scrapedAt`
+Lookup modes (`bySlug`, `byUrl`, `byIds`) always return detail fields. Search modes return detail
+fields only when `includeDetails` is true.
 
 ## Input
 
-| Field | Type | Default | Description |
+| Field | Type | Default | Notes |
 |---|---|---|---|
-| `mode` | string | `search` | `search` / `searchSpecializations` / `bySlug` / `byPartner` / `browse` |
-| `query` | string | `machine learning` | Keyword to search (mode=search, searchSpecializations, byPartner) |
-| `slug` | string | – | Course or specialization slug, e.g. `machine-learning` (mode=bySlug) |
-| `partner` | string | – | Filter results to this university/organization by substring match, e.g. `Stanford` |
-| `difficultyLevel` | string | – | `BEGINNER` / `INTERMEDIATE` / `ADVANCED` / `MIXED` |
-| `freeOnly` | boolean | `false` | Only return courses whose `enrollmentType` is auditable for free |
-| `maxItems` | integer | `5` | Maximum number of records to return (1-1000) |
+| `mode` | dropdown | `search` | One of the eight modes above |
+| `query` | text | empty | Required for `search` and `searchSpecializations`; optional narrowing for `byCategory` and `byPartner` |
+| `startUrls` | URL list | empty | Product, search or `/courses?query=` URLs |
+| `slugs` | text list | empty | Slugs such as `machine-learning`; full URLs accepted |
+| `productIds` | text list | empty | `course~...`, `s12n~...`, or a bare course ID |
+| `productTypes` | multi-select | all | 10 product types |
+| `difficulties` | multi-select | all | Beginner, Intermediate, Advanced, Mixed |
+| `durations` | multi-select | all | Less than 2 hours through 1-4 years |
+| `costs` | multi-select | all | Free, Free Trial, Paid, Preview |
+| `topics` | multi-select | all | 11 Coursera subject areas |
+| `languages` | multi-select | all | 67 content languages |
+| `subtitleLanguages` | multi-select | all | 67 subtitle languages |
+| `handsOnLearningTypes` | multi-select | all | Dialogues, guided projects, coding labs, cloud sandboxes, Gen AI playgrounds |
+| `tools` | multi-select | all | 10 tool/software values |
+| `partners` | text list | empty | Names are matched to the live partner filter; partial names resolve when possible |
+| `skills` | text list | empty | Matched to the live skill filter |
+| `courseraPlusStatus` | dropdown | any | Included or not included in Coursera Plus |
+| `freeOnly` | boolean | false | Adds the Free cost filter |
+| `sortBy` | dropdown | Best match | Best match or Newest |
+| `maxItems` | integer | 50 | 1-1000 |
+| `includeDetails` | boolean | false | Adds one product-page request per record |
 
-### Example: beginner machine learning courses
+Every filter is applied by Coursera's own catalog search. The actor does not post-filter a fixed
+page, so broad filters are not silently narrowed by a hidden default.
+
+## Examples
+
+### Beginner machine learning courses, full detail
 
 ```json
 {
   "mode": "search",
   "query": "machine learning",
-  "difficultyLevel": "BEGINNER",
-  "maxItems": 20
+  "productTypes": ["COURSE"],
+  "difficulties": ["BEGINNER"],
+  "maxItems": 25,
+  "includeDetails": true
 }
 ```
 
-### Example: specializations from one partner
-
-```json
-{
-  "mode": "searchSpecializations",
-  "query": "data science",
-  "partner": "IBM",
-  "maxItems": 15
-}
-```
-
-### Example: look up a known course by slug
-
-```json
-{
-  "mode": "bySlug",
-  "slug": "machine-learning"
-}
-```
-
-### Example: free courses from a specific university
+### Spanish data-science specializations from a partner
 
 ```json
 {
   "mode": "byPartner",
-  "query": "Stanford",
-  "freeOnly": true,
-  "maxItems": 25
+  "partners": ["IBM"],
+  "topics": ["Data Science"],
+  "languages": ["Spanish"],
+  "productTypes": ["SPECIALIZATION"],
+  "maxItems": 20
 }
 ```
 
+### Look up a course by its URL
+
+```json
+{
+  "mode": "byUrl",
+  "startUrls": [
+    {"url": "https://www.coursera.org/learn/machine-learning"}
+  ]
+}
+```
+
+### Look up several products by ID
+
+```json
+{
+  "mode": "byIds",
+  "productIds": [
+    "course~8UjeMk-mEeit4g4GsxE4dg",
+    "s12n~nOOfCDWeEeuiZgo2K4rorQ"
+  ]
+}
+```
+
+### Browse free courses with subtitles in Spanish
+
+```json
+{
+  "mode": "browse",
+  "productTypes": ["COURSE"],
+  "costs": ["Free"],
+  "subtitleLanguages": ["Spanish"],
+  "maxItems": 30
+}
+```
+
+## Output per product
+
+Every record carries `recordType`, `productType`, `productTypeLabel`, `productId`, `slug`, `name`,
+`siteName`, `sourceUrl`, `productUrl` and `scrapedAt`. Course records also keep the familiar
+`courseId`, `courseUrl` and `photoUrl` fields; specialization records keep `specializationId`,
+`specializationUrl`, `logoUrl`, `courseIds` and `numCourses`.
+
+List-level fields:
+
+`tagline`, `description`, `partnerName`, `partnerNames`, `partnerIds`, `partnerLogos`, `avgRating`,
+`numRatings`, `reviewCount`, `difficultyLevel`, `duration`, `durationLabel`, `skills`, `tools`,
+`handsOnLearningTypes`, `isCourseFree`, `isCreditEligible`, `isNewContent`,
+`isPartOfCourseraPlus`, `enrollmentType`, `badges`, `fullyTranslatedLanguages`,
+`subtitlesOnlyLanguages`, `primaryLanguageCodes`, `subtitleLanguageCodes`, `workload`,
+`certificates`, `topics`, `subtopics`, `topicIds`, `subtopicIds`, `courseType`, `searchQuery`,
+`searchRank`, `page`, `totalResults`.
+
+Detail fields (`includeDetails` or a lookup mode):
+
+`instructors`, `modules`, `totalDuration`, `totalDurationSeconds`, `totalEnrollmentCount`,
+`learnerCount`, `pageViewsLastMonth`, `contentSatisfactionScore`,
+`contentSatisfactionRatingsCount`, `averageInstructorRating`, `instructorRatingCount`,
+`ratingCountsByStar`, `topReviews`, `learningObjectives`, `recommendedBackground`,
+`specializations` (course membership), `courses` (specialization membership), `numAssignments`,
+`learningHoursPerWeek`, `totalLearningMonths`, `careerOutcomes`, `projectsOverview`,
+`professionalCertificateType`, `headline`, `subheader`, `courseStatus`, `launchedAt`.
+
+A `module` contains its week number, title, description, lecture count, total duration in seconds
+and a `lectures` array with title, type, ISO duration and duration in seconds. A `topReview`
+contains author, rating, date and text. Empty fields are omitted at every depth; booleans are kept
+even when false.
+
+## Data source and reliability
+
+The actor reads Coursera's public catalog through the same endpoints the public website uses:
+
+- The catalog search endpoint at `https://www.coursera.org/graphql-gateway?opname=Search` for
+  keyword search, facets, sorting and pagination.
+- Public batch endpoints (`courses.v1`, `onDemandSpecializations.v1`) for description, workload,
+  certificates, languages and subject areas.
+- Public product pages for the optional detail fields.
+
+No account, cookie, API key or proxy setup is needed. Results are deduplicated by product ID. The
+actor retries transient HTTP errors with exponential backoff and, if a cloud exit is ever blocked,
+falls back to an Apify datacenter proxy automatically. Runs stop on the requested item count, the
+end of the source or an exhausted result window; there is no wall-clock cut.
+
 ## Use cases
 
-- **Edtech catalog comparison** — survey course mix, difficulty levels and ratings across subjects
-- **Curriculum planning** — pull every course from a target university or organization
-- **Career counseling platforms** — surface free-to-audit courses matching a learner's goal
-- **Market research** — track partner coverage and learner-count trends on Coursera
-- **Content curation** — build topic-specific course lists with ratings and learner counts attached
+- **Curriculum research** - map which universities and companies teach a subject and at what level
+- **Competitive analysis** - compare ratings, enrollment signals, duration and skills across course providers
+- **Learning and development** - build internal training shortlists filtered by topic, language and difficulty
+- **Edtech market intelligence** - track new specializations, professional certificates and guided projects
+- **Academic research** - export a reproducible catalog slice with search rank and page metadata
 
 ## FAQ
 
-**Do I need a Coursera account?**
-No. All data comes from Coursera's public catalog, which doesn't require authentication.
+**Do I need a Coursera account?** No. Every request is cookieless and unauthenticated.
 
-**What difficulty levels can I filter on?**
-`BEGINNER`, `INTERMEDIATE`, `ADVANCED` and `MIXED` (mixed means difficulty varies by module within the course).
+**How many records can one run return?** Up to 1,000. Coursera's own search window is 10,000
+products; the actor never needs more than 1,000 for a run and partitions by filters when you need
+different slices of a large topic.
 
-**Can I scrape specializations instead of individual courses?**
-Yes, use `mode=searchSpecializations` for a keyword search, or `mode=bySlug` with a specialization's slug for a direct lookup.
+**Why do some records lack a rating or review count?** Coursera does not publish ratings for every
+new or low-traffic product. The field is omitted rather than filled with zero.
 
-**How do I pull every course from one university?**
-Use `mode=byPartner` with the university's name in `query`, or add the `partner` filter to any search mode to narrow results to that institution.
+**Why is `enrollmentType` shown as AUDIT or VERIFIED?** Coursera's current public catalog no longer
+exposes the old enrollment-form value. The actor keeps the historic values meaningful by deriving
+them from `isCourseFree` (free products become AUDIT, others VERIFIED). The authoritative access
+signals are `isCourseFree`, `isPartOfCourseraPlus` and `isCreditEligible`.
 
-**What does `freeOnly` actually filter on?**
-It keeps only results whose `enrollmentType` includes "AUDIT" — Coursera's designation for courses that can be audited without paying.
+**What does `includeDetails` cost?** One extra product-page request per record. It is the only
+setting that adds per-record requests; leave it off for fast catalog exports.
 
-**Why do some courses have no `avgRating`?**
-Newer or lower-traffic courses may not have accumulated enough learner ratings yet to publish a score; the field is omitted rather than shown as zero.
+**Can I get exact prices or discounts?** No. Coursera does not publish a stable price in the public
+catalog payload; it depends on region, session and promotions. Free/paid/trial/preview labels and
+Coursera Plus inclusion are available.
 
-**Is `learnerCount` an exact number?**
-No, it's returned exactly as Coursera displays it, which is typically a rounded figure like "4.8M students" rather than an exact count.
+**Can I get every review for a course?** The product page exposes a curated set of top reviews
+(typically 12-20). Bulk review export is outside this catalog actor's scope.
 
-**Is this affiliated with Coursera?**
-No. This is an independent, third-party actor that reads Coursera's public catalog; it is not operated by or affiliated with Coursera, Inc.
+**Do degree and certificate pages have the same detail fields?** Degrees and graduate certificates
+use a different Coursera page template with sparse public metadata. They are returned from the
+search catalog with list-level fields; course, project, specialization and professional-certificate
+pages have the full detail set.
+
+**Why did a slug or ID return nothing?** Some legacy products are retired or moved. Try the
+product URL in `byUrl`, or use a search query to find the current slug. Unsupported ID prefixes are
+reported in the run log.
+
+**A slug exists as both a course and a guided project. Which one is returned?** A bare slug is
+ambiguous; `bySlug` follows the first catalog hit. Use `byUrl` with the full product URL when you
+need a specific product type.
+
+**Is this affiliated with Coursera?** No. This is an independent, third-party actor that reads
+public catalog data. It is not operated by or affiliated with Coursera, Inc.
+
+## Limitations
+
+- Coursera's search index returns at most 10,000 products per query. The actor caps runs at 1,000
+  records; use filters (product type, topic, level, duration, language, partner) to cover a large
+  topic in several runs.
+- Exact price and discount data are not part of the public catalog payload.
+- Bulk/all reviews are not available from the catalog page; only the page's top reviews are
+  returned.
+- Degree and graduate-certificate detail pages expose a different, sparse schema; those product
+  types are list-level only.
+- One legacy professional certificate was missing from the public batch endpoint during research;
+  the actor falls back to the product page for such IDs and reports a shortfall in the status
+  message if the page is also gone.
+
+## Responsible use
+
+Use the actor for lawful catalog research and export. Respect Coursera's terms, copyright and
+privacy rules, and do not republish course content. The actor collects public catalog metadata and
+top review excerpts, not learner records or paid course materials.

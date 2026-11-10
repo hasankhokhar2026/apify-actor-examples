@@ -1127,4 +1127,21 @@
 <p><strong>What happens when Google blocks a request?</strong> The actor retries with bounded exponential backoff. If every request is blocked, the run fails loudly with a blocked-request message. A proxy can be supplied, but it is never required.</p>
 <p><strong>Can I mix apps and search in one run?</strong> Use <code>details</code> or <code>search</code> with <code>includeDetails</code>, or run separate tasks. Keeping modes separate makes row counts and output shapes predictable.</p>
 <p><strong>Is this affiliated with Google?</strong> No. This is an independent third-party actor that reads public Google Play pages.</p>
-</details></section><section id="python-quickstart"><h2>Python quickstart</h2><p>Use a schema-derived input and the Python standard library to start a run. An Apify account and token are required for execution.</p><p><a href="/apify-actor-examples/guides/VCknmnj5f5O6X56Ho/">Open the step-by-step Python guide →</a></p></section><p class="source-note">Source build <code>yabCXYoj5lcWqvbGd</code>. Documentation is regenerated from the default published build; private drafts are not included.</p></article></div></main><footer class="footer"><strong>Nimbryxo Studio</strong><div class="footer-links"><a href="/apify-actor-examples/topics/">Topics</a><a href="/apify-actor-examples/sources/">Documentation sources</a><a href="https://apify.com/nimbryxo-studio">Apify</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></div></footer></body></html>
+<h2 id="readme-use-it-as-an-api-server-mode">Use it as an API (server mode)</h2>
+<p>Need one answer right away instead of a batch job? Send the input as an HTTP request and the results come back in the response. There's no run to start and poll.</p>
+<pre><code class="language-bash">curl -H &quot;Authorization: Bearer $APIFY_TOKEN&quot; \
+  &quot;https://vcknmnj5f5o6x56ho.apify.actor/?mode=search&amp;searchQuery=calculator&amp;maxItems=3&quot;
+</code></pre>
+<p>Or POST the same input as JSON:</p>
+<pre><code class="language-bash">curl -X POST -H &quot;Authorization: Bearer $APIFY_TOKEN&quot; -H &quot;Content-Type: application/json&quot; \
+  -d '{&quot;mode&quot;: &quot;search&quot;, &quot;searchQuery&quot;: &quot;calculator&quot;, &quot;maxItems&quot;: 3}' \
+  &quot;https://vcknmnj5f5o6x56ho.apify.actor/&quot;
+</code></pre>
+<ul>
+<li>The fields are the same as in the input above. With GET, repeat a parameter once for each value in a list.</li>
+<li>You get back a JSON array with the same records a normal run saves. They're saved to the run's dataset too.</li>
+<li>Each request is capped at 100 results and 4 minutes. For bigger jobs, start a normal run.</li>
+<li>The request runs in your own Apify account at the Actor's normal price (a start fee plus a price per result). The server shuts down after a minute with no requests.</li>
+<li>The Server tab on this page lists every parameter and lets you try a request from your browser.</li>
+</ul>
+</details></section><section id="python-quickstart"><h2>Python quickstart</h2><p>Use a schema-derived input and the Python standard library to start a run. An Apify account and token are required for execution.</p><p><a href="/apify-actor-examples/guides/VCknmnj5f5O6X56Ho/">Open the step-by-step Python guide →</a></p></section><p class="source-note">Source build <code>lDjfP3tMb4neCMtu6</code>. Documentation is regenerated from the default published build; private drafts are not included.</p></article></div></main><footer class="footer"><strong>Nimbryxo Studio</strong><div class="footer-links"><a href="/apify-actor-examples/topics/">Topics</a><a href="/apify-actor-examples/sources/">Documentation sources</a><a href="https://apify.com/nimbryxo-studio">Apify</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></div></footer></body></html>
