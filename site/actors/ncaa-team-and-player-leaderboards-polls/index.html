@@ -1,0 +1,1580 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src &#x27;self&#x27;; script-src &#x27;self&#x27; &#x27;sha256-bnyeuPwSPxg9xZcX2SFpXb6X8nzJBNktQw9CVCwCaQI=&#x27;; style-src &#x27;self&#x27;; img-src &#x27;self&#x27; https: data:; base-uri &#x27;self&#x27;; form-action &#x27;self&#x27;; object-src &#x27;none&#x27;"><title>NCAA Stats &amp; Scores: Leaderboards, Polls &amp; Standings | Nimbryxo Studio</title><meta name="description" content="NCAA stats and scores: team and player leaderboards, polls, standings, school directory, schedules, team seasons, brackets, game details and championship history for 14 sports acro"><meta name="robots" content="index,follow"><link rel="canonical" href="https://hasankhokhar2026.github.io/apify-actor-examples/actors/ncaa-team-and-player-leaderboards-polls/"><meta property="og:title" content="NCAA Stats &amp; Scores: Leaderboards, Polls &amp; Standings | Nimbryxo Studio"><meta property="og:description" content="NCAA stats and scores: team and player leaderboards, polls, standings, school directory, schedules, team seasons, brackets, game details and championship history for 14 sports acro"><meta property="og:type" content="website"><meta property="og:url" content="https://hasankhokhar2026.github.io/apify-actor-examples/actors/ncaa-team-and-player-leaderboards-polls/"><meta property="og:site_name" content="Nimbryxo Studio"><meta name="twitter:card" content="summary"><link rel="icon" href="/apify-actor-examples/assets/mark.svg?v=2d20f9dc334a" type="image/svg+xml"><link rel="stylesheet" href="/apify-actor-examples/assets/site.css?v=39545fd4a399"><link rel="stylesheet" href="/apify-actor-examples/assets/brand.css?v=eb0f935ade25"><link rel="alternate" type="application/rss+xml" title="Nimbryxo Studio guides" href="/apify-actor-examples/feed.xml"><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization","name":"Nimbryxo Studio","url":"https://hasankhokhar2026.github.io/apify-actor-examples/","sameAs":["https://apify.com/nimbryxo-studio"]},{"@type":"WebSite","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#website","name":"Nimbryxo Studio","url":"https://hasankhokhar2026.github.io/apify-actor-examples/","publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"inLanguage":"en"},{"@type":"WebPage","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/ncaa-team-and-player-leaderboards-polls/#webpage","name":"NCAA Stats & Scores: Leaderboards, Polls & Standings","description":"NCAA stats and scores: team and player leaderboards, polls, standings, school directory, schedules, team seasons, brackets, game details and championship history for 14 sports across Divisions I-III.","url":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/ncaa-team-and-player-leaderboards-polls/","isPartOf":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#website"},"publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"inLanguage":"en","mainEntity":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/ncaa-team-and-player-leaderboards-polls/#article"},"breadcrumb":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/ncaa-team-and-player-leaderboards-polls/#breadcrumb"}},{"@type":"TechArticle","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/ncaa-team-and-player-leaderboards-polls/#article","headline":"NCAA Stats & Scores: Leaderboards, Polls & Standings","name":"NCAA Stats & Scores: Leaderboards, Polls & Standings","description":"NCAA stats and scores: team and player leaderboards, polls, standings, school directory, schedules, team seasons, brackets, game details and championship history for 14 sports across Divisions I-III.","url":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/ncaa-team-and-player-leaderboards-polls/","author":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"mainEntityOfPage":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/ncaa-team-and-player-leaderboards-polls/#webpage"},"inLanguage":"en","dateModified":"2026-11-06T10:26:58.919Z"},{"@type":"BreadcrumbList","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/ncaa-team-and-player-leaderboards-polls/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Nimbryxo Studio","item":"https://hasankhokhar2026.github.io/apify-actor-examples/"},{"@type":"ListItem","position":2,"name":"Actors","item":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/"},{"@type":"ListItem","position":3,"name":"NCAA Stats & Scores: Leaderboards, Polls & Standings","item":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/ncaa-team-and-player-leaderboards-polls/"}]}]}</script><script src="/apify-actor-examples/assets/site.js?v=7cabac48dd31" defer></script></head><body class="theme-studio"><a href="#main" class="skip-link">Skip to content</a><header><div class="inner"><a href="/apify-actor-examples/" class="brand"><img src="/apify-actor-examples/assets/mark.svg?v=2d20f9dc334a" alt="" width="29" height="29">Nimbryxo Studio</a><nav aria-label="Main navigation"><a href="/apify-actor-examples/actors/" aria-current="page">Actors</a><a href="/apify-actor-examples/guides/">Guides</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></nav></div></header><main id="main"><div class="doc-layout"><aside class="contents" aria-label="On this page"><strong>Contents</strong><a href="#overview">Overview</a><a href="#published-readme">Published README</a><a href="#input-schema">Input schema</a><a href="#output-schema">Output schema</a><a href="#dataset-schema">Dataset schema</a><a href="#python-quickstart">Python quickstart</a></aside><article class="prose"><div class="breadcrumb"><a href="/apify-actor-examples/actors/">Actors</a><span>/</span><span>NCAA Stats &amp; Scores: Leaderboards, Polls &amp; Standings</span></div><section id="overview"><h1 class="doc-title">NCAA Stats &amp; Scores: Leaderboards, Polls &amp; Standings</h1><p class="lede">NCAA stats and scores: team and player leaderboards, polls, standings, school directory, schedules, team seasons, brackets, game details and championship history for 14 sports across Divisions I-III.</p><p class="summary">NCAA Stats &amp; Scores: Leaderboards, Polls &amp; Standings is an Apify Actor published by Nimbryxo Studio. It accepts 21 input fields, and <code>mode</code> is required. Its build declares a results dataset with 1 view. Runs happen on Apify, where the Store page lists the current price.</p><div class="actions"><a class="button" href="https://apify.com/nimbryxo-studio/ncaa-team-and-player-leaderboards-polls">Open on Apify</a><a class="text-link" href="https://github.com/hasankhokhar2026/apify-actor-examples/blob/main/docs/actors/ZD3dF6oZeDkYaf2hk/README.md">GitHub source</a></div></section><section class="schema-section" id="input-schema"><h2>Input schema</h2><p>Input fields, types, required flags, descriptions, defaults, and prefills come from the published definition. Prefill examples are distinct from defaults.</p><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>mode</code></td><td>string</td><td>required</td><td>What to scrape from NCAA.com. `listOptions` returns the valid modes, sports, divisions, categories, polls, and conferences from the built-in catalog (optionally scoped with `sport`/`division`) without making any NCAA.com requests. `teamSchedule` returns one team&#x27;s full season (no 31-day limit); `brackets` returns championship / March Madness bracket games from NCAA.com&#x27;s official championship route.</td></tr><tr><td><code>sport</code></td><td>string</td><td>optional</td><td>NCAA sport to scrape. Required for the sport-specific modes; ignored by `mode=teams` and `mode=gameDetail`; optional scope for `mode=listOptions`.</td></tr><tr><td><code>division</code></td><td>string</td><td>optional</td><td>NCAA competition division. Football uses FBS/FCS; men&#x27;s volleyball and women&#x27;s ice hockey use `nc` (National Collegiate) for polls and history. The actor maps women&#x27;s ice hockey `nc` schedules to NCAA.com&#x27;s d1 scoreboard page. Not every division is offered for every sport; an unsupported combination returns a clear status message instead of data. Optional scope for `mode=listOptions`.</td></tr></tbody></table></div><details><summary>Show all input fields</summary><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>mode</code></td><td>string</td><td>required</td><td>What to scrape from NCAA.com. `listOptions` returns the valid modes, sports, divisions, categories, polls, and conferences from the built-in catalog (optionally scoped with `sport`/`division`) without making any NCAA.com requests. `teamSchedule` returns one team&#x27;s full season (no 31-day limit); `brackets` returns championship / March Madness bracket games from NCAA.com&#x27;s official championship route.</td></tr><tr><td><code>sport</code></td><td>string</td><td>optional</td><td>NCAA sport to scrape. Required for the sport-specific modes; ignored by `mode=teams` and `mode=gameDetail`; optional scope for `mode=listOptions`.</td></tr><tr><td><code>division</code></td><td>string</td><td>optional</td><td>NCAA competition division. Football uses FBS/FCS; men&#x27;s volleyball and women&#x27;s ice hockey use `nc` (National Collegiate) for polls and history. The actor maps women&#x27;s ice hockey `nc` schedules to NCAA.com&#x27;s d1 scoreboard page. Not every division is offered for every sport; an unsupported combination returns a clear status message instead of data. Optional scope for `mode=listOptions`.</td></tr><tr><td><code>statCategory</code></td><td>string</td><td>optional</td><td>(mode=teamStats or individualStats) The statistic to rank by. Every NCAA.com category is listed; the valid set depends on the chosen sport and mode. If the default `Scoring Offense` is not valid for the chosen sport/mode, the actor uses a curated per-sport default (for example Points Per Game for men&#x27;s/women&#x27;s basketball players, Passing Yards Per Game for FBS players, Batting Average for baseball/softball) and reports the substitution in the run status. An explicitly unavailable category returns a clear status message.</td></tr><tr><td><code>season</code></td><td>string</td><td>optional</td><td>(mode=teamStats, individualStats, teamSchedule, or brackets) Season/year. `Current season` follows whichever season NCAA.com is actively showing. `YYYY-YY` labels such as `2025-26` are accepted and mapped to their starting year for leaderboards and team schedules. For `mode=brackets`, enter the tournament year shown in NCAA.com&#x27;s bracket URL (for example `2026`); a `YYYY-YY` label tries the ending year first and then the starting year, and `current` tries the current calendar year then the previous year. Historical depth varies by sport; unsupported seasons return a clear status message.</td></tr><tr><td><code>pollSlug</code></td><td>string</td><td>optional</td><td>(mode=rankings) Which NCAA-hosted poll to scrape. The valid set depends on the chosen sport and division. If the default poll is not valid for the chosen sport/division, the actor uses a curated default (AP for D1 basketball and FBS football, AFCA Coaches for FCS, and the primary coaches/RPI/AVCA poll elsewhere) and reports the substitution in the run status. An explicitly unavailable poll returns a clear status message.</td></tr><tr><td><code>gameIds</code></td><td>array</td><td>optional</td><td>(mode=gameDetail) NCAA game IDs or game-page URLs, e.g. `6649632` or `https://www.ncaa.com/game/6649632`.</td></tr><tr><td><code>team</code></td><td>string</td><td>optional</td><td>Optional case-insensitive team/school name or NCAA.com school slug filter. Applies to leaderboards, polls, standings, schedules, teamSchedule, brackets, game detail, and the school directory. `mode=teamSchedule` requires this field; for example `duke` or `Duke` matches either team in each contest. Leave empty for all teams in the other modes.</td></tr><tr><td><code>playerName</code></td><td>string</td><td>optional</td><td>(mode=individualStats) Optional case-insensitive player-name filter, e.g. `Dybantsa`. Searches the rows of the selected player leaderboard.</td></tr><tr><td><code>conference</code></td><td>string</td><td>optional</td><td>(mode=standings or schedules) Optional conference filter. Standings are fetched from the chosen conference&#x27;s own page; schedules keep games involving a team from that conference. Not every conference is offered for every sport. When set, records without a published conference are excluded.</td></tr><tr><td><code>rankFrom</code></td><td>integer</td><td>optional</td><td>Optional lowest rank to keep (inclusive) for leaderboards and polls. Records without a published rank are excluded.</td></tr><tr><td><code>rankTo</code></td><td>integer</td><td>optional</td><td>Optional highest rank to keep (inclusive) for leaderboards and polls. Records without a published rank are excluded.</td></tr><tr><td><code>minGames</code></td><td>integer</td><td>optional</td><td>(mode=teamStats or individualStats) Optional minimum games-played filter. Rows without a games-played column pass through.</td></tr><tr><td><code>scheduleDateFrom</code></td><td>string</td><td>optional</td><td>(mode=schedules) Optional first date in YYYY-MM-DD format. Leave both date fields empty to use NCAA.com&#x27;s current game date. Date ranges are capped at 31 days. This field does not apply to `teamSchedule`, which scans the full season.</td></tr><tr><td><code>scheduleDateTo</code></td><td>string</td><td>optional</td><td>(mode=schedules) Optional last date in YYYY-MM-DD format (inclusive).</td></tr><tr><td><code>week</code></td><td>integer</td><td>optional</td><td>(mode=schedules, sport=football) Week number. Football schedules are week-based; leave empty to use the current NCAA.com week. `mode=teamSchedule` uses the full season calendar automatically and does not need this field.</td></tr><tr><td><code>finalOnly</code></td><td>boolean</td><td>optional</td><td>(mode=schedules) Keep only games whose status is final. Records without a final status are excluded.</td></tr><tr><td><code>includeGameDetails</code></td><td>boolean</td><td>optional</td><td>(mode=schedules or teamSchedule) Add venue, city/state, linescores, records, and hasBoxscore/hasPbp to each game. Adds one game-page request plus one game-detail request per record.</td></tr><tr><td><code>includeBoxscore</code></td><td>boolean</td><td>optional</td><td>(mode=gameDetail) Include team and player box-score blocks when NCAA.com publishes them.</td></tr><tr><td><code>includePlayByPlay</code></td><td>boolean</td><td>optional</td><td>(mode=gameDetail) Include the play-by-play timeline when NCAA.com publishes it. This can make each record large.</td></tr><tr><td><code>maxItems</code></td><td>integer</td><td>optional</td><td>Hard cap on the number of records emitted in this run, 1-5,000. When omitted, a mode-aware default is used (2,000 for leaderboards, 1,000 for polls/standings/history, 5,000 for the school directory and listOptions, 500 for schedules and brackets, 100 for teamSchedule and game detail). Leaderboard modes are also capped at 2,000 source rows (40 pages). The actor sets a status message whenever maxItems or the page cap actually truncates the output.</td></tr></tbody></table></div></details><p><a href="input-schema.json">Download the published input schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+  &quot;description&quot;: &quot;Scrape official NCAA team and player leaderboards, ranking polls, conference standings, the school directory, schedules/scores, game details, and championship history. Use listOptions to discover the valid sports, divisions, categories, polls, and conferences without scraping.&quot;,
+  &quot;properties&quot;: {
+    &quot;conference&quot;: {
+      &quot;default&quot;: &quot;all&quot;,
+      &quot;description&quot;: &quot;(mode=standings or schedules) Optional conference filter. Standings are fetched from the chosen conference&#x27;s own page; schedules keep games involving a team from that conference. Not every conference is offered for every sport. When set, records without a published conference are excluded.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;all&quot;,
+        &quot;acc&quot;,
+        &quot;america-east&quot;,
+        &quot;american&quot;,
+        &quot;asun&quot;,
+        &quot;atlantic-10&quot;,
+        &quot;big-12&quot;,
+        &quot;big-east&quot;,
+        &quot;big-sky&quot;,
+        &quot;big-south&quot;,
+        &quot;big-ten&quot;,
+        &quot;big-west&quot;,
+        &quot;caa&quot;,
+        &quot;cusa&quot;,
+        &quot;fbs-independent&quot;,
+        &quot;fcs-independent&quot;,
+        &quot;horizon&quot;,
+        &quot;ivy-league&quot;,
+        &quot;mac&quot;,
+        &quot;meac&quot;,
+        &quot;metro&quot;,
+        &quot;mountain-west&quot;,
+        &quot;mvc&quot;,
+        &quot;mvfc&quot;,
+        &quot;nec&quot;,
+        &quot;ovc&quot;,
+        &quot;pac-12&quot;,
+        &quot;patriot&quot;,
+        &quot;pioneer&quot;,
+        &quot;sec&quot;,
+        &quot;socon&quot;,
+        &quot;southland&quot;,
+        &quot;summit-league&quot;,
+        &quot;sun-belt&quot;,
+        &quot;swac&quot;,
+        &quot;uac-&quot;,
+        &quot;wcc&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;All conferences&quot;,
+        &quot;ATLANTIC COAST CONFERENCE&quot;,
+        &quot;AMERICA EAST CONFERENCE&quot;,
+        &quot;AMERICAN CONFERENCE&quot;,
+        &quot;ATLANTIC SUN CONFERENCE&quot;,
+        &quot;ATLANTIC 10 CONFERENCE&quot;,
+        &quot;BIG 12 CONFERENCE&quot;,
+        &quot;BIG EAST CONFERENCE&quot;,
+        &quot;BIG SKY CONFERENCE&quot;,
+        &quot;BIG SOUTH CONFERENCE&quot;,
+        &quot;BIG TEN CONFERENCE&quot;,
+        &quot;BIG WEST CONFERENCE&quot;,
+        &quot;COASTAL ATHLETIC ASSOCIATION&quot;,
+        &quot;CONFERENCE USA&quot;,
+        &quot;FBS INDEPENDENT&quot;,
+        &quot;FCS INDEPENDENT&quot;,
+        &quot;HORIZON LEAGUE&quot;,
+        &quot;THE IVY LEAGUE&quot;,
+        &quot;MID-AMERICAN CONFERENCE&quot;,
+        &quot;MID-EASTERN ATHLETIC CONF.&quot;,
+        &quot;METRO CONFERENCE&quot;,
+        &quot;MOUNTAIN WEST CONFERENCE&quot;,
+        &quot;MISSOURI VALLEY CONFERENCE&quot;,
+        &quot;MISSOURI VALLEY FOOTBALL CONFERENCE&quot;,
+        &quot;NORTHEAST CONFERENCE&quot;,
+        &quot;OHIO VALLEY CONFERENCE&quot;,
+        &quot;PAC-12 CONFERENCE&quot;,
+        &quot;PATRIOT LEAGUE&quot;,
+        &quot;PIONEER FOOTBALL LEAGUE&quot;,
+        &quot;SOUTHEASTERN CONFERENCE&quot;,
+        &quot;SOUTHERN CONFERENCE&quot;,
+        &quot;SOUTHLAND CONFERENCE&quot;,
+        &quot;THE SUMMIT LEAGUE&quot;,
+        &quot;SUN BELT CONFERENCE&quot;,
+        &quot;SOUTHWESTERN ATHLETIC CONF.&quot;,
+        &quot;UNITED ATHLETIC CONFERENCE&quot;,
+        &quot;WEST COAST CONFERENCE&quot;
+      ],
+      &quot;prefill&quot;: &quot;all&quot;,
+      &quot;title&quot;: &quot;Conference&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;division&quot;: {
+      &quot;default&quot;: &quot;d1&quot;,
+      &quot;description&quot;: &quot;NCAA competition division. Football uses FBS/FCS; men&#x27;s volleyball and women&#x27;s ice hockey use `nc` (National Collegiate) for polls and history. The actor maps women&#x27;s ice hockey `nc` schedules to NCAA.com&#x27;s d1 scoreboard page. Not every division is offered for every sport; an unsupported combination returns a clear status message instead of data. Optional scope for `mode=listOptions`.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;d1&quot;,
+        &quot;d2&quot;,
+        &quot;d3&quot;,
+        &quot;fbs&quot;,
+        &quot;fcs&quot;,
+        &quot;nc&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;Division I&quot;,
+        &quot;Division II&quot;,
+        &quot;Division III&quot;,
+        &quot;FBS — Football Bowl Subdivision&quot;,
+        &quot;FCS — Football Championship Subdivision&quot;,
+        &quot;National Collegiate&quot;
+      ],
+      &quot;prefill&quot;: &quot;d1&quot;,
+      &quot;title&quot;: &quot;Division&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;finalOnly&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;(mode=schedules) Keep only games whose status is final. Records without a final status are excluded.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Final games only&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;gameIds&quot;: {
+      &quot;default&quot;: [],
+      &quot;description&quot;: &quot;(mode=gameDetail) NCAA game IDs or game-page URLs, e.g. `6649632` or `https://www.ncaa.com/game/6649632`.&quot;,
+      &quot;editor&quot;: &quot;stringList&quot;,
+      &quot;prefill&quot;: [],
+      &quot;title&quot;: &quot;Game IDs or URLs&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;includeBoxscore&quot;: {
+      &quot;default&quot;: true,
+      &quot;description&quot;: &quot;(mode=gameDetail) Include team and player box-score blocks when NCAA.com publishes them.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Include box score&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;includeGameDetails&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;(mode=schedules or teamSchedule) Add venue, city/state, linescores, records, and hasBoxscore/hasPbp to each game. Adds one game-page request plus one game-detail request per record.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Enrich schedules with game details&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;includePlayByPlay&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;(mode=gameDetail) Include the play-by-play timeline when NCAA.com publishes it. This can make each record large.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Include play-by-play&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;maxItems&quot;: {
+      &quot;description&quot;: &quot;Hard cap on the number of records emitted in this run, 1-5,000. When omitted, a mode-aware default is used (2,000 for leaderboards, 1,000 for polls/standings/history, 5,000 for the school directory and listOptions, 500 for schedules and brackets, 100 for teamSchedule and game detail). Leaderboard modes are also capped at 2,000 source rows (40 pages). The actor sets a status message whenever maxItems or the page cap actually truncates the output.&quot;,
+      &quot;maximum&quot;: 5000,
+      &quot;minimum&quot;: 1,
+      &quot;prefill&quot;: 3,
+      &quot;title&quot;: &quot;Max items&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;minGames&quot;: {
+      &quot;description&quot;: &quot;(mode=teamStats or individualStats) Optional minimum games-played filter. Rows without a games-played column pass through.&quot;,
+      &quot;maximum&quot;: 500,
+      &quot;minimum&quot;: 0,
+      &quot;title&quot;: &quot;Minimum games played&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;mode&quot;: {
+      &quot;default&quot;: &quot;teamStats&quot;,
+      &quot;description&quot;: &quot;What to scrape from NCAA.com. `listOptions` returns the valid modes, sports, divisions, categories, polls, and conferences from the built-in catalog (optionally scoped with `sport`/`division`) without making any NCAA.com requests. `teamSchedule` returns one team&#x27;s full season (no 31-day limit); `brackets` returns championship / March Madness bracket games from NCAA.com&#x27;s official championship route.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;teamStats&quot;,
+        &quot;individualStats&quot;,
+        &quot;rankings&quot;,
+        &quot;standings&quot;,
+        &quot;teams&quot;,
+        &quot;schedules&quot;,
+        &quot;teamSchedule&quot;,
+        &quot;brackets&quot;,
+        &quot;gameDetail&quot;,
+        &quot;history&quot;,
+        &quot;listOptions&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;Team statistical leaderboards&quot;,
+        &quot;Individual (player) statistical leaderboards&quot;,
+        &quot;National ranking polls&quot;,
+        &quot;Conference standings&quot;,
+        &quot;NCAA school directory&quot;,
+        &quot;Schedules and scores&quot;,
+        &quot;Team season schedule (full season, not limited to 31 days)&quot;,
+        &quot;Championship / March Madness brackets&quot;,
+        &quot;Game detail (venue, linescores, box score, play-by-play)&quot;,
+        &quot;Championship history&quot;,
+        &quot;Available options (modes, sports, divisions, categories, polls, conferences)&quot;
+      ],
+      &quot;prefill&quot;: &quot;teamStats&quot;,
+      &quot;title&quot;: &quot;Mode&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;playerName&quot;: {
+      &quot;description&quot;: &quot;(mode=individualStats) Optional case-insensitive player-name filter, e.g. `Dybantsa`. Searches the rows of the selected player leaderboard.&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;title&quot;: &quot;Player filter&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;pollSlug&quot;: {
+      &quot;default&quot;: &quot;di-mens-basketball-associated-press&quot;,
+      &quot;description&quot;: &quot;(mode=rankings) Which NCAA-hosted poll to scrape. The valid set depends on the chosen sport and division. If the default poll is not valid for the chosen sport/division, the actor uses a curated default (AP for D1 basketball and FBS football, AFCA Coaches for FCS, and the primary coaches/RPI/AVCA poll elsewhere) and reports the substitution in the run status. An explicitly unavailable poll returns a clear status message.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;2026-march-madness-womens-seeding&quot;,
+        &quot;afca-fcs-coaches-poll&quot;,
+        &quot;associated-press&quot;,
+        &quot;avca-rankings&quot;,
+        &quot;college-football-playoff&quot;,
+        &quot;d1baseballcom-top-25&quot;,
+        &quot;di-committees-top-10&quot;,
+        &quot;di-committees-top-16&quot;,
+        &quot;di-mens-basketball-associated-press&quot;,
+        &quot;di-womens-basketball-associated-press&quot;,
+        &quot;espncom/usa-softball&quot;,
+        &quot;fcs-top-10-committee-rankings&quot;,
+        &quot;iwsoc-coaches-poll&quot;,
+        &quot;nabc-coaches&quot;,
+        &quot;nc-mens-volleyball-rpi&quot;,
+        &quot;ncaa-field-hockey-rpi&quot;,
+        &quot;ncaa-mens-basketball-net-rankings&quot;,
+        &quot;ncaa-mens-lacrosse-rpi&quot;,
+        &quot;ncaa-mens-soccer-rpi&quot;,
+        &quot;ncaa-womens-basketball-net-rankings&quot;,
+        &quot;ncaa-womens-lacrosse-rpi&quot;,
+        &quot;ncaa-womens-soccer-rpi&quot;,
+        &quot;ncaa-womens-softball-rpi&quot;,
+        &quot;ncaa-womens-volleyball-rpi&quot;,
+        &quot;npi&quot;,
+        &quot;npi-rankings&quot;,
+        &quot;pairwise&quot;,
+        &quot;regional-ranking&quot;,
+        &quot;regional-rankings&quot;,
+        &quot;regional-rankings-0&quot;,
+        &quot;rpi&quot;,
+        &quot;stats-perform-fcs-top-25&quot;,
+        &quot;top-16-committee-ranking&quot;,
+        &quot;top-16-committee-rankings&quot;,
+        &quot;united-soccer-coaches&quot;,
+        &quot;uschocom&quot;,
+        &quot;wab-ranking&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;2026 March Madness women&#x27;s seeding&quot;,
+        &quot;AFCA FCS Coaches Poll&quot;,
+        &quot;College football rankings: Associated Press Top 25&quot;,
+        &quot;AVCA Rankings&quot;,
+        &quot;College Football Playoff&quot;,
+        &quot;D1Baseball.com Top 25&quot;,
+        &quot;DI Committee&#x27;s Top 10&quot;,
+        &quot;DI committee&#x27;s top 16&quot;,
+        &quot;DI Men&#x27;s Basketball: Associated Press&quot;,
+        &quot;DI Women&#x27;s Basketball: Associated Press&quot;,
+        &quot;ESPN.com/USA Softball&quot;,
+        &quot;FCS Top 10 Committee Rankings&quot;,
+        &quot;IWSOC Coaches Poll&quot;,
+        &quot;NABC Coaches&quot;,
+        &quot;NC Men&#x27;s Volleyball RPI&quot;,
+        &quot;NCAA Field Hockey RPI&quot;,
+        &quot;NCAA Men&#x27;s Basketball NET Rankings&quot;,
+        &quot;NCAA Men&#x27;s Lacrosse RPI&quot;,
+        &quot;NCAA Men&#x27;s Soccer RPI&quot;,
+        &quot;NCAA Women&#x27;s Basketball NET Rankings&quot;,
+        &quot;NCAA Women&#x27;s Lacrosse RPI&quot;,
+        &quot;NCAA Women&#x27;s Soccer RPI&quot;,
+        &quot;NCAA Women&#x27;s Softball RPI&quot;,
+        &quot;NCAA Women&#x27;s Volleyball RPI&quot;,
+        &quot;NPI&quot;,
+        &quot;NPI Rankings&quot;,
+        &quot;PairWise&quot;,
+        &quot;Regional Ranking&quot;,
+        &quot;Regional Rankings&quot;,
+        &quot;Regional Rankings&quot;,
+        &quot;RPI&quot;,
+        &quot;Stats Perform FCS Top 25&quot;,
+        &quot;Top 16 committee ranking&quot;,
+        &quot;Top 16 Committee Rankings&quot;,
+        &quot;United Soccer Coaches&quot;,
+        &quot;USCHO.com&quot;,
+        &quot;WAB Ranking&quot;
+      ],
+      &quot;prefill&quot;: &quot;di-mens-basketball-associated-press&quot;,
+      &quot;title&quot;: &quot;Ranking poll&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;rankFrom&quot;: {
+      &quot;description&quot;: &quot;Optional lowest rank to keep (inclusive) for leaderboards and polls. Records without a published rank are excluded.&quot;,
+      &quot;maximum&quot;: 1000,
+      &quot;minimum&quot;: 1,
+      &quot;title&quot;: &quot;Rank from&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;rankTo&quot;: {
+      &quot;description&quot;: &quot;Optional highest rank to keep (inclusive) for leaderboards and polls. Records without a published rank are excluded.&quot;,
+      &quot;maximum&quot;: 1000,
+      &quot;minimum&quot;: 1,
+      &quot;title&quot;: &quot;Rank to&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;scheduleDateFrom&quot;: {
+      &quot;description&quot;: &quot;(mode=schedules) Optional first date in YYYY-MM-DD format. Leave both date fields empty to use NCAA.com&#x27;s current game date. Date ranges are capped at 31 days. This field does not apply to `teamSchedule`, which scans the full season.&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;title&quot;: &quot;Schedule date from&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;scheduleDateTo&quot;: {
+      &quot;description&quot;: &quot;(mode=schedules) Optional last date in YYYY-MM-DD format (inclusive).&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;title&quot;: &quot;Schedule date to&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;season&quot;: {
+      &quot;default&quot;: &quot;current&quot;,
+      &quot;description&quot;: &quot;(mode=teamStats, individualStats, teamSchedule, or brackets) Season/year. `Current season` follows whichever season NCAA.com is actively showing. `YYYY-YY` labels such as `2025-26` are accepted and mapped to their starting year for leaderboards and team schedules. For `mode=brackets`, enter the tournament year shown in NCAA.com&#x27;s bracket URL (for example `2026`); a `YYYY-YY` label tries the ending year first and then the starting year, and `current` tries the current calendar year then the previous year. Historical depth varies by sport; unsupported seasons return a clear status message.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;current&quot;,
+        &quot;2026-27&quot;,
+        &quot;2025-26&quot;,
+        &quot;2024-25&quot;,
+        &quot;2026&quot;,
+        &quot;2025&quot;,
+        &quot;2024&quot;,
+        &quot;2023&quot;,
+        &quot;2022&quot;,
+        &quot;2021&quot;,
+        &quot;2020&quot;,
+        &quot;2019&quot;,
+        &quot;2018&quot;,
+        &quot;2017&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;Current season&quot;,
+        &quot;2026-27&quot;,
+        &quot;2025-26&quot;,
+        &quot;2024-25&quot;,
+        &quot;2026&quot;,
+        &quot;2025&quot;,
+        &quot;2024&quot;,
+        &quot;2023&quot;,
+        &quot;2022&quot;,
+        &quot;2021&quot;,
+        &quot;2020&quot;,
+        &quot;2019&quot;,
+        &quot;2018&quot;,
+        &quot;2017&quot;
+      ],
+      &quot;prefill&quot;: &quot;current&quot;,
+      &quot;title&quot;: &quot;Season&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;sport&quot;: {
+      &quot;default&quot;: &quot;basketball-men&quot;,
+      &quot;description&quot;: &quot;NCAA sport to scrape. Required for the sport-specific modes; ignored by `mode=teams` and `mode=gameDetail`; optional scope for `mode=listOptions`.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;baseball&quot;,
+        &quot;basketball-men&quot;,
+        &quot;basketball-women&quot;,
+        &quot;fieldhockey&quot;,
+        &quot;football&quot;,
+        &quot;icehockey-men&quot;,
+        &quot;icehockey-women&quot;,
+        &quot;lacrosse-men&quot;,
+        &quot;lacrosse-women&quot;,
+        &quot;soccer-men&quot;,
+        &quot;soccer-women&quot;,
+        &quot;softball&quot;,
+        &quot;volleyball-men&quot;,
+        &quot;volleyball-women&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;Baseball&quot;,
+        &quot;Men&#x27;s Basketball&quot;,
+        &quot;Women&#x27;s Basketball&quot;,
+        &quot;Field Hockey&quot;,
+        &quot;Football&quot;,
+        &quot;Men&#x27;s Ice Hockey&quot;,
+        &quot;Women&#x27;s Ice Hockey&quot;,
+        &quot;Men&#x27;s Lacrosse&quot;,
+        &quot;Women&#x27;s Lacrosse&quot;,
+        &quot;Men&#x27;s Soccer&quot;,
+        &quot;Women&#x27;s Soccer&quot;,
+        &quot;Softball&quot;,
+        &quot;Men&#x27;s Volleyball&quot;,
+        &quot;Women&#x27;s Volleyball&quot;
+      ],
+      &quot;prefill&quot;: &quot;basketball-men&quot;,
+      &quot;title&quot;: &quot;Sport&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;statCategory&quot;: {
+      &quot;default&quot;: &quot;Scoring Offense&quot;,
+      &quot;description&quot;: &quot;(mode=teamStats or individualStats) The statistic to rank by. Every NCAA.com category is listed; the valid set depends on the chosen sport and mode. If the default `Scoring Offense` is not valid for the chosen sport/mode, the actor uses a curated per-sport default (for example Points Per Game for men&#x27;s/women&#x27;s basketball players, Passing Yards Per Game for FBS players, Batting Average for baseball/softball) and reports the substitution in the run status. An explicitly unavailable category returns a clear status message.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;3rd Down Conversion Pct&quot;,
+        &quot;3rd Down Conversion Pct Defense&quot;,
+        &quot;4th Down Conversion Pct&quot;,
+        &quot;4th Down Conversion Pct Defense&quot;,
+        &quot;Aces Per Set&quot;,
+        &quot;All Purpose&quot;,
+        &quot;Assist/Turnover Ratio&quot;,
+        &quot;Assists&quot;,
+        &quot;Assists Per Game&quot;,
+        &quot;Assists per Game&quot;,
+        &quot;Assists Per Set&quot;,
+        &quot;Attacks Per Set&quot;,
+        &quot;Base on Balls&quot;,
+        &quot;Base on Balls Per Game&quot;,
+        &quot;Batting Average&quot;,
+        &quot;Bench Points Per Game&quot;,
+        &quot;Bench Points per game&quot;,
+        &quot;Blocked Kicks&quot;,
+        &quot;Blocked Kicks Allowed&quot;,
+        &quot;Blocked Punts&quot;,
+        &quot;Blocked Punts Allowed&quot;,
+        &quot;Blocks&quot;,
+        &quot;Blocks Per Game&quot;,
+        &quot;Blocks Per Set&quot;,
+        &quot;Caught Stealing By&quot;,
+        &quot;Caused Turnovers Per Game&quot;,
+        &quot;Clearing Percentage&quot;,
+        &quot;Combined Kick Returns&quot;,
+        &quot;Complete Games&quot;,
+        &quot;Completion Percentage&quot;,
+        &quot;Completions Per Game&quot;,
+        &quot;Corner Kicks Per Game&quot;,
+        &quot;Defensive Saves&quot;,
+        &quot;Defensive TDs&quot;,
+        &quot;Digs Per Set&quot;,
+        &quot;Double Doubles&quot;,
+        &quot;Double Plays&quot;,
+        &quot;Double Plays per Game&quot;,
+        &quot;Double Plays Per Game&quot;,
+        &quot;Doubles&quot;,
+        &quot;Doubles per Game&quot;,
+        &quot;Doubles Per Game&quot;,
+        &quot;Draw Control Percentage&quot;,
+        &quot;Draw Controls Per Game&quot;,
+        &quot;Earned Run Average&quot;,
+        &quot;Effective FG pct&quot;,
+        &quot;Face-Off Win Percentage&quot;,
+        &quot;Face-Off Winning Pct&quot;,
+        &quot;Face-Off Winning Percentage&quot;,
+        &quot;Faceoff win percentage&quot;,
+        &quot;Faceoff wins&quot;,
+        &quot;Faceoffs won&quot;,
+        &quot;Fastbreak Points&quot;,
+        &quot;Fewest Penalties&quot;,
+        &quot;Fewest Penalties Per Game&quot;,
+        &quot;Fewest Penalty Yards&quot;,
+        &quot;Fewest Penalty Yards Per Game&quot;,
+        &quot;Field Goal Attempts&quot;,
+        &quot;Field Goal Percentage&quot;,
+        &quot;Field Goal Percentage Defense&quot;,
+        &quot;Field Goals&quot;,
+        &quot;Field Goals Per Game&quot;,
+        &quot;Fielding Percentage&quot;,
+        &quot;First Downs Defense&quot;,
+        &quot;First Downs Offense&quot;,
+        &quot;Forced Fumbles&quot;,
+        &quot;Fouls Per Game&quot;,
+        &quot;Free Position Goals Per Game&quot;,
+        &quot;Free Position Percentage&quot;,
+        &quot;Free Throw Attempts&quot;,
+        &quot;Free Throw Attempts Per Game&quot;,
+        &quot;Free Throw Percentage&quot;,
+        &quot;Free Throws&quot;,
+        &quot;Free Throws Made Per Game&quot;,
+        &quot;Fumbles Lost&quot;,
+        &quot;Fumbles Recovered&quot;,
+        &quot;Game Winning Goals&quot;,
+        &quot;Game-Winning Goals&quot;,
+        &quot;Games Started&quot;,
+        &quot;Goal Differential&quot;,
+        &quot;Goalie Minutes Played&quot;,
+        &quot;Goalie Win-Loss Pct&quot;,
+        &quot;Goalie Winning Pct.&quot;,
+        &quot;Goals&quot;,
+        &quot;Goals Against Average&quot;,
+        &quot;Goals Per Game&quot;,
+        &quot;Goals per Game&quot;,
+        &quot;Goals-Against Average&quot;,
+        &quot;Ground Balls Per Game&quot;,
+        &quot;Hat Tricks&quot;,
+        &quot;Hit Batters&quot;,
+        &quot;Hit by Pitch&quot;,
+        &quot;Hit By Pitch&quot;,
+        &quot;Hit by Pitch per Game&quot;,
+        &quot;Hit By Pitch Per Game&quot;,
+        &quot;Hits&quot;,
+        &quot;Hits Allowed Per Nine Innings&quot;,
+        &quot;Hits Allowed Per Seven Innings&quot;,
+        &quot;Hits Per Game&quot;,
+        &quot;Hitting Percentage&quot;,
+        &quot;Home Runs&quot;,
+        &quot;Home Runs Per Game&quot;,
+        &quot;Home Runs per game&quot;,
+        &quot;Individual Man-up Goals&quot;,
+        &quot;Innings Pitched&quot;,
+        &quot;Interceptions Per Game&quot;,
+        &quot;Kickoff Return Defense&quot;,
+        &quot;Kickoff Return TDs&quot;,
+        &quot;Kickoff Returns&quot;,
+        &quot;Kills Per Set&quot;,
+        &quot;Kills SG Highs&quot;,
+        &quot;Man-Down Defense&quot;,
+        &quot;Man-Up Offense&quot;,
+        &quot;Match W-L Pctg.&quot;,
+        &quot;Minutes Per Game&quot;,
+        &quot;Net Punting&quot;,
+        &quot;On Base Percentage&quot;,
+        &quot;Opp Hitting Percentage&quot;,
+        &quot;Opponent Clear Percentage&quot;,
+        &quot;Opponent Hitting Percentage&quot;,
+        &quot;Passes Defended&quot;,
+        &quot;Passes Had Intercepted&quot;,
+        &quot;Passes Intercepted&quot;,
+        &quot;Passing Efficiency&quot;,
+        &quot;Passing Offense&quot;,
+        &quot;Passing TDs&quot;,
+        &quot;Passing Yards&quot;,
+        &quot;Passing Yards Allowed&quot;,
+        &quot;Passing Yards per Completion&quot;,
+        &quot;Passing Yards Per Game&quot;,
+        &quot;Penalties&quot;,
+        &quot;Penalty Corners Per Game&quot;,
+        &quot;Penalty Kicks&quot;,
+        &quot;Penalty Killing Pct.&quot;,
+        &quot;Penalty Killing Percentage&quot;,
+        &quot;Pitching Appearances&quot;,
+        &quot;Points&quot;,
+        &quot;Points Per Game&quot;,
+        &quot;Points per Game&quot;,
+        &quot;Points Per Set&quot;,
+        &quot;Points Responsible For&quot;,
+        &quot;Points Responsible For Per Game&quot;,
+        &quot;Power Play Goals&quot;,
+        &quot;Power-Play Percentage&quot;,
+        &quot;Punt Return Defense&quot;,
+        &quot;Punt Return TDs&quot;,
+        &quot;Punt Returns&quot;,
+        &quot;Punting&quot;,
+        &quot;RBIs&quot;,
+        &quot;RBIs Per Game&quot;,
+        &quot;Rebound Margin&quot;,
+        &quot;Rebounds&quot;,
+        &quot;Rebounds (Defensive) Per Game&quot;,
+        &quot;Rebounds (Offensive) Per Game&quot;,
+        &quot;Rebounds Per Game&quot;,
+        &quot;Receiving TDs&quot;,
+        &quot;Receiving Yards&quot;,
+        &quot;Receiving Yards Per Game&quot;,
+        &quot;Receptions Per Game&quot;,
+        &quot;Red Cards&quot;,
+        &quot;Red Zone Defense&quot;,
+        &quot;Red Zone Offense&quot;,
+        &quot;Runs&quot;,
+        &quot;Runs Batted In&quot;,
+        &quot;Runs Batted In Per Game&quot;,
+        &quot;Runs per Game&quot;,
+        &quot;Runs Per Game&quot;,
+        &quot;Rush Yards Per Carry&quot;,
+        &quot;Rushing Defense&quot;,
+        &quot;Rushing Offense&quot;,
+        &quot;Rushing TDs&quot;,
+        &quot;Rushing Yards&quot;,
+        &quot;Rushing Yards Per Game&quot;,
+        &quot;Sacks&quot;,
+        &quot;Sacks Allowed&quot;,
+        &quot;Sacrifice Bunts&quot;,
+        &quot;Sacrifice Bunts Per Game&quot;,
+        &quot;Sacrifice Bunts per game&quot;,
+        &quot;Sacrifice Flies&quot;,
+        &quot;Save Pct&quot;,
+        &quot;Save Percentage&quot;,
+        &quot;Saves&quot;,
+        &quot;Saves Per Game&quot;,
+        &quot;Saves Percentage&quot;,
+        &quot;Scoring&quot;,
+        &quot;Scoring Average&quot;,
+        &quot;Scoring Defense&quot;,
+        &quot;Scoring Margin&quot;,
+        &quot;Scoring Offense&quot;,
+        &quot;Service Aces&quot;,
+        &quot;Short-Handed Goals&quot;,
+        &quot;Short-handed Goals&quot;,
+        &quot;Shot Accuracy&quot;,
+        &quot;Shot Percentage&quot;,
+        &quot;Shots on Goal Per Game&quot;,
+        &quot;Shots Per Game&quot;,
+        &quot;Shutout Percentage&quot;,
+        &quot;Shutouts&quot;,
+        &quot;Shutouts Per Game&quot;,
+        &quot;Slugging Percentage&quot;,
+        &quot;Solo Tackles&quot;,
+        &quot;Steals&quot;,
+        &quot;Steals Per Game&quot;,
+        &quot;Stolen Base Percentage&quot;,
+        &quot;Stolen Bases&quot;,
+        &quot;Stolen Bases per Game&quot;,
+        &quot;Stolen Bases Per Game&quot;,
+        &quot;Strikeout-to-Walk Ratio&quot;,
+        &quot;Strikeouts&quot;,
+        &quot;Strikeouts Per Nine Innings&quot;,
+        &quot;Strikeouts Per Seven Innings&quot;,
+        &quot;Tackles For Loss&quot;,
+        &quot;Tackles for Loss Allowed&quot;,
+        &quot;Team Assists&quot;,
+        &quot;Team Attacks Per Set&quot;,
+        &quot;Team Digs&quot;,
+        &quot;Team Faceoff win percentage&quot;,
+        &quot;Team Goals Against Average&quot;,
+        &quot;Team Kills&quot;,
+        &quot;Team Passing Efficiency&quot;,
+        &quot;Team Passing Efficiency Defense&quot;,
+        &quot;Team Penalty Minutes Per Game&quot;,
+        &quot;Team Points&quot;,
+        &quot;Team Sacks&quot;,
+        &quot;Team Saves&quot;,
+        &quot;Team Service Aces&quot;,
+        &quot;Team Shutouts&quot;,
+        &quot;Team Strikeouts Per Seven Innings&quot;,
+        &quot;Team Tackles for Loss&quot;,
+        &quot;Team Total Attacks&quot;,
+        &quot;Team Total Blocks&quot;,
+        &quot;Three Point Attempts&quot;,
+        &quot;Three Point Attempts Per Game&quot;,
+        &quot;Three Point Percentage&quot;,
+        &quot;Three Point Percentage Defense&quot;,
+        &quot;Three Pointers&quot;,
+        &quot;Three Pointers Per Game&quot;,
+        &quot;Time of Possession&quot;,
+        &quot;Tm. Pen. Min.&quot;,
+        &quot;Tm. Power Play Goals&quot;,
+        &quot;Tm. Short-Handed Goals&quot;,
+        &quot;Total 3-point FGM&quot;,
+        &quot;Total Assists&quot;,
+        &quot;Total Attacks&quot;,
+        &quot;Total Bases&quot;,
+        &quot;Total Blocks&quot;,
+        &quot;Total Defense&quot;,
+        &quot;Total Digs&quot;,
+        &quot;Total Goals&quot;,
+        &quot;Total Interceptions&quot;,
+        &quot;Total Kills&quot;,
+        &quot;Total Offense&quot;,
+        &quot;Total Points&quot;,
+        &quot;Total Points Scored&quot;,
+        &quot;Total Runs&quot;,
+        &quot;Total Sacrifice Bunts&quot;,
+        &quot;Total Sacrifice Flies&quot;,
+        &quot;Total Saves&quot;,
+        &quot;Total Stolen Bases&quot;,
+        &quot;Total Tackles&quot;,
+        &quot;Total Touchdowns&quot;,
+        &quot;Toughest to Strike Out&quot;,
+        &quot;Triple Doubles&quot;,
+        &quot;Triple Plays&quot;,
+        &quot;Triples&quot;,
+        &quot;Triples Per Game&quot;,
+        &quot;Triples per Game&quot;,
+        &quot;Turnover Margin&quot;,
+        &quot;Turnovers Forced Per Game&quot;,
+        &quot;Turnovers Gained&quot;,
+        &quot;Turnovers Lost&quot;,
+        &quot;Turnovers Per Game&quot;,
+        &quot;Victories&quot;,
+        &quot;Walks&quot;,
+        &quot;Walks Allowed Per Nine Innings&quot;,
+        &quot;Walks Allowed Per Seven Innings&quot;,
+        &quot;Walks Per Game&quot;,
+        &quot;WHIP&quot;,
+        &quot;Win Percentage&quot;,
+        &quot;Winning Percentage&quot;,
+        &quot;WL Pct&quot;,
+        &quot;WL Percentage&quot;,
+        &quot;Won-Lost-Tied Percentage&quot;,
+        &quot;Yards per Pass Attempt&quot;,
+        &quot;Yards per Reception&quot;,
+        &quot;Yellow Cards&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;3rd Down Conversion Pct&quot;,
+        &quot;3rd Down Conversion Pct Defense&quot;,
+        &quot;4th Down Conversion Pct&quot;,
+        &quot;4th Down Conversion Pct Defense&quot;,
+        &quot;Aces Per Set&quot;,
+        &quot;All Purpose&quot;,
+        &quot;Assist/Turnover Ratio&quot;,
+        &quot;Assists&quot;,
+        &quot;Assists Per Game&quot;,
+        &quot;Assists per Game&quot;,
+        &quot;Assists Per Set&quot;,
+        &quot;Attacks Per Set&quot;,
+        &quot;Base on Balls&quot;,
+        &quot;Base on Balls Per Game&quot;,
+        &quot;Batting Average&quot;,
+        &quot;Bench Points Per Game&quot;,
+        &quot;Bench Points per game&quot;,
+        &quot;Blocked Kicks&quot;,
+        &quot;Blocked Kicks Allowed&quot;,
+        &quot;Blocked Punts&quot;,
+        &quot;Blocked Punts Allowed&quot;,
+        &quot;Blocks&quot;,
+        &quot;Blocks Per Game&quot;,
+        &quot;Blocks Per Set&quot;,
+        &quot;Caught Stealing By&quot;,
+        &quot;Caused Turnovers Per Game&quot;,
+        &quot;Clearing Percentage&quot;,
+        &quot;Combined Kick Returns&quot;,
+        &quot;Complete Games&quot;,
+        &quot;Completion Percentage&quot;,
+        &quot;Completions Per Game&quot;,
+        &quot;Corner Kicks Per Game&quot;,
+        &quot;Defensive Saves&quot;,
+        &quot;Defensive TDs&quot;,
+        &quot;Digs Per Set&quot;,
+        &quot;Double Doubles&quot;,
+        &quot;Double Plays&quot;,
+        &quot;Double Plays per Game&quot;,
+        &quot;Double Plays Per Game&quot;,
+        &quot;Doubles&quot;,
+        &quot;Doubles per Game&quot;,
+        &quot;Doubles Per Game&quot;,
+        &quot;Draw Control Percentage&quot;,
+        &quot;Draw Controls Per Game&quot;,
+        &quot;Earned Run Average&quot;,
+        &quot;Effective FG pct&quot;,
+        &quot;Face-Off Win Percentage&quot;,
+        &quot;Face-Off Winning Pct&quot;,
+        &quot;Face-Off Winning Percentage&quot;,
+        &quot;Faceoff win percentage&quot;,
+        &quot;Faceoff wins&quot;,
+        &quot;Faceoffs won&quot;,
+        &quot;Fastbreak Points&quot;,
+        &quot;Fewest Penalties&quot;,
+        &quot;Fewest Penalties Per Game&quot;,
+        &quot;Fewest Penalty Yards&quot;,
+        &quot;Fewest Penalty Yards Per Game&quot;,
+        &quot;Field Goal Attempts&quot;,
+        &quot;Field Goal Percentage&quot;,
+        &quot;Field Goal Percentage Defense&quot;,
+        &quot;Field Goals&quot;,
+        &quot;Field Goals Per Game&quot;,
+        &quot;Fielding Percentage&quot;,
+        &quot;First Downs Defense&quot;,
+        &quot;First Downs Offense&quot;,
+        &quot;Forced Fumbles&quot;,
+        &quot;Fouls Per Game&quot;,
+        &quot;Free Position Goals Per Game&quot;,
+        &quot;Free Position Percentage&quot;,
+        &quot;Free Throw Attempts&quot;,
+        &quot;Free Throw Attempts Per Game&quot;,
+        &quot;Free Throw Percentage&quot;,
+        &quot;Free Throws&quot;,
+        &quot;Free Throws Made Per Game&quot;,
+        &quot;Fumbles Lost&quot;,
+        &quot;Fumbles Recovered&quot;,
+        &quot;Game Winning Goals&quot;,
+        &quot;Game-Winning Goals&quot;,
+        &quot;Games Started&quot;,
+        &quot;Goal Differential&quot;,
+        &quot;Goalie Minutes Played&quot;,
+        &quot;Goalie Win-Loss Pct&quot;,
+        &quot;Goalie Winning Pct.&quot;,
+        &quot;Goals&quot;,
+        &quot;Goals Against Average&quot;,
+        &quot;Goals Per Game&quot;,
+        &quot;Goals per Game&quot;,
+        &quot;Goals-Against Average&quot;,
+        &quot;Ground Balls Per Game&quot;,
+        &quot;Hat Tricks&quot;,
+        &quot;Hit Batters&quot;,
+        &quot;Hit by Pitch&quot;,
+        &quot;Hit By Pitch&quot;,
+        &quot;Hit by Pitch per Game&quot;,
+        &quot;Hit By Pitch Per Game&quot;,
+        &quot;Hits&quot;,
+        &quot;Hits Allowed Per Nine Innings&quot;,
+        &quot;Hits Allowed Per Seven Innings&quot;,
+        &quot;Hits Per Game&quot;,
+        &quot;Hitting Percentage&quot;,
+        &quot;Home Runs&quot;,
+        &quot;Home Runs Per Game&quot;,
+        &quot;Home Runs per game&quot;,
+        &quot;Individual Man-up Goals&quot;,
+        &quot;Innings Pitched&quot;,
+        &quot;Interceptions Per Game&quot;,
+        &quot;Kickoff Return Defense&quot;,
+        &quot;Kickoff Return TDs&quot;,
+        &quot;Kickoff Returns&quot;,
+        &quot;Kills Per Set&quot;,
+        &quot;Kills SG Highs&quot;,
+        &quot;Man-Down Defense&quot;,
+        &quot;Man-Up Offense&quot;,
+        &quot;Match W-L Pctg.&quot;,
+        &quot;Minutes Per Game&quot;,
+        &quot;Net Punting&quot;,
+        &quot;On Base Percentage&quot;,
+        &quot;Opp Hitting Percentage&quot;,
+        &quot;Opponent Clear Percentage&quot;,
+        &quot;Opponent Hitting Percentage&quot;,
+        &quot;Passes Defended&quot;,
+        &quot;Passes Had Intercepted&quot;,
+        &quot;Passes Intercepted&quot;,
+        &quot;Passing Efficiency&quot;,
+        &quot;Passing Offense&quot;,
+        &quot;Passing TDs&quot;,
+        &quot;Passing Yards&quot;,
+        &quot;Passing Yards Allowed&quot;,
+        &quot;Passing Yards per Completion&quot;,
+        &quot;Passing Yards Per Game&quot;,
+        &quot;Penalties&quot;,
+        &quot;Penalty Corners Per Game&quot;,
+        &quot;Penalty Kicks&quot;,
+        &quot;Penalty Killing Pct.&quot;,
+        &quot;Penalty Killing Percentage&quot;,
+        &quot;Pitching Appearances&quot;,
+        &quot;Points&quot;,
+        &quot;Points Per Game&quot;,
+        &quot;Points per Game&quot;,
+        &quot;Points Per Set&quot;,
+        &quot;Points Responsible For&quot;,
+        &quot;Points Responsible For Per Game&quot;,
+        &quot;Power Play Goals&quot;,
+        &quot;Power-Play Percentage&quot;,
+        &quot;Punt Return Defense&quot;,
+        &quot;Punt Return TDs&quot;,
+        &quot;Punt Returns&quot;,
+        &quot;Punting&quot;,
+        &quot;RBIs&quot;,
+        &quot;RBIs Per Game&quot;,
+        &quot;Rebound Margin&quot;,
+        &quot;Rebounds&quot;,
+        &quot;Rebounds (Defensive) Per Game&quot;,
+        &quot;Rebounds (Offensive) Per Game&quot;,
+        &quot;Rebounds Per Game&quot;,
+        &quot;Receiving TDs&quot;,
+        &quot;Receiving Yards&quot;,
+        &quot;Receiving Yards Per Game&quot;,
+        &quot;Receptions Per Game&quot;,
+        &quot;Red Cards&quot;,
+        &quot;Red Zone Defense&quot;,
+        &quot;Red Zone Offense&quot;,
+        &quot;Runs&quot;,
+        &quot;Runs Batted In&quot;,
+        &quot;Runs Batted In Per Game&quot;,
+        &quot;Runs per Game&quot;,
+        &quot;Runs Per Game&quot;,
+        &quot;Rush Yards Per Carry&quot;,
+        &quot;Rushing Defense&quot;,
+        &quot;Rushing Offense&quot;,
+        &quot;Rushing TDs&quot;,
+        &quot;Rushing Yards&quot;,
+        &quot;Rushing Yards Per Game&quot;,
+        &quot;Sacks&quot;,
+        &quot;Sacks Allowed&quot;,
+        &quot;Sacrifice Bunts&quot;,
+        &quot;Sacrifice Bunts Per Game&quot;,
+        &quot;Sacrifice Bunts per game&quot;,
+        &quot;Sacrifice Flies&quot;,
+        &quot;Save Pct&quot;,
+        &quot;Save Percentage&quot;,
+        &quot;Saves&quot;,
+        &quot;Saves Per Game&quot;,
+        &quot;Saves Percentage&quot;,
+        &quot;Scoring&quot;,
+        &quot;Scoring Average&quot;,
+        &quot;Scoring Defense&quot;,
+        &quot;Scoring Margin&quot;,
+        &quot;Scoring Offense&quot;,
+        &quot;Service Aces&quot;,
+        &quot;Short-Handed Goals&quot;,
+        &quot;Short-handed Goals&quot;,
+        &quot;Shot Accuracy&quot;,
+        &quot;Shot Percentage&quot;,
+        &quot;Shots on Goal Per Game&quot;,
+        &quot;Shots Per Game&quot;,
+        &quot;Shutout Percentage&quot;,
+        &quot;Shutouts&quot;,
+        &quot;Shutouts Per Game&quot;,
+        &quot;Slugging Percentage&quot;,
+        &quot;Solo Tackles&quot;,
+        &quot;Steals&quot;,
+        &quot;Steals Per Game&quot;,
+        &quot;Stolen Base Percentage&quot;,
+        &quot;Stolen Bases&quot;,
+        &quot;Stolen Bases per Game&quot;,
+        &quot;Stolen Bases Per Game&quot;,
+        &quot;Strikeout-to-Walk Ratio&quot;,
+        &quot;Strikeouts&quot;,
+        &quot;Strikeouts Per Nine Innings&quot;,
+        &quot;Strikeouts Per Seven Innings&quot;,
+        &quot;Tackles For Loss&quot;,
+        &quot;Tackles for Loss Allowed&quot;,
+        &quot;Team Assists&quot;,
+        &quot;Team Attacks Per Set&quot;,
+        &quot;Team Digs&quot;,
+        &quot;Team Faceoff win percentage&quot;,
+        &quot;Team Goals Against Average&quot;,
+        &quot;Team Kills&quot;,
+        &quot;Team Passing Efficiency&quot;,
+        &quot;Team Passing Efficiency Defense&quot;,
+        &quot;Team Penalty Minutes Per Game&quot;,
+        &quot;Team Points&quot;,
+        &quot;Team Sacks&quot;,
+        &quot;Team Saves&quot;,
+        &quot;Team Service Aces&quot;,
+        &quot;Team Shutouts&quot;,
+        &quot;Team Strikeouts Per Seven Innings&quot;,
+        &quot;Team Tackles for Loss&quot;,
+        &quot;Team Total Attacks&quot;,
+        &quot;Team Total Blocks&quot;,
+        &quot;Three Point Attempts&quot;,
+        &quot;Three Point Attempts Per Game&quot;,
+        &quot;Three Point Percentage&quot;,
+        &quot;Three Point Percentage Defense&quot;,
+        &quot;Three Pointers&quot;,
+        &quot;Three Pointers Per Game&quot;,
+        &quot;Time of Possession&quot;,
+        &quot;Tm. Pen. Min.&quot;,
+        &quot;Tm. Power Play Goals&quot;,
+        &quot;Tm. Short-Handed Goals&quot;,
+        &quot;Total 3-point FGM&quot;,
+        &quot;Total Assists&quot;,
+        &quot;Total Attacks&quot;,
+        &quot;Total Bases&quot;,
+        &quot;Total Blocks&quot;,
+        &quot;Total Defense&quot;,
+        &quot;Total Digs&quot;,
+        &quot;Total Goals&quot;,
+        &quot;Total Interceptions&quot;,
+        &quot;Total Kills&quot;,
+        &quot;Total Offense&quot;,
+        &quot;Total Points&quot;,
+        &quot;Total Points Scored&quot;,
+        &quot;Total Runs&quot;,
+        &quot;Total Sacrifice Bunts&quot;,
+        &quot;Total Sacrifice Flies&quot;,
+        &quot;Total Saves&quot;,
+        &quot;Total Stolen Bases&quot;,
+        &quot;Total Tackles&quot;,
+        &quot;Total Touchdowns&quot;,
+        &quot;Toughest to Strike Out&quot;,
+        &quot;Triple Doubles&quot;,
+        &quot;Triple Plays&quot;,
+        &quot;Triples&quot;,
+        &quot;Triples Per Game&quot;,
+        &quot;Triples per Game&quot;,
+        &quot;Turnover Margin&quot;,
+        &quot;Turnovers Forced Per Game&quot;,
+        &quot;Turnovers Gained&quot;,
+        &quot;Turnovers Lost&quot;,
+        &quot;Turnovers Per Game&quot;,
+        &quot;Victories&quot;,
+        &quot;Walks&quot;,
+        &quot;Walks Allowed Per Nine Innings&quot;,
+        &quot;Walks Allowed Per Seven Innings&quot;,
+        &quot;Walks Per Game&quot;,
+        &quot;WHIP&quot;,
+        &quot;Win Percentage&quot;,
+        &quot;Winning Percentage&quot;,
+        &quot;WL Pct&quot;,
+        &quot;WL Percentage&quot;,
+        &quot;Won-Lost-Tied Percentage&quot;,
+        &quot;Yards per Pass Attempt&quot;,
+        &quot;Yards per Reception&quot;,
+        &quot;Yellow Cards&quot;
+      ],
+      &quot;prefill&quot;: &quot;Scoring Offense&quot;,
+      &quot;title&quot;: &quot;Statistical category&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;team&quot;: {
+      &quot;description&quot;: &quot;Optional case-insensitive team/school name or NCAA.com school slug filter. Applies to leaderboards, polls, standings, schedules, teamSchedule, brackets, game detail, and the school directory. `mode=teamSchedule` requires this field; for example `duke` or `Duke` matches either team in each contest. Leave empty for all teams in the other modes.&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;title&quot;: &quot;Team filter&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;week&quot;: {
+      &quot;description&quot;: &quot;(mode=schedules, sport=football) Week number. Football schedules are week-based; leave empty to use the current NCAA.com week. `mode=teamSchedule` uses the full season calendar automatically and does not need this field.&quot;,
+      &quot;maximum&quot;: 20,
+      &quot;minimum&quot;: 1,
+      &quot;title&quot;: &quot;Football week&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    }
+  },
+  &quot;required&quot;: [
+    &quot;mode&quot;
+  ],
+  &quot;schemaVersion&quot;: 1,
+  &quot;title&quot;: &quot;NCAA Stats &amp; Scores: Team &amp; Player Leaderboards, Polls &amp; Standings Input&quot;,
+  &quot;type&quot;: &quot;object&quot;
+}
+</code></pre></details></section><section class="schema-section" id="output-schema"><h2>Output schema</h2><p>Published result links and storage locations. This schema is not an exhaustive contract for every field in a dataset record.</p><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>stats</code></td><td>string</td><td>optional</td><td>Dataset containing all scraped NCAA.com records for this run, including option records when mode=listOptions.</td></tr></tbody></table></div><p><a href="output-schema.json">Download the published output schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+  &quot;actorOutputSchemaVersion&quot;: 1,
+  &quot;description&quot;: &quot;Official NCAA.com stats and scores: team and player leaderboards, ranking polls, conference standings, school directory entries, schedules/scores, full team season schedules, championship / March Madness bracket games, game details (venue, linescores, box score, play-by-play), championship history, and the listOptions capability catalog.&quot;,
+  &quot;properties&quot;: {
+    &quot;stats&quot;: {
+      &quot;description&quot;: &quot;Dataset containing all scraped NCAA.com records for this run, including option records when mode=listOptions.&quot;,
+      &quot;template&quot;: &quot;{{links.apiDefaultDatasetUrl}}/items&quot;,
+      &quot;title&quot;: &quot;NCAA stats &amp; scores records&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    }
+  },
+  &quot;title&quot;: &quot;NCAA Stats &amp; Scores: Team &amp; Player Leaderboards, Polls &amp; Standings Output&quot;
+}
+</code></pre></details></section><section class="schema-section" id="dataset-schema"><h2>Dataset schema</h2><p>Published dataset views and any declared field definitions. A view can select only a subset of the returned record fields.</p><p><a href="dataset-schema.json">Download the published dataset schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+  &quot;actorSpecification&quot;: 1,
+  &quot;views&quot;: {
+    &quot;overview&quot;: {
+      &quot;display&quot;: {
+        &quot;component&quot;: &quot;table&quot;,
+        &quot;properties&quot;: {}
+      },
+      &quot;title&quot;: &quot;NCAA stats &amp; scores&quot;,
+      &quot;transformation&quot;: {
+        &quot;fields&quot;: [
+          &quot;recordType&quot;,
+          &quot;optionType&quot;,
+          &quot;value&quot;,
+          &quot;title&quot;,
+          &quot;rank&quot;,
+          &quot;team&quot;,
+          &quot;playerName&quot;,
+          &quot;school&quot;,
+          &quot;conference&quot;,
+          &quot;statCategory&quot;,
+          &quot;statValue&quot;,
+          &quot;statLabel&quot;,
+          &quot;season&quot;,
+          &quot;seasonLabel&quot;,
+          &quot;seasonYear&quot;,
+          &quot;date&quot;,
+          &quot;homeTeam&quot;,
+          &quot;awayTeam&quot;,
+          &quot;pollSlug&quot;,
+          &quot;requestedPoll&quot;,
+          &quot;usedPoll&quot;,
+          &quot;fallbackUsed&quot;,
+          &quot;year&quot;,
+          &quot;champion&quot;,
+          &quot;championshipId&quot;,
+          &quot;championshipTitle&quot;,
+          &quot;championshipYear&quot;,
+          &quot;roundNumber&quot;,
+          &quot;roundTitle&quot;,
+          &quot;region&quot;,
+          &quot;homeSeed&quot;,
+          &quot;awaySeed&quot;,
+          &quot;bracketUrl&quot;,
+          &quot;sourceUrl&quot;,
+          &quot;gameId&quot;,
+          &quot;venue&quot;,
+          &quot;hasBoxscore&quot;,
+          &quot;hasPbp&quot;
+        ]
+      }
+    }
+  }
+}
+</code></pre></details></section><section class="schema-section" id="key-value-schema"><h2>Key-value schema</h2><p>Published key-value store definitions, when provided by this build.</p><p>This definition is not present in the default published build. See the published README for available documentation.</p></section><section id="published-readme"><h2>Published README</h2><details><summary>Read the full published documentation</summary><h2 id="readme-ncaa-stats-scores-team-player-leaderboards-polls-standings">NCAA Stats &amp; Scores: Team &amp; Player Leaderboards, Polls &amp; Standings</h2>
+<p>Scrape official NCAA.com stats and scores for 14 college sports: team and individual statistical leaderboards, national ranking polls, conference standings, the NCAA school directory, schedules and scores, full team season schedules, championship / March Madness brackets, game details (venue, linescores, box score, play-by-play), and championship history. Every record comes from public NCAA.com pages and the official NCAA scoreboard/championship feeds — no account, cookies, or API key required.</p>
+<h2 id="readme-what-this-actor-does">What this actor does</h2>
+<ul>
+<li><strong>Eleven modes:</strong> <code>teamStats</code>, <code>individualStats</code>, <code>rankings</code>, <code>standings</code>, <code>teams</code>, <code>schedules</code>, <code>teamSchedule</code>, <code>brackets</code>, <code>gameDetail</code>, <code>history</code>, <code>listOptions</code></li>
+<li><strong><code>listOptions</code></strong> returns the valid modes, sports, divisions, categories, polls, and conferences from the built-in catalog for a given <code>sport</code>/<code>division</code>; it makes no NCAA.com requests and uses no paid API</li>
+<li><strong>Fourteen sports</strong> across Division I, II, and III, plus FBS/FCS football and National Collegiate men's volleyball and women's ice hockey</li>
+<li><strong>Every leaderboard column</strong> NCAA.com publishes for the selected category, including games played, class year, height, and position where available</li>
+<li><strong>Every NCAA-hosted poll</strong>, including AP, NET, RPI, committee rankings, NPI, WAB, and regional rankings</li>
+<li><strong>Conference standings</strong> with conference and overall records, win percentage, streak, and sport-specific extra columns</li>
+<li><strong>School directory</strong> with school name, short name, logo, and NCAA.com school URL</li>
+<li><strong>Schedules and scores</strong> with home/away teams, scores, status, conferences, ranks, seeds, and championship context</li>
+<li><strong>Full team season schedules</strong> (<code>teamSchedule</code>) from NCAA.com's season-wide schedule dates or football week calendar — not limited to the 31-day <code>schedules</code> window</li>
+<li><strong>Championship / March Madness brackets</strong> (<code>brackets</code>) with rounds, regions, seeds, scores, and bracket position, from NCAA.com's official championship GraphQL route</li>
+<li><strong>Game detail</strong> with venue, city/state, linescores, team records, box-score blocks, and play-by-play when NCAA.com publishes them</li>
+<li><strong>Optional schedule enrichment</strong> adds venue, linescores, records, and box-score/play-by-play availability flags to schedule and team-schedule rows</li>
+<li><strong>Championship history</strong> with year, champion, record, coach, score, runner-up, and site</li>
+<li><strong>Filters</strong> for team, player, rank range, minimum games, conference, and final games only</li>
+<li><strong>Empty fields are omitted</strong> — no <code>null</code>, no placeholders, no fabricated values</li>
+</ul>
+<h2 id="readme-output-per-team-leaderboard-row-mode-teamstats">Output per team leaderboard row (<code>mode: teamStats</code>)</h2>
+<ul>
+<li><code>sport</code>, <code>sportSlug</code>, <code>division</code>, <code>season</code>, <code>seasonLabel</code>, <code>seasonYear</code></li>
+<li><code>statCategory</code>, <code>statCategoryId</code> — category used and NCAA.com's category id</li>
+<li><code>requestedStatCategory</code>, <code>fallbackUsed</code> — when the schema default was replaced by the curated per-sport default</li>
+<li><code>rank</code> — leaderboard position</li>
+<li><code>tiedRank</code> — <code>true</code> only when the row shares the rank above it</li>
+<li><code>team</code> — school name</li>
+<li><code>teamUrl</code> — NCAA.com school page</li>
+<li><code>teamLogoUrl</code> — official school logo</li>
+<li><code>gamesPlayed</code></li>
+<li><code>stats</code> — every other numeric or text column NCAA.com shows for the category</li>
+<li><code>statLabel</code>, <code>statValue</code> — the category's headline column label and value</li>
+<li><code>lastUpdated</code> — NCAA.com's &quot;through games&quot; or last-updated note, when published</li>
+<li><code>page</code> — source leaderboard page</li>
+<li><code>sourceUrl</code>, <code>recordType</code>, <code>scrapedAt</code></li>
+</ul>
+<h2 id="readme-output-per-player-leaderboard-row-mode-individualstats">Output per player leaderboard row (<code>mode: individualStats</code>)</h2>
+<p>Same fields as a team leaderboard row, plus:</p>
+<ul>
+<li><code>playerName</code></li>
+<li><code>class</code> — class year when NCAA.com publishes it</li>
+<li><code>height</code> — when NCAA.com publishes it</li>
+<li><code>position</code> — when NCAA.com publishes it</li>
+</ul>
+<h2 id="readme-output-per-poll-row-mode-rankings">Output per poll row (<code>mode: rankings</code>)</h2>
+<ul>
+<li><code>sport</code>, <code>sportSlug</code>, <code>division</code></li>
+<li><code>pollSlug</code>, <code>pollName</code>, <code>usedPoll</code>, <code>requestedPoll</code>, <code>fallbackUsed</code> — the poll requested and the curated default actually used</li>
+<li><code>rank</code>, <code>tiedRank</code></li>
+<li><code>school</code> — school or college name</li>
+<li><code>firstPlaceVotes</code> — when the poll publishes first-place votes</li>
+<li><code>record</code>, <code>wins</code>, <code>losses</code>, <code>ties</code> — when the poll publishes a record</li>
+<li><code>points</code> — poll points when published</li>
+<li><code>previousRank</code> — previous poll position when published</li>
+<li><code>conference</code> — when the poll table includes a conference column</li>
+<li><code>pollStats</code> — every other column the poll publishes (road/home/neutral splits, quadrant records, etc.)</li>
+<li><code>lastUpdated</code> (when published), <code>sourceUrl</code>, <code>recordType</code>, <code>scrapedAt</code></li>
+</ul>
+<h2 id="readme-output-per-standings-row-mode-standings">Output per standings row (<code>mode: standings</code>)</h2>
+<ul>
+<li><code>sport</code>, <code>sportSlug</code>, <code>division</code></li>
+<li><code>conference</code>, <code>conferenceSlug</code> (<code>conferenceSlug</code> when a specific conference was requested)</li>
+<li><code>team</code>, <code>teamLogoUrl</code></li>
+<li><code>conferenceWins</code>, <code>conferenceLosses</code>, <code>conferencePct</code></li>
+<li><code>overallWins</code>, <code>overallLosses</code>, <code>overallPct</code></li>
+<li><code>streak</code></li>
+<li><code>standingsStats</code> — sport-specific extra columns (for football: points for/against, home/away records)</li>
+<li><code>lastUpdated</code> (when published), <code>sourceUrl</code>, <code>recordType</code>, <code>scrapedAt</code></li>
+</ul>
+<h2 id="readme-output-per-school-mode-teams">Output per school (<code>mode: teams</code>)</h2>
+<ul>
+<li><code>team</code> — short school name</li>
+<li><code>schoolName</code> — full institution name</li>
+<li><code>teamSlug</code> — NCAA.com school slug</li>
+<li><code>teamUrl</code>, <code>teamLogoUrl</code></li>
+<li><code>page</code> — directory page</li>
+<li><code>sourceUrl</code>, <code>recordType</code>, <code>scrapedAt</code></li>
+</ul>
+<h2 id="readme-output-per-game-mode-schedules">Output per game (<code>mode: schedules</code>)</h2>
+<ul>
+<li><code>gameId</code></li>
+<li><code>sport</code>, <code>sportSlug</code>, <code>division</code>, <code>season</code>, <code>seasonLabel</code>, <code>seasonYear</code>, <code>week</code> (football)</li>
+<li><code>date</code>, <code>startTime</code>, <code>startTimeEpoch</code> (UTC epoch)</li>
+<li><code>status</code>, <code>statusDisplay</code>, <code>currentPeriod</code>, <code>contestClock</code></li>
+<li><code>homeTeam</code>, <code>homeTeamSlug</code>, <code>homeScore</code>, <code>homeConference</code>, <code>homeRank</code>, <code>homeSeed</code></li>
+<li><code>awayTeam</code>, <code>awayTeamSlug</code>, <code>awayScore</code>, <code>awayConference</code> (when published), <code>awayRank</code>, <code>awaySeed</code></li>
+<li><code>winner</code> — <code>home</code>, <code>away</code>, or <code>tie</code> when a final result is known</li>
+<li><code>isChampionship</code>, <code>championshipId</code>, <code>bracketId</code>, <code>roundNumber</code>, <code>roundDescription</code></li>
+<li>With <code>includeGameDetails</code>: <code>venue</code>, <code>city</code>, <code>state</code>, <code>linescores</code>, <code>homeRecord</code>, <code>awayRecord</code>, <code>homeTeamId</code>, <code>awayTeamId</code>, <code>homeTeamFullName</code>, <code>awayTeamFullName</code>, <code>winnerTeamId</code>, <code>hasBoxscore</code>, <code>hasPbp</code>, <code>hasTeamStats</code>, <code>hasScoringSummary</code></li>
+<li><code>sourceUrl</code>, <code>recordType</code>, <code>scrapedAt</code></li>
+</ul>
+<h3 id="readme-output-per-team-schedule-game-mode-teamschedule">Output per team-schedule game (<code>mode: teamSchedule</code>)</h3>
+<p>Same fields as a <code>schedules</code> row, returned for one team across the whole NCAA.com season. <code>team</code> is required (a school name or NCAA.com slug such as <code>duke</code>). The mode reads NCAA.com's season-wide game-date list (or football's week calendar) and does not apply the 31-day window; <code>scheduleDateFrom</code>, <code>scheduleDateTo</code>, and <code>week</code> are ignored. <code>includeGameDetails</code> works the same as in <code>schedules</code>.</p>
+<h2 id="readme-output-per-bracket-game-mode-brackets">Output per bracket game (<code>mode: brackets</code>)</h2>
+<ul>
+<li><code>sport</code>, <code>sportSlug</code>, <code>division</code></li>
+<li><code>championshipYear</code>, <code>season</code>, <code>seasonYear</code> — the tournament year NCAA.com returned</li>
+<li><code>championshipId</code>, <code>championshipTitle</code>, <code>bracketTemplate</code></li>
+<li><code>gameId</code>, <code>gameTitle</code>, <code>date</code>, <code>startTime</code>, <code>startTimeEpoch</code></li>
+<li><code>status</code>, <code>statusDisplay</code>, <code>currentPeriod</code>, <code>finalMessage</code></li>
+<li><code>roundNumber</code>, <code>roundTitle</code>, <code>isFinalRound</code></li>
+<li><code>bracketPositionId</code>, <code>bracketId</code>, <code>sectionId</code>, <code>region</code>, <code>regionCode</code></li>
+<li><code>homeTeam</code>, <code>homeTeamSlug</code>, <code>homeSeed</code>, <code>homeScore</code>, <code>homeTeamLogoUrl</code></li>
+<li><code>awayTeam</code>, <code>awayTeamSlug</code>, <code>awaySeed</code>, <code>awayScore</code>, <code>awayTeamLogoUrl</code></li>
+<li><code>winner</code> — <code>home</code>, <code>away</code>, or <code>tie</code> when a result is known; <code>winnerTeam</code> when published</li>
+<li><code>bracketUrl</code> — official NCAA.com bracket page; <code>sourceUrl</code> — official game page</li>
+<li><code>recordType</code> — <code>bracketGame</code>; <code>scrapedAt</code></li>
+</ul>
+<p>Unplayed bracket slots that NCAA.com publishes as TBA are returned with their bracket position and round; team and score fields are omitted until NCAA.com publishes them. No team or score is inferred.</p>
+<h2 id="readme-output-per-game-detail-mode-gamedetail">Output per game detail (<code>mode: gameDetail</code>)</h2>
+<ul>
+<li><code>gameId</code>, <code>sport</code>, <code>sportSlug</code>, <code>sportCode</code>, <code>division</code>, <code>season</code>, <code>seasonYear</code>, <code>week</code></li>
+<li><code>date</code>, <code>startTime</code>, <code>startTimeEpoch</code> (UTC epoch)</li>
+<li><code>status</code>, <code>statusDisplay</code>, <code>currentPeriod</code>, <code>clock</code>, <code>finalMessage</code></li>
+<li><code>venue</code>, <code>city</code>, <code>state</code> — when NCAA.com publishes a location</li>
+<li><code>homeTeam</code>, <code>homeTeamId</code>, <code>homeTeamSlug</code>, <code>homeTeamFullName</code>, <code>homeCollegeName</code>, <code>homeColor</code>, <code>homeScore</code>, <code>homeRecord</code>, <code>homeRank</code>, <code>homeGameRank</code>, <code>homeSeed</code></li>
+<li><code>awayTeam</code>, <code>awayTeamId</code>, <code>awayTeamSlug</code>, <code>awayTeamFullName</code>, <code>awayCollegeName</code>, <code>awayColor</code>, <code>awayScore</code>, <code>awayRecord</code>, <code>awayRank</code>, <code>awayGameRank</code>, <code>awaySeed</code></li>
+<li><code>winner</code>, <code>winnerTeamId</code></li>
+<li><code>linescores</code> — per-period home/visit scores</li>
+<li><code>hasBoxscore</code>, <code>hasPbp</code>, <code>hasTeamStats</code>, <code>hasScoringSummary</code></li>
+<li><code>isChampionship</code>, <code>isConferenceTournament</code>, <code>network</code></li>
+<li>With <code>includeBoxscore</code>: <code>homeTeamStats</code>, <code>awayTeamStats</code>, <code>homePlayerStats</code>, <code>awayPlayerStats</code>, <code>boxscoreTitle</code>, <code>boxscoreStatus</code>, <code>boxscorePeriod</code></li>
+<li>With <code>includePlayByPlay</code>: <code>playByPlay</code> (periods and events), <code>playCount</code>, <code>pbpTitle</code>, <code>pbpStatus</code></li>
+<li><code>sourceUrl</code>, <code>recordType</code>, <code>scrapedAt</code></li>
+</ul>
+<h2 id="readme-output-per-option-mode-listoptions">Output per option (<code>mode: listOptions</code>)</h2>
+<ul>
+<li><code>recordType</code> — <code>option</code></li>
+<li><code>optionType</code> — <code>mode</code>, <code>sport</code>, <code>division</code>, <code>category</code>, <code>poll</code>, or <code>conference</code></li>
+<li><code>value</code> — the exact value to use in the matching input field</li>
+<li><code>title</code> — human-readable label</li>
+<li><code>sport</code>, <code>sportTitle</code>, <code>division</code>, <code>mode</code>, <code>statType</code>, <code>statCategoryId</code> — context when the option is scoped</li>
+<li><code>isDefault</code> — <code>true</code> when this is the curated default</li>
+<li><code>divisions</code> — for sport options</li>
+<li><code>scrapedAt</code></li>
+</ul>
+<h2 id="readme-output-per-champion-mode-history">Output per champion (<code>mode: history</code>)</h2>
+<ul>
+<li><code>sport</code>, <code>sportSlug</code>, <code>division</code></li>
+<li><code>year</code></li>
+<li><code>champion</code>, <code>championRecord</code>, <code>wins</code>, <code>losses</code>, <code>ties</code> — when a record is published</li>
+<li><code>coach</code> — when published</li>
+<li><code>score</code> — final score when published</li>
+<li><code>runnerUp</code> — when published</li>
+<li><code>site</code> — host city/site when published</li>
+<li><code>selectingOrganization</code> — for football champions selected by different organizations</li>
+<li><code>sourceUrl</code>, <code>recordType</code>, <code>scrapedAt</code></li>
+</ul>
+<h2 id="readme-input">Input</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>mode</code></td>
+<td>select</td>
+<td><code>teamStats</code></td>
+<td><code>teamStats</code> / <code>individualStats</code> / <code>rankings</code> / <code>standings</code> / <code>teams</code> / <code>schedules</code> / <code>teamSchedule</code> / <code>brackets</code> / <code>gameDetail</code> / <code>history</code> / <code>listOptions</code></td>
+</tr>
+<tr>
+<td><code>sport</code></td>
+<td>select</td>
+<td><code>basketball-men</code></td>
+<td>One of 14 NCAA sports (ignored by <code>mode=teams</code> and <code>mode=gameDetail</code>; optional scope for <code>mode=listOptions</code>)</td>
+</tr>
+<tr>
+<td><code>division</code></td>
+<td>select</td>
+<td><code>d1</code></td>
+<td><code>d1</code> / <code>d2</code> / <code>d3</code> / <code>fbs</code> / <code>fcs</code> / <code>nc</code> (women's ice hockey <code>nc</code> schedules use NCAA.com's d1 scoreboard page; optional scope for <code>mode=listOptions</code>)</td>
+</tr>
+<tr>
+<td><code>statCategory</code></td>
+<td>select</td>
+<td><code>Scoring Offense</code></td>
+<td>Statistical category (<code>mode=teamStats</code> or <code>individualStats</code>); if the default is not valid for the sport/mode the actor uses a curated per-sport default and reports it in the run status</td>
+</tr>
+<tr>
+<td><code>season</code></td>
+<td>select</td>
+<td><code>current</code></td>
+<td><code>Current season</code>, <code>2026-27</code> / <code>2025-26</code> / <code>2024-25</code> labels, <code>2026</code> … <code>2017</code> (<code>mode=teamStats</code>, <code>individualStats</code>, <code>teamSchedule</code>, or <code>brackets</code>). For <code>brackets</code>, <code>season</code> is the tournament year shown in NCAA.com's bracket URL; <code>YYYY-YY</code> tries the ending year first, then the starting year.</td>
+</tr>
+<tr>
+<td><code>pollSlug</code></td>
+<td>select</td>
+<td><code>di-mens-basketball-associated-press</code></td>
+<td>NCAA-hosted poll (<code>mode=rankings</code>); if the default is not valid for the sport/division the actor uses the curated default (AP for D1 basketball and FBS, AFCA Coaches for FCS, primary coaches/RPI/AVCA poll elsewhere) and reports it in the run status</td>
+</tr>
+<tr>
+<td><code>gameIds</code></td>
+<td>array</td>
+<td><code>[]</code></td>
+<td>Game IDs or URLs (<code>mode=gameDetail</code>), e.g. <code>6649632</code></td>
+</tr>
+<tr>
+<td><code>team</code></td>
+<td>text</td>
+<td>–</td>
+<td>Case-insensitive team/school name or NCAA.com slug filter. Required for <code>mode=teamSchedule</code>; for example <code>duke</code> matches either side of each contest.</td>
+</tr>
+<tr>
+<td><code>playerName</code></td>
+<td>text</td>
+<td>–</td>
+<td>Case-insensitive player filter (<code>mode=individualStats</code>)</td>
+</tr>
+<tr>
+<td><code>conference</code></td>
+<td>select</td>
+<td><code>all</code></td>
+<td>Conference filter (<code>mode=standings</code> or <code>schedules</code>); records without a published conference are excluded when set</td>
+</tr>
+<tr>
+<td><code>rankFrom</code></td>
+<td>integer</td>
+<td>–</td>
+<td>Lowest rank to keep, 1–1000; records without a rank are excluded when set</td>
+</tr>
+<tr>
+<td><code>rankTo</code></td>
+<td>integer</td>
+<td>–</td>
+<td>Highest rank to keep, 1–1000; records without a rank are excluded when set</td>
+</tr>
+<tr>
+<td><code>minGames</code></td>
+<td>integer</td>
+<td>–</td>
+<td>Minimum games played, 0–500 (rows without games pass through)</td>
+</tr>
+<tr>
+<td><code>scheduleDateFrom</code></td>
+<td>text</td>
+<td>–</td>
+<td>First schedule date, <code>YYYY-MM-DD</code> (<code>mode=schedules</code>); ignored by <code>teamSchedule</code>, which scans the full season</td>
+</tr>
+<tr>
+<td><code>scheduleDateTo</code></td>
+<td>text</td>
+<td>–</td>
+<td>Last schedule date, <code>YYYY-MM-DD</code> (<code>mode=schedules</code>); ignored by <code>teamSchedule</code></td>
+</tr>
+<tr>
+<td><code>week</code></td>
+<td>integer</td>
+<td>–</td>
+<td>Football week, 1–20 (<code>mode=schedules</code>, football); <code>teamSchedule</code> uses the full season calendar automatically</td>
+</tr>
+<tr>
+<td><code>finalOnly</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Keep only final games (<code>mode=schedules</code>, <code>teamSchedule</code>, or <code>brackets</code>); records without a final status are excluded</td>
+</tr>
+<tr>
+<td><code>includeGameDetails</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Enrich each schedule/team-schedule row with venue, linescores, records, and availability flags</td>
+</tr>
+<tr>
+<td><code>includeBoxscore</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td>Include team/player box-score blocks (<code>mode=gameDetail</code>)</td>
+</tr>
+<tr>
+<td><code>includePlayByPlay</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Include the play-by-play timeline (<code>mode=gameDetail</code>)</td>
+</tr>
+<tr>
+<td><code>maxItems</code></td>
+<td>integer</td>
+<td>– (mode-aware)</td>
+<td>Hard cap on records emitted, 1–5000. When omitted: 2,000 for leaderboards, 1,000 for polls/standings/history, 5,000 for the school directory and <code>listOptions</code>, 500 for schedules and brackets, 100 for <code>teamSchedule</code> and game detail. Leaderboards are also capped at 2,000 source rows (40 pages); the actor sets a status message whenever <code>maxItems</code> or the page cap actually truncates the output.</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="readme-supported-sports-and-divisions">Supported sports and divisions</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Sport</th>
+<th><code>sport</code> value</th>
+<th>Divisions</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Men's Basketball</td>
+<td><code>basketball-men</code></td>
+<td>d1, d2, d3</td>
+</tr>
+<tr>
+<td>Women's Basketball</td>
+<td><code>basketball-women</code></td>
+<td>d1, d2, d3</td>
+</tr>
+<tr>
+<td>Football</td>
+<td><code>football</code></td>
+<td>fbs, fcs, d2, d3</td>
+</tr>
+<tr>
+<td>Baseball</td>
+<td><code>baseball</code></td>
+<td>d1, d2, d3</td>
+</tr>
+<tr>
+<td>Softball</td>
+<td><code>softball</code></td>
+<td>d1, d2, d3</td>
+</tr>
+<tr>
+<td>Men's Soccer</td>
+<td><code>soccer-men</code></td>
+<td>d1, d2, d3</td>
+</tr>
+<tr>
+<td>Women's Soccer</td>
+<td><code>soccer-women</code></td>
+<td>d1, d2, d3</td>
+</tr>
+<tr>
+<td>Men's Volleyball</td>
+<td><code>volleyball-men</code></td>
+<td>d1, d3, nc</td>
+</tr>
+<tr>
+<td>Women's Volleyball</td>
+<td><code>volleyball-women</code></td>
+<td>d1, d2, d3</td>
+</tr>
+<tr>
+<td>Men's Lacrosse</td>
+<td><code>lacrosse-men</code></td>
+<td>d1, d2, d3</td>
+</tr>
+<tr>
+<td>Women's Lacrosse</td>
+<td><code>lacrosse-women</code></td>
+<td>d1, d2, d3</td>
+</tr>
+<tr>
+<td>Men's Ice Hockey</td>
+<td><code>icehockey-men</code></td>
+<td>d1, d3</td>
+</tr>
+<tr>
+<td>Women's Ice Hockey</td>
+<td><code>icehockey-women</code></td>
+<td>d1, d3, nc</td>
+</tr>
+<tr>
+<td>Field Hockey</td>
+<td><code>fieldhockey</code></td>
+<td>d1, d2, d3</td>
+</tr>
+</tbody>
+</table></div>
+<p>If you request a sport/division combination NCAA.com does not publish, or a category/poll/conference that does not exist for that combination, the run finishes with a status message listing the valid options instead of failing silently.</p>
+<h3 id="readme-example-team-scoring-leaders">Example: team scoring leaders</h3>
+<pre><code class="language-json">{
+  &quot;mode&quot;: &quot;teamStats&quot;,
+  &quot;sport&quot;: &quot;basketball-men&quot;,
+  &quot;division&quot;: &quot;d1&quot;,
+  &quot;statCategory&quot;: &quot;Scoring Offense&quot;,
+  &quot;season&quot;: &quot;current&quot;,
+  &quot;maxItems&quot;: 50
+}
+</code></pre>
+<h3 id="readme-example-player-passing-leaders-with-a-team-filter">Example: player passing leaders with a team filter</h3>
+<pre><code class="language-json">{
+  &quot;mode&quot;: &quot;individualStats&quot;,
+  &quot;sport&quot;: &quot;football&quot;,
+  &quot;division&quot;: &quot;fbs&quot;,
+  &quot;statCategory&quot;: &quot;Passing Yards Per Game&quot;,
+  &quot;team&quot;: &quot;Oregon&quot;,
+  &quot;minGames&quot;: 8,
+  &quot;maxItems&quot;: 100
+}
+</code></pre>
+<h3 id="readme-example-ap-top-25-ranks-1-10">Example: AP Top 25, ranks 1-10</h3>
+<pre><code class="language-json">{
+  &quot;mode&quot;: &quot;rankings&quot;,
+  &quot;sport&quot;: &quot;basketball-men&quot;,
+  &quot;division&quot;: &quot;d1&quot;,
+  &quot;pollSlug&quot;: &quot;di-mens-basketball-associated-press&quot;,
+  &quot;rankFrom&quot;: 1,
+  &quot;rankTo&quot;: 10
+}
+</code></pre>
+<h3 id="readme-example-acc-standings">Example: ACC standings</h3>
+<pre><code class="language-json">{
+  &quot;mode&quot;: &quot;standings&quot;,
+  &quot;sport&quot;: &quot;basketball-men&quot;,
+  &quot;division&quot;: &quot;d1&quot;,
+  &quot;conference&quot;: &quot;acc&quot;,
+  &quot;maxItems&quot;: 50
+}
+</code></pre>
+<h3 id="readme-example-final-games-on-a-date">Example: final games on a date</h3>
+<pre><code class="language-json">{
+  &quot;mode&quot;: &quot;schedules&quot;,
+  &quot;sport&quot;: &quot;basketball-men&quot;,
+  &quot;division&quot;: &quot;d1&quot;,
+  &quot;scheduleDateFrom&quot;: &quot;2026-11-02&quot;,
+  &quot;scheduleDateTo&quot;: &quot;2026-11-02&quot;,
+  &quot;finalOnly&quot;: true,
+  &quot;maxItems&quot;: 100
+}
+</code></pre>
+<h3 id="readme-example-enrich-schedules-with-game-details">Example: enrich schedules with game details</h3>
+<pre><code class="language-json">{
+  &quot;mode&quot;: &quot;schedules&quot;,
+  &quot;sport&quot;: &quot;basketball-men&quot;,
+  &quot;division&quot;: &quot;d1&quot;,
+  &quot;scheduleDateFrom&quot;: &quot;2026-11-02&quot;,
+  &quot;scheduleDateTo&quot;: &quot;2026-11-02&quot;,
+  &quot;includeGameDetails&quot;: true,
+  &quot;maxItems&quot;: 25
+}
+</code></pre>
+<h3 id="readme-example-full-team-season-schedule">Example: full team season schedule</h3>
+<pre><code class="language-json">{
+  &quot;mode&quot;: &quot;teamSchedule&quot;,
+  &quot;sport&quot;: &quot;basketball-men&quot;,
+  &quot;division&quot;: &quot;d1&quot;,
+  &quot;season&quot;: &quot;2025-26&quot;,
+  &quot;team&quot;: &quot;duke&quot;,
+  &quot;maxItems&quot;: 100
+}
+</code></pre>
+<h3 id="readme-example-march-madness-bracket">Example: March Madness bracket</h3>
+<pre><code class="language-json">{
+  &quot;mode&quot;: &quot;brackets&quot;,
+  &quot;sport&quot;: &quot;basketball-men&quot;,
+  &quot;division&quot;: &quot;d1&quot;,
+  &quot;season&quot;: &quot;2026&quot;,
+  &quot;maxItems&quot;: 100
+}
+</code></pre>
+<h3 id="readme-example-full-game-detail-with-box-score-and-play-by-play">Example: full game detail with box score and play-by-play</h3>
+<pre><code class="language-json">{
+  &quot;mode&quot;: &quot;gameDetail&quot;,
+  &quot;gameIds&quot;: [&quot;6649632&quot;],
+  &quot;includeBoxscore&quot;: true,
+  &quot;includePlayByPlay&quot;: true
+}
+</code></pre>
+<h3 id="readme-example-championship-history">Example: championship history</h3>
+<pre><code class="language-json">{
+  &quot;mode&quot;: &quot;history&quot;,
+  &quot;sport&quot;: &quot;basketball-men&quot;,
+  &quot;division&quot;: &quot;d1&quot;,
+  &quot;maxItems&quot;: 200
+}
+</code></pre>
+<h3 id="readme-example-discover-valid-options-for-a-sport-division">Example: discover valid options for a sport/division</h3>
+<pre><code class="language-json">{
+  &quot;mode&quot;: &quot;listOptions&quot;,
+  &quot;sport&quot;: &quot;basketball-women&quot;,
+  &quot;division&quot;: &quot;d1&quot;,
+  &quot;maxItems&quot;: 5000
+}
+</code></pre>
+<p>Each returned option record has <code>optionType</code>, <code>value</code>, <code>title</code>, and <code>isDefault</code> (when it is the curated default). Leave <code>sport</code> and <code>division</code> empty to list every sport, mode, and conference.</p>
+<h2 id="readme-use-cases">Use cases</h2>
+<ul>
+<li><strong>Sports media and content sites</strong> — auto-publish weekly leaderboard, poll, and standings roundups</li>
+<li><strong>Fantasy sports and betting research</strong> — track team and player statistical trends over time</li>
+<li><strong>Recruiting and scouting</strong> — search player leaderboards by name, team, class year, or position</li>
+<li><strong>Sports analytics</strong> — build historical datasets from leaderboards, polls, and championship results</li>
+<li><strong>Fan dashboards</strong> — power live score, schedule, and conference-standings widgets</li>
+<li><strong>Academic research</strong> — compare competitive trends across NCAA divisions and sports</li>
+</ul>
+<h2 id="readme-faq">FAQ</h2>
+<p><strong>Do I need an NCAA.com account, cookies, or an API key?</strong> No. The actor reads public NCAA.com pages and the public NCAA scoreboard feed.</p>
+<p><strong>Why does <code>stats</code> or <code>pollStats</code> vary between records?</strong> NCAA.com publishes a different set of columns for every statistical category and every poll. The actor captures every column the source page shows for the requested category or poll, with numeric values parsed as numbers.</p>
+<p><strong>What do <code>statValue</code> and <code>statLabel</code> mean?</strong> NCAA.com's rightmost column is the category's headline number. <code>statLabel</code> is that column's label (for example <code>PPG</code>) and <code>statValue</code> is the number.</p>
+<p><strong>How far back does <code>season</code> go?</strong> Archive depth is set by NCAA.com and varies by sport. Men's basketball has the deepest archive; several other sports have only recent seasons. When a season is not published, the run finishes with a clear status message.</p>
+<p><strong>Why do two rows share the same <code>rank</code>?</strong> NCAA.com renders a tied row's rank as <code>-</code> instead of repeating the number. The actor carries the previous rank forward and adds <code>tiedRank: true</code> rather than dropping the row.</p>
+<p><strong>Why are some polls missing for my sport?</strong> The actor exposes only polls hosted on NCAA.com. Some polls (for example USA Today coaches polls) live on third-party sites and are not scraped.</p>
+<p><strong>Can I scrape multiple categories or polls in one run?</strong> Run the actor once per category or poll. Each run is focused on one leaderboard or poll, matching how NCAA.com organizes the data.</p>
+<p><strong>Why is <code>standings</code> only available for a few sports?</strong> NCAA.com publishes its conference-standings widget only for Division I men's and women's basketball and FBS/FCS football. Other sport/division combinations return a status message.</p>
+<p><strong>Why did my schedule run return no games?</strong> Check the date window and <code>finalOnly</code>. Football <code>schedules</code> runs are week-based: set <code>week</code> instead of a date range. Dates outside the current or archived season may have no games. For a whole team season, use <code>mode=teamSchedule</code> with <code>team</code>; it is not limited to the 31-day window.</p>
+<p><strong>How do I get one team's full season schedule?</strong> Use <code>mode=teamSchedule</code> with <code>team</code> (a school name or NCAA.com slug such as <code>duke</code>). The actor reads NCAA.com's season-wide game-date feed (or football's week calendar), then queries each date and keeps only that team's games. It is not limited to 31 days and ignores <code>scheduleDateFrom</code>/<code>scheduleDateTo</code>. Set <code>includeGameDetails</code> for venue, linescores, records, and availability flags.</p>
+<p><strong>Are March Madness and other championship brackets included?</strong> Yes, with <code>mode=brackets</code>. The actor calls NCAA.com's official <code>get_championship_ncaa</code> GraphQL route, which returns the same bracket data as the public bracket pages, including round, region, seeds, scores, and bracket position. Set <code>season</code> to the tournament year (for example <code>2026</code>); <code>YYYY-YY</code> labels try the ending year first and then the starting year. Brackets appear after the field is announced, and some sports/divisions publish only recent years. Unplayed TBA slots are returned without invented teams or scores. If NCAA.com rotates its persisted query, the run finishes with a clear status message instead of returning a partial or fabricated bracket.</p>
+<p><strong>Do you include rosters, injuries, or betting odds?</strong> No. These are out-of-scope external-source limitations, not hidden data limits. The public NCAA.com pages and GraphQL feeds this actor uses do not publish rosters, injury reports, or odds: rosters live on school athletics sites (and stats.ncaa.org is Akamai/robots-blocked), injuries are team/third-party announcements, and odds come from licensed sportsbooks or ESPN. Adding them would require a different non-NCAA source, so the actor does not fabricate or guess them.</p>
+<p><strong>Are schedules and scores live?</strong> They reflect the public NCAA scoreboard at the time of the run. Scheduled games show their start time; completed games show final scores and a winner.</p>
+<p><strong>How do I get venue, box score, or play-by-play?</strong> Use <code>mode: gameDetail</code> with one or more <code>gameIds</code>. Set <code>includeBoxscore</code> and/or <code>includePlayByPlay</code> to add those blocks. You can also set <code>includeGameDetails: true</code> on <code>schedules</code> to add venue, linescores, records, and availability flags to each schedule row without fetching full box scores or play-by-play.</p>
+<p><strong>Why is a venue or box score missing for some games?</strong> NCAA.com publishes those fields only for games it has complete data for. The actor adds <code>hasBoxscore</code>, <code>hasPbp</code>, <code>hasTeamStats</code>, and <code>hasScoringSummary</code> flags so you can tell what is available; it never fabricates a missing venue or stat.</p>
+<p><strong>What happens if I leave the default category or poll selected for another sport?</strong> The schema default is treated as &quot;no explicit choice&quot;. If it is not valid for the selected sport/mode, the actor uses a curated default — for example AP for D1 basketball and FBS football, AFCA Coaches for FCS, and the primary coaches/RPI/AVCA poll elsewhere; Points Per Game for basketball players, Passing Yards Per Game for FBS players, and Batting Average for baseball/softball — and reports the substitution in the run status. It never picks the alphabetically first option.</p>
+<p><strong>How do I find the valid categories, polls, or conferences?</strong> Run <code>mode: listOptions</code> with the sport/division you care about. It returns the exact <code>value</code> strings to use in <code>statCategory</code>, <code>pollSlug</code>, <code>conference</code>, and the other select fields. You can also run it without a sport to list every mode, sport, division, and conference.</p>
+<p><strong>What time zone is used for the default schedule date?</strong> When both schedule dates are empty, the actor uses today's date in America/New_York (the zone NCAA.com's scoreboard uses) and keeps <code>startTimeEpoch</code> in UTC. Set <code>scheduleDateFrom</code>/<code>scheduleDateTo</code> explicitly for archival dates.</p>
+<p><strong>Why does a category or poll return a &quot;no data&quot; message instead of an empty dataset?</strong> NCAA.com sometimes publishes a category page that has no rows for a sport/division/season, or a poll that is not yet live. The actor detects that page state and returns the valid alternatives in the run status instead of reporting a generic &quot;no rows&quot; result. The catalog was also scrubbed of category IDs that NCAA.com returns 404.</p>
+<p><strong>What do the filters do when a field is missing?</strong> <code>team</code>, <code>playerName</code>, rank, conference, and <code>finalOnly</code> are strict when set: a record without the filtered field is excluded. <code>minGames</code> is the exception — rows without a games-played column pass through, as documented in the input description.</p>
+<p><strong>Why is <code>nc</code> accepted for women's ice hockey schedules if NCAA.com's nc page is 404?</strong> The actor maps that combination to NCAA.com's d1 scoreboard page, which is where NCAA.com serves the National Collegiate schedule. The output keeps the division you requested.</p>
+<p><strong>Why did a large run stop before reaching <code>maxItems</code>?</strong> Leaderboard modes are capped at 2,000 source rows (40 pages of 50). If the page cap is reached first, the run sets a status message; split by category or season to collect more. The same applies when <code>maxItems</code> truncates standings, teams, rankings, schedules, or history — the status message says which cap stopped the run and how many source rows were available.</p>
+<p><strong>Why is <code>maxItems</code> optional now?</strong> The old fixed default of 50 silently truncated large exports. <code>maxItems</code> now has a mode-aware default (for example 5,000 for the school directory, 2,000 for leaderboards, 100 for game detail) while the daily-test prefill stays at 3. The schema maximum is 5,000.</p>
+<p><strong>Is this affiliated with the NCAA?</strong> No. This is a third-party actor using publicly available NCAA.com statistics, rankings, standings, school, schedule, game-detail, and history pages.</p>
+</details></section><section id="python-quickstart"><h2>Python quickstart</h2><p>Use a schema-derived input and the Python standard library to start a run. An Apify account and token are required for execution.</p><p><a href="/apify-actor-examples/guides/ncaa-team-and-player-leaderboards-polls/">Open the step-by-step Python guide →</a></p></section><p class="source-note">Source build <code>0CfvUxrNclxYHLnVM</code>. Documentation is regenerated from the default published build; private drafts are not included.</p></article></div></main><footer class="footer"><strong>Nimbryxo Studio</strong><div class="footer-links"><a href="/apify-actor-examples/topics/">Topics</a><a href="/apify-actor-examples/sources/">Documentation sources</a><a href="https://apify.com/nimbryxo-studio">Apify</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></div></footer></body></html>

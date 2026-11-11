@@ -1,0 +1,982 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src &#x27;self&#x27;; script-src &#x27;self&#x27; &#x27;sha256-c/WICYE1NZoH8pt91Py2afAIkwmR/AVFsN4hEAmD+DU=&#x27;; style-src &#x27;self&#x27;; img-src &#x27;self&#x27; https: data:; base-uri &#x27;self&#x27;; form-action &#x27;self&#x27;; object-src &#x27;none&#x27;"><title>Realtor.com Listing &amp; Property Detail Extractor | Nimbryxo Studio</title><meta name="description" content="Search Realtor.com for-sale, for-rent, or recently-sold listings by city, or pull full detail pages with agent contacts, nearby schools, tax and price history, and flood/wildfire/n"><meta name="robots" content="index,follow"><link rel="canonical" href="https://hasankhokhar2026.github.io/apify-actor-examples/actors/realtor-com-listing-and-property-detail-extractor/"><meta property="og:title" content="Realtor.com Listing &amp; Property Detail Extractor | Nimbryxo Studio"><meta property="og:description" content="Search Realtor.com for-sale, for-rent, or recently-sold listings by city, or pull full detail pages with agent contacts, nearby schools, tax and price history, and flood/wildfire/n"><meta property="og:type" content="website"><meta property="og:url" content="https://hasankhokhar2026.github.io/apify-actor-examples/actors/realtor-com-listing-and-property-detail-extractor/"><meta property="og:site_name" content="Nimbryxo Studio"><meta name="twitter:card" content="summary"><link rel="icon" href="/apify-actor-examples/assets/mark.svg?v=2d20f9dc334a" type="image/svg+xml"><link rel="stylesheet" href="/apify-actor-examples/assets/site.css?v=39545fd4a399"><link rel="stylesheet" href="/apify-actor-examples/assets/brand.css?v=eb0f935ade25"><link rel="alternate" type="application/rss+xml" title="Nimbryxo Studio guides" href="/apify-actor-examples/feed.xml"><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization","name":"Nimbryxo Studio","url":"https://hasankhokhar2026.github.io/apify-actor-examples/","sameAs":["https://apify.com/nimbryxo-studio"]},{"@type":"WebSite","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#website","name":"Nimbryxo Studio","url":"https://hasankhokhar2026.github.io/apify-actor-examples/","publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"inLanguage":"en"},{"@type":"WebPage","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/realtor-com-listing-and-property-detail-extractor/#webpage","name":"Realtor.com Listing & Property Detail Extractor","description":"Search Realtor.com for-sale, for-rent, or recently-sold listings by city, or pull full detail pages with agent contacts, nearby schools, tax and price history, and flood/wildfire/noise risk scores.","url":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/realtor-com-listing-and-property-detail-extractor/","isPartOf":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#website"},"publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"inLanguage":"en","mainEntity":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/realtor-com-listing-and-property-detail-extractor/#article"},"breadcrumb":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/realtor-com-listing-and-property-detail-extractor/#breadcrumb"}},{"@type":"TechArticle","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/realtor-com-listing-and-property-detail-extractor/#article","headline":"Realtor.com Listing & Property Detail Extractor","name":"Realtor.com Listing & Property Detail Extractor","description":"Search Realtor.com for-sale, for-rent, or recently-sold listings by city, or pull full detail pages with agent contacts, nearby schools, tax and price history, and flood/wildfire/noise risk scores.","url":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/realtor-com-listing-and-property-detail-extractor/","author":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"mainEntityOfPage":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/realtor-com-listing-and-property-detail-extractor/#webpage"},"inLanguage":"en","dateModified":"2026-11-09T12:48:46.035Z"},{"@type":"BreadcrumbList","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/realtor-com-listing-and-property-detail-extractor/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Nimbryxo Studio","item":"https://hasankhokhar2026.github.io/apify-actor-examples/"},{"@type":"ListItem","position":2,"name":"Actors","item":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/"},{"@type":"ListItem","position":3,"name":"Realtor.com Listing & Property Detail Extractor","item":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/realtor-com-listing-and-property-detail-extractor/"}]}]}</script><script src="/apify-actor-examples/assets/site.js?v=7cabac48dd31" defer></script></head><body class="theme-studio"><a href="#main" class="skip-link">Skip to content</a><header><div class="inner"><a href="/apify-actor-examples/" class="brand"><img src="/apify-actor-examples/assets/mark.svg?v=2d20f9dc334a" alt="" width="29" height="29">Nimbryxo Studio</a><nav aria-label="Main navigation"><a href="/apify-actor-examples/actors/" aria-current="page">Actors</a><a href="/apify-actor-examples/guides/">Guides</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></nav></div></header><main id="main"><div class="doc-layout"><aside class="contents" aria-label="On this page"><strong>Contents</strong><a href="#overview">Overview</a><a href="#published-readme">Published README</a><a href="#input-schema">Input schema</a><a href="#output-schema">Output schema</a><a href="#dataset-schema">Dataset schema</a><a href="#python-quickstart">Python quickstart</a></aside><article class="prose"><div class="breadcrumb"><a href="/apify-actor-examples/actors/">Actors</a><span>/</span><span>Realtor.com Listing &amp; Property Detail Extractor</span></div><section id="overview"><h1 class="doc-title">Realtor.com Listing &amp; Property Detail Extractor</h1><p class="lede">Search Realtor.com for-sale, for-rent, or recently-sold listings by city, or pull full detail pages with agent contacts, nearby schools, tax and price history, and flood/wildfire/noise risk scores.</p><p class="summary">Realtor.com Listing &amp; Property Detail Extractor is an Apify Actor published by Nimbryxo Studio. It accepts 33 input fields, and <code>mode</code> is required. Its build declares a results dataset with 2 views. Runs happen on Apify, where the Store page lists the current price.</p><div class="actions"><a class="button" href="https://apify.com/nimbryxo-studio/realtor-com-listing-and-property-detail-extractor">Open on Apify</a><a class="text-link" href="https://github.com/hasankhokhar2026/apify-actor-examples/blob/main/docs/actors/76arWXzbeyTRhZQcR/README.md">GitHub source</a></div></section><section class="schema-section" id="input-schema"><h2>Input schema</h2><p>Input fields, types, required flags, descriptions, defaults, and prefills come from the published definition. Prefill examples are distinct from defaults.</p><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>mode</code></td><td>string</td><td>required</td><td>Property status to search. `BUY` is active for-sale, `RENT` is for-rent, `SOLD` is recently sold, `PENDING`/`CONTINGENT` are under contract, `COMING_SOON` is not-yet-active inventory, `OFF_MARKET` is delisted and `READY_TO_BUILD` is new construction. Used in property mode; ignored in agent mode.</td></tr><tr><td><code>recordType</code></td><td>string</td><td>optional</td><td>Collect property listings or real-estate agent directory records.</td></tr><tr><td><code>search</code></td><td>string</td><td>optional</td><td>City and state (`Houston, TX`), ZIP code (`77002`), neighborhood, county or a street address (`16142 Maladi Dr`). In agent mode this may be a city/state or ZIP.</td></tr></tbody></table></div><details><summary>Show all input fields</summary><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>mode</code></td><td>string</td><td>required</td><td>Property status to search. `BUY` is active for-sale, `RENT` is for-rent, `SOLD` is recently sold, `PENDING`/`CONTINGENT` are under contract, `COMING_SOON` is not-yet-active inventory, `OFF_MARKET` is delisted and `READY_TO_BUILD` is new construction. Used in property mode; ignored in agent mode.</td></tr><tr><td><code>recordType</code></td><td>string</td><td>optional</td><td>Collect property listings or real-estate agent directory records.</td></tr><tr><td><code>search</code></td><td>string</td><td>optional</td><td>City and state (`Houston, TX`), ZIP code (`77002`), neighborhood, county or a street address (`16142 Maladi Dr`). In agent mode this may be a city/state or ZIP.</td></tr><tr><td><code>agentName</code></td><td>string</td><td>optional</td><td>Agent or team name to search in agent mode, e.g. `Pedro Casanova`. Leave empty to search agents by the location above.</td></tr><tr><td><code>startUrls</code></td><td>array</td><td>optional</td><td>Realtor.com property detail URLs or search-result URLs. Detail URLs are resolved directly; search URLs reuse their location, mode and page.</td></tr><tr><td><code>maxItems</code></td><td>integer</td><td>optional</td><td>Maximum property or agent records to emit (1-10000). Property searches are limited by the source to 10,000 addressable rows per search.</td></tr><tr><td><code>endPage</code></td><td>integer</td><td>optional</td><td>Maximum GraphQL result pages per search. Each page holds up to 200 properties; set 50 to reach the 10,000-row search cap. Agents use their own page size.</td></tr><tr><td><code>scrapeDetails</code></td><td>boolean</td><td>optional</td><td>Fetch each property&#x27;s full detail record: description, HOA, mortgage estimate, assigned schools, open houses, tours, photo tags, tax and price history, risk scores and extra agent contacts. In agent mode it also fetches each agent&#x27;s profile phone numbers.</td></tr><tr><td><code>bedsMin</code></td><td>integer</td><td>optional</td><td>Minimum bedrooms. Applied server-side, then verified on each record.</td></tr><tr><td><code>bedsMax</code></td><td>integer</td><td>optional</td><td>Maximum bedrooms.</td></tr><tr><td><code>bathsMin</code></td><td>integer</td><td>optional</td><td>Minimum bathrooms.</td></tr><tr><td><code>bathsMax</code></td><td>integer</td><td>optional</td><td>Maximum bathrooms.</td></tr><tr><td><code>priceMin</code></td><td>integer</td><td>optional</td><td>Minimum list price in US dollars.</td></tr><tr><td><code>priceMax</code></td><td>integer</td><td>optional</td><td>Maximum list price in US dollars.</td></tr><tr><td><code>sqftMin</code></td><td>integer</td><td>optional</td><td>Minimum living area in square feet.</td></tr><tr><td><code>sqftMax</code></td><td>integer</td><td>optional</td><td>Maximum living area in square feet.</td></tr><tr><td><code>lotSqftMin</code></td><td>integer</td><td>optional</td><td>Minimum lot size in square feet.</td></tr><tr><td><code>lotSqftMax</code></td><td>integer</td><td>optional</td><td>Maximum lot size in square feet.</td></tr><tr><td><code>yearBuiltMin</code></td><td>integer</td><td>optional</td><td>Minimum construction year.</td></tr><tr><td><code>yearBuiltMax</code></td><td>integer</td><td>optional</td><td>Maximum construction year.</td></tr><tr><td><code>propertyTypes</code></td><td>array</td><td>optional</td><td>Limit results to one or more Realtor.com property types.</td></tr><tr><td><code>keywords</code></td><td>array</td><td>optional</td><td>Free-text keywords matched by Realtor.com, e.g. `pool`, `waterfront`, `garage`, `new construction`.</td></tr><tr><td><code>hasPhotos</code></td><td>boolean</td><td>optional</td><td>Exclude listings that have no photos.</td></tr><tr><td><code>comingSoonOnly</code></td><td>boolean</td><td>optional</td><td>Apply the source&#x27;s coming-soon filter to for-sale modes. `COMING_SOON` mode enables it automatically.</td></tr><tr><td><code>sortBy</code></td><td>string</td><td>optional</td><td>Result ordering.</td></tr><tr><td><code>listedSince</code></td><td>string</td><td>optional</td><td>Only listings added on or after this date (YYYY-MM-DD). Useful for delta monitoring.</td></tr><tr><td><code>soldSince</code></td><td>string</td><td>optional</td><td>In SOLD mode, only sales on or after this date (YYYY-MM-DD).</td></tr><tr><td><code>openHouseFrom</code></td><td>string</td><td>optional</td><td>Only listings with an open house on or after this date (YYYY-MM-DD).</td></tr><tr><td><code>openHouseTo</code></td><td>string</td><td>optional</td><td>Only listings with an open house on or before this date (YYYY-MM-DD).</td></tr><tr><td><code>latitude</code></td><td>number</td><td>optional</td><td>Latitude for a radius search. Combine with longitude and radius miles.</td></tr><tr><td><code>longitude</code></td><td>number</td><td>optional</td><td>Longitude for a radius search. Combine with latitude and radius miles.</td></tr><tr><td><code>radiusMiles</code></td><td>integer</td><td>optional</td><td>Search radius in miles around the latitude/longitude point.</td></tr><tr><td><code>boundary</code></td><td>object</td><td>optional</td><td>Search inside a GeoJSON Polygon instead of a named location. Coordinates are [longitude, latitude]; rings may be open and are closed automatically. Example: {&quot;type&quot;:&quot;Polygon&quot;,&quot;coordinates&quot;:[[[-95.6,29.6],[-95.0,29.6],[-95.0,30.1],[-95.6,30.1],[-95.6,29.6]]]}.</td></tr></tbody></table></div></details><p><a href="input-schema.json">Download the published input schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+  &quot;description&quot;: &quot;Search Realtor.com listings by city, ZIP, address, map radius or GeoJSON polygon, or pull full property/agent records. Filter by status, beds, baths, price, size, year, type, keywords, open houses and listing dates.&quot;,
+  &quot;properties&quot;: {
+    &quot;agentName&quot;: {
+      &quot;description&quot;: &quot;Agent or team name to search in agent mode, e.g. `Pedro Casanova`. Leave empty to search agents by the location above.&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;title&quot;: &quot;Agent name (agent mode)&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;bathsMax&quot;: {
+      &quot;description&quot;: &quot;Maximum bathrooms.&quot;,
+      &quot;maximum&quot;: 30,
+      &quot;minimum&quot;: 0,
+      &quot;title&quot;: &quot;Baths (max)&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;bathsMin&quot;: {
+      &quot;description&quot;: &quot;Minimum bathrooms.&quot;,
+      &quot;maximum&quot;: 30,
+      &quot;minimum&quot;: 0,
+      &quot;title&quot;: &quot;Baths (min)&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;bedsMax&quot;: {
+      &quot;description&quot;: &quot;Maximum bedrooms.&quot;,
+      &quot;maximum&quot;: 30,
+      &quot;minimum&quot;: 0,
+      &quot;title&quot;: &quot;Beds (max)&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;bedsMin&quot;: {
+      &quot;description&quot;: &quot;Minimum bedrooms. Applied server-side, then verified on each record.&quot;,
+      &quot;maximum&quot;: 30,
+      &quot;minimum&quot;: 0,
+      &quot;sectionCaption&quot;: &quot;Search filters&quot;,
+      &quot;sectionDescription&quot;: &quot;Optional property filters. They apply in property mode when searching by location, address, ZIP or map radius.&quot;,
+      &quot;title&quot;: &quot;Beds (min)&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;boundary&quot;: {
+      &quot;description&quot;: &quot;Search inside a GeoJSON Polygon instead of a named location. Coordinates are [longitude, latitude]; rings may be open and are closed automatically. Example: {\&quot;type\&quot;:\&quot;Polygon\&quot;,\&quot;coordinates\&quot;:[[[-95.6,29.6],[-95.0,29.6],[-95.0,30.1],[-95.6,30.1],[-95.6,29.6]]]}.&quot;,
+      &quot;editor&quot;: &quot;json&quot;,
+      &quot;title&quot;: &quot;Polygon boundary (GeoJSON)&quot;,
+      &quot;type&quot;: &quot;object&quot;
+    },
+    &quot;comingSoonOnly&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;Apply the source&#x27;s coming-soon filter to for-sale modes. `COMING_SOON` mode enables it automatically.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Only coming-soon listings&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;endPage&quot;: {
+      &quot;default&quot;: 50,
+      &quot;description&quot;: &quot;Maximum GraphQL result pages per search. Each page holds up to 200 properties; set 50 to reach the 10,000-row search cap. Agents use their own page size.&quot;,
+      &quot;maximum&quot;: 50,
+      &quot;minimum&quot;: 1,
+      &quot;prefill&quot;: 1,
+      &quot;title&quot;: &quot;Maximum search pages&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;hasPhotos&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;Exclude listings that have no photos.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Only listings with photos&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;keywords&quot;: {
+      &quot;default&quot;: [],
+      &quot;description&quot;: &quot;Free-text keywords matched by Realtor.com, e.g. `pool`, `waterfront`, `garage`, `new construction`.&quot;,
+      &quot;editor&quot;: &quot;stringList&quot;,
+      &quot;prefill&quot;: [],
+      &quot;title&quot;: &quot;Keywords&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;latitude&quot;: {
+      &quot;description&quot;: &quot;Latitude for a radius search. Combine with longitude and radius miles.&quot;,
+      &quot;maximum&quot;: 90,
+      &quot;minimum&quot;: -90,
+      &quot;title&quot;: &quot;Latitude&quot;,
+      &quot;type&quot;: &quot;number&quot;
+    },
+    &quot;listedSince&quot;: {
+      &quot;description&quot;: &quot;Only listings added on or after this date (YYYY-MM-DD). Useful for delta monitoring.&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;title&quot;: &quot;Listed since&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;longitude&quot;: {
+      &quot;description&quot;: &quot;Longitude for a radius search. Combine with latitude and radius miles.&quot;,
+      &quot;maximum&quot;: 180,
+      &quot;minimum&quot;: -180,
+      &quot;title&quot;: &quot;Longitude&quot;,
+      &quot;type&quot;: &quot;number&quot;
+    },
+    &quot;lotSqftMax&quot;: {
+      &quot;description&quot;: &quot;Maximum lot size in square feet.&quot;,
+      &quot;maximum&quot;: 100000000,
+      &quot;minimum&quot;: 0,
+      &quot;title&quot;: &quot;Lot sqft (max)&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;lotSqftMin&quot;: {
+      &quot;description&quot;: &quot;Minimum lot size in square feet.&quot;,
+      &quot;maximum&quot;: 100000000,
+      &quot;minimum&quot;: 0,
+      &quot;title&quot;: &quot;Lot sqft (min)&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;maxItems&quot;: {
+      &quot;default&quot;: 100,
+      &quot;description&quot;: &quot;Maximum property or agent records to emit (1-10000). Property searches are limited by the source to 10,000 addressable rows per search.&quot;,
+      &quot;maximum&quot;: 10000,
+      &quot;minimum&quot;: 1,
+      &quot;prefill&quot;: 3,
+      &quot;title&quot;: &quot;Maximum records&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;mode&quot;: {
+      &quot;default&quot;: &quot;BUY&quot;,
+      &quot;description&quot;: &quot;Property status to search. `BUY` is active for-sale, `RENT` is for-rent, `SOLD` is recently sold, `PENDING`/`CONTINGENT` are under contract, `COMING_SOON` is not-yet-active inventory, `OFF_MARKET` is delisted and `READY_TO_BUILD` is new construction. Used in property mode; ignored in agent mode.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;BUY&quot;,
+        &quot;RENT&quot;,
+        &quot;SOLD&quot;,
+        &quot;PENDING&quot;,
+        &quot;CONTINGENT&quot;,
+        &quot;COMING_SOON&quot;,
+        &quot;OFF_MARKET&quot;,
+        &quot;READY_TO_BUILD&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;For sale&quot;,
+        &quot;For rent&quot;,
+        &quot;Recently sold&quot;,
+        &quot;Pending&quot;,
+        &quot;Contingent&quot;,
+        &quot;Coming soon&quot;,
+        &quot;Off market&quot;,
+        &quot;Ready to build&quot;
+      ],
+      &quot;prefill&quot;: &quot;BUY&quot;,
+      &quot;title&quot;: &quot;Listing status&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;openHouseFrom&quot;: {
+      &quot;description&quot;: &quot;Only listings with an open house on or after this date (YYYY-MM-DD).&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;sectionCaption&quot;: &quot;Open houses &amp; map&quot;,
+      &quot;sectionDescription&quot;: &quot;Optional open-house date window and map-radius search.&quot;,
+      &quot;title&quot;: &quot;Open house from&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;openHouseTo&quot;: {
+      &quot;description&quot;: &quot;Only listings with an open house on or before this date (YYYY-MM-DD).&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;title&quot;: &quot;Open house to&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;priceMax&quot;: {
+      &quot;description&quot;: &quot;Maximum list price in US dollars.&quot;,
+      &quot;maximum&quot;: 1000000000,
+      &quot;minimum&quot;: 0,
+      &quot;title&quot;: &quot;Price (max)&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;priceMin&quot;: {
+      &quot;description&quot;: &quot;Minimum list price in US dollars.&quot;,
+      &quot;maximum&quot;: 1000000000,
+      &quot;minimum&quot;: 0,
+      &quot;title&quot;: &quot;Price (min)&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;propertyTypes&quot;: {
+      &quot;default&quot;: [],
+      &quot;description&quot;: &quot;Limit results to one or more Realtor.com property types.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;items&quot;: {
+        &quot;enum&quot;: [
+          &quot;apartment&quot;,
+          &quot;commercial&quot;,
+          &quot;cond_op&quot;,
+          &quot;condo&quot;,
+          &quot;condo_townhome&quot;,
+          &quot;condo_townhome_rowhome_coop&quot;,
+          &quot;condop&quot;,
+          &quot;condos&quot;,
+          &quot;coop&quot;,
+          &quot;duplex_triplex&quot;,
+          &quot;farm&quot;,
+          &quot;investment&quot;,
+          &quot;land&quot;,
+          &quot;mobile&quot;,
+          &quot;multi_family&quot;,
+          &quot;other&quot;,
+          &quot;rental&quot;,
+          &quot;single_family&quot;,
+          &quot;townhomes&quot;,
+          &quot;townhouse&quot;
+        ],
+        &quot;enumTitles&quot;: [
+          &quot;Apartment&quot;,
+          &quot;Commercial&quot;,
+          &quot;Cond-op&quot;,
+          &quot;Condo&quot;,
+          &quot;Condo/townhome&quot;,
+          &quot;Condo/townhome/rowhome/co-op&quot;,
+          &quot;Condop&quot;,
+          &quot;Condos&quot;,
+          &quot;Co-op&quot;,
+          &quot;Duplex/triplex&quot;,
+          &quot;Farm&quot;,
+          &quot;Investment&quot;,
+          &quot;Land&quot;,
+          &quot;Mobile&quot;,
+          &quot;Multi-family&quot;,
+          &quot;Other&quot;,
+          &quot;Rental&quot;,
+          &quot;Single family&quot;,
+          &quot;Townhomes&quot;,
+          &quot;Townhouse&quot;
+        ],
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;prefill&quot;: [],
+      &quot;title&quot;: &quot;Property types&quot;,
+      &quot;type&quot;: &quot;array&quot;,
+      &quot;uniqueItems&quot;: true
+    },
+    &quot;radiusMiles&quot;: {
+      &quot;description&quot;: &quot;Search radius in miles around the latitude/longitude point.&quot;,
+      &quot;maximum&quot;: 100,
+      &quot;minimum&quot;: 1,
+      &quot;title&quot;: &quot;Radius (miles)&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;recordType&quot;: {
+      &quot;default&quot;: &quot;PROPERTIES&quot;,
+      &quot;description&quot;: &quot;Collect property listings or real-estate agent directory records.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;PROPERTIES&quot;,
+        &quot;AGENTS&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;Properties&quot;,
+        &quot;Agents&quot;
+      ],
+      &quot;prefill&quot;: &quot;PROPERTIES&quot;,
+      &quot;title&quot;: &quot;What to collect&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;scrapeDetails&quot;: {
+      &quot;default&quot;: true,
+      &quot;description&quot;: &quot;Fetch each property&#x27;s full detail record: description, HOA, mortgage estimate, assigned schools, open houses, tours, photo tags, tax and price history, risk scores and extra agent contacts. In agent mode it also fetches each agent&#x27;s profile phone numbers.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Scrape full details&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;search&quot;: {
+      &quot;description&quot;: &quot;City and state (`Houston, TX`), ZIP code (`77002`), neighborhood, county or a street address (`16142 Maladi Dr`). In agent mode this may be a city/state or ZIP.&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;prefill&quot;: &quot;Houston, TX&quot;,
+      &quot;title&quot;: &quot;Location or address&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;soldSince&quot;: {
+      &quot;description&quot;: &quot;In SOLD mode, only sales on or after this date (YYYY-MM-DD).&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;title&quot;: &quot;Sold since&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;sortBy&quot;: {
+      &quot;default&quot;: &quot;relevant&quot;,
+      &quot;description&quot;: &quot;Result ordering.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;relevant&quot;,
+        &quot;newest&quot;,
+        &quot;price_low&quot;,
+        &quot;price_high&quot;,
+        &quot;sqft_high&quot;,
+        &quot;beds_high&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;Most relevant&quot;,
+        &quot;Newest listings&quot;,
+        &quot;Price: low to high&quot;,
+        &quot;Price: high to low&quot;,
+        &quot;Largest living area&quot;,
+        &quot;Most bedrooms&quot;
+      ],
+      &quot;prefill&quot;: &quot;relevant&quot;,
+      &quot;title&quot;: &quot;Sort results&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;sqftMax&quot;: {
+      &quot;description&quot;: &quot;Maximum living area in square feet.&quot;,
+      &quot;maximum&quot;: 1000000,
+      &quot;minimum&quot;: 0,
+      &quot;title&quot;: &quot;Living area sqft (max)&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;sqftMin&quot;: {
+      &quot;description&quot;: &quot;Minimum living area in square feet.&quot;,
+      &quot;maximum&quot;: 1000000,
+      &quot;minimum&quot;: 0,
+      &quot;title&quot;: &quot;Living area sqft (min)&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;startUrls&quot;: {
+      &quot;default&quot;: [],
+      &quot;description&quot;: &quot;Realtor.com property detail URLs or search-result URLs. Detail URLs are resolved directly; search URLs reuse their location, mode and page.&quot;,
+      &quot;editor&quot;: &quot;requestListSources&quot;,
+      &quot;items&quot;: {
+        &quot;properties&quot;: {
+          &quot;url&quot;: {
+            &quot;description&quot;: &quot;Realtor.com property or search URL.&quot;,
+            &quot;title&quot;: &quot;Listing URL&quot;,
+            &quot;type&quot;: &quot;string&quot;
+          }
+        },
+        &quot;type&quot;: &quot;object&quot;
+      },
+      &quot;prefill&quot;: [],
+      &quot;title&quot;: &quot;Start URLs&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;yearBuiltMax&quot;: {
+      &quot;description&quot;: &quot;Maximum construction year.&quot;,
+      &quot;maximum&quot;: 2100,
+      &quot;minimum&quot;: 1700,
+      &quot;title&quot;: &quot;Year built (max)&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;yearBuiltMin&quot;: {
+      &quot;description&quot;: &quot;Minimum construction year.&quot;,
+      &quot;maximum&quot;: 2100,
+      &quot;minimum&quot;: 1700,
+      &quot;title&quot;: &quot;Year built (min)&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    }
+  },
+  &quot;required&quot;: [
+    &quot;mode&quot;
+  ],
+  &quot;schemaVersion&quot;: 1,
+  &quot;title&quot;: &quot;Realtor.com Property &amp; Agent Scraper&quot;,
+  &quot;type&quot;: &quot;object&quot;
+}
+</code></pre></details></section><section class="schema-section" id="output-schema"><h2>Output schema</h2><p>Published result links and storage locations. This schema is not an exhaustive contract for every field in a dataset record.</p><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>properties</code></td><td>string</td><td>optional</td><td>Dataset containing scraped property listings and/or agent records</td></tr></tbody></table></div><p><a href="output-schema.json">Download the published output schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+  &quot;actorOutputSchemaVersion&quot;: 1,
+  &quot;description&quot;: &quot;Property records with pricing, beds/baths/sqft, MLS and parcel ids, HOA, mortgage estimate, schools, open houses, tours, photo tags, tax and price history, risk scores and agent contacts; agent records with name, office, profile phones, license, bio, languages and profile URL. Placeholder zero prices are omitted.&quot;,
+  &quot;properties&quot;: {
+    &quot;properties&quot;: {
+      &quot;description&quot;: &quot;Dataset containing scraped property listings and/or agent records&quot;,
+      &quot;template&quot;: &quot;{{links.apiDefaultDatasetUrl}}/items&quot;,
+      &quot;title&quot;: &quot;Property &amp; agent records&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    }
+  },
+  &quot;title&quot;: &quot;Realtor.com Property &amp; Agent Scraper Output&quot;
+}
+</code></pre></details></section><section class="schema-section" id="dataset-schema"><h2>Dataset schema</h2><p>Published dataset views and any declared field definitions. A view can select only a subset of the returned record fields.</p><p><a href="dataset-schema.json">Download the published dataset schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+  &quot;actorSpecification&quot;: 1,
+  &quot;views&quot;: {
+    &quot;agents&quot;: {
+      &quot;display&quot;: {
+        &quot;component&quot;: &quot;table&quot;,
+        &quot;properties&quot;: {
+          &quot;languages&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Languages&quot;
+          },
+          &quot;licenseNumber&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;License&quot;
+          },
+          &quot;name&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Name&quot;
+          },
+          &quot;officeName&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Office&quot;
+          },
+          &quot;phone&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Phone&quot;
+          },
+          &quot;profileUrl&quot;: {
+            &quot;format&quot;: &quot;link&quot;,
+            &quot;label&quot;: &quot;Profile&quot;
+          }
+        }
+      },
+      &quot;title&quot;: &quot;Agents&quot;,
+      &quot;transformation&quot;: {
+        &quot;fields&quot;: [
+          &quot;name&quot;,
+          &quot;officeName&quot;,
+          &quot;phone&quot;,
+          &quot;licenseNumber&quot;,
+          &quot;languages&quot;,
+          &quot;profileUrl&quot;
+        ]
+      }
+    },
+    &quot;overview&quot;: {
+      &quot;display&quot;: {
+        &quot;component&quot;: &quot;table&quot;,
+        &quot;properties&quot;: {
+          &quot;address&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Address&quot;
+          },
+          &quot;baths&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Baths&quot;
+          },
+          &quot;beds&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Beds&quot;
+          },
+          &quot;daysOnMarket&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Days on market&quot;
+          },
+          &quot;listPrice&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Price&quot;
+          },
+          &quot;mlsId&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;MLS #&quot;
+          },
+          &quot;pricePerSqft&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;$/Sqft&quot;
+          },
+          &quot;sqft&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Sqft&quot;
+          },
+          &quot;status&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Status&quot;
+          },
+          &quot;type&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Type&quot;
+          },
+          &quot;url&quot;: {
+            &quot;format&quot;: &quot;link&quot;,
+            &quot;label&quot;: &quot;URL&quot;
+          },
+          &quot;yearBuilt&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Year Built&quot;
+          }
+        }
+      },
+      &quot;title&quot;: &quot;Properties&quot;,
+      &quot;transformation&quot;: {
+        &quot;fields&quot;: [
+          &quot;address&quot;,
+          &quot;listPrice&quot;,
+          &quot;beds&quot;,
+          &quot;baths&quot;,
+          &quot;sqft&quot;,
+          &quot;pricePerSqft&quot;,
+          &quot;type&quot;,
+          &quot;status&quot;,
+          &quot;mlsId&quot;,
+          &quot;yearBuilt&quot;,
+          &quot;daysOnMarket&quot;,
+          &quot;url&quot;
+        ]
+      }
+    }
+  }
+}
+</code></pre></details></section><section class="schema-section" id="key-value-schema"><h2>Key-value schema</h2><p>Published key-value store definitions, when provided by this build.</p><p>This definition is not present in the default published build. See the published README for available documentation.</p></section><section id="published-readme"><h2>Published README</h2><details><summary>Read the full published documentation</summary><h2 id="readme-realtor-com-property-agent-scraper">Realtor.com Property &amp; Agent Scraper</h2>
+<p>Turn Realtor.com into structured data. Search active, rental, sold, pending, contingent, coming-soon, off-market or new-construction listings by city, ZIP, street address, map radius or GeoJSON polygon; apply real filters; and pull the full property record â€” MLS number, HOA, mortgage estimate, assigned schools, open houses, tours, photo tags, tax and price history, risk scores and agent contacts. Switch one field to collect real-estate agent directory records, including profile phone numbers.</p>
+<p>No account, cookies, API key or proxy setup is required.</p>
+<h2 id="readme-what-this-actor-does">What this actor does</h2>
+<ul>
+<li><strong>Eight listing statuses</strong> â€” <code>BUY</code> (for sale), <code>RENT</code>, <code>SOLD</code>, <code>PENDING</code>, <code>CONTINGENT</code>, <code>COMING_SOON</code>, <code>OFF_MARKET</code> and <code>READY_TO_BUILD</code>.</li>
+<li><strong>Five ways to target</strong> â€” free-form location (city, ZIP, neighborhood, county), street address, a map point with a mile radius, a GeoJSON polygon, or Realtor.com URLs.</li>
+<li><strong>Real server-side filters</strong> â€” beds, baths, price, living area, lot size, year built, property type, keywords, photos-only, coming-soon, open-house dates and listing/sold dates.</li>
+<li><strong>Full detail records</strong> â€” one detail lookup per property adds the marketing description, HOA fee, mortgage estimate, assigned and nearby schools, open houses, virtual tours, photo tags, categorized features, tax/price history, parcel ids and expanded agent contacts.</li>
+<li><strong>Agent directory</strong> â€” search agents by name, city/state or ZIP; returns name, office, profile phones, license, bio, languages, designations, avatar and public profile URL.</li>
+<li><strong>Sorted and paginated deeply</strong> â€” newest, price, size or bedroom ordering, up to 10,000 records per run (the source's addressable search window).</li>
+<li><strong>Honest output</strong> â€” a field the source does not publish for a listing is omitted, never guessed or filled with a sentinel. Zero placeholder prices from public records are removed rather than emitted.</li>
+</ul>
+<h2 id="readme-listing-statuses">Listing statuses</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Mode</th>
+<th>What it returns</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>BUY</code></td>
+<td>Active for-sale listings</td>
+</tr>
+<tr>
+<td><code>RENT</code></td>
+<td>Active rental listings</td>
+</tr>
+<tr>
+<td><code>SOLD</code></td>
+<td>Recently sold properties with sale date and, where published, sale price</td>
+</tr>
+<tr>
+<td><code>PENDING</code></td>
+<td>For-sale listings with an accepted offer</td>
+</tr>
+<tr>
+<td><code>CONTINGENT</code></td>
+<td>For-sale listings still subject to a contingency</td>
+</tr>
+<tr>
+<td><code>COMING_SOON</code></td>
+<td>Not-yet-active listings announced ahead of the market</td>
+</tr>
+<tr>
+<td><code>OFF_MARKET</code></td>
+<td>Delisted / off-market listings</td>
+</tr>
+<tr>
+<td><code>READY_TO_BUILD</code></td>
+<td>New-construction and build-ready listings</td>
+</tr>
+</tbody>
+</table></div>
+<p><code>PENDING</code>, <code>CONTINGENT</code> and <code>COMING_SOON</code> come back with <code>status: for_sale</code> and the matching <code>flags.isPending</code> / <code>flags.isContingent</code> / <code>flags.isComingSoon</code> set, because that is how the source models them. The same coming-soon filter is available as <code>comingSoonOnly</code> on the other for-sale modes.</p>
+<h2 id="readme-filters">Filters</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Filter</th>
+<th>Applies to</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>bedsMin</code> / <code>bedsMax</code></td>
+<td>Bedroom range</td>
+</tr>
+<tr>
+<td><code>bathsMin</code> / <code>bathsMax</code></td>
+<td>Bathroom range</td>
+</tr>
+<tr>
+<td><code>priceMin</code> / <code>priceMax</code></td>
+<td>List price range (USD)</td>
+</tr>
+<tr>
+<td><code>sqftMin</code> / <code>sqftMax</code></td>
+<td>Living area range</td>
+</tr>
+<tr>
+<td><code>lotSqftMin</code> / <code>lotSqftMax</code></td>
+<td>Lot size range</td>
+</tr>
+<tr>
+<td><code>yearBuiltMin</code> / <code>yearBuiltMax</code></td>
+<td>Construction year range</td>
+</tr>
+<tr>
+<td><code>propertyTypes</code></td>
+<td>One or more of Realtor.com's 20 property types</td>
+</tr>
+<tr>
+<td><code>keywords</code></td>
+<td>Free-text terms such as <code>pool</code>, <code>waterfront</code>, <code>garage</code></td>
+</tr>
+<tr>
+<td><code>hasPhotos</code></td>
+<td>Exclude listings without photos</td>
+</tr>
+<tr>
+<td><code>comingSoonOnly</code></td>
+<td>Only coming-soon listings in the for-sale modes</td>
+</tr>
+<tr>
+<td><code>openHouseFrom</code> / <code>openHouseTo</code></td>
+<td>Listings with an open house in the date window</td>
+</tr>
+<tr>
+<td><code>listedSince</code></td>
+<td>Listings added on or after a date (delta monitoring)</td>
+</tr>
+<tr>
+<td><code>soldSince</code></td>
+<td>In <code>SOLD</code> mode, sales on or after a date</td>
+</tr>
+<tr>
+<td><code>latitude</code> + <code>longitude</code> + <code>radiusMiles</code></td>
+<td>Radius search around a map point</td>
+</tr>
+<tr>
+<td><code>boundary</code></td>
+<td>GeoJSON Polygon search area (longitude/latitude rings)</td>
+</tr>
+<tr>
+<td><code>sortBy</code></td>
+<td>Relevance, newest, price low/high, largest living area or most bedrooms</td>
+</tr>
+</tbody>
+</table></div>
+<p>Filters are sent to Realtor.com and then verified on every returned record, so a filter cannot silently pass through unfiltered rows.</p>
+<h2 id="readme-output-per-property">Output per property</h2>
+<p>Identity</p>
+<ul>
+<li><code>recordType</code> â€” always <code>property</code></li>
+<li><code>url</code>, <code>id</code>, <code>listingId</code>, <code>permalink</code></li>
+<li><code>mlsId</code>, <code>mlsSource</code>, <code>mlsType</code>, <code>mlsStatus</code></li>
+<li><code>parcelId</code> plus <code>taxRecord.clId</code>, <code>.publicRecordId</code>, <code>.lastUpdateDate</code>, <code>.apn</code>, <code>.taxParcelId</code></li>
+<li><code>status</code></li>
+</ul>
+<p>Pricing</p>
+<ul>
+<li><code>listPrice</code>, <code>listPriceMin</code>, <code>listPriceMax</code> (range-priced new builds have no single price)</li>
+<li><code>pricePerSqft</code> â€” from the source, or computed from list price and living area</li>
+<li><code>priceReduced</code> â€” reduction amount</li>
+<li><code>lastSoldPrice</code>, <code>soldOn</code></li>
+<li><code>estimatedValue</code>, and <code>estimates[]</code> with <code>.estimate</code>, <code>.estimateLow</code>, <code>.estimateHigh</code>, <code>.date</code>, <code>.source</code>, <code>.sourceType</code> (multiple valuation providers when available)</li>
+<li><code>mortgage.monthlyPayment</code>, <code>.downPayment</code>, <code>.loanAmount</code></li>
+<li><code>hoaFee</code></li>
+</ul>
+<p>Property facts</p>
+<ul>
+<li><code>beds</code>, <code>baths</code>, <code>bathsFull</code>, <code>bathsHalf</code></li>
+<li><code>sqft</code>, <code>lotSqft</code>, <code>yearBuilt</code>, <code>yearRenovated</code></li>
+<li><code>garage</code>, <code>garageType</code>, <code>stories</code>, <code>rooms</code>, <code>units</code></li>
+<li><code>type</code>, <code>subType</code>, <code>name</code> (community/building name)</li>
+<li><code>listDate</code>, <code>pendingDate</code>, <code>lastStatusChangeDate</code>, <code>lastUpdateDate</code></li>
+<li><code>daysOnMarket</code> â€” source value, or derived from the list date (and the sale date for sold records)</li>
+</ul>
+<p>Location</p>
+<ul>
+<li><code>address.street</code>, <code>.city</code>, <code>.state</code>, <code>.postalCode</code>, <code>.county</code>, <code>.countyFips</code>, <code>.neighborhoods</code></li>
+<li><code>coordinates.lat</code>, <code>.lng</code></li>
+</ul>
+<p>Media</p>
+<ul>
+<li><code>photos</code> â€” photo URLs</li>
+<li><code>photoTags</code> â€” <code>[{ url, tags: [&quot;kitchen&quot;, &quot;exterior&quot;, â€¦] }]</code></li>
+<li><code>virtualTours</code> â€” <code>[{ href, type }]</code></li>
+</ul>
+<p>Flags</p>
+<ul>
+<li><code>flags.isNewListing</code>, <code>.isPriceReduced</code>, <code>.isForeclosure</code>, <code>.isNewConstruction</code>, <code>.isPending</code>, <code>.isContingent</code>, <code>.isComingSoon</code></li>
+</ul>
+<p>Detail sections (when <code>scrapeDetails</code> is on and the source publishes them)</p>
+<ul>
+<li><code>text</code> â€” full marketing description</li>
+<li><code>features</code> â€” cooling, heating, exterior, roofing, construction, fireplace, pool, zoning, styles, garage type</li>
+<li><code>tags</code> â€” source amenity tags</li>
+<li><code>details</code> â€” categorized feature lists, <code>[{ category, parentCategory, items }]</code></li>
+<li><code>petPolicy</code>, <code>unitDetails</code></li>
+<li><code>nearbySchools</code> â€” name, rating, distance, grades, type, levels, student count, <code>assigned</code></li>
+<li><code>assignedSchools</code> â€” the assigned public schools for the address</li>
+<li><code>openHouses</code> â€” start, end, description, methods, time zone, DST</li>
+<li><code>local.flood</code>, <code>.noise</code>, <code>.wildfire</code> â€” risk scores, severity, FEMA zone, noise categories</li>
+<li><code>history</code> â€” listing/sale events with date, event, price and price per sqft; zero placeholder prices are omitted per row</li>
+<li><code>taxHistory</code> â€” year, tax, assessed and market values (total/land/building); zero placeholders are omitted</li>
+<li><code>agents</code> â€” name, email, phone, office, office phone, office email, type, license, NRDS id, fulfillment id, broker</li>
+<li><code>branding</code>, <code>products</code>, <code>leadAttributes</code>, <code>otherListings</code></li>
+</ul>
+<p>Every record ends with <code>scrapedAt</code> (ISO timestamp).</p>
+<h2 id="readme-output-per-agent">Output per agent</h2>
+<ul>
+<li><code>recordType</code> â€” always <code>agent</code></li>
+<li><code>agentId</code>, <code>fulfillmentId</code></li>
+<li><code>name</code>, <code>profileUrl</code>, <code>website</code></li>
+<li><code>officeName</code>, <code>licenseNumber</code></li>
+<li><code>phone</code>, <code>phones[]</code> â€” profile phone numbers with their <code>type</code> (when Realtor.com publishes them and <code>scrapeDetails</code> is on)</li>
+<li><code>officePhone</code>, <code>officePhones[]</code> â€” office phone numbers from the same profile</li>
+<li><code>bio</code>, <code>languages</code>, <code>designations</code></li>
+<li><code>avatarUrl</code></li>
+<li><code>searchLocation</code> â€” the agent-name/city/ZIP query that produced the record</li>
+<li><code>scrapedAt</code></li>
+</ul>
+<h2 id="readme-input">Input</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>mode</code></td>
+<td>Select</td>
+<td><code>BUY</code></td>
+<td>Listing status: <code>BUY</code>, <code>RENT</code>, <code>SOLD</code>, <code>PENDING</code>, <code>CONTINGENT</code>, <code>OFF_MARKET</code>, <code>READY_TO_BUILD</code></td>
+</tr>
+<tr>
+<td><code>recordType</code></td>
+<td>Select</td>
+<td><code>PROPERTIES</code></td>
+<td>Collect property listings or agent directory records</td>
+</tr>
+<tr>
+<td><code>search</code></td>
+<td>String</td>
+<td>-</td>
+<td>City/state, ZIP, neighborhood, county or street address. In agent mode: city/state or ZIP</td>
+</tr>
+<tr>
+<td><code>agentName</code></td>
+<td>String</td>
+<td>-</td>
+<td>Agent or team name (agent mode)</td>
+</tr>
+<tr>
+<td><code>startUrls</code></td>
+<td>Array</td>
+<td><code>[]</code></td>
+<td>Realtor.com detail or search-result URLs</td>
+</tr>
+<tr>
+<td><code>maxItems</code></td>
+<td>Integer</td>
+<td><code>100</code></td>
+<td>Maximum records to emit (1-10,000)</td>
+</tr>
+<tr>
+<td><code>endPage</code></td>
+<td>Integer</td>
+<td><code>50</code></td>
+<td>Maximum result pages per search (200 properties per page; 50 reaches 10,000)</td>
+</tr>
+<tr>
+<td><code>scrapeDetails</code></td>
+<td>Boolean</td>
+<td><code>true</code></td>
+<td>Fetch each property's full detail record; in agent mode, fetch profile phones</td>
+</tr>
+<tr>
+<td><code>bedsMin</code>, <code>bedsMax</code></td>
+<td>Integer</td>
+<td>-</td>
+<td>Bedroom range</td>
+</tr>
+<tr>
+<td><code>bathsMin</code>, <code>bathsMax</code></td>
+<td>Integer</td>
+<td>-</td>
+<td>Bathroom range</td>
+</tr>
+<tr>
+<td><code>priceMin</code>, <code>priceMax</code></td>
+<td>Integer</td>
+<td>-</td>
+<td>List price range</td>
+</tr>
+<tr>
+<td><code>sqftMin</code>, <code>sqftMax</code></td>
+<td>Integer</td>
+<td>-</td>
+<td>Living area range</td>
+</tr>
+<tr>
+<td><code>lotSqftMin</code>, <code>lotSqftMax</code></td>
+<td>Integer</td>
+<td>-</td>
+<td>Lot size range</td>
+</tr>
+<tr>
+<td><code>yearBuiltMin</code>, <code>yearBuiltMax</code></td>
+<td>Integer</td>
+<td>-</td>
+<td>Construction year range</td>
+</tr>
+<tr>
+<td><code>propertyTypes</code></td>
+<td>Multi-select</td>
+<td><code>[]</code></td>
+<td>One or more property types</td>
+</tr>
+<tr>
+<td><code>keywords</code></td>
+<td>String list</td>
+<td><code>[]</code></td>
+<td>Free-text keywords</td>
+</tr>
+<tr>
+<td><code>hasPhotos</code></td>
+<td>Boolean</td>
+<td><code>false</code></td>
+<td>Only listings with photos</td>
+</tr>
+<tr>
+<td><code>comingSoonOnly</code></td>
+<td>Boolean</td>
+<td><code>false</code></td>
+<td>Only coming-soon listings in for-sale modes</td>
+</tr>
+<tr>
+<td><code>sortBy</code></td>
+<td>Select</td>
+<td><code>relevant</code></td>
+<td><code>relevant</code>, <code>newest</code>, <code>price_low</code>, <code>price_high</code>, <code>sqft_high</code>, <code>beds_high</code></td>
+</tr>
+<tr>
+<td><code>listedSince</code></td>
+<td>Date</td>
+<td>-</td>
+<td>Listings added on/after <code>YYYY-MM-DD</code></td>
+</tr>
+<tr>
+<td><code>soldSince</code></td>
+<td>Date</td>
+<td>-</td>
+<td>Sales on/after <code>YYYY-MM-DD</code> (<code>SOLD</code> mode)</td>
+</tr>
+<tr>
+<td><code>openHouseFrom</code>, <code>openHouseTo</code></td>
+<td>Date</td>
+<td>-</td>
+<td>Open-house date window</td>
+</tr>
+<tr>
+<td><code>latitude</code>, <code>longitude</code></td>
+<td>Number</td>
+<td>-</td>
+<td>Map point for a radius search</td>
+</tr>
+<tr>
+<td><code>radiusMiles</code></td>
+<td>Integer</td>
+<td>-</td>
+<td>Radius around the map point (1-100 miles)</td>
+</tr>
+<tr>
+<td><code>boundary</code></td>
+<td>Object</td>
+<td>-</td>
+<td>GeoJSON Polygon: <code>{&quot;type&quot;:&quot;Polygon&quot;,&quot;coordinates&quot;:[[[lon,lat],...]]}</code></td>
+</tr>
+</tbody>
+</table></div>
+<p>At least one of <code>search</code>, <code>startUrls</code>, a complete latitude/longitude/radius point, or a <code>boundary</code> polygon is required for property mode. Agent mode needs <code>agentName</code> or <code>search</code>.</p>
+<h3 id="readme-example-active-listings-in-a-city">Example: active listings in a city</h3>
+<pre><code class="language-json">{
+    &quot;mode&quot;: &quot;BUY&quot;,
+    &quot;search&quot;: &quot;Houston, TX&quot;,
+    &quot;maxItems&quot;: 100,
+    &quot;scrapeDetails&quot;: true
+}
+</code></pre>
+<h3 id="readme-example-comparable-sales">Example: comparable sales</h3>
+<pre><code class="language-json">{
+    &quot;mode&quot;: &quot;SOLD&quot;,
+    &quot;search&quot;: &quot;Denver, CO&quot;,
+    &quot;soldSince&quot;: &quot;2026-01-01&quot;,
+    &quot;maxItems&quot;: 50,
+    &quot;scrapeDetails&quot;: true
+}
+</code></pre>
+<h3 id="readme-example-filtered-search-with-open-houses">Example: filtered search with open houses</h3>
+<pre><code class="language-json">{
+    &quot;mode&quot;: &quot;BUY&quot;,
+    &quot;search&quot;: &quot;Austin, TX&quot;,
+    &quot;bedsMin&quot;: 3,
+    &quot;priceMax&quot;: 750000,
+    &quot;propertyTypes&quot;: [&quot;single_family&quot;],
+    &quot;openHouseFrom&quot;: &quot;2026-11-01&quot;,
+    &quot;openHouseTo&quot;: &quot;2026-11-30&quot;,
+    &quot;sortBy&quot;: &quot;newest&quot;,
+    &quot;maxItems&quot;: 25
+}
+</code></pre>
+<h3 id="readme-example-radius-search-around-coordinates">Example: radius search around coordinates</h3>
+<pre><code class="language-json">{
+    &quot;mode&quot;: &quot;BUY&quot;,
+    &quot;latitude&quot;: 29.76,
+    &quot;longitude&quot;: -95.36,
+    &quot;radiusMiles&quot;: 5,
+    &quot;sqftMin&quot;: 1500,
+    &quot;maxItems&quot;: 50
+}
+</code></pre>
+<h3 id="readme-example-coming-soon-listings">Example: coming-soon listings</h3>
+<pre><code class="language-json">{
+    &quot;mode&quot;: &quot;COMING_SOON&quot;,
+    &quot;search&quot;: &quot;Atlanta, GA&quot;,
+    &quot;maxItems&quot;: 50,
+    &quot;scrapeDetails&quot;: false
+}
+</code></pre>
+<p><code>comingSoonOnly: true</code> applies the same filter inside <code>BUY</code>, <code>PENDING</code> or <code>CONTINGENT</code> mode.</p>
+<h3 id="readme-example-polygon-search-area">Example: polygon search area</h3>
+<pre><code class="language-json">{
+    &quot;mode&quot;: &quot;BUY&quot;,
+    &quot;boundary&quot;: {
+        &quot;type&quot;: &quot;Polygon&quot;,
+        &quot;coordinates&quot;: [
+            [[-95.6, 29.6], [-95.0, 29.6], [-95.0, 30.1], [-95.6, 30.1], [-95.6, 29.6]]
+        ]
+    },
+    &quot;maxItems&quot;: 50,
+    &quot;scrapeDetails&quot;: false
+}
+</code></pre>
+<p>Rings may be open; the actor closes them automatically. Coordinates are <code>[longitude, latitude]</code>.</p>
+<h3 id="readme-example-agent-directory-by-city-or-zip">Example: agent directory by city or ZIP</h3>
+<pre><code class="language-json">{
+    &quot;recordType&quot;: &quot;AGENTS&quot;,
+    &quot;search&quot;: &quot;Houston, TX&quot;,
+    &quot;maxItems&quot;: 100
+}
+</code></pre>
+<pre><code class="language-json">{
+    &quot;recordType&quot;: &quot;AGENTS&quot;,
+    &quot;agentName&quot;: &quot;Pedro Casanova&quot;,
+    &quot;maxItems&quot;: 25
+}
+</code></pre>
+<h3 id="readme-example-direct-property-urls">Example: direct property URLs</h3>
+<pre><code class="language-json">{
+    &quot;startUrls&quot;: [
+        { &quot;url&quot;: &quot;https://www.realtor.com/realestateandhomes-detail/1802-Hamlin-Valley-Dr_Houston_TX_77090_M80144-71467&quot; }
+    ],
+    &quot;scrapeDetails&quot;: true
+}
+</code></pre>
+<p>Search-result URLs work too; their location, status and page are reused:</p>
+<pre><code class="language-json">{
+    &quot;startUrls&quot;: [
+        { &quot;url&quot;: &quot;https://www.realtor.com/realestateandhomes-search/Houston_TX/pg-2&quot; }
+    ],
+    &quot;maxItems&quot;: 20
+}
+</code></pre>
+<h2 id="readme-use-cases">Use cases</h2>
+<ul>
+<li><strong>Comparable-sales research</strong> â€” pull <code>SOLD</code> records by ZIP or neighborhood with sale dates, assessed values and price per sqft.</li>
+<li><strong>Buyer shortlists</strong> â€” check flood, wildfire and noise scores, assigned schools, HOA and monthly mortgage estimates before a showing.</li>
+<li><strong>Open-house planning</strong> â€” filter by open-house dates and get start/end times, methods and time zone in one dataset.</li>
+<li><strong>Investor screening</strong> â€” compare list price, tax history and automated valuations to spot under- or over-assessed properties.</li>
+<li><strong>Rental tracking</strong> â€” run <code>RENT</code> on a schedule and use <code>listedSince</code> or <code>sortBy: newest</code> for deltas.</li>
+<li><strong>Agent and brokerage mapping</strong> â€” collect agent names, offices, licenses, languages and profile links for a market.</li>
+<li><strong>Listing monitoring</strong> â€” schedule a run with <code>listedSince</code> to pick up new inventory without re-scraping everything.</li>
+</ul>
+<h2 id="readme-data-source-and-reliability">Data source and reliability</h2>
+<p>The actor reads Realtor.com's public web endpoints. It does not log in, and it does not need cookies, browser automation or a paid proxy. Detail enrichment costs one request per property (and one per agent in agent mode); turn <code>scrapeDetails</code> off when search-level fields are enough.</p>
+<h2 id="readme-limits-and-faq">Limits and FAQ</h2>
+<p><strong>How many results can one search return?</strong>
+Up to 10,000 per run, which is Realtor.com's own addressable search window (200 per request, offset up to 10,000). The result total can be larger, but only the first 10,000 rows of one search are reachable. To go deeper, split the market with filters (price bands, property type, ZIP codes or smaller map radii) and run each slice.</p>
+<p><strong>Do I need a Realtor.com account or API key?</strong>
+No. Both property and agent searches use public data and run without credentials.</p>
+<p><strong>Why is <code>lastSoldPrice</code> empty for some sold properties?</strong>
+Some US states do not disclose sale prices. The sale date and history events are still returned when published; price fields are omitted rather than guessed or filled with the <code>0</code> placeholder that public records sometimes carry. The same rule applies inside <code>history</code> and <code>taxHistory</code> rows.</p>
+<p><strong>Why are some detail fields missing on a property?</strong>
+Sections such as HOA, tax history, assigned schools, open houses, tours, risk scores and mortgage estimates exist only when Realtor.com publishes them for that listing. New construction and off-market properties often have fewer sections.</p>
+<p><strong>What is the difference between <code>PENDING</code> and <code>CONTINGENT</code>?</strong>
+Both are for-sale listings under contract; the source marks them with separate flags, which the actor filters on and exposes as <code>flags.isPending</code> and <code>flags.isContingent</code>.</p>
+<p><strong>Can I scrape coming-soon listings?</strong>
+Yes. Use <code>mode: COMING_SOON</code> or set <code>comingSoonOnly: true</code> in a for-sale mode. The actor applies Realtor.com's coming-soon filter, verifies <code>flags.isComingSoon</code> on each record and exposes the flag in the output.</p>
+<p><strong>How is <code>daysOnMarket</code> calculated?</strong>
+It uses the source value when present. Otherwise it is the number of days between the list date and today, or between the list date and the sale date for sold records. It is always non-negative.</p>
+<p><strong>Why did I get fewer records than <code>maxItems</code>?</strong>
+The location or filter combination may have fewer matches, the result set may have hit the source's 10,000-listing ceiling, or the pages ran out. Narrow or broaden the search accordingly.</p>
+<p><strong>Can I mix a location search and direct URLs?</strong>
+Yes. Direct detail URLs are resolved individually and de-duplicated against the search results by property id.</p>
+<p><strong>Does agent mode return phone numbers and email addresses?</strong>
+Profile phone numbers are returned when Realtor.com publishes them and <code>scrapeDetails</code> is on, together with the office phone when available. Agent emails are not exposed by the public agent profile endpoint, so they are never fabricated; property advertiser emails are returned when the listing publishes them. Agent records always include a public profile URL so missing contact details can be checked at the source.</p>
+<p><strong>Is this affiliated with Realtor.com?</strong>
+No. It is an independent tool that reads publicly available Realtor.com pages and endpoints; it is not operated or endorsed by Realtor.com.</p>
+</details></section><section id="python-quickstart"><h2>Python quickstart</h2><p>Use a schema-derived input and the Python standard library to start a run. An Apify account and token are required for execution.</p><p><a href="/apify-actor-examples/guides/realtor-com-listing-and-property-detail-extractor/">Open the step-by-step Python guide →</a></p></section><p class="source-note">Source build <code>xJ0EyZLaPnLnZtUeM</code>. Documentation is regenerated from the default published build; private drafts are not included.</p></article></div></main><footer class="footer"><strong>Nimbryxo Studio</strong><div class="footer-links"><a href="/apify-actor-examples/topics/">Topics</a><a href="/apify-actor-examples/sources/">Documentation sources</a><a href="https://apify.com/nimbryxo-studio">Apify</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></div></footer></body></html>

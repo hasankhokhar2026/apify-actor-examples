@@ -1,0 +1,980 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src &#x27;self&#x27;; script-src &#x27;self&#x27; &#x27;sha256-Lg1fki9+LxjtuINfHMbGIu5ivjOhPsbgo1VzEu+ZQFI=&#x27;; style-src &#x27;self&#x27;; img-src &#x27;self&#x27; https: data:; base-uri &#x27;self&#x27;; form-action &#x27;self&#x27;; object-src &#x27;none&#x27;"><title>Glassdoor Review Export - Ratings, Pros, Cons &amp; Replies | Nimbryxo Studio</title><meta name="description" content="Get Glassdoor employee reviews for any company with overall and sub-category ratings, pros, cons, advice to management, job title and employment status."><meta name="robots" content="index,follow"><link rel="canonical" href="https://hasankhokhar2026.github.io/apify-actor-examples/actors/glassdoor-employee-reviews-with-full-ratings/"><meta property="og:title" content="Glassdoor Review Export - Ratings, Pros, Cons &amp; Replies | Nimbryxo Studio"><meta property="og:description" content="Get Glassdoor employee reviews for any company with overall and sub-category ratings, pros, cons, advice to management, job title and employment status."><meta property="og:type" content="website"><meta property="og:url" content="https://hasankhokhar2026.github.io/apify-actor-examples/actors/glassdoor-employee-reviews-with-full-ratings/"><meta property="og:site_name" content="Nimbryxo Studio"><meta name="twitter:card" content="summary"><link rel="icon" href="/apify-actor-examples/assets/mark.svg?v=2d20f9dc334a" type="image/svg+xml"><link rel="stylesheet" href="/apify-actor-examples/assets/site.css?v=39545fd4a399"><link rel="stylesheet" href="/apify-actor-examples/assets/brand.css?v=eb0f935ade25"><link rel="alternate" type="application/rss+xml" title="Nimbryxo Studio guides" href="/apify-actor-examples/feed.xml"><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization","name":"Nimbryxo Studio","url":"https://hasankhokhar2026.github.io/apify-actor-examples/","sameAs":["https://apify.com/nimbryxo-studio"]},{"@type":"WebSite","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#website","name":"Nimbryxo Studio","url":"https://hasankhokhar2026.github.io/apify-actor-examples/","publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"inLanguage":"en"},{"@type":"WebPage","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/glassdoor-employee-reviews-with-full-ratings/#webpage","name":"Glassdoor Review Export - Ratings, Pros, Cons & Replies","description":"Get Glassdoor employee reviews for any company with overall and sub-category ratings, pros, cons, advice to management, job title and employment status.","url":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/glassdoor-employee-reviews-with-full-ratings/","isPartOf":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#website"},"publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"inLanguage":"en","mainEntity":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/glassdoor-employee-reviews-with-full-ratings/#article"},"breadcrumb":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/glassdoor-employee-reviews-with-full-ratings/#breadcrumb"}},{"@type":"TechArticle","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/glassdoor-employee-reviews-with-full-ratings/#article","headline":"Glassdoor Review Export - Ratings, Pros, Cons & Replies","name":"Glassdoor Review Export - Ratings, Pros, Cons & Replies","description":"Get Glassdoor employee reviews for any company with overall and sub-category ratings, pros, cons, advice to management, job title and employment status.","url":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/glassdoor-employee-reviews-with-full-ratings/","author":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"mainEntityOfPage":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/glassdoor-employee-reviews-with-full-ratings/#webpage"},"inLanguage":"en","dateModified":"2026-11-09T06:12:29.161Z"},{"@type":"BreadcrumbList","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/glassdoor-employee-reviews-with-full-ratings/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Nimbryxo Studio","item":"https://hasankhokhar2026.github.io/apify-actor-examples/"},{"@type":"ListItem","position":2,"name":"Actors","item":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/"},{"@type":"ListItem","position":3,"name":"Glassdoor Review Export - Ratings, Pros, Cons & Replies","item":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/glassdoor-employee-reviews-with-full-ratings/"}]}]}</script><script src="/apify-actor-examples/assets/site.js?v=7cabac48dd31" defer></script></head><body class="theme-studio"><a href="#main" class="skip-link">Skip to content</a><header><div class="inner"><a href="/apify-actor-examples/" class="brand"><img src="/apify-actor-examples/assets/mark.svg?v=2d20f9dc334a" alt="" width="29" height="29">Nimbryxo Studio</a><nav aria-label="Main navigation"><a href="/apify-actor-examples/actors/" aria-current="page">Actors</a><a href="/apify-actor-examples/guides/">Guides</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></nav></div></header><main id="main"><div class="doc-layout"><aside class="contents" aria-label="On this page"><strong>Contents</strong><a href="#overview">Overview</a><a href="#published-readme">Published README</a><a href="#input-schema">Input schema</a><a href="#output-schema">Output schema</a><a href="#dataset-schema">Dataset schema</a><a href="#python-quickstart">Python quickstart</a></aside><article class="prose"><div class="breadcrumb"><a href="/apify-actor-examples/actors/">Actors</a><span>/</span><span>Glassdoor Review Export - Ratings, Pros, Cons &amp; Replies</span></div><section id="overview"><h1 class="doc-title">Glassdoor Review Export - Ratings, Pros, Cons &amp; Replies</h1><p class="lede">Get Glassdoor employee reviews for any company with overall and sub-category ratings, pros, cons, advice to management, job title and employment status.</p><p class="summary">Glassdoor Review Export - Ratings, Pros, Cons &amp; Replies is an Apify Actor published by Nimbryxo Studio. It accepts 25 input fields, none of them required at the top level. Its build declares a results dataset with 2 views. Runs happen on Apify, where the Store page lists the current price.</p><div class="actions"><a class="button" href="https://apify.com/nimbryxo-studio/glassdoor-employee-reviews-with-full-ratings">Open on Apify</a><a class="text-link" href="https://github.com/hasankhokhar2026/apify-actor-examples/blob/main/docs/actors/5lWwuQH8dZ6LpE4AU/README.md">GitHub source</a></div></section><section class="schema-section" id="input-schema"><h2>Input schema</h2><p>Input fields, types, required flags, descriptions, defaults, and prefills come from the published definition. Prefill examples are distinct from defaults.</p><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>companies</code></td><td>array</td><td>optional</td><td>Glassdoor company Review or Overview URLs, company names, or employer ids. Add one item per company. Example: https://www.glassdoor.com/Reviews/Google-Reviews-E9079.htm or Google or 9079.</td></tr><tr><td><code>maxItems</code></td><td>integer</td><td>optional</td><td>Maximum number of reviews to save across all companies.</td></tr><tr><td><code>maxReviewsPerCompany</code></td><td>integer</td><td>optional</td><td>Maximum reviews to save for each company. Set to 0 for no per-company limit.</td></tr></tbody></table></div><details><summary>Show all input fields</summary><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>companies</code></td><td>array</td><td>optional</td><td>Glassdoor company Review or Overview URLs, company names, or employer ids. Add one item per company. Example: https://www.glassdoor.com/Reviews/Google-Reviews-E9079.htm or Google or 9079.</td></tr><tr><td><code>maxItems</code></td><td>integer</td><td>optional</td><td>Maximum number of reviews to save across all companies.</td></tr><tr><td><code>maxReviewsPerCompany</code></td><td>integer</td><td>optional</td><td>Maximum reviews to save for each company. Set to 0 for no per-company limit.</td></tr><tr><td><code>sortBy</code></td><td>string</td><td>optional</td><td>Order in which Glassdoor returns reviews.</td></tr><tr><td><code>location</code></td><td>string</td><td>optional</td><td>City, state, metro area, or country to filter reviews by, such as New York, NY or London. Leave empty for all locations. The value is resolved automatically through Glassdoor&#x27;s location search.</td></tr><tr><td><code>jobFunction</code></td><td>string</td><td>optional</td><td>Only keep reviews whose job function matches this category.</td></tr><tr><td><code>postedWithinDays</code></td><td>string</td><td>optional</td><td>Only keep reviews posted within this many days. Uses newest-first order and stops when older reviews are reached.</td></tr><tr><td><code>dateFrom</code></td><td>string</td><td>optional</td><td>Keep reviews posted on or after this date (YYYY-MM-DD). Applied client-side and forces newest-first order.</td></tr><tr><td><code>dateTo</code></td><td>string</td><td>optional</td><td>Keep reviews posted on or before this date (YYYY-MM-DD). Applied client-side and forces newest-first order.</td></tr><tr><td><code>rating</code></td><td>string</td><td>optional</td><td>Only keep reviews with this exact overall star rating. Use ratings to select several stars.</td></tr><tr><td><code>ratings</code></td><td>array</td><td>optional</td><td>Keep reviews with any of these exact star ratings: 1, 2, 3, 4, 5. Leave empty to use the single rating filter.</td></tr><tr><td><code>employmentType</code></td><td>string</td><td>optional</td><td>Only keep reviews with this employment status.</td></tr><tr><td><code>employmentTypes</code></td><td>array</td><td>optional</td><td>Keep reviews with any of these employment statuses: regular, part_time, intern, contract, freelance, temporary. Leave empty to use the single employment type filter.</td></tr><tr><td><code>onlyCurrentEmployees</code></td><td>boolean</td><td>optional</td><td>Only keep reviews written by current employees.</td></tr><tr><td><code>onlyWithEmployerResponses</code></td><td>boolean</td><td>optional</td><td>Only keep reviews that have an official employer response.</td></tr><tr><td><code>jobTitleKeywords</code></td><td>string</td><td>optional</td><td>Only keep reviews whose job title matches these words. Glassdoor may also return closely related titles, such as software developer for software engineer.</td></tr><tr><td><code>keyword</code></td><td>string</td><td>optional</td><td>Only keep reviews that mention this word or phrase.</td></tr><tr><td><code>language</code></td><td>string</td><td>optional</td><td>Language of the reviews to collect. Choose all languages to include every language Glassdoor exposes.</td></tr><tr><td><code>languages</code></td><td>array</td><td>optional</td><td>Collect reviews in any of these languages: eng, fra, deu, nld, por, spa, ita. Leave empty to use the single language filter.</td></tr><tr><td><code>includeWorldwideReviews</code></td><td>boolean</td><td>optional</td><td>Remove Glassdoor&#x27;s default review criteria and include reviews from all countries. This raises the review ceiling but can add much older or non-local reviews.</td></tr><tr><td><code>includeCompanySummary</code></td><td>boolean</td><td>optional</td><td>Add one companySummary record per company with saved, available, siteTotal, stopReason, logo, rating, and URL. Summary records are marked with recordType=companySummary.</td></tr><tr><td><code>includeCompanyProfile</code></td><td>boolean</td><td>optional</td><td>Add company profile fields such as website, headquarters, size, revenue, industry, CEO, and company sub-ratings to each review. This makes one extra request per company.</td></tr><tr><td><code>onlyNew</code></td><td>boolean</td><td>optional</td><td>Remember previously seen reviews in a named key-value store and emit only reviews that are new since the last run. Uses newest-first order and stops at the stored review-id watermark. Set the same monitorId on every scheduled run.</td></tr><tr><td><code>monitorId</code></td><td>string</td><td>optional</td><td>Name of the named key-value store that holds monitoring state. Use the same value on every scheduled run. Default glassdoor-reviews.</td></tr><tr><td><code>emitUnchanged</code></td><td>boolean</td><td>optional</td><td>With onlyNew, also emit previously seen reviews that have not changed. Each emitted review gets isNew=false and its original firstSeenAt. Leave off to avoid duplicate dataset records.</td></tr></tbody></table></div></details><p><a href="input-schema.json">Download the published input schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+  &quot;description&quot;: &quot;Scrape employee reviews from Glassdoor companies by URL, name, or employer id. No login, cookie, or proxy setup is required.&quot;,
+  &quot;properties&quot;: {
+    &quot;companies&quot;: {
+      &quot;default&quot;: [],
+      &quot;description&quot;: &quot;Glassdoor company Review or Overview URLs, company names, or employer ids. Add one item per company. Example: https://www.glassdoor.com/Reviews/Google-Reviews-E9079.htm or Google or 9079.&quot;,
+      &quot;editor&quot;: &quot;stringList&quot;,
+      &quot;prefill&quot;: [
+        &quot;https://www.glassdoor.com/Reviews/Google-Reviews-E9079.htm&quot;
+      ],
+      &quot;title&quot;: &quot;Companies&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;dateFrom&quot;: {
+      &quot;default&quot;: &quot;&quot;,
+      &quot;description&quot;: &quot;Keep reviews posted on or after this date (YYYY-MM-DD). Applied client-side and forces newest-first order.&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;prefill&quot;: &quot;&quot;,
+      &quot;title&quot;: &quot;Date from&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;dateTo&quot;: {
+      &quot;default&quot;: &quot;&quot;,
+      &quot;description&quot;: &quot;Keep reviews posted on or before this date (YYYY-MM-DD). Applied client-side and forces newest-first order.&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;prefill&quot;: &quot;&quot;,
+      &quot;title&quot;: &quot;Date to&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;emitUnchanged&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;With onlyNew, also emit previously seen reviews that have not changed. Each emitted review gets isNew=false and its original firstSeenAt. Leave off to avoid duplicate dataset records.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Also emit unchanged reviews&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;employmentType&quot;: {
+      &quot;default&quot;: &quot;any&quot;,
+      &quot;description&quot;: &quot;Only keep reviews with this employment status.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;any&quot;,
+        &quot;regular&quot;,
+        &quot;part_time&quot;,
+        &quot;intern&quot;,
+        &quot;contract&quot;,
+        &quot;freelance&quot;,
+        &quot;temporary&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;Any employment type&quot;,
+        &quot;Full-time (regular)&quot;,
+        &quot;Part-time&quot;,
+        &quot;Intern&quot;,
+        &quot;Contract&quot;,
+        &quot;Freelance&quot;,
+        &quot;Temporary&quot;
+      ],
+      &quot;prefill&quot;: &quot;any&quot;,
+      &quot;title&quot;: &quot;Employment type&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;employmentTypes&quot;: {
+      &quot;default&quot;: [],
+      &quot;description&quot;: &quot;Keep reviews with any of these employment statuses: regular, part_time, intern, contract, freelance, temporary. Leave empty to use the single employment type filter.&quot;,
+      &quot;editor&quot;: &quot;stringList&quot;,
+      &quot;items&quot;: {
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;prefill&quot;: [],
+      &quot;title&quot;: &quot;Employment types&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;includeCompanyProfile&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;Add company profile fields such as website, headquarters, size, revenue, industry, CEO, and company sub-ratings to each review. This makes one extra request per company.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;sectionCaption&quot;: &quot;Company profile&quot;,
+      &quot;sectionDescription&quot;: &quot;Optional company context. Leave this off for the smallest and fastest run.&quot;,
+      &quot;title&quot;: &quot;Include company profile&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;includeCompanySummary&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;Add one companySummary record per company with saved, available, siteTotal, stopReason, logo, rating, and URL. Summary records are marked with recordType=companySummary.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Include company summaries&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;includeWorldwideReviews&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;Remove Glassdoor&#x27;s default review criteria and include reviews from all countries. This raises the review ceiling but can add much older or non-local reviews.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Include worldwide reviews&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;jobFunction&quot;: {
+      &quot;default&quot;: &quot;any&quot;,
+      &quot;description&quot;: &quot;Only keep reviews whose job function matches this category.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;any&quot;,
+        &quot;1001&quot;,
+        &quot;1002&quot;,
+        &quot;1003&quot;,
+        &quot;1004&quot;,
+        &quot;1005&quot;,
+        &quot;1006&quot;,
+        &quot;1007&quot;,
+        &quot;1008&quot;,
+        &quot;1009&quot;,
+        &quot;1010&quot;,
+        &quot;1011&quot;,
+        &quot;1012&quot;,
+        &quot;1013&quot;,
+        &quot;1014&quot;,
+        &quot;1015&quot;,
+        &quot;1016&quot;,
+        &quot;1017&quot;,
+        &quot;1018&quot;,
+        &quot;1019&quot;,
+        &quot;1020&quot;,
+        &quot;1021&quot;,
+        &quot;1022&quot;,
+        &quot;1023&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;Any job function&quot;,
+        &quot;Administrative&quot;,
+        &quot;Arts &amp; Design&quot;,
+        &quot;Business&quot;,
+        &quot;Consulting&quot;,
+        &quot;Customer Services &amp; Support&quot;,
+        &quot;Education&quot;,
+        &quot;Engineering&quot;,
+        &quot;Finance &amp; Accounting&quot;,
+        &quot;Healthcare&quot;,
+        &quot;Human Resources&quot;,
+        &quot;Information Technology&quot;,
+        &quot;Legal&quot;,
+        &quot;Marketing&quot;,
+        &quot;Media &amp; Communications&quot;,
+        &quot;Military &amp; Protective Services&quot;,
+        &quot;Operations&quot;,
+        &quot;Other&quot;,
+        &quot;Product &amp; Project Management&quot;,
+        &quot;Research &amp; Science&quot;,
+        &quot;Retail &amp; Food Services&quot;,
+        &quot;Sales&quot;,
+        &quot;Skilled Labor &amp; Manufacturing&quot;,
+        &quot;Transportation&quot;
+      ],
+      &quot;prefill&quot;: &quot;any&quot;,
+      &quot;title&quot;: &quot;Job function&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;jobTitleKeywords&quot;: {
+      &quot;default&quot;: &quot;&quot;,
+      &quot;description&quot;: &quot;Only keep reviews whose job title matches these words. Glassdoor may also return closely related titles, such as software developer for software engineer.&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;prefill&quot;: &quot;&quot;,
+      &quot;title&quot;: &quot;Job title keywords&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;keyword&quot;: {
+      &quot;default&quot;: &quot;&quot;,
+      &quot;description&quot;: &quot;Only keep reviews that mention this word or phrase.&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;prefill&quot;: &quot;&quot;,
+      &quot;title&quot;: &quot;Review text keyword&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;language&quot;: {
+      &quot;default&quot;: &quot;eng&quot;,
+      &quot;description&quot;: &quot;Language of the reviews to collect. Choose all languages to include every language Glassdoor exposes.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;eng&quot;,
+        &quot;fra&quot;,
+        &quot;deu&quot;,
+        &quot;nld&quot;,
+        &quot;por&quot;,
+        &quot;spa&quot;,
+        &quot;ita&quot;,
+        &quot;all&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;English&quot;,
+        &quot;French&quot;,
+        &quot;German&quot;,
+        &quot;Dutch&quot;,
+        &quot;Portuguese&quot;,
+        &quot;Spanish&quot;,
+        &quot;Italian&quot;,
+        &quot;All languages&quot;
+      ],
+      &quot;prefill&quot;: &quot;eng&quot;,
+      &quot;title&quot;: &quot;Review language&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;languages&quot;: {
+      &quot;default&quot;: [],
+      &quot;description&quot;: &quot;Collect reviews in any of these languages: eng, fra, deu, nld, por, spa, ita. Leave empty to use the single language filter.&quot;,
+      &quot;editor&quot;: &quot;stringList&quot;,
+      &quot;items&quot;: {
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;prefill&quot;: [],
+      &quot;title&quot;: &quot;Review languages&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;location&quot;: {
+      &quot;default&quot;: &quot;&quot;,
+      &quot;description&quot;: &quot;City, state, metro area, or country to filter reviews by, such as New York, NY or London. Leave empty for all locations. The value is resolved automatically through Glassdoor&#x27;s location search.&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;prefill&quot;: &quot;&quot;,
+      &quot;title&quot;: &quot;Location&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;maxItems&quot;: {
+      &quot;default&quot;: 100,
+      &quot;description&quot;: &quot;Maximum number of reviews to save across all companies.&quot;,
+      &quot;maximum&quot;: 50000,
+      &quot;minimum&quot;: 1,
+      &quot;prefill&quot;: 3,
+      &quot;title&quot;: &quot;Maximum reviews&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;maxReviewsPerCompany&quot;: {
+      &quot;default&quot;: 0,
+      &quot;description&quot;: &quot;Maximum reviews to save for each company. Set to 0 for no per-company limit.&quot;,
+      &quot;maximum&quot;: 50000,
+      &quot;minimum&quot;: 0,
+      &quot;prefill&quot;: 0,
+      &quot;title&quot;: &quot;Maximum reviews per company&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;monitorId&quot;: {
+      &quot;default&quot;: &quot;glassdoor-reviews&quot;,
+      &quot;description&quot;: &quot;Name of the named key-value store that holds monitoring state. Use the same value on every scheduled run. Default glassdoor-reviews.&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;prefill&quot;: &quot;glassdoor-reviews&quot;,
+      &quot;title&quot;: &quot;Monitor id&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;onlyCurrentEmployees&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;Only keep reviews written by current employees.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Current employees only&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;onlyNew&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;Remember previously seen reviews in a named key-value store and emit only reviews that are new since the last run. Uses newest-first order and stops at the stored review-id watermark. Set the same monitorId on every scheduled run.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;sectionCaption&quot;: &quot;Incremental monitoring&quot;,
+      &quot;sectionDescription&quot;: &quot;Run on a schedule with onlyNew to receive new reviews only. The actor stores a per-company review-id watermark and seen set after each successful dataset push.&quot;,
+      &quot;title&quot;: &quot;Only new reviews&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;onlyWithEmployerResponses&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;Only keep reviews that have an official employer response.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Only with responses&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;postedWithinDays&quot;: {
+      &quot;default&quot;: &quot;any&quot;,
+      &quot;description&quot;: &quot;Only keep reviews posted within this many days. Uses newest-first order and stops when older reviews are reached.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;any&quot;,
+        &quot;7&quot;,
+        &quot;30&quot;,
+        &quot;90&quot;,
+        &quot;180&quot;,
+        &quot;365&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;Any time&quot;,
+        &quot;Last 7 days&quot;,
+        &quot;Last 30 days&quot;,
+        &quot;Last 90 days&quot;,
+        &quot;Last 6 months&quot;,
+        &quot;Last 12 months&quot;
+      ],
+      &quot;prefill&quot;: &quot;any&quot;,
+      &quot;title&quot;: &quot;Posted within&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;rating&quot;: {
+      &quot;default&quot;: &quot;any&quot;,
+      &quot;description&quot;: &quot;Only keep reviews with this exact overall star rating. Use ratings to select several stars.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;any&quot;,
+        &quot;1&quot;,
+        &quot;2&quot;,
+        &quot;3&quot;,
+        &quot;4&quot;,
+        &quot;5&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;Any rating&quot;,
+        &quot;1 star&quot;,
+        &quot;2 stars&quot;,
+        &quot;3 stars&quot;,
+        &quot;4 stars&quot;,
+        &quot;5 stars&quot;
+      ],
+      &quot;prefill&quot;: &quot;any&quot;,
+      &quot;title&quot;: &quot;Star rating&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;ratings&quot;: {
+      &quot;default&quot;: [],
+      &quot;description&quot;: &quot;Keep reviews with any of these exact star ratings: 1, 2, 3, 4, 5. Leave empty to use the single rating filter.&quot;,
+      &quot;editor&quot;: &quot;stringList&quot;,
+      &quot;items&quot;: {
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;prefill&quot;: [],
+      &quot;title&quot;: &quot;Star ratings&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;sortBy&quot;: {
+      &quot;default&quot;: &quot;mostRecent&quot;,
+      &quot;description&quot;: &quot;Order in which Glassdoor returns reviews.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;mostRecent&quot;,
+        &quot;mostRelevant&quot;,
+        &quot;oldest&quot;,
+        &quot;highestRated&quot;,
+        &quot;lowestRated&quot;,
+        &quot;mostRelevantClassic&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;Newest first&quot;,
+        &quot;Most relevant&quot;,
+        &quot;Oldest first&quot;,
+        &quot;Highest rated&quot;,
+        &quot;Lowest rated&quot;,
+        &quot;Most relevant (classic)&quot;
+      ],
+      &quot;prefill&quot;: &quot;mostRecent&quot;,
+      &quot;sectionCaption&quot;: &quot;Review filters&quot;,
+      &quot;sectionDescription&quot;: &quot;Optional filters for the review export. When a date window is selected, sorting is forced to newest first.&quot;,
+      &quot;title&quot;: &quot;Sort reviews by&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    }
+  },
+  &quot;schemaVersion&quot;: 1,
+  &quot;title&quot;: &quot;Glassdoor Employee Review Export Input&quot;,
+  &quot;type&quot;: &quot;object&quot;
+}
+</code></pre></details></section><section class="schema-section" id="output-schema"><h2>Output schema</h2><p>Published result links and storage locations. This schema is not an exhaustive contract for every field in a dataset record.</p><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>reviews</code></td><td>string</td><td>optional</td><td>Dataset containing one record per Glassdoor employee review.</td></tr></tbody></table></div><p><a href="output-schema.json">Download the published output schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+  &quot;actorOutputSchemaVersion&quot;: 1,
+  &quot;description&quot;: &quot;Employee reviews scraped from Glassdoor with ratings, pros and cons, reviewer context, language data, employer responses, company context, company logo, and canonical review URLs. With onlyNew, reviews also carry isNew, firstSeenAt, lastSeenAt, changed, and lastChangedAt monitoring fields. The run status and RUN_SUMMARY key-value record expose the saved/available/siteTotal/stopReason completeness contract, plus monitorId/newReviews/unchangedReviews when monitoring is on. Set includeCompanySummary to add companySummary records to the same dataset.&quot;,
+  &quot;properties&quot;: {
+    &quot;reviews&quot;: {
+      &quot;description&quot;: &quot;Dataset containing one record per Glassdoor employee review.&quot;,
+      &quot;template&quot;: &quot;{{links.apiDefaultDatasetUrl}}/items&quot;,
+      &quot;title&quot;: &quot;Company Reviews&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    }
+  },
+  &quot;title&quot;: &quot;Glassdoor Employee Reviews Output&quot;
+}
+</code></pre></details></section><section class="schema-section" id="dataset-schema"><h2>Dataset schema</h2><p>Published dataset views and any declared field definitions. A view can select only a subset of the returned record fields.</p><p><a href="dataset-schema.json">Download the published dataset schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+  &quot;actorSpecification&quot;: 1,
+  &quot;title&quot;: &quot;Glassdoor Company Reviews&quot;,
+  &quot;views&quot;: {
+    &quot;monitoring&quot;: {
+      &quot;display&quot;: {
+        &quot;component&quot;: &quot;table&quot;,
+        &quot;properties&quot;: {
+          &quot;changed&quot;: {
+            &quot;format&quot;: &quot;boolean&quot;,
+            &quot;label&quot;: &quot;Changed&quot;
+          },
+          &quot;companyName&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Company&quot;
+          },
+          &quot;firstSeenAt&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;First Seen&quot;
+          },
+          &quot;isNew&quot;: {
+            &quot;format&quot;: &quot;boolean&quot;,
+            &quot;label&quot;: &quot;New&quot;
+          },
+          &quot;jobTitle&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Job Title&quot;
+          },
+          &quot;lastChangedAt&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Last Changed&quot;
+          },
+          &quot;lastSeenAt&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Last Seen&quot;
+          },
+          &quot;location&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Location&quot;
+          },
+          &quot;ratingOverall&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Rating&quot;
+          },
+          &quot;reviewDate&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Review Date&quot;
+          },
+          &quot;reviewUrl&quot;: {
+            &quot;format&quot;: &quot;link&quot;,
+            &quot;label&quot;: &quot;Review URL&quot;
+          },
+          &quot;title&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Title&quot;
+          }
+        }
+      },
+      &quot;title&quot;: &quot;Monitoring&quot;,
+      &quot;transformation&quot;: {
+        &quot;fields&quot;: [
+          &quot;isNew&quot;,
+          &quot;changed&quot;,
+          &quot;firstSeenAt&quot;,
+          &quot;lastSeenAt&quot;,
+          &quot;lastChangedAt&quot;,
+          &quot;reviewDate&quot;,
+          &quot;title&quot;,
+          &quot;ratingOverall&quot;,
+          &quot;companyName&quot;,
+          &quot;jobTitle&quot;,
+          &quot;location&quot;,
+          &quot;reviewUrl&quot;
+        ]
+      }
+    },
+    &quot;overview&quot;: {
+      &quot;display&quot;: {
+        &quot;component&quot;: &quot;table&quot;,
+        &quot;properties&quot;: {
+          &quot;companyLogo&quot;: {
+            &quot;format&quot;: &quot;image&quot;,
+            &quot;label&quot;: &quot;Company Logo&quot;
+          },
+          &quot;companyName&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Company&quot;
+          },
+          &quot;companyRating&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Company Rating&quot;
+          },
+          &quot;cons&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Cons&quot;
+          },
+          &quot;jobTitle&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Job Title&quot;
+          },
+          &quot;languageId&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Language&quot;
+          },
+          &quot;location&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Location&quot;
+          },
+          &quot;pros&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Pros&quot;
+          },
+          &quot;ratingOverall&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Rating&quot;
+          },
+          &quot;reviewDate&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Date&quot;
+          },
+          &quot;reviewUrl&quot;: {
+            &quot;format&quot;: &quot;link&quot;,
+            &quot;label&quot;: &quot;Review URL&quot;
+          },
+          &quot;title&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Title&quot;
+          }
+        }
+      },
+      &quot;title&quot;: &quot;Review Overview&quot;,
+      &quot;transformation&quot;: {
+        &quot;fields&quot;: [
+          &quot;title&quot;,
+          &quot;ratingOverall&quot;,
+          &quot;pros&quot;,
+          &quot;cons&quot;,
+          &quot;jobTitle&quot;,
+          &quot;location&quot;,
+          &quot;reviewDate&quot;,
+          &quot;companyName&quot;,
+          &quot;companyLogo&quot;,
+          &quot;languageId&quot;,
+          &quot;companyRating&quot;,
+          &quot;reviewUrl&quot;
+        ]
+      }
+    }
+  }
+}
+</code></pre></details></section><section class="schema-section" id="key-value-schema"><h2>Key-value schema</h2><p>Published key-value store definitions, when provided by this build.</p><p>This definition is not present in the default published build. See the published README for available documentation.</p></section><section id="published-readme"><h2>Published README</h2><details><summary>Read the full published documentation</summary><h2 id="readme-glassdoor-review-export-ratings-pros-cons-replies">Glassdoor Review Export - Ratings, Pros, Cons &amp; Replies</h2>
+<p>Collect employee reviews from Glassdoor companies by URL, company name, or employer id. Get the overall rating and every sub-rating, pros, cons, advice to management, reviewer job title and location, employment status, helpful votes, language, employer responses, company logo, canonical review URLs, and optional company profile data. No Glassdoor login, cookie, or proxy setup is required. The actor escalates from direct requests to Apify datacenter and residential proxies only when Glassdoor blocks the session.</p>
+<h2 id="readme-what-this-actor-does">What this actor does</h2>
+<ul>
+<li>Accepts one or many Glassdoor company Review or Overview URLs, company names, or employer ids.</li>
+<li>Reads Glassdoor's public review data through its own JSON endpoint, so it does not need a browser or a logged-in session.</li>
+<li>Returns every review Glassdoor serves, including beyond the roughly 200 reviews the public review page shows.</li>
+<li>Supports exact single or multi-star filtering, employment type(s), current employees only, employer responses only, keyword search, job-title keywords, job function, location, language selection, worldwide review coverage, a recent-date window, and client-side <code>dateFrom</code>/<code>dateTo</code> ranges.</li>
+<li>Keeps the 25 fields from the previous version and adds canonical review URLs, company logo, language data, employer responses, company context, and optional firmographics.</li>
+<li>Applies an exact post-filter when keyword and star rating are combined, because Glassdoor treats that server-side rating as a minimum, not an exact match.</li>
+<li>Reports a completeness contract (<code>saved</code>, <code>available</code>, <code>siteTotal</code>, <code>stopReason</code>) in the run status and in the <code>RUN_SUMMARY</code> key-value record.</li>
+<li>Supports incremental monitoring with <code>onlyNew</code> and a named <code>monitorId</code> state store: per-company review-id watermarks and seen sets, <code>isNew</code>/<code>firstSeenAt</code> output, optional <code>emitUnchanged</code>, and state updates only after a successful dataset push.</li>
+<li>Resolves company and location names with exact/unique matching. Ambiguous or invalid values produce typed warnings instead of silently taking the first autocomplete row.</li>
+<li>Omits fields that Glassdoor does not provide for a review instead of writing empty strings, nulls, or zero placeholders.</li>
+<li><strong>Empty fields are omitted:</strong> never null, empty strings or empty arrays/objects.</li>
+</ul>
+<p>Typical uses: employer-brand research, culture and sentiment analysis, HR benchmarking, due diligence, recruiting research, and building review datasets for analytics.</p>
+<h2 id="readme-input">Input</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>companies</code></td>
+<td>string list</td>
+<td>Any (prefill: Google Reviews URL)</td>
+<td>Glassdoor Review or Overview URLs, company names, or employer ids. Add one item per company.</td>
+</tr>
+<tr>
+<td><code>maxItems</code></td>
+<td>integer 1-50,000</td>
+<td>100</td>
+<td>Maximum reviews to save across all companies.</td>
+</tr>
+<tr>
+<td><code>maxReviewsPerCompany</code></td>
+<td>integer 0-50,000</td>
+<td>0</td>
+<td>Maximum reviews per company. 0 means no per-company limit.</td>
+</tr>
+<tr>
+<td><code>sortBy</code></td>
+<td>select</td>
+<td>Newest first (<code>mostRecent</code>)</td>
+<td>Newest first, most relevant, oldest first, highest rated, lowest rated, or classic relevance.</td>
+</tr>
+<tr>
+<td><code>location</code></td>
+<td>text</td>
+<td>empty</td>
+<td>City, state, metro area, or country, such as New York, NY or London. Resolved automatically through Glassdoor's location search.</td>
+</tr>
+<tr>
+<td><code>jobFunction</code></td>
+<td>select</td>
+<td>Any job function</td>
+<td>Administrative, Arts &amp; Design, Business, Consulting, Customer Services &amp; Support, Education, Engineering, Finance &amp; Accounting, Healthcare, Human Resources, Information Technology, Legal, Marketing, Media &amp; Communications, Military &amp; Protective Services, Operations, Other, Product &amp; Project Management, Research &amp; Science, Retail &amp; Food Services, Sales, Skilled Labor &amp; Manufacturing, or Transportation.</td>
+</tr>
+<tr>
+<td><code>postedWithinDays</code></td>
+<td>select</td>
+<td>Any time</td>
+<td>Keep only reviews from the last 7, 30, 90, 180, or 365 days. Sorting is forced to newest first.</td>
+</tr>
+<tr>
+<td><code>dateFrom</code></td>
+<td>text</td>
+<td>empty</td>
+<td>Keep reviews posted on or after this date (<code>YYYY-MM-DD</code>). Applied client-side; sorting is forced to newest first.</td>
+</tr>
+<tr>
+<td><code>dateTo</code></td>
+<td>text</td>
+<td>empty</td>
+<td>Keep reviews posted on or before this date (<code>YYYY-MM-DD</code>). Applied client-side; sorting is forced to newest first.</td>
+</tr>
+<tr>
+<td><code>rating</code></td>
+<td>select</td>
+<td>Any rating</td>
+<td>Keep only reviews with an exact 1-5 star overall rating.</td>
+</tr>
+<tr>
+<td><code>ratings</code></td>
+<td>string list</td>
+<td>empty</td>
+<td>Keep reviews with any of several exact star ratings. When set, it takes precedence over <code>rating</code>.</td>
+</tr>
+<tr>
+<td><code>employmentType</code></td>
+<td>select</td>
+<td>Any</td>
+<td>Full-time (regular), part-time, intern, contract, freelance, or temporary.</td>
+</tr>
+<tr>
+<td><code>employmentTypes</code></td>
+<td>string list</td>
+<td>empty</td>
+<td>Keep reviews with any of several employment statuses. When set, it takes precedence over <code>employmentType</code>.</td>
+</tr>
+<tr>
+<td><code>onlyCurrentEmployees</code></td>
+<td>boolean</td>
+<td>false</td>
+<td>Keep only reviews from current employees.</td>
+</tr>
+<tr>
+<td><code>onlyWithEmployerResponses</code></td>
+<td>boolean</td>
+<td>false</td>
+<td>Keep only reviews that have an official employer response.</td>
+</tr>
+<tr>
+<td><code>jobTitleKeywords</code></td>
+<td>text</td>
+<td>empty</td>
+<td>Keep reviews whose job title matches these words. Glassdoor may include closely related titles.</td>
+</tr>
+<tr>
+<td><code>keyword</code></td>
+<td>text</td>
+<td>empty</td>
+<td>Keep reviews that mention this word or phrase. Combined with a star rating, the actor applies an exact client-side rating filter.</td>
+</tr>
+<tr>
+<td><code>language</code></td>
+<td>select</td>
+<td>English</td>
+<td>English, French, German, Dutch, Portuguese, Spanish, Italian, or all languages.</td>
+</tr>
+<tr>
+<td><code>languages</code></td>
+<td>string list</td>
+<td>empty</td>
+<td>Collect reviews in any of several languages. When set, it takes precedence over <code>language</code>.</td>
+</tr>
+<tr>
+<td><code>includeWorldwideReviews</code></td>
+<td>boolean</td>
+<td>false</td>
+<td>Remove Glassdoor's default review criteria and include reviews from all countries.</td>
+</tr>
+<tr>
+<td><code>includeCompanySummary</code></td>
+<td>boolean</td>
+<td>false</td>
+<td>Add one <code>companySummary</code> record per company with saved, available, site total, stop reason, logo, rating, and URL.</td>
+</tr>
+<tr>
+<td><code>includeCompanyProfile</code></td>
+<td>boolean</td>
+<td>false</td>
+<td>Add website, headquarters, size, revenue, industry, CEO, and company sub-ratings to each review.</td>
+</tr>
+<tr>
+<td><code>onlyNew</code></td>
+<td>boolean</td>
+<td>false</td>
+<td>Emit only reviews that were not seen in a previous run. Stores a per-company review-id watermark and seen set in the named <code>monitorId</code> key-value store. Forces newest-first order.</td>
+</tr>
+<tr>
+<td><code>monitorId</code></td>
+<td>string</td>
+<td><code>glassdoor-reviews</code></td>
+<td>Name of the key-value store that holds monitoring state. Use the same value on every scheduled run.</td>
+</tr>
+<tr>
+<td><code>emitUnchanged</code></td>
+<td>boolean</td>
+<td>false</td>
+<td>With <code>onlyNew</code>, also emit previously seen reviews that have not changed. Each emitted review gets <code>isNew: false</code> and its original <code>firstSeenAt</code>.</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="readme-example-one-company-by-url">Example: one company by URL</h3>
+<pre><code class="language-json">{
+  &quot;companies&quot;: [&quot;https://www.glassdoor.com/Reviews/Google-Reviews-E9079.htm&quot;],
+  &quot;maxItems&quot;: 50,
+  &quot;sortBy&quot;: &quot;mostRecent&quot;
+}
+</code></pre>
+<h3 id="readme-example-several-companies-by-name-or-id">Example: several companies by name or id</h3>
+<pre><code class="language-json">{
+  &quot;companies&quot;: [&quot;Microsoft&quot;, &quot;Amazon&quot;, &quot;9079&quot;],
+  &quot;maxItems&quot;: 300,
+  &quot;maxReviewsPerCompany&quot;: 100,
+  &quot;language&quot;: &quot;eng&quot;
+}
+</code></pre>
+<h3 id="readme-example-recent-five-star-reviews-from-current-employees">Example: recent five-star reviews from current employees</h3>
+<pre><code class="language-json">{
+  &quot;companies&quot;: [&quot;https://www.glassdoor.com/Reviews/Google-Reviews-E9079.htm&quot;],
+  &quot;maxItems&quot;: 100,
+  &quot;rating&quot;: &quot;5&quot;,
+  &quot;onlyCurrentEmployees&quot;: true,
+  &quot;postedWithinDays&quot;: &quot;90&quot;
+}
+</code></pre>
+<h3 id="readme-example-exact-date-range-with-several-star-ratings-and-languages">Example: exact date range with several star ratings and languages</h3>
+<pre><code class="language-json">{
+  &quot;companies&quot;: [&quot;https://www.glassdoor.com/Reviews/Google-Reviews-E9079.htm&quot;],
+  &quot;maxItems&quot;: 200,
+  &quot;dateFrom&quot;: &quot;2026-01-01&quot;,
+  &quot;dateTo&quot;: &quot;2026-06-30&quot;,
+  &quot;ratings&quot;: [&quot;1&quot;, &quot;2&quot;],
+  &quot;languages&quot;: [&quot;eng&quot;, &quot;fra&quot;]
+}
+</code></pre>
+<h3 id="readme-example-new-york-engineers-with-employer-responses">Example: New York engineers with employer responses</h3>
+<pre><code class="language-json">{
+  &quot;companies&quot;: [&quot;https://www.glassdoor.com/Reviews/Google-Reviews-E9079.htm&quot;],
+  &quot;maxItems&quot;: 50,
+  &quot;location&quot;: &quot;New York, NY&quot;,
+  &quot;jobFunction&quot;: &quot;1007&quot;,
+  &quot;onlyWithEmployerResponses&quot;: true
+}
+</code></pre>
+<h3 id="readme-example-all-languages-worldwide-with-company-profile">Example: all languages, worldwide, with company profile</h3>
+<pre><code class="language-json">{
+  &quot;companies&quot;: [&quot;https://www.glassdoor.com/Reviews/Siemens-Reviews-E3510.htm&quot;],
+  &quot;maxItems&quot;: 200,
+  &quot;language&quot;: &quot;all&quot;,
+  &quot;includeWorldwideReviews&quot;: true,
+  &quot;includeCompanyProfile&quot;: true
+}
+</code></pre>
+<h3 id="readme-example-scheduled-incremental-monitoring">Example: scheduled incremental monitoring</h3>
+<pre><code class="language-json">{
+  &quot;companies&quot;: [&quot;https://www.glassdoor.com/Reviews/Google-Reviews-E9079.htm&quot;],
+  &quot;maxItems&quot;: 500,
+  &quot;onlyNew&quot;: true,
+  &quot;monitorId&quot;: &quot;google-reviews&quot;
+}
+</code></pre>
+<h2 id="readme-output">Output</h2>
+<p>Each dataset item is one review. The actor keeps these existing fields with the same names:</p>
+<p><code>reviewId</code>, <code>reviewDate</code>, <code>title</code>, <code>pros</code>, <code>cons</code>, <code>advice</code>, <code>ratingOverall</code>, <code>ratingWorkLifeBalance</code>, <code>ratingCultureAndValues</code>, <code>ratingDiversityAndInclusion</code>, <code>ratingSeniorLeadership</code>, <code>ratingCareerOpportunities</code>, <code>ratingCompensationAndBenefits</code>, <code>ratingCeo</code>, <code>ratingBusinessOutlook</code>, <code>ratingRecommendToFriend</code>, <code>jobTitle</code>, <code>location</code>, <code>employmentStatus</code>, <code>isCurrentJob</code>, <code>lengthOfEmployment</code>, <code>countHelpful</code>, <code>countNotHelpful</code>, <code>companyName</code>, <code>companyId</code>.</p>
+<p>New fields are added beside them:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>reviewUrl</code></td>
+<td>Canonical link to the company reviews page with this review's <code>#Review&lt;id&gt;</code> anchor. Built from Glassdoor's canonical Reviews URL, so non-ASCII company names such as L'Oréal and Nestlé stay valid.</td>
+</tr>
+<tr>
+<td><code>companyLogo</code></td>
+<td>Company square logo URL, from the company profile or the review response.</td>
+</tr>
+<tr>
+<td><code>jobTitleId</code></td>
+<td>Glassdoor's job-title id.</td>
+</tr>
+<tr>
+<td><code>locationId</code></td>
+<td>Glassdoor's location id.</td>
+</tr>
+<tr>
+<td><code>locationType</code></td>
+<td>Location type, such as <code>CITY</code>.</td>
+</tr>
+<tr>
+<td><code>isFeatured</code></td>
+<td>Whether Glassdoor marked the review as featured.</td>
+</tr>
+<tr>
+<td><code>languageId</code></td>
+<td>Review language bucket, such as <code>eng</code> or <code>fra</code>.</td>
+</tr>
+<tr>
+<td><code>originalLanguageId</code></td>
+<td>Original language when Glassdoor exposes it.</td>
+</tr>
+<tr>
+<td><code>summaryOriginal</code>, <code>prosOriginal</code>, <code>consOriginal</code>, <code>adviceOriginal</code></td>
+<td>Original text when Glassdoor exposes it.</td>
+</tr>
+<tr>
+<td><code>translationMethod</code></td>
+<td>Translation method when Glassdoor exposes it.</td>
+</tr>
+<tr>
+<td><code>hasEmployerResponse</code></td>
+<td>Whether the employer replied to the review.</td>
+</tr>
+<tr>
+<td><code>employerResponses</code></td>
+<td>Employer replies, with response text, date, responder job title, and helpful count.</td>
+</tr>
+<tr>
+<td><code>companyRating</code></td>
+<td>Company's overall rating.</td>
+</tr>
+<tr>
+<td><code>companyReviewCount</code></td>
+<td>Company's total review count.</td>
+</tr>
+<tr>
+<td><code>companyUrl</code></td>
+<td>Company's Glassdoor reviews page.</td>
+</tr>
+<tr>
+<td><code>companyRatingDistribution</code></td>
+<td>Company's star distribution by rating category.</td>
+</tr>
+<tr>
+<td><code>sourceDomain</code></td>
+<td>Glassdoor domain used for the data.</td>
+</tr>
+<tr>
+<td><code>recordType</code></td>
+<td><code>review</code> for review rows; <code>companySummary</code> for summary rows.</td>
+</tr>
+<tr>
+<td><code>sourceUrl</code></td>
+<td>Canonical review URL (<code>reviewUrl</code>); for company summaries, the company reviews URL.</td>
+</tr>
+<tr>
+<td><code>scrapedAt</code></td>
+<td>Run timestamp in UTC.</td>
+</tr>
+</tbody>
+</table></div>
+<p>When <code>onlyNew</code> is on, each emitted review also gets these monitoring fields:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>isNew</code></td>
+<td><code>true</code> when the review id was never seen by this monitor, <code>false</code> for a previously seen review emitted because <code>emitUnchanged</code> is on.</td>
+</tr>
+<tr>
+<td><code>firstSeenAt</code></td>
+<td>UTC timestamp of the first run that saw this review.</td>
+</tr>
+<tr>
+<td><code>lastSeenAt</code></td>
+<td>UTC timestamp of the current run that saw this review.</td>
+</tr>
+<tr>
+<td><code>changed</code></td>
+<td><code>true</code> when a previously seen review's tracked content changed since the stored snapshot.</td>
+</tr>
+<tr>
+<td><code>lastChangedAt</code></td>
+<td>UTC timestamp of the first or latest detected content change.</td>
+</tr>
+</tbody>
+</table></div>
+<p>When <code>includeCompanyProfile</code> is on, each review also gets <code>companyWebsite</code>, <code>companyHeadquarters</code>, <code>companySize</code>, <code>companyRevenue</code>, <code>companyType</code>, <code>companyFoundedYear</code>, <code>companyIndustry</code>, <code>companyCeo</code>, and <code>companySubRatings</code>.</p>
+<p><code>companySubRatings</code> keeps the six category ratings on Glassdoor's 1-5 scale (<code>overall</code>, <code>workLifeBalance</code>, <code>cultureAndValues</code>, <code>diversityAndInclusion</code>, <code>seniorManagement</code>, <code>careerOpportunities</code>, <code>compensationAndBenefits</code>) and converts the three fraction fields to 0-100 percentages: <code>ceoApprovalPct</code>, <code>recommendToFriendPct</code>, and <code>businessOutlookPct</code>. A <code>scale</code> string documents both scales.</p>
+<p><code>lengthOfEmployment</code> is Glassdoor's tenure bucket; <code>0</code> means less than one year, not missing. <code>ratingRecommendToFriend</code> uses Glassdoor's values such as <code>RECOMMEND</code>, <code>WONT_RECOMMEND</code> and <code>NO_OPINION</code> when present.</p>
+<p>Missing values are omitted. For example, a review without advice has no <code>advice</code> key, and a review without sub-ratings has no sub-rating keys. Booleans such as <code>isCurrentJob</code>, <code>isFeatured</code>, and <code>hasEmployerResponse</code> are always present.</p>
+<h2 id="readme-completeness-and-company-summaries">Completeness and company summaries</h2>
+<p>Every run reports a completeness contract in the status message and in the <code>RUN_SUMMARY</code> key-value record:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>saved</code></td>
+<td>Reviews written to the dataset.</td>
+</tr>
+<tr>
+<td><code>available</code></td>
+<td>Server-side review count for the exact filter set, when it is exact. <code>null</code> when a client-side filter (keyword + rating, multi-star, date window) makes the server count non-exact.</td>
+</tr>
+<tr>
+<td><code>siteTotal</code></td>
+<td>Glassdoor's total review count across the processed companies.</td>
+</tr>
+<tr>
+<td><code>stopReason</code></td>
+<td>Why scraping stopped: <code>maxItems</code>, <code>maxReviewsPerCompany</code>, <code>postedWithinDays</code>, <code>dateFrom</code>, <code>onlyNew</code>, <code>source exhausted</code>, <code>error</code>, or <code>completed</code>.</td>
+</tr>
+</tbody>
+</table></div>
+<p>When <code>includeCompanySummary</code> is on, the actor also writes one record per company with <code>recordType: &quot;companySummary&quot;</code> and the same <code>saved</code>/<code>available</code>/<code>siteTotal</code>/<code>stopReason</code> fields plus company id, name, logo, rating, URL, and the resolved location. With <code>onlyNew</code>, summaries also include <code>newReviews</code>, <code>unchangedReviews</code>, <code>monitorId</code>, and the stored <code>watermark</code>. Filter on <code>recordType</code> to separate summaries from reviews.</p>
+<h2 id="readme-incremental-monitoring">Incremental monitoring</h2>
+<p>Set <code>onlyNew</code> to run the actor on a schedule and receive only reviews that are new since the previous run. Monitoring state lives in a named key-value store whose name is <code>monitorId</code> (default <code>glassdoor-reviews</code>). Use the same <code>monitorId</code> on every run that belongs to the same monitor.</p>
+<p>How it works:</p>
+<ul>
+<li>Each company has its own state record with a numeric <code>reviewId</code> watermark and a <code>seen</code> set of review ids, first-seen timestamps, last-seen timestamps, and content hashes.</li>
+<li>The first run emits all matching reviews (up to <code>maxItems</code>) as <code>isNew: true</code> and records their ids.</li>
+<li>Later runs read newest first and stop as soon as they reach the stored watermark, so they do not page through the entire history. A run that stops this way reports <code>stopReason: &quot;onlyNew&quot;</code>.</li>
+<li>A review is emitted only when its id is not in the seen set. Previously seen reviews are skipped by default, so they are not billed twice.</li>
+<li><code>emitUnchanged</code> re-emits previously seen reviews with <code>isNew: false</code>, their original <code>firstSeenAt</code>, and <code>changed</code> set when the tracked review content differs from the stored hash.</li>
+<li>State is written only after the dataset push succeeds. If a push fails, the affected ids are not marked as seen, so the next run retries them.</li>
+<li><code>maxItems</code> and <code>maxReviewsPerCompany</code> stop the run early without advancing the watermark past unseen reviews. The next run resumes where the previous one stopped.</li>
+<li>Monitoring state is tied to the current filter set (ratings, employment types, keyword, location, language, date window, and so on). Changing filters starts a fresh baseline for that company.</li>
+</ul>
+<p>Only reviews above the stored watermark are read, so edits to older reviews are not detected unless <code>emitUnchanged</code> is used on a review that is re-encountered. To start over, use a new <code>monitorId</code> or delete the named key-value store.</p>
+<h2 id="readme-how-far-back-and-how-many-reviews">How far back and how many reviews</h2>
+<p>Glassdoor's public page shows only a slice of a company's reviews. This actor uses Glassdoor's review endpoint, which can return thousands of reviews. For Google, the actor reaches about 74,000 reviews, close to Glassdoor's own total. For smaller companies, it returns everything Glassdoor serves.</p>
+<p>Glassdoor still counts a small number of reviews it does not serve. The actor reports the available count and the site total in the run status, so you can see the gap instead of guessing. Set <code>language</code> to all (or list every <code>languages</code> value) and <code>includeWorldwideReviews</code> to true to reach the broadest set.</p>
+<h2 id="readme-languages-and-countries">Languages and countries</h2>
+<p>Glassdoor stores reviews in language buckets. Set <code>language</code> to collect English, French, German, Dutch, Portuguese, Spanish, Italian, or all languages, or list several values in <code>languages</code>. Region-specific Glassdoor URLs are accepted, but the data comes from Glassdoor's global review endpoint; the country domain alone does not create a separate review set. <code>sourceDomain</code> records the domain from the input URL.</p>
+<h2 id="readme-use-cases">Use cases</h2>
+<ul>
+<li><strong>Employer-brand and culture research</strong> - compare pros, cons and sub-ratings across companies or locations.</li>
+<li><strong>HR and recruiting benchmarking</strong> - measure compensation, work-life balance and leadership sentiment by job function or tenure.</li>
+<li><strong>Due diligence and investment research</strong> - export structured review history, ratings and employer responses for analysis.</li>
+<li><strong>Voice-of-employee monitoring</strong> - schedule <code>onlyNew</code> runs and route new reviews to HR, ops or customer-experience teams.</li>
+<li><strong>Labor-market datasets</strong> - build review corpora with canonical URLs, language buckets and first-seen timestamps.</li>
+</ul>
+<h2 id="readme-data-source-and-limitations">Data source and limitations</h2>
+<ul>
+<li>Data source: Glassdoor's public review and company endpoints.</li>
+<li>No user credentials, cookies, or proxy configuration are required.</li>
+<li>Reviewer names are not exposed by Glassdoor's public review data. The actor does not attempt to identify reviewers.</li>
+<li>Employer responses are optional and appear only when Glassdoor provides them. Use onlyWithEmployerResponses to keep response-bearing reviews only.</li>
+<li>Glassdoor does not expose original-language or translation text for the sampled reviews; those fields are omitted unless the source provides them.</li>
+<li>Arbitrary date ranges are applied client-side, so very old ranges may require paging through newer reviews first.</li>
+<li>Keyword + exact rating filtering is also client-side because Glassdoor treats the server rating as a minimum. Newest-first order may page through many non-matching reviews; highest-rated or lowest-rated order is faster for sparse exact ratings.</li>
+<li>Company names are resolved through Glassdoor autocomplete with exact/unique matching. For ambiguous names, use the company URL or employer id.</li>
+<li>Regional Glassdoor URLs are accepted for company resolution, but review data still comes from Glassdoor's global endpoint; <code>sourceDomain</code> records the input domain.</li>
+<li>Monitoring state is stored in a named key-value store. Use the same <code>monitorId</code> across scheduled runs; a different id starts a fresh baseline. State is tied to the current filter set, and edits to reviews older than the stored watermark are not re-read.</li>
+<li>Glassdoor can change its public endpoints without notice. The actor rotates sessions and escalates direct → datacenter → residential proxies on repeated blocks. If a run reports a block or an endpoint error, re-run later or contact support with the run id.</li>
+</ul>
+<h2 id="readme-faq">FAQ</h2>
+<p><strong>Do I need a Glassdoor account or cookie?</strong>
+No. The actor reads public review data without a login, cookie, or user-supplied proxy.</p>
+<p><strong>Why did I get fewer reviews than <code>maxItems</code>?</strong>
+The company may have fewer reviews than requested, Glassdoor's filters may exclude some reviews, or the recent-date window may have been reached. The run status shows the stop reason and the available count out of the site total (for example, available 51,182 of 74,053).</p>
+<p><strong>Why are some fields missing on some reviews?</strong>
+Glassdoor does not require reviewers to provide advice, tenure, sub-ratings, CEO approval, business outlook, or a response. Missing values are omitted, not filled with placeholders.</p>
+<p><strong>Can I filter by reviewer location or job function?</strong>
+Yes. Enter a city, state, metro area, or country in <code>location</code>; the actor resolves it through Glassdoor's location search before scraping. Select a <code>jobFunction</code> category to keep only that function. Ambiguous locations are reported with the chosen candidate and fallbacks, and a zero-result candidate falls back to the next one. If a location cannot be resolved at all, the actor warns and ignores the filter instead of failing the run.</p>
+<p><strong>Can I filter by an exact date range?</strong>
+Yes. Set <code>dateFrom</code> and <code>dateTo</code> (<code>YYYY-MM-DD</code>). Glassdoor's endpoint does not accept arbitrary date bounds, so the actor reads newest-first and applies the range client-side. It stops once reviews older than <code>dateFrom</code> are reached. <code>postedWithinDays</code> remains a shortcut for a recent window.</p>
+<p><strong>Can I filter by several star ratings, languages, or employment types?</strong>
+Yes. Use the <code>ratings</code>, <code>languages</code>, and <code>employmentTypes</code> lists. Multi-star and date filters are applied client-side, so the run status marks the server count as non-exact instead of claiming it is the final count.</p>
+<p><strong>Can I monitor only new reviews?</strong>
+Yes. Run the actor on a schedule with <code>onlyNew: true</code> and the same <code>monitorId</code>. The actor stores a per-company review-id watermark and seen set in the named key-value store, emits only reviews it has not seen before, and reports <code>stopReason: &quot;onlyNew&quot;</code> when it reaches the watermark. Set <code>emitUnchanged: true</code> to also receive previously seen reviews with <code>isNew: false</code> and change flags. Use a new <code>monitorId</code> to start a fresh baseline.</p>
+<p><strong>What happens with an ambiguous or invalid company or location?</strong>
+The actor no longer silently takes the first autocomplete row. Company names require an exact or unique match; ambiguous names are skipped with a warning that lists candidates. Location candidates are ranked (city/country before state), ambiguous choices are reported, and a zero-result location falls back to the next candidate. An unresolved location is ignored with a warning instead of failing the whole run.</p>
+<p><strong>Is this affiliated with Glassdoor?</strong>
+No. This actor collects public review data and is not affiliated with, endorsed by, or sponsored by Glassdoor.</p>
+</details></section><section id="python-quickstart"><h2>Python quickstart</h2><p>Use a schema-derived input and the Python standard library to start a run. An Apify account and token are required for execution.</p><p><a href="/apify-actor-examples/guides/glassdoor-employee-reviews-with-full-ratings/">Open the step-by-step Python guide →</a></p></section><p class="source-note">Source build <code>xTNWFWMUeKS0bj8HD</code>. Documentation is regenerated from the default published build; private drafts are not included.</p></article></div></main><footer class="footer"><strong>Nimbryxo Studio</strong><div class="footer-links"><a href="/apify-actor-examples/topics/">Topics</a><a href="/apify-actor-examples/sources/">Documentation sources</a><a href="https://apify.com/nimbryxo-studio">Apify</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></div></footer></body></html>

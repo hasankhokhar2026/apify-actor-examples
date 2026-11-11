@@ -1,0 +1,1394 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src &#x27;self&#x27;; script-src &#x27;self&#x27; &#x27;sha256-HjQxB//mgX0AWryk5lBxmisZ3fq6KCXJu8oPHhm6620=&#x27;; style-src &#x27;self&#x27;; img-src &#x27;self&#x27; https: data:; base-uri &#x27;self&#x27;; form-action &#x27;self&#x27;; object-src &#x27;none&#x27;"><title>Bluesky Posts, Profiles, Feeds &amp; Threads Scraper | Nimbryxo Studio</title><meta name="description" content="Search Bluesky posts by keyword, hashtag, author, mention, domain or URL; read profiles, threads, lists, starter packs, feeds and followers; export likes, reposts, follows, quotes "><meta name="robots" content="index,follow"><link rel="canonical" href="https://hasankhokhar2026.github.io/apify-actor-examples/actors/bluesky-posts-profiles-feeds-and-threads-scraper/"><meta property="og:title" content="Bluesky Posts, Profiles, Feeds &amp; Threads Scraper | Nimbryxo Studio"><meta property="og:description" content="Search Bluesky posts by keyword, hashtag, author, mention, domain or URL; read profiles, threads, lists, starter packs, feeds and followers; export likes, reposts, follows, quotes "><meta property="og:type" content="website"><meta property="og:url" content="https://hasankhokhar2026.github.io/apify-actor-examples/actors/bluesky-posts-profiles-feeds-and-threads-scraper/"><meta property="og:site_name" content="Nimbryxo Studio"><meta name="twitter:card" content="summary"><link rel="icon" href="/apify-actor-examples/assets/mark.svg?v=2d20f9dc334a" type="image/svg+xml"><link rel="stylesheet" href="/apify-actor-examples/assets/site.css?v=39545fd4a399"><link rel="stylesheet" href="/apify-actor-examples/assets/brand.css?v=eb0f935ade25"><link rel="alternate" type="application/rss+xml" title="Nimbryxo Studio guides" href="/apify-actor-examples/feed.xml"><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization","name":"Nimbryxo Studio","url":"https://hasankhokhar2026.github.io/apify-actor-examples/","sameAs":["https://apify.com/nimbryxo-studio"]},{"@type":"WebSite","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#website","name":"Nimbryxo Studio","url":"https://hasankhokhar2026.github.io/apify-actor-examples/","publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"inLanguage":"en"},{"@type":"WebPage","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/bluesky-posts-profiles-feeds-and-threads-scraper/#webpage","name":"Bluesky Posts, Profiles, Feeds & Threads Scraper","description":"Search Bluesky posts by keyword, hashtag, author, mention, domain or URL; read profiles, threads, lists, starter packs, feeds and followers; export likes, reposts, follows, quotes and relationships.","url":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/bluesky-posts-profiles-feeds-and-threads-scraper/","isPartOf":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#website"},"publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"inLanguage":"en","mainEntity":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/bluesky-posts-profiles-feeds-and-threads-scraper/#article"},"breadcrumb":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/bluesky-posts-profiles-feeds-and-threads-scraper/#breadcrumb"}},{"@type":"TechArticle","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/bluesky-posts-profiles-feeds-and-threads-scraper/#article","headline":"Bluesky Posts, Profiles, Feeds & Threads Scraper","name":"Bluesky Posts, Profiles, Feeds & Threads Scraper","description":"Search Bluesky posts by keyword, hashtag, author, mention, domain or URL; read profiles, threads, lists, starter packs, feeds and followers; export likes, reposts, follows, quotes and relationships.","url":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/bluesky-posts-profiles-feeds-and-threads-scraper/","author":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"mainEntityOfPage":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/bluesky-posts-profiles-feeds-and-threads-scraper/#webpage"},"inLanguage":"en","dateModified":"2026-11-06T10:26:44.210Z"},{"@type":"BreadcrumbList","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/bluesky-posts-profiles-feeds-and-threads-scraper/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Nimbryxo Studio","item":"https://hasankhokhar2026.github.io/apify-actor-examples/"},{"@type":"ListItem","position":2,"name":"Actors","item":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/"},{"@type":"ListItem","position":3,"name":"Bluesky Posts, Profiles, Feeds & Threads Scraper","item":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/bluesky-posts-profiles-feeds-and-threads-scraper/"}]}]}</script><script src="/apify-actor-examples/assets/site.js?v=7cabac48dd31" defer></script></head><body class="theme-studio"><a href="#main" class="skip-link">Skip to content</a><header><div class="inner"><a href="/apify-actor-examples/" class="brand"><img src="/apify-actor-examples/assets/mark.svg?v=2d20f9dc334a" alt="" width="29" height="29">Nimbryxo Studio</a><nav aria-label="Main navigation"><a href="/apify-actor-examples/actors/" aria-current="page">Actors</a><a href="/apify-actor-examples/guides/">Guides</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></nav></div></header><main id="main"><div class="doc-layout"><aside class="contents" aria-label="On this page"><strong>Contents</strong><a href="#overview">Overview</a><a href="#published-readme">Published README</a><a href="#input-schema">Input schema</a><a href="#output-schema">Output schema</a><a href="#dataset-schema">Dataset schema</a><a href="#python-quickstart">Python quickstart</a></aside><article class="prose"><div class="breadcrumb"><a href="/apify-actor-examples/actors/">Actors</a><span>/</span><span>Bluesky Posts, Profiles, Feeds &amp; Threads Scraper</span></div><section id="overview"><h1 class="doc-title">Bluesky Posts, Profiles, Feeds &amp; Threads Scraper</h1><p class="lede">Search Bluesky posts by keyword, hashtag, author, mention, domain or URL; read profiles, threads, lists, starter packs, feeds and followers; export likes, reposts, follows, quotes and relationships.</p><p class="summary">Bluesky Posts, Profiles, Feeds &amp; Threads Scraper is an Apify Actor published by Nimbryxo Studio. It accepts 45 input fields, and <code>mode</code> is required. Its build declares a results dataset with 1 view. Runs happen on Apify, where the Store page lists the current price.</p><div class="actions"><a class="button" href="https://apify.com/nimbryxo-studio/bluesky-posts-profiles-feeds-and-threads-scraper">Open on Apify</a><a class="text-link" href="https://github.com/hasankhokhar2026/apify-actor-examples/blob/main/docs/actors/MFlAz6T5BhkrS9qhc/README.md">GitHub source</a></div></section><section class="schema-section" id="input-schema"><h2>Input schema</h2><p>Input fields, types, required flags, descriptions, defaults, and prefills come from the published definition. Prefill examples are distinct from defaults.</p><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>mode</code></td><td>string</td><td>required</td><td>What to fetch.</td></tr><tr><td><code>searchQuery</code></td><td>string</td><td>optional</td><td>Keyword, hashtag, phrase, or Lucene-style query. Used by search, actorSearch, starterPackSearch, and feedGeneratorsDiscovery.</td></tr><tr><td><code>searchSort</code></td><td>string</td><td>optional</td><td>Search ranking. `latest` returns newest first; `top` returns engagement-ranked posts. Both use time-window pagination to collect beyond one page.</td></tr></tbody></table></div><details><summary>Show all input fields</summary><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>mode</code></td><td>string</td><td>required</td><td>What to fetch.</td></tr><tr><td><code>searchQuery</code></td><td>string</td><td>optional</td><td>Keyword, hashtag, phrase, or Lucene-style query. Used by search, actorSearch, starterPackSearch, and feedGeneratorsDiscovery.</td></tr><tr><td><code>searchSort</code></td><td>string</td><td>optional</td><td>Search ranking. `latest` returns newest first; `top` returns engagement-ranked posts. Both use time-window pagination to collect beyond one page.</td></tr><tr><td><code>searchTags</code></td><td>array</td><td>optional</td><td>Only posts with these hashtags (without `#`). Multiple tags are AND-matched. (mode=search)</td></tr><tr><td><code>searchDomain</code></td><td>string</td><td>optional</td><td>Only posts linking to this domain, e.g. `github.com`. (mode=search)</td></tr><tr><td><code>searchUrl</code></td><td>string</td><td>optional</td><td>Only posts linking to this exact URL. (mode=search)</td></tr><tr><td><code>mentionsUser</code></td><td>string</td><td>optional</td><td>Only posts mentioning this handle or DID. (mode=search)</td></tr><tr><td><code>fromUser</code></td><td>string</td><td>optional</td><td>Only posts authored by this handle or DID. (mode=search)</td></tr><tr><td><code>since</code></td><td>string</td><td>optional</td><td>Earliest post date as `YYYY-MM-DD` or an ISO datetime. (mode=search)</td></tr><tr><td><code>until</code></td><td>string</td><td>optional</td><td>Latest post date as `YYYY-MM-DD` or an ISO datetime. (mode=search)</td></tr><tr><td><code>language</code></td><td>string</td><td>optional</td><td>ISO 639-1 language filter for post search and post records. Empty means no filter.</td></tr><tr><td><code>authorFeedFilter</code></td><td>string</td><td>optional</td><td>Which posts to include in the author feed. (mode=profile)</td></tr><tr><td><code>includePins</code></td><td>boolean</td><td>optional</td><td>Include the pinned post at the top of the author feed. (mode=profile)</td></tr><tr><td><code>includeParents</code></td><td>boolean</td><td>optional</td><td>Include ancestor posts above the requested post. (mode=postThread)</td></tr><tr><td><code>threadDepth</code></td><td>integer</td><td>optional</td><td>How many reply levels and ancestor levels to walk. Depths beyond about 10 reply levels are reached by walking reply branches across requests. 0 returns only the requested post. (mode=postThread)</td></tr><tr><td><code>maxRepliesPerPost</code></td><td>integer</td><td>optional</td><td>Maximum direct replies followed under each post while walking a thread. Larger values reach more branches but cost more requests. (mode=postThread)</td></tr><tr><td><code>actor</code></td><td>string</td><td>optional</td><td>Bluesky handle or DID. Used by profile, follows, followers, lists, actorLikes, actorFeeds, relationships, and discoveryType=suggestedFollows.</td></tr><tr><td><code>actors</code></td><td>array</td><td>optional</td><td>Handles, DIDs, or profile URLs for batch lookup. Used by profiles and by relationships as the accounts to check against `actor`.</td></tr><tr><td><code>postUri</code></td><td>string</td><td>optional</td><td>AT URI of a post. Used by postThread, getLikes, repostedBy, and quotes.</td></tr><tr><td><code>postUris</code></td><td>array</td><td>optional</td><td>AT URIs of posts to hydrate. Used by getPosts and as a fallback for single-post modes.</td></tr><tr><td><code>postUrls</code></td><td>array</td><td>optional</td><td>bsky.app post, profile, list, feed, or starter-pack URLs. Used by urlFetch, getPosts, and as a fallback for single-post modes.</td></tr><tr><td><code>listUri</code></td><td>string</td><td>optional</td><td>AT URI of a Bluesky list. Used by getList and listFeed.</td></tr><tr><td><code>listUris</code></td><td>array</td><td>optional</td><td>AT URIs or bsky.app list URLs for batch list processing. (mode=getList)</td></tr><tr><td><code>starterPackUri</code></td><td>string</td><td>optional</td><td>AT URI of a starter pack. (mode=getStarterPack)</td></tr><tr><td><code>starterPackUris</code></td><td>array</td><td>optional</td><td>AT URIs or bsky.app starter-pack URLs for batch processing. (mode=getStarterPack)</td></tr><tr><td><code>feedPreset</code></td><td>string</td><td>optional</td><td>Built-in feed preset. Live presets are listed first, followed by legacy aliases mapped to What&#x27;s Hot. An explicit `feedUri` always takes precedence; if neither is set, What&#x27;s Hot is used for mode=feed.</td></tr><tr><td><code>feedUri</code></td><td>string</td><td>optional</td><td>AT URI or bsky.app feed URL of a custom feed generator. (mode=feed / feedGenerator)</td></tr><tr><td><code>feedUris</code></td><td>array</td><td>optional</td><td>AT URIs or bsky.app feed URLs for batch feed-generator lookup. (mode=feedGenerator)</td></tr><tr><td><code>discoveryType</code></td><td>string</td><td>optional</td><td>Which discovery surface to fetch. (mode=discovery)</td></tr><tr><td><code>excludeReplies</code></td><td>boolean</td><td>optional</td><td>Drop posts that are replies to another post.</td></tr><tr><td><code>excludeReposts</code></td><td>boolean</td><td>optional</td><td>Drop posts surfaced as reposts.</td></tr><tr><td><code>mediaOnly</code></td><td>boolean</td><td>optional</td><td>Only emit posts with at least one image, video, or external embed.</td></tr><tr><td><code>excludeLabeled</code></td><td>boolean</td><td>optional</td><td>Drop posts and accounts that carry moderation or self-labels, including labels on a post&#x27;s author.</td></tr><tr><td><code>respectNoUnauthenticated</code></td><td>boolean</td><td>optional</td><td>Skip records whose author carries the `!no-unauthenticated` label. The run status reports how many records were skipped.</td></tr><tr><td><code>verifiedOnly</code></td><td>boolean</td><td>optional</td><td>Only emit accounts with a valid Bluesky verification, or posts whose author is verified. Records with no verification object are excluded. Post modes hydrate author profiles so verification can be checked.</td></tr><tr><td><code>minLikes</code></td><td>integer</td><td>optional</td><td>Drop posts with fewer likes.</td></tr><tr><td><code>minReposts</code></td><td>integer</td><td>optional</td><td>Drop posts with fewer reposts.</td></tr><tr><td><code>minReplies</code></td><td>integer</td><td>optional</td><td>Drop posts with fewer replies.</td></tr><tr><td><code>minQuotes</code></td><td>integer</td><td>optional</td><td>Drop posts with fewer quote posts.</td></tr><tr><td><code>minFollowers</code></td><td>integer</td><td>optional</td><td>Keep accounts with at least this many followers.</td></tr><tr><td><code>maxFollowers</code></td><td>integer</td><td>optional</td><td>Keep accounts with at most this many followers.</td></tr><tr><td><code>includeListMetadata</code></td><td>boolean</td><td>optional</td><td>Emit a list record before its members. (mode=getList)</td></tr><tr><td><code>includeStarterPackMembers</code></td><td>boolean</td><td>optional</td><td>Emit the accounts in the starter pack&#x27;s list after the pack record. (mode=getStarterPack)</td></tr><tr><td><code>hydrateAuthors</code></td><td>boolean</td><td>optional</td><td>Fetch full author profiles for post records. Adds one batched profile request per 25 unique authors and flat author follower, following, post and verification fields. Enabled by default; the daily profile prefill leaves it off to stay cheap.</td></tr><tr><td><code>maxItems</code></td><td>integer</td><td>optional</td><td>Hard cap on emitted records. For batch modes the cap applies across the whole run.</td></tr></tbody></table></div></details><p><a href="input-schema.json">Download the published input schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+  &quot;description&quot;: &quot;Search Bluesky posts with keyword, hashtag, author, mention, domain and URL filters; read profiles, author feeds, full reply branches, custom feeds, lists, starter packs, likes, reposts, quotes, actor liked posts and public relationships; and discover trending topics, feeds and starter packs. All data is public and needs no login, cookies or API key.&quot;,
+  &quot;properties&quot;: {
+    &quot;actor&quot;: {
+      &quot;description&quot;: &quot;Bluesky handle or DID. Used by profile, follows, followers, lists, actorLikes, actorFeeds, relationships, and discoveryType=suggestedFollows.&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;prefill&quot;: &quot;bsky.app&quot;,
+      &quot;title&quot;: &quot;Handle or DID&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;actors&quot;: {
+      &quot;default&quot;: [],
+      &quot;description&quot;: &quot;Handles, DIDs, or profile URLs for batch lookup. Used by profiles and by relationships as the accounts to check against `actor`.&quot;,
+      &quot;editor&quot;: &quot;stringList&quot;,
+      &quot;items&quot;: {
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;prefill&quot;: [],
+      &quot;title&quot;: &quot;Handles or DIDs&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;authorFeedFilter&quot;: {
+      &quot;default&quot;: &quot;posts_with_replies&quot;,
+      &quot;description&quot;: &quot;Which posts to include in the author feed. (mode=profile)&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;posts_with_replies&quot;,
+        &quot;posts_no_replies&quot;,
+        &quot;posts_with_media&quot;,
+        &quot;posts_and_author_threads&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;Posts with replies&quot;,
+        &quot;Original posts only&quot;,
+        &quot;Posts with media&quot;,
+        &quot;Posts and author threads&quot;
+      ],
+      &quot;prefill&quot;: &quot;posts_with_replies&quot;,
+      &quot;title&quot;: &quot;Author feed filter&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;discoveryType&quot;: {
+      &quot;default&quot;: &quot;trendingTopics&quot;,
+      &quot;description&quot;: &quot;Which discovery surface to fetch. (mode=discovery)&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;trendingTopics&quot;,
+        &quot;suggestedFeeds&quot;,
+        &quot;suggestedStarterPacks&quot;,
+        &quot;taggedSuggestions&quot;,
+        &quot;suggestedFollows&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;Trending topics&quot;,
+        &quot;Suggested feeds&quot;,
+        &quot;Suggested starter packs&quot;,
+        &quot;Tagged suggestions&quot;,
+        &quot;Suggested follows&quot;
+      ],
+      &quot;prefill&quot;: &quot;trendingTopics&quot;,
+      &quot;title&quot;: &quot;Discovery type&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;excludeLabeled&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;Drop posts and accounts that carry moderation or self-labels, including labels on a post&#x27;s author.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Exclude labeled&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;excludeReplies&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;Drop posts that are replies to another post.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Exclude replies&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;excludeReposts&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;Drop posts surfaced as reposts.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Exclude reposts&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;feedPreset&quot;: {
+      &quot;description&quot;: &quot;Built-in feed preset. Live presets are listed first, followed by legacy aliases mapped to What&#x27;s Hot. An explicit `feedUri` always takes precedence; if neither is set, What&#x27;s Hot is used for mode=feed.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;whats-hot&quot;,
+        &quot;bsky-team&quot;,
+        &quot;hot-classic&quot;,
+        &quot;discover&quot;,
+        &quot;mutuals&quot;,
+        &quot;popular-with-friends&quot;,
+        &quot;for-you&quot;,
+        &quot;news&quot;,
+        &quot;trending-videos&quot;,
+        &quot;quiet-posters&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;What&#x27;s Hot&quot;,
+        &quot;Bluesky Team&quot;,
+        &quot;Hot Classic&quot;,
+        &quot;Legacy: Discover (uses What&#x27;s Hot)&quot;,
+        &quot;Legacy: Mutuals (uses What&#x27;s Hot)&quot;,
+        &quot;Legacy: Popular With Friends (uses What&#x27;s Hot)&quot;,
+        &quot;Legacy: For You (uses What&#x27;s Hot)&quot;,
+        &quot;Legacy: News (uses What&#x27;s Hot)&quot;,
+        &quot;Legacy: Trending Videos (uses What&#x27;s Hot)&quot;,
+        &quot;Legacy: Quiet Posters (uses What&#x27;s Hot)&quot;
+      ],
+      &quot;prefill&quot;: &quot;whats-hot&quot;,
+      &quot;title&quot;: &quot;Feed preset&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;feedUri&quot;: {
+      &quot;description&quot;: &quot;AT URI or bsky.app feed URL of a custom feed generator. (mode=feed / feedGenerator)&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;title&quot;: &quot;Feed AT URI&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;feedUris&quot;: {
+      &quot;default&quot;: [],
+      &quot;description&quot;: &quot;AT URIs or bsky.app feed URLs for batch feed-generator lookup. (mode=feedGenerator)&quot;,
+      &quot;editor&quot;: &quot;stringList&quot;,
+      &quot;items&quot;: {
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;prefill&quot;: [],
+      &quot;title&quot;: &quot;Feed AT URIs&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;fromUser&quot;: {
+      &quot;description&quot;: &quot;Only posts authored by this handle or DID. (mode=search)&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;title&quot;: &quot;From user&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;hydrateAuthors&quot;: {
+      &quot;default&quot;: true,
+      &quot;description&quot;: &quot;Fetch full author profiles for post records. Adds one batched profile request per 25 unique authors and flat author follower, following, post and verification fields. Enabled by default; the daily profile prefill leaves it off to stay cheap.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Hydrate post authors&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;includeListMetadata&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;Emit a list record before its members. (mode=getList)&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Include list metadata&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;includeParents&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;Include ancestor posts above the requested post. (mode=postThread)&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Include parent posts&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;includePins&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;Include the pinned post at the top of the author feed. (mode=profile)&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Include pinned post&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;includeStarterPackMembers&quot;: {
+      &quot;default&quot;: true,
+      &quot;description&quot;: &quot;Emit the accounts in the starter pack&#x27;s list after the pack record. (mode=getStarterPack)&quot;,
+      &quot;prefill&quot;: true,
+      &quot;title&quot;: &quot;Include starter-pack members&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;language&quot;: {
+      &quot;default&quot;: &quot;&quot;,
+      &quot;description&quot;: &quot;ISO 639-1 language filter for post search and post records. Empty means no filter.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;&quot;,
+        &quot;ab&quot;,
+        &quot;aa&quot;,
+        &quot;af&quot;,
+        &quot;ak&quot;,
+        &quot;sq&quot;,
+        &quot;am&quot;,
+        &quot;ar&quot;,
+        &quot;an&quot;,
+        &quot;hy&quot;,
+        &quot;as&quot;,
+        &quot;av&quot;,
+        &quot;ae&quot;,
+        &quot;ay&quot;,
+        &quot;az&quot;,
+        &quot;bm&quot;,
+        &quot;ba&quot;,
+        &quot;eu&quot;,
+        &quot;be&quot;,
+        &quot;bn&quot;,
+        &quot;bi&quot;,
+        &quot;bs&quot;,
+        &quot;br&quot;,
+        &quot;bg&quot;,
+        &quot;my&quot;,
+        &quot;ca&quot;,
+        &quot;ch&quot;,
+        &quot;ce&quot;,
+        &quot;ny&quot;,
+        &quot;zh&quot;,
+        &quot;cu&quot;,
+        &quot;cv&quot;,
+        &quot;kw&quot;,
+        &quot;co&quot;,
+        &quot;cr&quot;,
+        &quot;hr&quot;,
+        &quot;cs&quot;,
+        &quot;da&quot;,
+        &quot;dv&quot;,
+        &quot;nl&quot;,
+        &quot;dz&quot;,
+        &quot;en&quot;,
+        &quot;eo&quot;,
+        &quot;et&quot;,
+        &quot;ee&quot;,
+        &quot;fo&quot;,
+        &quot;fj&quot;,
+        &quot;fi&quot;,
+        &quot;fr&quot;,
+        &quot;ff&quot;,
+        &quot;gl&quot;,
+        &quot;lg&quot;,
+        &quot;ka&quot;,
+        &quot;de&quot;,
+        &quot;gn&quot;,
+        &quot;gu&quot;,
+        &quot;ht&quot;,
+        &quot;ha&quot;,
+        &quot;he&quot;,
+        &quot;hz&quot;,
+        &quot;hi&quot;,
+        &quot;ho&quot;,
+        &quot;hu&quot;,
+        &quot;is&quot;,
+        &quot;io&quot;,
+        &quot;ig&quot;,
+        &quot;id&quot;,
+        &quot;ia&quot;,
+        &quot;ie&quot;,
+        &quot;iu&quot;,
+        &quot;ik&quot;,
+        &quot;ga&quot;,
+        &quot;it&quot;,
+        &quot;ja&quot;,
+        &quot;jv&quot;,
+        &quot;kl&quot;,
+        &quot;kn&quot;,
+        &quot;kr&quot;,
+        &quot;ks&quot;,
+        &quot;kk&quot;,
+        &quot;km&quot;,
+        &quot;ki&quot;,
+        &quot;rw&quot;,
+        &quot;ky&quot;,
+        &quot;kv&quot;,
+        &quot;kg&quot;,
+        &quot;ko&quot;,
+        &quot;kj&quot;,
+        &quot;ku&quot;,
+        &quot;lo&quot;,
+        &quot;la&quot;,
+        &quot;lv&quot;,
+        &quot;li&quot;,
+        &quot;ln&quot;,
+        &quot;lt&quot;,
+        &quot;lu&quot;,
+        &quot;lb&quot;,
+        &quot;mk&quot;,
+        &quot;mg&quot;,
+        &quot;ms&quot;,
+        &quot;ml&quot;,
+        &quot;mt&quot;,
+        &quot;gv&quot;,
+        &quot;mi&quot;,
+        &quot;mr&quot;,
+        &quot;mh&quot;,
+        &quot;el&quot;,
+        &quot;mn&quot;,
+        &quot;na&quot;,
+        &quot;nv&quot;,
+        &quot;ng&quot;,
+        &quot;ne&quot;,
+        &quot;nd&quot;,
+        &quot;se&quot;,
+        &quot;no&quot;,
+        &quot;nb&quot;,
+        &quot;nn&quot;,
+        &quot;oc&quot;,
+        &quot;oj&quot;,
+        &quot;or&quot;,
+        &quot;om&quot;,
+        &quot;os&quot;,
+        &quot;pi&quot;,
+        &quot;pa&quot;,
+        &quot;fa&quot;,
+        &quot;pl&quot;,
+        &quot;pt&quot;,
+        &quot;ps&quot;,
+        &quot;qu&quot;,
+        &quot;ro&quot;,
+        &quot;rm&quot;,
+        &quot;rn&quot;,
+        &quot;ru&quot;,
+        &quot;sm&quot;,
+        &quot;sg&quot;,
+        &quot;sa&quot;,
+        &quot;sc&quot;,
+        &quot;gd&quot;,
+        &quot;sr&quot;,
+        &quot;sh&quot;,
+        &quot;sn&quot;,
+        &quot;ii&quot;,
+        &quot;sd&quot;,
+        &quot;si&quot;,
+        &quot;sk&quot;,
+        &quot;sl&quot;,
+        &quot;so&quot;,
+        &quot;nr&quot;,
+        &quot;st&quot;,
+        &quot;es&quot;,
+        &quot;su&quot;,
+        &quot;sw&quot;,
+        &quot;ss&quot;,
+        &quot;sv&quot;,
+        &quot;tl&quot;,
+        &quot;ty&quot;,
+        &quot;tg&quot;,
+        &quot;ta&quot;,
+        &quot;tt&quot;,
+        &quot;te&quot;,
+        &quot;th&quot;,
+        &quot;bo&quot;,
+        &quot;ti&quot;,
+        &quot;to&quot;,
+        &quot;ts&quot;,
+        &quot;tn&quot;,
+        &quot;tr&quot;,
+        &quot;tk&quot;,
+        &quot;tw&quot;,
+        &quot;ug&quot;,
+        &quot;uk&quot;,
+        &quot;ur&quot;,
+        &quot;uz&quot;,
+        &quot;ve&quot;,
+        &quot;vi&quot;,
+        &quot;vo&quot;,
+        &quot;wa&quot;,
+        &quot;cy&quot;,
+        &quot;fy&quot;,
+        &quot;wo&quot;,
+        &quot;xh&quot;,
+        &quot;yi&quot;,
+        &quot;yo&quot;,
+        &quot;za&quot;,
+        &quot;zu&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;(no filter)&quot;,
+        &quot;Abkhazian&quot;,
+        &quot;Afar&quot;,
+        &quot;Afrikaans&quot;,
+        &quot;Akan&quot;,
+        &quot;Albanian&quot;,
+        &quot;Amharic&quot;,
+        &quot;Arabic&quot;,
+        &quot;Aragonese&quot;,
+        &quot;Armenian&quot;,
+        &quot;Assamese&quot;,
+        &quot;Avaric&quot;,
+        &quot;Avestan&quot;,
+        &quot;Aymara&quot;,
+        &quot;Azerbaijani&quot;,
+        &quot;Bambara&quot;,
+        &quot;Bashkir&quot;,
+        &quot;Basque&quot;,
+        &quot;Belarusian&quot;,
+        &quot;Bengali&quot;,
+        &quot;Bislama&quot;,
+        &quot;Bosnian&quot;,
+        &quot;Breton&quot;,
+        &quot;Bulgarian&quot;,
+        &quot;Burmese&quot;,
+        &quot;Catalan&quot;,
+        &quot;Chamorro&quot;,
+        &quot;Chechen&quot;,
+        &quot;Chichewa&quot;,
+        &quot;Chinese&quot;,
+        &quot;Church Slavic&quot;,
+        &quot;Chuvash&quot;,
+        &quot;Cornish&quot;,
+        &quot;Corsican&quot;,
+        &quot;Cree&quot;,
+        &quot;Croatian&quot;,
+        &quot;Czech&quot;,
+        &quot;Danish&quot;,
+        &quot;Divehi&quot;,
+        &quot;Dutch&quot;,
+        &quot;Dzongkha&quot;,
+        &quot;English&quot;,
+        &quot;Esperanto&quot;,
+        &quot;Estonian&quot;,
+        &quot;Ewe&quot;,
+        &quot;Faroese&quot;,
+        &quot;Fijian&quot;,
+        &quot;Finnish&quot;,
+        &quot;French&quot;,
+        &quot;Fulah&quot;,
+        &quot;Galician&quot;,
+        &quot;Ganda&quot;,
+        &quot;Georgian&quot;,
+        &quot;German&quot;,
+        &quot;Guarani&quot;,
+        &quot;Gujarati&quot;,
+        &quot;Haitian&quot;,
+        &quot;Hausa&quot;,
+        &quot;Hebrew&quot;,
+        &quot;Herero&quot;,
+        &quot;Hindi&quot;,
+        &quot;Hiri Motu&quot;,
+        &quot;Hungarian&quot;,
+        &quot;Icelandic&quot;,
+        &quot;Ido&quot;,
+        &quot;Igbo&quot;,
+        &quot;Indonesian&quot;,
+        &quot;Interlingua (International Auxiliary Language Association)&quot;,
+        &quot;Interlingue&quot;,
+        &quot;Inuktitut&quot;,
+        &quot;Inupiaq&quot;,
+        &quot;Irish&quot;,
+        &quot;Italian&quot;,
+        &quot;Japanese&quot;,
+        &quot;Javanese&quot;,
+        &quot;Kalaallisut&quot;,
+        &quot;Kannada&quot;,
+        &quot;Kanuri&quot;,
+        &quot;Kashmiri&quot;,
+        &quot;Kazakh&quot;,
+        &quot;Khmer&quot;,
+        &quot;Kikuyu&quot;,
+        &quot;Kinyarwanda&quot;,
+        &quot;Kirghiz&quot;,
+        &quot;Komi&quot;,
+        &quot;Kongo&quot;,
+        &quot;Korean&quot;,
+        &quot;Kuanyama&quot;,
+        &quot;Kurdish&quot;,
+        &quot;Lao&quot;,
+        &quot;Latin&quot;,
+        &quot;Latvian&quot;,
+        &quot;Limburgan&quot;,
+        &quot;Lingala&quot;,
+        &quot;Lithuanian&quot;,
+        &quot;Luba-Katanga&quot;,
+        &quot;Luxembourgish&quot;,
+        &quot;Macedonian&quot;,
+        &quot;Malagasy&quot;,
+        &quot;Malay (macrolanguage)&quot;,
+        &quot;Malayalam&quot;,
+        &quot;Maltese&quot;,
+        &quot;Manx&quot;,
+        &quot;Maori&quot;,
+        &quot;Marathi&quot;,
+        &quot;Marshallese&quot;,
+        &quot;Modern Greek (1453-)&quot;,
+        &quot;Mongolian&quot;,
+        &quot;Nauru&quot;,
+        &quot;Navajo&quot;,
+        &quot;Ndonga&quot;,
+        &quot;Nepali (macrolanguage)&quot;,
+        &quot;North Ndebele&quot;,
+        &quot;Northern Sami&quot;,
+        &quot;Norwegian&quot;,
+        &quot;Norwegian Bokmål&quot;,
+        &quot;Norwegian Nynorsk&quot;,
+        &quot;Occitan (post 1500)&quot;,
+        &quot;Ojibwa&quot;,
+        &quot;Oriya (macrolanguage)&quot;,
+        &quot;Oromo&quot;,
+        &quot;Ossetian&quot;,
+        &quot;Pali&quot;,
+        &quot;Panjabi&quot;,
+        &quot;Persian&quot;,
+        &quot;Polish&quot;,
+        &quot;Portuguese&quot;,
+        &quot;Pushto&quot;,
+        &quot;Quechua&quot;,
+        &quot;Romanian&quot;,
+        &quot;Romansh&quot;,
+        &quot;Rundi&quot;,
+        &quot;Russian&quot;,
+        &quot;Samoan&quot;,
+        &quot;Sango&quot;,
+        &quot;Sanskrit&quot;,
+        &quot;Sardinian&quot;,
+        &quot;Scottish Gaelic&quot;,
+        &quot;Serbian&quot;,
+        &quot;Serbo-Croatian&quot;,
+        &quot;Shona&quot;,
+        &quot;Sichuan Yi&quot;,
+        &quot;Sindhi&quot;,
+        &quot;Sinhala&quot;,
+        &quot;Slovak&quot;,
+        &quot;Slovenian&quot;,
+        &quot;Somali&quot;,
+        &quot;South Ndebele&quot;,
+        &quot;Southern Sotho&quot;,
+        &quot;Spanish&quot;,
+        &quot;Sundanese&quot;,
+        &quot;Swahili (macrolanguage)&quot;,
+        &quot;Swati&quot;,
+        &quot;Swedish&quot;,
+        &quot;Tagalog&quot;,
+        &quot;Tahitian&quot;,
+        &quot;Tajik&quot;,
+        &quot;Tamil&quot;,
+        &quot;Tatar&quot;,
+        &quot;Telugu&quot;,
+        &quot;Thai&quot;,
+        &quot;Tibetan&quot;,
+        &quot;Tigrinya&quot;,
+        &quot;Tonga (Tonga Islands)&quot;,
+        &quot;Tsonga&quot;,
+        &quot;Tswana&quot;,
+        &quot;Turkish&quot;,
+        &quot;Turkmen&quot;,
+        &quot;Twi&quot;,
+        &quot;Uighur&quot;,
+        &quot;Ukrainian&quot;,
+        &quot;Urdu&quot;,
+        &quot;Uzbek&quot;,
+        &quot;Venda&quot;,
+        &quot;Vietnamese&quot;,
+        &quot;Volapük&quot;,
+        &quot;Walloon&quot;,
+        &quot;Welsh&quot;,
+        &quot;Western Frisian&quot;,
+        &quot;Wolof&quot;,
+        &quot;Xhosa&quot;,
+        &quot;Yiddish&quot;,
+        &quot;Yoruba&quot;,
+        &quot;Zhuang&quot;,
+        &quot;Zulu&quot;
+      ],
+      &quot;prefill&quot;: &quot;&quot;,
+      &quot;title&quot;: &quot;Language&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;listUri&quot;: {
+      &quot;description&quot;: &quot;AT URI of a Bluesky list. Used by getList and listFeed.&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;title&quot;: &quot;List AT URI&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;listUris&quot;: {
+      &quot;default&quot;: [],
+      &quot;description&quot;: &quot;AT URIs or bsky.app list URLs for batch list processing. (mode=getList)&quot;,
+      &quot;editor&quot;: &quot;stringList&quot;,
+      &quot;items&quot;: {
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;prefill&quot;: [],
+      &quot;title&quot;: &quot;List AT URIs&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;maxFollowers&quot;: {
+      &quot;description&quot;: &quot;Keep accounts with at most this many followers.&quot;,
+      &quot;maximum&quot;: 1000000000,
+      &quot;minimum&quot;: 0,
+      &quot;title&quot;: &quot;Maximum followers&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;maxItems&quot;: {
+      &quot;default&quot;: 40,
+      &quot;description&quot;: &quot;Hard cap on emitted records. For batch modes the cap applies across the whole run.&quot;,
+      &quot;maximum&quot;: 5000,
+      &quot;minimum&quot;: 1,
+      &quot;prefill&quot;: 3,
+      &quot;title&quot;: &quot;Max items&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;maxRepliesPerPost&quot;: {
+      &quot;default&quot;: 100,
+      &quot;description&quot;: &quot;Maximum direct replies followed under each post while walking a thread. Larger values reach more branches but cost more requests. (mode=postThread)&quot;,
+      &quot;maximum&quot;: 1000,
+      &quot;minimum&quot;: 1,
+      &quot;prefill&quot;: 100,
+      &quot;title&quot;: &quot;Max replies per post&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;mediaOnly&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;Only emit posts with at least one image, video, or external embed.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Media only&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;mentionsUser&quot;: {
+      &quot;description&quot;: &quot;Only posts mentioning this handle or DID. (mode=search)&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;title&quot;: &quot;Mentioning user&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;minFollowers&quot;: {
+      &quot;description&quot;: &quot;Keep accounts with at least this many followers.&quot;,
+      &quot;maximum&quot;: 1000000000,
+      &quot;minimum&quot;: 0,
+      &quot;title&quot;: &quot;Minimum followers&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;minLikes&quot;: {
+      &quot;description&quot;: &quot;Drop posts with fewer likes.&quot;,
+      &quot;maximum&quot;: 10000000,
+      &quot;minimum&quot;: 0,
+      &quot;title&quot;: &quot;Minimum likes&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;minQuotes&quot;: {
+      &quot;description&quot;: &quot;Drop posts with fewer quote posts.&quot;,
+      &quot;maximum&quot;: 10000000,
+      &quot;minimum&quot;: 0,
+      &quot;title&quot;: &quot;Minimum quotes&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;minReplies&quot;: {
+      &quot;description&quot;: &quot;Drop posts with fewer replies.&quot;,
+      &quot;maximum&quot;: 10000000,
+      &quot;minimum&quot;: 0,
+      &quot;title&quot;: &quot;Minimum replies&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;minReposts&quot;: {
+      &quot;description&quot;: &quot;Drop posts with fewer reposts.&quot;,
+      &quot;maximum&quot;: 10000000,
+      &quot;minimum&quot;: 0,
+      &quot;title&quot;: &quot;Minimum reposts&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;mode&quot;: {
+      &quot;default&quot;: &quot;search&quot;,
+      &quot;description&quot;: &quot;What to fetch.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;search&quot;,
+        &quot;profile&quot;,
+        &quot;profiles&quot;,
+        &quot;actorSearch&quot;,
+        &quot;feed&quot;,
+        &quot;postThread&quot;,
+        &quot;urlFetch&quot;,
+        &quot;getPosts&quot;,
+        &quot;follows&quot;,
+        &quot;followers&quot;,
+        &quot;getLikes&quot;,
+        &quot;repostedBy&quot;,
+        &quot;quotes&quot;,
+        &quot;actorLikes&quot;,
+        &quot;getList&quot;,
+        &quot;listFeed&quot;,
+        &quot;lists&quot;,
+        &quot;actorFeeds&quot;,
+        &quot;getStarterPack&quot;,
+        &quot;starterPackSearch&quot;,
+        &quot;feedGenerator&quot;,
+        &quot;feedGeneratorsDiscovery&quot;,
+        &quot;relationships&quot;,
+        &quot;discovery&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;Search posts - keyword, hashtag, author, mention, domain or URL&quot;,
+        &quot;Profile - metadata plus recent posts&quot;,
+        &quot;Profiles - batch lookup by handle or DID&quot;,
+        &quot;Account search - find users by keyword&quot;,
+        &quot;Feed - custom feed or built-in preset&quot;,
+        &quot;Post thread - post, full reply branches, optional parents&quot;,
+        &quot;URL fetch - expand bsky.app post, profile, list, feed or starter-pack URLs&quot;,
+        &quot;Get posts - batch-hydrate AT URIs or post URLs&quot;,
+        &quot;Follows - accounts a user follows&quot;,
+        &quot;Followers - accounts following a user&quot;,
+        &quot;Likes - accounts that liked a post&quot;,
+        &quot;Reposts - accounts that reposted a post&quot;,
+        &quot;Quotes - posts quoting a post&quot;,
+        &quot;Actor likes - posts an account liked, via its public PDS&quot;,
+        &quot;List members - one or more lists, optional list metadata&quot;,
+        &quot;List feed - posts in a list&quot;,
+        &quot;Lists - lists created by an account&quot;,
+        &quot;Actor feeds - feed generators created by an account&quot;,
+        &quot;Starter packs - pack details and members&quot;,
+        &quot;Starter-pack search - find starter packs by keyword&quot;,
+        &quot;Feed generator - details for one or more feeds&quot;,
+        &quot;Feed discovery - popular feed generators&quot;,
+        &quot;Relationships - public follow/block checks for supplied accounts&quot;,
+        &quot;Discovery - trending topics, suggested feeds, starter packs, tags, follows&quot;
+      ],
+      &quot;prefill&quot;: &quot;profile&quot;,
+      &quot;title&quot;: &quot;Mode&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;postUri&quot;: {
+      &quot;description&quot;: &quot;AT URI of a post. Used by postThread, getLikes, repostedBy, and quotes.&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;title&quot;: &quot;Post AT URI&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;postUris&quot;: {
+      &quot;default&quot;: [],
+      &quot;description&quot;: &quot;AT URIs of posts to hydrate. Used by getPosts and as a fallback for single-post modes.&quot;,
+      &quot;editor&quot;: &quot;stringList&quot;,
+      &quot;items&quot;: {
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;prefill&quot;: [],
+      &quot;title&quot;: &quot;Post AT URIs&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;postUrls&quot;: {
+      &quot;default&quot;: [],
+      &quot;description&quot;: &quot;bsky.app post, profile, list, feed, or starter-pack URLs. Used by urlFetch, getPosts, and as a fallback for single-post modes.&quot;,
+      &quot;editor&quot;: &quot;stringList&quot;,
+      &quot;items&quot;: {
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;prefill&quot;: [],
+      &quot;title&quot;: &quot;Bluesky URLs&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;respectNoUnauthenticated&quot;: {
+      &quot;default&quot;: true,
+      &quot;description&quot;: &quot;Skip records whose author carries the `!no-unauthenticated` label. The run status reports how many records were skipped.&quot;,
+      &quot;prefill&quot;: true,
+      &quot;title&quot;: &quot;Respect no-unauthenticated accounts&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;searchDomain&quot;: {
+      &quot;description&quot;: &quot;Only posts linking to this domain, e.g. `github.com`. (mode=search)&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;title&quot;: &quot;Search domain&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;searchQuery&quot;: {
+      &quot;default&quot;: &quot;bluesky&quot;,
+      &quot;description&quot;: &quot;Keyword, hashtag, phrase, or Lucene-style query. Used by search, actorSearch, starterPackSearch, and feedGeneratorsDiscovery.&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;prefill&quot;: &quot;bluesky&quot;,
+      &quot;title&quot;: &quot;Search query&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;searchSort&quot;: {
+      &quot;default&quot;: &quot;latest&quot;,
+      &quot;description&quot;: &quot;Search ranking. `latest` returns newest first; `top` returns engagement-ranked posts. Both use time-window pagination to collect beyond one page.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;top&quot;,
+        &quot;latest&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;Top - engagement-ranked&quot;,
+        &quot;Latest - newest first (supports deeper collection)&quot;
+      ],
+      &quot;prefill&quot;: &quot;latest&quot;,
+      &quot;title&quot;: &quot;Search sort&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;searchTags&quot;: {
+      &quot;default&quot;: [],
+      &quot;description&quot;: &quot;Only posts with these hashtags (without `#`). Multiple tags are AND-matched. (mode=search)&quot;,
+      &quot;editor&quot;: &quot;stringList&quot;,
+      &quot;items&quot;: {
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;prefill&quot;: [],
+      &quot;title&quot;: &quot;Search hashtags&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;searchUrl&quot;: {
+      &quot;description&quot;: &quot;Only posts linking to this exact URL. (mode=search)&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;title&quot;: &quot;Search URL&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;since&quot;: {
+      &quot;description&quot;: &quot;Earliest post date as `YYYY-MM-DD` or an ISO datetime. (mode=search)&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;title&quot;: &quot;Since&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;starterPackUri&quot;: {
+      &quot;description&quot;: &quot;AT URI of a starter pack. (mode=getStarterPack)&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;title&quot;: &quot;Starter pack AT URI&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;starterPackUris&quot;: {
+      &quot;default&quot;: [],
+      &quot;description&quot;: &quot;AT URIs or bsky.app starter-pack URLs for batch processing. (mode=getStarterPack)&quot;,
+      &quot;editor&quot;: &quot;stringList&quot;,
+      &quot;items&quot;: {
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;prefill&quot;: [],
+      &quot;title&quot;: &quot;Starter pack AT URIs&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;threadDepth&quot;: {
+      &quot;default&quot;: 6,
+      &quot;description&quot;: &quot;How many reply levels and ancestor levels to walk. Depths beyond about 10 reply levels are reached by walking reply branches across requests. 0 returns only the requested post. (mode=postThread)&quot;,
+      &quot;maximum&quot;: 1000,
+      &quot;minimum&quot;: 0,
+      &quot;prefill&quot;: 6,
+      &quot;title&quot;: &quot;Thread depth&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;until&quot;: {
+      &quot;description&quot;: &quot;Latest post date as `YYYY-MM-DD` or an ISO datetime. (mode=search)&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;title&quot;: &quot;Until&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;verifiedOnly&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;Only emit accounts with a valid Bluesky verification, or posts whose author is verified. Records with no verification object are excluded. Post modes hydrate author profiles so verification can be checked.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Verified only&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    }
+  },
+  &quot;required&quot;: [
+    &quot;mode&quot;
+  ],
+  &quot;schemaVersion&quot;: 1,
+  &quot;title&quot;: &quot;Bluesky Posts, Profiles, Feeds &amp; Threads Scraper Input&quot;,
+  &quot;type&quot;: &quot;object&quot;
+}
+</code></pre></details></section><section class="schema-section" id="output-schema"><h2>Output schema</h2><p>Published result links and storage locations. This schema is not an exhaustive contract for every field in a dataset record.</p><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>records</code></td><td>string</td><td>optional</td><td>Dataset containing all scraped posts, accounts, lists, starter packs, feed generators and discovery records.</td></tr></tbody></table></div><p><a href="output-schema.json">Download the published output schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+  &quot;actorOutputSchemaVersion&quot;: 1,
+  &quot;description&quot;: &quot;Bluesky posts, accounts, lists, starter packs, feed generators, trending topics and tag suggestions from the public read API.&quot;,
+  &quot;properties&quot;: {
+    &quot;records&quot;: {
+      &quot;description&quot;: &quot;Dataset containing all scraped posts, accounts, lists, starter packs, feed generators and discovery records.&quot;,
+      &quot;template&quot;: &quot;{{links.apiDefaultDatasetUrl}}/items&quot;,
+      &quot;title&quot;: &quot;Bluesky records&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    }
+  },
+  &quot;title&quot;: &quot;Bluesky Posts, Profiles, Feeds &amp; Threads Scraper Output&quot;
+}
+</code></pre></details></section><section class="schema-section" id="dataset-schema"><h2>Dataset schema</h2><p>Published dataset views and any declared field definitions. A view can select only a subset of the returned record fields.</p><p><a href="dataset-schema.json">Download the published dataset schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+  &quot;actorSpecification&quot;: 1,
+  &quot;views&quot;: {
+    &quot;overview&quot;: {
+      &quot;display&quot;: {
+        &quot;component&quot;: &quot;table&quot;,
+        &quot;properties&quot;: {}
+      },
+      &quot;title&quot;: &quot;Bluesky&quot;,
+      &quot;transformation&quot;: {
+        &quot;fields&quot;: [
+          &quot;recordType&quot;,
+          &quot;url&quot;,
+          &quot;createdAt&quot;,
+          &quot;authorHandle&quot;,
+          &quot;displayName&quot;,
+          &quot;text&quot;,
+          &quot;likeCount&quot;,
+          &quot;repostCount&quot;
+        ]
+      }
+    }
+  }
+}
+</code></pre></details></section><section class="schema-section" id="key-value-schema"><h2>Key-value schema</h2><p>Published key-value store definitions, when provided by this build.</p><p>This definition is not present in the default published build. See the published README for available documentation.</p></section><section id="published-readme"><h2>Published README</h2><details><summary>Read the full published documentation</summary><h2 id="readme-bluesky-posts-profiles-feeds-threads-scraper">Bluesky Posts, Profiles, Feeds &amp; Threads Scraper</h2>
+<p>Scrape <strong>Bluesky</strong> public data without a login, cookies or an API key. Search posts by keyword, hashtag, author, mention, domain or URL; read profiles, author feeds, full thread reply branches, lists, starter packs, custom feeds, likes, reposts, quotes, actor liked posts and public relationships; and discover trending topics and suggested communities. Every record has flat top-level fields with a few natural nested objects, absolute URLs, ISO dates and omit-empty output.</p>
+<h2 id="readme-what-this-actor-does">What this actor does</h2>
+<ul>
+<li><strong>24 modes</strong> across posts, accounts, threads, lists, starter packs, feed generators, relationships and discovery.</li>
+<li><strong>Post search with the full public filter surface</strong>: keyword, hashtag, author, mention, domain, URL, date range, language and top/latest ranking.</li>
+<li><strong>Search beyond the first page</strong>: both <code>searchSort=latest</code> and <code>searchSort=top</code> walk backwards through time windows. Latest is newest-first; Top preserves engagement ranking within each window. Cursor paging is not used because Bluesky rejects anonymous cursors.</li>
+<li><strong>Full thread reply trees</strong>: <code>threadDepth</code> walks deeper than the ~10-level per-request limit by fetching truncated reply branches separately. <code>maxRepliesPerPost</code> bounds fan-out and <code>threadTruncated</code> marks records whose children were cut short.</li>
+<li><strong>Actor likes without credentials</strong>: <code>mode=actorLikes</code> reads the account's public like records from its personal data server and hydrates the liked posts, with <code>likedAt</code> and like-record fields.</li>
+<li><strong>More public surfaces</strong>: <code>mode=actorFeeds</code> lists an account's feed generators, <code>mode=starterPackSearch</code> searches starter packs, and <code>mode=relationships</code> checks public follow/block relationships for supplied accounts.</li>
+<li><strong>Rich records</strong>: engagement counts, languages, mentions, hashtags, links, domains, images, video, external embeds, quoted posts, reposts, reply roots, labels, self-labels, verification, live status, pinned posts, profile counts and flat author follower counts.</li>
+<li><strong>Privacy-aware</strong>: accounts marked <code>!no-unauthenticated</code> are skipped by default, and the run status reports how many records were skipped.</li>
+<li><strong>Batch-friendly</strong>: multiple profiles, posts, lists, starter packs, feeds and URLs per run, with automatic de-duplication.</li>
+<li><strong>No credentials required.</strong> Every mode reads public data. If Bluesky temporarily blocks a search request from the actor's network, the actor retries it automatically and reports a clear status if it still fails.</li>
+</ul>
+<h2 id="readme-output-per-record">Output per record</h2>
+<p>Every record carries <code>recordType</code>, <code>sourceUrl</code> and <code>scrapedAt</code>. Empty values are omitted at every depth, so the dataset never contains nulls or empty placeholders.</p>
+<h3 id="readme-post-records-recordtype-post">Post records (<code>recordType=post</code>)</h3>
+<ul>
+<li><code>uri</code> - canonical AT URI</li>
+<li><code>cid</code> - content identifier</li>
+<li><code>id</code> - same as <code>uri</code></li>
+<li><code>url</code> - public <code>bsky.app</code> post URL</li>
+<li><code>sourceUrl</code> - same as <code>url</code></li>
+<li><code>text</code> - post text</li>
+<li><code>createdAt</code>, <code>indexedAt</code> - ISO 8601 timestamps</li>
+<li><code>language</code> - first declared language</li>
+<li><code>languages[]</code> - all declared languages</li>
+<li><code>replyCount</code>, <code>repostCount</code>, <code>likeCount</code>, <code>quoteCount</code>, <code>bookmarkCount</code></li>
+<li><code>isReply</code> - true when the post replies to another post</li>
+<li><code>inReplyToUri</code>, <code>inReplyToCid</code> - parent post</li>
+<li><code>rootUri</code>, <code>rootCid</code> - thread root</li>
+<li><code>isRepost</code> - true when surfaced as a repost</li>
+<li><code>repostedBy</code> - handle that reposted it</li>
+<li><code>repostUri</code>, <code>repostCid</code>, <code>repostedAt</code> - repost metadata</li>
+<li><code>isQuote</code> - true when the post quotes another post</li>
+<li><code>threadTruncated</code> - true on a thread record whose direct replies were cut by <code>maxRepliesPerPost</code>, <code>maxItems</code> or a public-API gap (<code>mode=postThread</code>)</li>
+<li><code>likedAt</code>, <code>likedBy</code>, <code>likedByDid</code>, <code>likeUri</code>, <code>likeCid</code> - like-record metadata added by <code>mode=actorLikes</code></li>
+<li><code>quotedPost</code> - <code>{uri, cid, text, createdAt, indexedAt, authorHandle, authorDid, authorDisplayName, authorAvatar, url, likeCount, repostCount, replyCount, quoteCount, labels, labelValues, mediaAttachments}</code></li>
+<li><code>mentions[]</code> - mentioned DIDs</li>
+<li><code>tags[]</code> - hashtags, lowercase</li>
+<li><code>urls[]</code> - external links</li>
+<li><code>domains[]</code> - hostnames from <code>urls[]</code></li>
+<li><code>mediaAttachments[]</code> - <code>{type, url, previewUrl, description, width, height, presentation, title}</code> for images, video and external embeds</li>
+<li><code>hasMedia</code>, <code>mediaTypes[]</code></li>
+<li><code>labels[]</code> - <code>{val, src, uri, cid, cts, ver}</code></li>
+<li><code>labelValues[]</code> - label values only</li>
+<li><code>selfLabels[]</code> - author-applied labels</li>
+<li><code>author</code> - <code>{did, handle, displayName, avatar, createdAt, profileUrl, labels, labelValues, verification, status}</code>; with <code>hydrateAuthors=true</code> (the default) it also includes <code>description</code>, <code>banner</code>, <code>followersCount</code>, <code>followsCount</code>, <code>postsCount</code>, <code>indexedAt</code>, <code>pinnedPostUri</code>, <code>pinnedPostCid</code>. The hydrated profile's <code>handle</code> and <code>did</code> replace stale values, and <code>url</code>, <code>sourceUrl</code> and <code>authorHandle</code> are recomputed</li>
+<li><code>authorFollowersCount</code>, <code>authorFollowsCount</code>, <code>authorPostsCount</code>, <code>authorVerified</code> - flat author stats added when <code>hydrateAuthors=true</code></li>
+<li><code>authorHandle</code> - convenience field</li>
+<li><code>hitsTotal</code>, <code>searchHitsTotal</code> - search-result totals when Bluesky returns them (the value is capped/rounded by the source, so treat it as an estimate)</li>
+</ul>
+<h3 id="readme-account-records-recordtype-account-like-listmember-repost-or-starterpackmember">Account records (<code>recordType=account</code>, <code>like</code>, <code>listMember</code>, <code>repost</code> or <code>starterPackMember</code>)</h3>
+<ul>
+<li><code>did</code>, <code>id</code>, <code>handle</code>, <code>displayName</code>, <code>description</code>, <code>pronouns</code></li>
+<li><code>avatar</code>, <code>banner</code></li>
+<li><code>followersCount</code>, <code>followsCount</code>, <code>postsCount</code></li>
+<li><code>createdAt</code>, <code>indexedAt</code></li>
+<li><code>url</code>, <code>sourceUrl</code> - public profile URL</li>
+<li><code>labels[]</code>, <code>labelValues[]</code></li>
+<li><code>verification</code> - <code>{verifiedStatus, trustedVerifierStatus, verifications[]}</code></li>
+<li><code>associated</code> - <code>{listsCount, feedGeneratorsCount, starterPacksCount, isLabeler, chatAllowIncoming, chatAllowGroupInvites, activitySubscription}</code></li>
+<li><code>status</code> - <code>{type, createdAt, durationMinutes, expiresAt, isActive, embed}</code></li>
+<li><code>pinnedPostUri</code>, <code>pinnedPostCid</code></li>
+<li><code>relation</code> - <code>profile</code>, <code>searchMatch</code>, <code>follower</code>, <code>following</code>, <code>liked</code>, <code>reposted</code>, <code>listMember</code>, <code>starterPackMember</code>, <code>suggestedFollow</code> or <code>relationship</code></li>
+<li><code>likedAt</code>, <code>likedPostUri</code> - for <code>mode=getLikes</code></li>
+<li><code>repostedPostUri</code> - for <code>mode=repostedBy</code></li>
+<li><code>listUri</code>, <code>listName</code> - for list members</li>
+<li><code>starterPackUri</code> - for starter-pack members</li>
+<li><code>relationshipActor</code>, <code>isFollowing</code>, <code>isFollowedBy</code>, <code>isMutualFollow</code> - for <code>mode=relationships</code></li>
+<li><code>following</code>, <code>followedBy</code>, <code>blocking</code>, <code>blockedBy</code> - public relationship record URIs when present</li>
+</ul>
+<h3 id="readme-list-records-recordtype-list">List records (<code>recordType=list</code>)</h3>
+<ul>
+<li><code>uri</code>, <code>cid</code>, <code>id</code>, <code>name</code>, <code>purpose</code>, <code>description</code></li>
+<li><code>listItemCount</code></li>
+<li><code>creator</code> - account summary</li>
+<li><code>creatorHandle</code>, <code>creatorDid</code></li>
+<li><code>labels[]</code>, <code>labelValues[]</code>, <code>indexedAt</code></li>
+<li><code>url</code>, <code>sourceUrl</code> - public list URL</li>
+</ul>
+<h3 id="readme-starter-pack-records-recordtype-starterpack">Starter-pack records (<code>recordType=starterPack</code>)</h3>
+<ul>
+<li><code>uri</code>, <code>cid</code>, <code>id</code>, <code>name</code>, <code>description</code></li>
+<li><code>creator</code> - account summary</li>
+<li><code>creatorHandle</code>, <code>creatorDid</code></li>
+<li><code>listUri</code>, <code>listName</code>, <code>listItemCount</code></li>
+<li><code>joinedAllTimeCount</code>, <code>joinedWeekCount</code></li>
+<li><code>createdAt</code>, <code>updatedAt</code></li>
+<li><code>feeds[]</code> - <code>{uri, displayName, description, avatar, creatorHandle}</code></li>
+<li><code>listItemsSample[]</code> - sample account summaries</li>
+<li><code>labels[]</code>, <code>labelValues[]</code>, <code>indexedAt</code></li>
+<li><code>url</code>, <code>sourceUrl</code> - public starter-pack URL</li>
+</ul>
+<h3 id="readme-feed-generator-records-recordtype-feedgenerator">Feed-generator records (<code>recordType=feedGenerator</code>)</h3>
+<ul>
+<li><code>uri</code>, <code>cid</code>, <code>id</code>, <code>did</code></li>
+<li><code>displayName</code>, <code>description</code>, <code>avatar</code></li>
+<li><code>likeCount</code>, <code>acceptsInteractions</code></li>
+<li><code>creator</code> - account summary</li>
+<li><code>creatorHandle</code>, <code>creatorDid</code></li>
+<li><code>labels[]</code>, <code>labelValues[]</code>, <code>indexedAt</code></li>
+<li><code>isOnline</code>, <code>isValid</code> - when fetched with <code>mode=feedGenerator</code></li>
+<li><code>url</code>, <code>sourceUrl</code> - public feed URL</li>
+</ul>
+<h3 id="readme-discovery-records">Discovery records</h3>
+<ul>
+<li><code>recordType=trendingTopic</code>: <code>topic</code>, <code>displayName</code>, <code>description</code>, <code>link</code>, <code>url</code>, <code>sourceUrl</code>, <code>rank</code></li>
+<li><code>recordType=taggedSuggestion</code>: <code>tag</code>, <code>subjectType</code>, <code>subject</code>, <code>url</code>, <code>sourceUrl</code></li>
+</ul>
+<p>When a discovery item has no public target URL, <code>url</code> and <code>sourceUrl</code> fall back to the Bluesky home page so every record still has a source link.</p>
+<h2 id="readme-input">Input</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>mode</code></td>
+<td>Enum</td>
+<td><code>search</code></td>
+<td><code>search</code> / <code>profile</code> / <code>profiles</code> / <code>actorSearch</code> / <code>feed</code> / <code>postThread</code> / <code>urlFetch</code> / <code>getPosts</code> / <code>follows</code> / <code>followers</code> / <code>getLikes</code> / <code>repostedBy</code> / <code>quotes</code> / <code>actorLikes</code> / <code>getList</code> / <code>listFeed</code> / <code>lists</code> / <code>actorFeeds</code> / <code>getStarterPack</code> / <code>starterPackSearch</code> / <code>feedGenerator</code> / <code>feedGeneratorsDiscovery</code> / <code>relationships</code> / <code>discovery</code></td>
+</tr>
+<tr>
+<td><code>searchQuery</code></td>
+<td>String</td>
+<td><code>bluesky</code></td>
+<td>Keyword, hashtag, phrase or Lucene-style query. Used by <code>search</code>, <code>actorSearch</code>, <code>starterPackSearch</code> and <code>feedGeneratorsDiscovery</code></td>
+</tr>
+<tr>
+<td><code>searchSort</code></td>
+<td>Enum</td>
+<td><code>latest</code></td>
+<td><code>latest</code> (newest first; supports deeper collection) or <code>top</code> (engagement-ranked, capped at about 100 posts)</td>
+</tr>
+<tr>
+<td><code>searchTags</code></td>
+<td>Array</td>
+<td><code>[]</code></td>
+<td>Hashtags without <code>#</code>; multiple tags are AND-matched (<code>mode=search</code>)</td>
+</tr>
+<tr>
+<td><code>searchDomain</code></td>
+<td>String</td>
+<td>–</td>
+<td>Only posts linking to this domain (<code>mode=search</code>)</td>
+</tr>
+<tr>
+<td><code>searchUrl</code></td>
+<td>String</td>
+<td>–</td>
+<td>Only posts linking to this exact URL (<code>mode=search</code>)</td>
+</tr>
+<tr>
+<td><code>mentionsUser</code></td>
+<td>String</td>
+<td>–</td>
+<td>Only posts mentioning this handle or DID (<code>mode=search</code>)</td>
+</tr>
+<tr>
+<td><code>fromUser</code></td>
+<td>String</td>
+<td>–</td>
+<td>Only posts authored by this handle or DID (<code>mode=search</code>)</td>
+</tr>
+<tr>
+<td><code>since</code></td>
+<td>String</td>
+<td>–</td>
+<td>Earliest post date (<code>YYYY-MM-DD</code> or ISO datetime); a bare date starts at 00:00 UTC (<code>mode=search</code>)</td>
+</tr>
+<tr>
+<td><code>until</code></td>
+<td>String</td>
+<td>–</td>
+<td>Latest post date (<code>YYYY-MM-DD</code> or ISO datetime); a bare date includes the whole day through 23:59:59.999999 UTC (<code>mode=search</code>)</td>
+</tr>
+<tr>
+<td><code>language</code></td>
+<td>Enum</td>
+<td>–</td>
+<td>ISO 639-1 language filter; empty means no filter</td>
+</tr>
+<tr>
+<td><code>authorFeedFilter</code></td>
+<td>Enum</td>
+<td><code>posts_with_replies</code></td>
+<td><code>posts_with_replies</code> / <code>posts_no_replies</code> / <code>posts_with_media</code> / <code>posts_and_author_threads</code> (<code>mode=profile</code>)</td>
+</tr>
+<tr>
+<td><code>includePins</code></td>
+<td>Boolean</td>
+<td><code>false</code></td>
+<td>Include the pinned post at the top of the author feed (<code>mode=profile</code>)</td>
+</tr>
+<tr>
+<td><code>includeParents</code></td>
+<td>Boolean</td>
+<td><code>false</code></td>
+<td>Include ancestor posts above the requested post (<code>mode=postThread</code>)</td>
+</tr>
+<tr>
+<td><code>threadDepth</code></td>
+<td>Integer</td>
+<td><code>6</code></td>
+<td>Reply and ancestor levels to walk, 0-1000. Depths beyond about 10 reply levels are reached by walking branches across requests (<code>mode=postThread</code>)</td>
+</tr>
+<tr>
+<td><code>maxRepliesPerPost</code></td>
+<td>Integer</td>
+<td><code>100</code></td>
+<td>Maximum direct replies followed under each post while walking a thread, 1-1000 (<code>mode=postThread</code>)</td>
+</tr>
+<tr>
+<td><code>actor</code></td>
+<td>String</td>
+<td>–</td>
+<td>Handle or DID. Used by <code>profile</code>, <code>follows</code>, <code>followers</code>, <code>lists</code>, <code>actorLikes</code>, <code>actorFeeds</code>, <code>relationships</code> and <code>discoveryType=suggestedFollows</code></td>
+</tr>
+<tr>
+<td><code>actors</code></td>
+<td>Array</td>
+<td><code>[]</code></td>
+<td>Handles, DIDs or profile URLs for <code>mode=profiles</code>; the accounts to check against <code>actor</code> for <code>mode=relationships</code></td>
+</tr>
+<tr>
+<td><code>postUri</code></td>
+<td>String</td>
+<td>–</td>
+<td>AT URI of a post. Used by <code>postThread</code>, <code>getLikes</code>, <code>repostedBy</code> and <code>quotes</code></td>
+</tr>
+<tr>
+<td><code>postUris</code></td>
+<td>Array</td>
+<td><code>[]</code></td>
+<td>AT URIs to hydrate (<code>mode=getPosts</code>; fallback for single-post modes)</td>
+</tr>
+<tr>
+<td><code>postUrls</code></td>
+<td>Array</td>
+<td><code>[]</code></td>
+<td>bsky.app post URLs for <code>getPosts</code>; post, profile, list, feed or starter-pack URLs for <code>urlFetch</code>; fallback for single-post modes</td>
+</tr>
+<tr>
+<td><code>listUri</code></td>
+<td>String</td>
+<td>–</td>
+<td>AT URI of a list (<code>mode=getList</code>, <code>mode=listFeed</code>)</td>
+</tr>
+<tr>
+<td><code>listUris</code></td>
+<td>Array</td>
+<td><code>[]</code></td>
+<td>AT URIs or list URLs for batch list processing (<code>mode=getList</code>)</td>
+</tr>
+<tr>
+<td><code>starterPackUri</code></td>
+<td>String</td>
+<td>–</td>
+<td>AT URI of a starter pack (<code>mode=getStarterPack</code>)</td>
+</tr>
+<tr>
+<td><code>starterPackUris</code></td>
+<td>Array</td>
+<td><code>[]</code></td>
+<td>AT URIs or starter-pack URLs for batch processing (<code>mode=getStarterPack</code>)</td>
+</tr>
+<tr>
+<td><code>feedPreset</code></td>
+<td>Enum</td>
+<td>-</td>
+<td><code>whats-hot</code> / <code>bsky-team</code> / <code>hot-classic</code>; an explicit <code>feedUri</code> always wins. Legacy names (<code>discover</code>, <code>mutuals</code>, <code>popular-with-friends</code>, <code>for-you</code>, <code>news</code>, <code>trending-videos</code>, <code>quiet-posters</code>) are accepted and mapped to What's Hot. If neither is set, <code>mode=feed</code> uses What's Hot</td>
+</tr>
+<tr>
+<td><code>feedUri</code></td>
+<td>String</td>
+<td>–</td>
+<td>AT URI or bsky.app feed URL (<code>mode=feed</code>, <code>mode=feedGenerator</code>)</td>
+</tr>
+<tr>
+<td><code>feedUris</code></td>
+<td>Array</td>
+<td><code>[]</code></td>
+<td>AT URIs or feed URLs for batch lookup (<code>mode=feedGenerator</code>)</td>
+</tr>
+<tr>
+<td><code>discoveryType</code></td>
+<td>Enum</td>
+<td><code>trendingTopics</code></td>
+<td><code>trendingTopics</code> / <code>suggestedFeeds</code> / <code>suggestedStarterPacks</code> / <code>taggedSuggestions</code> / <code>suggestedFollows</code> (<code>mode=discovery</code>)</td>
+</tr>
+<tr>
+<td><code>excludeReplies</code></td>
+<td>Boolean</td>
+<td><code>false</code></td>
+<td>Drop posts that are replies</td>
+</tr>
+<tr>
+<td><code>excludeReposts</code></td>
+<td>Boolean</td>
+<td><code>false</code></td>
+<td>Drop reposts</td>
+</tr>
+<tr>
+<td><code>mediaOnly</code></td>
+<td>Boolean</td>
+<td><code>false</code></td>
+<td>Only posts with at least one image, video or external embed</td>
+</tr>
+<tr>
+<td><code>excludeLabeled</code></td>
+<td>Boolean</td>
+<td><code>false</code></td>
+<td>Drop posts and accounts that carry moderation or self-labels, including labels on a post's author</td>
+</tr>
+<tr>
+<td><code>respectNoUnauthenticated</code></td>
+<td>Boolean</td>
+<td><code>true</code></td>
+<td>Skip records whose author carries <code>!no-unauthenticated</code>; the run status reports the skipped count</td>
+</tr>
+<tr>
+<td><code>verifiedOnly</code></td>
+<td>Boolean</td>
+<td><code>false</code></td>
+<td>Only verified accounts, or posts whose author is verified. Records with no verification object are excluded; post modes hydrate author profiles to check</td>
+</tr>
+<tr>
+<td><code>minLikes</code></td>
+<td>Integer</td>
+<td>–</td>
+<td>Drop posts below this like count, 0-10,000,000</td>
+</tr>
+<tr>
+<td><code>minReposts</code></td>
+<td>Integer</td>
+<td>–</td>
+<td>Drop posts below this repost count, 0-10,000,000</td>
+</tr>
+<tr>
+<td><code>minReplies</code></td>
+<td>Integer</td>
+<td>–</td>
+<td>Drop posts below this reply count, 0-10,000,000</td>
+</tr>
+<tr>
+<td><code>minQuotes</code></td>
+<td>Integer</td>
+<td>–</td>
+<td>Drop posts below this quote count, 0-10,000,000</td>
+</tr>
+<tr>
+<td><code>minFollowers</code></td>
+<td>Integer</td>
+<td>–</td>
+<td>Keep accounts with at least this many followers, 0-1,000,000,000</td>
+</tr>
+<tr>
+<td><code>maxFollowers</code></td>
+<td>Integer</td>
+<td>–</td>
+<td>Keep accounts with at most this many followers, 0-1,000,000,000</td>
+</tr>
+<tr>
+<td><code>includeListMetadata</code></td>
+<td>Boolean</td>
+<td><code>false</code></td>
+<td>Emit a list record before its members (<code>mode=getList</code>)</td>
+</tr>
+<tr>
+<td><code>includeStarterPackMembers</code></td>
+<td>Boolean</td>
+<td><code>true</code></td>
+<td>Emit the pack's member accounts (<code>mode=getStarterPack</code>)</td>
+</tr>
+<tr>
+<td><code>hydrateAuthors</code></td>
+<td>Boolean</td>
+<td><code>true</code></td>
+<td>Fetch full author profiles for post records in batches of 25 and add flat author follower, following, post and verification fields. Automatically enabled when <code>verifiedOnly=true</code>; the daily profile prefill leaves it off to stay cheap</td>
+</tr>
+<tr>
+<td><code>maxItems</code></td>
+<td>Integer</td>
+<td><code>40</code></td>
+<td>Hard cap on emitted records, 1-5000. Source exhaustion or Bluesky caps may return fewer; the run status reports a shortfall</td>
+</tr>
+</tbody>
+</table></div>
+<p>Legacy saved tasks that specify <code>mode=getActorLikes</code> are mapped to <code>actorLikes</code> with a status message. That mode reads the account's public like records from its personal data server and hydrates the liked posts; no login or app password is used.</p>
+<h3 id="readme-example-brand-monitoring-with-filters">Example: brand monitoring with filters</h3>
+<pre><code class="language-json">{
+  &quot;mode&quot;: &quot;search&quot;,
+  &quot;searchQuery&quot;: &quot;bluesky&quot;,
+  &quot;searchSort&quot;: &quot;latest&quot;,
+  &quot;searchTags&quot;: [&quot;opensource&quot;],
+  &quot;language&quot;: &quot;en&quot;,
+  &quot;minLikes&quot;: 10,
+  &quot;maxItems&quot;: 300
+}
+</code></pre>
+<h3 id="readme-example-a-user-s-profile-and-recent-media-posts">Example: a user's profile and recent media posts</h3>
+<pre><code class="language-json">{
+  &quot;mode&quot;: &quot;profile&quot;,
+  &quot;actor&quot;: &quot;bsky.app&quot;,
+  &quot;authorFeedFilter&quot;: &quot;posts_with_media&quot;,
+  &quot;includePins&quot;: true,
+  &quot;maxItems&quot;: 50
+}
+</code></pre>
+<h3 id="readme-example-a-thread-with-parents-and-replies">Example: a thread with parents and replies</h3>
+<pre><code class="language-json">{
+  &quot;mode&quot;: &quot;postThread&quot;,
+  &quot;postUri&quot;: &quot;at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.post/3l6oveex3ii2l&quot;,
+  &quot;includeParents&quot;: true,
+  &quot;threadDepth&quot;: 30,
+  &quot;maxRepliesPerPost&quot;: 100,
+  &quot;maxItems&quot;: 200
+}
+</code></pre>
+<h3 id="readme-example-posts-an-account-liked">Example: posts an account liked</h3>
+<pre><code class="language-json">{
+  &quot;mode&quot;: &quot;actorLikes&quot;,
+  &quot;actor&quot;: &quot;bsky.app&quot;,
+  &quot;maxItems&quot;: 100
+}
+</code></pre>
+<h3 id="readme-example-audience-export-with-follower-counts">Example: audience export with follower counts</h3>
+<pre><code class="language-json">{
+  &quot;mode&quot;: &quot;followers&quot;,
+  &quot;actor&quot;: &quot;jay.bsky.team&quot;,
+  &quot;minFollowers&quot;: 100,
+  &quot;maxItems&quot;: 500
+}
+</code></pre>
+<h3 id="readme-example-discover-trending-topics">Example: discover trending topics</h3>
+<pre><code class="language-json">{
+  &quot;mode&quot;: &quot;discovery&quot;,
+  &quot;discoveryType&quot;: &quot;trendingTopics&quot;,
+  &quot;maxItems&quot;: 20
+}
+</code></pre>
+<h2 id="readme-use-cases">Use cases</h2>
+<ul>
+<li><strong>Social listening and brand monitoring</strong> - track keywords, hashtags, mentions, domains and authors with date and engagement filters.</li>
+<li><strong>Influencer and KOL research</strong> - combine account search with follower ranges, verification and profile counts.</li>
+<li><strong>Audience and lead export</strong> - export followers, follows, likers, reposters, list members and starter-pack members with handles, bios and counts.</li>
+<li><strong>Conversation analysis</strong> - capture a post, its ancestors and replies up to <code>threadDepth</code> for sentiment or narrative research.</li>
+<li><strong>Content and LLM datasets</strong> - collect post text, languages, hashtags, links, media metadata and engagement counts.</li>
+<li><strong>Community mapping</strong> - explore lists, list feeds, starter packs, custom feeds and trending topics.</li>
+</ul>
+<h2 id="readme-faq">FAQ</h2>
+<p><strong>Do I need a Bluesky account or login?</strong>
+No. Every mode reads public data. No cookies or API keys are needed. If Bluesky temporarily blocks a search request from the actor's network, the actor retries it automatically through an Apify connection and reports a clear status if it still fails. No proxy setup is required.</p>
+<p><strong>How far back can a keyword search go?</strong>
+<code>searchSort=latest</code> walks backwards through time windows and can return far more than the 100-post relevance cap. <code>searchSort=top</code> is relevance-ranked and limited to about 100 posts per query. Time-window search is approximate: pages can overlap, so results are de-duplicated by post URI, and a narrow or wide date range changes how predictable the volume is. When Bluesky returns a search hit total it is exposed as <code>hitsTotal</code>/<code>searchHitsTotal</code>, but the source caps and rounds that number.</p>
+<p><strong>Why do some posts have no text?</strong>
+Bluesky allows media-only posts. The actor omits empty <code>text</code> and keeps the media metadata.</p>
+<p><strong>Why are some fields missing from an account?</strong>
+Basic account views do not always include a bio, banner, follower counts or a pinned post. The actor hydrates accounts in batches so those fields are present whenever Bluesky publishes them. Labels, verification and live status are conditional by nature.</p>
+<p><strong>Why are some accounts missing from results?</strong>
+Some accounts opt out of unauthenticated access and carry the <code>!no-unauthenticated</code> label. They are skipped by default and counted in the run status. Set <code>respectNoUnauthenticated=false</code> to include them when Bluesky returns them.</p>
+<p><strong>Why does a follower export contain fewer rows than the profile's follower count?</strong>
+Profile counts are cached totals; deactivated or unindexed accounts can make them larger than the returned list. <code>!no-unauthenticated</code> accounts are filtered by this actor by default. The export is complete for what the public API exposes after that policy.</p>
+<p><strong>How are reposts and quote posts handled?</strong>
+A repost is one record with <code>isRepost=true</code>, <code>repostedBy</code> and the original post's content. A quote post is one record with the quoter's text and a nested <code>quotedPost</code> object containing the quoted post's text, author, URL, counts and media.</p>
+<p><strong>What is the difference between <code>mode=search</code> and <code>mode=actorSearch</code>?</strong>
+<code>search</code> finds posts. <code>actorSearch</code> finds accounts by handle, display name or bio.</p>
+<p><strong>What is a feed, and which presets are available?</strong>
+A feed is a curated post stream produced by a feed generator. The built-in presets are What's Hot, Bluesky Team and Hot Classic. Paste any other generator's AT URI or bsky.app feed URL into <code>feedUri</code>. An explicit <code>feedUri</code> always takes precedence over <code>feedPreset</code>; legacy preset names are mapped to What's Hot.</p>
+<p><strong>Does <code>feedPreset</code> override my custom <code>feedUri</code>?</strong>
+No. <code>feedUri</code>/<code>feedUris</code> win whenever they are supplied. <code>feedPreset</code> is only used when no feed URI is given, and <code>mode=feedGenerator</code> never adds an unrequested feed.</p>
+<p><strong>How does <code>verifiedOnly</code> work?</strong>
+It keeps only accounts with a valid Bluesky verification and posts whose author is verified. Records with no verification object are excluded. Post modes hydrate author profiles so verification can be checked, which adds batched profile requests and may return fewer posts than an unfiltered search.</p>
+<p><strong>How do actor likes work without a login?</strong>
+<code>mode=actorLikes</code> resolves the account's personal data server from its public DID document, lists the public <code>app.bsky.feed.like</code> records stored there, and hydrates each liked post. No credentials are used. Likes whose posts were deleted, or accounts whose DID document does not expose a public data server, return no rows for that part. <code>mode=getLikes</code> is the opposite direction: it lists the accounts that liked a given post.</p>
+<p><strong>How deep can a thread go?</strong>
+<code>threadDepth</code> can be set up to 1000. The public thread endpoint returns about 10 reply levels per request, so the actor detects reply branches that still have children and fetches those branches separately. <code>maxRepliesPerPost</code> caps how many direct replies are followed under each post; when a branch is cut, the affected post carries <code>threadTruncated=true</code> and the run status explains why.</p>
+<p><strong>What is <code>mode=relationships</code>?</strong>
+It checks public follow and block relationships between <code>actor</code> and each account in <code>actors</code> (up to batches of 30). Each account record gets <code>isFollowing</code>, <code>isFollowedBy</code>, <code>isMutualFollow</code> and the public relationship record URIs. It is not a replacement for a logged-in viewer's personalised &quot;known followers&quot; list, which needs an account context.</p>
+<p><strong>Why did I get fewer records than <code>maxItems</code>?</strong>
+Filters can exclude many candidates, Bluesky can exhaust the source, and some search modes have source caps. The run status message reports the shortfall; it does not silently pretend the result is complete.</p>
+<p><strong>Can I export followers of a very large account?</strong>
+Yes, up to <code>maxItems</code>. Bluesky returns followers in cursor-paged batches; the actor keeps walking short pages until the cap or the end of the list.</p>
+<p><strong>How current is the data?</strong>
+Live. Every run reads Bluesky at request time, so schedule the actor hourly or daily for ongoing refreshes.</p>
+<p><strong>Is this affiliated with Bluesky?</strong>
+No. This is an independent actor that reads public Bluesky data.</p>
+<h2 id="readme-limitations">Limitations</h2>
+<ul>
+<li><strong>Top search uses time windows.</strong> <code>searchSort=top</code> is engagement-ranked; the actor walks older time windows to collect more than one page, preserving ranking within each window. Results are deduplicated by post URI.</li>
+<li><strong>Time-window search is approximate.</strong> The <code>latest</code> walk can return posts outside the exact window, can overlap between windows, and is de-duplicated by post URI. The <code>until</code> boundary uses the newer of a post's <code>createdAt</code> and <code>indexedAt</code>, and a date-only <code>until</code> includes the whole UTC day.</li>
+<li><strong>Search hit totals are estimates.</strong> When Bluesky returns <code>hitsTotal</code>/<code>searchHitsTotal</code>, the source caps and rounds the number; it is not an exact result count.</li>
+<li><strong>Search can be temporarily blocked.</strong> If Bluesky returns HTTP 403 even after the automatic Apify retry, the run stops with a clear status message. Try again later or use <code>mode=profile</code>, <code>mode=feed</code> or a direct post/list feed.</li>
+<li><strong>Search coverage is not exhaustive.</strong> Bluesky's search index is recency-weighted and does not include every post.</li>
+<li><strong>Thread walking is bounded on purpose.</strong> Each request returns about 10 reply levels, so deeper replies are fetched branch by branch. The walk stops at <code>threadDepth</code>, <code>maxRepliesPerPost</code>, <code>maxItems</code> or the per-run branch budget; affected records carry <code>threadTruncated=true</code>. Deleted, blocked, hidden or rate-limited branches still create gaps.</li>
+<li><strong>Actor likes depend on the public data server.</strong> The like records are read from the account's personal data server rather than the public feed service. If that server is unreachable, does not appear in the DID document, or no longer stores the like record, those likes cannot be returned. Deleted posts are skipped even when their like record remains.</li>
+<li><strong>Personalised known followers need a login.</strong> The public relationship check in <code>mode=relationships</code> can tell you whether supplied accounts follow or block a target, but a viewer-specific &quot;followers you know&quot; list requires an authenticated account context, which this actor does not use.</li>
+<li><strong>Starter-pack typeahead is not a separate mode.</strong> <code>mode=starterPackSearch</code> uses the public starter-pack search endpoint, which covers keyword search and paging; a viewer-boosted typeahead ordering is not exposed without an account context.</li>
+<li><strong>Hidden accounts are skipped by default.</strong> Accounts that carry <code>!no-unauthenticated</code> are filtered out unless <code>respectNoUnauthenticated=false</code>, and the status message reports how many records were skipped.</li>
+<li><strong>Follower counts can exceed exported rows.</strong> Profile totals are cached by Bluesky and include accounts that are deactivated or no longer indexed. <code>!no-unauthenticated</code> accounts are returned by the API and then filtered by this actor by default, so <code>followersCount</code> can exceed the exported rows. Set <code>respectNoUnauthenticated=false</code> to include them.</li>
+<li><strong>Private data is out of scope.</strong> Direct messages, private accounts, notifications and muted/blocked relationships are not available.</li>
+<li><strong>Some fields are conditional.</strong> Labels, verification, live status, pinned posts, banners and media are present only when the source has them.</li>
+<li><strong>Custom feeds depend on third-party generators.</strong> If a generator is offline, its feed returns no posts.</li>
+<li><strong>Follower lists can be very large.</strong> Use <code>maxItems</code> to bound a run.</li>
+<li><strong><code>maxItems</code> is capped at 5,000 per run.</strong> Larger requests are clamped by the input schema.</li>
+<li><strong>Filtered account modes keep walking cursor pages until the cap or source exhaustion.</strong> If Bluesky has no more matches, the run reports a shortfall in its status message.</li>
+<li><strong><code>verifiedOnly</code> can return far fewer records.</strong> Most post authors do not publish a verification object, so verified-only post searches are intentionally narrow.</li>
+<li><strong><code>mode=feedGenerator</code> returns only the feeds you request.</strong> It does not append a default What's Hot record.</li>
+</ul>
+</details></section><section id="python-quickstart"><h2>Python quickstart</h2><p>Use a schema-derived input and the Python standard library to start a run. An Apify account and token are required for execution.</p><p><a href="/apify-actor-examples/guides/bluesky-posts-profiles-feeds-and-threads-scraper/">Open the step-by-step Python guide →</a></p></section><p class="source-note">Source build <code>QVca54L51kgdV5Lsb</code>. Documentation is regenerated from the default published build; private drafts are not included.</p></article></div></main><footer class="footer"><strong>Nimbryxo Studio</strong><div class="footer-links"><a href="/apify-actor-examples/topics/">Topics</a><a href="/apify-actor-examples/sources/">Documentation sources</a><a href="https://apify.com/nimbryxo-studio">Apify</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></div></footer></body></html>

@@ -94,6 +94,8 @@ class Apify:
             "status": "deprecated" if actor.get("isDeprecated") else "public",
             "url": f"https://apify.com/{actor['username']}/{actor['name']}",
             "build_id": build["id"],
+            # The page's true content date (schema.org dateModified); omitted when not a timestamp.
+            "build_finished_at": build["finishedAt"] if re.fullmatch(r"\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d(?:\.\d+)?Z", str(build.get("finishedAt") or "")) else None,
             "readme": readme,
             "input_schema": input_schema,
             "output_schema": output_schema,

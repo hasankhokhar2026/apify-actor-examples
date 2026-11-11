@@ -83,6 +83,35 @@ def ensure_repository(org, api):
     return repo
 
 
+def verification_files(checkout, state_dir, org):
+    """Search-engine ownership files to keep in the site: the ones already published (so a run
+    without operator state, such as the repository's own workflow, keeps them) plus any the
+    operator's search step has requested in <state>/search/<organization>.json."""
+    from .site import GOOGLE_FILE
+    names = {p.name for p in (Path(checkout) / "site").glob("google*.html") if GOOGLE_FILE.fullmatch(p.name)}
+    requested = Path(state_dir) / "search" / (org["apify_username"] + ".json")
+    if requested.is_file():
+        try:
+            name = json.loads(requested.read_text(encoding="utf-8")).get("google_file")
+        except ValueError:
+            name = None
+        if isinstance(name, str) and GOOGLE_FILE.fullmatch(name):
+            names.add(name)
+    return sorted(names)
+
+
+def changed_urls(org, changed):
+    """Public page URLs whose published file changed in this commit (for IndexNow)."""
+    base = org.get("site", {}).get("url", "")
+    urls = set()
+    for name in changed:
+        if name.startswith("site/") and name.endswith(".html"):
+            path = name[len("site/"):]
+            if path.endswith("index.html"):
+                urls.add(base + path[:-len("index.html")])
+    return sorted(urls)
+
+
 def publish(org, actors, state_dir, templates, push=False, bootstrap=False):
     check_snapshot(actors, org)
     token = os.environ.get(org["token_env"])
@@ -129,7 +158,8 @@ def publish(org, actors, state_dir, templates, push=False, bootstrap=False):
         if enabled:
             from .site import Site
             from .automation import runtime_files
-            files.update({"site/" + path: text for path, text in Site(org, actors).build(previous).items()})
+            site = Site(org, actors, verification_files(checkout, state_dir, org))
+            files.update({"site/" + path: text for path, text in site.build(previous).items()})
             files.update(runtime_files(org))
             project_readme = checkout / "README.md"
             if project_readme.is_file():
@@ -147,7 +177,8 @@ def publish(org, actors, state_dir, templates, push=False, bootstrap=False):
                     check_brand(path.read_text(encoding="utf-8"), org)
         status = git.run(["status", "--porcelain"], checkout)
         result = {"organization": org["apify_username"], "repository": remote.removesuffix(".git"),
-                  "public_actors": len(actors), "changed_files": len(changed), "dry_run": not push}
+                  "public_actors": len(actors), "changed_files": len(changed), "dry_run": not push,
+                  "changed_urls": changed_urls(org, changed)}
         if not status:
             return {**result, "status": "unchanged"}
         if not push:

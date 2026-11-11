@@ -1,0 +1,506 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src &#x27;self&#x27;; script-src &#x27;self&#x27; &#x27;sha256-tciYh+8O5UV7ieeiZ929YAxs6kKu2pL13j8lC7jQE9c=&#x27;; style-src &#x27;self&#x27;; img-src &#x27;self&#x27; https: data:; base-uri &#x27;self&#x27;; form-action &#x27;self&#x27;; object-src &#x27;none&#x27;"><title>Freelancer.com Project Budget &amp; Bids Scraper | Nimbryxo Studio</title><meta name="description" content="Pull Freelancer.com projects from direct links, search keywords, category pages or a user&#x27;s posted-project list, with budget or hourly rate, bid count, days left, skills and descri"><meta name="robots" content="index,follow"><link rel="canonical" href="https://hasankhokhar2026.github.io/apify-actor-examples/actors/freelancer-com-project-budget-and-bids-scraper/"><meta property="og:title" content="Freelancer.com Project Budget &amp; Bids Scraper | Nimbryxo Studio"><meta property="og:description" content="Pull Freelancer.com projects from direct links, search keywords, category pages or a user&#x27;s posted-project list, with budget or hourly rate, bid count, days left, skills and descri"><meta property="og:type" content="website"><meta property="og:url" content="https://hasankhokhar2026.github.io/apify-actor-examples/actors/freelancer-com-project-budget-and-bids-scraper/"><meta property="og:site_name" content="Nimbryxo Studio"><meta name="twitter:card" content="summary"><link rel="icon" href="/apify-actor-examples/assets/mark.svg?v=2d20f9dc334a" type="image/svg+xml"><link rel="stylesheet" href="/apify-actor-examples/assets/site.css?v=39545fd4a399"><link rel="stylesheet" href="/apify-actor-examples/assets/brand.css?v=eb0f935ade25"><link rel="alternate" type="application/rss+xml" title="Nimbryxo Studio guides" href="/apify-actor-examples/feed.xml"><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization","name":"Nimbryxo Studio","url":"https://hasankhokhar2026.github.io/apify-actor-examples/","sameAs":["https://apify.com/nimbryxo-studio"]},{"@type":"WebSite","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#website","name":"Nimbryxo Studio","url":"https://hasankhokhar2026.github.io/apify-actor-examples/","publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"inLanguage":"en"},{"@type":"WebPage","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/freelancer-com-project-budget-and-bids-scraper/#webpage","name":"Freelancer.com Project Budget & Bids Scraper","description":"Pull Freelancer.com projects from direct links, search keywords, category pages or a user's posted-project list, with budget or hourly rate, bid count, days left, skills and description.","url":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/freelancer-com-project-budget-and-bids-scraper/","isPartOf":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#website"},"publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"inLanguage":"en","mainEntity":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/freelancer-com-project-budget-and-bids-scraper/#article"},"breadcrumb":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/freelancer-com-project-budget-and-bids-scraper/#breadcrumb"}},{"@type":"TechArticle","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/freelancer-com-project-budget-and-bids-scraper/#article","headline":"Freelancer.com Project Budget & Bids Scraper","name":"Freelancer.com Project Budget & Bids Scraper","description":"Pull Freelancer.com projects from direct links, search keywords, category pages or a user's posted-project list, with budget or hourly rate, bid count, days left, skills and description.","url":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/freelancer-com-project-budget-and-bids-scraper/","author":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"mainEntityOfPage":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/freelancer-com-project-budget-and-bids-scraper/#webpage"},"inLanguage":"en","dateModified":"2026-11-03T08:04:13.053Z"},{"@type":"BreadcrumbList","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/freelancer-com-project-budget-and-bids-scraper/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Nimbryxo Studio","item":"https://hasankhokhar2026.github.io/apify-actor-examples/"},{"@type":"ListItem","position":2,"name":"Actors","item":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/"},{"@type":"ListItem","position":3,"name":"Freelancer.com Project Budget & Bids Scraper","item":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/freelancer-com-project-budget-and-bids-scraper/"}]}]}</script><script src="/apify-actor-examples/assets/site.js?v=7cabac48dd31" defer></script></head><body class="theme-studio"><a href="#main" class="skip-link">Skip to content</a><header><div class="inner"><a href="/apify-actor-examples/" class="brand"><img src="/apify-actor-examples/assets/mark.svg?v=2d20f9dc334a" alt="" width="29" height="29">Nimbryxo Studio</a><nav aria-label="Main navigation"><a href="/apify-actor-examples/actors/" aria-current="page">Actors</a><a href="/apify-actor-examples/guides/">Guides</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></nav></div></header><main id="main"><div class="doc-layout"><aside class="contents" aria-label="On this page"><strong>Contents</strong><a href="#overview">Overview</a><a href="#published-readme">Published README</a><a href="#input-schema">Input schema</a><a href="#output-schema">Output schema</a><a href="#dataset-schema">Dataset schema</a><a href="#python-quickstart">Python quickstart</a></aside><article class="prose"><div class="breadcrumb"><a href="/apify-actor-examples/actors/">Actors</a><span>/</span><span>Freelancer.com Project Budget &amp; Bids Scraper</span></div><section id="overview"><h1 class="doc-title">Freelancer.com Project Budget &amp; Bids Scraper</h1><p class="lede">Pull Freelancer.com projects from direct links, search keywords, category pages or a user&#x27;s posted-project list, with budget or hourly rate, bid count, days left, skills and description.</p><p class="summary">Freelancer.com Project Budget &amp; Bids Scraper is an Apify Actor published by Nimbryxo Studio. It accepts 20 input fields, and <code>mode</code> is required. Its build declares a results dataset with 1 view. Runs happen on Apify, where the Store page lists the current price.</p><div class="actions"><a class="button" href="https://apify.com/nimbryxo-studio/freelancer-com-project-budget-and-bids-scraper">Open on Apify</a><a class="text-link" href="https://github.com/hasankhokhar2026/apify-actor-examples/blob/main/docs/actors/rIifZrshkdx1QJHsI/README.md">GitHub source</a></div></section><section class="schema-section" id="input-schema"><h2>Input schema</h2><p>Input fields, types, required flags, descriptions, defaults, and prefills come from the published definition. Prefill examples are distinct from defaults.</p><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>mode</code></td><td>string</td><td>required</td><td>How to find projects. `auto` detects the mode from the fields you fill in, `search` uses a keyword, `byProject` uses project URLs/ids, and `byCategory` browses a skill/category page.</td></tr><tr><td><code>query</code></td><td>string</td><td>optional</td><td>Keyword used in mode=search, e.g. `python`, `logo design`, `data entry`. Required for search mode.</td></tr><tr><td><code>projectUrls</code></td><td>array</td><td>optional</td><td>Full Freelancer project URLs, paths or numeric project ids used in mode=byProject, e.g. https://www.freelancer.com/projects/python/my-project or 40425363.</td></tr></tbody></table></div><details><summary>Show all input fields</summary><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>mode</code></td><td>string</td><td>required</td><td>How to find projects. `auto` detects the mode from the fields you fill in, `search` uses a keyword, `byProject` uses project URLs/ids, and `byCategory` browses a skill/category page.</td></tr><tr><td><code>query</code></td><td>string</td><td>optional</td><td>Keyword used in mode=search, e.g. `python`, `logo design`, `data entry`. Required for search mode.</td></tr><tr><td><code>projectUrls</code></td><td>array</td><td>optional</td><td>Full Freelancer project URLs, paths or numeric project ids used in mode=byProject, e.g. https://www.freelancer.com/projects/python/my-project or 40425363.</td></tr><tr><td><code>categoryUrls</code></td><td>array</td><td>optional</td><td>Freelancer /jobs/&lt;skill&gt;/ URLs or skill slugs used in mode=byCategory, e.g. https://www.freelancer.com/jobs/python/ or `website-design`.</td></tr><tr><td><code>projectType</code></td><td>string</td><td>optional</td><td>Keep fixed-price projects, hourly projects, or both.</td></tr><tr><td><code>budgetMin</code></td><td>integer</td><td>optional</td><td>Minimum fixed budget or hourly rate in USD. Use 0 for no minimum. When projectType=any, the range is applied to both types.</td></tr><tr><td><code>budgetMax</code></td><td>integer</td><td>optional</td><td>Maximum fixed budget or hourly rate in USD. Use 0 for no maximum. When projectType=any, the range is applied to both types.</td></tr><tr><td><code>minBidCount</code></td><td>integer</td><td>optional</td><td>Only keep projects with at least this many bids. Use 0 for no minimum.</td></tr><tr><td><code>maxBidCount</code></td><td>integer</td><td>optional</td><td>Only keep projects with at most this many bids. Use 0 for no maximum.</td></tr><tr><td><code>skills</code></td><td>array</td><td>optional</td><td>Skill names, slugs or numeric ids to narrow the search, e.g. `Python`, `website-design` or `13`.</td></tr><tr><td><code>languages</code></td><td>array</td><td>optional</td><td>ISO 639-1 language codes, e.g. `en`, `de`, `hi`, `es`.</td></tr><tr><td><code>postedAfter</code></td><td>string</td><td>optional</td><td>Only keep projects posted on or after this date. ISO date or datetime, e.g. `2026-01-01` or `2026-01-01T12:00:00Z`.</td></tr><tr><td><code>postedBefore</code></td><td>string</td><td>optional</td><td>Only keep projects posted on or before this date. ISO date or datetime, e.g. `2026-12-31` or `2026-12-31T23:59:59Z`.</td></tr><tr><td><code>includeClosed</code></td><td>boolean</td><td>optional</td><td>Also search closed projects in search/category modes. Direct project URLs and ids always work for closed projects.</td></tr><tr><td><code>includeDetails</code></td><td>boolean</td><td>optional</td><td>Fetch the public project page for employer country/rating/reviews, verification flags, page title and posting text. Adds one request per project.</td></tr><tr><td><code>includeBids</code></td><td>boolean</td><td>optional</td><td>Fetch individual bids with bidder identity, amount, delivery period and proposal text. Adds one request per project.</td></tr><tr><td><code>maxBidsPerProject</code></td><td>integer</td><td>optional</td><td>How many individual bids to return per project when `includeBids` is enabled.</td></tr><tr><td><code>sortBy</code></td><td>string</td><td>optional</td><td>Order of search/category results. Ending-soon and budget sorts are applied to the collected candidate pool.</td></tr><tr><td><code>maxPages</code></td><td>integer</td><td>optional</td><td>Maximum listing pages to request. Each page contains up to 99 projects.</td></tr><tr><td><code>maxItems</code></td><td>integer</td><td>optional</td><td>Hard cap on emitted project records.</td></tr></tbody></table></div></details><p><a href="input-schema.json">Download the published input schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+  &quot;description&quot;: &quot;Collect Freelancer.com projects by keyword, category or direct project URL/id, with fixed/hourly budgets, skills, languages, bids, employer details and dates.&quot;,
+  &quot;properties&quot;: {
+    &quot;budgetMax&quot;: {
+      &quot;default&quot;: 0,
+      &quot;description&quot;: &quot;Maximum fixed budget or hourly rate in USD. Use 0 for no maximum. When projectType=any, the range is applied to both types.&quot;,
+      &quot;maximum&quot;: 10000000,
+      &quot;minimum&quot;: 0,
+      &quot;prefill&quot;: 0,
+      &quot;title&quot;: &quot;Maximum budget (USD)&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;budgetMin&quot;: {
+      &quot;default&quot;: 0,
+      &quot;description&quot;: &quot;Minimum fixed budget or hourly rate in USD. Use 0 for no minimum. When projectType=any, the range is applied to both types.&quot;,
+      &quot;maximum&quot;: 10000000,
+      &quot;minimum&quot;: 0,
+      &quot;prefill&quot;: 0,
+      &quot;title&quot;: &quot;Minimum budget (USD)&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;categoryUrls&quot;: {
+      &quot;default&quot;: [],
+      &quot;description&quot;: &quot;Freelancer /jobs/&lt;skill&gt;/ URLs or skill slugs used in mode=byCategory, e.g. https://www.freelancer.com/jobs/python/ or `website-design`.&quot;,
+      &quot;editor&quot;: &quot;stringList&quot;,
+      &quot;prefill&quot;: [],
+      &quot;title&quot;: &quot;Category or skill URLs&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;includeBids&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;Fetch individual bids with bidder identity, amount, delivery period and proposal text. Adds one request per project.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Fetch bid lists&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;includeClosed&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;Also search closed projects in search/category modes. Direct project URLs and ids always work for closed projects.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Include closed projects&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;includeDetails&quot;: {
+      &quot;default&quot;: true,
+      &quot;description&quot;: &quot;Fetch the public project page for employer country/rating/reviews, verification flags, page title and posting text. Adds one request per project.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Fetch project details&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;languages&quot;: {
+      &quot;default&quot;: [],
+      &quot;description&quot;: &quot;ISO 639-1 language codes, e.g. `en`, `de`, `hi`, `es`.&quot;,
+      &quot;editor&quot;: &quot;stringList&quot;,
+      &quot;prefill&quot;: [],
+      &quot;title&quot;: &quot;Project languages&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;maxBidCount&quot;: {
+      &quot;default&quot;: 0,
+      &quot;description&quot;: &quot;Only keep projects with at most this many bids. Use 0 for no maximum.&quot;,
+      &quot;maximum&quot;: 1000000,
+      &quot;minimum&quot;: 0,
+      &quot;prefill&quot;: 0,
+      &quot;title&quot;: &quot;Maximum bid count&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;maxBidsPerProject&quot;: {
+      &quot;default&quot;: 20,
+      &quot;description&quot;: &quot;How many individual bids to return per project when `includeBids` is enabled.&quot;,
+      &quot;maximum&quot;: 1000,
+      &quot;minimum&quot;: 1,
+      &quot;prefill&quot;: 1,
+      &quot;title&quot;: &quot;Max bids per project&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;maxItems&quot;: {
+      &quot;default&quot;: 50,
+      &quot;description&quot;: &quot;Hard cap on emitted project records.&quot;,
+      &quot;maximum&quot;: 10000,
+      &quot;minimum&quot;: 1,
+      &quot;prefill&quot;: 3,
+      &quot;title&quot;: &quot;Max items&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;maxPages&quot;: {
+      &quot;default&quot;: 5,
+      &quot;description&quot;: &quot;Maximum listing pages to request. Each page contains up to 99 projects.&quot;,
+      &quot;maximum&quot;: 100,
+      &quot;minimum&quot;: 1,
+      &quot;prefill&quot;: 1,
+      &quot;title&quot;: &quot;Max pages&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;minBidCount&quot;: {
+      &quot;default&quot;: 0,
+      &quot;description&quot;: &quot;Only keep projects with at least this many bids. Use 0 for no minimum.&quot;,
+      &quot;maximum&quot;: 1000000,
+      &quot;minimum&quot;: 0,
+      &quot;prefill&quot;: 0,
+      &quot;title&quot;: &quot;Minimum bid count&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;mode&quot;: {
+      &quot;default&quot;: &quot;auto&quot;,
+      &quot;description&quot;: &quot;How to find projects. `auto` detects the mode from the fields you fill in, `search` uses a keyword, `byProject` uses project URLs/ids, and `byCategory` browses a skill/category page.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;auto&quot;,
+        &quot;search&quot;,
+        &quot;byProject&quot;,
+        &quot;byCategory&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;Auto-detect from inputs&quot;,
+        &quot;Search by keyword&quot;,
+        &quot;Fetch specific projects&quot;,
+        &quot;Browse a category or skill&quot;
+      ],
+      &quot;prefill&quot;: &quot;search&quot;,
+      &quot;title&quot;: &quot;Mode&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;postedAfter&quot;: {
+      &quot;default&quot;: &quot;&quot;,
+      &quot;description&quot;: &quot;Only keep projects posted on or after this date. ISO date or datetime, e.g. `2026-01-01` or `2026-01-01T12:00:00Z`.&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;prefill&quot;: &quot;&quot;,
+      &quot;title&quot;: &quot;Posted after&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;postedBefore&quot;: {
+      &quot;default&quot;: &quot;&quot;,
+      &quot;description&quot;: &quot;Only keep projects posted on or before this date. ISO date or datetime, e.g. `2026-12-31` or `2026-12-31T23:59:59Z`.&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;prefill&quot;: &quot;&quot;,
+      &quot;title&quot;: &quot;Posted before&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;projectType&quot;: {
+      &quot;default&quot;: &quot;any&quot;,
+      &quot;description&quot;: &quot;Keep fixed-price projects, hourly projects, or both.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;any&quot;,
+        &quot;fixed&quot;,
+        &quot;hourly&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;Any type&quot;,
+        &quot;Fixed-price projects&quot;,
+        &quot;Hourly projects&quot;
+      ],
+      &quot;prefill&quot;: &quot;any&quot;,
+      &quot;title&quot;: &quot;Project type&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;projectUrls&quot;: {
+      &quot;default&quot;: [],
+      &quot;description&quot;: &quot;Full Freelancer project URLs, paths or numeric project ids used in mode=byProject, e.g. https://www.freelancer.com/projects/python/my-project or 40425363.&quot;,
+      &quot;editor&quot;: &quot;stringList&quot;,
+      &quot;prefill&quot;: [],
+      &quot;title&quot;: &quot;Project URLs or ids&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;query&quot;: {
+      &quot;default&quot;: &quot;python&quot;,
+      &quot;description&quot;: &quot;Keyword used in mode=search, e.g. `python`, `logo design`, `data entry`. Required for search mode.&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;prefill&quot;: &quot;python&quot;,
+      &quot;title&quot;: &quot;Search keyword&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;skills&quot;: {
+      &quot;default&quot;: [],
+      &quot;description&quot;: &quot;Skill names, slugs or numeric ids to narrow the search, e.g. `Python`, `website-design` or `13`.&quot;,
+      &quot;editor&quot;: &quot;stringList&quot;,
+      &quot;prefill&quot;: [],
+      &quot;title&quot;: &quot;Skills&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;sortBy&quot;: {
+      &quot;default&quot;: &quot;latest&quot;,
+      &quot;description&quot;: &quot;Order of search/category results. Ending-soon and budget sorts are applied to the collected candidate pool.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;latest&quot;,
+        &quot;ending_soon&quot;,
+        &quot;lowest_budget&quot;,
+        &quot;highest_budget&quot;,
+        &quot;lowest_bids&quot;,
+        &quot;highest_bids&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;Newest first&quot;,
+        &quot;Ending soon&quot;,
+        &quot;Lowest budget first&quot;,
+        &quot;Highest budget first&quot;,
+        &quot;Lowest bid count first&quot;,
+        &quot;Highest bid count first&quot;
+      ],
+      &quot;prefill&quot;: &quot;latest&quot;,
+      &quot;title&quot;: &quot;Sort results&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    }
+  },
+  &quot;required&quot;: [
+    &quot;mode&quot;
+  ],
+  &quot;schemaVersion&quot;: 1,
+  &quot;title&quot;: &quot;Freelancer Project Scraper Input&quot;,
+  &quot;type&quot;: &quot;object&quot;
+}
+</code></pre></details></section><section class="schema-section" id="output-schema"><h2>Output schema</h2><p>Published result links and storage locations. This schema is not an exhaustive contract for every field in a dataset record.</p><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>projects</code></td><td>string</td><td>optional</td><td>Dataset containing Freelancer project records.</td></tr></tbody></table></div><p><a href="output-schema.json">Download the published output schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+  &quot;actorOutputSchemaVersion&quot;: 1,
+  &quot;description&quot;: &quot;One record per Freelancer.com project, with fixed or hourly budget, bid count and bid list, skills, employer rating and verification, dates and flags.&quot;,
+  &quot;properties&quot;: {
+    &quot;projects&quot;: {
+      &quot;description&quot;: &quot;Dataset containing Freelancer project records.&quot;,
+      &quot;template&quot;: &quot;{{links.apiDefaultDatasetUrl}}/items&quot;,
+      &quot;title&quot;: &quot;Freelancer projects&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    }
+  },
+  &quot;title&quot;: &quot;Freelancer.com Project Budget &amp; Bids Scraper Output&quot;
+}
+</code></pre></details></section><section class="schema-section" id="dataset-schema"><h2>Dataset schema</h2><p>Published dataset views and any declared field definitions. A view can select only a subset of the returned record fields.</p><p><a href="dataset-schema.json">Download the published dataset schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+  &quot;actorSpecification&quot;: 1,
+  &quot;views&quot;: {
+    &quot;overview&quot;: {
+      &quot;display&quot;: {
+        &quot;component&quot;: &quot;table&quot;,
+        &quot;properties&quot;: {}
+      },
+      &quot;title&quot;: &quot;Projects&quot;,
+      &quot;transformation&quot;: {
+        &quot;fields&quot;: [
+          &quot;title&quot;,
+          &quot;projectType&quot;,
+          &quot;budget&quot;,
+          &quot;hourlyRate&quot;,
+          &quot;bidCount&quot;,
+          &quot;canonicalUrl&quot;
+        ]
+      }
+    }
+  }
+}
+</code></pre></details></section><section class="schema-section" id="key-value-schema"><h2>Key-value schema</h2><p>Published key-value store definitions, when provided by this build.</p><p>This definition is not present in the default published build. See the published README for available documentation.</p></section><section id="published-readme"><h2>Published README</h2><details><summary>Read the full published documentation</summary><h2 id="readme-freelancer-com-project-budget-bids-scraper">Freelancer.com Project Budget &amp; Bids Scraper</h2>
+<p>Freelancer.com publishes project budgets, bid activity, skills and deadlines on every listing. This actor turns that into a structured dataset you can filter, sort and export. Search by keyword, browse a skill/category page, or paste project URLs and ids. It returns the budget in the project's own currency and in USD, the bid count, an optional full bid list with bidder details, the required skills, the employer's public rating and verification flags, and the posting and closing dates. No login, cookies or proxy setup is required.</p>
+<h2 id="readme-what-this-actor-does">What this actor does</h2>
+<ul>
+<li><strong>Three ways to find projects:</strong> keyword search, category/skill browse, or direct project URL/id lookup. Auto-detect picks the right one from the fields you fill in.</li>
+<li><strong>Fixed and hourly projects:</strong> budgets stay separate, with native-currency and USD values on every record.</li>
+<li><strong>Real filters:</strong> project type, budget range, skills, languages, bid-count range and posting-date range.</li>
+<li><strong>Bid intelligence:</strong> bid count and average bid always; an optional full bid list with bidder username, country, amount, delivery period and proposal text.</li>
+<li><strong>Employer context:</strong> country, city, rating, review count, member-since date and payment/email/phone verification flags when the public project page publishes them.</li>
+<li><strong>Closed projects:</strong> search them with <code>includeClosed</code>, or fetch any closed project directly by URL or id.</li>
+<li><strong>Clean output:</strong> empty fields are omitted at every depth, so you never have to defend against <code>null</code>.</li>
+</ul>
+<h2 id="readme-output-per-project">Output per project</h2>
+<ul>
+<li><code>projectId</code> — Freelancer project id</li>
+<li><code>title</code>, <code>pageTitle</code>, <code>slug</code> — project title, page title and URL slug</li>
+<li><code>sourceUrl</code>, <code>canonicalUrl</code> — where the project was found and its canonical project URL</li>
+<li><code>status</code>, <code>subStatus</code>, <code>frontendStatus</code> — project status as published</li>
+<li><code>projectType</code> — <code>fixed</code> or <code>hourly</code></li>
+<li><code>budget</code> — fixed-price budget display string, e.g. <code>$250-750 USD</code></li>
+<li><code>budgetMinMax</code> — fixed budget as <code>{min, max, currency}</code></li>
+<li><code>budgetUsdMin</code>, <code>budgetUsdMax</code> — fixed budget converted to USD</li>
+<li><code>hourlyRate</code> — hourly rate display string, e.g. <code>$15-30 USD / hr</code></li>
+<li><code>hourlyRateMinMax</code> — hourly rate as <code>{min, max, currency}</code></li>
+<li><code>hourlyRateUsdMin</code>, <code>hourlyRateUsdMax</code> — hourly rate converted to USD</li>
+<li><code>currency</code>, <code>currencySymbol</code> — project currency</li>
+<li><code>paymentType</code> — fixed-price or hourly label from the page</li>
+<li><code>bidCount</code> — number of bids received</li>
+<li><code>averageBid</code> — average bid in the project's currency</li>
+<li><code>averageBidUsd</code> — average bid converted to USD</li>
+<li><code>bids</code> — individual bids when <code>includeBids</code> is enabled: bidder id, username, display name, country, city, registration date, hourly rate, rating, review count, amount, currency, delivery period, proposal, submitted date, rank, milestone percentage and sealed flag</li>
+<li><code>description</code> — full project brief</li>
+<li><code>skills</code> — skill names attached to the project</li>
+<li><code>skillSlugs</code>, <code>skillIds</code>, <code>categories</code> — skill slugs, numeric ids and top-level categories</li>
+<li><code>employer</code> — public client details: country, country code, city, rating, review count, member-since date and verification flags</li>
+<li><code>postedAt</code>, <code>updatedAt</code>, <code>endsAt</code>, <code>latestActivityAt</code> — ISO 8601 dates</li>
+<li><code>bidPeriodDays</code>, <code>daysLeft</code> — bidding window and days remaining</li>
+<li><code>postedText</code> — relative posting text from the project page, when available</li>
+<li><code>hourlyCommitmentHours</code>, <code>hourlyCommitmentInterval</code>, <code>hourlyDuration</code> — hourly project commitment</li>
+<li><code>isFeatured</code>, <code>isUrgent</code>, <code>isNda</code>, <code>isSealed</code>, <code>isNonpublic</code>, <code>isFulltime</code>, <code>isLocal</code>, <code>isProjectManagement</code>, <code>isRecruiter</code> — project flags</li>
+<li><code>projectCountry</code>, <code>projectCity</code> — published project location, when available</li>
+<li><code>marketplaceRating</code>, <code>marketplaceReviewCount</code>, <code>marketplaceDescription</code> — marketplace rating block when the page carries it</li>
+<li><code>recordType: &quot;project&quot;</code>, <code>scrapedAt</code> — record type and scrape timestamp</li>
+</ul>
+<h2 id="readme-input">Input</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>mode</code></td>
+<td>string</td>
+<td><code>auto</code></td>
+<td><code>auto</code>, <code>search</code>, <code>byProject</code> or <code>byCategory</code></td>
+</tr>
+<tr>
+<td><code>query</code></td>
+<td>string</td>
+<td><code>python</code></td>
+<td>Keyword for <code>mode=search</code></td>
+</tr>
+<tr>
+<td><code>projectUrls</code></td>
+<td>array</td>
+<td><code>[]</code></td>
+<td>Project URLs, paths or numeric ids for <code>mode=byProject</code></td>
+</tr>
+<tr>
+<td><code>categoryUrls</code></td>
+<td>array</td>
+<td><code>[]</code></td>
+<td><code>/jobs/&lt;skill&gt;/</code> URLs or skill slugs for <code>mode=byCategory</code></td>
+</tr>
+<tr>
+<td><code>projectType</code></td>
+<td>string</td>
+<td><code>any</code></td>
+<td><code>any</code>, <code>fixed</code> or <code>hourly</code></td>
+</tr>
+<tr>
+<td><code>budgetMin</code></td>
+<td>integer</td>
+<td><code>0</code></td>
+<td>Minimum fixed budget or hourly rate in USD; <code>0</code> = no minimum</td>
+</tr>
+<tr>
+<td><code>budgetMax</code></td>
+<td>integer</td>
+<td><code>0</code></td>
+<td>Maximum fixed budget or hourly rate in USD; <code>0</code> = no maximum</td>
+</tr>
+<tr>
+<td><code>minBidCount</code></td>
+<td>integer</td>
+<td><code>0</code></td>
+<td>Minimum number of bids; <code>0</code> = no minimum</td>
+</tr>
+<tr>
+<td><code>maxBidCount</code></td>
+<td>integer</td>
+<td><code>0</code></td>
+<td>Maximum number of bids; <code>0</code> = no maximum</td>
+</tr>
+<tr>
+<td><code>skills</code></td>
+<td>array</td>
+<td><code>[]</code></td>
+<td>Skill names, slugs or numeric ids</td>
+</tr>
+<tr>
+<td><code>languages</code></td>
+<td>array</td>
+<td><code>[]</code></td>
+<td>ISO 639-1 language codes, e.g. <code>en</code>, <code>de</code>, <code>hi</code></td>
+</tr>
+<tr>
+<td><code>postedAfter</code></td>
+<td>string</td>
+<td>–</td>
+<td>ISO date/datetime lower bound on posting time</td>
+</tr>
+<tr>
+<td><code>postedBefore</code></td>
+<td>string</td>
+<td>–</td>
+<td>ISO date/datetime upper bound on posting time</td>
+</tr>
+<tr>
+<td><code>includeClosed</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Include closed projects in search/category results</td>
+</tr>
+<tr>
+<td><code>includeDetails</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td>Fetch the public project page for employer details and page text. When off, a project URL is still resolved to its id, but page-only fields are omitted</td>
+</tr>
+<tr>
+<td><code>includeBids</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Fetch individual bids</td>
+</tr>
+<tr>
+<td><code>maxBidsPerProject</code></td>
+<td>integer</td>
+<td><code>20</code></td>
+<td>Maximum bids returned per project (1–1000)</td>
+</tr>
+<tr>
+<td><code>sortBy</code></td>
+<td>string</td>
+<td><code>latest</code></td>
+<td><code>latest</code>, <code>ending_soon</code>, <code>lowest_budget</code>, <code>highest_budget</code>, <code>lowest_bids</code> or <code>highest_bids</code>; ending-soon and budget sorts order the collected pool</td>
+</tr>
+<tr>
+<td><code>maxPages</code></td>
+<td>integer</td>
+<td><code>5</code></td>
+<td>Maximum listing pages (99 projects per page)</td>
+</tr>
+<tr>
+<td><code>maxItems</code></td>
+<td>integer</td>
+<td><code>50</code></td>
+<td>Hard cap on emitted projects (1–10000)</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="readme-example-keyword-search-with-a-fixed-budget">Example: keyword search with a fixed budget</h3>
+<pre><code class="language-json">{
+  &quot;mode&quot;: &quot;search&quot;,
+  &quot;query&quot;: &quot;python&quot;,
+  &quot;projectType&quot;: &quot;fixed&quot;,
+  &quot;budgetMin&quot;: 250,
+  &quot;budgetMax&quot;: 1500,
+  &quot;languages&quot;: [&quot;en&quot;],
+  &quot;maxItems&quot;: 100
+}
+</code></pre>
+<h3 id="readme-example-hourly-projects-with-low-competition">Example: hourly projects with low competition</h3>
+<pre><code class="language-json">{
+  &quot;mode&quot;: &quot;search&quot;,
+  &quot;query&quot;: &quot;react&quot;,
+  &quot;projectType&quot;: &quot;hourly&quot;,
+  &quot;budgetMin&quot;: 20,
+  &quot;budgetMax&quot;: 80,
+  &quot;maxBidCount&quot;: 10,
+  &quot;sortBy&quot;: &quot;lowest_bids&quot;,
+  &quot;maxItems&quot;: 50
+}
+</code></pre>
+<h3 id="readme-example-browse-a-skill-page-and-include-bids">Example: browse a skill page and include bids</h3>
+<pre><code class="language-json">{
+  &quot;mode&quot;: &quot;byCategory&quot;,
+  &quot;categoryUrls&quot;: [&quot;https://www.freelancer.com/jobs/logo-design/&quot;],
+  &quot;includeBids&quot;: true,
+  &quot;maxBidsPerProject&quot;: 10,
+  &quot;maxItems&quot;: 25
+}
+</code></pre>
+<h3 id="readme-example-fetch-specific-projects-including-a-closed-one">Example: fetch specific projects, including a closed one</h3>
+<pre><code class="language-json">{
+  &quot;mode&quot;: &quot;byProject&quot;,
+  &quot;projectUrls&quot;: [
+    &quot;https://www.freelancer.com/projects/python/cricket-prediction-rewards-bot&quot;,
+    &quot;40425363&quot;
+  ],
+  &quot;includeDetails&quot;: true,
+  &quot;includeBids&quot;: true,
+  &quot;maxBidsPerProject&quot;: 20
+}
+</code></pre>
+<h2 id="readme-use-cases">Use cases</h2>
+<ul>
+<li><strong>Freelance demand monitoring</strong> — track project volume and budgets across skills and categories</li>
+<li><strong>Pricing research</strong> — compare fixed budgets and hourly rates across currencies in USD</li>
+<li><strong>Bid-competition analysis</strong> — find low-bid, high-budget projects and inspect who is bidding</li>
+<li><strong>Employer intelligence</strong> — see client country, rating, reviews and verification flags before bidding</li>
+<li><strong>Market and trend research</strong> — export project descriptions, skills and posting dates for analysis</li>
+<li><strong>Opportunity alerts</strong> — schedule keyword or category searches and filter by budget, bids and age</li>
+</ul>
+<h2 id="readme-faq">FAQ</h2>
+<p><strong>Do I need a Freelancer.com account, cookies or a proxy?</strong>
+No. The actor reads public project data and runs without login, cookies or proxy setup. It chooses a working connection automatically.</p>
+<p><strong>Why is the employer missing from some records?</strong>
+Freelancer publishes the client's country, rating, reviews, member-since date and verification flags on many project pages, but not all. Closed-project pages in particular can be served in a reduced form without the client block. The actor returns the employer object when the public page carries it and omits it when it does not. The employer's username and hire rate are not public.</p>
+<p><strong>What does <code>includeDetails</code> change?</strong>
+The actor always reads the public project API for the title, budget, skills, dates and bid counts. <code>includeDetails</code> adds one project-page request for employer details, the page title and the relative posting text. When it is off, a project URL is still resolved to its project id, but those page-only fields are omitted.</p>
+<p><strong>How many bids can I get per project?</strong>
+<code>bidCount</code> and <code>averageBid</code> are always included. Set <code>includeBids</code> to true to get individual bids; <code>maxBidsPerProject</code> controls how many. Some projects hide their bid list from public view, so you may get the count without individual bids. Some bidders also leave the proposal text blank, so that field can be absent on an individual bid.</p>
+<p><strong>Why do some bids show an amount of 0?</strong>
+Freelancer hides the amount and proposal for sealed bids. Those bids carry <code>sealed: true</code>; the zero amount is the source's placeholder, not a real bid of zero. Visible bids keep their real amount.</p>
+<p><strong>Why don't closed projects appear first when <code>includeClosed</code> is on?</strong>
+The closed archive is much older and larger than the active listing, so a broad keyword returns matching active projects first and reaches closed ones only after several pages. Use a keyword or category that identifies the closed project, or pass its URL/id directly; direct project lookup always includes closed projects.</p>
+<p><strong>What is the difference between <code>budget</code> and <code>hourlyRate</code>?</strong>
+Fixed-price projects use <code>budget</code>; hourly projects use <code>hourlyRate</code>. For hourly projects the numbers are a rate per hour, not a total. <code>projectType</code> tells you which one applies.</p>
+<p><strong>Are budgets converted to USD?</strong>
+Yes. <code>budgetMinMax</code> and <code>hourlyRateMinMax</code> keep the project's own currency, while <code>budgetUsdMin</code>, <code>budgetUsdMax</code>, <code>hourlyRateUsdMin</code>, <code>hourlyRateUsdMax</code> and <code>averageBidUsd</code> are converted to USD. Filters use USD.</p>
+<p><strong>Can I search closed projects?</strong>
+Yes. Set <code>includeClosed</code> to true in search or category mode. Direct project URLs and ids work for closed projects without any extra setting.</p>
+<p><strong>Why do I get fewer rows than <code>maxItems</code>?</strong>
+A restrictive filter can run out of matches within <code>maxPages</code>. Increase <code>maxPages</code> or narrow the keyword/category. One keyword returns at most about 5,000 active projects.</p>
+<p><strong>Why are some fields missing from a record?</strong>
+The source does not publish every field for every project. Empty values are omitted instead of being sent as <code>null</code>, <code>&quot;&quot;</code> or <code>[]</code>. This is normal for optional fields such as employer details, hourly commitment or marketplace rating.</p>
+<p><strong>How fresh is the data?</strong>
+Each run reads the live project listing. Bid counts and statuses can change quickly; <code>scrapedAt</code> records when the row was collected.</p>
+<p><strong>Is this affiliated with Freelancer.com?</strong>
+No. This is an independent, third-party actor that reads public Freelancer.com project data. It is not affiliated with or endorsed by Freelancer.com.</p>
+</details></section><section id="python-quickstart"><h2>Python quickstart</h2><p>Use a schema-derived input and the Python standard library to start a run. An Apify account and token are required for execution.</p><p><a href="/apify-actor-examples/guides/freelancer-com-project-budget-and-bids-scraper/">Open the step-by-step Python guide →</a></p></section><p class="source-note">Source build <code>bbzK5whhDLh1yi1Dc</code>. Documentation is regenerated from the default published build; private drafts are not included.</p></article></div></main><footer class="footer"><strong>Nimbryxo Studio</strong><div class="footer-links"><a href="/apify-actor-examples/topics/">Topics</a><a href="/apify-actor-examples/sources/">Documentation sources</a><a href="https://apify.com/nimbryxo-studio">Apify</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></div></footer></body></html>

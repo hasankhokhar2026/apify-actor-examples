@@ -1,0 +1,888 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src &#x27;self&#x27;; script-src &#x27;self&#x27; &#x27;sha256-2LTRCofXEJAwFJOZ3P6p/QRls9/ODIpH1IFWaqtDDCI=&#x27;; style-src &#x27;self&#x27;; img-src &#x27;self&#x27; https: data:; base-uri &#x27;self&#x27;; form-action &#x27;self&#x27;; object-src &#x27;none&#x27;"><title>Complete Page Capture - Screenshot &amp; PDF | Nimbryxo Studio</title><meta name="description" content="Capture complete full-page screenshots or PDFs of any URL list. Scrolls lazy content, waits for images and fonts, removes fixed headers and consent overlays, emulates real devices,"><meta name="robots" content="index,follow"><link rel="canonical" href="https://hasankhokhar2026.github.io/apify-actor-examples/actors/full-page-website-screenshot-and-pdf-capture/"><meta property="og:title" content="Complete Page Capture - Screenshot &amp; PDF | Nimbryxo Studio"><meta property="og:description" content="Capture complete full-page screenshots or PDFs of any URL list. Scrolls lazy content, waits for images and fonts, removes fixed headers and consent overlays, emulates real devices,"><meta property="og:type" content="website"><meta property="og:url" content="https://hasankhokhar2026.github.io/apify-actor-examples/actors/full-page-website-screenshot-and-pdf-capture/"><meta property="og:site_name" content="Nimbryxo Studio"><meta name="twitter:card" content="summary"><link rel="icon" href="/apify-actor-examples/assets/mark.svg?v=2d20f9dc334a" type="image/svg+xml"><link rel="stylesheet" href="/apify-actor-examples/assets/site.css?v=39545fd4a399"><link rel="stylesheet" href="/apify-actor-examples/assets/brand.css?v=eb0f935ade25"><link rel="alternate" type="application/rss+xml" title="Nimbryxo Studio guides" href="/apify-actor-examples/feed.xml"><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization","name":"Nimbryxo Studio","url":"https://hasankhokhar2026.github.io/apify-actor-examples/","sameAs":["https://apify.com/nimbryxo-studio"]},{"@type":"WebSite","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#website","name":"Nimbryxo Studio","url":"https://hasankhokhar2026.github.io/apify-actor-examples/","publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"inLanguage":"en"},{"@type":"WebPage","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/full-page-website-screenshot-and-pdf-capture/#webpage","name":"Complete Page Capture - Screenshot & PDF","description":"Capture complete full-page screenshots or PDFs of any URL list. Scrolls lazy content, waits for images and fonts, removes fixed headers and consent overlays, emulates real devices, and reports blocks and truncation instead of returning a broken image.","url":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/full-page-website-screenshot-and-pdf-capture/","isPartOf":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#website"},"publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"inLanguage":"en","mainEntity":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/full-page-website-screenshot-and-pdf-capture/#article"},"breadcrumb":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/full-page-website-screenshot-and-pdf-capture/#breadcrumb"}},{"@type":"TechArticle","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/full-page-website-screenshot-and-pdf-capture/#article","headline":"Complete Page Capture - Screenshot & PDF","name":"Complete Page Capture - Screenshot & PDF","description":"Capture complete full-page screenshots or PDFs of any URL list. Scrolls lazy content, waits for images and fonts, removes fixed headers and consent overlays, emulates real devices, and reports blocks and truncation instead of returning a broken image.","url":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/full-page-website-screenshot-and-pdf-capture/","author":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"mainEntityOfPage":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/full-page-website-screenshot-and-pdf-capture/#webpage"},"inLanguage":"en","dateModified":"2026-11-05T12:29:19.262Z"},{"@type":"BreadcrumbList","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/full-page-website-screenshot-and-pdf-capture/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Nimbryxo Studio","item":"https://hasankhokhar2026.github.io/apify-actor-examples/"},{"@type":"ListItem","position":2,"name":"Actors","item":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/"},{"@type":"ListItem","position":3,"name":"Complete Page Capture - Screenshot & PDF","item":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/full-page-website-screenshot-and-pdf-capture/"}]}]}</script><script src="/apify-actor-examples/assets/site.js?v=7cabac48dd31" defer></script></head><body class="theme-studio"><a href="#main" class="skip-link">Skip to content</a><header><div class="inner"><a href="/apify-actor-examples/" class="brand"><img src="/apify-actor-examples/assets/mark.svg?v=2d20f9dc334a" alt="" width="29" height="29">Nimbryxo Studio</a><nav aria-label="Main navigation"><a href="/apify-actor-examples/actors/" aria-current="page">Actors</a><a href="/apify-actor-examples/guides/">Guides</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></nav></div></header><main id="main"><div class="doc-layout"><aside class="contents" aria-label="On this page"><strong>Contents</strong><a href="#overview">Overview</a><a href="#published-readme">Published README</a><a href="#input-schema">Input schema</a><a href="#output-schema">Output schema</a><a href="#dataset-schema">Dataset schema</a><a href="#python-quickstart">Python quickstart</a></aside><article class="prose"><div class="breadcrumb"><a href="/apify-actor-examples/actors/">Actors</a><span>/</span><span>Complete Page Capture - Screenshot &amp; PDF</span></div><section id="overview"><h1 class="doc-title">Complete Page Capture - Screenshot &amp; PDF</h1><p class="lede">Capture complete full-page screenshots or PDFs of any URL list. Scrolls lazy content, waits for images and fonts, removes fixed headers and consent overlays, emulates real devices, and reports blocks and truncation instead of returning a broken image.</p><p class="summary">Complete Page Capture - Screenshot &amp; PDF is an Apify Actor published by Nimbryxo Studio. It accepts 35 input fields, and <code>urls</code> is required. Its build declares a results dataset with 1 view. Runs happen on Apify, where the Store page lists the current price.</p><div class="actions"><a class="button" href="https://apify.com/nimbryxo-studio/full-page-website-screenshot-and-pdf-capture">Open on Apify</a><a class="text-link" href="https://github.com/hasankhokhar2026/apify-actor-examples/blob/main/docs/actors/oG0Mque4wwAd1e4EK/README.md">GitHub source</a></div></section><section class="schema-section" id="input-schema"><h2>Input schema</h2><p>Input fields, types, required flags, descriptions, defaults, and prefills come from the published definition. Prefill examples are distinct from defaults.</p><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>urls</code></td><td>array</td><td>required</td><td>Web pages to capture. Each item can be a URL object or a plain URL string. Bare domains such as example.com are accepted and use https.</td></tr><tr><td><code>format</code></td><td>string</td><td>optional</td><td>PNG is lossless, JPEG and WebP are smaller, PDF produces a printable document. WebP conversion uses Pillow after the browser capture.</td></tr><tr><td><code>quality</code></td><td>integer</td><td>optional</td><td>Quality for JPEG and WebP output (1-100). Ignored for PNG and PDF.</td></tr></tbody></table></div><details><summary>Show all input fields</summary><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>urls</code></td><td>array</td><td>required</td><td>Web pages to capture. Each item can be a URL object or a plain URL string. Bare domains such as example.com are accepted and use https.</td></tr><tr><td><code>format</code></td><td>string</td><td>optional</td><td>PNG is lossless, JPEG and WebP are smaller, PDF produces a printable document. WebP conversion uses Pillow after the browser capture.</td></tr><tr><td><code>quality</code></td><td>integer</td><td>optional</td><td>Quality for JPEG and WebP output (1-100). Ignored for PNG and PDF.</td></tr><tr><td><code>fullPage</code></td><td>boolean</td><td>optional</td><td>Capture the full scrollable page. Turn off to capture only the visible viewport. A selector overrides this option.</td></tr><tr><td><code>selector</code></td><td>string</td><td>optional</td><td>Optional CSS selector. When set, captures only that element and ignores fullPage. Example: main, #pricing, article.</td></tr><tr><td><code>device</code></td><td>string</td><td>optional</td><td>Device preset. Custom uses the viewport width, height and scale factor below. Presets emulate a real mobile or desktop browser.</td></tr><tr><td><code>viewportWidth</code></td><td>integer</td><td>optional</td><td>Browser viewport width in pixels when Device is Custom.</td></tr><tr><td><code>viewportHeight</code></td><td>integer</td><td>optional</td><td>Browser viewport height in pixels when Device is Custom.</td></tr><tr><td><code>deviceScaleFactor</code></td><td>integer</td><td>optional</td><td>Pixel density for Device=Custom: 1 is standard, 2 is retina, 3 is high-DPI mobile. Device presets use their own scale factor.</td></tr><tr><td><code>colorScheme</code></td><td>string</td><td>optional</td><td>Request the site&#x27;s light or dark theme through prefers-color-scheme where the site supports it.</td></tr><tr><td><code>locale</code></td><td>string</td><td>optional</td><td>Locale used for navigator.language and localized pages.</td></tr><tr><td><code>waitUntil</code></td><td>string</td><td>optional</td><td>Navigation readiness. DOM content loaded is the fastest reliable default; network idle can stall on analytics-heavy sites.</td></tr><tr><td><code>waitForSelector</code></td><td>string</td><td>optional</td><td>Optional CSS selector to wait for before capture. Useful for single-page apps. Fails the URL if the element never becomes visible.</td></tr><tr><td><code>waitForImages</code></td><td>boolean</td><td>optional</td><td>Wait up to 5 seconds for images to finish loading after scrolling. Incomplete images are reported in warnings.</td></tr><tr><td><code>waitForFonts</code></td><td>boolean</td><td>optional</td><td>Wait up to 5 seconds for web fonts to finish loading.</td></tr><tr><td><code>delay</code></td><td>integer</td><td>optional</td><td>Additional milliseconds to wait after navigation before scrolling or capturing.</td></tr><tr><td><code>scrollToBottom</code></td><td>boolean</td><td>optional</td><td>Scroll through the page in steps to trigger lazy images, infinite-scroll widgets and content-visibility sections before capture.</td></tr><tr><td><code>maxScrollSteps</code></td><td>integer</td><td>optional</td><td>Stop after this many scroll steps. Prevents infinite-scroll pages from running forever. A cap hit sets truncated=true in the record.</td></tr><tr><td><code>scrollStepPx</code></td><td>integer</td><td>optional</td><td>Pixels to scroll per step. Smaller steps trigger more IntersectionObserver content but take longer.</td></tr><tr><td><code>delayAfterScrolling</code></td><td>integer</td><td>optional</td><td>Milliseconds to wait after scrolling and before capture. Only used when scrolling is enabled.</td></tr><tr><td><code>waitUntilNetworkIdleAfterScroll</code></td><td>boolean</td><td>optional</td><td>After scrolling, wait until the network is idle before capture. Uses the timeout below.</td></tr><tr><td><code>waitUntilNetworkIdleAfterScrollTimeout</code></td><td>integer</td><td>optional</td><td>Maximum milliseconds to wait for network idle after scrolling.</td></tr><tr><td><code>hideFixedElements</code></td><td>boolean</td><td>optional</td><td>Hide real fixed headers, full-screen overlays and chat widgets before capture. Sticky content blocks are left in place. Default off because resetting to the top already prevents repeated headers on most pages.</td></tr><tr><td><code>cookieBannerAction</code></td><td>string</td><td>optional</td><td>Hide common cookie and consent overlays, click Accept first, or leave them untouched.</td></tr><tr><td><code>selectorsToHide</code></td><td>string</td><td>optional</td><td>Comma or newline separated CSS selectors for extra elements to hide before capture. Example: .newsletter-popup, #chat-widget</td></tr><tr><td><code>pdfPageSize</code></td><td>string</td><td>optional</td><td>Paper size for PDF output. Web page width preserves the previous 1280 px wide / Letter-height behavior.</td></tr><tr><td><code>pdfLandscape</code></td><td>boolean</td><td>optional</td><td>Use landscape orientation for PDF pages.</td></tr><tr><td><code>pdfPrintBackground</code></td><td>boolean</td><td>optional</td><td>Include CSS backgrounds, colors and images in the PDF.</td></tr><tr><td><code>pdfFitOnePage</code></td><td>boolean</td><td>optional</td><td>Create one tall PDF page instead of paginated paper. Overrides the paper height but keeps the selected margins.</td></tr><tr><td><code>pdfMargin</code></td><td>string</td><td>optional</td><td>Page margins for PDF output.</td></tr><tr><td><code>maxConcurrency</code></td><td>integer</td><td>optional</td><td>How many URLs to capture in parallel. Keep at 1 for long pages at 2048 MB; higher values need more memory.</td></tr><tr><td><code>maxRetries</code></td><td>integer</td><td>optional</td><td>Retry transient navigation failures and block pages. Retries use the AUTO datacenter proxy when no user proxy is configured.</td></tr><tr><td><code>navigationTimeoutSecs</code></td><td>integer</td><td>optional</td><td>Maximum seconds to wait for navigation and selector readiness per URL.</td></tr><tr><td><code>maxPageHeight</code></td><td>integer</td><td>optional</td><td>Clip full-page images at this CSS height. 0 means unlimited. PDFs keep their full document height and ignore this limit. Truncation is reported in the record.</td></tr><tr><td><code>proxyConfiguration</code></td><td>object</td><td>optional</td><td>Optional proxy override. The actor starts direct and uses an Apify AUTO datacenter proxy only after a real block when this is empty. Residential is never selected automatically.</td></tr></tbody></table></div></details><p><a href="input-schema.json">Download the published input schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+  &quot;description&quot;: &quot;Capture complete full-page screenshots or PDFs of any list of URLs. The actor scrolls lazy content, waits for images and fonts, removes fixed headers and consent overlays, and reports blocks and truncation honestly.&quot;,
+  &quot;properties&quot;: {
+    &quot;colorScheme&quot;: {
+      &quot;default&quot;: &quot;no-preference&quot;,
+      &quot;description&quot;: &quot;Request the site&#x27;s light or dark theme through prefers-color-scheme where the site supports it.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;no-preference&quot;,
+        &quot;light&quot;,
+        &quot;dark&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;Follow the site&quot;,
+        &quot;Force light&quot;,
+        &quot;Force dark&quot;
+      ],
+      &quot;prefill&quot;: &quot;no-preference&quot;,
+      &quot;title&quot;: &quot;Color scheme&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;cookieBannerAction&quot;: {
+      &quot;default&quot;: &quot;hide&quot;,
+      &quot;description&quot;: &quot;Hide common cookie and consent overlays, click Accept first, or leave them untouched.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;hide&quot;,
+        &quot;accept&quot;,
+        &quot;off&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;Hide banners (recommended)&quot;,
+        &quot;Click Accept&quot;,
+        &quot;Leave banners&quot;
+      ],
+      &quot;prefill&quot;: &quot;hide&quot;,
+      &quot;title&quot;: &quot;Consent banners&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;delay&quot;: {
+      &quot;default&quot;: 0,
+      &quot;description&quot;: &quot;Additional milliseconds to wait after navigation before scrolling or capturing.&quot;,
+      &quot;maximum&quot;: 600000,
+      &quot;minimum&quot;: 0,
+      &quot;prefill&quot;: 0,
+      &quot;title&quot;: &quot;Extra delay after load&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;delayAfterScrolling&quot;: {
+      &quot;default&quot;: 1000,
+      &quot;description&quot;: &quot;Milliseconds to wait after scrolling and before capture. Only used when scrolling is enabled.&quot;,
+      &quot;maximum&quot;: 600000,
+      &quot;minimum&quot;: 0,
+      &quot;prefill&quot;: 0,
+      &quot;title&quot;: &quot;Delay after scrolling&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;device&quot;: {
+      &quot;default&quot;: &quot;custom&quot;,
+      &quot;description&quot;: &quot;Device preset. Custom uses the viewport width, height and scale factor below. Presets emulate a real mobile or desktop browser.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;custom&quot;,
+        &quot;desktop&quot;,
+        &quot;desktop_hd&quot;,
+        &quot;laptop&quot;,
+        &quot;tablet&quot;,
+        &quot;ipad&quot;,
+        &quot;iphone_15&quot;,
+        &quot;iphone_se&quot;,
+        &quot;pixel_8&quot;,
+        &quot;galaxy_s23&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;Custom viewport&quot;,
+        &quot;Desktop 1280x1080&quot;,
+        &quot;Desktop HD 1920x1080&quot;,
+        &quot;Laptop 1366x768&quot;,
+        &quot;Tablet 768x1024&quot;,
+        &quot;iPad 1024x1366&quot;,
+        &quot;iPhone 15&quot;,
+        &quot;iPhone SE&quot;,
+        &quot;Pixel 8&quot;,
+        &quot;Galaxy S23&quot;
+      ],
+      &quot;prefill&quot;: &quot;custom&quot;,
+      &quot;sectionCaption&quot;: &quot;Device &amp; rendering&quot;,
+      &quot;sectionDescription&quot;: &quot;Viewport, scale, color scheme and language for the browser.&quot;,
+      &quot;title&quot;: &quot;Device&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;deviceScaleFactor&quot;: {
+      &quot;default&quot;: 1,
+      &quot;description&quot;: &quot;Pixel density for Device=Custom: 1 is standard, 2 is retina, 3 is high-DPI mobile. Device presets use their own scale factor.&quot;,
+      &quot;maximum&quot;: 3,
+      &quot;minimum&quot;: 1,
+      &quot;prefill&quot;: 1,
+      &quot;title&quot;: &quot;Device scale factor&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;format&quot;: {
+      &quot;default&quot;: &quot;png&quot;,
+      &quot;description&quot;: &quot;PNG is lossless, JPEG and WebP are smaller, PDF produces a printable document. WebP conversion uses Pillow after the browser capture.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;png&quot;,
+        &quot;jpeg&quot;,
+        &quot;webp&quot;,
+        &quot;pdf&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;PNG image&quot;,
+        &quot;JPEG image&quot;,
+        &quot;WebP image&quot;,
+        &quot;PDF document&quot;
+      ],
+      &quot;prefill&quot;: &quot;png&quot;,
+      &quot;title&quot;: &quot;Output format&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;fullPage&quot;: {
+      &quot;default&quot;: true,
+      &quot;description&quot;: &quot;Capture the full scrollable page. Turn off to capture only the visible viewport. A selector overrides this option.&quot;,
+      &quot;prefill&quot;: true,
+      &quot;title&quot;: &quot;Capture the whole page&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;hideFixedElements&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;Hide real fixed headers, full-screen overlays and chat widgets before capture. Sticky content blocks are left in place. Default off because resetting to the top already prevents repeated headers on most pages.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Hide fixed headers and overlays&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;locale&quot;: {
+      &quot;default&quot;: &quot;en-US&quot;,
+      &quot;description&quot;: &quot;Locale used for navigator.language and localized pages.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;en-US&quot;,
+        &quot;en-GB&quot;,
+        &quot;de-DE&quot;,
+        &quot;fr-FR&quot;,
+        &quot;es-ES&quot;,
+        &quot;it-IT&quot;,
+        &quot;pt-BR&quot;,
+        &quot;nl-NL&quot;,
+        &quot;pl-PL&quot;,
+        &quot;ru-RU&quot;,
+        &quot;tr-TR&quot;,
+        &quot;ar-SA&quot;,
+        &quot;hi-IN&quot;,
+        &quot;ja-JP&quot;,
+        &quot;zh-CN&quot;,
+        &quot;ko-KR&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;English (US)&quot;,
+        &quot;English (UK)&quot;,
+        &quot;German&quot;,
+        &quot;French&quot;,
+        &quot;Spanish&quot;,
+        &quot;Italian&quot;,
+        &quot;Portuguese (Brazil)&quot;,
+        &quot;Dutch&quot;,
+        &quot;Polish&quot;,
+        &quot;Russian&quot;,
+        &quot;Turkish&quot;,
+        &quot;Arabic&quot;,
+        &quot;Hindi&quot;,
+        &quot;Japanese&quot;,
+        &quot;Chinese (Simplified)&quot;,
+        &quot;Korean&quot;
+      ],
+      &quot;prefill&quot;: &quot;en-US&quot;,
+      &quot;title&quot;: &quot;Browser language&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;maxConcurrency&quot;: {
+      &quot;default&quot;: 1,
+      &quot;description&quot;: &quot;How many URLs to capture in parallel. Keep at 1 for long pages at 2048 MB; higher values need more memory.&quot;,
+      &quot;maximum&quot;: 5,
+      &quot;minimum&quot;: 1,
+      &quot;prefill&quot;: 1,
+      &quot;sectionCaption&quot;: &quot;Reliability&quot;,
+      &quot;sectionDescription&quot;: &quot;Retries, timeouts and page-size limits.&quot;,
+      &quot;title&quot;: &quot;Concurrent URLs&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;maxPageHeight&quot;: {
+      &quot;default&quot;: 0,
+      &quot;description&quot;: &quot;Clip full-page images at this CSS height. 0 means unlimited. PDFs keep their full document height and ignore this limit. Truncation is reported in the record.&quot;,
+      &quot;maximum&quot;: 200000,
+      &quot;minimum&quot;: 0,
+      &quot;prefill&quot;: 0,
+      &quot;title&quot;: &quot;Maximum page height&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;maxRetries&quot;: {
+      &quot;default&quot;: 1,
+      &quot;description&quot;: &quot;Retry transient navigation failures and block pages. Retries use the AUTO datacenter proxy when no user proxy is configured.&quot;,
+      &quot;maximum&quot;: 5,
+      &quot;minimum&quot;: 0,
+      &quot;prefill&quot;: 0,
+      &quot;title&quot;: &quot;Retries per URL&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;maxScrollSteps&quot;: {
+      &quot;default&quot;: 400,
+      &quot;description&quot;: &quot;Stop after this many scroll steps. Prevents infinite-scroll pages from running forever. A cap hit sets truncated=true in the record.&quot;,
+      &quot;maximum&quot;: 1000,
+      &quot;minimum&quot;: 1,
+      &quot;prefill&quot;: 400,
+      &quot;title&quot;: &quot;Maximum scroll steps&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;navigationTimeoutSecs&quot;: {
+      &quot;default&quot;: 60,
+      &quot;description&quot;: &quot;Maximum seconds to wait for navigation and selector readiness per URL.&quot;,
+      &quot;maximum&quot;: 300,
+      &quot;minimum&quot;: 5,
+      &quot;prefill&quot;: 60,
+      &quot;title&quot;: &quot;Navigation timeout&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;pdfFitOnePage&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;Create one tall PDF page instead of paginated paper. Overrides the paper height but keeps the selected margins.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Fit the whole page on one PDF page&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;pdfLandscape&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;Use landscape orientation for PDF pages.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Landscape PDF&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;pdfMargin&quot;: {
+      &quot;default&quot;: &quot;none&quot;,
+      &quot;description&quot;: &quot;Page margins for PDF output.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;none&quot;,
+        &quot;narrow&quot;,
+        &quot;normal&quot;,
+        &quot;wide&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;None&quot;,
+        &quot;Narrow (0.25 in)&quot;,
+        &quot;Normal (0.5 in)&quot;,
+        &quot;Wide (1 in)&quot;
+      ],
+      &quot;prefill&quot;: &quot;none&quot;,
+      &quot;title&quot;: &quot;PDF margin&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;pdfPageSize&quot;: {
+      &quot;default&quot;: &quot;web&quot;,
+      &quot;description&quot;: &quot;Paper size for PDF output. Web page width preserves the previous 1280 px wide / Letter-height behavior.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;web&quot;,
+        &quot;a4&quot;,
+        &quot;letter&quot;,
+        &quot;legal&quot;,
+        &quot;a3&quot;,
+        &quot;a5&quot;,
+        &quot;tabloid&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;Web page width (current behavior)&quot;,
+        &quot;A4&quot;,
+        &quot;Letter&quot;,
+        &quot;Legal&quot;,
+        &quot;A3&quot;,
+        &quot;A5&quot;,
+        &quot;Tabloid&quot;
+      ],
+      &quot;prefill&quot;: &quot;web&quot;,
+      &quot;sectionCaption&quot;: &quot;PDF options&quot;,
+      &quot;sectionDescription&quot;: &quot;Only used when Output format is PDF.&quot;,
+      &quot;title&quot;: &quot;PDF page size&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;pdfPrintBackground&quot;: {
+      &quot;default&quot;: true,
+      &quot;description&quot;: &quot;Include CSS backgrounds, colors and images in the PDF.&quot;,
+      &quot;prefill&quot;: true,
+      &quot;title&quot;: &quot;Print backgrounds&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;proxyConfiguration&quot;: {
+      &quot;description&quot;: &quot;Optional proxy override. The actor starts direct and uses an Apify AUTO datacenter proxy only after a real block when this is empty. Residential is never selected automatically.&quot;,
+      &quot;editor&quot;: &quot;proxy&quot;,
+      &quot;sectionCaption&quot;: &quot;Advanced&quot;,
+      &quot;title&quot;: &quot;Proxy configuration&quot;,
+      &quot;type&quot;: &quot;object&quot;
+    },
+    &quot;quality&quot;: {
+      &quot;default&quot;: 85,
+      &quot;description&quot;: &quot;Quality for JPEG and WebP output (1-100). Ignored for PNG and PDF.&quot;,
+      &quot;maximum&quot;: 100,
+      &quot;minimum&quot;: 1,
+      &quot;prefill&quot;: 85,
+      &quot;title&quot;: &quot;Image quality&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;scrollStepPx&quot;: {
+      &quot;default&quot;: 250,
+      &quot;description&quot;: &quot;Pixels to scroll per step. Smaller steps trigger more IntersectionObserver content but take longer.&quot;,
+      &quot;maximum&quot;: 2000,
+      &quot;minimum&quot;: 100,
+      &quot;prefill&quot;: 250,
+      &quot;title&quot;: &quot;Scroll step&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;scrollToBottom&quot;: {
+      &quot;default&quot;: true,
+      &quot;description&quot;: &quot;Scroll through the page in steps to trigger lazy images, infinite-scroll widgets and content-visibility sections before capture.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;sectionCaption&quot;: &quot;Scrolling &amp; cleanup&quot;,
+      &quot;sectionDescription&quot;: &quot;Controls for lazy content, fixed elements and consent overlays.&quot;,
+      &quot;title&quot;: &quot;Scroll to load lazy content&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;selector&quot;: {
+      &quot;description&quot;: &quot;Optional CSS selector. When set, captures only that element and ignores fullPage. Example: main, #pricing, article.&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;title&quot;: &quot;Capture one element&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;selectorsToHide&quot;: {
+      &quot;description&quot;: &quot;Comma or newline separated CSS selectors for extra elements to hide before capture. Example: .newsletter-popup, #chat-widget&quot;,
+      &quot;editor&quot;: &quot;textarea&quot;,
+      &quot;title&quot;: &quot;Additional CSS selectors to hide&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;urls&quot;: {
+      &quot;description&quot;: &quot;Web pages to capture. Each item can be a URL object or a plain URL string. Bare domains such as example.com are accepted and use https.&quot;,
+      &quot;editor&quot;: &quot;requestListSources&quot;,
+      &quot;prefill&quot;: [
+        {
+          &quot;url&quot;: &quot;https://www.apify.com/&quot;
+        }
+      ],
+      &quot;title&quot;: &quot;URLs to capture&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;viewportHeight&quot;: {
+      &quot;default&quot;: 1080,
+      &quot;description&quot;: &quot;Browser viewport height in pixels when Device is Custom.&quot;,
+      &quot;maximum&quot;: 4320,
+      &quot;minimum&quot;: 100,
+      &quot;prefill&quot;: 1080,
+      &quot;title&quot;: &quot;Viewport height&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;viewportWidth&quot;: {
+      &quot;default&quot;: 1280,
+      &quot;description&quot;: &quot;Browser viewport width in pixels when Device is Custom.&quot;,
+      &quot;maximum&quot;: 3840,
+      &quot;minimum&quot;: 100,
+      &quot;prefill&quot;: 1280,
+      &quot;title&quot;: &quot;Viewport width&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;waitForFonts&quot;: {
+      &quot;default&quot;: true,
+      &quot;description&quot;: &quot;Wait up to 5 seconds for web fonts to finish loading.&quot;,
+      &quot;prefill&quot;: true,
+      &quot;title&quot;: &quot;Wait for fonts&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;waitForImages&quot;: {
+      &quot;default&quot;: true,
+      &quot;description&quot;: &quot;Wait up to 5 seconds for images to finish loading after scrolling. Incomplete images are reported in warnings.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Wait for images&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;waitForSelector&quot;: {
+      &quot;description&quot;: &quot;Optional CSS selector to wait for before capture. Useful for single-page apps. Fails the URL if the element never becomes visible.&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;title&quot;: &quot;Wait for element&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;waitUntil&quot;: {
+      &quot;default&quot;: &quot;load&quot;,
+      &quot;description&quot;: &quot;Navigation readiness. DOM content loaded is the fastest reliable default; network idle can stall on analytics-heavy sites.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;load&quot;,
+        &quot;domcontentloaded&quot;,
+        &quot;networkidle&quot;,
+        &quot;commit&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;Page load event&quot;,
+        &quot;DOM content loaded (recommended)&quot;,
+        &quot;Network idle (can stall)&quot;,
+        &quot;Navigation committed&quot;
+      ],
+      &quot;prefill&quot;: &quot;domcontentloaded&quot;,
+      &quot;sectionCaption&quot;: &quot;Loading &amp; timing&quot;,
+      &quot;sectionDescription&quot;: &quot;Controls for deciding when the page and its assets are ready.&quot;,
+      &quot;title&quot;: &quot;Wait until&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;waitUntilNetworkIdleAfterScroll&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;After scrolling, wait until the network is idle before capture. Uses the timeout below.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Wait for network idle after scrolling&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;waitUntilNetworkIdleAfterScrollTimeout&quot;: {
+      &quot;default&quot;: 15000,
+      &quot;description&quot;: &quot;Maximum milliseconds to wait for network idle after scrolling.&quot;,
+      &quot;maximum&quot;: 120000,
+      &quot;minimum&quot;: 1000,
+      &quot;prefill&quot;: 1000,
+      &quot;title&quot;: &quot;Network idle timeout&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    }
+  },
+  &quot;required&quot;: [
+    &quot;urls&quot;
+  ],
+  &quot;schemaVersion&quot;: 1,
+  &quot;title&quot;: &quot;Screenshot URL Input&quot;,
+  &quot;type&quot;: &quot;object&quot;
+}
+</code></pre></details></section><section class="schema-section" id="output-schema"><h2>Output schema</h2><p>Published result links and storage locations. This schema is not an exhaustive contract for every field in a dataset record.</p><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>screenshots</code></td><td>string</td><td>optional</td><td>Dataset containing one result per URL, including status, HTTP status, page title, image dimensions and public file URL.</td></tr><tr><td><code>screenshotFiles</code></td><td>string</td><td>optional</td><td>Key-value store containing the PNG, JPEG, WebP or PDF files.</td></tr></tbody></table></div><p><a href="output-schema.json">Download the published output schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+  &quot;actorOutputSchemaVersion&quot;: 1,
+  &quot;description&quot;: &quot;One record per captured URL, with the file link, page metadata, block/error classification and capture evidence.&quot;,
+  &quot;properties&quot;: {
+    &quot;screenshotFiles&quot;: {
+      &quot;description&quot;: &quot;Key-value store containing the PNG, JPEG, WebP or PDF files.&quot;,
+      &quot;template&quot;: &quot;{{links.apiDefaultKeyValueStoreUrl}}/records&quot;,
+      &quot;title&quot;: &quot;Capture files&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;screenshots&quot;: {
+      &quot;description&quot;: &quot;Dataset containing one result per URL, including status, HTTP status, page title, image dimensions and public file URL.&quot;,
+      &quot;template&quot;: &quot;{{links.apiDefaultDatasetUrl}}/items&quot;,
+      &quot;title&quot;: &quot;Capture results&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    }
+  },
+  &quot;title&quot;: &quot;Complete Page Capture Output&quot;
+}
+</code></pre></details></section><section class="schema-section" id="dataset-schema"><h2>Dataset schema</h2><p>Published dataset views and any declared field definitions. A view can select only a subset of the returned record fields.</p><p><a href="dataset-schema.json">Download the published dataset schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+  &quot;actorSpecification&quot;: 1,
+  &quot;views&quot;: {
+    &quot;overview&quot;: {
+      &quot;display&quot;: {
+        &quot;component&quot;: &quot;table&quot;,
+        &quot;properties&quot;: {
+          &quot;blocked&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Blocked&quot;
+          },
+          &quot;fileSizeBytes&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Bytes&quot;
+          },
+          &quot;format&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Format&quot;
+          },
+          &quot;httpStatus&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;HTTP&quot;
+          },
+          &quot;imageHeight&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Height&quot;
+          },
+          &quot;imageWidth&quot;: {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Width&quot;
+          },
+          &quot;pageTitle&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Page title&quot;
+          },
+          &quot;screenshotUrl&quot;: {
+            &quot;format&quot;: &quot;link&quot;,
+            &quot;label&quot;: &quot;Screenshot&quot;
+          },
+          &quot;startUrl&quot;: {
+            &quot;format&quot;: &quot;link&quot;,
+            &quot;label&quot;: &quot;Input URL&quot;
+          },
+          &quot;status&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Status&quot;
+          },
+          &quot;timestamp&quot;: {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Timestamp&quot;
+          },
+          &quot;url&quot;: {
+            &quot;format&quot;: &quot;link&quot;,
+            &quot;label&quot;: &quot;Final URL&quot;
+          }
+        }
+      },
+      &quot;title&quot;: &quot;Screenshots&quot;,
+      &quot;transformation&quot;: {
+        &quot;fields&quot;: [
+          &quot;startUrl&quot;,
+          &quot;url&quot;,
+          &quot;pageTitle&quot;,
+          &quot;status&quot;,
+          &quot;httpStatus&quot;,
+          &quot;blocked&quot;,
+          &quot;format&quot;,
+          &quot;imageWidth&quot;,
+          &quot;imageHeight&quot;,
+          &quot;fileSizeBytes&quot;,
+          &quot;screenshotUrl&quot;,
+          &quot;timestamp&quot;
+        ]
+      }
+    }
+  }
+}
+</code></pre></details></section><section class="schema-section" id="key-value-schema"><h2>Key-value schema</h2><p>Published key-value store definitions, when provided by this build.</p><p>This definition is not present in the default published build. See the published README for available documentation.</p></section><section id="published-readme"><h2>Published README</h2><details><summary>Read the full published documentation</summary><h2 id="readme-complete-page-capture-screenshot-pdf">Complete Page Capture - Screenshot &amp; PDF</h2>
+<p>Capture complete full-page screenshots or PDFs of any URL list. This actor scrolls lazy content into view, waits for images and fonts, removes fixed headers and consent overlays, supports real device emulation, and tells you when a page was blocked or truncated instead of returning a broken image as a success.</p>
+<h2 id="readme-why-this-actor">Why this actor</h2>
+<ul>
+<li><strong>Complete captures</strong> - scrolls through the page to trigger lazy images and infinite-scroll widgets, then captures with the page reset to the top.</li>
+<li><strong>Clean captures</strong> - can hide fixed headers, overlays and common cookie banners before the shot without deleting sticky content cards.</li>
+<li><strong>Honest results</strong> - reports HTTP status, page title, block reason, truncation, image failures and file metadata for every URL.</li>
+<li><strong>Real device modes</strong> - desktop, laptop, tablet, iPhone, Pixel and Galaxy presets with the right viewport, user agent, touch support and pixel density.</li>
+<li><strong>Useful formats</strong> - PNG, JPEG, WebP and PDF, with PDF paper size, orientation, margins, backgrounds and a one-page mode.</li>
+<li><strong>Bulk friendly</strong> - concurrent captures, bounded retries, per-URL timeouts and a hard cap for very long or infinite pages.</li>
+</ul>
+<h2 id="readme-quick-start">Quick start</h2>
+<pre><code class="language-json">{
+  &quot;urls&quot;: [
+    {&quot;url&quot;: &quot;https://www.apify.com/&quot;},
+    {&quot;url&quot;: &quot;https://en.wikipedia.org/wiki/World_War_II&quot;}
+  ],
+  &quot;format&quot;: &quot;png&quot;,
+  &quot;device&quot;: &quot;desktop&quot;,
+  &quot;scrollToBottom&quot;: true
+}
+</code></pre>
+<p>Every URL produces one dataset record and one file in the run's key-value store. The <code>screenshotUrl</code> field is a public download link; no Apify token is needed to open it.</p>
+<h2 id="readme-inputs">Inputs</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Default</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>urls</code></td>
+<td>-</td>
+<td>Required. URL list; accepts URL objects or plain strings. Bare domains use https.</td>
+</tr>
+<tr>
+<td><code>format</code></td>
+<td><code>png</code></td>
+<td><code>png</code>, <code>jpeg</code>, <code>webp</code> or <code>pdf</code>.</td>
+</tr>
+<tr>
+<td><code>quality</code></td>
+<td><code>85</code></td>
+<td>JPEG/WebP quality, 1-100.</td>
+</tr>
+<tr>
+<td><code>fullPage</code></td>
+<td><code>true</code></td>
+<td>Capture the whole scrollable page. Turn off for the first screen only.</td>
+</tr>
+<tr>
+<td><code>selector</code></td>
+<td>-</td>
+<td>Capture one element by CSS selector instead of the page.</td>
+</tr>
+<tr>
+<td><code>device</code></td>
+<td><code>custom</code></td>
+<td><code>custom</code>, <code>desktop</code>, <code>desktop_hd</code>, <code>laptop</code>, <code>tablet</code>, <code>ipad</code>, <code>iphone_15</code>, <code>iphone_se</code>, <code>pixel_8</code>, <code>galaxy_s23</code>.</td>
+</tr>
+<tr>
+<td><code>viewportWidth</code></td>
+<td><code>1280</code></td>
+<td>Width for <code>device=custom</code>, 100-3840.</td>
+</tr>
+<tr>
+<td><code>viewportHeight</code></td>
+<td><code>1080</code></td>
+<td>Height for <code>device=custom</code>, 100-4320.</td>
+</tr>
+<tr>
+<td><code>deviceScaleFactor</code></td>
+<td><code>1</code></td>
+<td>Pixel density for <code>device=custom</code>, 1-3.</td>
+</tr>
+<tr>
+<td><code>colorScheme</code></td>
+<td><code>no-preference</code></td>
+<td><code>no-preference</code>, <code>light</code> or <code>dark</code>.</td>
+</tr>
+<tr>
+<td><code>locale</code></td>
+<td><code>en-US</code></td>
+<td>Browser language for localized pages.</td>
+</tr>
+<tr>
+<td><code>waitUntil</code></td>
+<td><code>load</code></td>
+<td><code>load</code>, <code>domcontentloaded</code>, <code>networkidle</code> or <code>commit</code>.</td>
+</tr>
+<tr>
+<td><code>waitForSelector</code></td>
+<td>-</td>
+<td>Wait for a selector to become visible before capture.</td>
+</tr>
+<tr>
+<td><code>waitForImages</code></td>
+<td><code>true</code></td>
+<td>Wait up to 5 seconds for images after scrolling.</td>
+</tr>
+<tr>
+<td><code>waitForFonts</code></td>
+<td><code>true</code></td>
+<td>Wait up to 5 seconds for web fonts.</td>
+</tr>
+<tr>
+<td><code>delay</code></td>
+<td><code>0</code></td>
+<td>Extra milliseconds after navigation.</td>
+</tr>
+<tr>
+<td><code>scrollToBottom</code></td>
+<td><code>true</code></td>
+<td>Scroll through the page to trigger lazy content.</td>
+</tr>
+<tr>
+<td><code>maxScrollSteps</code></td>
+<td><code>400</code></td>
+<td>Hard scroll-step cap.</td>
+</tr>
+<tr>
+<td><code>scrollStepPx</code></td>
+<td><code>250</code></td>
+<td>Pixels per scroll step.</td>
+</tr>
+<tr>
+<td><code>delayAfterScrolling</code></td>
+<td><code>1000</code></td>
+<td>Milliseconds to settle after scrolling.</td>
+</tr>
+<tr>
+<td><code>waitUntilNetworkIdleAfterScroll</code></td>
+<td><code>false</code></td>
+<td>Wait for network idle after scrolling.</td>
+</tr>
+<tr>
+<td><code>waitUntilNetworkIdleAfterScrollTimeout</code></td>
+<td><code>15000</code></td>
+<td>Network-idle timeout in milliseconds.</td>
+</tr>
+<tr>
+<td><code>hideFixedElements</code></td>
+<td><code>false</code></td>
+<td>Hide fixed headers, full-screen overlays and chat widgets. Sticky content blocks stay in place.</td>
+</tr>
+<tr>
+<td><code>cookieBannerAction</code></td>
+<td><code>hide</code></td>
+<td><code>hide</code>, <code>accept</code> or <code>off</code>.</td>
+</tr>
+<tr>
+<td><code>selectorsToHide</code></td>
+<td>-</td>
+<td>Extra comma/newline-separated CSS selectors to hide.</td>
+</tr>
+<tr>
+<td><code>pdfPageSize</code></td>
+<td><code>web</code></td>
+<td><code>web</code>, <code>a4</code>, <code>letter</code>, <code>legal</code>, <code>a3</code>, <code>a5</code> or <code>tabloid</code>.</td>
+</tr>
+<tr>
+<td><code>pdfLandscape</code></td>
+<td><code>false</code></td>
+<td>Landscape PDF pages.</td>
+</tr>
+<tr>
+<td><code>pdfPrintBackground</code></td>
+<td><code>true</code></td>
+<td>Include CSS backgrounds and colors in the PDF.</td>
+</tr>
+<tr>
+<td><code>pdfFitOnePage</code></td>
+<td><code>false</code></td>
+<td>One tall PDF page instead of paginated paper.</td>
+</tr>
+<tr>
+<td><code>pdfMargin</code></td>
+<td><code>none</code></td>
+<td><code>none</code>, <code>narrow</code>, <code>normal</code> or <code>wide</code>.</td>
+</tr>
+<tr>
+<td><code>maxConcurrency</code></td>
+<td><code>1</code></td>
+<td>URLs captured in parallel, 1-5. Use 1 for long pages at 2048 MB.</td>
+</tr>
+<tr>
+<td><code>maxRetries</code></td>
+<td><code>1</code></td>
+<td>Retries for transient navigation failures and blocks.</td>
+</tr>
+<tr>
+<td><code>navigationTimeoutSecs</code></td>
+<td><code>60</code></td>
+<td>Per-URL navigation and selector timeout.</td>
+</tr>
+<tr>
+<td><code>maxPageHeight</code></td>
+<td><code>0</code></td>
+<td>Clip full-page images at this CSS height; 0 is unlimited. PDFs keep their full document height.</td>
+</tr>
+<tr>
+<td><code>proxyConfiguration</code></td>
+<td>-</td>
+<td>Optional proxy override. The actor starts direct and escalates to an AUTO datacenter proxy only after a real block.</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="readme-output">Output</h2>
+<p>Each dataset record contains:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>startUrl</code></td>
+<td>URL you submitted.</td>
+</tr>
+<tr>
+<td><code>url</code></td>
+<td>Final URL after redirects.</td>
+</tr>
+<tr>
+<td><code>screenshotUrl</code></td>
+<td>Public download link for the file.</td>
+</tr>
+<tr>
+<td><code>screenshotKey</code></td>
+<td>Key of the file in the run's key-value store.</td>
+</tr>
+<tr>
+<td><code>format</code></td>
+<td><code>png</code>, <code>jpeg</code>, <code>webp</code> or <code>pdf</code>.</td>
+</tr>
+<tr>
+<td><code>status</code></td>
+<td><code>success</code> for a real stored capture, otherwise <code>error: ...</code>.</td>
+</tr>
+<tr>
+<td><code>timestamp</code></td>
+<td>ISO-8601 UTC capture time.</td>
+</tr>
+<tr>
+<td><code>pageTitle</code></td>
+<td>Page title at capture time.</td>
+</tr>
+<tr>
+<td><code>httpStatus</code></td>
+<td>Main document HTTP status.</td>
+</tr>
+<tr>
+<td><code>contentType</code></td>
+<td>Main response content type.</td>
+</tr>
+<tr>
+<td><code>blocked</code> / <code>blockReason</code></td>
+<td>Whether the page was a block, captcha or login wall, and which kind.</td>
+</tr>
+<tr>
+<td><code>errorType</code></td>
+<td>Machine-readable error category.</td>
+</tr>
+<tr>
+<td><code>device</code>, <code>viewportWidth</code>, <code>viewportHeight</code>, <code>deviceScaleFactor</code>, <code>colorScheme</code></td>
+<td>Rendering settings used.</td>
+</tr>
+<tr>
+<td><code>fullPage</code>, <code>selector</code></td>
+<td>Capture scope.</td>
+</tr>
+<tr>
+<td><code>imageWidth</code>, <code>imageHeight</code>, <code>fileSizeBytes</code></td>
+<td>File dimensions and size.</td>
+</tr>
+<tr>
+<td><code>pageHeight</code>, <code>capturedHeight</code>, <code>truncated</code></td>
+<td>Page height, captured height and whether a cap clipped it.</td>
+</tr>
+<tr>
+<td><code>pdfPages</code>, <code>pdfPageSize</code></td>
+<td>PDF page count and paper size.</td>
+</tr>
+<tr>
+<td><code>durationMs</code>, <code>imagesTotal</code>, <code>imagesFailed</code>, <code>retries</code></td>
+<td>Capture evidence. Image counts cover visible images only; hidden tracking pixels are ignored.</td>
+</tr>
+<tr>
+<td><code>warnings</code></td>
+<td>Human-readable notes such as failed images or a hit scroll cap.</td>
+</tr>
+</tbody>
+</table></div>
+<p>Blocked pages are not stored as screenshots and do not produce a success record. The record says <code>blocked: true</code> and <code>status: error: blocked (...)</code>, so a challenge page cannot be mistaken for page content.</p>
+<h2 id="readme-examples">Examples</h2>
+<h3 id="readme-mobile-screenshot">Mobile screenshot</h3>
+<pre><code class="language-json">{
+  &quot;urls&quot;: [{&quot;url&quot;: &quot;https://stripe.com/&quot;}],
+  &quot;device&quot;: &quot;iphone_15&quot;,
+  &quot;format&quot;: &quot;jpeg&quot;,
+  &quot;quality&quot;: 85
+}
+</code></pre>
+<h3 id="readme-full-page-dark-pdf">Full-page, dark PDF</h3>
+<pre><code class="language-json">{
+  &quot;urls&quot;: [{&quot;url&quot;: &quot;https://tailwindcss.com/&quot;}],
+  &quot;format&quot;: &quot;pdf&quot;,
+  &quot;colorScheme&quot;: &quot;dark&quot;,
+  &quot;pdfPageSize&quot;: &quot;a4&quot;,
+  &quot;pdfFitOnePage&quot;: true,
+  &quot;cookieBannerAction&quot;: &quot;hide&quot;
+}
+</code></pre>
+<h3 id="readme-capture-one-section">Capture one section</h3>
+<pre><code class="language-json">{
+  &quot;urls&quot;: [{&quot;url&quot;: &quot;https://www.apify.com/&quot;}],
+  &quot;selector&quot;: &quot;main&quot;,
+  &quot;fullPage&quot;: false,
+  &quot;format&quot;: &quot;png&quot;
+}
+</code></pre>
+<h2 id="readme-what-changed-in-this-revamp">What changed in this revamp</h2>
+<ul>
+<li><code>scrollToBottom</code> now defaults to <code>true</code> so lazy images are actually loaded.</li>
+<li><code>hideFixedElements</code> defaults to <code>false</code>: resetting to the top already avoids repeated headers on most pages, and this keeps sticky content cards in the image. Turn it on to remove fixed headers/overlays.</li>
+<li><code>cookieBannerAction</code> now defaults to <code>hide</code>.</li>
+<li><code>maxConcurrency</code> now defaults to <code>1</code> for safe 2048 MB memory use; raise it only when you have memory headroom.</li>
+<li>The <code>screenshotUrl</code> field now returns a working public link.</li>
+<li><code>waitUntil=domcontentloaded</code> is the prefill because <code>networkidle</code> can stall on analytics-heavy pages.</li>
+<li>Pages that return 403/captcha/login walls are reported as blocked errors, not successes.</li>
+</ul>
+<p>You can turn each of these off from the input form.</p>
+<h2 id="readme-limitations">Limitations</h2>
+<ul>
+<li>Only public, anonymous pages are supported. Login-protected pages are outside this actor's design.</li>
+<li>Some sites use CAPTCHA or bot defenses that cannot be bypassed. Those URLs are reported as blocked and are not charged as successful captures.</li>
+<li>Consent banners are handled on a best-effort basis. Hide is more reliable than click-accept; use <code>selectorsToHide</code> for a site-specific banner.</li>
+<li>Some lazy images never load because of the site's own rules or missing assets. Only visible images are counted in <code>imagesFailed</code> and listed in <code>warnings</code>; hidden tracking pixels and empty placeholders are ignored.</li>
+<li>Fixed headers are kept by default. Enable <code>hideFixedElements</code> to remove fixed headers, full-screen overlays and chat widgets; sticky content cards are intentionally preserved.</li>
+<li>Very long or infinite pages are capped by <code>maxScrollSteps</code> and <code>maxPageHeight</code>; the record sets <code>truncated: true</code> when a cap clips the capture.</li>
+<li>A direct PDF URL is copied when <code>format=pdf</code>; asking for an image of a PDF is reported as an error because Chromium downloads the file instead of rendering it.</li>
+<li>PDF pagination follows the browser's print layout, which can differ from the screen layout.</li>
+</ul>
+<h2 id="readme-faq">FAQ</h2>
+<p><strong>Do I need a proxy?</strong> No. The actor starts with a direct connection and only uses an AUTO datacenter proxy after a real block. If you supply your own proxy, it is used instead.</p>
+<p><strong>Can I capture a page that requires a login?</strong> No. Authenticated pages are intentionally out of scope.</p>
+<p><strong>How do I hide a cookie banner?</strong> Leave <code>cookieBannerAction</code> on <code>hide</code>. If a site uses a custom banner, add its selector to <code>selectorsToHide</code>.</p>
+<p><strong>Why is a page reported as blocked?</strong> The actor saw an HTTP 403/429/451, a CAPTCHA/Cloudflare challenge, or a login wall. The block page is not saved as a normal screenshot.</p>
+<p><strong>Why is my image shorter than the page?</strong> Check <code>truncated</code> and <code>warnings</code>. <code>maxPageHeight</code> or <code>maxScrollSteps</code> may have capped the capture.</p>
+<p><strong>Can I capture multiple URLs?</strong> Yes. Each URL produces its own record and file. Keep <code>maxConcurrency</code> at 1 for very long pages at 2048 MB; use a larger memory setting before raising concurrency.</p>
+<p><strong>Can I make a single-page PDF?</strong> Set <code>format=pdf</code> and <code>pdfFitOnePage=true</code>. For paper output, choose <code>pdfPageSize</code> and <code>pdfMargin</code>.</p>
+</details></section><section id="python-quickstart"><h2>Python quickstart</h2><p>Use a schema-derived input and the Python standard library to start a run. An Apify account and token are required for execution.</p><p><a href="/apify-actor-examples/guides/full-page-website-screenshot-and-pdf-capture/">Open the step-by-step Python guide →</a></p></section><p class="source-note">Source build <code>ugu5kWKeaoli71PqF</code>. Documentation is regenerated from the default published build; private drafts are not included.</p></article></div></main><footer class="footer"><strong>Nimbryxo Studio</strong><div class="footer-links"><a href="/apify-actor-examples/topics/">Topics</a><a href="/apify-actor-examples/sources/">Documentation sources</a><a href="https://apify.com/nimbryxo-studio">Apify</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></div></footer></body></html>

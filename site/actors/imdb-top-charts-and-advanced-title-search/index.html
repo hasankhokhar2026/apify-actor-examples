@@ -1,0 +1,1022 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src &#x27;self&#x27;; script-src &#x27;self&#x27; &#x27;sha256-HWYvk6qVmYT4ry1nS+6IBE6OBxGwZ2Soax9b8pNz41c=&#x27;; style-src &#x27;self&#x27;; img-src &#x27;self&#x27; https: data:; base-uri &#x27;self&#x27;; form-action &#x27;self&#x27;; object-src &#x27;none&#x27;"><title>IMDb Top Charts &amp; Advanced Title Search | Nimbryxo Studio</title><meta name="description" content="Search IMDb movies and TV shows, fetch titles by IMDb ID, browse Top 250 and regional charts, or run an advanced search by genre, year, rating and vote count, with cast, crew and p"><meta name="robots" content="index,follow"><link rel="canonical" href="https://hasankhokhar2026.github.io/apify-actor-examples/actors/imdb-top-charts-and-advanced-title-search/"><meta property="og:title" content="IMDb Top Charts &amp; Advanced Title Search | Nimbryxo Studio"><meta property="og:description" content="Search IMDb movies and TV shows, fetch titles by IMDb ID, browse Top 250 and regional charts, or run an advanced search by genre, year, rating and vote count, with cast, crew and p"><meta property="og:type" content="website"><meta property="og:url" content="https://hasankhokhar2026.github.io/apify-actor-examples/actors/imdb-top-charts-and-advanced-title-search/"><meta property="og:site_name" content="Nimbryxo Studio"><meta name="twitter:card" content="summary"><link rel="icon" href="/apify-actor-examples/assets/mark.svg?v=2d20f9dc334a" type="image/svg+xml"><link rel="stylesheet" href="/apify-actor-examples/assets/site.css?v=39545fd4a399"><link rel="stylesheet" href="/apify-actor-examples/assets/brand.css?v=eb0f935ade25"><link rel="alternate" type="application/rss+xml" title="Nimbryxo Studio guides" href="/apify-actor-examples/feed.xml"><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization","name":"Nimbryxo Studio","url":"https://hasankhokhar2026.github.io/apify-actor-examples/","sameAs":["https://apify.com/nimbryxo-studio"]},{"@type":"WebSite","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#website","name":"Nimbryxo Studio","url":"https://hasankhokhar2026.github.io/apify-actor-examples/","publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"inLanguage":"en"},{"@type":"WebPage","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/imdb-top-charts-and-advanced-title-search/#webpage","name":"IMDb Top Charts & Advanced Title Search","description":"Search IMDb movies and TV shows, fetch titles by IMDb ID, browse Top 250 and regional charts, or run an advanced search by genre, year, rating and vote count, with cast, crew and plot details per title.","url":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/imdb-top-charts-and-advanced-title-search/","isPartOf":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#website"},"publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"inLanguage":"en","mainEntity":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/imdb-top-charts-and-advanced-title-search/#article"},"breadcrumb":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/imdb-top-charts-and-advanced-title-search/#breadcrumb"}},{"@type":"TechArticle","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/imdb-top-charts-and-advanced-title-search/#article","headline":"IMDb Top Charts & Advanced Title Search","name":"IMDb Top Charts & Advanced Title Search","description":"Search IMDb movies and TV shows, fetch titles by IMDb ID, browse Top 250 and regional charts, or run an advanced search by genre, year, rating and vote count, with cast, crew and plot details per title.","url":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/imdb-top-charts-and-advanced-title-search/","author":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"mainEntityOfPage":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/imdb-top-charts-and-advanced-title-search/#webpage"},"inLanguage":"en","dateModified":"2026-11-09T12:48:26.714Z"},{"@type":"BreadcrumbList","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/imdb-top-charts-and-advanced-title-search/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Nimbryxo Studio","item":"https://hasankhokhar2026.github.io/apify-actor-examples/"},{"@type":"ListItem","position":2,"name":"Actors","item":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/"},{"@type":"ListItem","position":3,"name":"IMDb Top Charts & Advanced Title Search","item":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/imdb-top-charts-and-advanced-title-search/"}]}]}</script><script src="/apify-actor-examples/assets/site.js?v=7cabac48dd31" defer></script></head><body class="theme-studio"><a href="#main" class="skip-link">Skip to content</a><header><div class="inner"><a href="/apify-actor-examples/" class="brand"><img src="/apify-actor-examples/assets/mark.svg?v=2d20f9dc334a" alt="" width="29" height="29">Nimbryxo Studio</a><nav aria-label="Main navigation"><a href="/apify-actor-examples/actors/" aria-current="page">Actors</a><a href="/apify-actor-examples/guides/">Guides</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></nav></div></header><main id="main"><div class="doc-layout"><aside class="contents" aria-label="On this page"><strong>Contents</strong><a href="#overview">Overview</a><a href="#published-readme">Published README</a><a href="#input-schema">Input schema</a><a href="#output-schema">Output schema</a><a href="#dataset-schema">Dataset schema</a><a href="#python-quickstart">Python quickstart</a></aside><article class="prose"><div class="breadcrumb"><a href="/apify-actor-examples/actors/">Actors</a><span>/</span><span>IMDb Top Charts &amp; Advanced Title Search</span></div><section id="overview"><h1 class="doc-title">IMDb Top Charts &amp; Advanced Title Search</h1><p class="lede">Search IMDb movies and TV shows, fetch titles by IMDb ID, browse Top 250 and regional charts, or run an advanced search by genre, year, rating and vote count, with cast, crew and plot details per title.</p><p class="summary">IMDb Top Charts &amp; Advanced Title Search is an Apify Actor published by Nimbryxo Studio. It accepts 20 input fields, and <code>mode</code> is required. Its build declares a results dataset with 1 view. Runs happen on Apify, where the Store page lists the current price.</p><div class="actions"><a class="button" href="https://apify.com/nimbryxo-studio/imdb-top-charts-and-advanced-title-search">Open on Apify</a><a class="text-link" href="https://github.com/hasankhokhar2026/apify-actor-examples/blob/main/docs/actors/vCwUhfrZSJ6ZgYDhE/README.md">GitHub source</a></div></section><section class="schema-section" id="input-schema"><h2>Input schema</h2><p>Input fields, types, required flags, descriptions, defaults, and prefills come from the published definition. Prefill examples are distinct from defaults.</p><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>mode</code></td><td>string</td><td>required</td><td>What to fetch from IMDb: title search, direct IDs, a chart, the popularity meter, a filtered search, user reviews, or TV episodes.</td></tr><tr><td><code>searchQuery</code></td><td>string</td><td>optional</td><td>Free-text title search, e.g. &#x27;inception&#x27; or &#x27;breaking bad&#x27;. Used in search mode.</td></tr><tr><td><code>imdbIds</code></td><td>array</td><td>optional</td><td>IMDb title IDs (e.g. tt0111161) or title URLs. Used by byId, reviews and episodes modes. In episodes mode, pass TV series IDs.</td></tr></tbody></table></div><details><summary>Show all input fields</summary><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>mode</code></td><td>string</td><td>required</td><td>What to fetch from IMDb: title search, direct IDs, a chart, the popularity meter, a filtered search, user reviews, or TV episodes.</td></tr><tr><td><code>searchQuery</code></td><td>string</td><td>optional</td><td>Free-text title search, e.g. &#x27;inception&#x27; or &#x27;breaking bad&#x27;. Used in search mode.</td></tr><tr><td><code>imdbIds</code></td><td>array</td><td>optional</td><td>IMDb title IDs (e.g. tt0111161) or title URLs. Used by byId, reviews and episodes modes. In episodes mode, pass TV series IDs.</td></tr><tr><td><code>reviewSortBy</code></td><td>string</td><td>optional</td><td>How to order reviews in reviews mode.</td></tr><tr><td><code>reviewSortOrder</code></td><td>string</td><td>optional</td><td>Ascending or descending order for the review sort.</td></tr><tr><td><code>excludeSpoilers</code></td><td>boolean</td><td>optional</td><td>Skip reviews flagged as containing spoilers.</td></tr><tr><td><code>titleType</code></td><td>string</td><td>optional</td><td>Restrict results to one content type. Used in search, popular and advanced modes.</td></tr><tr><td><code>genres</code></td><td>array</td><td>optional</td><td>Filter by genres, e.g. Drama, Thriller, Sci-Fi. Multiple genres are combined with AND. Used in search and advanced modes.</td></tr><tr><td><code>languages</code></td><td>array</td><td>optional</td><td>Filter by spoken-language codes, e.g. en, fr, hi, ta. Multiple languages are combined with OR. Used in search and advanced modes.</td></tr><tr><td><code>countries</code></td><td>array</td><td>optional</td><td>Filter by country-of-origin codes, e.g. US, GB, IN, JP. Multiple countries are combined with OR. Used in search and advanced modes.</td></tr><tr><td><code>runtimeMin</code></td><td>integer</td><td>optional</td><td>Only include titles at least this many minutes long. Used in search and advanced modes.</td></tr><tr><td><code>runtimeMax</code></td><td>integer</td><td>optional</td><td>Only include titles at most this many minutes long. Used in search and advanced modes.</td></tr><tr><td><code>yearMin</code></td><td>integer</td><td>optional</td><td>Include only titles released on or after this year.</td></tr><tr><td><code>yearMax</code></td><td>integer</td><td>optional</td><td>Include only titles released on or before this year.</td></tr><tr><td><code>minRating</code></td><td>number</td><td>optional</td><td>Only include titles with at least this IMDb rating (1-10).</td></tr><tr><td><code>minVotes</code></td><td>integer</td><td>optional</td><td>Only include titles with at least this many IMDb votes.</td></tr><tr><td><code>sortBy</code></td><td>string</td><td>optional</td><td>Sort field for search and advanced modes.</td></tr><tr><td><code>sortOrder</code></td><td>string</td><td>optional</td><td>Sort direction for search and advanced modes.</td></tr><tr><td><code>topRatedChart</code></td><td>string</td><td>optional</td><td>Which IMDb chart to fetch in topRated mode.</td></tr><tr><td><code>maxItems</code></td><td>integer</td><td>optional</td><td>Maximum number of records to return across all requested IDs (1-1000). Each review or episode is one record. Results are paginated, so the upstream 50-reviews-per-request limit does not cap this.</td></tr></tbody></table></div></details><p><a href="input-schema.json">Download the published input schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+  &quot;description&quot;: &quot;Search IMDb titles, fetch titles by ID, browse charts, run advanced searches, export user reviews, or list every episode of a TV series.&quot;,
+  &quot;properties&quot;: {
+    &quot;countries&quot;: {
+      &quot;default&quot;: [],
+      &quot;description&quot;: &quot;Filter by country-of-origin codes, e.g. US, GB, IN, JP. Multiple countries are combined with OR. Used in search and advanced modes.&quot;,
+      &quot;editor&quot;: &quot;stringList&quot;,
+      &quot;prefill&quot;: [],
+      &quot;title&quot;: &quot;Countries of Origin&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;excludeSpoilers&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;Skip reviews flagged as containing spoilers.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Exclude Spoiler Reviews&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;genres&quot;: {
+      &quot;default&quot;: [],
+      &quot;description&quot;: &quot;Filter by genres, e.g. Drama, Thriller, Sci-Fi. Multiple genres are combined with AND. Used in search and advanced modes.&quot;,
+      &quot;editor&quot;: &quot;stringList&quot;,
+      &quot;prefill&quot;: [],
+      &quot;title&quot;: &quot;Genres&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;imdbIds&quot;: {
+      &quot;default&quot;: [],
+      &quot;description&quot;: &quot;IMDb title IDs (e.g. tt0111161) or title URLs. Used by byId, reviews and episodes modes. In episodes mode, pass TV series IDs.&quot;,
+      &quot;editor&quot;: &quot;stringList&quot;,
+      &quot;prefill&quot;: [],
+      &quot;sectionCaption&quot;: &quot;IMDb IDs&quot;,
+      &quot;sectionDescription&quot;: &quot;Used by byId, reviews and episodes modes. Accepts bare IDs (tt0111161), numbers (111161), or full IMDb title URLs.&quot;,
+      &quot;title&quot;: &quot;IMDb Title IDs&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;languages&quot;: {
+      &quot;default&quot;: [],
+      &quot;description&quot;: &quot;Filter by spoken-language codes, e.g. en, fr, hi, ta. Multiple languages are combined with OR. Used in search and advanced modes.&quot;,
+      &quot;editor&quot;: &quot;stringList&quot;,
+      &quot;prefill&quot;: [],
+      &quot;title&quot;: &quot;Spoken Languages&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;maxItems&quot;: {
+      &quot;default&quot;: 50,
+      &quot;description&quot;: &quot;Maximum number of records to return across all requested IDs (1-1000). Each review or episode is one record. Results are paginated, so the upstream 50-reviews-per-request limit does not cap this.&quot;,
+      &quot;maximum&quot;: 1000,
+      &quot;minimum&quot;: 1,
+      &quot;prefill&quot;: 3,
+      &quot;sectionCaption&quot;: &quot;Output&quot;,
+      &quot;sectionDescription&quot;: &quot;Keep the daily test run small; increase this for real exports.&quot;,
+      &quot;title&quot;: &quot;Max Items&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;minRating&quot;: {
+      &quot;description&quot;: &quot;Only include titles with at least this IMDb rating (1-10).&quot;,
+      &quot;maximum&quot;: 10,
+      &quot;minimum&quot;: 1,
+      &quot;title&quot;: &quot;Minimum IMDb Rating&quot;,
+      &quot;type&quot;: &quot;number&quot;
+    },
+    &quot;minVotes&quot;: {
+      &quot;description&quot;: &quot;Only include titles with at least this many IMDb votes.&quot;,
+      &quot;maximum&quot;: 10000000,
+      &quot;minimum&quot;: 0,
+      &quot;title&quot;: &quot;Minimum Vote Count&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;mode&quot;: {
+      &quot;default&quot;: &quot;topRated&quot;,
+      &quot;description&quot;: &quot;What to fetch from IMDb: title search, direct IDs, a chart, the popularity meter, a filtered search, user reviews, or TV episodes.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;topRated&quot;,
+        &quot;search&quot;,
+        &quot;byId&quot;,
+        &quot;popular&quot;,
+        &quot;advanced&quot;,
+        &quot;reviews&quot;,
+        &quot;episodes&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;Top 250 &amp; Other Charts&quot;,
+        &quot;Search Titles&quot;,
+        &quot;Fetch by IMDb ID&quot;,
+        &quot;Popular Now (IMDb Meter)&quot;,
+        &quot;Advanced Search&quot;,
+        &quot;User Reviews&quot;,
+        &quot;TV Series Episodes&quot;
+      ],
+      &quot;prefill&quot;: &quot;topRated&quot;,
+      &quot;title&quot;: &quot;Mode&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;reviewSortBy&quot;: {
+      &quot;default&quot;: &quot;HELPFULNESS_SCORE&quot;,
+      &quot;description&quot;: &quot;How to order reviews in reviews mode.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;HELPFULNESS_SCORE&quot;,
+        &quot;USER_RATING&quot;,
+        &quot;SUBMISSION_DATE&quot;,
+        &quot;TOTAL_VOTES&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;Most Helpful&quot;,
+        &quot;Highest Reviewer Rating&quot;,
+        &quot;Newest Submission&quot;,
+        &quot;Most Helpfulness Votes&quot;
+      ],
+      &quot;prefill&quot;: &quot;HELPFULNESS_SCORE&quot;,
+      &quot;sectionCaption&quot;: &quot;Review options&quot;,
+      &quot;sectionDescription&quot;: &quot;Only used in reviews mode.&quot;,
+      &quot;title&quot;: &quot;Review Sort Order&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;reviewSortOrder&quot;: {
+      &quot;default&quot;: &quot;DESC&quot;,
+      &quot;description&quot;: &quot;Ascending or descending order for the review sort.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;DESC&quot;,
+        &quot;ASC&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;Descending&quot;,
+        &quot;Ascending&quot;
+      ],
+      &quot;prefill&quot;: &quot;DESC&quot;,
+      &quot;title&quot;: &quot;Review Sort Direction&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;runtimeMax&quot;: {
+      &quot;description&quot;: &quot;Only include titles at most this many minutes long. Used in search and advanced modes.&quot;,
+      &quot;maximum&quot;: 1440,
+      &quot;minimum&quot;: 1,
+      &quot;title&quot;: &quot;Runtime (max minutes)&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;runtimeMin&quot;: {
+      &quot;description&quot;: &quot;Only include titles at least this many minutes long. Used in search and advanced modes.&quot;,
+      &quot;maximum&quot;: 1440,
+      &quot;minimum&quot;: 1,
+      &quot;title&quot;: &quot;Runtime (min minutes)&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;searchQuery&quot;: {
+      &quot;description&quot;: &quot;Free-text title search, e.g. &#x27;inception&#x27; or &#x27;breaking bad&#x27;. Used in search mode.&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;prefill&quot;: &quot;inception&quot;,
+      &quot;sectionCaption&quot;: &quot;Search titles&quot;,
+      &quot;sectionDescription&quot;: &quot;Used by search mode. The query is matched against IMDb&#x27;s full title catalog.&quot;,
+      &quot;title&quot;: &quot;Search Query&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;sortBy&quot;: {
+      &quot;default&quot;: &quot;RANKING&quot;,
+      &quot;description&quot;: &quot;Sort field for search and advanced modes.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;RANKING&quot;,
+        &quot;USER_RATING&quot;,
+        &quot;USER_RATING_COUNT&quot;,
+        &quot;RELEASE_DATE&quot;,
+        &quot;TITLE_REGIONAL&quot;,
+        &quot;METACRITIC_SCORE&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;Relevance&quot;,
+        &quot;Highest Rated&quot;,
+        &quot;Most Votes&quot;,
+        &quot;Release Date (Newest)&quot;,
+        &quot;Alphabetical&quot;,
+        &quot;Metacritic Score&quot;
+      ],
+      &quot;prefill&quot;: &quot;RANKING&quot;,
+      &quot;title&quot;: &quot;Sort By&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;sortOrder&quot;: {
+      &quot;default&quot;: &quot;DESC&quot;,
+      &quot;description&quot;: &quot;Sort direction for search and advanced modes.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;DESC&quot;,
+        &quot;ASC&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;Descending&quot;,
+        &quot;Ascending&quot;
+      ],
+      &quot;prefill&quot;: &quot;DESC&quot;,
+      &quot;title&quot;: &quot;Sort Direction&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;titleType&quot;: {
+      &quot;default&quot;: &quot;&quot;,
+      &quot;description&quot;: &quot;Restrict results to one content type. Used in search, popular and advanced modes.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;&quot;,
+        &quot;movie&quot;,
+        &quot;tvSeries&quot;,
+        &quot;short&quot;,
+        &quot;tvMiniSeries&quot;,
+        &quot;tvMovie&quot;,
+        &quot;tvSpecial&quot;,
+        &quot;videoGame&quot;,
+        &quot;podcastSeries&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;All Types&quot;,
+        &quot;Feature Film&quot;,
+        &quot;TV Series&quot;,
+        &quot;Short Film&quot;,
+        &quot;Mini-Series&quot;,
+        &quot;TV Movie&quot;,
+        &quot;TV Special&quot;,
+        &quot;Video Game&quot;,
+        &quot;Podcast Series&quot;
+      ],
+      &quot;prefill&quot;: &quot;&quot;,
+      &quot;sectionCaption&quot;: &quot;Filters&quot;,
+      &quot;sectionDescription&quot;: &quot;Filters apply to search, advanced, popular and chart modes where noted. Reviews and episodes modes use only the IDs list.&quot;,
+      &quot;title&quot;: &quot;Title Type&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;topRatedChart&quot;: {
+      &quot;default&quot;: &quot;TOP_250&quot;,
+      &quot;description&quot;: &quot;Which IMDb chart to fetch in topRated mode.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;TOP_250&quot;,
+        &quot;TOP_250_ENGLISH&quot;,
+        &quot;TOP_250_TV&quot;,
+        &quot;BOTTOM_100&quot;,
+        &quot;TOP_50_BENGALI&quot;,
+        &quot;TOP_50_MALAYALAM&quot;,
+        &quot;TOP_50_TAMIL&quot;,
+        &quot;TOP_50_TELUGU&quot;,
+        &quot;TOP_250_INDIA&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;Top 250 Movies (All Languages)&quot;,
+        &quot;Top 250 English-Language Movies&quot;,
+        &quot;Top 250 TV Shows&quot;,
+        &quot;Bottom 100 Movies&quot;,
+        &quot;Top 50 Bengali Movies&quot;,
+        &quot;Top 50 Malayalam Movies&quot;,
+        &quot;Top 50 Tamil Movies&quot;,
+        &quot;Top 50 Telugu Movies&quot;,
+        &quot;Top 250 Indian Movies&quot;
+      ],
+      &quot;prefill&quot;: &quot;TOP_250&quot;,
+      &quot;sectionCaption&quot;: &quot;Chart&quot;,
+      &quot;sectionDescription&quot;: &quot;Used by topRated mode only. For the current most popular titles, use Popular Now mode.&quot;,
+      &quot;title&quot;: &quot;Chart&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;yearMax&quot;: {
+      &quot;description&quot;: &quot;Include only titles released on or before this year.&quot;,
+      &quot;maximum&quot;: 2030,
+      &quot;minimum&quot;: 1880,
+      &quot;title&quot;: &quot;Release Year (max)&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;yearMin&quot;: {
+      &quot;description&quot;: &quot;Include only titles released on or after this year.&quot;,
+      &quot;maximum&quot;: 2030,
+      &quot;minimum&quot;: 1880,
+      &quot;title&quot;: &quot;Release Year (min)&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    }
+  },
+  &quot;required&quot;: [
+    &quot;mode&quot;
+  ],
+  &quot;schemaVersion&quot;: 1,
+  &quot;title&quot;: &quot;IMDb Scraper Input&quot;,
+  &quot;type&quot;: &quot;object&quot;
+}
+</code></pre></details></section><section class="schema-section" id="output-schema"><h2>Output schema</h2><p>Published result links and storage locations. This schema is not an exhaustive contract for every field in a dataset record.</p><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>titles</code></td><td>string</td><td>optional</td><td>Dataset containing title, review and episode records.</td></tr></tbody></table></div><p><a href="output-schema.json">Download the published output schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+  &quot;actorOutputSchemaVersion&quot;: 1,
+  &quot;description&quot;: &quot;One dataset with one row per record. Title rows carry metadata, ratings, cast, awards, box office (budget, domestic/international/worldwide gross, opening weekends), keywords, companies, AKAs, release dates, trailers and rating breakdown; review rows carry reviewer, rating, text, helpfulness votes and spoiler flag; episode rows carry season/episode numbers and the parent series; every row carries sourceUrl. Filter by the recordType field.&quot;,
+  &quot;properties&quot;: {
+    &quot;titles&quot;: {
+      &quot;description&quot;: &quot;Dataset containing title, review and episode records.&quot;,
+      &quot;template&quot;: &quot;{{links.apiDefaultDatasetUrl}}/items&quot;,
+      &quot;title&quot;: &quot;IMDb Records&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    }
+  },
+  &quot;title&quot;: &quot;IMDb Titles, Reviews &amp; Episodes Output&quot;
+}
+</code></pre></details></section><section class="schema-section" id="dataset-schema"><h2>Dataset schema</h2><p>Published dataset views and any declared field definitions. A view can select only a subset of the returned record fields.</p><p><a href="dataset-schema.json">Download the published dataset schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+  &quot;actorSpecification&quot;: 1,
+  &quot;views&quot;: {
+    &quot;overview&quot;: {
+      &quot;display&quot;: {
+        &quot;component&quot;: &quot;table&quot;,
+        &quot;properties&quot;: {}
+      },
+      &quot;title&quot;: &quot;Records&quot;,
+      &quot;transformation&quot;: {
+        &quot;fields&quot;: [
+          &quot;recordType&quot;,
+          &quot;imdbId&quot;,
+          &quot;title&quot;,
+          &quot;year&quot;,
+          &quot;type&quot;,
+          &quot;rating&quot;,
+          &quot;ratingCount&quot;,
+          &quot;seriesTitle&quot;,
+          &quot;seasonNumber&quot;,
+          &quot;episodeNumber&quot;,
+          &quot;author&quot;,
+          &quot;authorRating&quot;,
+          &quot;genres&quot;,
+          &quot;imdbUrl&quot;
+        ]
+      }
+    }
+  }
+}
+</code></pre></details></section><section class="schema-section" id="key-value-schema"><h2>Key-value schema</h2><p>Published key-value store definitions, when provided by this build.</p><p>This definition is not present in the default published build. See the published README for available documentation.</p></section><section id="published-readme"><h2>Published README</h2><details><summary>Read the full published documentation</summary><h2 id="readme-imdb-search-charts-reviews-episodes-scraper">IMDb Search, Charts, Reviews &amp; Episodes Scraper</h2>
+<p>IMDb spreads search, charts, title details, user reviews and episode lists across separate pages with no bulk export. This actor collects them into one dataset: search results, direct title lookups, nine official charts, the popularity meter, filtered advanced searches, user reviews, and episode lists for TV series — each row carrying the metadata IMDb publishes for it.</p>
+<h2 id="readme-what-this-actor-does">What this actor does</h2>
+<ul>
+<li>Searches IMDb's full title catalog by keyword, with optional type, genre, year, rating and vote filters</li>
+<li>Fetches specific titles directly by IMDb ID or title URL</li>
+<li>Pulls one of nine IMDb charts, including Top 250, Top 250 TV, Bottom 100, English-language and regional Indian charts</li>
+<li>Returns IMDb's current popularity-meter titles</li>
+<li>Runs a filtered, sortable advanced search by title type, genre, country, language, runtime, release year, minimum rating and minimum vote count</li>
+<li>Exports user reviews with reviewer name, reviewer rating, review title and body, helpfulness votes, spoiler flag and submission date</li>
+<li>Lists episodes of a TV series with season and episode numbers, episode rating, plot, runtime, certificate, poster and credits</li>
+<li>Enriches title rows with rating breakdown, keywords, production companies, alternative titles (AKAs), detailed release dates, trailers, awards, box office (including worldwide gross) and popularity rank</li>
+<li>Omits a field when IMDb did not publish a value for it</li>
+</ul>
+<h2 id="readme-one-dataset-three-row-types">One dataset, three row types</h2>
+<p>Every row has a <code>recordType</code>:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th><code>recordType</code></th>
+<th>What the row represents</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>title</code></td>
+<td>A movie, TV series, short, video game or other title</td>
+</tr>
+<tr>
+<td><code>review</code></td>
+<td>One IMDb user review of a title</td>
+</tr>
+<tr>
+<td><code>episode</code></td>
+<td>One episode of a TV series</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="readme-title-row-fields">Title row fields</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>recordType</code></td>
+<td><code>title</code></td>
+</tr>
+<tr>
+<td><code>imdbId</code></td>
+<td>IMDb title ID, e.g. <code>tt0111161</code></td>
+</tr>
+<tr>
+<td><code>title</code></td>
+<td>Display title</td>
+</tr>
+<tr>
+<td><code>originalTitle</code></td>
+<td>Original-language title, when different from <code>title</code></td>
+</tr>
+<tr>
+<td><code>type</code></td>
+<td>Title type, e.g. <code>movie</code>, <code>tvSeries</code>, <code>tvEpisode</code></td>
+</tr>
+<tr>
+<td><code>year</code></td>
+<td>Release year</td>
+</tr>
+<tr>
+<td><code>endYear</code></td>
+<td>Final year on air, for ended TV series</td>
+</tr>
+<tr>
+<td><code>rating</code></td>
+<td>IMDb rating out of 10</td>
+</tr>
+<tr>
+<td><code>ratingCount</code></td>
+<td>Number of ratings behind the score</td>
+</tr>
+<tr>
+<td><code>metascore</code></td>
+<td>Metacritic score, when IMDb has one</td>
+</tr>
+<tr>
+<td><code>ratingBreakdown</code></td>
+<td>Vote counts per score: list of <code>{ rating, voteCount }</code> from 1 to 10</td>
+</tr>
+<tr>
+<td><code>plot</code></td>
+<td>Plot summary</td>
+</tr>
+<tr>
+<td><code>genres</code></td>
+<td>List of genres</td>
+</tr>
+<tr>
+<td><code>runtime</code></td>
+<td>Runtime in minutes</td>
+</tr>
+<tr>
+<td><code>certificate</code></td>
+<td>Content/age rating certificate</td>
+</tr>
+<tr>
+<td><code>posterUrl</code></td>
+<td>Poster image URL</td>
+</tr>
+<tr>
+<td><code>releaseDate</code></td>
+<td>Primary release date, when more precise than the year</td>
+</tr>
+<tr>
+<td><code>releaseDates</code></td>
+<td>Detailed release dates: list of <code>{ date, country }</code></td>
+</tr>
+<tr>
+<td><code>countries</code></td>
+<td>Countries of origin</td>
+</tr>
+<tr>
+<td><code>languages</code></td>
+<td>Spoken languages</td>
+</tr>
+<tr>
+<td><code>directors</code></td>
+<td>Up to 5 directors, each <code>{ name, imdbId }</code></td>
+</tr>
+<tr>
+<td><code>writers</code></td>
+<td>Up to 5 writers, each <code>{ name, imdbId }</code></td>
+</tr>
+<tr>
+<td><code>cast</code></td>
+<td>Up to 10 cast members, each <code>{ name, imdbId, character }</code></td>
+</tr>
+<tr>
+<td><code>keywords</code></td>
+<td>Up to 10 plot keywords</td>
+</tr>
+<tr>
+<td><code>companies</code></td>
+<td>Up to 10 production/distribution credits, each <code>{ name, companyId, category }</code></td>
+</tr>
+<tr>
+<td><code>akas</code></td>
+<td>Up to 10 alternative titles, each <code>{ title, country, countryCode, language }</code></td>
+</tr>
+<tr>
+<td><code>trailers</code></td>
+<td>Up to 50 trailers/clips, each <code>{ videoId, url, title, type, thumbnailUrl, runtimeSeconds }</code></td>
+</tr>
+<tr>
+<td><code>budget</code></td>
+<td>Production budget as <code>{ amount, currency }</code>, when IMDb publishes one</td>
+</tr>
+<tr>
+<td><code>domesticLifetimeGross</code></td>
+<td>Domestic lifetime gross as <code>{ amount, currency }</code></td>
+</tr>
+<tr>
+<td><code>internationalLifetimeGross</code></td>
+<td>International lifetime gross as <code>{ amount, currency }</code></td>
+</tr>
+<tr>
+<td><code>worldwideLifetimeGross</code></td>
+<td>Worldwide lifetime gross as <code>{ amount, currency }</code></td>
+</tr>
+<tr>
+<td><code>openingWeekend</code></td>
+<td><code>{ date, theaters, gross: { amount, currency } }</code> for the domestic opening weekend</td>
+</tr>
+<tr>
+<td><code>internationalOpeningWeekend</code></td>
+<td><code>{ date, theaters, gross: { amount, currency } }</code> for the international opening weekend</td>
+</tr>
+<tr>
+<td><code>awards</code></td>
+<td>Total competitive <code>{ wins, nominations }</code></td>
+</tr>
+<tr>
+<td><code>prestigiousAwards</code></td>
+<td>Major-award summary <code>{ wins, nominations }</code> (for example Oscars)</td>
+</tr>
+<tr>
+<td><code>popularityRank</code></td>
+<td>Current IMDb popularity-meter position</td>
+</tr>
+<tr>
+<td><code>imdbUrl</code></td>
+<td>Link to the title's IMDb page</td>
+</tr>
+<tr>
+<td><code>sourceUrl</code></td>
+<td>Same as <code>imdbUrl</code> for title rows</td>
+</tr>
+<tr>
+<td><code>topRatedRank</code></td>
+<td>Chart position, present only on chart rows</td>
+</tr>
+<tr>
+<td><code>scrapedAt</code></td>
+<td>UTC timestamp of when the row was captured</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="readme-review-row-fields">Review row fields</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>recordType</code></td>
+<td><code>review</code></td>
+</tr>
+<tr>
+<td><code>imdbId</code></td>
+<td>IMDb ID of the reviewed title</td>
+</tr>
+<tr>
+<td><code>title</code></td>
+<td>Title name</td>
+</tr>
+<tr>
+<td><code>type</code></td>
+<td>Title type</td>
+</tr>
+<tr>
+<td><code>year</code></td>
+<td>Title release year</td>
+</tr>
+<tr>
+<td><code>imdbUrl</code></td>
+<td>Link to the title's IMDb page</td>
+</tr>
+<tr>
+<td><code>reviewId</code></td>
+<td>IMDb review ID, e.g. <code>rw6606154</code></td>
+</tr>
+<tr>
+<td><code>reviewTitle</code></td>
+<td>Review headline</td>
+</tr>
+<tr>
+<td><code>reviewText</code></td>
+<td>Full review body</td>
+</tr>
+<tr>
+<td><code>author</code></td>
+<td>Reviewer display name</td>
+</tr>
+<tr>
+<td><code>authorId</code></td>
+<td>Reviewer profile ID</td>
+</tr>
+<tr>
+<td><code>authorRating</code></td>
+<td>Rating the reviewer gave the title (1–10), when supplied</td>
+</tr>
+<tr>
+<td><code>submissionDate</code></td>
+<td>Review submission date</td>
+</tr>
+<tr>
+<td><code>helpfulUpVotes</code></td>
+<td>Helpful votes received</td>
+</tr>
+<tr>
+<td><code>helpfulDownVotes</code></td>
+<td>Not-helpful votes received</td>
+</tr>
+<tr>
+<td><code>spoiler</code></td>
+<td><code>true</code> when the review is flagged as containing spoilers</td>
+</tr>
+<tr>
+<td><code>reviewUrl</code></td>
+<td>Link to the review on IMDb</td>
+</tr>
+<tr>
+<td><code>sourceUrl</code></td>
+<td>Same as <code>reviewUrl</code> for review rows</td>
+</tr>
+<tr>
+<td><code>scrapedAt</code></td>
+<td>UTC timestamp of when the row was captured</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="readme-episode-row-fields">Episode row fields</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>recordType</code></td>
+<td><code>episode</code></td>
+</tr>
+<tr>
+<td><code>imdbId</code></td>
+<td>IMDb ID of the episode itself</td>
+</tr>
+<tr>
+<td><code>title</code></td>
+<td>Episode title</td>
+</tr>
+<tr>
+<td><code>originalTitle</code></td>
+<td>Original-language episode title, when different</td>
+</tr>
+<tr>
+<td><code>type</code></td>
+<td><code>tvEpisode</code></td>
+</tr>
+<tr>
+<td><code>year</code></td>
+<td>Episode release year</td>
+</tr>
+<tr>
+<td><code>rating</code></td>
+<td>Episode IMDb rating</td>
+</tr>
+<tr>
+<td><code>ratingCount</code></td>
+<td>Number of episode ratings</td>
+</tr>
+<tr>
+<td><code>metascore</code></td>
+<td>Episode Metacritic score, when IMDb has one</td>
+</tr>
+<tr>
+<td><code>ratingBreakdown</code></td>
+<td>Vote counts per score: list of <code>{ rating, voteCount }</code></td>
+</tr>
+<tr>
+<td><code>plot</code></td>
+<td>Episode plot summary</td>
+</tr>
+<tr>
+<td><code>genres</code></td>
+<td>Episode genres</td>
+</tr>
+<tr>
+<td><code>runtime</code></td>
+<td>Episode runtime in minutes</td>
+</tr>
+<tr>
+<td><code>certificate</code></td>
+<td>Episode content rating</td>
+</tr>
+<tr>
+<td><code>posterUrl</code></td>
+<td>Episode image URL</td>
+</tr>
+<tr>
+<td><code>releaseDate</code></td>
+<td>Episode release date</td>
+</tr>
+<tr>
+<td><code>countries</code></td>
+<td>Countries of origin</td>
+</tr>
+<tr>
+<td><code>languages</code></td>
+<td>Spoken languages</td>
+</tr>
+<tr>
+<td><code>directors</code> / <code>writers</code> / <code>cast</code></td>
+<td>Episode credits</td>
+</tr>
+<tr>
+<td><code>popularityRank</code></td>
+<td>Current IMDb popularity-meter position</td>
+</tr>
+<tr>
+<td><code>seriesId</code></td>
+<td>IMDb ID of the parent series</td>
+</tr>
+<tr>
+<td><code>seriesTitle</code></td>
+<td>Parent series name</td>
+</tr>
+<tr>
+<td><code>seriesUrl</code></td>
+<td>Link to the parent series</td>
+</tr>
+<tr>
+<td><code>seasonNumber</code></td>
+<td>Season number</td>
+</tr>
+<tr>
+<td><code>episodeNumber</code></td>
+<td>Episode number within the season</td>
+</tr>
+<tr>
+<td><code>imdbUrl</code></td>
+<td>Link to the episode's IMDb page</td>
+</tr>
+<tr>
+<td><code>sourceUrl</code></td>
+<td>Same as <code>imdbUrl</code> for episode rows</td>
+</tr>
+<tr>
+<td><code>scrapedAt</code></td>
+<td>UTC timestamp of when the row was captured</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="readme-input">Input</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>mode</code></td>
+<td>string (select)</td>
+<td><code>topRated</code></td>
+<td><code>topRated</code>, <code>search</code>, <code>byId</code>, <code>popular</code>, <code>advanced</code>, <code>reviews</code>, or <code>episodes</code></td>
+</tr>
+<tr>
+<td><code>searchQuery</code></td>
+<td>string</td>
+<td>–</td>
+<td>Free-text title query (mode <code>search</code>)</td>
+</tr>
+<tr>
+<td><code>imdbIds</code></td>
+<td>array</td>
+<td><code>[]</code></td>
+<td>IMDb title IDs or URLs for <code>byId</code>, <code>reviews</code>, and <code>episodes</code> modes</td>
+</tr>
+<tr>
+<td><code>reviewSortBy</code></td>
+<td>string (select)</td>
+<td><code>HELPFULNESS_SCORE</code></td>
+<td>Review ordering: <code>HELPFULNESS_SCORE</code>, <code>USER_RATING</code>, <code>SUBMISSION_DATE</code>, or <code>TOTAL_VOTES</code></td>
+</tr>
+<tr>
+<td><code>reviewSortOrder</code></td>
+<td>string (select)</td>
+<td><code>DESC</code></td>
+<td><code>DESC</code> or <code>ASC</code></td>
+</tr>
+<tr>
+<td><code>excludeSpoilers</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Skip reviews flagged as spoilers</td>
+</tr>
+<tr>
+<td><code>topRatedChart</code></td>
+<td>string (select)</td>
+<td><code>TOP_250</code></td>
+<td>Which chart to fetch (mode <code>topRated</code>) — see chart list below</td>
+</tr>
+<tr>
+<td><code>titleType</code></td>
+<td>string (select)</td>
+<td>– (all types)</td>
+<td><code>movie</code>, <code>tvSeries</code>, <code>short</code>, <code>tvMiniSeries</code>, <code>tvMovie</code>, <code>tvSpecial</code>, <code>videoGame</code>, or <code>podcastSeries</code></td>
+</tr>
+<tr>
+<td><code>genres</code></td>
+<td>array</td>
+<td><code>[]</code></td>
+<td>Genres to filter by (combined with AND); e.g. <code>Drama</code>, <code>Thriller</code>, <code>Sci-Fi</code></td>
+</tr>
+<tr>
+<td><code>languages</code></td>
+<td>array</td>
+<td><code>[]</code></td>
+<td>Spoken-language codes to filter by (combined with OR); e.g. <code>en</code>, <code>fr</code>, <code>hi</code>, <code>ta</code></td>
+</tr>
+<tr>
+<td><code>countries</code></td>
+<td>array</td>
+<td><code>[]</code></td>
+<td>Country-of-origin codes to filter by (combined with OR); e.g. <code>US</code>, <code>GB</code>, <code>IN</code>, <code>JP</code></td>
+</tr>
+<tr>
+<td><code>runtimeMin</code> / <code>runtimeMax</code></td>
+<td>integer</td>
+<td>–</td>
+<td>Runtime range in minutes (1–1440)</td>
+</tr>
+<tr>
+<td><code>yearMin</code> / <code>yearMax</code></td>
+<td>integer</td>
+<td>–</td>
+<td>Release year range (1880–2030)</td>
+</tr>
+<tr>
+<td><code>minRating</code></td>
+<td>number</td>
+<td>–</td>
+<td>Minimum IMDb rating (1–10)</td>
+</tr>
+<tr>
+<td><code>minVotes</code></td>
+<td>integer</td>
+<td>–</td>
+<td>Minimum vote count</td>
+</tr>
+<tr>
+<td><code>sortBy</code></td>
+<td>string (select)</td>
+<td><code>RANKING</code></td>
+<td><code>RANKING</code>, <code>USER_RATING</code>, <code>USER_RATING_COUNT</code>, <code>RELEASE_DATE</code>, <code>TITLE_REGIONAL</code>, or <code>METACRITIC_SCORE</code></td>
+</tr>
+<tr>
+<td><code>sortOrder</code></td>
+<td>string (select)</td>
+<td><code>DESC</code></td>
+<td><code>DESC</code> or <code>ASC</code></td>
+</tr>
+<tr>
+<td><code>maxItems</code></td>
+<td>integer</td>
+<td>50</td>
+<td>Maximum records to return (1–1000). Reviews and episodes are one record each</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="readme-examples">Examples</h2>
+<h3 id="readme-top-250-movies">Top 250 movies</h3>
+<pre><code class="language-json">{
+  &quot;mode&quot;: &quot;topRated&quot;,
+  &quot;topRatedChart&quot;: &quot;TOP_250&quot;,
+  &quot;maxItems&quot;: 50
+}
+</code></pre>
+<h3 id="readme-search-for-a-title">Search for a title</h3>
+<pre><code class="language-json">{
+  &quot;mode&quot;: &quot;search&quot;,
+  &quot;searchQuery&quot;: &quot;The Dark Knight&quot;,
+  &quot;maxItems&quot;: 10
+}
+</code></pre>
+<h3 id="readme-fetch-specific-titles-by-id">Fetch specific titles by ID</h3>
+<pre><code class="language-json">{
+  &quot;mode&quot;: &quot;byId&quot;,
+  &quot;imdbIds&quot;: [&quot;tt0111161&quot;, &quot;tt0468569&quot;, &quot;tt1375666&quot;]
+}
+</code></pre>
+<h3 id="readme-advanced-search-for-recent-well-voted-sci-fi">Advanced search for recent, well-voted sci-fi</h3>
+<pre><code class="language-json">{
+  &quot;mode&quot;: &quot;advanced&quot;,
+  &quot;titleType&quot;: &quot;movie&quot;,
+  &quot;genres&quot;: [&quot;Sci-Fi&quot;],
+  &quot;yearMin&quot;: 2010,
+  &quot;minRating&quot;: 7.5,
+  &quot;minVotes&quot;: 50000,
+  &quot;sortBy&quot;: &quot;USER_RATING&quot;,
+  &quot;sortOrder&quot;: &quot;DESC&quot;,
+  &quot;maxItems&quot;: 100
+}
+</code></pre>
+<h3 id="readme-advanced-search-by-country-language-and-runtime">Advanced search by country, language and runtime</h3>
+<pre><code class="language-json">{
+  &quot;mode&quot;: &quot;advanced&quot;,
+  &quot;titleType&quot;: &quot;movie&quot;,
+  &quot;countries&quot;: [&quot;IN&quot;],
+  &quot;languages&quot;: [&quot;ta&quot;],
+  &quot;runtimeMin&quot;: 90,
+  &quot;runtimeMax&quot;: 180,
+  &quot;sortBy&quot;: &quot;USER_RATING&quot;,
+  &quot;maxItems&quot;: 50
+}
+</code></pre>
+<h3 id="readme-export-reviews-for-two-titles">Export reviews for two titles</h3>
+<pre><code class="language-json">{
+  &quot;mode&quot;: &quot;reviews&quot;,
+  &quot;imdbIds&quot;: [&quot;tt0111161&quot;, &quot;tt0468569&quot;],
+  &quot;reviewSortBy&quot;: &quot;HELPFULNESS_SCORE&quot;,
+  &quot;reviewSortOrder&quot;: &quot;DESC&quot;,
+  &quot;excludeSpoilers&quot;: true,
+  &quot;maxItems&quot;: 100
+}
+</code></pre>
+<h3 id="readme-list-every-episode-of-a-series">List every episode of a series</h3>
+<pre><code class="language-json">{
+  &quot;mode&quot;: &quot;episodes&quot;,
+  &quot;imdbIds&quot;: [&quot;tt0903747&quot;],
+  &quot;maxItems&quot;: 100
+}
+</code></pre>
+<h3 id="readme-current-popularity-meter">Current popularity meter</h3>
+<pre><code class="language-json">{
+  &quot;mode&quot;: &quot;popular&quot;,
+  &quot;maxItems&quot;: 50
+}
+</code></pre>
+<h2 id="readme-available-chart-types">Available chart types</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Value</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>TOP_250</code></td>
+<td>Top 250 movies of all time</td>
+</tr>
+<tr>
+<td><code>TOP_250_ENGLISH</code></td>
+<td>Top 250 English-language movies</td>
+</tr>
+<tr>
+<td><code>TOP_250_TV</code></td>
+<td>Top 250 TV series</td>
+</tr>
+<tr>
+<td><code>BOTTOM_100</code></td>
+<td>Bottom 100 lowest-rated movies</td>
+</tr>
+<tr>
+<td><code>TOP_50_BENGALI</code></td>
+<td>Top 50 Bengali-language films</td>
+</tr>
+<tr>
+<td><code>TOP_50_MALAYALAM</code></td>
+<td>Top 50 Malayalam-language films</td>
+</tr>
+<tr>
+<td><code>TOP_50_TAMIL</code></td>
+<td>Top 50 Tamil-language films</td>
+</tr>
+<tr>
+<td><code>TOP_50_TELUGU</code></td>
+<td>Top 50 Telugu-language films</td>
+</tr>
+<tr>
+<td><code>TOP_250_INDIA</code></td>
+<td>Top 250 Indian films overall</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="readme-use-cases">Use cases</h2>
+<ul>
+<li><strong>Recommendation engines</strong> — export a chart with ratings, genres, keywords and rating breakdowns to seed a model</li>
+<li><strong>Catalog enrichment</strong> — fetch metadata for a known list of IMDb IDs and fill in cast, companies, AKAs, release dates and box office including worldwide gross</li>
+<li><strong>Review analysis</strong> — export reviews with reviewer ratings, helpfulness votes and spoiler flags for sentiment or topic research</li>
+<li><strong>TV episode guides</strong> — list every episode of a series with season/episode numbers, ratings, plots and credits</li>
+<li><strong>Genre, language and era research</strong> — run a filtered advanced search by genre, country, language, runtime, year or vote level to study which titles rate highest</li>
+<li><strong>Watchlist building</strong> — combine type, genre, rating and vote filters to find well-reviewed titles you have missed</li>
+<li><strong>Regional content discovery</strong> — pull a language-specific chart like Tamil or Malayalam alongside the global Top 250</li>
+<li><strong>Awards and box office research</strong> — compare wins, nominations, budgets, domestic/international/worldwide grosses and opening weekends</li>
+</ul>
+<h2 id="readme-faq">FAQ</h2>
+<p><strong>Is this affiliated with IMDb?</strong>
+No. This is an independent data extraction tool and has no connection to IMDb.com or Amazon.</p>
+<p><strong>Do I need an IMDb account or API key?</strong>
+No — nothing needs to be configured beyond the mode and filters above.</p>
+<p><strong>How fresh is the data?</strong>
+Each run reads IMDb's current data at the time it executes, so ratings, vote counts and chart positions reflect that moment.</p>
+<p><strong>How many reviews can I export?</strong>
+<code>maxItems</code> caps the total rows per run (up to 1000). When you pass several IMDb IDs, the budget is shared across them. Reviews are paginated 50 at a time, so titles with many reviews can fill large exports. Sort and spoiler filters apply to every requested title.</p>
+<p><strong>Why do some reviews have no <code>authorRating</code>?</strong>
+IMDb allows reviewers to submit text without a numeric score; those reviews simply omit the field.</p>
+<p><strong>Why does episodes mode return nothing?</strong>
+Episodes mode expects TV series IDs. A movie ID has no episode list. Try a series such as <code>tt0903747</code>.</p>
+<p><strong>Can I get individual TV episode records?</strong>
+Yes — use episodes mode with the series ID. You can also fetch a known episode ID directly with <code>byId</code>.</p>
+<p><strong>Why are some titles missing box office, awards or trailers?</strong>
+IMDb does not publish every field for every title. Box office is a theatrical-film field, so TV series and streaming titles normally have none; older, regional or obscure releases may also lack it. The actor leaves those fields out instead of guessing.</p>
+<p><strong>Why is the cast list capped?</strong>
+To keep rows a manageable size while covering the top-billed cast, which is the most commonly needed slice. Episode rows use the same cast cap.</p>
+<p><strong>Are trailer playback URLs included?</strong>
+No. Trailer rows include a stable IMDb video page URL, title, type, thumbnail and runtime, not expiring video-file links.</p>
+<p><strong>What is <code>popularityRank</code>?</strong>
+It is the title's current position on IMDb's popularity meter; lower numbers mean more popular.</p>
+<p><strong>What is the difference between <code>topRated</code> and <code>advanced</code>?</strong>
+<code>topRated</code> returns one of IMDb's fixed chart lists in chart order; <code>advanced</code> runs a filtered, sortable search across IMDb's full catalog using the criteria you specify.</p>
+<p><strong>How do I find a title's IMDb ID?</strong>
+It is in the title's IMDb page URL, e.g. <code>imdb.com/title/tt0111161/</code> — pass it with or without the <code>tt</code> prefix, or paste the full URL.</p>
+<p><strong>Can I mix title, review and episode rows in one run?</strong>
+Each run uses one mode and produces one row type, except that <code>byId</code> can return any title-shaped record. Use the <code>recordType</code> field when combining exports from several runs.</p>
+</details></section><section id="python-quickstart"><h2>Python quickstart</h2><p>Use a schema-derived input and the Python standard library to start a run. An Apify account and token are required for execution.</p><p><a href="/apify-actor-examples/guides/imdb-top-charts-and-advanced-title-search/">Open the step-by-step Python guide →</a></p></section><p class="source-note">Source build <code>Fbeq026cct90fLKAG</code>. Documentation is regenerated from the default published build; private drafts are not included.</p></article></div></main><footer class="footer"><strong>Nimbryxo Studio</strong><div class="footer-links"><a href="/apify-actor-examples/topics/">Topics</a><a href="/apify-actor-examples/sources/">Documentation sources</a><a href="https://apify.com/nimbryxo-studio">Apify</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></div></footer></body></html>

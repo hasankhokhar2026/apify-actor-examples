@@ -122,11 +122,35 @@ def code_block(text, block_id, language="json"):
     return f'<button type="button" class="copy-button" data-copy="{esc(block_id)}" aria-label="Copy {esc(language)} code">Copy</button><pre><code id="{esc(block_id)}" class="language-{esc(language)}">{esc(text)}</code></pre>'
 
 
+SLUG = re.compile(r"^[a-z0-9](?:[a-z0-9-]{0,98}[a-z0-9])?$")
+ACTOR_ID = re.compile(r"^[A-Za-z0-9]{8,40}$")
+# Search-engine ownership files the sync keeps in the published site (Google's FILE method).
+GOOGLE_FILE = re.compile(r"^google[0-9a-f]{16}\.html$")
+INDEXNOW_KEY = re.compile(r"^[0-9a-f]{32,64}$")
+
+
+def actor_slugs(actors):
+    """Readable page paths: the Actor's Store name (`google-maps-scraper`), unique within one
+    organization. An ID stays the path only if a name is unusable or would collide."""
+    slugs, taken = {}, {a["id"] for a in actors}
+    for actor in sorted(actors, key=lambda a: a["id"]):
+        name = str(actor.get("name") or "").lower()
+        slug = name if SLUG.fullmatch(name) and name not in taken else actor["id"]
+        taken.add(slug)
+        slugs[actor["id"]] = slug
+    return slugs
+
+
 class Site:
-    def __init__(self, org, actors):
+    def __init__(self, org, actors, verification_files=()):
         check_snapshot(actors, org)
         self.org = org
         self.actors = sorted(actors, key=lambda a: (a["title"].casefold(), a["id"]))
+        self.slugs = actor_slugs(self.actors)
+        self.verification_files = sorted(set(verification_files))
+        for name in self.verification_files:
+            if not GOOGLE_FILE.fullmatch(name):
+                raise SyncError("Invalid search verification file name")
         self.brand = org["brand"]
         self.theme = org.get("site", {}).get("theme", "classic")
         if self.theme not in ("classic", "studio", "lab", "editorial"):
@@ -144,11 +168,20 @@ class Site:
     def link(self, path=""):
         return self.prefix + path
 
+    def doc_path(self, actor, kind="actors"):
+        return f"{kind}/{self.slugs[actor['id']]}/"
+
     def asset(self, path):
         return self.link(path) + "?v=" + digest(self.files.get(path, ""))[:12]
 
-    def page(self, path, title, description, body, kind="CollectionPage", active="actors", noindex=False):
+    def page(self, path, title, description, body, kind="CollectionPage", active="actors", noindex=False, redirect=None, modified=None):
         canonical = self.base + path
+        refresh = ""
+        if redirect:
+            # GitHub Pages cannot answer 301: an instant refresh plus a canonical to the new
+            # address is the redirect search engines accept from a static host.
+            noindex = True
+            refresh = f'<meta http-equiv="refresh" content="0; url={esc(redirect)}">'
         organization_id = self.base + "#organization"
         website_id = self.base + "#website"
         page_id = canonical + "#webpage"
@@ -168,6 +201,10 @@ class Site:
                           "name": title, "description": description, "url": canonical,
                           "author": {"@id": organization_id}, "publisher": {"@id": organization_id},
                           "mainEntityOfPage": {"@id": page_id}, "inLanguage": "en"})
+            if modified:
+                # The finish time of the published build these pages are generated from: the
+                # only true content date we have (no publication date is invented).
+                nodes[-1]["dateModified"] = modified
         if path.startswith(("actors/", "guides/", "topics/")) and path.count("/") > 1:
             section = path.split("/", 1)[0]
             breadcrumb_id = canonical + "#breadcrumb"
@@ -183,7 +220,7 @@ class Site:
         csp = f"default-src 'self'; script-src 'self' 'sha256-{ld_hash}'; style-src 'self'; img-src 'self' https: data:; base-uri 'self'; form-action 'self'; object-src 'none'"
         full_title = title if self.brand in title else title + " | " + self.brand
         navigation = "".join(f'<a href="{self.link(route)}"' + (' aria-current="page"' if label == active else "") + f'>{label.title()}</a>' for label, route in [("actors", "actors/"), ("guides", "guides/")])
-        content = f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta http-equiv="Content-Security-Policy" content="{esc(csp)}"><title>{esc(full_title)}</title><meta name="description" content="{esc(description[:180])}"><meta name="robots" content="{"noindex,follow" if noindex else "index,follow"}"><link rel="canonical" href="{esc(canonical)}"><meta property="og:title" content="{esc(full_title)}"><meta property="og:description" content="{esc(description[:180])}"><meta property="og:type" content="website"><meta property="og:url" content="{esc(canonical)}"><meta property="og:site_name" content="{esc(self.brand)}"><meta name="twitter:card" content="summary"><link rel="icon" href="{self.asset('assets/mark.svg')}" type="image/svg+xml"><link rel="stylesheet" href="{self.asset('assets/site.css')}"><link rel="stylesheet" href="{self.asset('assets/brand.css')}"><link rel="alternate" type="application/rss+xml" title="{esc(self.brand)} guides" href="{self.link('feed.xml')}"><script type="application/ld+json">{ld}</script><script src="{self.asset('assets/site.js')}" defer></script></head><body class="theme-{self.theme}"><a href="#main" class="skip-link">Skip to content</a><header><div class="inner"><a href="{self.link()}" class="brand"><img src="{self.asset('assets/mark.svg')}" alt="" width="29" height="29">{esc(self.brand)}</a><nav aria-label="Main navigation">{navigation}<a href="{self.repo}">GitHub</a></nav></div></header><main id="main">{body}</main><footer class="footer"><strong>{esc(self.brand)}</strong><div class="footer-links"><a href="{self.link('topics/')}">Topics</a><a href="{self.link('sources/')}">Documentation sources</a><a href="{self.apify}">Apify</a><a href="{self.repo}">GitHub</a></div></footer></body></html>'''
+        content = f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta http-equiv="Content-Security-Policy" content="{esc(csp)}"><title>{esc(full_title)}</title><meta name="description" content="{esc(description[:180])}"><meta name="robots" content="{"noindex,follow" if noindex else "index,follow"}">{refresh}<link rel="canonical" href="{esc(redirect or canonical)}"><meta property="og:title" content="{esc(full_title)}"><meta property="og:description" content="{esc(description[:180])}"><meta property="og:type" content="website"><meta property="og:url" content="{esc(redirect or canonical)}"><meta property="og:site_name" content="{esc(self.brand)}"><meta name="twitter:card" content="summary"><link rel="icon" href="{self.asset('assets/mark.svg')}" type="image/svg+xml"><link rel="stylesheet" href="{self.asset('assets/site.css')}"><link rel="stylesheet" href="{self.asset('assets/brand.css')}"><link rel="alternate" type="application/rss+xml" title="{esc(self.brand)} guides" href="{self.link('feed.xml')}"><script type="application/ld+json">{ld}</script><script src="{self.asset('assets/site.js')}" defer></script></head><body class="theme-{self.theme}"><a href="#main" class="skip-link">Skip to content</a><header><div class="inner"><a href="{self.link()}" class="brand"><img src="{self.asset('assets/mark.svg')}" alt="" width="29" height="29">{esc(self.brand)}</a><nav aria-label="Main navigation">{navigation}<a href="{self.repo}">GitHub</a></nav></div></header><main id="main">{body}</main><footer class="footer"><strong>{esc(self.brand)}</strong><div class="footer-links"><a href="{self.link('topics/')}">Topics</a><a href="{self.link('sources/')}">Documentation sources</a><a href="{self.apify}">Apify</a><a href="{self.repo}">GitHub</a></div></footer></body></html>'''
         filename = path + "index.html" if path.endswith("/") or not path else path
         self.files[filename] = content
         if not noindex:
@@ -193,7 +230,7 @@ class Site:
         rows = []
         for index, actor in enumerate(actors):
             category = next((c for c in actor["categories"] if c != "AUTOMATION"), "AUTOMATION")
-            target = self.link(f"actors/{actor['id']}/")
+            target = self.link(self.doc_path(actor))
             rows.append(f'<article class="actor-row" data-actor-row data-search="{esc((actor["title"] + " " + actor["description"]).casefold())}" data-categories="{esc("|".join(actor["categories"]))}"' + (' hidden' if home and index >= 5 else "") + f'><div><a class="category-label" href="{self.link("topics/" + category_slug(category) + "/")}">{esc(category_name(category))}</a></div><h2><a href="{target}">{esc(actor["title"])}</a></h2><p>{esc(actor["description"])}</p><a class="arrow" href="{target}" aria-label="Read {esc(actor["title"])}">→</a></article>')
         return '<div class="catalog-head"><span>Category</span><span>Actor</span><span>Description</span><span></span></div>' + "".join(rows)
 
@@ -223,7 +260,7 @@ class Site:
         return [indexed[i] for i in preferred if i in indexed] + [a for a in self.actors if a["id"] not in preferred]
 
     def guide_rows(self, actors):
-        return '<div class="guide-list">' + "".join(f'<article class="guide-row"><div><a href="{self.link("guides/" + a["id"] + "/")}">Use {esc(a["title"])} with Python</a><p>Published inputs, result schemas, and a source-based API recipe.</p></div><span class="arrow" aria-hidden="true">→</span></article>' for a in actors) + "</div>"
+        return '<div class="guide-list">' + "".join(f'<article class="guide-row"><div><a href="{self.link(self.doc_path(a, "guides"))}">Use {esc(a["title"])} with Python</a><p>Published inputs, result schemas, and a source-based API recipe.</p></div><span class="arrow" aria-hidden="true">→</span></article>' for a in actors) + "</div>"
 
     def schema_section(self, actor, key, heading, text):
         slug = key.replace("_", "-")
@@ -262,40 +299,112 @@ print("Status:", run["status"])
 # Inspect and download results in Apify Console once the run succeeds.
 '''
 
+    def glance(self, actor):
+        """An answer-first summary built only from the published definition, so a reader or an
+        answer engine gets what the Actor is, what it needs, and what it returns in one paragraph."""
+        schema = actor.get("input_schema") or {}
+        fields = list((schema.get("properties") or {}).keys())
+        required = [k for k in (schema.get("required") or []) if k in fields]
+        text = f"{esc(actor['title'])} is an Apify Actor published by {esc(self.brand)}. "
+        if fields:
+            text += f"It accepts {len(fields)} input field{'s' if len(fields) != 1 else ''}"
+            if required:
+                names = [f"<code>{esc(k)}</code>" for k in required]
+                listed = names[0] if len(names) == 1 else ", ".join(names[:-1]) + " and " + names[-1]
+                text += ", and " + listed + (" is" if len(names) == 1 else " are") + " required. "
+            else:
+                text += ", none of them required at the top level. "
+        views = (actor.get("dataset_schema") or {}).get("views") or {}
+        if views:
+            text += f"Its build declares a results dataset with {len(views)} view{'s' if len(views) != 1 else ''}. "
+        else:
+            text += "Its build declares no dataset schema; the published README describes the output. "
+        text += "Runs happen on Apify, where the Store page lists the current price."
+        return f'<p class="summary">{text}</p>'
+
     def actor_page(self, actor):
         actor_id = actor["id"]
         sidebar = '<aside class="contents" aria-label="On this page"><strong>Contents</strong>' + "".join(f'<a href="#{key}">{label}</a>' for key, label in [("overview", "Overview"), ("published-readme", "Published README"), ("input-schema", "Input schema"), ("output-schema", "Output schema"), ("dataset-schema", "Dataset schema"), ("python-quickstart", "Python quickstart")]) + "</aside>"
-        content = f'<div class="breadcrumb"><a href="{self.link("actors/")}">Actors</a><span>/</span><span>{esc(actor["title"])}</span></div><section id="overview"><h1 class="doc-title">{esc(actor["title"])}</h1><p class="lede">{esc(actor["description"])}</p><div class="actions"><a class="button" href="{actor["url"]}">Open on Apify</a><a class="text-link" href="{self.repo}/blob/main/docs/actors/{actor_id}/README.md">GitHub source</a></div></section>'
+        content = f'<div class="breadcrumb"><a href="{self.link("actors/")}">Actors</a><span>/</span><span>{esc(actor["title"])}</span></div><section id="overview"><h1 class="doc-title">{esc(actor["title"])}</h1><p class="lede">{esc(actor["description"])}</p>{self.glance(actor)}<div class="actions"><a class="button" href="{actor["url"]}">Open on Apify</a><a class="text-link" href="{self.repo}/blob/main/docs/actors/{actor_id}/README.md">GitHub source</a></div></section>'
         content += self.schema_section(actor, "input_schema", "Input schema", "Input fields, types, required flags, descriptions, defaults, and prefills come from the published definition. Prefill examples are distinct from defaults.")
         content += self.schema_section(actor, "output_schema", "Output schema", "Published result links and storage locations. This schema is not an exhaustive contract for every field in a dataset record.")
         content += self.schema_section(actor, "dataset_schema", "Dataset schema", "Published dataset views and any declared field definitions. A view can select only a subset of the returned record fields.")
         content += self.schema_section(actor, "key_value_schema", "Key-value schema", "Published key-value store definitions, when provided by this build.")
         content += '<section id="published-readme"><h2>Published README</h2><details><summary>Read the full published documentation</summary>' + markdown(actor["readme"]) + "</details></section>"
-        content += f'<section id="python-quickstart"><h2>Python quickstart</h2><p>Use a schema-derived input and the Python standard library to start a run. An Apify account and token are required for execution.</p><p><a href="{self.link("guides/" + actor_id + "/")}">Open the step-by-step Python guide →</a></p></section>'
+        content += f'<section id="python-quickstart"><h2>Python quickstart</h2><p>Use a schema-derived input and the Python standard library to start a run. An Apify account and token are required for execution.</p><p><a href="{self.link(self.doc_path(actor, "guides"))}">Open the step-by-step Python guide →</a></p></section>'
         content += f'<p class="source-note">Source build <code>{esc(actor["build_id"])}</code>. Documentation is regenerated from the default published build; private drafts are not included.</p>'
-        self.page(f"actors/{actor_id}/", actor["title"], actor["description"], '<div class="doc-layout">' + sidebar + '<article class="prose">' + content + "</article></div>", "TechArticle")
+        self.page(self.doc_path(actor), actor["title"], actor["description"], '<div class="doc-layout">' + sidebar + '<article class="prose">' + content + "</article></div>", "TechArticle", modified=actor.get("build_finished_at"))
         for key in ("input_schema", "output_schema", "dataset_schema", "key_value_schema"):
-            self.files[f"actors/{actor_id}/{key.replace('_', '-')}.json"] = json_text(actor.get(key))
-        self.files[f"actors/{actor_id}/README.md"] = actor["readme"]
+            self.files[self.doc_path(actor) + key.replace('_', '-') + ".json"] = json_text(actor.get(key))
+        self.files[self.doc_path(actor) + "README.md"] = actor["readme"]
 
     def guide_page(self, actor):
         actor_id = actor["id"]
         sample, missing = source_example(actor)
         title = "Use " + actor["title"] + " with Python"
-        body = f'<div class="breadcrumb"><a href="{self.link("guides/")}">Guides</a><span>/</span><a href="{self.link("actors/" + actor_id + "/")}">{esc(actor["title"])}</a></div><article class="prose"><h1 class="doc-title">{esc(title)}</h1><p class="lede">{esc(actor["description"])}</p><h2>1. Choose the data you need</h2><p>Review the <a href="{self.link("actors/" + actor_id + "/#published-readme")}">published README</a> for supported collection modes, examples, and limits. The recipe below uses the current published input definition.</p><h2>2. Prepare a source-based input</h2><p>This JSON contains published prefills and required-field defaults. Review every value for your task before running it; it is not a promise of successful collection.</p>'
+        body = f'<div class="breadcrumb"><a href="{self.link("guides/")}">Guides</a><span>/</span><a href="{self.link(self.doc_path(actor))}">{esc(actor["title"])}</a></div><article class="prose"><h1 class="doc-title">{esc(title)}</h1><p class="lede">{esc(actor["description"])}</p><h2>1. Choose the data you need</h2><p>Review the <a href="{self.link(self.doc_path(actor) + "#published-readme")}">published README</a> for supported collection modes, examples, and limits. The recipe below uses the current published input definition.</p><h2>2. Prepare a source-based input</h2><p>This JSON contains published prefills and required-field defaults. Review every value for your task before running it; it is not a promise of successful collection.</p>'
         if missing:
             body += '<p class="note">The published schema does not supply an example for these required fields: ' + ", ".join(f"<code>{esc(x)}</code>" for x in missing) + '. Supply them using the reference documentation before execution.</p>'
         body += code_block(json_text(sample), "example-input") + f'<p><a href="input.example.json" download>Download input.example.json</a> and save your reviewed copy as <code>input.json</code>.</p>'
         body += schema_table(actor["input_schema"])
         body += '<h2>3. Start an Actor run</h2><p>Set <code>APIFY_TOKEN</code> in your environment. Python 3.10 or newer is sufficient; this recipe uses no third-party packages.</p><p class="note">Execution may incur charges. Review current pricing on Apify. The request asks for a 120-second timeout and a charge limit; these settings are subject to Apify’s pricing and do not guarantee an all-inclusive spending cap.</p>'
         body += code_block(self.python_code(actor), "python-recipe", "python")
-        body += f'<h2>4. Inspect the actual results</h2><p>Open the run in Apify Console and wait for a successful completion. Use the published <a href="{self.link("actors/" + actor_id + "/#output-schema")}">output schema</a> to locate results and the <a href="{self.link("actors/" + actor_id + "/#dataset-schema")}">dataset schema</a> to understand declared views. Missing or optional record fields must not be treated as guaranteed values.</p>'
+        body += f'<h2>4. Inspect the actual results</h2><p>Open the run in Apify Console and wait for a successful completion. Use the published <a href="{self.link(self.doc_path(actor) + "#output-schema")}">output schema</a> to locate results and the <a href="{self.link(self.doc_path(actor) + "#dataset-schema")}">dataset schema</a> to understand declared views. Missing or optional record fields must not be treated as guaranteed values.</p>'
         if actor.get("output_schema", {}).get("description") if actor.get("output_schema") else False:
             body += '<p>' + esc(actor["output_schema"]["description"]) + "</p>"
         body += '<h2>Questions before you run</h2><div class="faq"><details><summary>Which inputs are required?</summary><p>' + ("The published required fields are " + ", ".join(f"<code>{esc(k)}</code>" for k in actor["input_schema"].get("required", [])) if actor["input_schema"].get("required") else "No top-level fields are marked required in the published schema. Conditional requirements can still apply; check the README.") + '</p></details><details><summary>What does this guide verify?</summary><p>The fields, prefills, and schema links are rendered from the published build. This is a usage recipe, not a paid live extraction test. Source availability and collection results can vary.</p></details><details><summary>What if the run request times out?</summary><p>Check Apify Console before retrying. The first request may already have created a run. Do not automatically repeat a run-creation POST.</p></details></div>'
-        body += f'<div class="actions"><a class="button" href="{actor["url"]}">Open on Apify</a><a href="{self.link("actors/" + actor_id + "/")}">Full Actor reference</a></div><p class="source-note">Generated from source build <code>{esc(actor["build_id"])}</code> and its README and schemas. Source changes regenerate this guide; no third-party editorial claims are inferred.</p></article>'
-        self.page(f"guides/{actor_id}/", title, "Python usage recipe for " + actor["title"] + ", grounded in its published input and output definitions.", body, "TechArticle", "guides")
-        self.files[f"guides/{actor_id}/input.example.json"] = json_text(sample)
+        body += f'<div class="actions"><a class="button" href="{actor["url"]}">Open on Apify</a><a href="{self.link(self.doc_path(actor))}">Full Actor reference</a></div><p class="source-note">Generated from source build <code>{esc(actor["build_id"])}</code> and its README and schemas. Source changes regenerate this guide; no third-party editorial claims are inferred.</p></article>'
+        self.page(self.doc_path(actor, "guides"), title, "Python usage recipe for " + actor["title"] + ", grounded in its published input and output definitions.", body, "TechArticle", "guides", modified=actor.get("build_finished_at"))
+        self.files[self.doc_path(actor, "guides") + "input.example.json"] = json_text(sample)
+
+    def legacy_paths(self, previous):
+        """Addresses that were published before keep answering: an Actor's ID path (the
+        original URL scheme) and an old name redirect to its readable page; an Actor that left
+        the listing keeps a noindex notice. A current page always wins a path."""
+        current = {a["id"]: a for a in self.actors}
+        unavailable = '<article class="prose"><h1>Actor unavailable</h1><p>This Actor is absent from the current public organization listing. Browse the current catalog for available documentation.</p><p><a href="' + self.link("actors/") + '">View the current catalog</a></p></article>'
+        for kind in ("actors", "guides"):
+            moves = [(actor["id"], actor) for actor in self.actors]
+            for old in previous:
+                name = str(old.get("name") or "").lower()
+                if old.get("id") in current and SLUG.fullmatch(name):
+                    moves.append((name, current[old["id"]]))
+            for path, actor in moves:
+                target = self.doc_path(actor, kind)
+                source = f"{kind}/{path}/"
+                if source == target or source + "index.html" in self.files:
+                    continue
+                url = self.base + target
+                self.page(source, "Moved: " + actor["title"], "This page moved to " + url,
+                          f'<article class="prose"><h1>This page has moved</h1><p><a href="{self.link(target)}">{esc(actor["title"])}</a> has a new address.</p></article>',
+                          active=kind, redirect=url)
+            for old in previous:
+                if old.get("id") in current or not ACTOR_ID.fullmatch(str(old.get("id", ""))):
+                    continue
+                name = str(old.get("name") or "").lower()
+                for path in [old["id"]] + ([name] if SLUG.fullmatch(name) else []):
+                    if f"{kind}/{path}/index.html" not in self.files:
+                        self.page(f"{kind}/{path}/", "Actor unavailable", "This Actor is not in the current public listing.", unavailable, noindex=True)
+
+    def llms(self):
+        """llms.txt: what this site is and how it stays true, then every Actor with its reference
+        and guide, grouped by topic so a model can find the right one by task."""
+        lines = [f"# {self.brand} Actor documentation", "",
+                 f"> Reference pages and Python usage guides for the {len(self.actors)} public Apify Actors published by {self.brand}. "
+                 "Every page is generated from the Actor's published README, input schema, and output definitions, "
+                 "and regenerated when the published build changes. Pricing and runs happen on Apify.", "",
+                 f"- Catalog: {self.base}actors/", f"- Topics: {self.base}topics/", f"- Guides: {self.base}guides/",
+                 f"- Machine-readable index: {self.base}actors.json", f"- Publisher on Apify: {self.apify}", ""]
+        by_topic = {}
+        for actor in self.actors:
+            topic = next((c for c in actor["categories"] if c != "AUTOMATION"), "AUTOMATION")
+            by_topic.setdefault(category_name(topic), []).append(actor)
+        for topic in sorted(by_topic):
+            lines += [f"## {topic}", ""]
+            for a in by_topic[topic]:
+                lines.append(f"- [{a['title']}]({self.base}{self.doc_path(a)}): {a['description']} Python guide: {self.base}{self.doc_path(a, 'guides')}")
+            lines.append("")
+        return "\n".join(lines).rstrip() + "\n"
 
     def build(self, previous=None):
         accent = self.org.get("site", {}).get("accent", "#155dfb")
@@ -322,23 +431,26 @@ print("Status:", run["status"])
         for actor in self.actors:
             self.actor_page(actor)
             self.guide_page(actor)
-        current = {a["id"] for a in self.actors}
-        for old in previous or []:
-            if old["id"] not in current:
-                for kind in ("actors", "guides"):
-                    self.page(f"{kind}/{old['id']}/", "Actor unavailable", "This Actor is not in the current public listing.", '<article class="prose"><h1>Actor unavailable</h1><p>This Actor is absent from the current public organization listing. Browse the current catalog for available documentation.</p><p><a href="' + self.link("actors/") + '">View the current catalog</a></p></article>', noindex=True)
+        self.legacy_paths(previous or [])
         self.page("sources/", "Documentation sources", "How published Apify data keeps this documentation current.", f'<article class="prose"><h1>Documentation sources</h1><p>This site is maintained by {esc(self.brand)}. Actor descriptions, READMEs, input schemas, output schemas, and dataset definitions are read from its public Apify organization and successful default builds.</p><h2>What updates automatically</h2><p>New public Actors receive reference pages and Python recipes. Published source changes regenerate affected content. Generated-file drift is repaired from the current source, while incomplete API reads block publication.</p><h2>Scope and limitations</h2><p>Drafts and alternate build tags are not included. Schema-derived examples are usage recipes, not live execution verification. Pricing and source-site availability must be checked on Apify. Absent definitions are identified explicitly.</p><h2>Machine-readable references</h2><p><a href="{self.link("actors.json")}">Actor index</a> · <a href="{self.link("source-manifest.json")}">Source content hashes</a> · <a href="{self.link("llms.txt")}">Documentation index</a></p><p><a href="{self.apify}">Apify organization</a> · <a href="{self.repo}">Project repository</a></p></article>', "AboutPage")
         self.page("404.html", "Page not found", "The requested documentation page was not found.", '<article class="prose"><h1>Page not found</h1><p><a href="' + self.link("actors/") + '">Browse the Actor catalog</a></p></article>', noindex=True)
-        metadata = [{k: a[k] for k in ("id", "username", "name", "title", "description", "categories", "url", "build_id")} | {"documentation": self.base + f"actors/{a['id']}/", "guide": self.base + f"guides/{a['id']}/"} for a in self.actors]
+        metadata = [{k: a[k] for k in ("id", "username", "name", "title", "description", "categories", "url", "build_id")} | {"documentation": self.base + self.doc_path(a), "guide": self.base + self.doc_path(a, "guides")} for a in self.actors]
         self.files["actors.json"] = json_text({"brand": self.brand, "actors": metadata})
         self.files["source-manifest.json"] = json_text({"schema_version": 2, "organization": self.org["apify_username"], "actors": [{"id": a["id"], "build_id": a["build_id"], "hashes": {key: digest(a["readme"]) if key == "readme" else digest(json_text(a.get(key))) for key in ("readme", "input_schema", "output_schema", "dataset_schema", "key_value_schema")}} for a in self.actors]})
         self.files["sitemap.xml"] = '<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' + "".join("<url><loc>" + xml_escape(u) + "</loc></url>" for u in sorted(self.indexed)) + "</urlset>\n"
         # A project site's /robots.txt is not authoritative for the github.io host.
         self.files["robots.txt"] = "User-agent: *\nAllow: /\nSitemap: " + self.base + "sitemap.xml\n"
-        self.files["llms.txt"] = "# " + self.brand + " documentation\n\nPublished Actor references and Python usage recipes.\n\n" + "\n".join(f"- [{a['title']}]({self.base}actors/{a['id']}/): {a['description']}" for a in self.actors) + "\n"
+        self.files["llms.txt"] = self.llms()
         # RSS permits omitted dates: never stamp polling time as publication time.
-        self.files["feed.xml"] = '<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"><channel><title>' + xml_escape(self.brand + " technical guides") + '</title><link>' + xml_escape(self.base + "guides/") + '</link><description>Source-based Actor usage guides</description>' + "".join('<item><title>' + xml_escape("Use " + a["title"] + " with Python") + '</title><link>' + xml_escape(self.base + f"guides/{a['id']}/") + '</link><guid isPermaLink="true">' + xml_escape(self.base + f"guides/{a['id']}/") + '</guid><description>' + xml_escape(a["description"]) + '</description></item>' for a in self.actors) + '</channel></rss>\n'
+        self.files["feed.xml"] = '<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"><channel><title>' + xml_escape(self.brand + " technical guides") + '</title><link>' + xml_escape(self.base + "guides/") + '</link><description>Source-based Actor usage guides</description>' + "".join('<item><title>' + xml_escape("Use " + a["title"] + " with Python") + '</title><link>' + xml_escape(self.base + self.doc_path(a, "guides")) + '</link><guid isPermaLink="true">' + xml_escape(self.base + self.doc_path(a, "guides")) + '</guid><description>' + xml_escape(a["description"]) + '</description></item>' for a in self.actors) + '</channel></rss>\n'
         self.files[".nojekyll"] = ""
+        for name in self.verification_files:
+            self.files[name] = "google-site-verification: " + name + "\n"
+        key = self.org.get("site", {}).get("indexnow_key")
+        if key:
+            if not INDEXNOW_KEY.fullmatch(key):
+                raise SyncError("Invalid IndexNow key")
+            self.files[key + ".txt"] = key
         validate_site(self.files, self.org, self.prefix)
         return self.files
 
@@ -368,7 +480,7 @@ def validate_site(files, org, prefix):
     audits = {}
     for name, content in files.items():
         check_brand(content, org)
-        if name.endswith(".html"):
+        if name.endswith(".html") and not GOOGLE_FILE.fullmatch(name):
             audit = LinkAudit()
             audit.feed(content)
             if audit.h1 != 1 or audit.duplicate_ids:

@@ -1,0 +1,556 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src &#x27;self&#x27;; script-src &#x27;self&#x27; &#x27;sha256-0pg8Em8VYJU80Ba40lnWWp+L20Mn1tBJVS+/3LeO2e4=&#x27;; style-src &#x27;self&#x27;; img-src &#x27;self&#x27; https: data:; base-uri &#x27;self&#x27;; form-action &#x27;self&#x27;; object-src &#x27;none&#x27;"><title>Naver Blog Post Search &amp; Full Content Extractor | Nimbryxo Studio</title><meta name="description" content="Search Naver Blog by keyword, fetch recent posts from a specific blog, or get full post content and tags, with author, blog name, publish date and URLs."><meta name="robots" content="index,follow"><link rel="canonical" href="https://hasankhokhar2026.github.io/apify-actor-examples/actors/naver-blog-post-search-and-full-content-extractor/"><meta property="og:title" content="Naver Blog Post Search &amp; Full Content Extractor | Nimbryxo Studio"><meta property="og:description" content="Search Naver Blog by keyword, fetch recent posts from a specific blog, or get full post content and tags, with author, blog name, publish date and URLs."><meta property="og:type" content="website"><meta property="og:url" content="https://hasankhokhar2026.github.io/apify-actor-examples/actors/naver-blog-post-search-and-full-content-extractor/"><meta property="og:site_name" content="Nimbryxo Studio"><meta name="twitter:card" content="summary"><link rel="icon" href="/apify-actor-examples/assets/mark.svg?v=2d20f9dc334a" type="image/svg+xml"><link rel="stylesheet" href="/apify-actor-examples/assets/site.css?v=39545fd4a399"><link rel="stylesheet" href="/apify-actor-examples/assets/brand.css?v=eb0f935ade25"><link rel="alternate" type="application/rss+xml" title="Nimbryxo Studio guides" href="/apify-actor-examples/feed.xml"><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization","name":"Nimbryxo Studio","url":"https://hasankhokhar2026.github.io/apify-actor-examples/","sameAs":["https://apify.com/nimbryxo-studio"]},{"@type":"WebSite","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#website","name":"Nimbryxo Studio","url":"https://hasankhokhar2026.github.io/apify-actor-examples/","publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"inLanguage":"en"},{"@type":"WebPage","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/naver-blog-post-search-and-full-content-extractor/#webpage","name":"Naver Blog Post Search & Full Content Extractor","description":"Search Naver Blog by keyword, fetch recent posts from a specific blog, or get full post content and tags, with author, blog name, publish date and URLs.","url":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/naver-blog-post-search-and-full-content-extractor/","isPartOf":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#website"},"publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"inLanguage":"en","mainEntity":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/naver-blog-post-search-and-full-content-extractor/#article"},"breadcrumb":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/naver-blog-post-search-and-full-content-extractor/#breadcrumb"}},{"@type":"TechArticle","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/naver-blog-post-search-and-full-content-extractor/#article","headline":"Naver Blog Post Search & Full Content Extractor","name":"Naver Blog Post Search & Full Content Extractor","description":"Search Naver Blog by keyword, fetch recent posts from a specific blog, or get full post content and tags, with author, blog name, publish date and URLs.","url":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/naver-blog-post-search-and-full-content-extractor/","author":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"mainEntityOfPage":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/naver-blog-post-search-and-full-content-extractor/#webpage"},"inLanguage":"en","dateModified":"2026-11-02T08:52:17.670Z"},{"@type":"BreadcrumbList","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/naver-blog-post-search-and-full-content-extractor/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Nimbryxo Studio","item":"https://hasankhokhar2026.github.io/apify-actor-examples/"},{"@type":"ListItem","position":2,"name":"Actors","item":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/"},{"@type":"ListItem","position":3,"name":"Naver Blog Post Search & Full Content Extractor","item":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/naver-blog-post-search-and-full-content-extractor/"}]}]}</script><script src="/apify-actor-examples/assets/site.js?v=7cabac48dd31" defer></script></head><body class="theme-studio"><a href="#main" class="skip-link">Skip to content</a><header><div class="inner"><a href="/apify-actor-examples/" class="brand"><img src="/apify-actor-examples/assets/mark.svg?v=2d20f9dc334a" alt="" width="29" height="29">Nimbryxo Studio</a><nav aria-label="Main navigation"><a href="/apify-actor-examples/actors/" aria-current="page">Actors</a><a href="/apify-actor-examples/guides/">Guides</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></nav></div></header><main id="main"><div class="doc-layout"><aside class="contents" aria-label="On this page"><strong>Contents</strong><a href="#overview">Overview</a><a href="#published-readme">Published README</a><a href="#input-schema">Input schema</a><a href="#output-schema">Output schema</a><a href="#dataset-schema">Dataset schema</a><a href="#python-quickstart">Python quickstart</a></aside><article class="prose"><div class="breadcrumb"><a href="/apify-actor-examples/actors/">Actors</a><span>/</span><span>Naver Blog Post Search &amp; Full Content Extractor</span></div><section id="overview"><h1 class="doc-title">Naver Blog Post Search &amp; Full Content Extractor</h1><p class="lede">Search Naver Blog by keyword, fetch recent posts from a specific blog, or get full post content and tags, with author, blog name, publish date and URLs.</p><p class="summary">Naver Blog Post Search &amp; Full Content Extractor is an Apify Actor published by Nimbryxo Studio. It accepts 15 input fields, and <code>mode</code> is required. Its build declares a results dataset with 1 view. Runs happen on Apify, where the Store page lists the current price.</p><div class="actions"><a class="button" href="https://apify.com/nimbryxo-studio/naver-blog-post-search-and-full-content-extractor">Open on Apify</a><a class="text-link" href="https://github.com/hasankhokhar2026/apify-actor-examples/blob/main/docs/actors/JR9iN0YMYQXCfKan9/README.md">GitHub source</a></div></section><section class="schema-section" id="input-schema"><h2>Input schema</h2><p>Input fields, types, required flags, descriptions, defaults, and prefills come from the published definition. Prefill examples are distinct from defaults.</p><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>mode</code></td><td>string</td><td>required</td><td>What to fetch.</td></tr><tr><td><code>searchQueries</code></td><td>array</td><td>optional</td><td>One or more Korean or English keywords to search across Naver Blog (mode=search). Each query is searched up to Naver&#x27;s 1,000-result limit.</td></tr><tr><td><code>blogIds</code></td><td>array</td><td>optional</td><td>Naver blog IDs or blog URLs (mode=blogPosts). Accepts `hello_world123`, `@hello_world123`, or `https://blog.naver.com/hello_world123`.</td></tr></tbody></table></div><details><summary>Show all input fields</summary><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>mode</code></td><td>string</td><td>required</td><td>What to fetch.</td></tr><tr><td><code>searchQueries</code></td><td>array</td><td>optional</td><td>One or more Korean or English keywords to search across Naver Blog (mode=search). Each query is searched up to Naver&#x27;s 1,000-result limit.</td></tr><tr><td><code>blogIds</code></td><td>array</td><td>optional</td><td>Naver blog IDs or blog URLs (mode=blogPosts). Accepts `hello_world123`, `@hello_world123`, or `https://blog.naver.com/hello_world123`.</td></tr><tr><td><code>postUrls</code></td><td>array</td><td>optional</td><td>Naver blog post URLs to fetch in detail (mode=postDetails). Accepts desktop, mobile, PostView, and bare `blogId/logNo` forms.</td></tr><tr><td><code>sortBy</code></td><td>string</td><td>optional</td><td>Sort order for keyword search (mode=search).</td></tr><tr><td><code>publishedWithin</code></td><td>string</td><td>optional</td><td>Limit keyword search results by publish period (mode=search). Choose Custom to use dateFrom and dateTo.</td></tr><tr><td><code>dateFrom</code></td><td>string</td><td>optional</td><td>Start date in YYYY-MM-DD format (KST). Used when publishedWithin=custom (mode=search).</td></tr><tr><td><code>dateTo</code></td><td>string</td><td>optional</td><td>End date in YYYY-MM-DD format (KST). Used when publishedWithin=custom (mode=search).</td></tr><tr><td><code>categoryNo</code></td><td>integer</td><td>optional</td><td>Naver blog category number to restrict a blog archive; 0 means all categories (mode=blogPosts).</td></tr><tr><td><code>maxItems</code></td><td>integer</td><td>optional</td><td>Hard cap on emitted records across all queries, blogs, or URLs.</td></tr><tr><td><code>includeContent</code></td><td>boolean</td><td>optional</td><td>Fetch each post page for full text, exact publish time, images, tags, category, and places. Turn off for faster list-level records.</td></tr><tr><td><code>includeComments</code></td><td>boolean</td><td>optional</td><td>Add the comment count and comment threads up to maxComments (default 100), including replies when Naver returns them. Implies includeContent=true and adds requests per post.</td></tr><tr><td><code>maxComments</code></td><td>integer</td><td>optional</td><td>Maximum comments to return per post when includeComments is on. Fetched in pages of 100; commentCount still reports the full total.</td></tr><tr><td><code>includeHtml</code></td><td>boolean</td><td>optional</td><td>Add the post body as HTML in contentHtml. Implies includeContent=true.</td></tr><tr><td><code>maxConcurrency</code></td><td>integer</td><td>optional</td><td>Parallel post-page requests when content enrichment is enabled.</td></tr></tbody></table></div></details><p><a href="input-schema.json">Download the published input schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+  &quot;description&quot;: &quot;Search Naver Blog posts by one or more keywords, fetch every post from a blog, or get full post details for a list of URLs.&quot;,
+  &quot;properties&quot;: {
+    &quot;blogIds&quot;: {
+      &quot;default&quot;: [],
+      &quot;description&quot;: &quot;Naver blog IDs or blog URLs (mode=blogPosts). Accepts `hello_world123`, `@hello_world123`, or `https://blog.naver.com/hello_world123`.&quot;,
+      &quot;editor&quot;: &quot;stringList&quot;,
+      &quot;prefill&quot;: [],
+      &quot;title&quot;: &quot;Blog IDs&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;categoryNo&quot;: {
+      &quot;default&quot;: 0,
+      &quot;description&quot;: &quot;Naver blog category number to restrict a blog archive; 0 means all categories (mode=blogPosts).&quot;,
+      &quot;maximum&quot;: 999999999,
+      &quot;minimum&quot;: 0,
+      &quot;prefill&quot;: 0,
+      &quot;title&quot;: &quot;Category number&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;dateFrom&quot;: {
+      &quot;description&quot;: &quot;Start date in YYYY-MM-DD format (KST). Used when publishedWithin=custom (mode=search).&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;title&quot;: &quot;Date from&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;dateTo&quot;: {
+      &quot;description&quot;: &quot;End date in YYYY-MM-DD format (KST). Used when publishedWithin=custom (mode=search).&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;title&quot;: &quot;Date to&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;includeComments&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;Add the comment count and comment threads up to maxComments (default 100), including replies when Naver returns them. Implies includeContent=true and adds requests per post.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Include comments&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;includeContent&quot;: {
+      &quot;default&quot;: true,
+      &quot;description&quot;: &quot;Fetch each post page for full text, exact publish time, images, tags, category, and places. Turn off for faster list-level records.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Include full content&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;includeHtml&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;Add the post body as HTML in contentHtml. Implies includeContent=true.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Include content HTML&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;maxComments&quot;: {
+      &quot;default&quot;: 100,
+      &quot;description&quot;: &quot;Maximum comments to return per post when includeComments is on. Fetched in pages of 100; commentCount still reports the full total.&quot;,
+      &quot;maximum&quot;: 1000,
+      &quot;minimum&quot;: 1,
+      &quot;prefill&quot;: 100,
+      &quot;title&quot;: &quot;Max comments per post&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;maxConcurrency&quot;: {
+      &quot;default&quot;: 3,
+      &quot;description&quot;: &quot;Parallel post-page requests when content enrichment is enabled.&quot;,
+      &quot;maximum&quot;: 10,
+      &quot;minimum&quot;: 1,
+      &quot;prefill&quot;: 3,
+      &quot;title&quot;: &quot;Max concurrency&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;maxItems&quot;: {
+      &quot;default&quot;: 20,
+      &quot;description&quot;: &quot;Hard cap on emitted records across all queries, blogs, or URLs.&quot;,
+      &quot;maximum&quot;: 10000,
+      &quot;minimum&quot;: 1,
+      &quot;prefill&quot;: 3,
+      &quot;title&quot;: &quot;Max items&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;mode&quot;: {
+      &quot;default&quot;: &quot;search&quot;,
+      &quot;description&quot;: &quot;What to fetch.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;search&quot;,
+        &quot;blogPosts&quot;,
+        &quot;postDetails&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;Search blog posts by keyword&quot;,
+        &quot;Fetch posts from a specific blog&quot;,
+        &quot;Get full post details for a list of URLs&quot;
+      ],
+      &quot;prefill&quot;: &quot;search&quot;,
+      &quot;title&quot;: &quot;Mode&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;postUrls&quot;: {
+      &quot;default&quot;: [],
+      &quot;description&quot;: &quot;Naver blog post URLs to fetch in detail (mode=postDetails). Accepts desktop, mobile, PostView, and bare `blogId/logNo` forms.&quot;,
+      &quot;editor&quot;: &quot;stringList&quot;,
+      &quot;prefill&quot;: [],
+      &quot;title&quot;: &quot;Post URLs&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;publishedWithin&quot;: {
+      &quot;default&quot;: &quot;all&quot;,
+      &quot;description&quot;: &quot;Limit keyword search results by publish period (mode=search). Choose Custom to use dateFrom and dateTo.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;all&quot;,
+        &quot;1h&quot;,
+        &quot;1d&quot;,
+        &quot;1w&quot;,
+        &quot;1m&quot;,
+        &quot;3m&quot;,
+        &quot;6m&quot;,
+        &quot;1y&quot;,
+        &quot;custom&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;Any time&quot;,
+        &quot;Last hour&quot;,
+        &quot;Last 24 hours&quot;,
+        &quot;Last week&quot;,
+        &quot;Last month&quot;,
+        &quot;Last 3 months&quot;,
+        &quot;Last 6 months&quot;,
+        &quot;Last year&quot;,
+        &quot;Custom range&quot;
+      ],
+      &quot;prefill&quot;: &quot;all&quot;,
+      &quot;title&quot;: &quot;Published within&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;searchQueries&quot;: {
+      &quot;default&quot;: [
+        &quot;제주도 여행&quot;
+      ],
+      &quot;description&quot;: &quot;One or more Korean or English keywords to search across Naver Blog (mode=search). Each query is searched up to Naver&#x27;s 1,000-result limit.&quot;,
+      &quot;editor&quot;: &quot;stringList&quot;,
+      &quot;prefill&quot;: [
+        &quot;제주도 여행&quot;
+      ],
+      &quot;title&quot;: &quot;Search queries&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;sortBy&quot;: {
+      &quot;default&quot;: &quot;sim&quot;,
+      &quot;description&quot;: &quot;Sort order for keyword search (mode=search).&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;sim&quot;,
+        &quot;date&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;Relevance&quot;,
+        &quot;Newest first&quot;
+      ],
+      &quot;prefill&quot;: &quot;sim&quot;,
+      &quot;title&quot;: &quot;Sort by&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    }
+  },
+  &quot;required&quot;: [
+    &quot;mode&quot;
+  ],
+  &quot;schemaVersion&quot;: 1,
+  &quot;title&quot;: &quot;Naver Blog Scraper Input&quot;,
+  &quot;type&quot;: &quot;object&quot;
+}
+</code></pre></details></section><section class="schema-section" id="output-schema"><h2>Output schema</h2><p>Published result links and storage locations. This schema is not an exhaustive contract for every field in a dataset record.</p><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>blogPosts</code></td><td>string</td><td>optional</td><td>Dataset containing all scraped Naver Blog posts.</td></tr></tbody></table></div><p><a href="output-schema.json">Download the published output schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+  &quot;actorOutputSchemaVersion&quot;: 1,
+  &quot;description&quot;: &quot;Naver Blog posts — titles, authors, blog names, exact publish times, full text, images, tags, categories, and places.&quot;,
+  &quot;properties&quot;: {
+    &quot;blogPosts&quot;: {
+      &quot;description&quot;: &quot;Dataset containing all scraped Naver Blog posts.&quot;,
+      &quot;template&quot;: &quot;{{links.apiDefaultDatasetUrl}}/items&quot;,
+      &quot;title&quot;: &quot;Naver Blog posts&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    }
+  },
+  &quot;title&quot;: &quot;Naver Blog Post Search &amp; Full Content Extractor Output&quot;
+}
+</code></pre></details></section><section class="schema-section" id="dataset-schema"><h2>Dataset schema</h2><p>Published dataset views and any declared field definitions. A view can select only a subset of the returned record fields.</p><p><a href="dataset-schema.json">Download the published dataset schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+  &quot;actorSpecification&quot;: 1,
+  &quot;views&quot;: {
+    &quot;overview&quot;: {
+      &quot;display&quot;: {
+        &quot;component&quot;: &quot;table&quot;,
+        &quot;properties&quot;: {}
+      },
+      &quot;title&quot;: &quot;Blog Posts&quot;,
+      &quot;transformation&quot;: {
+        &quot;fields&quot;: [
+          &quot;title&quot;,
+          &quot;authorName&quot;,
+          &quot;blogName&quot;,
+          &quot;publishDate&quot;,
+          &quot;contentLength&quot;,
+          &quot;commentCount&quot;,
+          &quot;likeCount&quot;,
+          &quot;isSelfPurchased&quot;,
+          &quot;postUrl&quot;
+        ]
+      }
+    }
+  }
+}
+</code></pre></details></section><section class="schema-section" id="key-value-schema"><h2>Key-value schema</h2><p>Published key-value store definitions, when provided by this build.</p><p>This definition is not present in the default published build. See the published README for available documentation.</p></section><section id="published-readme"><h2>Published README</h2><details><summary>Read the full published documentation</summary><h2 id="readme-naver-blog-post-search-full-content-extractor">Naver Blog Post Search &amp; Full Content Extractor</h2>
+<p>Naver Blog is South Korea's largest blogging platform, and its posts hold first-hand reviews, local guides, recipes, and daily-life writing that rarely appear elsewhere. This actor searches Naver Blog by keyword, walks an entire public blog archive, or fetches a list of post URLs — returning clean post records with exact publish times, full text, images, tags, categories, and places.</p>
+<p>No Naver account, login, API key, or proxy setup is required.</p>
+<h2 id="readme-what-this-actor-does">What this actor does</h2>
+<ul>
+<li><strong>Three modes:</strong> <code>search</code> for keyword discovery, <code>blogPosts</code> for a blog's public archive, and <code>postDetails</code> for exact URLs.</li>
+<li><strong>Multiple targets per run:</strong> search up to 50 keywords and read up to 50 blog IDs in one run, with duplicates removed across queries.</li>
+<li><strong>Real sorting and date filters:</strong> relevance or newest-first, plus last hour/day/week/month/3 months/6 months/year and custom <code>YYYY-MM-DD</code> ranges.</li>
+<li><strong>Full posts, not snippets:</strong> optional content enrichment adds the complete body, exact publish time, images, thumbnail, tags, category, and Naver Map places.</li>
+<li><strong>Exact publish times:</strong> <code>publishedAt</code> is the post's real timestamp in Korea Standard Time (UTC+9), while <code>publishDateText</code> preserves what Naver displayed.</li>
+<li><strong>Reactions and comments:</strong> like counts, reaction breakdowns, and optional comment counts and paginated comment threads (up to <code>maxComments</code> per post).</li>
+<li><strong>Empty fields are omitted:</strong> every record is cleaned recursively, so absent data is never returned as <code>null</code>, <code>&quot;&quot;</code>, or <code>[]</code>.</li>
+</ul>
+<h2 id="readme-output-per-post">Output per post</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>title</code></td>
+<td>Post title, HTML removed</td>
+</tr>
+<tr>
+<td><code>summary</code></td>
+<td>Search snippet or the post page's description</td>
+</tr>
+<tr>
+<td><code>authorName</code></td>
+<td>Author's display name</td>
+</tr>
+<tr>
+<td><code>authorUrl</code></td>
+<td>Author profile link, when Naver exposes one</td>
+</tr>
+<tr>
+<td><code>blogName</code></td>
+<td>Name of the blog</td>
+</tr>
+<tr>
+<td><code>blogId</code></td>
+<td>Blog identifier, e.g. <code>travel_lover</code></td>
+</tr>
+<tr>
+<td><code>blogUrl</code></td>
+<td>Blog home URL</td>
+</tr>
+<tr>
+<td><code>postUrl</code></td>
+<td>Canonical post URL</td>
+</tr>
+<tr>
+<td><code>publishDate</code></td>
+<td>Publish date in <code>YYYY-MM-DD</code> format (KST)</td>
+</tr>
+<tr>
+<td><code>publishedAt</code></td>
+<td>Exact publish time as ISO 8601 with <code>+09:00</code> (content enrichment only)</td>
+</tr>
+<tr>
+<td><code>publishDateText</code></td>
+<td>Date as Naver displayed it, e.g. <code>2주 전</code> or <code>2026. 10. 23. 11:10</code></td>
+</tr>
+<tr>
+<td><code>category</code></td>
+<td>Blog category name (content enrichment only)</td>
+</tr>
+<tr>
+<td><code>tags</code></td>
+<td>Hashtags found on the post (content enrichment only)</td>
+</tr>
+<tr>
+<td><code>images</code></td>
+<td>Full-size content image URLs (content enrichment only)</td>
+</tr>
+<tr>
+<td><code>imageCount</code></td>
+<td>Number of images in <code>images</code></td>
+</tr>
+<tr>
+<td><code>thumbnail</code></td>
+<td>Representative image for the post</td>
+</tr>
+<tr>
+<td><code>places</code></td>
+<td>Naver Map places mentioned in the post (content enrichment only)</td>
+</tr>
+<tr>
+<td><code>hasVideo</code></td>
+<td><code>true</code> when the post contains a video (only present when true)</td>
+</tr>
+<tr>
+<td><code>isSelfPurchased</code></td>
+<td><code>true</code> when Naver shows its structured self-purchased review disclosure (내돈내산)</td>
+</tr>
+<tr>
+<td><code>content</code></td>
+<td>Complete post text, never truncated (content enrichment only)</td>
+</tr>
+<tr>
+<td><code>contentHtml</code></td>
+<td>Post body HTML, only when <code>includeHtml</code> is on</td>
+</tr>
+<tr>
+<td><code>contentLength</code></td>
+<td>Character count of <code>content</code></td>
+</tr>
+<tr>
+<td><code>rank</code></td>
+<td>1-based organic position for the query that found the post (<code>search</code> only)</td>
+</tr>
+<tr>
+<td><code>searchQuery</code></td>
+<td>First query that found the post (<code>search</code> only)</td>
+</tr>
+<tr>
+<td><code>matchedQueries</code></td>
+<td>Every processed query that found the post (<code>search</code> only)</td>
+</tr>
+<tr>
+<td><code>commentCount</code></td>
+<td>Total comments including replies; from the blog list or <code>includeComments</code></td>
+</tr>
+<tr>
+<td><code>comments</code></td>
+<td>Comment threads up to <code>maxComments</code> (default 100), fetched in pages of 100, only when <code>includeComments</code> is on</td>
+</tr>
+<tr>
+<td><code>likeCount</code></td>
+<td>Main &quot;like&quot; (공감) count when Naver publishes it (content enrichment only)</td>
+</tr>
+<tr>
+<td><code>reactionCounts</code></td>
+<td>Counts by reaction type (<code>like</code>, <code>impressive</code>, <code>thanks</code>, <code>wow</code>, <code>haha</code>, <code>sad</code>) when Naver publishes them</td>
+</tr>
+<tr>
+<td><code>recordType</code></td>
+<td>Always <code>&quot;blogPost&quot;</code></td>
+</tr>
+<tr>
+<td><code>scrapedAt</code></td>
+<td>UTC timestamp when the record was scraped</td>
+</tr>
+</tbody>
+</table></div>
+<p>Each place in <code>places</code> contains <code>name</code>, <code>address</code>, <code>latitude</code>, <code>longitude</code>, <code>phone</code>, <code>placeId</code>, and <code>bookingUrl</code>, with empty values omitted.</p>
+<p>With <code>includeContent</code> off, search and blog-archive records contain list-level fields only: title, summary, author, blog, URLs, <code>publishDateText</code>, and the date when Naver shows an absolute date. <code>postDetails</code> always fetches the post page because that is the mode's purpose.</p>
+<h2 id="readme-input">Input</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>mode</code></td>
+<td>string (required)</td>
+<td><code>search</code></td>
+<td><code>search</code>, <code>blogPosts</code>, or <code>postDetails</code></td>
+</tr>
+<tr>
+<td><code>searchQueries</code></td>
+<td>array of strings</td>
+<td><code>[&quot;제주도 여행&quot;]</code></td>
+<td>Keywords to search (mode=search); max 50</td>
+</tr>
+<tr>
+<td><code>blogIds</code></td>
+<td>array of strings</td>
+<td>–</td>
+<td>Blog IDs or blog URLs (mode=blogPosts); max 50</td>
+</tr>
+<tr>
+<td><code>postUrls</code></td>
+<td>array of strings</td>
+<td>–</td>
+<td>Post URLs to fetch (mode=postDetails); desktop, mobile, PostView, or <code>blogId/logNo</code></td>
+</tr>
+<tr>
+<td><code>sortBy</code></td>
+<td>string</td>
+<td><code>sim</code></td>
+<td><code>sim</code> for relevance, <code>date</code> for newest first (mode=search)</td>
+</tr>
+<tr>
+<td><code>publishedWithin</code></td>
+<td>string</td>
+<td><code>all</code></td>
+<td><code>all</code>, <code>1h</code>, <code>1d</code>, <code>1w</code>, <code>1m</code>, <code>3m</code>, <code>6m</code>, <code>1y</code>, or <code>custom</code> (mode=search)</td>
+</tr>
+<tr>
+<td><code>dateFrom</code></td>
+<td>string</td>
+<td>–</td>
+<td>Start date <code>YYYY-MM-DD</code> for a custom range (mode=search)</td>
+</tr>
+<tr>
+<td><code>dateTo</code></td>
+<td>string</td>
+<td>–</td>
+<td>End date <code>YYYY-MM-DD</code> for a custom range (mode=search)</td>
+</tr>
+<tr>
+<td><code>categoryNo</code></td>
+<td>integer</td>
+<td><code>0</code></td>
+<td>Blog category number; <code>0</code> means every category (mode=blogPosts)</td>
+</tr>
+<tr>
+<td><code>maxItems</code></td>
+<td>integer</td>
+<td><code>20</code></td>
+<td>Hard cap on emitted records across all targets (1–10,000)</td>
+</tr>
+<tr>
+<td><code>includeContent</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td>Fetch each post page for full text and detail fields</td>
+</tr>
+<tr>
+<td><code>includeHtml</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Add <code>contentHtml</code>; turns content enrichment on</td>
+</tr>
+<tr>
+<td><code>includeComments</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Add <code>commentCount</code> and comment threads up to <code>maxComments</code>; turns content enrichment on</td>
+</tr>
+<tr>
+<td><code>maxComments</code></td>
+<td>integer</td>
+<td><code>100</code></td>
+<td>Maximum comments returned per post with <code>includeComments</code> (1–1,000)</td>
+</tr>
+<tr>
+<td><code>maxConcurrency</code></td>
+<td>integer</td>
+<td><code>3</code></td>
+<td>Parallel post-page requests when enriching content</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="readme-example-korean-keyword-search-newest-first">Example: Korean keyword search, newest first</h3>
+<pre><code class="language-json">{
+  &quot;mode&quot;: &quot;search&quot;,
+  &quot;searchQueries&quot;: [&quot;제주도 여행&quot;],
+  &quot;sortBy&quot;: &quot;date&quot;,
+  &quot;publishedWithin&quot;: &quot;all&quot;,
+  &quot;maxItems&quot;: 50,
+  &quot;includeContent&quot;: true
+}
+</code></pre>
+<h3 id="readme-example-several-queries-with-a-custom-date-range">Example: several queries with a custom date range</h3>
+<pre><code class="language-json">{
+  &quot;mode&quot;: &quot;search&quot;,
+  &quot;searchQueries&quot;: [&quot;K-beauty routine&quot;, &quot;올리브영 추천&quot;],
+  &quot;sortBy&quot;: &quot;sim&quot;,
+  &quot;publishedWithin&quot;: &quot;custom&quot;,
+  &quot;dateFrom&quot;: &quot;2026-01-01&quot;,
+  &quot;dateTo&quot;: &quot;2026-03-31&quot;,
+  &quot;maxItems&quot;: 200,
+  &quot;includeContent&quot;: false
+}
+</code></pre>
+<h3 id="readme-example-a-blog-s-full-archive-in-one-category">Example: a blog's full archive in one category</h3>
+<pre><code class="language-json">{
+  &quot;mode&quot;: &quot;blogPosts&quot;,
+  &quot;blogIds&quot;: [&quot;ranto28&quot;],
+  &quot;categoryNo&quot;: 17,
+  &quot;maxItems&quot;: 500,
+  &quot;includeContent&quot;: true,
+  &quot;includeHtml&quot;: false
+}
+</code></pre>
+<h3 id="readme-example-full-details-for-known-posts">Example: full details for known posts</h3>
+<pre><code class="language-json">{
+  &quot;mode&quot;: &quot;postDetails&quot;,
+  &quot;postUrls&quot;: [
+    &quot;https://blog.naver.com/e_s_l/224451062514&quot;,
+    &quot;https://m.blog.naver.com/ranto28/224461024209&quot;,
+    &quot;https://blog.naver.com/PostView.naver?blogId=hoyaaaaa-&amp;logNo=224458179821&quot;
+  ]
+}
+</code></pre>
+<h2 id="readme-search-limits-and-blog-archives">Search limits and blog archives</h2>
+<p>Naver returns at most <strong>1,000 posts per keyword search</strong>. This is a source-side ceiling, not an actor setting. To collect more:</p>
+<ul>
+<li>split a broad topic into narrower queries;</li>
+<li>use <code>publishedWithin</code> presets or a custom <code>dateFrom</code>/<code>dateTo</code> window and run several windows;</li>
+<li>deduplicate with <code>postUrl</code> — the actor already removes duplicates inside a run.</li>
+</ul>
+<p>Blog archives use a different source and are <strong>not limited to 1,000 posts</strong>: a public blog with 2,700 posts can return all 2,700. Search results are likely to repeat across pages, so deduplication is applied by canonical post URL.</p>
+<p>Comment counts are included when Naver exposes them: from the blog list in <code>blogPosts</code> mode, or from the post page when <code>includeComments</code> is on. Likes (<code>likeCount</code> and <code>reactionCounts</code>) come from Naver's public reaction service and are omitted for posts with no reactions. With <code>includeComments</code>, <code>comments</code> returns up to <code>maxComments</code> per post (default 100, fetched in pages of 100) including replies when Naver returns them; <code>commentCount</code> is always the full total, so a post can have more comments than rows in <code>comments</code>.</p>
+<h3 id="readme-limitations">Limitations</h3>
+<ul>
+<li><strong>Search ceiling:</strong> Naver accepts search start positions up to 1,000, so one query exposes roughly a 1,000-result window; after deduplication a run can return fewer. Split by date or query for more.</li>
+<li><strong>Comment cap:</strong> Naver serves comment pages cookielessly; the actor pages through them up to <code>maxComments</code> per post (default 100, max 1,000) to keep output and request cost bounded. <code>commentCount</code> still reports the full total. Increase the cap if you need more rows. Posts with comments disabled return neither field.</li>
+<li><strong>Not shipped (scope decisions, not source limits):</strong> blogger profile totals (neighbors, visitors, post count), cafe/news article search, paid-sponsorship classification, and incremental only-new state. Profile and cafe/news data are reachable on separate Naver surfaces but are outside this post-oriented actor; paid sponsorship has no ground-truth label and remains a text heuristic for users; incremental state is an implementation choice, and date windows plus <code>postUrl</code> dedupe cover the same workflow. Self-purchased reviews are labeled by Naver and are exposed as <code>isSelfPurchased</code>.</li>
+<li><strong>Private, deleted, or members-only posts</strong> are skipped; one bad post does not fail the run.</li>
+<li><strong>Search relevance</strong> is Naver's own ranking, including Korean results for English queries; the actor does not re-rank.</li>
+<li><strong>Markup changes:</strong> Naver redesigns can require a parser update. The actor ships fixtures and status messages instead of failing silently.</li>
+</ul>
+<h2 id="readme-use-cases">Use cases</h2>
+<ul>
+<li><strong>Consumer research</strong> — collect how Korean bloggers describe a product, brand, or store before a launch.</li>
+<li><strong>Influencer and blog discovery</strong> — find active blogs in K-beauty, food, travel, parenting, or finance.</li>
+<li><strong>Brand monitoring</strong> — track mentions across the Korean blogosphere, then filter by exact publish date.</li>
+<li><strong>Content and trend analysis</strong> — measure post volume and topic shifts across date windows.</li>
+<li><strong>Local travel research</strong> — gather first-hand restaurant, cafe, and itinerary write-ups with mapped places.</li>
+<li><strong>Archive and migration</strong> — export a public blog's full post history, including text and image URLs.</li>
+</ul>
+<h2 id="readme-faq">FAQ</h2>
+<p><strong>Do I need a Naver account or API key?</strong>
+No. The actor reads public Naver Blog pages. There is no login, key, or proxy configuration to provide.</p>
+<p><strong>Can I search in Korean and English?</strong>
+Yes. Korean, English, and mixed queries all work. Results are mostly Korean-language blogs because that is what Naver Blog contains.</p>
+<p><strong>How do I find a blog ID?</strong>
+Use the segment right after <code>blog.naver.com/</code>. For <code>https://blog.naver.com/travel_lover</code>, the blog ID is <code>travel_lover</code>. The actor also accepts the full blog URL or <code>@travel_lover</code>.</p>
+<p><strong>Why do some posts have no <code>content</code>, <code>images</code>, or <code>publishedAt</code>?</strong>
+Those fields come from the post page, so they require <code>includeContent</code>. They are also omitted for empty-body posts, private or deleted posts, and text-only posts with no images or places.</p>
+<p><strong>What is the difference between <code>publishDate</code> and <code>publishedAt</code>?</strong>
+<code>publishDate</code> is the date in <code>YYYY-MM-DD</code> format. <code>publishedAt</code> is the exact timestamp with a <code>+09:00</code> offset. <code>publishDateText</code> keeps the original wording, which may be relative such as <code>3일 전</code>.</p>
+<p><strong>Why did a keyword return fewer posts than expected?</strong>
+Naver caps one keyword at 1,000 results and may return fewer for narrow queries. Add more queries or split the period into smaller date windows.</p>
+<p><strong>Why are there no likes or comments on some posts?</strong>
+Naver's reaction and comment services are public but conditional: posts with no reactions omit <code>likeCount</code>/<code>reactionCounts</code>, and posts with comments disabled omit <code>commentCount</code>/<code>comments</code>. Set <code>includeComments=true</code> to request comments; <code>commentCount</code> is the total and <code>comments</code> holds up to <code>maxComments</code> rows (default 100, paginated 100 at a time).</p>
+<p><strong>What does <code>isSelfPurchased</code> mean?</strong>
+It is <code>true</code> only when Naver itself shows the structured self-purchased review disclosure (내돈내산) on the post. It is not a paid-sponsorship classifier; <code>협찬</code>/<code>광고</code> wording remains in <code>content</code> for your own rules.</p>
+<p><strong>What happens to private, deleted, or blocked posts?</strong>
+They are skipped with a log message. One missing post does not fail the run. If every target is invalid, the run finishes with a status message explaining what to check.</p>
+<p><strong>Can I fetch more than 10,000 posts?</strong>
+<code>maxItems</code> is capped at 10,000 per run. For larger archives, split the work into separate runs and deduplicate by <code>postUrl</code>.</p>
+<p><strong>Is this affiliated with Naver?</strong>
+No. This is an independent third-party actor that reads public Naver Blog pages. It is not affiliated with, endorsed by, or sponsored by Naver Corporation.</p>
+</details></section><section id="python-quickstart"><h2>Python quickstart</h2><p>Use a schema-derived input and the Python standard library to start a run. An Apify account and token are required for execution.</p><p><a href="/apify-actor-examples/guides/naver-blog-post-search-and-full-content-extractor/">Open the step-by-step Python guide →</a></p></section><p class="source-note">Source build <code>EaLLw7aAkioCzX4Kt</code>. Documentation is regenerated from the default published build; private drafts are not included.</p></article></div></main><footer class="footer"><strong>Nimbryxo Studio</strong><div class="footer-links"><a href="/apify-actor-examples/topics/">Topics</a><a href="/apify-actor-examples/sources/">Documentation sources</a><a href="https://apify.com/nimbryxo-studio">Apify</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></div></footer></body></html>

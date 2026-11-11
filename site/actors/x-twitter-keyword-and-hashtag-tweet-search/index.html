@@ -1,0 +1,932 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src &#x27;self&#x27;; script-src &#x27;self&#x27; &#x27;sha256-JTuSEceYOBEKGFSjJi2rP9rJx6BgQOaCaDN4I2uFFSA=&#x27;; style-src &#x27;self&#x27;; img-src &#x27;self&#x27; https: data:; base-uri &#x27;self&#x27;; form-action &#x27;self&#x27;; object-src &#x27;none&#x27;"><title>X/Twitter Keyword &amp; Hashtag Tweet Search | Nimbryxo Studio</title><meta name="description" content="Search X (Twitter) by keyword, phrase or hashtag and get tweet text, author, engagement metrics, media and language. Every row says which keyword found it. No login required."><meta name="robots" content="index,follow"><link rel="canonical" href="https://hasankhokhar2026.github.io/apify-actor-examples/actors/x-twitter-keyword-and-hashtag-tweet-search/"><meta property="og:title" content="X/Twitter Keyword &amp; Hashtag Tweet Search | Nimbryxo Studio"><meta property="og:description" content="Search X (Twitter) by keyword, phrase or hashtag and get tweet text, author, engagement metrics, media and language. Every row says which keyword found it. No login required."><meta property="og:type" content="website"><meta property="og:url" content="https://hasankhokhar2026.github.io/apify-actor-examples/actors/x-twitter-keyword-and-hashtag-tweet-search/"><meta property="og:site_name" content="Nimbryxo Studio"><meta name="twitter:card" content="summary"><link rel="icon" href="/apify-actor-examples/assets/mark.svg?v=2d20f9dc334a" type="image/svg+xml"><link rel="stylesheet" href="/apify-actor-examples/assets/site.css?v=39545fd4a399"><link rel="stylesheet" href="/apify-actor-examples/assets/brand.css?v=eb0f935ade25"><link rel="alternate" type="application/rss+xml" title="Nimbryxo Studio guides" href="/apify-actor-examples/feed.xml"><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization","name":"Nimbryxo Studio","url":"https://hasankhokhar2026.github.io/apify-actor-examples/","sameAs":["https://apify.com/nimbryxo-studio"]},{"@type":"WebSite","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#website","name":"Nimbryxo Studio","url":"https://hasankhokhar2026.github.io/apify-actor-examples/","publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"inLanguage":"en"},{"@type":"WebPage","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/x-twitter-keyword-and-hashtag-tweet-search/#webpage","name":"X/Twitter Keyword & Hashtag Tweet Search","description":"Search X (Twitter) by keyword, phrase or hashtag and get tweet text, author, engagement metrics, media and language. Every row says which keyword found it. No login required.","url":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/x-twitter-keyword-and-hashtag-tweet-search/","isPartOf":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#website"},"publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"inLanguage":"en","mainEntity":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/x-twitter-keyword-and-hashtag-tweet-search/#article"},"breadcrumb":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/x-twitter-keyword-and-hashtag-tweet-search/#breadcrumb"}},{"@type":"TechArticle","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/x-twitter-keyword-and-hashtag-tweet-search/#article","headline":"X/Twitter Keyword & Hashtag Tweet Search","name":"X/Twitter Keyword & Hashtag Tweet Search","description":"Search X (Twitter) by keyword, phrase or hashtag and get tweet text, author, engagement metrics, media and language. Every row says which keyword found it. No login required.","url":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/x-twitter-keyword-and-hashtag-tweet-search/","author":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"mainEntityOfPage":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/x-twitter-keyword-and-hashtag-tweet-search/#webpage"},"inLanguage":"en","dateModified":"2026-11-09T06:10:55.618Z"},{"@type":"BreadcrumbList","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/x-twitter-keyword-and-hashtag-tweet-search/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Nimbryxo Studio","item":"https://hasankhokhar2026.github.io/apify-actor-examples/"},{"@type":"ListItem","position":2,"name":"Actors","item":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/"},{"@type":"ListItem","position":3,"name":"X/Twitter Keyword & Hashtag Tweet Search","item":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/x-twitter-keyword-and-hashtag-tweet-search/"}]}]}</script><script src="/apify-actor-examples/assets/site.js?v=7cabac48dd31" defer></script></head><body class="theme-studio"><a href="#main" class="skip-link">Skip to content</a><header><div class="inner"><a href="/apify-actor-examples/" class="brand"><img src="/apify-actor-examples/assets/mark.svg?v=2d20f9dc334a" alt="" width="29" height="29">Nimbryxo Studio</a><nav aria-label="Main navigation"><a href="/apify-actor-examples/actors/" aria-current="page">Actors</a><a href="/apify-actor-examples/guides/">Guides</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></nav></div></header><main id="main"><div class="doc-layout"><aside class="contents" aria-label="On this page"><strong>Contents</strong><a href="#overview">Overview</a><a href="#published-readme">Published README</a><a href="#input-schema">Input schema</a><a href="#output-schema">Output schema</a><a href="#dataset-schema">Dataset schema</a><a href="#python-quickstart">Python quickstart</a></aside><article class="prose"><div class="breadcrumb"><a href="/apify-actor-examples/actors/">Actors</a><span>/</span><span>X/Twitter Keyword &amp; Hashtag Tweet Search</span></div><section id="overview"><h1 class="doc-title">X/Twitter Keyword &amp; Hashtag Tweet Search</h1><p class="lede">Search X (Twitter) by keyword, phrase or hashtag and get tweet text, author, engagement metrics, media and language. Every row says which keyword found it. No login required.</p><p class="summary">X/Twitter Keyword &amp; Hashtag Tweet Search is an Apify Actor published by Nimbryxo Studio. It accepts 33 input fields, and <code>keywords</code> is required. Its build declares a results dataset with 1 view. Runs happen on Apify, where the Store page lists the current price.</p><div class="actions"><a class="button" href="https://apify.com/nimbryxo-studio/x-twitter-keyword-and-hashtag-tweet-search">Open on Apify</a><a class="text-link" href="https://github.com/hasankhokhar2026/apify-actor-examples/blob/main/docs/actors/XJyPDggYTy5zS42Q1/README.md">GitHub source</a></div></section><section class="schema-section" id="input-schema"><h2>Input schema</h2><p>Input fields, types, required flags, descriptions, defaults, and prefills come from the published definition. Prefill examples are distinct from defaults.</p><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>keywords</code></td><td>array</td><td>required</td><td>Words, phrases, hashtags or full X search queries to monitor. Each keyword is searched separately, and every result row tells you which keyword found it (searchTerm).</td></tr><tr><td><code>maxTweets</code></td><td>integer</td><td>optional</td><td>Stop after this many tweets for each keyword. This is a target, not a guarantee: guest X search returns ~20 posts per answered page, the Phase 6 probes measured 300 unique rows for a 300-row target, and 500/1,000 are unverified.</td></tr><tr><td><code>maxItems</code></td><td>integer</td><td>optional</td><td>Alias of Maximum tweets per keyword. The actor accepts either name.</td></tr></tbody></table></div><details><summary>Show all input fields</summary><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>keywords</code></td><td>array</td><td>required</td><td>Words, phrases, hashtags or full X search queries to monitor. Each keyword is searched separately, and every result row tells you which keyword found it (searchTerm).</td></tr><tr><td><code>maxTweets</code></td><td>integer</td><td>optional</td><td>Stop after this many tweets for each keyword. This is a target, not a guarantee: guest X search returns ~20 posts per answered page, the Phase 6 probes measured 300 unique rows for a 300-row target, and 500/1,000 are unverified.</td></tr><tr><td><code>maxItems</code></td><td>integer</td><td>optional</td><td>Alias of Maximum tweets per keyword. The actor accepts either name.</td></tr><tr><td><code>searchType</code></td><td>string</td><td>optional</td><td>Latest returns the newest posts first. Top is engagement-ranked output: X&#x27;s logged-out search never serves the real Top timeline, so the actor collects Latest pages and sorts them by like count client-side.</td></tr><tr><td><code>sort</code></td><td>string</td><td>optional</td><td>Alias of Result order. The actor accepts either name.</td></tr><tr><td><code>language</code></td><td>string</td><td>optional</td><td>Only return tweets written in this language. Leave the default to search all languages.</td></tr><tr><td><code>dateFrom</code></td><td>string</td><td>optional</td><td>Only return tweets posted on or after this date. Leave empty for no lower bound.</td></tr><tr><td><code>dateTo</code></td><td>string</td><td>optional</td><td>Only return tweets posted on or before this date (inclusive). Leave empty for no upper bound.</td></tr><tr><td><code>excludeRetweets</code></td><td>boolean</td><td>optional</td><td>Skip retweets/reposts and keep only original posts.</td></tr><tr><td><code>excludeReplies</code></td><td>boolean</td><td>optional</td><td>Skip replies and keep only top-level posts.</td></tr><tr><td><code>onlyVerifiedUsers</code></td><td>boolean</td><td>optional</td><td>Only return tweets from verified (blue check) accounts.</td></tr><tr><td><code>onlyImages</code></td><td>boolean</td><td>optional</td><td>Only return tweets that contain at least one image.</td></tr><tr><td><code>onlyVideos</code></td><td>boolean</td><td>optional</td><td>Only return tweets that contain at least one video or GIF.</td></tr><tr><td><code>onlyQuotes</code></td><td>boolean</td><td>optional</td><td>Only return quote tweets (filter:quote).</td></tr><tr><td><code>mentioning</code></td><td>string</td><td>optional</td><td>Only return posts that mention this account, e.g. apify or @apify.</td></tr><tr><td><code>author</code></td><td>string</td><td>optional</td><td>Only return posts written by this account, e.g. openai or @openai.</td></tr><tr><td><code>inReplyTo</code></td><td>string</td><td>optional</td><td>Only return replies addressed to this account, e.g. elonmusk or @elonmusk.</td></tr><tr><td><code>conversationId</code></td><td>string</td><td>optional</td><td>Only return posts in this conversation (the numeric id of the root post).</td></tr><tr><td><code>matchMode</code></td><td>string</td><td>optional</td><td>How to combine the words in each keyword: all = X&#x27;s default AND, any = (word1 OR word2), exact = quoted phrase.</td></tr><tr><td><code>excludeWords</code></td><td>array</td><td>optional</td><td>Words or phrases to exclude from every search, compiled to -word / -&quot;two words&quot; tokens.</td></tr><tr><td><code>includeLanes</code></td><td>array</td><td>optional</td><td>Which X search lanes to run: latest, media, media-product, links, replies. Leave empty for the default latest + media + links (replies is added automatically for jobs of 100+ rows). media-product asks for X&#x27;s product=Media page directly and is opt-in.</td></tr><tr><td><code>maxWindows</code></td><td>integer</td><td>optional</td><td>Cap the number of backwards time-window passes per keyword. 0 means no explicit cap (the wall-clock budget still applies).</td></tr><tr><td><code>maxPasses</code></td><td>integer</td><td>optional</td><td>Cap the total number of X search passes (core lanes + time windows) per keyword. 0 means no explicit cap.</td></tr><tr><td><code>onlyNew</code></td><td>boolean</td><td>optional</td><td>Return only posts newer than the previous run for this keyword. The actor stores a numeric tweet-id watermark plus an overlap window in the key-value store, so scheduled runs do not repeat old rows.</td></tr><tr><td><code>monitoringEnabled</code></td><td>boolean</td><td>optional</td><td>Alias that enables onlyNew when onlyNew itself is not provided. Prefer the Only new posts field.</td></tr><tr><td><code>monitorId</code></td><td>string</td><td>optional</td><td>Namespace for the saved watermark. Use different ids to keep independent schedules for the same keyword. Defaults to &#x27;default&#x27;. The legacy alias &#x27;monitoringStateKey&#x27; is also accepted.</td></tr><tr><td><code>overlapMinutes</code></td><td>integer</td><td>optional</td><td>How far back before the previous run to search, so posts published during the last walk are not missed. Already-seen ids are still filtered out.</td></tr><tr><td><code>maxAgeDays</code></td><td>integer</td><td>optional</td><td>Never walk further back than this many days, even when catching up after a long gap.</td></tr><tr><td><code>sinceTime</code></td><td>string</td><td>optional</td><td>Optional lower bound for a backfill run: ISO 8601 timestamp or Unix epoch seconds. Uses X&#x27;s epoch since_time operator, not day-granular since:.</td></tr><tr><td><code>untilTime</code></td><td>string</td><td>optional</td><td>Optional upper bound for a backfill run: ISO 8601 timestamp or Unix epoch seconds. Uses X&#x27;s epoch until_time operator.</td></tr><tr><td><code>proxyConfiguration</code></td><td>object</td><td>optional</td><td>Optional. Use a proxy if you run large jobs or see frequent IP-based rate limits.</td></tr><tr><td><code>startDate</code></td><td>string</td><td>optional</td><td>Deprecated — use &#x27;Start date&#x27; instead. Kept so existing saved inputs keep working. Format: YYYY-MM-DD.</td></tr><tr><td><code>endDate</code></td><td>string</td><td>optional</td><td>Deprecated — use &#x27;End date&#x27; instead. Kept so existing saved inputs keep working. Format: YYYY-MM-DD.</td></tr></tbody></table></div></details><p><a href="input-schema.json">Download the published input schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+  &quot;properties&quot;: {
+    &quot;author&quot;: {
+      &quot;description&quot;: &quot;Only return posts written by this account, e.g. openai or @openai.&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;nullable&quot;: true,
+      &quot;title&quot;: &quot;From account&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;conversationId&quot;: {
+      &quot;description&quot;: &quot;Only return posts in this conversation (the numeric id of the root post).&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;nullable&quot;: true,
+      &quot;title&quot;: &quot;Conversation ID&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;dateFrom&quot;: {
+      &quot;description&quot;: &quot;Only return tweets posted on or after this date. Leave empty for no lower bound.&quot;,
+      &quot;editor&quot;: &quot;datepicker&quot;,
+      &quot;nullable&quot;: true,
+      &quot;title&quot;: &quot;Start date&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;dateTo&quot;: {
+      &quot;description&quot;: &quot;Only return tweets posted on or before this date (inclusive). Leave empty for no upper bound.&quot;,
+      &quot;editor&quot;: &quot;datepicker&quot;,
+      &quot;nullable&quot;: true,
+      &quot;title&quot;: &quot;End date&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;endDate&quot;: {
+      &quot;description&quot;: &quot;Deprecated — use &#x27;End date&#x27; instead. Kept so existing saved inputs keep working. Format: YYYY-MM-DD.&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;nullable&quot;: true,
+      &quot;title&quot;: &quot;End date (legacy)&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;excludeReplies&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;Skip replies and keep only top-level posts.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Exclude replies&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;excludeRetweets&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;Skip retweets/reposts and keep only original posts.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Exclude retweets (reposts)&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;excludeWords&quot;: {
+      &quot;default&quot;: [],
+      &quot;description&quot;: &quot;Words or phrases to exclude from every search, compiled to -word / -\&quot;two words\&quot; tokens.&quot;,
+      &quot;editor&quot;: &quot;stringList&quot;,
+      &quot;items&quot;: {
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;nullable&quot;: true,
+      &quot;title&quot;: &quot;Exclude words&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;inReplyTo&quot;: {
+      &quot;description&quot;: &quot;Only return replies addressed to this account, e.g. elonmusk or @elonmusk.&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;nullable&quot;: true,
+      &quot;title&quot;: &quot;In reply to account&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;includeLanes&quot;: {
+      &quot;default&quot;: [],
+      &quot;description&quot;: &quot;Which X search lanes to run: latest, media, media-product, links, replies. Leave empty for the default latest + media + links (replies is added automatically for jobs of 100+ rows). media-product asks for X&#x27;s product=Media page directly and is opt-in.&quot;,
+      &quot;editor&quot;: &quot;stringList&quot;,
+      &quot;items&quot;: {
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;nullable&quot;: true,
+      &quot;title&quot;: &quot;Search lanes&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;keywords&quot;: {
+      &quot;default&quot;: [],
+      &quot;description&quot;: &quot;Words, phrases, hashtags or full X search queries to monitor. Each keyword is searched separately, and every result row tells you which keyword found it (searchTerm).&quot;,
+      &quot;editor&quot;: &quot;stringList&quot;,
+      &quot;items&quot;: {
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;minItems&quot;: 1,
+      &quot;prefill&quot;: [
+        &quot;apify&quot;
+      ],
+      &quot;title&quot;: &quot;Search keywords&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;language&quot;: {
+      &quot;default&quot;: &quot;Any language&quot;,
+      &quot;description&quot;: &quot;Only return tweets written in this language. Leave the default to search all languages.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;Any language&quot;,
+        &quot;en&quot;,
+        &quot;es&quot;,
+        &quot;zh&quot;,
+        &quot;hi&quot;,
+        &quot;ar&quot;,
+        &quot;bn&quot;,
+        &quot;pt&quot;,
+        &quot;ru&quot;,
+        &quot;ja&quot;,
+        &quot;de&quot;,
+        &quot;fr&quot;,
+        &quot;ko&quot;,
+        &quot;tr&quot;,
+        &quot;vi&quot;,
+        &quot;te&quot;,
+        &quot;mr&quot;,
+        &quot;ta&quot;,
+        &quot;ur&quot;,
+        &quot;it&quot;,
+        &quot;th&quot;,
+        &quot;gu&quot;,
+        &quot;fa&quot;,
+        &quot;pl&quot;,
+        &quot;uk&quot;,
+        &quot;ml&quot;,
+        &quot;kn&quot;,
+        &quot;id&quot;,
+        &quot;ms&quot;,
+        &quot;sw&quot;,
+        &quot;ha&quot;,
+        &quot;am&quot;,
+        &quot;my&quot;,
+        &quot;pa&quot;,
+        &quot;nl&quot;,
+        &quot;ro&quot;,
+        &quot;el&quot;,
+        &quot;he&quot;,
+        &quot;sv&quot;,
+        &quot;hu&quot;,
+        &quot;cs&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;Any language&quot;,
+        &quot;English&quot;,
+        &quot;Spanish&quot;,
+        &quot;Chinese&quot;,
+        &quot;Hindi&quot;,
+        &quot;Arabic&quot;,
+        &quot;Bengali&quot;,
+        &quot;Portuguese&quot;,
+        &quot;Russian&quot;,
+        &quot;Japanese&quot;,
+        &quot;German&quot;,
+        &quot;French&quot;,
+        &quot;Korean&quot;,
+        &quot;Turkish&quot;,
+        &quot;Vietnamese&quot;,
+        &quot;Telugu&quot;,
+        &quot;Marathi&quot;,
+        &quot;Tamil&quot;,
+        &quot;Urdu&quot;,
+        &quot;Italian&quot;,
+        &quot;Thai&quot;,
+        &quot;Gujarati&quot;,
+        &quot;Persian&quot;,
+        &quot;Polish&quot;,
+        &quot;Ukrainian&quot;,
+        &quot;Malayalam&quot;,
+        &quot;Kannada&quot;,
+        &quot;Indonesian&quot;,
+        &quot;Malay&quot;,
+        &quot;Swahili&quot;,
+        &quot;Hausa&quot;,
+        &quot;Amharic&quot;,
+        &quot;Burmese&quot;,
+        &quot;Punjabi&quot;,
+        &quot;Dutch&quot;,
+        &quot;Romanian&quot;,
+        &quot;Greek&quot;,
+        &quot;Hebrew&quot;,
+        &quot;Swedish&quot;,
+        &quot;Hungarian&quot;,
+        &quot;Czech&quot;
+      ],
+      &quot;prefill&quot;: &quot;Any language&quot;,
+      &quot;title&quot;: &quot;Language&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;matchMode&quot;: {
+      &quot;default&quot;: &quot;all&quot;,
+      &quot;description&quot;: &quot;How to combine the words in each keyword: all = X&#x27;s default AND, any = (word1 OR word2), exact = quoted phrase.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;all&quot;,
+        &quot;any&quot;,
+        &quot;exact&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;All words (AND)&quot;,
+        &quot;Any word (OR)&quot;,
+        &quot;Exact phrase&quot;
+      ],
+      &quot;prefill&quot;: &quot;all&quot;,
+      &quot;title&quot;: &quot;Multi-word match mode&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;maxAgeDays&quot;: {
+      &quot;default&quot;: 90,
+      &quot;description&quot;: &quot;Never walk further back than this many days, even when catching up after a long gap.&quot;,
+      &quot;maximum&quot;: 3650,
+      &quot;minimum&quot;: 1,
+      &quot;title&quot;: &quot;Maximum age (days)&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;maxItems&quot;: {
+      &quot;description&quot;: &quot;Alias of Maximum tweets per keyword. The actor accepts either name.&quot;,
+      &quot;maximum&quot;: 1000,
+      &quot;minimum&quot;: 1,
+      &quot;title&quot;: &quot;Max tweets per keyword&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;maxPasses&quot;: {
+      &quot;default&quot;: 0,
+      &quot;description&quot;: &quot;Cap the total number of X search passes (core lanes + time windows) per keyword. 0 means no explicit cap.&quot;,
+      &quot;maximum&quot;: 5000,
+      &quot;minimum&quot;: 0,
+      &quot;title&quot;: &quot;Maximum search passes&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;maxTweets&quot;: {
+      &quot;default&quot;: 20,
+      &quot;description&quot;: &quot;Stop after this many tweets for each keyword. This is a target, not a guarantee: guest X search returns ~20 posts per answered page, the Phase 6 probes measured 300 unique rows for a 300-row target, and 500/1,000 are unverified.&quot;,
+      &quot;maximum&quot;: 1000,
+      &quot;minimum&quot;: 1,
+      &quot;prefill&quot;: 20,
+      &quot;title&quot;: &quot;Maximum tweets per keyword&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;maxWindows&quot;: {
+      &quot;default&quot;: 0,
+      &quot;description&quot;: &quot;Cap the number of backwards time-window passes per keyword. 0 means no explicit cap (the wall-clock budget still applies).&quot;,
+      &quot;maximum&quot;: 1000,
+      &quot;minimum&quot;: 0,
+      &quot;title&quot;: &quot;Maximum time windows&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;mentioning&quot;: {
+      &quot;description&quot;: &quot;Only return posts that mention this account, e.g. apify or @apify.&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;nullable&quot;: true,
+      &quot;title&quot;: &quot;Mentioning account&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;monitorId&quot;: {
+      &quot;description&quot;: &quot;Namespace for the saved watermark. Use different ids to keep independent schedules for the same keyword. Defaults to &#x27;default&#x27;. The legacy alias &#x27;monitoringStateKey&#x27; is also accepted.&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;nullable&quot;: true,
+      &quot;title&quot;: &quot;Monitor ID&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;monitoringEnabled&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;Alias that enables onlyNew when onlyNew itself is not provided. Prefer the Only new posts field.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Enable monitoring (alias)&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;onlyImages&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;Only return tweets that contain at least one image.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Tweets with images only&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;onlyNew&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;Return only posts newer than the previous run for this keyword. The actor stores a numeric tweet-id watermark plus an overlap window in the key-value store, so scheduled runs do not repeat old rows.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;sectionCaption&quot;: &quot;Monitoring (only new posts)&quot;,
+      &quot;sectionDescription&quot;: &quot;Use these fields when the actor runs on a schedule and should return only fresh posts. X guest search has no since_id, so the actor compares 19-digit snowflake ids numerically and walks an overlap window.&quot;,
+      &quot;title&quot;: &quot;Only new posts (monitoring)&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;onlyQuotes&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;Only return quote tweets (filter:quote).&quot;,
+      &quot;prefill&quot;: false,
+      &quot;sectionCaption&quot;: &quot;More search filters&quot;,
+      &quot;sectionDescription&quot;: &quot;Optional operator-style filters. Operator queries use the X guest search only; the Bing News fallback cannot honour them.&quot;,
+      &quot;title&quot;: &quot;Quote tweets only&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;onlyVerifiedUsers&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;Only return tweets from verified (blue check) accounts.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Verified accounts only&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;onlyVideos&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;Only return tweets that contain at least one video or GIF.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Tweets with videos only&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;overlapMinutes&quot;: {
+      &quot;default&quot;: 10,
+      &quot;description&quot;: &quot;How far back before the previous run to search, so posts published during the last walk are not missed. Already-seen ids are still filtered out.&quot;,
+      &quot;maximum&quot;: 1440,
+      &quot;minimum&quot;: 0,
+      &quot;title&quot;: &quot;Overlap window (minutes)&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;proxyConfiguration&quot;: {
+      &quot;description&quot;: &quot;Optional. Use a proxy if you run large jobs or see frequent IP-based rate limits.&quot;,
+      &quot;editor&quot;: &quot;proxy&quot;,
+      &quot;nullable&quot;: true,
+      &quot;sectionCaption&quot;: &quot;Advanced&quot;,
+      &quot;sectionDescription&quot;: &quot;Optional settings for large or repeated runs.&quot;,
+      &quot;title&quot;: &quot;Proxy configuration&quot;,
+      &quot;type&quot;: &quot;object&quot;
+    },
+    &quot;searchType&quot;: {
+      &quot;default&quot;: &quot;Top&quot;,
+      &quot;description&quot;: &quot;Latest returns the newest posts first. Top is engagement-ranked output: X&#x27;s logged-out search never serves the real Top timeline, so the actor collects Latest pages and sorts them by like count client-side.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;Top&quot;,
+        &quot;Latest&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;Top — engagement-ranked (client-side like-sort of Latest)&quot;,
+        &quot;Latest — newest first&quot;
+      ],
+      &quot;prefill&quot;: &quot;Latest&quot;,
+      &quot;title&quot;: &quot;Result order&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;sinceTime&quot;: {
+      &quot;description&quot;: &quot;Optional lower bound for a backfill run: ISO 8601 timestamp or Unix epoch seconds. Uses X&#x27;s epoch since_time operator, not day-granular since:.&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;nullable&quot;: true,
+      &quot;title&quot;: &quot;Since time (backfill)&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;sort&quot;: {
+      &quot;description&quot;: &quot;Alias of Result order. The actor accepts either name.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;Top&quot;,
+        &quot;Latest&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;Top — engagement-ranked (client-side like-sort of Latest)&quot;,
+        &quot;Latest — newest first&quot;
+      ],
+      &quot;title&quot;: &quot;Result order (alias)&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;startDate&quot;: {
+      &quot;description&quot;: &quot;Deprecated — use &#x27;Start date&#x27; instead. Kept so existing saved inputs keep working. Format: YYYY-MM-DD.&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;nullable&quot;: true,
+      &quot;sectionCaption&quot;: &quot;Advanced (legacy)&quot;,
+      &quot;sectionDescription&quot;: &quot;Deprecated aliases kept for backwards compatibility. Prefer the fields above.&quot;,
+      &quot;title&quot;: &quot;Start date (legacy)&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;untilTime&quot;: {
+      &quot;description&quot;: &quot;Optional upper bound for a backfill run: ISO 8601 timestamp or Unix epoch seconds. Uses X&#x27;s epoch until_time operator.&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;nullable&quot;: true,
+      &quot;title&quot;: &quot;Until time (backfill)&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    }
+  },
+  &quot;required&quot;: [
+    &quot;keywords&quot;
+  ],
+  &quot;schemaVersion&quot;: 1,
+  &quot;title&quot;: &quot;Twitter Keywords Scraper&quot;,
+  &quot;type&quot;: &quot;object&quot;
+}
+</code></pre></details></section><section class="schema-section" id="output-schema"><h2>Output schema</h2><p>Published result links and storage locations. This schema is not an exhaustive contract for every field in a dataset record.</p><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>tweets</code></td><td>string</td><td>optional</td><td>Dataset containing one row per tweet, typed status rows when a keyword needs attention, and one run summary row.</td></tr></tbody></table></div><p><a href="output-schema.json">Download the published output schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+  &quot;actorOutputSchemaVersion&quot;: 1,
+  &quot;description&quot;: &quot;Tweets found for your keywords — text, author, engagement metrics, media and the search term that found each row.&quot;,
+  &quot;properties&quot;: {
+    &quot;tweets&quot;: {
+      &quot;description&quot;: &quot;Dataset containing one row per tweet, typed status rows when a keyword needs attention, and one run summary row.&quot;,
+      &quot;template&quot;: &quot;{{links.apiDefaultDatasetUrl}}/items&quot;,
+      &quot;title&quot;: &quot;Tweets&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    }
+  },
+  &quot;title&quot;: &quot;X/Twitter Keyword &amp; Hashtag Tweet Search Output&quot;
+}
+</code></pre></details></section><section class="schema-section" id="dataset-schema"><h2>Dataset schema</h2><p>Published dataset views and any declared field definitions. A view can select only a subset of the returned record fields.</p><p><a href="dataset-schema.json">Download the published dataset schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+  &quot;actorSpecification&quot;: 1,
+  &quot;views&quot;: {
+    &quot;tweets&quot;: {
+      &quot;display&quot;: {
+        &quot;columns&quot;: [
+          {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Type&quot;
+          },
+          {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Keyword&quot;
+          },
+          {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Tweet&quot;
+          },
+          {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Author&quot;
+          },
+          {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Date&quot;
+          },
+          {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Language&quot;
+          },
+          {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Replies&quot;
+          },
+          {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Retweets&quot;
+          },
+          {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Likes&quot;
+          },
+          {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Quotes&quot;
+          },
+          {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Views&quot;
+          },
+          {
+            &quot;format&quot;: &quot;number&quot;,
+            &quot;label&quot;: &quot;Engagement rate&quot;
+          },
+          {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Retweet?&quot;
+          },
+          {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Quote?&quot;
+          },
+          {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Reply?&quot;
+          },
+          {
+            &quot;format&quot;: &quot;link&quot;,
+            &quot;label&quot;: &quot;URL&quot;
+          },
+          {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Media&quot;
+          },
+          {
+            &quot;format&quot;: &quot;text&quot;,
+            &quot;label&quot;: &quot;Data collected at&quot;
+          }
+        ],
+        &quot;component&quot;: &quot;table&quot;
+      },
+      &quot;title&quot;: &quot;Tweets&quot;,
+      &quot;transformation&quot;: {
+        &quot;fields&quot;: [
+          &quot;type&quot;,
+          &quot;searchTerm&quot;,
+          &quot;text&quot;,
+          &quot;author.username&quot;,
+          &quot;createdAt&quot;,
+          &quot;language&quot;,
+          &quot;replyCount&quot;,
+          &quot;retweetCount&quot;,
+          &quot;likeCount&quot;,
+          &quot;quoteCount&quot;,
+          &quot;viewCount&quot;,
+          &quot;engagementRate&quot;,
+          &quot;isRetweet&quot;,
+          &quot;isQuote&quot;,
+          &quot;isReply&quot;,
+          &quot;url&quot;,
+          &quot;media&quot;,
+          &quot;collectedAt&quot;
+        ]
+      }
+    }
+  }
+}
+</code></pre></details></section><section class="schema-section" id="key-value-schema"><h2>Key-value schema</h2><p>Published key-value store definitions, when provided by this build.</p><p>This definition is not present in the default published build. See the published README for available documentation.</p></section><section id="published-readme"><h2>Published README</h2><details><summary>Read the full published documentation</summary><h2 id="readme-x-twitter-keyword-hashtag-tweet-search">X/Twitter Keyword &amp; Hashtag Tweet Search</h2>
+<p>Give this actor a list of keywords, phrases or hashtags and it pulls back matching X (formerly Twitter) posts — full text, engagement counts, media and the author who wrote each one. No sign-in, cookies or developer credentials needed; it reads the same public search results any visitor sees.</p>
+<h2 id="readme-what-this-actor-does">What this actor does</h2>
+<ul>
+<li>Runs each entry in <code>keywords</code> as its own independent search, so a single job can cover several unrelated topics at once.</li>
+<li>Targets up to 1,000 posts per keyword via <code>maxTweets</code>; how many actually come back depends on how much volume that keyword has on X. A 300-row target has been verified (about 297 s); 500/1,000 are not verified, so treat <code>maxTweets</code> as a target, not a promise.</li>
+<li>Runs several X search lanes (<code>latest</code>, <code>media</code>, opt-in <code>media-product</code>, <code>links</code>, optionally <code>replies</code>) and walks backwards through <code>since_time</code>/<code>until_time</code> windows. Guest search has <strong>no cursor paging</strong>; time-window backfill is the only way past the ~20-row page cap (a <code>product=Media</code> page can return 41-45 rows).</li>
+<li><code>Latest</code> returns newest-first. <code>Top</code> is <strong>engagement-ranked output, not X's real Top timeline</strong>: X never serves Top to logged-out callers, so the actor collects Latest pages and sorts them by like count client-side.</li>
+<li>Narrows by language, date window, retweets/replies, verification, media presence, quotes, mentions, author, reply target, conversation id, and minimum like/retweet/reply counts.</li>
+<li>Supports multi-word <code>matchMode</code> (<code>all</code>, <code>any</code>, <code>exact</code>) and <code>excludeWords</code>.</li>
+<li>With <code>onlyNew</code> enabled, returns only posts newer than the previous run for the same <code>monitorId</code> + keyword. The actor persists a numeric snowflake watermark and an overlap window in the key-value store.</li>
+<li>Stamps every row with <code>searchTerm</code>, <code>source</code> (<code>x-search</code> or <code>bing-news</code>), <code>sourceLane</code> (<code>latest</code> / <code>media</code> / <code>media-product</code> / <code>links</code> / <code>replies</code> / <code>window</code> / <code>bing</code> / <code>bing-title-only</code>) and <code>degraded</code>.</li>
+<li>Emits a typed <code>status</code> row for a keyword that needs attention and one <code>summary</code> row per run.</li>
+<li><strong>Empty fields are omitted:</strong> never <code>null</code>, empty strings or empty arrays/objects in the output.</li>
+</ul>
+<h2 id="readme-output-per-post">Output per post</h2>
+<p>Core fields on every post record: <code>id</code>, <code>url</code>, <code>text</code>, <code>createdAt</code>, <code>language</code> (when X reports one), <code>searchTerm</code>, <code>source</code>, <code>sourceLane</code>, <code>degraded</code>, <code>type: &quot;post&quot;</code> and <code>collectedAt</code>.</p>
+<p>Engagement comes through <code>replyCount</code>, <code>retweetCount</code>, <code>likeCount</code>, <code>quoteCount</code>, <code>bookmarkCount</code>, and <code>viewCount</code>, plus a computed <code>engagementRate</code> — <code>(likes + retweets + replies + quotes) ÷ followers</code> — included only once the author's follower count is known and nonzero. Missing retweets/quotes/bookmarks/views/followers/bio are backfilled from the FxTwitter mirror after the X refresh; X values always win and only missing fields are copied.</p>
+<p>Post-type context: <code>isReply</code>, <code>isRetweet</code>, <code>isQuote</code>, <code>isNoteTweet</code>, and, for replies, <code>conversationId</code>, <code>inReplyToTweetId</code>, <code>inReplyToUserId</code>, <code>inReplyToUsername</code>, <code>parentTweet</code> (a nested summary of the post being replied to, when available). Every post row also carries <code>recordType: &quot;post&quot;</code>, <code>sourceUrl</code> (the canonical post URL) and <code>scrapedAt</code>.</p>
+<p>Entities parsed out of the text: <code>hashtags</code>, <code>mentions</code>, <code>urls</code>, <code>cashtags</code>.</p>
+<p>Attachments and extras, when present: <code>media</code> (one entry per photo/video/GIF with <code>type</code>, <code>url</code>, <code>previewImageUrl</code>, <code>width</code>, <code>height</code>, <code>durationSeconds</code>, <code>viewCount</code>, <code>altText</code>, <code>mediaKey</code>, <code>canMediaTag</code>, <code>focusRects</code>, <code>variants</code> with <code>url</code>/<code>contentType</code>/<code>bitrate</code>), <code>quotedTweet</code> / <code>quotedTweetId</code>, <code>poll</code>, <code>card</code>, <code>possiblySensitive</code>, <code>withheldInCountries</code>, <code>place</code>, <code>postedFrom</code>, <code>isEdited</code>, <code>editControl</code> (edit history metadata), <code>newsActionType</code>.</p>
+<p>The author rides along as a nested <code>author</code> object: <code>id</code>, <code>username</code>, <code>name</code>, <code>bio</code>, <code>bioLinks</code>, <code>location</code>, <code>website</code>, <code>followers</code>, <code>following</code>, <code>likesGiven</code>, <code>postCount</code>, <code>mediaCount</code>, <code>createdAt</code>, <code>profileImageUrl</code>, <code>bannerUrl</code>, <code>profileImageShape</code>, <code>isBlueVerified</code>, <code>verified</code>, <code>verifiedType</code>, <code>isProtected</code>, <code>professionalType</code>, <code>superFollowEligible</code>, <code>superFollowedBy</code>, <code>superFollowing</code>, <code>hasGraduatedAccess</code>, <code>translatorType</code> and <code>pinnedTweetIds</code>. Fields X does not expose for a post are omitted.</p>
+<h3 id="readme-sample-record">Sample record</h3>
+<pre><code class="language-json">{
+  &quot;type&quot;: &quot;post&quot;,
+  &quot;id&quot;: &quot;1923456789012345678&quot;,
+  &quot;url&quot;: &quot;https://x.com/i/status/1923456789012345678&quot;,
+  &quot;text&quot;: &quot;Just shipped a new feature after three weeks of testing. Feels good. #buildinpublic&quot;,
+  &quot;createdAt&quot;: &quot;2026-06-02T09:15:00+00:00&quot;,
+  &quot;language&quot;: &quot;en&quot;,
+  &quot;searchTerm&quot;: &quot;buildinpublic&quot;,
+  &quot;source&quot;: &quot;x-search&quot;,
+  &quot;sourceLane&quot;: &quot;latest&quot;,
+  &quot;degraded&quot;: false,
+  &quot;replyCount&quot;: 34,
+  &quot;retweetCount&quot;: 112,
+  &quot;likeCount&quot;: 1870,
+  &quot;quoteCount&quot;: 9,
+  &quot;bookmarkCount&quot;: 265,
+  &quot;viewCount&quot;: 54300,
+  &quot;isReply&quot;: false,
+  &quot;isRetweet&quot;: false,
+  &quot;isQuote&quot;: false,
+  &quot;hashtags&quot;: [&quot;buildinpublic&quot;],
+  &quot;author&quot;: {
+    &quot;id&quot;: &quot;1092834756&quot;,
+    &quot;username&quot;: &quot;makerjane&quot;,
+    &quot;name&quot;: &quot;Jane Builds&quot;,
+    &quot;followers&quot;: 18400,
+    &quot;isBlueVerified&quot;: false
+  },
+  &quot;collectedAt&quot;: &quot;2026-06-02T10:03:41+00:00&quot;
+}
+</code></pre>
+<h2 id="readme-output-per-status-row">Output per status row</h2>
+<p>When a keyword needs attention, the actor pushes one typed record:</p>
+<pre><code class="language-json">{
+  &quot;type&quot;: &quot;status&quot;,
+  &quot;status&quot;: &quot;blocked&quot;,
+  &quot;message&quot;: &quot;X guest search refused this network right now...&quot;,
+  &quot;searchTerm&quot;: &quot;apify&quot;,
+  &quot;collectedAt&quot;: &quot;2026-06-02T10:03:41+00:00&quot;,
+  &quot;source&quot;: &quot;none&quot;,
+  &quot;sourcesTried&quot;: [&quot;x-search&quot;, &quot;bing-news&quot;],
+  &quot;xAttempts&quot;: 96,
+  &quot;xOk&quot;: 0,
+  &quot;xLastStatus&quot;: 404,
+  &quot;bingDiscovered&quot;: 0,
+  &quot;bingHydrated&quot;: 0,
+  &quot;bingTitleOnly&quot;: 0,
+  &quot;bingRows&quot;: 0,
+  &quot;targetRows&quot;: 20,
+  &quot;uniqueRows&quot;: 0,
+  &quot;budgetSeconds&quot;: 105,
+  &quot;budgetExhausted&quot;: false,
+  &quot;degraded&quot;: true,
+  &quot;partial&quot;: false
+}
+</code></pre>
+<p>Statuses:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Status</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>noInput</code></td>
+<td>No keywords were provided.</td>
+</tr>
+<tr>
+<td><code>noResults</code></td>
+<td>A source answered and returned zero matching posts (or every collected row was already seen by <code>onlyNew</code>).</td>
+</tr>
+<tr>
+<td><code>blocked</code></td>
+<td>No source answered: X refused and Bing was unavailable or skipped because the query uses operators.</td>
+</tr>
+<tr>
+<td><code>partial</code></td>
+<td>Rows were returned but the target was <strong>not</strong> reached (budget/limits stopped the walk, a full page appeared at the oldest edge, or X was blocked and Bing supplied fewer rows than requested). Reaching the target exactly is <code>ok</code>, even when rows are <code>degraded</code>.</td>
+</tr>
+<tr>
+<td><code>budgetExhausted</code></td>
+<td>The per-keyword budget ran out before any source answered.</td>
+</tr>
+<tr>
+<td><code>enrichmentPartial</code></td>
+<td>Rows were returned, but one or more per-tweet enrichment lookups failed.</td>
+</tr>
+</tbody>
+</table></div>
+<p><code>xOk</code> counts only X bursts that returned a parseable page of posts. An HTTP 200 with an empty payload or an empty timeline is treated as a refusal/no-answer, so it cannot mask <code>blocked</code> or <code>budgetExhausted</code>.</p>
+<p>Every run also ends with one <code>type: &quot;summary&quot;</code> row carrying <code>recordType: &quot;runSummary&quot;</code>, <code>scrapedAt</code>, <code>startedAt</code>, <code>finishedAt</code>, <code>keywords</code>, <code>postRows</code>, <code>statusRows</code>, <code>bySource</code>, <code>sourcesTried</code>, aggregate <code>xAttempts</code> / <code>xOk</code> / <code>bingDiscovered</code> / <code>bingHydrated</code> / <code>bingTitleOnly</code>, <code>degradedKeywords</code>, <code>partialKeywords</code>, <code>blockedKeywords</code>, <code>durationSeconds</code>, <code>monitorId</code> and <code>onlyNew</code>. Consumers that count <code>type: &quot;post&quot;</code> are never confused by status or summary rows.</p>
+<h2 id="readme-known-hard-limits">Known hard limits</h2>
+<p>Measured directly (no proxy, no cookies, no browser) in live probes on 2026-11-08:</p>
+<ul>
+<li><strong>Guest search is a lottery.</strong> Only ~6% of Latest bursts answered in a 32-attempt probe, and the 300-row backfill used 5,259 attempts / 20 answered bursts (0.38%). The same query can return 20 rows in seconds later, but there is no SLA.</li>
+<li><strong>No real <code>Top</code>.</strong> X serves Top only to signed-in callers, so <code>Top</code> output is a client-side like-sort of the Latest rows that were collected.</li>
+<li><strong>No cursor paging.</strong> One answered page is ~20 rows; <code>product=Media</code> can return 41-45. Backfill beyond one page is time-window walking only.</li>
+<li><strong>300 rows is the measured backfill ceiling.</strong> 300/300 was reached on <code>bitcoin</code>; 500 and 1,000 are unverified targets.</li>
+<li><strong>Bing News is stale and shallow.</strong> It discovers newsworthy posts only (0/65 sampled rows were &lt;24 h old, 53/65 were &lt;7 d) and walks at most 5 RSS pages (~50 unique ids). It cannot honour operator queries.</li>
+<li><strong>Monitoring is duplicate suppression, not complete coverage.</strong> <code>onlyNew</code> plus the overlap window protects the page boundary; posts published between runs can be missed when a keyword produces more than one page per interval.</li>
+<li><strong>Enrichment depends on one third-party mirror.</strong> FxTwitter fills retweets/quotes/bookmarks/views/author fields; vxtwitter/fxwitter/fixupx were unusable in the same environment. If FxTwitter fails, those fields stay absent; rows are still returned.</li>
+</ul>
+<h2 id="readme-input">Input</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>keywords</code></td>
+<td>array</td>
+<td>–</td>
+<td><strong>Required.</strong> Words, phrases, hashtags or full search queries; each runs separately.</td>
+</tr>
+<tr>
+<td><code>maxTweets</code></td>
+<td>integer</td>
+<td><code>20</code></td>
+<td>Target number of posts per keyword (1–1000).</td>
+</tr>
+<tr>
+<td><code>maxItems</code></td>
+<td>integer</td>
+<td>–</td>
+<td>Same as <code>maxTweets</code> — use whichever name you prefer.</td>
+</tr>
+<tr>
+<td><code>searchType</code></td>
+<td>string</td>
+<td><code>Top</code></td>
+<td><code>Top</code> = engagement-ranked (client-side like-sort of Latest); <code>Latest</code> = newest-first.</td>
+</tr>
+<tr>
+<td><code>sort</code></td>
+<td>string</td>
+<td>–</td>
+<td>Same as <code>searchType</code>.</td>
+</tr>
+<tr>
+<td><code>language</code></td>
+<td>string</td>
+<td><code>Any language</code></td>
+<td>Restrict to one of 40 common X language codes, e.g. <code>en</code>, <code>es</code>, <code>ja</code>.</td>
+</tr>
+<tr>
+<td><code>dateFrom</code></td>
+<td>date</td>
+<td>–</td>
+<td>Earliest post date to include.</td>
+</tr>
+<tr>
+<td><code>dateTo</code></td>
+<td>date</td>
+<td>–</td>
+<td>Latest post date to include (inclusive).</td>
+</tr>
+<tr>
+<td><code>excludeRetweets</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Drop retweets/reposts, keep only original posts.</td>
+</tr>
+<tr>
+<td><code>excludeReplies</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Drop replies, keep only top-level posts.</td>
+</tr>
+<tr>
+<td><code>onlyVerifiedUsers</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Keep only posts from verified accounts.</td>
+</tr>
+<tr>
+<td><code>onlyImages</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Keep only posts containing at least one image.</td>
+</tr>
+<tr>
+<td><code>onlyVideos</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Keep only posts containing at least one video or GIF.</td>
+</tr>
+<tr>
+<td><code>onlyQuotes</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Keep only quote tweets.</td>
+</tr>
+<tr>
+<td><code>mentioning</code></td>
+<td>string</td>
+<td>–</td>
+<td>Keep posts that mention this account.</td>
+</tr>
+<tr>
+<td><code>author</code></td>
+<td>string</td>
+<td>–</td>
+<td>Keep posts written by this account.</td>
+</tr>
+<tr>
+<td><code>inReplyTo</code></td>
+<td>string</td>
+<td>–</td>
+<td>Keep replies addressed to this account.</td>
+</tr>
+<tr>
+<td><code>conversationId</code></td>
+<td>string</td>
+<td>–</td>
+<td>Keep posts in this conversation.</td>
+</tr>
+<tr>
+<td><code>matchMode</code></td>
+<td>string</td>
+<td><code>all</code></td>
+<td><code>all</code> (AND), <code>any</code> (OR) or <code>exact</code> (quoted phrase) for multi-word keywords.</td>
+</tr>
+<tr>
+<td><code>excludeWords</code></td>
+<td>array</td>
+<td>–</td>
+<td>Words/phrases to exclude (<code>-word</code>, <code>-&quot;two words&quot;</code>).</td>
+</tr>
+<tr>
+<td><code>includeLanes</code></td>
+<td>array</td>
+<td>–</td>
+<td><code>latest</code>, <code>media</code>, <code>media-product</code>, <code>links</code>, <code>replies</code>. Default is latest + media + links; replies is added for 100+ row jobs. <code>media-product</code> asks for X's <code>product=Media</code> page directly (opt-in; 41-45 rows when it answers).</td>
+</tr>
+<tr>
+<td><code>maxWindows</code></td>
+<td>integer</td>
+<td><code>0</code></td>
+<td>Cap backwards time-window passes per keyword; <code>0</code> = no explicit cap.</td>
+</tr>
+<tr>
+<td><code>maxPasses</code></td>
+<td>integer</td>
+<td><code>0</code></td>
+<td>Cap total X search passes (core + windows); <code>0</code> = no explicit cap.</td>
+</tr>
+<tr>
+<td><code>minimumLikes</code></td>
+<td>integer</td>
+<td>–</td>
+<td>Floor on like count.</td>
+</tr>
+<tr>
+<td><code>minimumRetweets</code></td>
+<td>integer</td>
+<td>–</td>
+<td>Floor on retweet count.</td>
+</tr>
+<tr>
+<td><code>minimumReplies</code></td>
+<td>integer</td>
+<td>–</td>
+<td>Floor on reply count.</td>
+</tr>
+<tr>
+<td><code>onlyNew</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Return only posts newer than the previous run for this keyword.</td>
+</tr>
+<tr>
+<td><code>monitoringEnabled</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Alias that enables <code>onlyNew</code> when <code>onlyNew</code> is not provided.</td>
+</tr>
+<tr>
+<td><code>monitorId</code></td>
+<td>string</td>
+<td><code>default</code></td>
+<td>Namespace for the saved watermark; use different ids for independent schedules. <code>monitoringStateKey</code> is accepted as an alias.</td>
+</tr>
+<tr>
+<td><code>overlapMinutes</code></td>
+<td>integer</td>
+<td><code>10</code></td>
+<td>Search this far before the previous run so late-arriving posts are not missed.</td>
+</tr>
+<tr>
+<td><code>maxAgeDays</code></td>
+<td>integer</td>
+<td><code>90</code></td>
+<td>Never walk further back than this, even after a long gap.</td>
+</tr>
+<tr>
+<td><code>sinceTime</code></td>
+<td>string</td>
+<td>–</td>
+<td>Backfill lower bound: ISO 8601 or Unix epoch seconds.</td>
+</tr>
+<tr>
+<td><code>untilTime</code></td>
+<td>string</td>
+<td>–</td>
+<td>Backfill upper bound: ISO 8601 or Unix epoch seconds.</td>
+</tr>
+<tr>
+<td><code>proxyConfiguration</code></td>
+<td>object</td>
+<td>–</td>
+<td>Optional; useful for large or repeated runs from the same IP.</td>
+</tr>
+<tr>
+<td><code>startDate</code> / <code>endDate</code></td>
+<td>string</td>
+<td>–</td>
+<td>Older aliases for <code>dateFrom</code> / <code>dateTo</code> (<code>YYYY-MM-DD</code>).</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="readme-example-two-unrelated-topics-in-one-run">Example: two unrelated topics in one run</h3>
+<pre><code class="language-json">{
+  &quot;keywords&quot;: [&quot;apify&quot;, &quot;web scraping&quot;],
+  &quot;maxTweets&quot;: 50
+}
+</code></pre>
+<h3 id="readme-example-live-brand-mention-watch">Example: live brand-mention watch</h3>
+<pre><code class="language-json">{
+  &quot;keywords&quot;: [&quot;#YourBrand&quot;, &quot;\&quot;your brand\&quot;&quot;],
+  &quot;searchType&quot;: &quot;Latest&quot;,
+  &quot;language&quot;: &quot;en&quot;,
+  &quot;maxTweets&quot;: 200,
+  &quot;excludeRetweets&quot;: true,
+  &quot;excludeReplies&quot;: true
+}
+</code></pre>
+<h3 id="readme-example-scheduled-only-new-monitoring">Example: scheduled only-new monitoring</h3>
+<pre><code class="language-json">{
+  &quot;keywords&quot;: [&quot;#YourBrand&quot;, &quot;@yourbrand&quot;],
+  &quot;searchType&quot;: &quot;Latest&quot;,
+  &quot;maxTweets&quot;: 200,
+  &quot;onlyNew&quot;: true,
+  &quot;monitorId&quot;: &quot;brand-watch&quot;,
+  &quot;overlapMinutes&quot;: 15,
+  &quot;maxAgeDays&quot;: 30
+}
+</code></pre>
+<h3 id="readme-example-bounded-backfill-without-a-cursor">Example: bounded backfill without a cursor</h3>
+<pre><code class="language-json">{
+  &quot;keywords&quot;: [&quot;artificial intelligence&quot;],
+  &quot;maxTweets&quot;: 500,
+  &quot;sinceTime&quot;: &quot;2026-01-01T00:00:00Z&quot;,
+  &quot;untilTime&quot;: &quot;2026-06-30T23:59:59Z&quot;,
+  &quot;includeLanes&quot;: [&quot;latest&quot;, &quot;media&quot;, &quot;links&quot;],
+  &quot;maxWindows&quot;: 40
+}
+</code></pre>
+<h3 id="readme-example-top-posts-in-a-date-window-above-an-engagement-floor">Example: top posts in a date window, above an engagement floor</h3>
+<pre><code class="language-json">{
+  &quot;keywords&quot;: [&quot;artificial intelligence&quot;],
+  &quot;maxTweets&quot;: 500,
+  &quot;minimumLikes&quot;: 100,
+  &quot;minimumRetweets&quot;: 20,
+  &quot;dateFrom&quot;: &quot;2026-01-01&quot;,
+  &quot;dateTo&quot;: &quot;2026-06-30&quot;
+}
+</code></pre>
+<h2 id="readme-use-cases">Use cases</h2>
+<ul>
+<li><strong>Brand monitoring</strong> — schedule the actor with <code>onlyNew</code> to catch new mentions without repeating old rows.</li>
+<li><strong>Trend and topic tracking</strong> — measure how a subject's volume and engagement shift over weeks or months.</li>
+<li><strong>Breaking-news watch</strong> — pair <code>Latest</code> with a tight date range or <code>sinceTime</code>/<code>untilTime</code> to follow a fast-moving story.</li>
+<li><strong>Content research</strong> — surface the highest-engagement posts around a theme for inspiration.</li>
+<li><strong>Academic or policy research</strong> — assemble a dataset of public discourse on a topic, language or time period.</li>
+<li><strong>Competitor comparison</strong> — run several competing keywords side by side and compare volume and engagement.</li>
+</ul>
+<h2 id="readme-faq">FAQ</h2>
+<p><strong>Do I need an X account or developer credentials?</strong>
+No — there's no credential field in the input at all. The actor reads what any logged-out visitor can already see on X's own search.</p>
+<p><strong>How many posts will I actually get per keyword?</strong>
+Up to <code>maxTweets</code>, but that's a ceiling, not a promise. Guest search answers intermittently and returns ~20 rows per answered page (41-45 on an answered <code>product=Media</code> page). The actor multiplies those pages with lanes and time windows. A 300-row target has been verified; targets above 300 are unverified. An obscure keyword may return only a handful.</p>
+<p><strong>Why did I get a different count on a second identical run?</strong>
+X's logged-out search doesn't expose stable, full pagination, and what it surfaces can shift between requests. If you need more rows, use <code>onlyNew: false</code>, narrow the date window, or add lanes rather than assuming something broke.</p>
+<p><strong>Should I use <code>Top</code> or <code>Latest</code>?</strong>
+<code>Latest</code> for anything time-sensitive — breaking news, live mentions, a campaign in progress. <code>Top</code> gives you the strongest engagement among the rows the actor could collect, but it is a client-side like-sort of Latest results, not X's real Top timeline (X does not serve Top to guests).</p>
+<p><strong>How does only-new monitoring work without a cursor?</strong>
+The actor saves <code>lastMaxId</code> (numeric 19-digit snowflake), <code>lastRunAt</code> and the last 1,000 seen ids in the key-value store under <code>xkw:&lt;sha1(monitorId + keyword)&gt;</code>. Each run searches from <code>lastRunAt - overlapMinutes</code> (capped by <code>maxAgeDays</code>) and keeps rows with an id numerically above the watermark or created inside the overlap window and not already seen. A blocked run never advances the watermark. Bing-only fallback rows are remembered as seen so they are not re-emitted, but they leave the X gap open for the next run.</p>
+<p><strong>Is a proxy required?</strong>
+No, it's optional. Add one mainly if you're running large or frequent jobs from the same IP and want extra headroom against rate limiting.</p>
+<p><strong>How current is the data?</strong>
+Fully live — each run queries X at the moment it executes. Put the actor on a schedule with <code>onlyNew</code> for ongoing monitoring. Bing News fallback rows are not real-time: in live probes only 1.2% were under 24 hours old.</p>
+<p><strong>Why is a row marked <code>degraded: true</code>?</strong>
+It came from the Bing News fallback (hydrated or title-only). Those rows are newsworthy-only, can be days or years old, and lack retweets/quotes/views/bookmarks/followers until the enrichment layer fills what it can.</p>
+<p><strong>How do I get the results into another tool?</strong>
+Pull the dataset from the run page or the Apify API, wire up a webhook, or connect it to Zapier, Make, Google Sheets, or similar no-code tools.</p>
+<p><strong>Is this affiliated with X?</strong>
+No. This is an independent, third-party actor that reads publicly available X search results.</p>
+</details></section><section id="python-quickstart"><h2>Python quickstart</h2><p>Use a schema-derived input and the Python standard library to start a run. An Apify account and token are required for execution.</p><p><a href="/apify-actor-examples/guides/x-twitter-keyword-and-hashtag-tweet-search/">Open the step-by-step Python guide →</a></p></section><p class="source-note">Source build <code>0DLSgXAaZoP4YhOHR</code>. Documentation is regenerated from the default published build; private drafts are not included.</p></article></div></main><footer class="footer"><strong>Nimbryxo Studio</strong><div class="footer-links"><a href="/apify-actor-examples/topics/">Topics</a><a href="/apify-actor-examples/sources/">Documentation sources</a><a href="https://apify.com/nimbryxo-studio">Apify</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></div></footer></body></html>

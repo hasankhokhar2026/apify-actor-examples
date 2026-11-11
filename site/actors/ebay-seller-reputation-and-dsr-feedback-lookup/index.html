@@ -1,0 +1,941 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src &#x27;self&#x27;; script-src &#x27;self&#x27; &#x27;sha256-509VnneXLzEwC2E9axxqE3ntSiHzFFlDSTMe6AD2lN4=&#x27;; style-src &#x27;self&#x27;; img-src &#x27;self&#x27; https: data:; base-uri &#x27;self&#x27;; form-action &#x27;self&#x27;; object-src &#x27;none&#x27;"><title>eBay Seller Reputation &amp; DSR Feedback Lookup | Nimbryxo Studio</title><meta name="description" content="Look up any eBay seller by username or store URL and get individual feedback entries (rating, comment, item, price, buyer) plus their overall reputation stats and Detailed Seller R"><meta name="robots" content="index,follow"><link rel="canonical" href="https://hasankhokhar2026.github.io/apify-actor-examples/actors/ebay-seller-reputation-and-dsr-feedback-lookup/"><meta property="og:title" content="eBay Seller Reputation &amp; DSR Feedback Lookup | Nimbryxo Studio"><meta property="og:description" content="Look up any eBay seller by username or store URL and get individual feedback entries (rating, comment, item, price, buyer) plus their overall reputation stats and Detailed Seller R"><meta property="og:type" content="website"><meta property="og:url" content="https://hasankhokhar2026.github.io/apify-actor-examples/actors/ebay-seller-reputation-and-dsr-feedback-lookup/"><meta property="og:site_name" content="Nimbryxo Studio"><meta name="twitter:card" content="summary"><link rel="icon" href="/apify-actor-examples/assets/mark.svg?v=2d20f9dc334a" type="image/svg+xml"><link rel="stylesheet" href="/apify-actor-examples/assets/site.css?v=39545fd4a399"><link rel="stylesheet" href="/apify-actor-examples/assets/brand.css?v=eb0f935ade25"><link rel="alternate" type="application/rss+xml" title="Nimbryxo Studio guides" href="/apify-actor-examples/feed.xml"><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization","name":"Nimbryxo Studio","url":"https://hasankhokhar2026.github.io/apify-actor-examples/","sameAs":["https://apify.com/nimbryxo-studio"]},{"@type":"WebSite","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#website","name":"Nimbryxo Studio","url":"https://hasankhokhar2026.github.io/apify-actor-examples/","publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"inLanguage":"en"},{"@type":"WebPage","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/ebay-seller-reputation-and-dsr-feedback-lookup/#webpage","name":"eBay Seller Reputation & DSR Feedback Lookup","description":"Look up any eBay seller by username or store URL and get individual feedback entries (rating, comment, item, price, buyer) plus their overall reputation stats and Detailed Seller Ratings.","url":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/ebay-seller-reputation-and-dsr-feedback-lookup/","isPartOf":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#website"},"publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"inLanguage":"en","mainEntity":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/ebay-seller-reputation-and-dsr-feedback-lookup/#article"},"breadcrumb":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/ebay-seller-reputation-and-dsr-feedback-lookup/#breadcrumb"}},{"@type":"TechArticle","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/ebay-seller-reputation-and-dsr-feedback-lookup/#article","headline":"eBay Seller Reputation & DSR Feedback Lookup","name":"eBay Seller Reputation & DSR Feedback Lookup","description":"Look up any eBay seller by username or store URL and get individual feedback entries (rating, comment, item, price, buyer) plus their overall reputation stats and Detailed Seller Ratings.","url":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/ebay-seller-reputation-and-dsr-feedback-lookup/","author":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"mainEntityOfPage":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/ebay-seller-reputation-and-dsr-feedback-lookup/#webpage"},"inLanguage":"en","dateModified":"2026-11-10T16:02:20.721Z"},{"@type":"BreadcrumbList","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/ebay-seller-reputation-and-dsr-feedback-lookup/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Nimbryxo Studio","item":"https://hasankhokhar2026.github.io/apify-actor-examples/"},{"@type":"ListItem","position":2,"name":"Actors","item":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/"},{"@type":"ListItem","position":3,"name":"eBay Seller Reputation & DSR Feedback Lookup","item":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/ebay-seller-reputation-and-dsr-feedback-lookup/"}]}]}</script><script src="/apify-actor-examples/assets/site.js?v=7cabac48dd31" defer></script></head><body class="theme-studio"><a href="#main" class="skip-link">Skip to content</a><header><div class="inner"><a href="/apify-actor-examples/" class="brand"><img src="/apify-actor-examples/assets/mark.svg?v=2d20f9dc334a" alt="" width="29" height="29">Nimbryxo Studio</a><nav aria-label="Main navigation"><a href="/apify-actor-examples/actors/" aria-current="page">Actors</a><a href="/apify-actor-examples/guides/">Guides</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></nav></div></header><main id="main"><div class="doc-layout"><aside class="contents" aria-label="On this page"><strong>Contents</strong><a href="#overview">Overview</a><a href="#published-readme">Published README</a><a href="#input-schema">Input schema</a><a href="#output-schema">Output schema</a><a href="#dataset-schema">Dataset schema</a><a href="#python-quickstart">Python quickstart</a></aside><article class="prose"><div class="breadcrumb"><a href="/apify-actor-examples/actors/">Actors</a><span>/</span><span>eBay Seller Reputation &amp; DSR Feedback Lookup</span></div><section id="overview"><h1 class="doc-title">eBay Seller Reputation &amp; DSR Feedback Lookup</h1><p class="lede">Look up any eBay seller by username or store URL and get individual feedback entries (rating, comment, item, price, buyer) plus their overall reputation stats and Detailed Seller Ratings.</p><p class="summary">eBay Seller Reputation &amp; DSR Feedback Lookup is an Apify Actor published by Nimbryxo Studio. It accepts 16 input fields, and <code>mode</code> is required. Its build declares a results dataset with 2 views. Runs happen on Apify, where the Store page lists the current price.</p><div class="actions"><a class="button" href="https://apify.com/nimbryxo-studio/ebay-seller-reputation-and-dsr-feedback-lookup">Open on Apify</a><a class="text-link" href="https://github.com/hasankhokhar2026/apify-actor-examples/blob/main/docs/actors/NloD0CR3lldcQwPKt/README.md">GitHub source</a></div></section><section class="schema-section" id="input-schema"><h2>Input schema</h2><p>Input fields, types, required flags, descriptions, defaults, and prefills come from the published definition. Prefill examples are distinct from defaults.</p><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>mode</code></td><td>string</td><td>required</td><td>Choose feedback rows, one seller profile summary per seller, or both.</td></tr><tr><td><code>sellerUsernames</code></td><td>array</td><td>optional</td><td>eBay seller usernames or profile URLs, e.g. &quot;musicmagpie&quot; or https://www.ebay.com/usr/musicmagpie. At least one of sellerUsernames or storeUrls must be given.</td></tr><tr><td><code>storeUrls</code></td><td>array</td><td>optional</td><td>Full eBay store URLs (https://www.ebay.com/str/&lt;seller&gt;). The URL&#x27;s eBay site is used for that seller.</td></tr></tbody></table></div><details><summary>Show all input fields</summary><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>mode</code></td><td>string</td><td>required</td><td>Choose feedback rows, one seller profile summary per seller, or both.</td></tr><tr><td><code>sellerUsernames</code></td><td>array</td><td>optional</td><td>eBay seller usernames or profile URLs, e.g. &quot;musicmagpie&quot; or https://www.ebay.com/usr/musicmagpie. At least one of sellerUsernames or storeUrls must be given.</td></tr><tr><td><code>storeUrls</code></td><td>array</td><td>optional</td><td>Full eBay store URLs (https://www.ebay.com/str/&lt;seller&gt;). The URL&#x27;s eBay site is used for that seller.</td></tr><tr><td><code>marketplace</code></td><td>string</td><td>optional</td><td>eBay site used for plain usernames and as the default for store URLs.</td></tr><tr><td><code>feedbackType</code></td><td>string</td><td>optional</td><td>Which side of the seller&#x27;s feedback ledger to read.</td></tr><tr><td><code>ratingType</code></td><td>string</td><td>optional</td><td>Filter feedback rows by rating.</td></tr><tr><td><code>period</code></td><td>string</td><td>optional</td><td>Only feedback left in this period. eBay applies this within the last 12 months.</td></tr><tr><td><code>sortBy</code></td><td>string</td><td>optional</td><td>Newest first is best for monitoring; relevance follows eBay&#x27;s own ranking.</td></tr><tr><td><code>itemSearch</code></td><td>string</td><td>optional</td><td>Only feedback for matching items. eBay searches the last 5 years and cannot combine this with its period or rating filters; the rating filter is checked by the actor instead.</td></tr><tr><td><code>imagesOnly</code></td><td>boolean</td><td>optional</td><td>Return only feedback entries where the buyer attached a photo.</td></tr><tr><td><code>includePhotos</code></td><td>boolean</td><td>optional</td><td>Fetch every buyer photo for feedback entries that have more than one. Adds one public feedback-detail request per such entry.</td></tr><tr><td><code>includeAutomated</code></td><td>boolean</td><td>optional</td><td>Include eBay&#x27;s automated positive feedback entries. Turn off to keep only feedback written by buyers.</td></tr><tr><td><code>maxItems</code></td><td>integer</td><td>optional</td><td>Maximum number of feedback rows to return across all sellers.</td></tr><tr><td><code>maxFeedbackPerSeller</code></td><td>integer</td><td>optional</td><td>Per-seller cap. The global maxItems cap also applies.</td></tr><tr><td><code>maxPages</code></td><td>integer</td><td>optional</td><td>Safety cap on feedback pages followed per seller. eBay usually serves 25, 50 or 100 rows per page.</td></tr><tr><td><code>stopAtFeedbackIds</code></td><td>array</td><td>optional</td><td>Optional feedback IDs from an earlier run. Each seller stops when one of these IDs is reached (the known row is not returned). Requires newest-first sorting.</td></tr></tbody></table></div></details><p><a href="input-schema.json">Download the published input schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+  &quot;description&quot;: &quot;Look up eBay seller feedback, seller reputation, Detailed Seller Ratings, replies and store metadata by username or store URL.&quot;,
+  &quot;properties&quot;: {
+    &quot;feedbackType&quot;: {
+      &quot;default&quot;: &quot;All&quot;,
+      &quot;description&quot;: &quot;Which side of the seller&#x27;s feedback ledger to read.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;All&quot;,
+        &quot;Seller&quot;,
+        &quot;Buyer&quot;,
+        &quot;LeftForOthers&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;All received feedback&quot;,
+        &quot;Received as seller&quot;,
+        &quot;Received as buyer&quot;,
+        &quot;Left for others&quot;
+      ],
+      &quot;prefill&quot;: &quot;All&quot;,
+      &quot;sectionCaption&quot;: &quot;Feedback filters&quot;,
+      &quot;sectionDescription&quot;: &quot;Optional filters applied to the feedback list. The rating and period filters are applied by eBay where possible and checked again in the actor.&quot;,
+      &quot;title&quot;: &quot;Feedback role&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;imagesOnly&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;Return only feedback entries where the buyer attached a photo.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Only feedback with photos&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;includeAutomated&quot;: {
+      &quot;default&quot;: true,
+      &quot;description&quot;: &quot;Include eBay&#x27;s automated positive feedback entries. Turn off to keep only feedback written by buyers.&quot;,
+      &quot;prefill&quot;: true,
+      &quot;title&quot;: &quot;Include automated feedback&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;includePhotos&quot;: {
+      &quot;default&quot;: false,
+      &quot;description&quot;: &quot;Fetch every buyer photo for feedback entries that have more than one. Adds one public feedback-detail request per such entry.&quot;,
+      &quot;prefill&quot;: false,
+      &quot;title&quot;: &quot;Include full photo galleries&quot;,
+      &quot;type&quot;: &quot;boolean&quot;
+    },
+    &quot;itemSearch&quot;: {
+      &quot;default&quot;: &quot;&quot;,
+      &quot;description&quot;: &quot;Only feedback for matching items. eBay searches the last 5 years and cannot combine this with its period or rating filters; the rating filter is checked by the actor instead.&quot;,
+      &quot;editor&quot;: &quot;textfield&quot;,
+      &quot;prefill&quot;: &quot;&quot;,
+      &quot;title&quot;: &quot;Item title or ID search&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;marketplace&quot;: {
+      &quot;default&quot;: &quot;US&quot;,
+      &quot;description&quot;: &quot;eBay site used for plain usernames and as the default for store URLs.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;US&quot;,
+        &quot;UK&quot;,
+        &quot;DE&quot;,
+        &quot;AU&quot;,
+        &quot;CA&quot;,
+        &quot;FR&quot;,
+        &quot;IT&quot;,
+        &quot;ES&quot;,
+        &quot;IE&quot;,
+        &quot;NL&quot;,
+        &quot;PL&quot;,
+        &quot;CH&quot;,
+        &quot;AT&quot;,
+        &quot;BE&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;United States (ebay.com)&quot;,
+        &quot;United Kingdom (ebay.co.uk)&quot;,
+        &quot;Germany (ebay.de)&quot;,
+        &quot;Australia (ebay.com.au)&quot;,
+        &quot;Canada (ebay.ca)&quot;,
+        &quot;France (ebay.fr)&quot;,
+        &quot;Italy (ebay.it)&quot;,
+        &quot;Spain (ebay.es)&quot;,
+        &quot;Ireland (ebay.ie)&quot;,
+        &quot;Netherlands (ebay.nl)&quot;,
+        &quot;Poland (ebay.pl)&quot;,
+        &quot;Switzerland (ebay.ch)&quot;,
+        &quot;Austria (ebay.at)&quot;,
+        &quot;Belgium (ebay.be)&quot;
+      ],
+      &quot;prefill&quot;: &quot;US&quot;,
+      &quot;sectionCaption&quot;: &quot;Marketplace&quot;,
+      &quot;sectionDescription&quot;: &quot;Choose the eBay site whose language, currency and feedback profile you want to read.&quot;,
+      &quot;title&quot;: &quot;Marketplace&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;maxFeedbackPerSeller&quot;: {
+      &quot;default&quot;: 500,
+      &quot;description&quot;: &quot;Per-seller cap. The global maxItems cap also applies.&quot;,
+      &quot;editor&quot;: &quot;number&quot;,
+      &quot;maximum&quot;: 10000,
+      &quot;minimum&quot;: 1,
+      &quot;prefill&quot;: 500,
+      &quot;title&quot;: &quot;Max feedback rows per seller&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;maxItems&quot;: {
+      &quot;default&quot;: 25,
+      &quot;description&quot;: &quot;Maximum number of feedback rows to return across all sellers.&quot;,
+      &quot;editor&quot;: &quot;number&quot;,
+      &quot;maximum&quot;: 10000,
+      &quot;minimum&quot;: 1,
+      &quot;prefill&quot;: 3,
+      &quot;sectionCaption&quot;: &quot;Limits&quot;,
+      &quot;sectionDescription&quot;: &quot;Control how many rows and pages are collected.&quot;,
+      &quot;title&quot;: &quot;Max feedback rows&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;maxPages&quot;: {
+      &quot;default&quot;: 20,
+      &quot;description&quot;: &quot;Safety cap on feedback pages followed per seller. eBay usually serves 25, 50 or 100 rows per page.&quot;,
+      &quot;editor&quot;: &quot;number&quot;,
+      &quot;maximum&quot;: 100,
+      &quot;minimum&quot;: 1,
+      &quot;prefill&quot;: 20,
+      &quot;title&quot;: &quot;Max pages per seller&quot;,
+      &quot;type&quot;: &quot;integer&quot;
+    },
+    &quot;mode&quot;: {
+      &quot;default&quot;: &quot;feedback&quot;,
+      &quot;description&quot;: &quot;Choose feedback rows, one seller profile summary per seller, or both.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;feedback&quot;,
+        &quot;sellerProfile&quot;,
+        &quot;both&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;Feedback rows&quot;,
+        &quot;Seller profile summaries&quot;,
+        &quot;Feedback rows + seller profiles&quot;
+      ],
+      &quot;prefill&quot;: &quot;feedback&quot;,
+      &quot;title&quot;: &quot;Mode&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;period&quot;: {
+      &quot;default&quot;: &quot;All&quot;,
+      &quot;description&quot;: &quot;Only feedback left in this period. eBay applies this within the last 12 months.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;All&quot;,
+        &quot;PastMonth&quot;,
+        &quot;Past6Months&quot;,
+        &quot;Past12Months&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;All time&quot;,
+        &quot;Past month&quot;,
+        &quot;Past 6 months&quot;,
+        &quot;Past 12 months&quot;
+      ],
+      &quot;prefill&quot;: &quot;All&quot;,
+      &quot;title&quot;: &quot;Period&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;ratingType&quot;: {
+      &quot;default&quot;: &quot;All&quot;,
+      &quot;description&quot;: &quot;Filter feedback rows by rating.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;All&quot;,
+        &quot;Positive&quot;,
+        &quot;Neutral&quot;,
+        &quot;Negative&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;All ratings&quot;,
+        &quot;Positive only&quot;,
+        &quot;Neutral only&quot;,
+        &quot;Negative only&quot;
+      ],
+      &quot;prefill&quot;: &quot;All&quot;,
+      &quot;title&quot;: &quot;Rating type&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;sellerUsernames&quot;: {
+      &quot;default&quot;: [],
+      &quot;description&quot;: &quot;eBay seller usernames or profile URLs, e.g. \&quot;musicmagpie\&quot; or https://www.ebay.com/usr/musicmagpie. At least one of sellerUsernames or storeUrls must be given.&quot;,
+      &quot;editor&quot;: &quot;stringList&quot;,
+      &quot;prefill&quot;: [
+        &quot;musicmagpie&quot;
+      ],
+      &quot;title&quot;: &quot;Seller usernames&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;sortBy&quot;: {
+      &quot;default&quot;: &quot;Newest&quot;,
+      &quot;description&quot;: &quot;Newest first is best for monitoring; relevance follows eBay&#x27;s own ranking.&quot;,
+      &quot;editor&quot;: &quot;select&quot;,
+      &quot;enum&quot;: [
+        &quot;Newest&quot;,
+        &quot;Relevance&quot;
+      ],
+      &quot;enumTitles&quot;: [
+        &quot;Newest first&quot;,
+        &quot;Most relevant&quot;
+      ],
+      &quot;prefill&quot;: &quot;Newest&quot;,
+      &quot;title&quot;: &quot;Sort order&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;stopAtFeedbackIds&quot;: {
+      &quot;default&quot;: [],
+      &quot;description&quot;: &quot;Optional feedback IDs from an earlier run. Each seller stops when one of these IDs is reached (the known row is not returned). Requires newest-first sorting.&quot;,
+      &quot;editor&quot;: &quot;stringList&quot;,
+      &quot;prefill&quot;: [],
+      &quot;title&quot;: &quot;Stop at known feedback IDs&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;storeUrls&quot;: {
+      &quot;default&quot;: [],
+      &quot;description&quot;: &quot;Full eBay store URLs (https://www.ebay.com/str/&lt;seller&gt;). The URL&#x27;s eBay site is used for that seller.&quot;,
+      &quot;editor&quot;: &quot;stringList&quot;,
+      &quot;prefill&quot;: [],
+      &quot;title&quot;: &quot;Store URLs&quot;,
+      &quot;type&quot;: &quot;array&quot;
+    }
+  },
+  &quot;required&quot;: [
+    &quot;mode&quot;
+  ],
+  &quot;schemaVersion&quot;: 1,
+  &quot;title&quot;: &quot;eBay Seller Feedback Scraper Input&quot;,
+  &quot;type&quot;: &quot;object&quot;
+}
+</code></pre></details></section><section class="schema-section" id="output-schema"><h2>Output schema</h2><p>Published result links and storage locations. This schema is not an exhaustive contract for every field in a dataset record.</p><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>feedback</code></td><td>string</td><td>optional</td><td>Dataset containing feedback rows, seller profile summaries and any per-seller error rows (distinguished by recordType).</td></tr></tbody></table></div><p><a href="output-schema.json">Download the published output schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+  &quot;actorOutputSchemaVersion&quot;: 1,
+  &quot;description&quot;: &quot;Feedback rows and seller profile summaries scraped from eBay&#x27;s public seller feedback pages - rating, comment, item, price, buyer, replies, seller reputation, rating counts, Detailed Seller Ratings and store metadata.&quot;,
+  &quot;properties&quot;: {
+    &quot;feedback&quot;: {
+      &quot;description&quot;: &quot;Dataset containing feedback rows, seller profile summaries and any per-seller error rows (distinguished by recordType).&quot;,
+      &quot;template&quot;: &quot;{{links.apiDefaultDatasetUrl}}/items&quot;,
+      &quot;title&quot;: &quot;eBay Seller Feedback&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    }
+  },
+  &quot;title&quot;: &quot;eBay Seller Reputation &amp; DSR Feedback Lookup Output&quot;
+}
+</code></pre></details></section><section class="schema-section" id="dataset-schema"><h2>Dataset schema</h2><p>Published dataset views and any declared field definitions. A view can select only a subset of the returned record fields.</p><p><a href="dataset-schema.json">Download the published dataset schema</a></p><details><summary>View complete JSON</summary><pre><code>{
+  &quot;actorSpecification&quot;: 1,
+  &quot;views&quot;: {
+    &quot;overview&quot;: {
+      &quot;display&quot;: {
+        &quot;component&quot;: &quot;table&quot;,
+        &quot;properties&quot;: {}
+      },
+      &quot;title&quot;: &quot;Feedback&quot;,
+      &quot;transformation&quot;: {
+        &quot;fields&quot;: [
+          &quot;sellerUsername&quot;,
+          &quot;rating&quot;,
+          &quot;comment&quot;,
+          &quot;dateRange&quot;,
+          &quot;itemTitle&quot;,
+          &quot;priceFormatted&quot;,
+          &quot;buyerUsername&quot;,
+          &quot;verifiedPurchase&quot;,
+          &quot;sellerPositiveFeedbackPercent&quot;,
+          &quot;sourceUrl&quot;
+        ]
+      }
+    },
+    &quot;sellerProfiles&quot;: {
+      &quot;display&quot;: {
+        &quot;component&quot;: &quot;table&quot;,
+        &quot;properties&quot;: {}
+      },
+      &quot;title&quot;: &quot;Seller profiles&quot;,
+      &quot;transformation&quot;: {
+        &quot;fields&quot;: [
+          &quot;sellerUsername&quot;,
+          &quot;marketplace&quot;,
+          &quot;sellerFeedbackScore&quot;,
+          &quot;sellerTotalFeedbackCount&quot;,
+          &quot;sellerPositiveFeedbackPercent&quot;,
+          &quot;sellerMemberSince&quot;,
+          &quot;sellerLocation&quot;,
+          &quot;sellerIsTopRated&quot;,
+          &quot;sellerStoreName&quot;,
+          &quot;sellerStoreItemsSoldText&quot;,
+          &quot;sellerStoreFollowersText&quot;,
+          &quot;sourceUrl&quot;
+        ]
+      }
+    }
+  }
+}
+</code></pre></details></section><section class="schema-section" id="key-value-schema"><h2>Key-value schema</h2><p>Published key-value store definitions, when provided by this build.</p><p>This definition is not present in the default published build. See the published README for available documentation.</p></section><section id="published-readme"><h2>Published README</h2><details><summary>Read the full published documentation</summary><h2 id="readme-ebay-seller-reputation-dsr-feedback-lookup">eBay Seller Reputation &amp; DSR Feedback Lookup</h2>
+<p>Look up <strong>eBay</strong> seller feedback and reputation from a seller's public feedback profile. Get individual
+feedback entries (rating, comment, item, price, buyer context, verified-purchase status and public seller
+replies), plus a seller profile summary with feedback score, positive percentage, member-since date,
+1/6/12-month rating counts, all four Detailed Seller Ratings and store metadata such as items sold and
+followers.</p>
+<p>Use seller usernames, profile URLs or store URLs, choose one of 14 eBay marketplaces, filter by feedback
+role, rating, period or item title/ID, and collect only feedback with buyer photos or only buyer-written
+feedback when you need a cleaner dataset.</p>
+<h2 id="readme-what-this-actor-does">What this actor does</h2>
+<ul>
+<li><strong>Feedback rows</strong> — one row per feedback entry: rating, comment, item title/URL/ID, price with currency,
+buyer context, verified-purchase flag, buyer photos, automated-feedback flag and public seller replies</li>
+<li><strong>Seller profile summaries</strong> — one summary row per seller: feedback score, total feedback received,
+12-month positive percentage, member-since date, location, Top Rated / business / ID-verified / store
+badges, 1/6/12-month positive/neutral/negative counts and all four Detailed Seller Ratings</li>
+<li><strong>Store metadata</strong> — store name, description, positive percentage, items sold, followers, store image and
+store URL when the seller runs an eBay Store</li>
+<li><strong>Marketplace selection</strong> — United States, United Kingdom, Germany, Australia, Canada, France, Italy,
+Spain, Ireland, Netherlands, Poland, Switzerland, Austria and Belgium</li>
+<li><strong>Filters</strong> — feedback role (seller/buyer/left for others), positive/neutral/negative rating, 1/6/12-month
+period, newest/relevance sort, item title or ID search, photos-only and automated-feedback toggle</li>
+<li><strong>Incremental collection</strong> — stop each seller at feedback IDs you already have from a previous run</li>
+<li><strong>Clean records</strong> — omit-empty output: fields eBay does not show for a record are left out, never sent as
+null or a placeholder</li>
+</ul>
+<h2 id="readme-input">Input</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>mode</code></td>
+<td>Select</td>
+<td><code>feedback</code></td>
+<td><code>feedback</code> rows, <code>sellerProfile</code> summaries, or <code>both</code></td>
+</tr>
+<tr>
+<td><code>sellerUsernames</code></td>
+<td>List</td>
+<td>–</td>
+<td>eBay usernames, member profile URLs or feedback profile URLs</td>
+</tr>
+<tr>
+<td><code>storeUrls</code></td>
+<td>List</td>
+<td>–</td>
+<td>eBay store URLs (<code>https://www.ebay.com/str/&lt;seller&gt;</code>); the URL's eBay site is used</td>
+</tr>
+<tr>
+<td><code>marketplace</code></td>
+<td>Select</td>
+<td><code>US</code></td>
+<td>eBay site for plain usernames and the default for store URLs</td>
+</tr>
+<tr>
+<td><code>feedbackType</code></td>
+<td>Select</td>
+<td><code>All</code></td>
+<td>All received feedback, received as seller, received as buyer, or left for others</td>
+</tr>
+<tr>
+<td><code>ratingType</code></td>
+<td>Select</td>
+<td><code>All</code></td>
+<td>All, Positive, Neutral or Negative</td>
+</tr>
+<tr>
+<td><code>period</code></td>
+<td>Select</td>
+<td><code>All</code></td>
+<td>All time, past month, past 6 months or past 12 months</td>
+</tr>
+<tr>
+<td><code>sortBy</code></td>
+<td>Select</td>
+<td><code>Newest</code></td>
+<td>Newest first or most relevant</td>
+</tr>
+<tr>
+<td><code>itemSearch</code></td>
+<td>Text</td>
+<td>–</td>
+<td>Only feedback for a matching item title or item ID</td>
+</tr>
+<tr>
+<td><code>imagesOnly</code></td>
+<td>Boolean</td>
+<td><code>false</code></td>
+<td>Only feedback entries with a buyer photo</td>
+</tr>
+<tr>
+<td><code>includePhotos</code></td>
+<td>Boolean</td>
+<td><code>false</code></td>
+<td>Fetch every buyer photo for entries with more than one</td>
+</tr>
+<tr>
+<td><code>includeAutomated</code></td>
+<td>Boolean</td>
+<td><code>true</code></td>
+<td>Include eBay's automated positive feedback entries</td>
+</tr>
+<tr>
+<td><code>maxItems</code></td>
+<td>Integer</td>
+<td><code>25</code></td>
+<td>Maximum feedback rows across all sellers</td>
+</tr>
+<tr>
+<td><code>maxFeedbackPerSeller</code></td>
+<td>Integer</td>
+<td><code>500</code></td>
+<td>Per-seller feedback cap</td>
+</tr>
+<tr>
+<td><code>maxPages</code></td>
+<td>Integer</td>
+<td><code>20</code></td>
+<td>Safety cap on feedback pages followed per seller</td>
+</tr>
+<tr>
+<td><code>stopAtFeedbackIds</code></td>
+<td>List</td>
+<td><code>[]</code></td>
+<td>Stop each seller at the first known feedback ID (the known row is excluded)</td>
+</tr>
+</tbody>
+</table></div>
+<p>At least one of <code>sellerUsernames</code> or <code>storeUrls</code> must be provided. If neither is given, the actor falls
+back to a known-good seller so a run always produces real output.</p>
+<p>The prefill is the cheapest run with output: one seller, all ratings and 3 rows.</p>
+<h2 id="readme-output-per-feedback-row-recordtype-feedback">Output per feedback row (<code>recordType: &quot;feedback&quot;</code>)</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>feedbackId</code></td>
+<td>String</td>
+<td>eBay's own identifier for the feedback entry</td>
+</tr>
+<tr>
+<td><code>sellerUsername</code></td>
+<td>String</td>
+<td>The seller this feedback was left for</td>
+</tr>
+<tr>
+<td><code>marketplace</code></td>
+<td>String</td>
+<td>The eBay site used (<code>US</code>, <code>UK</code>, <code>DE</code>, ...)</td>
+</tr>
+<tr>
+<td><code>feedbackRole</code></td>
+<td>String</td>
+<td><code>receivedAsSeller</code>, <code>receivedAsBuyer</code>, <code>leftForOthers</code> or <code>all</code></td>
+</tr>
+<tr>
+<td><code>rating</code></td>
+<td>String</td>
+<td><code>positive</code>, <code>neutral</code> or <code>negative</code></td>
+</tr>
+<tr>
+<td><code>comment</code></td>
+<td>String</td>
+<td>The feedback comment</td>
+</tr>
+<tr>
+<td><code>itemTitle</code></td>
+<td>String</td>
+<td>Title of the item the feedback refers to</td>
+</tr>
+<tr>
+<td><code>itemUrl</code></td>
+<td>String</td>
+<td>Link to the item</td>
+</tr>
+<tr>
+<td><code>itemId</code></td>
+<td>String</td>
+<td>eBay item ID</td>
+</tr>
+<tr>
+<td><code>priceFormatted</code></td>
+<td>String</td>
+<td>Price as eBay displays it, e.g. &quot;GBP 4.82&quot; or &quot;US $409.36&quot;</td>
+</tr>
+<tr>
+<td><code>itemPriceValue</code></td>
+<td>Number</td>
+<td>Numeric price</td>
+</tr>
+<tr>
+<td><code>itemPriceCurrency</code></td>
+<td>String</td>
+<td>ISO currency code</td>
+</tr>
+<tr>
+<td><code>itemImageUrl</code></td>
+<td>String</td>
+<td>Buyer-attached photo preview, when present</td>
+</tr>
+<tr>
+<td><code>itemImageUrls</code></td>
+<td>List</td>
+<td>Buyer-attached photo URLs; one preview by default, every photo with <code>includePhotos</code></td>
+</tr>
+<tr>
+<td><code>itemImageCount</code></td>
+<td>Integer</td>
+<td>Number of buyer-attached photos</td>
+</tr>
+<tr>
+<td><code>buyerUsername</code></td>
+<td>String</td>
+<td>Buyer name as eBay masks it (e.g. &quot;r***c&quot;)</td>
+</tr>
+<tr>
+<td><code>buyerFeedbackCount</code></td>
+<td>Integer</td>
+<td>Legacy name for the buyer's feedback score</td>
+</tr>
+<tr>
+<td><code>buyerFeedbackScore</code></td>
+<td>Integer</td>
+<td>The buyer's feedback score</td>
+</tr>
+<tr>
+<td><code>buyerFeedbackStar</code></td>
+<td>String</td>
+<td>Buyer's star level code, e.g. <code>RED_STAR</code></td>
+</tr>
+<tr>
+<td><code>buyerFeedbackStarLabel</code></td>
+<td>String</td>
+<td>Human-readable buyer star level</td>
+</tr>
+<tr>
+<td><code>buyerPrivateFeedback</code></td>
+<td>Boolean</td>
+<td>True when eBay marks the buyer's profile private</td>
+</tr>
+<tr>
+<td><code>automatedFeedback</code></td>
+<td>Boolean</td>
+<td>True for eBay's automated feedback entries</td>
+</tr>
+<tr>
+<td><code>verifiedPurchase</code></td>
+<td>Boolean</td>
+<td>True when eBay marks a verified purchase</td>
+</tr>
+<tr>
+<td><code>dateRange</code></td>
+<td>String</td>
+<td>eBay's relative time label, e.g. &quot;Past month&quot;</td>
+</tr>
+<tr>
+<td><code>replies</code></td>
+<td>List</td>
+<td>Public seller replies: <code>{author, dateRange, comment}</code></td>
+</tr>
+<tr>
+<td><code>sellerFeedbackScore</code></td>
+<td>Integer</td>
+<td>Seller's overall feedback score</td>
+</tr>
+<tr>
+<td><code>sellerTotalFeedbackCount</code></td>
+<td>Integer</td>
+<td>Total feedback entries eBay says the seller received</td>
+</tr>
+<tr>
+<td><code>sellerPositiveFeedbackPercent</code></td>
+<td>Number</td>
+<td>12-month positive percentage</td>
+</tr>
+<tr>
+<td><code>sellerPositiveFeedbackCount12Months</code></td>
+<td>Integer</td>
+<td>Positive count behind the percentage</td>
+</tr>
+<tr>
+<td><code>sellerNegativeFeedbackCount12Months</code></td>
+<td>Integer</td>
+<td>Negative count behind the percentage</td>
+</tr>
+<tr>
+<td><code>sellerPositiveRatingCount1Month</code></td>
+<td>Integer</td>
+<td>Positive ratings, last month</td>
+</tr>
+<tr>
+<td><code>sellerPositiveRatingCount6Months</code></td>
+<td>Integer</td>
+<td>Positive ratings, last 6 months</td>
+</tr>
+<tr>
+<td><code>sellerPositiveRatingCount12Months</code></td>
+<td>Integer</td>
+<td>Positive ratings, last 12 months</td>
+</tr>
+<tr>
+<td><code>sellerNeutralRatingCount1Month</code></td>
+<td>Integer</td>
+<td>Neutral ratings, last month</td>
+</tr>
+<tr>
+<td><code>sellerNeutralRatingCount6Months</code></td>
+<td>Integer</td>
+<td>Neutral ratings, last 6 months</td>
+</tr>
+<tr>
+<td><code>sellerNeutralRatingCount12Months</code></td>
+<td>Integer</td>
+<td>Neutral ratings, last 12 months</td>
+</tr>
+<tr>
+<td><code>sellerNegativeRatingCount1Month</code></td>
+<td>Integer</td>
+<td>Negative ratings, last month</td>
+</tr>
+<tr>
+<td><code>sellerNegativeRatingCount6Months</code></td>
+<td>Integer</td>
+<td>Negative ratings, last 6 months</td>
+</tr>
+<tr>
+<td><code>sellerNegativeRatingCount12Months</code></td>
+<td>Integer</td>
+<td>Negative ratings, last 12 months</td>
+</tr>
+<tr>
+<td><code>sellerDsrAccurateDescription</code></td>
+<td>Number</td>
+<td>&quot;Accurate description&quot; DSR average, out of 5</td>
+</tr>
+<tr>
+<td><code>sellerDsrAccurateDescriptionRatingsCount</code></td>
+<td>Integer</td>
+<td>Ratings behind that average</td>
+</tr>
+<tr>
+<td><code>sellerDsrReasonableShippingCost</code></td>
+<td>Number</td>
+<td>&quot;Reasonable shipping cost&quot; DSR average</td>
+</tr>
+<tr>
+<td><code>sellerDsrReasonableShippingCostRatingsCount</code></td>
+<td>Integer</td>
+<td>Ratings behind that average</td>
+</tr>
+<tr>
+<td><code>sellerDsrShippingSpeed</code></td>
+<td>Number</td>
+<td>&quot;Shipping speed&quot; DSR average</td>
+</tr>
+<tr>
+<td><code>sellerDsrShippingSpeedRatingsCount</code></td>
+<td>Integer</td>
+<td>Ratings behind that average</td>
+</tr>
+<tr>
+<td><code>sellerDsrCommunication</code></td>
+<td>Number</td>
+<td>&quot;Communication&quot; DSR average</td>
+</tr>
+<tr>
+<td><code>sellerDsrCommunicationRatingsCount</code></td>
+<td>Integer</td>
+<td>Ratings behind that average</td>
+</tr>
+<tr>
+<td><code>sellerMemberSince</code></td>
+<td>String</td>
+<td>ISO member-since date</td>
+</tr>
+<tr>
+<td><code>sellerMemberSinceRaw</code></td>
+<td>String</td>
+<td>eBay's original member-since wording</td>
+</tr>
+<tr>
+<td><code>sellerLocation</code></td>
+<td>String</td>
+<td>Member location as eBay shows it</td>
+</tr>
+<tr>
+<td><code>sellerIsBusinessSeller</code></td>
+<td>Boolean</td>
+<td>Registered as a business seller</td>
+</tr>
+<tr>
+<td><code>sellerIsIdVerified</code></td>
+<td>Boolean</td>
+<td>ID-verified badge</td>
+</tr>
+<tr>
+<td><code>sellerIsStoreOwner</code></td>
+<td>Boolean</td>
+<td>eBay Store badge</td>
+</tr>
+<tr>
+<td><code>sellerIsTopRated</code></td>
+<td>Boolean</td>
+<td>Top Rated Seller badge</td>
+</tr>
+<tr>
+<td><code>sellerAvatarUrl</code></td>
+<td>String</td>
+<td>Seller avatar URL</td>
+</tr>
+<tr>
+<td><code>sellerStoreUrl</code></td>
+<td>String</td>
+<td>Seller's eBay Store URL</td>
+</tr>
+<tr>
+<td><code>sellerAutomatedFeedbackCount</code></td>
+<td>Integer</td>
+<td>eBay automated-feedback count</td>
+</tr>
+<tr>
+<td><code>sellerRevisedFeedbackCount</code></td>
+<td>Integer</td>
+<td>Revised feedback count</td>
+</tr>
+<tr>
+<td><code>sourceUrl</code></td>
+<td>String</td>
+<td>Feedback profile URL</td>
+</tr>
+<tr>
+<td><code>scrapedAt</code></td>
+<td>String</td>
+<td>ISO 8601 extraction timestamp</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="readme-output-per-seller-profile-recordtype-sellerprofile">Output per seller profile (<code>recordType: &quot;sellerProfile&quot;</code>)</h2>
+<p>Seller profile rows carry the same <code>seller*</code> fields as feedback rows, plus:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>sellerStoreName</code></td>
+<td>String</td>
+<td>Store display name</td>
+</tr>
+<tr>
+<td><code>sellerStoreUrl</code></td>
+<td>String</td>
+<td>Store URL</td>
+</tr>
+<tr>
+<td><code>sellerStoreDescription</code></td>
+<td>String</td>
+<td>Store description</td>
+</tr>
+<tr>
+<td><code>sellerStorePositiveFeedbackPercent</code></td>
+<td>Number</td>
+<td>Store positive-feedback percentage</td>
+</tr>
+<tr>
+<td><code>sellerStoreItemsSoldText</code></td>
+<td>String</td>
+<td>Items sold as displayed, e.g. &quot;51.7M&quot;</td>
+</tr>
+<tr>
+<td><code>sellerStoreItemsSoldCount</code></td>
+<td>Integer</td>
+<td>Items sold expanded to a number</td>
+</tr>
+<tr>
+<td><code>sellerStoreFollowersText</code></td>
+<td>String</td>
+<td>Followers as displayed, e.g. &quot;498K&quot;</td>
+</tr>
+<tr>
+<td><code>sellerStoreFollowersCount</code></td>
+<td>Integer</td>
+<td>Followers expanded to a number</td>
+</tr>
+<tr>
+<td><code>sellerStoreImageUrl</code></td>
+<td>String</td>
+<td>Store image URL</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="readme-output-per-error-row-recordtype-error">Output per error row (<code>recordType: &quot;error&quot;</code>)</h2>
+<p>When a seller cannot be reached, does not exist or has no public feedback, the actor emits one error row
+for that seller with <code>sellerUsername</code>, <code>marketplace</code>, <code>sourceUrl</code>, <code>error</code> and <code>scrapedAt</code>, then continues
+with any other requested sellers.</p>
+<h2 id="readme-examples">Examples</h2>
+<h3 id="readme-check-one-seller-s-recent-feedback">Check one seller's recent feedback</h3>
+<pre><code class="language-json">{
+  &quot;sellerUsernames&quot;: [&quot;musicmagpie&quot;],
+  &quot;maxItems&quot;: 50
+}
+</code></pre>
+<h3 id="readme-audit-negative-feedback-in-the-last-12-months">Audit negative feedback in the last 12 months</h3>
+<pre><code class="language-json">{
+  &quot;sellerUsernames&quot;: [&quot;discountcomputerdepot&quot;],
+  &quot;ratingType&quot;: &quot;Negative&quot;,
+  &quot;period&quot;: &quot;Past12Months&quot;,
+  &quot;maxItems&quot;: 100
+}
+</code></pre>
+<h3 id="readme-get-seller-profile-summaries">Get seller profile summaries</h3>
+<pre><code class="language-json">{
+  &quot;sellerUsernames&quot;: [&quot;musicmagpie&quot;, &quot;discountcomputerdepot&quot;],
+  &quot;mode&quot;: &quot;sellerProfile&quot;
+}
+</code></pre>
+<h3 id="readme-look-up-a-seller-by-store-url-on-the-uk-site">Look up a seller by store URL on the UK site</h3>
+<pre><code class="language-json">{
+  &quot;storeUrls&quot;: [&quot;https://www.ebay.co.uk/str/musicmagpie&quot;],
+  &quot;maxItems&quot;: 50
+}
+</code></pre>
+<h3 id="readme-read-feedback-as-a-seller-on-the-german-site">Read feedback as a seller on the German site</h3>
+<pre><code class="language-json">{
+  &quot;sellerUsernames&quot;: [&quot;medimops&quot;],
+  &quot;marketplace&quot;: &quot;DE&quot;,
+  &quot;feedbackType&quot;: &quot;Seller&quot;,
+  &quot;maxItems&quot;: 50
+}
+</code></pre>
+<h3 id="readme-only-feedback-with-buyer-photos">Only feedback with buyer photos</h3>
+<pre><code class="language-json">{
+  &quot;sellerUsernames&quot;: [&quot;discountcomputerdepot&quot;],
+  &quot;imagesOnly&quot;: true,
+  &quot;maxItems&quot;: 20
+}
+</code></pre>
+<h3 id="readme-monitor-new-feedback-with-known-ids">Monitor new feedback with known IDs</h3>
+<pre><code class="language-json">{
+  &quot;sellerUsernames&quot;: [&quot;discountcomputerdepot&quot;],
+  &quot;sortBy&quot;: &quot;Newest&quot;,
+  &quot;stopAtFeedbackIds&quot;: [&quot;2255274619024&quot;],
+  &quot;maxItems&quot;: 100
+}
+</code></pre>
+<h3 id="readme-search-feedback-for-an-item">Search feedback for an item</h3>
+<pre><code class="language-json">{
+  &quot;sellerUsernames&quot;: [&quot;discountcomputerdepot&quot;],
+  &quot;itemSearch&quot;: &quot;Dell&quot;,
+  &quot;maxItems&quot;: 20
+}
+</code></pre>
+<h2 id="readme-use-cases">Use cases</h2>
+<ul>
+<li><strong>Seller due diligence</strong> — read recent feedback, negative comments, replies and DSR scores before buying</li>
+<li><strong>Reputation audits</strong> — track a seller's positive percentage, rating counts and DSR averages over time</li>
+<li><strong>Competitive benchmarking</strong> — compare feedback volume, positive share and DSR across sellers</li>
+<li><strong>Complaint mining</strong> — pull negative or neutral feedback and surface recurring shipping, condition or
+communication issues</li>
+<li><strong>Marketplace analytics</strong> — collect the same seller across multiple eBay marketplaces</li>
+<li><strong>Research datasets</strong> — export feedback rows with item, price and seller context for analysis</li>
+</ul>
+<h2 id="readme-data-source-and-reliability">Data source and reliability</h2>
+<p>This actor reads eBay's public seller feedback profiles (<code>https://www.ebay.&lt;site&gt;/fdbk/feedback_profile/&lt;seller&gt;</code>)
+and public store pages. No login, cookies, API key or proxy setup is required, and none is accepted as
+input. The actor handles connections automatically.</p>
+<p>The actor tries eBay's feedback host and market site first, falls back to the public Google Translate
+mirror when a market site serves a verification challenge, and keeps a muted headless-browser fallback for
+the rare case where every HTTP path is blocked. Pages are fetched with retries and exponential backoff on
+429/5xx. Pagination is server-side (<code>page_id</code>), so results are addressable and repeatable.</p>
+<h2 id="readme-limitations">Limitations</h2>
+<ul>
+<li><strong>Exact feedback dates are not public.</strong> eBay shows relative buckets (&quot;Past month&quot;, &quot;Past 6 months&quot;,
+&quot;Past year&quot;, &quot;More than a year ago&quot;). The actor reports eBay's own wording and does not invent a date.</li>
+<li><strong>Buyer identities are masked by eBay.</strong> The actor reports the public masked name (e.g. &quot;r***c&quot;) and
+never attempts to unmask it.</li>
+<li><strong>No lifetime neutral total is published.</strong> The actor reports the 1/6/12-month neutral counts that eBay
+publishes and does not infer a lifetime number.</li>
+<li><strong>Rating filters cover the last 12 months.</strong> eBay only applies an overall-rating filter within that
+window; the actor requests the 12-month view when a rating filter is set with period &quot;All&quot;.</li>
+<li><strong>Item-title/ID search cannot be combined with eBay's period or rating filters.</strong> The actor searches the
+item title/ID and checks the rating (and period when possible) itself.</li>
+<li><strong>The public feedback list is finite.</strong> eBay stopped serving older pages for some profiles; the actor
+stops cleanly at the source's last page or at your <code>maxPages</code> / <code>maxItems</code> cap and says so in the run
+status message.</li>
+<li><strong>Some sellers have no public feedback or a private profile.</strong> Those sellers get an error row or a
+profile without the missing fields.</li>
+<li><strong>Item links are eBay listing pages.</strong> A listing that has ended may return a 404/403 page even though the
+<code>itemUrl</code> is the canonical <code>/itm/&lt;id&gt;</code> link from eBay's feedback page; the feedback row itself remains
+valid.</li>
+<li><strong>Store metadata is only fetched in seller-profile modes.</strong> Feedback-only runs include the store URL from
+the feedback page but not the store's items-sold/followers figures.</li>
+<li><strong>Full photo galleries need <code>includePhotos</code>.</strong> eBay's feedback list exposes one preview per entry even when
+the buyer attached several photos. With <code>includePhotos</code>, the actor calls eBay's public feedback-detail
+endpoint once per entry that has more than one photo and returns the full gallery.</li>
+<li><strong>The Google Translate mirror can translate visible text when it is used as a fallback.</strong> The actor
+requests the page in the marketplace's own language to keep comments in their original language; the
+direct eBay path is preferred.</li>
+<li><strong>The actor is not affiliated with eBay.</strong> It reads only public pages and does not access private or
+login-gated data.</li>
+</ul>
+<h2 id="readme-faq">FAQ</h2>
+<p><strong>Q: Do I need an eBay account or API key?</strong>
+A: No. The actor reads only public feedback and store pages.</p>
+<p><strong>Q: Why is the buyer name partially hidden?</strong>
+A: eBay masks buyer names on public feedback profiles for privacy. The actor reports exactly what eBay
+shows.</p>
+<p><strong>Q: Why is there no exact feedback date?</strong>
+A: eBay publishes only relative time buckets for individual feedback entries on the public profile.</p>
+<p><strong>Q: Can I get only seller feedback, not buyer feedback?</strong>
+A: Yes. Set <code>feedbackType</code> to <code>Seller</code>. Use <code>Buyer</code> or <code>LeftForOthers</code> for the other sides of the ledger,
+or <code>All</code> for everything.</p>
+<p><strong>Q: Can I get a seller's reputation without pulling every feedback row?</strong>
+A: Yes. Set <code>mode</code> to <code>sellerProfile</code>. You get one summary row per seller with the score, positive
+percentage, rating counts, DSR and store metadata.</p>
+<p><strong>Q: Can I collect the same seller on another eBay site?</strong>
+A: Yes. Set <code>marketplace</code> for plain usernames, or use a store URL on the site you want.</p>
+<p><strong>Q: What happens when a seller does not exist?</strong>
+A: That seller gets a clear error row and the run continues with any other requested sellers.</p>
+<p><strong>Q: Can I get every buyer photo?</strong>
+A: Yes. Set <code>includePhotos</code> to <code>true</code>; the actor fetches the public feedback-detail gallery for entries with
+more than one photo. It adds one request per such entry.</p>
+<p><strong>Q: Is there a row limit?</strong>
+A: Yes. <code>maxItems</code> caps rows across the run, <code>maxFeedbackPerSeller</code> caps one seller and <code>maxPages</code> is a
+safety cap on pagination. eBay may also stop serving older pages.</p>
+</details></section><section id="python-quickstart"><h2>Python quickstart</h2><p>Use a schema-derived input and the Python standard library to start a run. An Apify account and token are required for execution.</p><p><a href="/apify-actor-examples/guides/ebay-seller-reputation-and-dsr-feedback-lookup/">Open the step-by-step Python guide →</a></p></section><p class="source-note">Source build <code>HtLKPgTBTd81lXefo</code>. Documentation is regenerated from the default published build; private drafts are not included.</p></article></div></main><footer class="footer"><strong>Nimbryxo Studio</strong><div class="footer-links"><a href="/apify-actor-examples/topics/">Topics</a><a href="/apify-actor-examples/sources/">Documentation sources</a><a href="https://apify.com/nimbryxo-studio">Apify</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></div></footer></body></html>
