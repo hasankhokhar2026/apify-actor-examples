@@ -1,0 +1,95 @@
+{
+  "properties": {
+    "githubToken": {
+      "description": "Optional GitHub personal access token. Mark this field as Secret when pasting. Increases the API rate limit from 60 requests/hour (unauthenticated) to 5000 requests/hour. A classic token with 'public_repo' scope is enough for public repositories.",
+      "editor": "textfield",
+      "isSecret": true,
+      "title": "GitHub personal access token (optional)",
+      "type": "string"
+    },
+    "includeLanguages": {
+      "default": true,
+      "description": "Include the per-language byte counts (e.g. {\"Python\": 123456, \"JavaScript\": 2345}).",
+      "title": "Include language breakdown",
+      "type": "boolean"
+    },
+    "includeReadme": {
+      "default": true,
+      "description": "Fetch and include the decoded README text for each repository (capped at 500 KB).",
+      "title": "Include README",
+      "type": "boolean"
+    },
+    "includeTopics": {
+      "default": true,
+      "description": "Include the repository's topic tags (e.g. 'machine-learning', 'web-scraping').",
+      "title": "Include topics",
+      "type": "boolean"
+    },
+    "maxResults": {
+      "default": 30,
+      "description": "Hard cap on the number of repositories to return. GitHub's search API itself is capped at 1000 results; direct mode is only limited by this value.",
+      "maximum": 1000,
+      "minimum": 1,
+      "prefill": 30,
+      "title": "Maximum results",
+      "type": "integer"
+    },
+    "mode": {
+      "default": "search",
+      "description": "Choose 'search' to query GitHub's search API with a keyword / qualifier expression, or 'direct' to fetch a known list of repository URLs.",
+      "editor": "select",
+      "enum": [
+        "search",
+        "direct"
+      ],
+      "enumTitles": [
+        "Search GitHub",
+        "Direct repository URLs"
+      ],
+      "prefill": "search",
+      "title": "Mode",
+      "type": "string"
+    },
+    "repositoryUrls": {
+      "description": "List of full GitHub repository URLs to scrape (used when mode = direct). Accepts https://github.com/owner/repo, ending with .git, trailing slash, or the git@github.com:owner/repo.git SSH form.",
+      "editor": "stringList",
+      "prefill": [
+        "https://github.com/apify/crawlee"
+      ],
+      "title": "Repository URLs",
+      "type": "array"
+    },
+    "searchQuery": {
+      "default": "stars:>10000 language:python",
+      "description": "GitHub search query (used when mode = search). Supports qualifiers like 'stars:>1000', 'language:python', 'topic:llm', 'user:apify'. See GitHub's search syntax docs for the full grammar.",
+      "editor": "textfield",
+      "example": "language:rust stars:>5000",
+      "prefill": "stars:>10000 language:python",
+      "title": "Search query",
+      "type": "string"
+    },
+    "sortBy": {
+      "default": "stars",
+      "description": "Sort order for search results. Ignored in direct mode.",
+      "editor": "select",
+      "enum": [
+        "stars",
+        "forks",
+        "updated",
+        "help-wanted-issues"
+      ],
+      "enumTitles": [
+        "Stars",
+        "Forks",
+        "Recently updated",
+        "Help-wanted issues"
+      ],
+      "title": "Sort results by",
+      "type": "string"
+    }
+  },
+  "required": [],
+  "schemaVersion": 1,
+  "title": "GitHub Repository Intelligence input",
+  "type": "object"
+}

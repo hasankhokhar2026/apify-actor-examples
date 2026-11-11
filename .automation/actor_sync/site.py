@@ -104,6 +104,8 @@ def markdown(text, used=None, anchors=None, shift=0):
                     fragment = child.attrGet("href")[1:]
                     child.attrSet("href", "#" + (anchors or {}).get(fragment, "readme-" + fragment))
     rendered = parser.renderer.render(tokens, parser.options, {})
+    # Column alignment comes out as inline styles, which the page's CSP blocks: use classes.
+    rendered = re.sub(r' style="text-align:(left|right|center)"', r' class="align-\1"', rendered)
     return rendered.replace("<table>", '<div class="table-wrap"><table>').replace("</table>", "</table></div>")
 
 
@@ -388,7 +390,7 @@ class Site:
                    f'<meta property="og:url" content="{esc(redirect or canonical)}"><meta property="og:site_name" content="{esc(self.brand)}">{social}'
                    f'<meta name="theme-color" content="{esc(self.org.get("site", {}).get("accent", "#155dfb"))}">'
                    f'<link rel="icon" href="{self.asset("assets/mark.svg")}" type="image/svg+xml"><link rel="stylesheet" href="{self.asset("assets/site.css")}">'
-                   f'<link rel="stylesheet" href="{self.asset("assets/brand.css")}"><link rel="alternate" type="application/rss+xml" title="{esc(self.brand)} guides" href="{self.link("feed.xml")}">'
+                   f'<link rel="alternate" type="application/rss+xml" title="{esc(self.brand)} guides" href="{self.link("feed.xml")}">'
                    f'<script type="application/ld+json">{ld}</script><script src="{self.asset("assets/site.js")}" defer></script></head>'
                    f'<body class="theme-{self.theme}"><a href="#main" class="skip-link">Skip to content</a>'
                    f'<header class="masthead"><div class="inner"><a href="{self.link()}" class="brand"><img src="{self.asset("assets/mark.svg")}" alt="" width="32" height="32"><span>{esc(self.brand)}</span></a>'
@@ -404,7 +406,7 @@ class Site:
 
     # ------------------------------------------------------------------ shared blocks
 
-    def actor_rows(self, actors, hidden_after=None):
+    def actor_rows(self, actors, hidden_after=None, level=3):
         rows = []
         for index, actor in enumerate(actors):
             target = self.link(self.doc_path(actor))
@@ -420,7 +422,7 @@ class Site:
                 meta.append(f'<span>{esc(price)}</span>')
             rows.append(f'<li class="actor-row" data-actor-row data-search="{esc(search_text)}" data-categories="{esc("|".join(actor["categories"]))}"'
                         + (' hidden' if hidden_after is not None and index >= hidden_after else "")
-                        + f'><h3><a href="{target}">{esc(actor["title"])}</a></h3><p>{esc(actor["description"])}</p><p class="row-meta">{"".join(meta)}</p></li>')
+                        + f'><h{level}><a href="{target}">{esc(actor["title"])}</a></h{level}><p>{esc(actor["description"])}</p><p class="row-meta">{"".join(meta)}</p></li>')
         return '<ul class="catalog" role="list">' + "".join(rows) + "</ul>"
 
     def compare_table(self, actors, caption):
@@ -484,7 +486,7 @@ class Site:
     def catalog(self):
         body = (f'<section class="intro"><h1>All {len(self.actors)} Actors</h1><p class="lead">Every public Actor {esc(self.brand)} publishes on Apify, A to Z. '
                 'Filter by the site you need, the data you want or a topic.</p></section>'
-                + self.search_form(self.actors) + self.actor_rows(self.actors)
+                + self.search_form(self.actors) + self.actor_rows(self.actors, level=2)
                 + '<p id="empty-results" class="empty" hidden>No Actor matches. Try the site name alone, such as "Amazon", or clear the topic.</p>')
         description = f"Browse all {len(self.actors)} Apify Actors from {self.brand}, with what each one collects and its price per 1,000 results on the Free plan."
         self.page("actors/", "All Apify Actors", description, body, active="actors", search=False, crumbs=[("Actors", "actors/")],
@@ -810,7 +812,7 @@ class Site:
                 if used[qid] > 1:
                     qid += "-" + str(used[qid])
                 questions.append(f'<div class="qa"><h3 id="{qid}">{inline_md(question)}</h3>{readme_html(markdown(answer, used, anchors, shift=2))}</div>')
-                faq_nodes.append({"@type": "Question", "name": question, "acceptedAnswer": {"@type": "Answer", "text": plain(answer)[:1200]}})
+                faq_nodes.append({"@type": "Question", "name": question, "acceptedAnswer": {"@type": "Answer", "text": plain(answer)[:500]}})
             content += f'<section id="faq"><h2>Questions</h2>{"".join(questions)}</section>'
             toc.append(("faq", "Questions"))
         elif kinds.get("faq"):
@@ -930,17 +932,21 @@ class Site:
         if not columns:
             steps = steps[1:]
         body.append('<nav class="toc inline" aria-label="Steps"><h2 class="toc-title">Steps</h2><ol>' + "".join(f'<li><a href="#{k}">{v}</a></li>' for k, v in steps) + "</ol></nav>")
+        intro_text, sections = facts.split_sections(actor["readme"])
+        notes = facts.readme_field_notes(sections)
         if columns:
-            rows = "".join(f"<tr><td><code>{esc(f)}</code></td><td>{esc(l)}</td></tr>" for f, l in columns)
+            rows = "".join(f'<tr><td><code>{esc(f)}</code></td><td data-label="Column header">{esc(l)}</td><td data-label="What it holds">{inline_md(notes[f]) if notes.get(f) else ""}</td></tr>'
+                           for f, l in columns)
             view_names = join_words(f'"{esc(v["title"])}"' for v in views)
             body.append(f'<section id="columns"><h2>The columns you can export</h2><p>The Actor\'s build declares {len(facts.dataset_fields(actor))} output fields '
                         f'in {len(views)} dataset view{"s" if len(views) != 1 else ""} ({view_names}). The export below keeps these, under the labels the publisher gave them:</p>'
-                        f'<div class="table-wrap"><table><caption>Default export columns</caption><thead><tr><th scope="col">Field</th><th scope="col">Column header</th></tr></thead>'
-                        f'<tbody>{rows}</tbody></table></div><p>Records can carry more fields than these; the <a href="{reference}#output">output reference</a> lists all of them. '
-                        'Swap any field into the list to export it.</p></section>')
-        body.append('<section id="token"><h2>Get an API token</h2><p>Copy your token from '
-                    '<a href="https://console.apify.com/settings/integrations">Apify Console, Settings, API and Integrations</a> '
-                    'and keep it in an environment variable rather than in the script.</p>'
+                        f'<div class="table-wrap"><table><caption>Default export columns</caption><thead><tr><th scope="col">Field</th><th scope="col">Column header</th><th scope="col">What it holds</th></tr></thead>'
+                        f'<tbody>{rows}</tbody></table></div><p>Swap in any field from the <a href="{reference}#output">output reference</a> to export it too.</p></section>')
+        uses = [x for x in sections if x["kind"] == "usecases"]
+        if uses:
+            body.append('<section id="uses"><h2>What people export it for</h2>' + readme_html(markdown(uses[0]["body"], {}, {}, shift=1)) + "</section>")
+        body.append('<section id="token"><h2>Get an API token</h2><p>Copy it from '
+                    '<a href="https://console.apify.com/settings/integrations">Console, Settings, API and Integrations</a>.</p>'
                     + code_block('export APIFY_TOKEN="your-token"', "token-export", "bash") + "</section>")
         input_text = '<section id="input"><h2>Choose the input</h2>'
         if required:
@@ -986,19 +992,17 @@ class Site:
                       f'run = client.actor(ACTOR).call(run_input=run_input)\n'
                       'items = list(client.dataset(run["defaultDatasetId"]).iterate_items())\n'
                       'with open("results.json", "w", encoding="utf-8") as f:\n    json.dump(items, f, ensure_ascii=False, indent=2)\n')
-        body.append(f'<section id="csv"><h2>Run it and write a CSV</h2><p><code>call()</code> starts the run and waits until it finishes, however long that takes; '
-                    f'the {esc(noun)}s land in the run\'s default dataset, which the loop reads page by page.</p>'
+        body.append(f'<section id="csv"><h2>Run it and write a CSV</h2><p><code>call()</code> waits for the run to finish; the loop then reads the {esc(noun)}s page by page.</p>'
                     + code_block("pip install apify-client", "py-install", "bash") + code_block(python, "py-run", "python", "export.py") + "</section>")
         fields_param = ("&fields=" + ",".join(quote(f, safe="") for f, _ in columns)) if columns else ""
         one_call = (f'curl -X POST "https://api.apify.com/v2/acts/{api_id}/run-sync-get-dataset-items?format=xlsx{fields_param}" \\\n'
                     '  -H "Authorization: Bearer $APIFY_TOKEN" \\\n  -H "Content-Type: application/json" \\\n  -d @input.json -o results.xlsx\n')
         later = (f'curl -H "Authorization: Bearer $APIFY_TOKEN" \\\n  "https://api.apify.com/v2/datasets/DATASET_ID/items?format=json{fields_param}" -o results.json\n')
-        body.append('<section id="excel"><h2>Download Excel or JSON</h2><p>The API can run the Actor and hand back the dataset as a file in one request. '
-                    '<code>format</code> takes <code>xlsx</code>, <code>csv</code>, <code>json</code>, <code>jsonl</code>, <code>xml</code> or <code>html</code>'
-                    + (', and <code>fields</code> keeps only the columns you list' if columns else "")
-                    + '. The request waits up to 300 seconds; a longer run answers HTTP 408 and carries on, so use the Python script for big runs.</p>'
+        body.append('<section id="excel"><h2>Download Excel or JSON</h2><p>One request runs it and returns the file'
+                    + (' with just these columns' if columns else "")
+                    + '. It waits at most 300 seconds (then HTTP 408 while the run carries on).</p>'
                     + code_block(one_call, "curl-xlsx", "bash")
-                    + '<p>To download a run that already finished, use its dataset ID from the run page in Console or from <code>run["defaultDatasetId"]</code>:</p>'
+                    + '<p>A finished run, by its dataset ID:</p>'
                     + code_block(later, "curl-dataset", "bash") + "</section>")
         js_fields = ("[" + ", ".join(json.dumps(f, ensure_ascii=False) for f, _ in columns) + "]") if columns else None
         javascript = ("// npm install apify-client   (Node.js 18+, save as export.mjs)\nimport { readFile, writeFile } from 'node:fs/promises';\nimport { ApifyClient } from 'apify-client';\n\n"
@@ -1010,16 +1014,14 @@ class Site:
         body.append('<section id="javascript"><h2>The same in JavaScript</h2>' + code_block("npm install apify-client", "js-install", "bash")
                     + code_block(javascript, "js-run", "javascript", "export.mjs") + "</section>")
         trouble = facts.troubleshooting(facts.faq_items(facts.split_sections(actor["readme"])[1]))
-        items = "".join(f'<li><a href="{reference}#{anchor_id(q, "faq-")}">{inline_md(q)}</a></li>' for q, _ in trouble[:8])
-        body.append('<section id="trouble"><h2>Fix common problems</h2><ul>'
-                    '<li><strong>HTTP 401:</strong> the token is missing or wrong; run <code>echo $APIFY_TOKEN</code> in the same shell.</li>'
-                    '<li><strong>An empty file:</strong> open the run in Console and read its log; it usually names the input that matched nothing.</li>'
-                    '<li><strong>Odd characters in Excel:</strong> open the CSV through Data, From Text/CSV and pick UTF-8, or download <code>xlsx</code> instead.</li>'
-                    '</ul>' + (f'<p>The publisher answers these questions about {esc(actor["title"])}:</p><ul>{items}</ul>' if items else "") + "</section>")
+        answers = "".join(f'<div class="qa"><h3>{inline_md(q)}</h3>{readme_html(markdown(a, {}, {}, shift=2))}</div>' for q, a in trouble[:3])
+        more = "".join(f'<li><a href="{reference}#{anchor_id(q, "faq-")}">{inline_md(q)}</a></li>' for q, _ in trouble[3:8])
+        body.append('<section id="trouble"><h2>Fix common problems</h2>' + answers + (f"<p>More from the publisher:</p><ul>{more}</ul>" if more else "")
+                    + '<p>HTTP 401 means the token is missing; an empty file usually means the input matched nothing, which the run log in Console names.</p></section>')
         if summary and summary["primary"]:
             free = facts.per_thousand(summary, "FREE")
-            body.append(f'<p>Each export run is billed on Apify: {facts.money(free)} per 1,000 {esc(noun)}s on the Free plan plus a start fee and platform usage. '
-                        f'The <a href="{reference}#cost">price table</a> works out runs of 100 to 10,000.</p>')
+            body.append(f'<p>An export of 1,000 {esc(noun)}s costs {facts.money2(facts.run_cost(summary, "FREE", 1000))} in Actor charges on the Free plan, plus platform usage '
+                        f'(<a href="{reference}#cost">all plans</a>).</p>')
         body.append(f'<div class="cta"><a class="button" href="{actor["url"]}">Open in Apify Store</a><a class="button secondary" href="{reference}">Read the full reference</a></div>')
         body.append(f'<p class="source-note">Built from the published build <code>{esc(actor["build_id"])}</code>: its README, input schema, dataset views and Store pricing.</p></article>')
         self.page(path, title, f"Export {actor['title']} results to CSV, Excel or JSON from Python, JavaScript or one API call, with the columns its dataset declares.",
@@ -1080,6 +1082,28 @@ class Site:
             lines.append("")
         return "\n".join(lines).rstrip() + "\n"
 
+    def demote_similar(self):
+        """Near-duplicate pages (publisher stubs, say) are consolidated, not published as scaled
+        copies: of any indexable pair over SIMILARITY_LIMIT, the page with less of its own text
+        becomes noindex and leaves the sitemap. The page stays reachable for readers."""
+        import itertools
+        self.demoted = []
+        for kind in ("actors/", "guides/"):
+            pages = sorted(n for n, t in self.files.items() if n.startswith(kind) and n.count("/") == 2 and n.endswith("/index.html") and INDEX_ROBOTS in t)
+            if len(pages) < SCALED_MINIMUM:
+                continue
+            sets = {n: shingles(self.files[n]) for n in pages}
+            gone = set()
+            for a, b in itertools.combinations(pages, 2):
+                if a in gone or b in gone:
+                    continue
+                if len(sets[a] & sets[b]) / max(1, len(sets[a] | sets[b])) > SIMILARITY_LIMIT:
+                    loser = a if (len(sets[a]), b) < (len(sets[b]), a) else b
+                    gone.add(loser)
+                    self.files[loser] = self.files[loser].replace(INDEX_ROBOTS, '<meta name="robots" content="noindex,follow">', 1)
+                    self.indexed.remove(self.base + loser[:-len("index.html")])
+                    self.demoted.append(loser)
+
     def search_index(self):
         return json.dumps([{"t": a["title"], "u": self.link(self.doc_path(a)), "d": a["description"][:160],
                             "s": self.platform[a["id"]] or "", "c": category_name(self.primary_category(a))} for a in self.actors],
@@ -1089,9 +1113,10 @@ class Site:
         accent = self.org.get("site", {}).get("accent", "#155dfb")
         if not re.fullmatch(r"#[0-9a-fA-F]{6}", accent):
             raise SyncError("Invalid brand accent color")
-        self.files["assets/site.css"] = (ASSETS / "site.css").read_text(encoding="utf-8") + f"\n:root{{--accent:{accent}}}\n"
+        theme_css = "" if self.theme == "classic" else (ASSETS / ("theme-" + self.theme + ".css")).read_text(encoding="utf-8")
+        # One render-blocking stylesheet: the base, the brand accent, then the theme.
+        self.files["assets/site.css"] = (ASSETS / "site.css").read_text(encoding="utf-8") + f"\n:root{{--accent:{accent}}}\n" + theme_css
         self.files["assets/site.js"] = (ASSETS / "site.js").read_text(encoding="utf-8")
-        self.files["assets/brand.css"] = "" if self.theme == "classic" else (ASSETS / ("theme-" + self.theme + ".css")).read_text(encoding="utf-8")
         initial = esc(self.brand[0].upper())
         self.files["assets/mark.svg"] = f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" rx="5" fill="{accent}"/><text x="16" y="23" text-anchor="middle" font-family="Arial,sans-serif" font-size="23" font-weight="700" fill="white">{initial}</text></svg>'
         if self.theme == "studio":
@@ -1112,6 +1137,7 @@ class Site:
         for actor in self.actors:
             self.actor_page(actor)
             self.guide_page(actor)
+        self.demote_similar()
         self.legacy_paths(previous or [])
         self.page("sources/", "How these pages are made", "How the published Apify data keeps this documentation current, and what it does not cover.",
                   f'<article class="prose"><h1>How these pages are made</h1><p>{esc(self.brand)} maintains this site. Actor descriptions, READMEs, input schemas, output schemas, '
@@ -1145,7 +1171,7 @@ class Site:
         self.files["feed.xml"] = ('<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"><channel><title>' + xml_escape(self.brand + " export tutorials") + '</title><link>'
                                   + xml_escape(self.base + "guides/") + '</link><description>Export tutorials for each Actor</description>'
                                   + "".join('<item><title>' + xml_escape(self.guide_title(a)) + '</title><link>' + xml_escape(self.base + self.doc_path(a, "guides")) + '</link><guid isPermaLink="true">'
-                                            + xml_escape(self.base + self.doc_path(a, "guides")) + '</guid><description>' + xml_escape(a["description"]) + '</description></item>' for a in self.actors if self.guide_indexable(a))
+                                            + xml_escape(self.base + self.doc_path(a, "guides")) + '</guid><description>' + xml_escape(a["description"]) + '</description></item>' for a in self.actors if self.base + self.doc_path(a, "guides") in self.indexed)
                                   + '</channel></rss>\n')
         self.files[".nojekyll"] = ""
         for name in self.verification_files:
@@ -1241,6 +1267,8 @@ def validate_page(name, page, audit):
         problems.append("missing meta description")
     if not audit.canonical:
         problems.append("missing canonical link")
+    if re.search(r"<[a-z][^>]*\sstyle=", page):
+        problems.append("an inline style attribute (the CSP blocks it)")
     if audit.empty_headings:
         problems.append("%d empty headings" % audit.empty_headings)
     for block in audit.ld:
@@ -1259,6 +1287,39 @@ def validate_page(name, page, audit):
         if re.search(r'<section[^>]*>\s*<h2[^>]*>[^<]*</h2>\s*</section>', page):
             problems.append("a section with a heading and no content")
     return problems
+
+
+SIMILARITY_LIMIT = 0.6
+SCALED_MINIMUM = 10  # page sets smaller than this are not "scaled": no similarity rule
+INDEX_ROBOTS = '<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1">'
+
+
+def shingles(page, size=5):
+    """Five-word shingles of a page's prose (no chrome, code or scripts)."""
+    page = re.sub(r'<header class="masthead">.*?</header>|<footer.*?</footer>|<nav\b.*?</nav>', " ", page, flags=re.S)
+    page = page.replace("<!--readme-->", "").replace("<!--/readme-->", "")
+    words = re.findall(r"[a-z0-9$.,']+", visible_text(page).lower())
+    return {" ".join(words[i:i + size]) for i in range(len(words) - size + 1)}
+
+
+def similarity_check(files):
+    """Scaled pages must each carry their own substance: no two indexable Actor pages, and no
+    two indexable guides, may share more than SIMILARITY_LIMIT of their 5-word shingles."""
+    import itertools
+    worst = {}
+    for kind in ("actors/", "guides/"):
+        pages = sorted(n for n, t in files.items() if n.startswith(kind) and n.count("/") == 2 and n.endswith("/index.html") and INDEX_ROBOTS in t)
+        if len(pages) < SCALED_MINIMUM:
+            continue
+        sets = {n: shingles(files[n]) for n in pages}
+        for a, b in itertools.combinations(pages, 2):
+            score = len(sets[a] & sets[b]) / max(1, len(sets[a] | sets[b]))
+            if score > worst.get(kind, (0,))[0]:
+                worst[kind] = (score, a, b)
+    for kind, (score, a, b) in worst.items():
+        if score > SIMILARITY_LIMIT:
+            raise SyncError(f"Pages are too similar ({score:.2f} > {SIMILARITY_LIMIT}): {a} and {b}")
+    return {kind: round(value[0], 3) for kind, value in worst.items()}
 
 
 def validate_site(files, org, prefix):
@@ -1300,4 +1361,4 @@ def validate_site(files, org, prefix):
                 raise SyncError("Broken internal link in " + name + ": " + link)
             if parsed.fragment and target in audits and parsed.fragment not in audits[target].ids:
                 raise SyncError("Broken internal anchor in " + name + ": " + link)
-    return {"pages": len(audits), "files": len(files)}
+    return {"pages": len(audits), "files": len(files), "similarity": similarity_check(files)}
