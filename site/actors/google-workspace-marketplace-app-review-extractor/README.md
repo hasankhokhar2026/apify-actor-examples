@@ -1,110 +1,140 @@
-# Google Workspace Marketplace App Review Extractor by App ID
+# Google Workspace Marketplace App Review Extractor
 
-Pull public reviews for a specific app on the [Google Workspace Marketplace](https://workspace.google.com/marketplace) — no API key, no login, no proxy required.
+Collect the public user reviews of any Google Workspace Marketplace app - stars, review text, date, reviewer, helpful votes and the developer's replies - for one app or a whole watchlist. No Google account, cookie, API key or proxy is needed.
 
-Provide a numeric App ID and get back reviewer names, star ratings, review text, dates, and helpful counts. Filter by minimum rating and sort by recency or helpfulness.
+The actor paginates the public review list and deduplicates overlapping pages, so a request for 100 reviews returns 100 unique reviews instead of repeated first-page rows.
 
 ## What this actor does
 
-- **Single-app focus** — pulls reviews for one app at a time, identified by its numeric App ID
-- **Minimum-rating filter** — drop reviews below a star-rating threshold
-- **Sort control** — most relevant, newest first, highest rated first, or lowest rated first
-- **Empty fields are omitted** from every record — a review with zero helpful votes simply omits `helpfulCount` rather than showing `0`
+- **One row per review** - rating, text, date, reviewer, helpful votes and developer replies
+- **Multiple apps** - pass app IDs or full Marketplace URLs in one run
+- **Pagination** - follows the public review list page by page and removes duplicates
+- **Filters** - rating range, date window and review-text keyword
+- **Languages** - 28 Marketplace language slices or the mixed "All languages" stream
+- **App context** - developer, listing rating, exact installs, pricing class, icon and links
+- **Empty fields are omitted** - never `null`, blank or placeholder values
 
 ## Output per review
 
-| Field | Description | Example |
-|---|---|---|
-| `reviewId` | Unique review identifier | `06060438314121439815` |
-| `appId` | Numeric app identifier | `992310177365` |
-| `appName` | Name of the app | `Timer + AI Proctor Limiter for Forms` |
-| `appUrl` | Link to the app's Marketplace listing | `https://workspace.google.com/...` |
-| `reviewerName` | Name of the reviewer | `John Doe` |
-| `rating` | Star rating (1–5 integer) | `5` |
-| `reviewText` | Full review text | `Great tool for online exams!` |
-| `reviewDate` | Date the review was posted | `2026-04-21` |
-| `helpfulCount` | Number of helpful votes | `3` |
-| `recordType` | Always `"workspace_review"` | `workspace_review` |
-| `scrapedAt` | ISO timestamp of when the record was scraped | `2026-05-20T10:00:00+00:00` |
+One row per review:
 
-## Input Options
-
-| Field | Type | Required | Default | Description |
-|---|---|---|---|---|
-| `appId` | string | Yes | – | Numeric App ID from the Marketplace URL |
-| `maxItems` | integer | No | `100` | Maximum reviews to collect (1–500) |
-| `minRating` | integer | No | — | Only return reviews at this star rating or above (1–5) |
-| `sortBy` | select | No | `MostRelevant` | Sort order for reviews |
-
-### sortBy Options
-
-| Value | Description |
+| Field | Meaning |
 |---|---|
-| `MostRelevant` | Google's default ranking |
-| `Newest` | Most recently posted reviews first |
-| `HighestRated` | 5-star reviews first |
-| `LowestRated` | 1-star reviews first |
+| `reviewId` | Marketplace review identifier |
+| `appId`, `appName`, `appUrl`, `sourceUrl` | App identity and listing URL |
+| `rating` | 1-5 stars |
+| `reviewText` | Review body (omitted for rating-only reviews) |
+| `reviewDate`, `reviewTimestamp` | Posting date and full UTC timestamp |
+| `reviewerName`, `reviewerAvatarUrl` | Public reviewer identity and avatar |
+| `helpfulCount` | Other users' helpful votes |
+| `reviewLanguage` | Language slice when a specific language is requested |
+| `developerReply`, `developerReplyDate`, `developerReplyTimestamp`, `developerReplyAuthor` | Latest developer reply |
+| `developerReplies[]` | Every reply on the review (`text`, `date`, `timestamp`, `author`, `avatarUrl`, `replyId`) |
+| `hasDeveloperReply`, `replyCount` | Reply flags |
+| `appDeveloper`, `appDeveloperWebsite` | Publisher identity |
+| `appRating`, `appReviewCount`, `appInstallCount`, `appInstallsLabel` | Listing rating, rating count and exact installs |
+| `appPricingModel` | Free, Free trial, Freemium or Paid (omitted when unpublished) |
+| `appIconUrl`, `appWorksWith[]`, `appLastUpdated` | Listing media, Google apps it plugs into, last update date |
+| `appTermsUrl`, `appPrivacyUrl`, `appSupportUrl`, `appWebsiteUrl` | Published listing links |
+| `recordType`, `scrapedAt` | Record marker and scrape time |
 
-### How to Find the App ID
+Empty values are omitted at every depth, so every row contains only real data.
 
-The App ID is the numeric portion at the end of a Marketplace app URL:
+## Input
 
-```
-https://workspace.google.com/marketplace/app/autocrat/539341275670
-                                                       ^^^^^^^^^^^^^
-                                                       This is the App ID
-```
+| Input | Default | What it does |
+|---|---|---|
+| `appIds` | `["539341275670"]` | App IDs or full Marketplace URLs. Duplicates are removed. Legacy saved tasks that send a single `appId` still work. |
+| `maxItems` | `100` | Total reviews saved across all apps. |
+| `maxReviewsPerApp` | `2000` | Hard per-app ceiling; unused slots are offered to the next app. |
+| `sortBy` | `MostRelevant` | `MostRelevant` / `MostHelpful` use Google's helpful ranking; `Newest` uses the date ranking; `HighestRated` / `LowestRated` sort the fetched reviews. |
+| `reviewLanguage` | `en` | 28 Marketplace language slices, or `all` for the site's mixed "All languages" stream. |
+| `minRating`, `maxRating` | - | Star range (1-5). `maxRating: 2` keeps complaints only. |
+| `sinceDate`, `untilDate` | - | ISO date/datetime, or a relative period such as `30 days`, `2 weeks`, `6 months`. |
+| `reviewKeyword` | - | Case-insensitive text that must appear in the review. |
 
----
+Only `appIds` (or the legacy `appId`) is needed. Everything else has a working default.
 
-## Example Output
+### Examples
+
+One app, newest first:
 
 ```json
 {
-  "reviewId": "06060438314121439815",
-  "appId": "992310177365",
-  "appName": "Timer + AI Proctor Limiter for Forms | Quilgo",
-  "appUrl": "https://workspace.google.com/marketplace/app/timer_+_ai.../992310177365",
-  "reviewerName": "SUDHANSHU VERMA",
-  "rating": 5,
-  "reviewText": "Good",
-  "reviewDate": "2026-04-21",
-  "helpfulCount": 1,
-  "recordType": "workspace_review",
-  "scrapedAt": "2026-05-20T10:00:00.000000+00:00"
+  "appIds": ["539341275670"],
+  "maxItems": 100,
+  "sortBy": "Newest"
 }
 ```
 
+A watchlist of IDs and URLs, complaints from the last 90 days:
+
+```json
+{
+  "appIds": [
+    "539341275670",
+    "https://workspace.google.com/marketplace/app/form_presenter+timer/93519377337"
+  ],
+  "maxItems": 200,
+  "maxReviewsPerApp": 100,
+  "maxRating": 2,
+  "sinceDate": "90 days"
+}
+```
+
+German reviews that mention a specific word:
+
+```json
+{
+  "appIds": ["218858140171"],
+  "reviewLanguage": "de",
+  "reviewKeyword": "Rechnung",
+  "maxItems": 50
+}
+```
+
+## Reliability and coverage
+
+- **Pagination** stops at the source total, repeated pages with no new review IDs, the per-app cap, or a safety page cap. Review IDs are deduplicated, so page overlap never produces duplicate rows.
+- **Replies** are attached to the reviews that carry them.
+- **Rating, date and keyword filters** are applied to the fetched reviews. Restrictive filters scan more pages automatically; raise `maxReviewsPerApp` for deeper history.
+- **Network errors** are retried on 429/5xx. A bad App ID is skipped with a clear status message, and the remaining apps still run.
+- **No proxy, no cookies**: no account, login, cookie, API key or proxy setup is needed.
+
 ## Use cases
 
-- **Product feedback analysis** — read what users actually say about an add-on before adopting it
-- **Competitive research** — monitor a competitor's app reviews for recurring complaints or praise
-- **Support prioritization** — surface low-rated reviews to identify bugs or missing features
-- **Marketing proof** — pull top-rated reviews to feature as testimonials
-- **Vendor due diligence** — check real user sentiment before recommending an app to a team
+- **App due diligence** - read recent complaints and developer responses before adopting an add-on
+- **Review monitoring** - track new reviews for a watchlist of Marketplace apps
+- **Competitive research** - compare ratings, installs and feedback across similar apps
+- **Product quality** - surface recurring issues by rating, date or keyword
+- **Localization QA** - inspect reviews in a specific language slice
 
 ## FAQ
 
-**Does this require a Google account?**
-No. Reviews on the Google Workspace Marketplace are publicly visible without any login.
+**How many reviews can I collect?** Up to 2,000 per app (`maxReviewsPerApp`) and up to 5,000 per run (`maxItems`). The Marketplace serves text reviews in 10-review pages; rating-only reviews have no body and are not part of the text review total.
 
-**How many reviews can I collect per run?**
-The Google Workspace Marketplace serves approximately 10 reviews per initial page load. The actor collects these reviews from the embedded page data. Set `maxItems` to control how many are returned (up to 500, though the actual yield depends on the app).
+**Why does an app show thousands of ratings but fewer text reviews?** The listing's rating count includes rating-only reviews. The review service returns reviews with text, split by language. Both numbers are real.
 
-**Can I filter by star rating?**
-Yes. Use `minRating` to only return reviews at or above a specific star count. For example, `minRating: 4` returns only 4-star and 5-star reviews.
+**Why pick a language?** The site serves one language slice at a time. `reviewLanguage` gives the complete slice for that language. `all` uses the site's mixed "All languages" stream, whose total can be shorter than the sum of the individual language slices.
 
-**What does `helpfulCount` represent?**
-The number of other users who marked the review as helpful.
+**Are review names always present?** Most reviews show a public name and avatar; some are anonymous. Those fields are omitted rather than filled with a placeholder.
 
-**Why might `reviewText` be short (e.g. just "Good")?**
-Many Workspace Marketplace reviewers leave very brief ratings. This is real data — the scraper faithfully captures what's on the page.
+**Do all apps have developer replies?** Replies are shown when the developer posted one. They are attached to the reviews that carry them; the actor never invents a reply.
 
-**What is the `sortBy` field?**
-Controls the order reviews are returned. `Newest` gives you the most recent reviews, `HighestRated`/`LowestRated` let you target extreme ratings. `MostRelevant` uses Google's default ranking algorithm.
+**Are `HighestRated` and `LowestRated` real Marketplace sorts?** The Marketplace only offers helpful and newest ordering. The actor fetches newest reviews and sorts that window by stars. Increase `maxReviewsPerApp` to widen the window.
 
-**Why might some fields be absent?**
-The actor uses an omit-empty policy: fields with no value (e.g. a review with 0 helpful votes) are omitted rather than set to null or zero.
+**Can I search for apps by keyword?** This actor takes app IDs or URLs. Keyword app discovery is a separate Marketplace surface; use the ID from any app URL.
 
-**Is this affiliated with Google?**
-No. This is an independent, third-party actor that reads the Google Workspace Marketplace's public review pages; it is not operated by or affiliated with Google.
+**Can I monitor new reviews?** Use `sinceDate` (for example `7 days`) on a schedule; the actor returns only reviews in that window. Cross-run "new since last run" state is not part of this extractor.
+
+**A URL field looks broken?** App icons, banners and reviewer avatars are public `lh3.googleusercontent.com` URLs and return images without cookies. Listing pages are public HTML. If an app's own terms/privacy/support link is dead, that is the publisher's link, not a scrape error.
+
+**What about an invalid App ID?** The Marketplace returns HTTP 400 for an unknown ID. The actor reports it in the status message and continues with the other apps.
+
+## Limitations
+
+- Caps are 2,000 reviews per app and 5,000 per run.
+- The Marketplace exposes two real server sorts; `HighestRated`/`LowestRated` sort the fetched window client-side.
+- Reviewer names, avatars and developer replies can be absent upstream; missing values are omitted, never filled.
+- Per-review permalinks are not published; `sourceUrl` is the app page.
+- Restrictive filters scan a bounded page budget; raise `maxReviewsPerApp` for deeper history.

@@ -1,11 +1,72 @@
 {
   "description": "Scrape Amazon third-party seller profiles and storefront catalogs. Provide one or more seller IDs directly, and/or product URLs to auto-derive the seller ID from the buy-box seller link.",
   "properties": {
+    "categoryFilter": {
+      "default": "",
+      "description": "Optional. Narrow the storefront to one category or facet by pasting a refinement token (e.g. n:172282) or a full Amazon facet URL from the storefrontFacets record. Leave blank for the full storefront. (mode=PRODUCTS or BOTH)",
+      "editor": "textfield",
+      "prefill": "",
+      "title": "Category / Refinement Filter",
+      "type": "string"
+    },
+    "feedbackPeriod": {
+      "default": "12 months",
+      "description": "Time window Amazon applies to the individual feedback entries and the profile rating summary.",
+      "editor": "select",
+      "enum": [
+        "30 days",
+        "90 days",
+        "12 months",
+        "lifetime"
+      ],
+      "enumTitles": [
+        "Last 30 days",
+        "Last 90 days",
+        "Last 12 months",
+        "Lifetime"
+      ],
+      "prefill": "12 months",
+      "title": "Feedback Period",
+      "type": "string"
+    },
+    "feedbackRating": {
+      "default": "all",
+      "description": "Only include feedback entries with this exact star rating. 'All stars' returns every rating.",
+      "editor": "select",
+      "enum": [
+        "all",
+        "5",
+        "4",
+        "3",
+        "2",
+        "1"
+      ],
+      "enumTitles": [
+        "All stars",
+        "5 stars only",
+        "4 stars only",
+        "3 stars only",
+        "2 stars only",
+        "1 star only"
+      ],
+      "prefill": "all",
+      "title": "Feedback Star Filter",
+      "type": "string"
+    },
     "includeBusinessDetails": {
       "default": true,
       "description": "If true, includes the seller's publicly-displayed legal business name, business address, and customer-service phone number (data Amazon itself shows on the public seller profile page -- not customer-level personal data).",
       "prefill": true,
+      "sectionCaption": "Profile details",
+      "sectionDescription": "Controls the seller profile record. These fields apply only in PROFILE or BOTH mode.",
       "title": "Include Business Details",
+      "type": "boolean"
+    },
+    "includeFeedbackEntries": {
+      "default": true,
+      "description": "Include the seller's recent individual feedback entries (star rating, text, rater, date) in each seller profile record, when Amazon displays them.",
+      "prefill": true,
+      "title": "Include Individual Feedback Entries",
       "type": "boolean"
     },
     "marketplace": {
@@ -66,18 +127,38 @@
       "title": "Marketplace",
       "type": "string"
     },
+    "maxFeedbackEntries": {
+      "default": 20,
+      "description": "Maximum individual feedback entries to include per seller (Amazon returns 5 per page). Applies when Include Individual Feedback Entries is on.",
+      "maximum": 200,
+      "minimum": 1,
+      "prefill": 5,
+      "title": "Max Feedback Entries Per Seller",
+      "type": "integer"
+    },
     "maxProductPages": {
       "default": 3,
-      "description": "Maximum number of /s?me= storefront pages to fetch per seller (mode=PRODUCTS or BOTH). Each page holds up to ~16 products.",
-      "maximum": 20,
+      "description": "Maximum number of /s?me= storefront pages to fetch per seller (mode=PRODUCTS or BOTH). Each page holds up to ~16 products; Amazon stops pagination at the seller's own result count.",
+      "maximum": 100,
       "minimum": 1,
       "prefill": 1,
+      "sectionCaption": "Storefront catalog",
+      "sectionDescription": "Controls the storefront product fetch. These fields apply only in PRODUCTS or BOTH mode.",
       "title": "Max Storefront Pages Per Seller",
+      "type": "integer"
+    },
+    "maxProductsPerSeller": {
+      "default": 200,
+      "description": "Hard cap on product records emitted per seller, applied in addition to Max Storefront Pages. (mode=PRODUCTS or BOTH)",
+      "maximum": 1000,
+      "minimum": 1,
+      "prefill": 16,
+      "title": "Max Products Per Seller",
       "type": "integer"
     },
     "mode": {
       "default": "BOTH",
-      "description": "PROFILE fetches only the seller profile page. PRODUCTS fetches only the seller's storefront catalog. BOTH fetches both for every resolved seller.",
+      "description": "PROFILE fetches only the seller profile page (including recent individual feedback entries when enabled). PRODUCTS fetches only the seller's storefront catalog. BOTH fetches both for every resolved seller.",
       "editor": "select",
       "enum": [
         "PROFILE",
@@ -109,7 +190,7 @@
     },
     "proxyCountry": {
       "default": "AUTO",
-      "description": "Proxy country for geo-targeting. Use AUTO to automatically select based on the Amazon marketplace/domain.",
+      "description": "Optional geo-targeting override. AUTO follows the selected marketplace and needs no setup; the actor picks a working connection automatically.",
       "editor": "select",
       "enum": [
         "AUTO",
@@ -208,13 +289,6 @@
       "prefill": "",
       "title": "Storefront Sort Order",
       "type": "string"
-    },
-    "useResidentialProxy": {
-      "default": false,
-      "description": "By default the actor uses datacenter (AUTO) proxies with a homepage-priming technique that reliably bypasses Amazon's cold-navigation block, escalating to residential proxies automatically only if repeated blocks occur. Enable this to force residential proxies (more reliable but more expensive) from the start.",
-      "prefill": false,
-      "title": "Use Residential Proxy",
-      "type": "boolean"
     }
   },
   "required": [

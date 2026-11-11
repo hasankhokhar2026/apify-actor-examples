@@ -1,80 +1,143 @@
 # Google Earth Location Coordinate Finder
 
-Turn a place name or address into precise coordinates the way Google Earth itself resolves it. Give it a list of queries — landmarks, addresses, business names — and get back the latitude/longitude, place name, a short description when one exists, and Google's internal place ID for each one. No Google Maps API key needed.
+Resolve place names, street addresses, postal codes, coordinate strings and public Google Earth URLs into precise latitude/longitude, Google place IDs, terrain elevation, matched addresses, place-card details and ready-to-import KML.
+
+The actor talks to the same public Google Earth web endpoints that earth.google.com uses in a browser. You do not need a Google Maps API key, a Google Cloud account, cookies or a proxy setup.
 
 ## What this actor does
 
-- **One result per query** — returns Google Earth's own top-ranked match for each search term
-- **Precise coordinates** — latitude and longitude as resolved by Google Earth's location search, not an approximate geocoder
-- **Place identity** — place name, short description (when Google Earth has one) and Google's internal place ID
-- **Configurable pacing** — set a random delay range between queries
-- **Empty fields are omitted** from every record; a query that doesn't resolve to a location produces no record at all
-
-## Output per location
-
-- `search_query` — the query text you provided
-- `place_name` — the resolved place name (falls back to your query text if Google Earth doesn't return a distinct name)
-- `latitude`, `longitude` — the resolved coordinates
-- `description` — a short description of the place, when Google Earth provides one (e.g. "Tower in Paris, France")
-- `google_place_id` — Google's internal place identifier (format `0x...:0x...`), when available
-- `data_source` — `search_api` when coordinates came from Google Earth's own search response, or `url_fallback` when they were read from the resulting map URL instead
-- `url` — the Google Earth URL for the resolved location
-- `scraped_at` — ISO 8601 timestamp of when the lookup ran
+- **Search by text** - one query returns Google Earth's best match by default, and you can raise the per-query limit to collect every ranked match.
+- **Search a region** - optional north/south/east/west bounds bias Google Earth's ranking to a city or country, so a generic query like `KFC` returns local branches.
+- **Switch language** - place names, descriptions and details come back in the language you select.
+- **Resolve Earth URLs** - paste public `earth.google.com/web` URLs. Search URLs are resolved; resolved view URLs with a `data=` token also unlock the place knowledge card.
+- **Terrain elevation** - every coordinate can be enriched with ground elevation in metres above sea level.
+- **Address matching** - Google's suggestion results are matched to search results when the match is unambiguous.
+- **Place-card details** - for resolved URLs with a feature token: long description, full address, plus code, official website, Wikipedia link, photos and opening hours.
+- **KML output** - optionally include a KML Placemark string on every record for QGIS, Google Earth or another GIS tool.
+- **No empty fields** - values Google does not provide are omitted, never emitted as `null`, `""`, `[]` or a sentinel.
 
 ## Input
 
 | Field | Type | Default | Description |
 |---|---|---|---|
-| `searchQueries` | array | `["Eiffel Tower"]` | List of location names or addresses to look up (1–100). Each query returns one result — Google Earth's own best match |
-| `minDelayBetweenRequests` | integer | `2` | Minimum delay in seconds between queries |
-| `maxDelayBetweenRequests` | integer | `5` | Maximum delay in seconds between queries |
+| `mode` | select | `search` | `search` for text queries, `byUrls` for Google Earth URLs. |
+| `searchQueries` | string list | `["Eiffel Tower"]` prefill | Place names, addresses, postal codes or `lat,lon` strings. (mode=search) |
+| `startUrls` | URL list | - | Public earth.google.com/web URLs. (mode=byUrls) |
+| `maxItems` | integer | 100 | Global cap on saved records. The daily prefill uses 1. |
+| `maxResultsPerQuery` | integer | 1 | Matches saved per query (1-200). The `rank` field keeps Google's original order. |
+| `language` | select | `en` | Language for names, descriptions and details. |
+| `searchArea` | object | world | Optional `{north, south, east, west}` bounds for search. |
+| `includeAddress` | boolean | true | Match a street address when Google's suggestions are unambiguous. |
+| `includeElevation` | boolean | true | Add `elevation_meters` (terrain elevation above sea level). |
+| `includeKml` | boolean | false | Add a generated `kml` Placemark string. |
+
+The smallest daily run is the prefill: one English query, one result, address/elevation/KML enrichment off. It makes a single search request and returns one record.
+
+Older task inputs that used `query`, `queries`, `maxResults`, `minDelayBetweenRequests` or `maxDelayBetweenRequests` still run: those keys are read in code and mapped to the current fields or pacing. They are not shown in the input form.
 
 ### Example: landmarks
 
 ```json
 {
-  "searchQueries": ["Eiffel Tower", "Statue of Liberty", "Burj Khalifa"],
-  "minDelayBetweenRequests": 2,
-  "maxDelayBetweenRequests": 5
+  "mode": "search",
+  "searchQueries": ["Eiffel Tower", "Statue of Liberty", "Taj Mahal"],
+  "maxResultsPerQuery": 1,
+  "includeElevation": true
 }
 ```
 
-### Example: specific addresses
+### Example: all matches for a chain
 
 ```json
 {
-  "searchQueries": ["1600 Pennsylvania Avenue NW, Washington, DC", "10 Downing Street, London"]
+  "mode": "search",
+  "searchQueries": ["KFC"],
+  "searchArea": {"north": 41.0, "south": 40.4, "east": -73.5, "west": -74.3},
+  "maxResultsPerQuery": 50,
+  "maxItems": 100
 }
 ```
 
-### Example: multiple locations of the same chain
+### Example: resolved Google Earth URL
 
 ```json
 {
-  "searchQueries": ["KFC New York", "KFC Los Angeles", "KFC Chicago"]
+  "mode": "byUrls",
+  "startUrls": [
+    {"url": "https://earth.google.com/web/search/Eiffel+Tower/@48.8583701,2.2944813,146.9105192a,533.29335005d,35y,0h,0t,0r/data=CjoaDAoIL20vMDJqODEYAiImCiQJME-ZgofyPUARME-ZgofyPcAZ26Y5nC09S0AhQYot7SnSTMBCAggBQgIIAEoNCP___________wEQAA"}
+  ],
+  "includeElevation": true,
+  "includeKml": true
 }
 ```
+
+## Output per location
+
+Legacy fields are unchanged:
+
+- `search_query` - the query text, or the source URL in `byUrls` mode
+- `place_name` - the resolved place name
+- `latitude`, `longitude` - the resolved coordinates (WGS84)
+- `description` - Google Earth's short description, e.g. `Tower in Paris, France`
+- `google_place_id` - Google's place identifier (`0x...:0x...`)
+- `data_source` - `search_api` for a search response, `url_fallback` for a URL-derived record
+- `url` - a Google Earth URL for the resolved location
+- `scraped_at` - ISO 8601 UTC timestamp
+
+New fields are added beside them:
+
+- `elevation_meters` - terrain elevation above sea level, when available
+- `address` - matched street address, when unambiguous
+- `rank` - original position in Google's result list
+- `language` - language used for the response
+- `record_type` - `location`
+- `kml` - generated KML Placemark, when `includeKml` is on
+
+For `byUrls` records with a feature token, the place knowledge card can also add:
+
+- `feature_id` - Google Knowledge Graph id (`/m/...` or `/g/...`)
+- `description_long` - the longer place description
+- `plus_code`, `plus_code_local`
+- `website`, `website_domain`
+- `wikipedia_url`
+- `photos` - Google-hosted photo URLs
+- `opening_hours` - day-to-hours object
+- `google_maps_url`
+- `camera_altitude_meters`, `camera_distance_meters`, `field_of_view_degrees`, `heading_degrees`, `tilt_degrees`, `roll_degrees`, `camera_text` - camera values read from the URL
 
 ## Use cases
 
-- **GIS data collection** — bulk-resolve a list of place names into coordinates for mapping
-- **Travel research** — get exact coordinates for landmarks before planning routes or itineraries
-- **Location intelligence** — attach Google's place ID and coordinates to a list of business names or addresses
-- **Dataset enrichment** — add latitude/longitude to records that only have a place name
-- **Franchise mapping** — resolve multiple locations of the same chain into individual coordinate records
+- **GIS data collection** - bulk-resolve place names into coordinates and elevation for maps and terrain models.
+- **Travel research** - get exact coordinates, addresses and opening hours for landmarks and venues.
+- **Location intelligence** - attach Google place IDs and coordinates to a list of business names or addresses.
+- **Dataset enrichment** - add latitude, longitude, elevation and a place ID to records that only have a name.
+- **Franchise mapping** - resolve many branches of the same chain, optionally biased to a city or region.
+- **KML handoff** - export a ready-to-import Placemark for each record.
 
 ## FAQ
 
-**What's the data source?** Google Earth's own location search, the same lookup used when you type a place into Google Earth's search box.
+**Do I need a Google Maps API key?** No. The actor uses the public endpoints behind earth.google.com and never asks you for a key.
 
-**Do I need a Google Maps API key?** No, this actor doesn't use the Google Maps API at all.
+**Why did a query return no record?** Google Earth could not resolve that text to a location. A typo, a very vague query, an unsupported script, or a temporary rate limit can all cause this. The run summary reports how many inputs were unresolved.
 
-**Why did a query return no record?** Google Earth genuinely couldn't resolve that query to a location — a typo, an overly vague query, or a place Google Earth doesn't recognize.
+**Why does one query return only one record?** That is the default. Set `maxResultsPerQuery` above 1 to collect every ranked match. Google Earth itself may return fewer matches than you ask for.
 
-**Can one query return multiple results?** No — each query returns at most one record, Google Earth's own top match for that search term. For multiple locations of the same name (e.g. franchise branches), submit more specific queries like "KFC New York" and "KFC Los Angeles".
+**Why is `address` missing on some records?** An address is added only when Google's suggestion results identify the same place unambiguously. Common names such as `KFC` can match many branches, so the actor omits the address instead of guessing.
 
-**Why would `description` or `google_place_id` be missing?** Those fields are only included when Google Earth's response actually provides them; many places have coordinates and a name but no short description or place ID.
+**Why can't I see website, photos or opening hours for a search result?** Google Earth's search response exposes coordinates, place IDs and short descriptions. The full place card requires a feature id, which Google only exposes in a resolved view URL. Use `mode=byUrls` with a resolved Earth URL to get the full card.
 
-**What's the difference between the two `data_source` values?** `search_api` means the coordinates came directly from Google Earth's own search response; `url_fallback` means they were read from the map URL after navigation when that response wasn't captured in time. Both reflect real, resolved locations.
+**What is the difference between `search_api` and `url_fallback`?** `search_api` means the record came from Google Earth's search response. `url_fallback` means the record came from a URL you supplied (a resolved view, a coordinate URL, or a search URL resolved through the API).
 
-**Is this affiliated with Google?** No. This is an independent, third-party actor that reads Google Earth's public location search; it is not operated by or affiliated with Google.
+**Are the coordinates survey-grade?** No. They are the coordinates Google Earth resolves for the place, typically accurate to a few metres for landmarks but not a survey measurement.
+
+**Does this work in any language?** The 32 most common Google Earth interface languages are available. Google may fall back to English for places that have no localized name.
+
+**Is this affiliated with Google?** No. This is an independent, third-party actor that reads Google Earth's public location search and place card data. It is not operated by or affiliated with Google.
+
+## Limitations
+
+- Google Earth may cap the number of matches for a broad query; the actor stops when the source stops returning a next page.
+- Place-card details (website, photos, hours, plus code) are only available for resolved URLs that contain a feature token, or when Google exposes a matching card.
+- Some official venue websites block automated link checks. Their URLs are still the real website URLs Google publishes.
+- Coordinates and names can change over time as Google updates its data.
+- Broad queries are ranked by Google Earth, not by the actor. Use a specific query or `searchArea` for predictable local results.

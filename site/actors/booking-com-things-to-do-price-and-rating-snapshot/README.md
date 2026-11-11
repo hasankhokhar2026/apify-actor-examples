@@ -1,50 +1,88 @@
 # Booking.com Things-to-Do Price & Rating Snapshot
 
-Get a quick snapshot of tours and activities listed on Booking.com for a destination: name, price, currency, rating, review count and a photo, in one request. Pick from a curated list of popular cities or enter any custom city and country code.
+Turn a destination into a clean table of bookable tours, tickets and activities: price, currency, rating on both Booking's 5-point scale and a familiar 0–10 scale, review counts, duration, cancellation policy, categories, photos and addresses. Search any city, or paste product URLs/IDs to pull one record per activity.
+
+No account, no cookies and no proxy setup are needed. The actor reads Booking.com's public attractions data directly and returns one JSON record per activity.
 
 ## What this actor does
 
-- Looks up tours and activities for a destination, picked from a dropdown of popular cities or entered as a custom city/country
-- Returns price, currency, rating and review count for each activity
-- Includes a photo URL and a free-cancellation flag for each listing
-- Every record always includes all fields; price, rating and review count default to `0` and text fields default to an empty value when Booking.com doesn't publish that detail for a listing
+- **Five modes** - search a destination, fetch product details, check availability, read reviews, or list the destination catalogue
+- **Any destination** - 30 popular cities plus custom city/country input
+- **Prices and ratings** - public and discounted prices, Booking's 0-5 rating plus a 0-10 compatibility field, and review counts
+- **Activity detail** - duration, cancellation policy, categories, photos, addresses, guide languages, inclusions and supplier
+- **Filters** - rating, free cancellation, skip-the-line, wheelchair access, time of day, guide language, category, price and review count
+- **Optional enrichment** - reviews, availability calendars and full product details
+- **Empty fields are omitted** - never `null`, blank or placeholder values
 
-## Output per activity
+## Modes
 
-- `name` — activity/tour name
-- `url` — Booking.com link to the activity
-- `price` — price per person
-- `currency` — currency of the price
-- `rating` — guest rating
-- `reviewCount` — number of guest reviews
-- `photoUrl` — main photo URL
-- `freeCancellation` — whether free cancellation is offered
-- `city` — the city slug this run searched
-- `scrapedAt` — ISO timestamp of when the record was collected
+| Mode | What it returns |
+|---|---|
+| `search` | Activities for a destination, with optional filters and pagination (default) |
+| `productDetails` | Full records for specific product IDs or URLs |
+| `availability` | Time slots for one date, plus an optional available-dates calendar |
+| `reviews` | Guest reviews for specific products, with sorting and a per-product cap |
+| `destinations` | The Booking.com city catalogue with ufi, country and product count |
 
 ## Input
 
 | Field | Type | Default | Description |
 |---|---|---|---|
-| `destination` | string | `fr/paris` | A popular destination from the dropdown, or `custom` to enter your own city/country below |
-| `customCity` | string | – | City slug as used in Booking.com URLs, e.g. `san-francisco` (used when `destination` is `custom`) |
-| `customCountry` | string | – | Two-letter country code, e.g. `us` (used when `destination` is `custom`) |
-| `maxResults` | integer | `50` | Maximum number of attractions to return (1–200) |
-| `proxyConfiguration` | object | Residential proxy | Recommended for reliability |
+| `mode` | select | `search` | One of the five modes above |
+| `destination` | select | `fr/paris` | 30 popular cities or `custom` |
+| `customCity` | text | – | City name or slug, e.g. `kuala-lumpur` |
+| `customCountry` | text | – | Two-letter code or country name, e.g. `my` |
+| `query` | text | – | Free-text search inside the destination |
+| `sortBy` | select | `trending` | `trending`, `lowest_price`, `highest_weighted_rating` |
+| `minRating` | select | any | `4.5`, `4.0`, `3.5` or `3.0` on Booking's 5-point scale |
+| `freeCancellationOnly` | boolean | false | Keep free-cancellation activities |
+| `skipTheLineOnly` | boolean | false | Keep skip-the-line activities |
+| `wheelchairAccessibleOnly` | boolean | false | Keep wheelchair-accessible activities |
+| `timeOfDay` | select | any | Morning, afternoon or evening start |
+| `guideLanguage` | select | any | Guide language filter |
+| `category` | select | any | Tours, museums, nature, entertainment, food, services |
+| `minPrice` / `maxPrice` | number | – | Representative-price bounds |
+| `minReviews` | integer | – | Minimum guest-review count |
+| `startDate` / `endDate` | text | – | Availability window in `YYYY-MM-DD` |
+| `productIds` | string list | `[]` | Booking product IDs or product URLs |
+| `productUrls` | URL list | `[]` | Product URLs (merged with `productIds`) |
+| `availabilityDate` | text | tomorrow | Date for `availability` mode |
+| `includeCalendar` | boolean | false | Fetch available dates and cheapest-price groups |
+| `includeReviews` | boolean | false | Attach reviews to each product |
+| `reviewSortBy` | select | `most_relevant` | Review order |
+| `maxReviewsPerProduct` | integer | 10 | 1–50 |
+| `includeAvailability` | boolean | false | Attach time slots to each product |
+| `includeDetails` | boolean | false | Fetch full details (all photos, inclusions, accessibility) per search result |
+| `maxResults` | integer | 50 | 1–1,000; the daily prefill uses 3 |
+| `language` | select | `en` | Content language for names and descriptions |
+| `currency` | select | `EUR` | Currency for representative prices |
 
-### Example: popular destination from the dropdown
+### Examples
+
+Smallest daily run:
+
+```json
+{ "destination": "fr/paris", "maxResults": 3 }
+```
+
+Filtered city search:
 
 ```json
 {
+  "mode": "search",
   "destination": "it/rome",
-  "maxResults": 30
+  "minRating": "4.5",
+  "freeCancellationOnly": true,
+  "sortBy": "lowest_price",
+  "maxResults": 40
 }
 ```
 
-### Example: custom city not in the dropdown
+Custom city:
 
 ```json
 {
+  "mode": "search",
   "destination": "custom",
   "customCity": "kuala-lumpur",
   "customCountry": "my",
@@ -52,38 +90,93 @@ Get a quick snapshot of tours and activities listed on Booking.com for a destina
 }
 ```
 
-### Example: a small highly-focused pull
+Product details by URL or ID:
 
 ```json
 {
-  "destination": "jp/tokyo",
-  "maxResults": 10
+  "mode": "productDetails",
+  "productIds": [
+    "PRe4kSVWXdrD",
+    "https://www.booking.com/attractions/fr/pre4ksvwxdrd-seine-river-sightseeing-cruise.html"
+  ]
 }
 ```
 
+Availability for one date, plus the calendar:
+
+```json
+{
+  "mode": "availability",
+  "productIds": ["PRe4kSVWXdrD"],
+  "availabilityDate": "2026-12-15",
+  "startDate": "2026-12-01",
+  "endDate": "2026-12-31",
+  "includeCalendar": true
+}
+```
+
+## Output per record type
+
+Every record includes the fields the source provides; empty values are omitted, never sentinel-filled.
+
+- Identity: `recordType`, `id`, `name`, `slug`, `url`, `sourceUrl`, `city`, `cityName`, `destinationUfi`, `destinationName`, `destinationCountry`
+- Price: `price`, `currency`, `pricePublicAmount`, `priceDiscountAmount`, `priceDiscountPercentage`
+- Ratings: `rating` (0–10), `ratingOutOf5`, `ratingScale`, `reviewCount`, `reviewCountAll`, `photosCount`, `ratingCategoryBreakdown`
+- Duration: `duration`, `durationValue`, `durationMin`, `durationMax`
+- Policy: `freeCancellation`, `cancellationPolicy`, `availableFrom`, `bookingWindowDays`, `isBookable`
+- Taxonomy: `type`, `categories`, `tags`, `labels`, `primaryLabel`, `flags`, `highlights`, `itinerary`
+- Copy: `shortDescription`, `description`, `additionalInfo`; `whatsIncluded`, `notIncluded`, `uniqueSellingPoints` and `accessibility` are lists
+- Languages: `guideLanguages`, `audioLanguages`
+- Media: `photoUrl`, `photoCaption`, `photos`
+- Location: `address`, `countryCode`, `countryName`, `postalCode`, `latitude`, `longitude`, `locationType`, `locationInstructions`, `departurePoint`, `meetingPoint`
+- Commerce: `supplier`, `externalSellerUrl`, `poweredBy`, `operatedBy`, `timeZone`
+- Optional: `reviews`, `reviewSummary`, `timeSlots`, `availabilityDate`, `availableDates`, `cheapestPrices`
+- `scrapedAt`
+
+**Rating scales:** Booking's attractions API reports 0–5. This actor keeps the original `rating` field at 0–10 for compatibility, and also emits `ratingOutOf5` and `ratingScale`, so you can use either without guessing.
+
 ## Use cases
 
-- **Travel comparison tools** — pull a quick list of bookable activities and their prices for a destination
-- **Price monitoring** — track activity pricing in a city over time
-- **Destination content** — populate a "things to do" section with live Booking.com listings
-- **Rating research** — compare guest ratings and review volume across activities in a city
+- **Travel planning** - compare tours, tickets and activities across a destination
+- **Price monitoring** - track public and discounted activity prices over time
+- **Market research** - map a city's attraction supply, categories and ratings
+- **Review analysis** - export guest reviews for sentiment and complaint research
+- **Availability checks** - inspect time slots and calendars for specific dates
 
 ## FAQ
 
 **Do I need a Booking.com account?**
-No, activity listings are publicly accessible.
-
-**Why do some records show `0` for `price` or `rating` instead of leaving the field out?**
-This actor always returns the same fixed set of fields for every record, using `0` for missing numeric values and an empty value for missing text, so your downstream code can rely on a consistent shape.
-
-**Can I search any city, not just the ones in the dropdown?**
-Yes — set `destination` to `custom` and fill in `customCity` and `customCountry`.
+No. The actor reads public listing data and needs no login, cookie or API key.
 
 **Do I need a proxy?**
-A residential proxy is recommended for reliability, but the actor will attempt the request without one if no proxy is configured.
+No. It connects directly and switches to a working connection automatically only if one is needed. No proxy setup is required.
+
+**Can I use any city?**
+Yes. Pick one of the 30 popular cities or set `destination` to `custom` and enter a city name and country. Cities with no attractions inventory return a clean empty result with a status message.
+
+**Why are some fields missing on a record?**
+Booking.com does not publish every detail for every activity. The actor omits fields the source does not have instead of writing `0`, `"N/A"` or an empty string.
+
+**Why is `category` applied after fetching?**
+Booking's category parameter is broader than its own product taxonomy. The actor fetches the page, then verifies each product's own type/categories/tags, so a category filter is accurate rather than approximate.
+
+**How many results can I get?**
+`maxResults` supports up to 1,000. The source may have thousands of activities in a large city; the status message reports when the cap was reached.
 
 **How fresh is the data?**
-Each run reads Booking.com live, so prices and ratings reflect what's shown at request time.
+Each run reads Booking.com live, so prices, ratings and availability reflect the request time.
 
 **Is this affiliated with Booking.com?**
-No, this is an independent third-party actor that reads Booking.com's public pages and is not affiliated with or endorsed by Booking.com.
+No. This is an independent third-party actor that reads publicly available Booking.com pages and data. It is not affiliated with or endorsed by Booking.com.
+
+## Data source and limitations
+
+The actor reads Booking.com's public attractions listing, product, review, availability and destination endpoints. There is no official free public API for this data; the official Booking.com Demand API is partner-only and requires credentials. This actor uses the same public web data a browser sees, with no account.
+
+Known limits:
+
+- Availability and review enrichment add one or more requests per product; they are off by default and off in the daily prefill.
+- Category, price and minimum-review filters are verified after fetch because the source's server-side parameters are not strict.
+- Some activities have no rating, duration or cancellation data because the source does not publish it.
+- Availability is date-specific. A product with no time slots on the requested date may still be bookable on another date; use the calendar fields to see available dates.
+- Large city catalogues can exceed 1,000 activities; raise `maxResults` or partition by category, date or price.

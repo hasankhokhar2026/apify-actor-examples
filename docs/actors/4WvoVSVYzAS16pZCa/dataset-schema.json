@@ -2,50 +2,321 @@
   "actorSpecification": 1,
   "fields": {
     "properties": {
+      "accessibility": {
+        "items": {
+          "type": "string"
+        },
+        "type": "array"
+      },
+      "additionalInfo": {
+        "type": "string"
+      },
+      "address": {
+        "type": "string"
+      },
+      "audioLanguages": {
+        "items": {
+          "type": "string"
+        },
+        "type": "array"
+      },
+      "availabilityDate": {
+        "type": "string"
+      },
+      "availableDates": {
+        "items": {
+          "type": "string"
+        },
+        "type": "array"
+      },
+      "availableFrom": {
+        "type": "string"
+      },
+      "bookingWindowDays": {
+        "type": "integer"
+      },
+      "cancellationPolicy": {
+        "type": "object"
+      },
+      "categories": {
+        "items": {
+          "type": "string"
+        },
+        "type": "array"
+      },
+      "cheapestPrices": {
+        "items": {
+          "type": "object"
+        },
+        "type": "array"
+      },
       "city": {
-        "description": "City name",
+        "description": "Destination city slug",
+        "type": "string"
+      },
+      "cityName": {
+        "type": "string"
+      },
+      "citySlug": {
+        "type": "string"
+      },
+      "continentId": {
+        "type": "integer"
+      },
+      "countryCode": {
+        "type": "string"
+      },
+      "countryName": {
         "type": "string"
       },
       "currency": {
-        "description": "Price currency",
-        "nullable": true,
+        "description": "ISO 4217 currency",
         "type": "string"
       },
+      "departurePoint": {
+        "type": "string"
+      },
+      "description": {
+        "type": "string"
+      },
+      "destinationCountry": {
+        "type": "string"
+      },
+      "destinationName": {
+        "type": "string"
+      },
+      "destinationProductCount": {
+        "type": "integer"
+      },
+      "destinationUfi": {
+        "type": "integer"
+      },
+      "duration": {
+        "description": "Human-readable duration label",
+        "type": "string"
+      },
+      "durationMax": {
+        "description": "Maximum duration if variable"
+      },
+      "durationMin": {
+        "description": "Minimum duration if variable"
+      },
+      "durationValue": {
+        "description": "ISO 8601 duration",
+        "type": "string"
+      },
+      "externalSellerUrl": {
+        "type": "string"
+      },
+      "flags": {
+        "items": {
+          "type": "string"
+        },
+        "type": "array"
+      },
       "freeCancellation": {
-        "description": "Free cancellation available",
         "type": "boolean"
       },
+      "guideLanguages": {
+        "items": {
+          "type": "string"
+        },
+        "type": "array"
+      },
+      "healthSafety": {
+        "type": "string"
+      },
+      "highlights": {
+        "items": {
+          "type": "string"
+        },
+        "type": "array"
+      },
+      "id": {
+        "description": "Booking.com product ID (PR...) or destination ufi as text",
+        "type": "string"
+      },
+      "imageUrl": {
+        "type": "string"
+      },
+      "isBookable": {
+        "type": "boolean"
+      },
+      "itinerary": {
+        "type": "object"
+      },
+      "labels": {
+        "items": {
+          "type": "object"
+        },
+        "type": "array"
+      },
+      "latitude": {
+        "type": "number"
+      },
+      "locationInstructions": {
+        "type": "string"
+      },
+      "locationType": {
+        "type": "string"
+      },
+      "longitude": {
+        "type": "number"
+      },
+      "meetingPoint": {
+        "type": "string"
+      },
       "name": {
-        "description": "Attraction/activity name",
+        "description": "Attraction or destination name",
+        "type": "string"
+      },
+      "notIncluded": {
+        "items": {
+          "type": "string"
+        },
+        "type": "array"
+      },
+      "operatedBy": {
+        "type": "string"
+      },
+      "photoCaption": {
         "type": "string"
       },
       "photoUrl": {
-        "description": "Main photo URL",
-        "nullable": true,
+        "description": "Primary photo URL",
+        "type": "string"
+      },
+      "photos": {
+        "items": {
+          "type": "string"
+        },
+        "type": "array"
+      },
+      "photosCount": {
+        "type": "integer"
+      },
+      "postalCode": {
+        "type": "string"
+      },
+      "poweredBy": {
         "type": "string"
       },
       "price": {
-        "description": "Price per person",
-        "nullable": true,
+        "description": "Representative (discounted) price",
         "type": "number"
       },
-      "rating": {
-        "description": "Guest rating",
-        "nullable": true,
+      "priceDiscountAmount": {
         "type": "number"
       },
-      "reviewCount": {
-        "description": "Number of reviews",
-        "nullable": true,
+      "priceDiscountPercentage": {
+        "type": "number"
+      },
+      "pricePublicAmount": {
+        "description": "Public/list price",
+        "type": "number"
+      },
+      "primaryLabel": {
+        "type": "string"
+      },
+      "productCount": {
+        "description": "Destination catalogue product count",
         "type": "integer"
       },
-      "scrapedAt": {
-        "description": "Scrape timestamp (ISO 8601)",
+      "rating": {
+        "description": "Guest rating on the legacy 0-10 scale",
+        "type": "number"
+      },
+      "ratingCategoryBreakdown": {
+        "items": {
+          "type": "object"
+        },
+        "type": "array"
+      },
+      "ratingOutOf5": {
+        "description": "Guest rating on Booking's 0-5 scale",
+        "type": "number"
+      },
+      "ratingScale": {
         "type": "string"
       },
-      "url": {
-        "description": "Booking.com attraction URL",
+      "recordType": {
+        "description": "attraction, destination or review-bearing product",
         "type": "string"
+      },
+      "restrictions": {
+        "type": "string"
+      },
+      "reviewCount": {
+        "type": "integer"
+      },
+      "reviewCountAll": {
+        "type": "integer"
+      },
+      "reviewSummary": {
+        "type": "object"
+      },
+      "reviews": {
+        "items": {
+          "type": "object"
+        },
+        "type": "array"
+      },
+      "scrapedAt": {
+        "description": "UTC ISO-8601 collection timestamp",
+        "type": "string"
+      },
+      "shortDescription": {
+        "type": "string"
+      },
+      "slug": {
+        "description": "Booking.com product slug",
+        "type": "string"
+      },
+      "sourceUrl": {
+        "description": "Canonical source URL",
+        "type": "string"
+      },
+      "supplier": {
+        "type": "object"
+      },
+      "tags": {
+        "items": {
+          "type": "string"
+        },
+        "type": "array"
+      },
+      "timeSlots": {
+        "items": {
+          "type": "object"
+        },
+        "type": "array"
+      },
+      "timeZone": {
+        "type": "string"
+      },
+      "type": {
+        "description": "Primary taxonomy type",
+        "type": "string"
+      },
+      "ufi": {
+        "description": "Destination ufi (destination records)",
+        "type": "integer"
+      },
+      "uniqueSellingPoints": {
+        "items": {
+          "type": "string"
+        },
+        "type": "array"
+      },
+      "url": {
+        "description": "Canonical Booking.com URL",
+        "type": "string"
+      },
+      "whatsIncluded": {
+        "items": {
+          "type": "string"
+        },
+        "type": "array"
       }
     },
     "type": "object"
@@ -56,9 +327,17 @@
       "display": {
         "component": "table",
         "properties": {
+          "cityName": {
+            "format": "text",
+            "label": "City"
+          },
           "currency": {
             "format": "text",
             "label": "Currency"
+          },
+          "duration": {
+            "format": "text",
+            "label": "Duration"
           },
           "freeCancellation": {
             "format": "text",
@@ -74,11 +353,15 @@
           },
           "rating": {
             "format": "number",
-            "label": "Rating"
+            "label": "Rating (0-10)"
           },
           "reviewCount": {
             "format": "number",
             "label": "Reviews"
+          },
+          "type": {
+            "format": "text",
+            "label": "Type"
           },
           "url": {
             "format": "link",
@@ -95,6 +378,9 @@
           "rating",
           "reviewCount",
           "freeCancellation",
+          "duration",
+          "type",
+          "cityName",
           "url"
         ]
       }

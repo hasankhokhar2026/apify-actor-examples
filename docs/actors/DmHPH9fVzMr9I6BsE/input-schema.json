@@ -1,34 +1,188 @@
 {
+  "description": "Resolve place names, addresses, coordinates and public Google Earth URLs into precise coordinates, place IDs, terrain elevation and available place-card details.",
   "properties": {
-    "maxDelayBetweenRequests": {
-      "default": 5,
-      "description": "Maximum delay in seconds between queries to avoid rate limiting.",
-      "example": 5,
-      "maximum": 60,
+    "includeAddress": {
+      "default": true,
+      "description": "Add a street address when Google's suggestion results identify the same place unambiguously. Adds one lightweight request per query.",
+      "prefill": false,
+      "sectionCaption": "Output options",
+      "sectionDescription": "Optional enrichment fields. Disable them for the fastest, smallest run.",
+      "title": "Match addresses",
+      "type": "boolean"
+    },
+    "includeElevation": {
+      "default": true,
+      "description": "Add terrain elevation in metres above sea level for every resolved coordinate, using Google Earth's public elevation service.",
+      "prefill": false,
+      "title": "Terrain elevation",
+      "type": "boolean"
+    },
+    "includeKml": {
+      "default": false,
+      "description": "Add a ready-to-import KML Placemark string to every record. Useful for opening the results in Google Earth, QGIS or other GIS tools.",
+      "prefill": false,
+      "title": "Generate KML",
+      "type": "boolean"
+    },
+    "language": {
+      "default": "en",
+      "description": "Language used for place names, descriptions and details returned by Google Earth.",
+      "editor": "select",
+      "enum": [
+        "en",
+        "ar",
+        "bn",
+        "cs",
+        "da",
+        "de",
+        "el",
+        "es",
+        "fa",
+        "fi",
+        "fr",
+        "he",
+        "hi",
+        "hu",
+        "id",
+        "it",
+        "ja",
+        "ko",
+        "ms",
+        "nl",
+        "no",
+        "pl",
+        "pt",
+        "ro",
+        "ru",
+        "sv",
+        "th",
+        "tr",
+        "uk",
+        "ur",
+        "vi",
+        "zh"
+      ],
+      "enumTitles": [
+        "English",
+        "Arabic",
+        "Bengali",
+        "Czech",
+        "Danish",
+        "German",
+        "Greek",
+        "Spanish",
+        "Persian",
+        "Finnish",
+        "French",
+        "Hebrew",
+        "Hindi",
+        "Hungarian",
+        "Indonesian",
+        "Italian",
+        "Japanese",
+        "Korean",
+        "Malay",
+        "Dutch",
+        "Norwegian",
+        "Polish",
+        "Portuguese",
+        "Romanian",
+        "Russian",
+        "Swedish",
+        "Thai",
+        "Turkish",
+        "Ukrainian",
+        "Urdu",
+        "Vietnamese",
+        "Chinese"
+      ],
+      "prefill": "en",
+      "sectionCaption": "Search filters",
+      "sectionDescription": "Optional language and geographic bias for search mode.",
+      "title": "Language",
+      "type": "string"
+    },
+    "maxItems": {
+      "default": 100,
+      "description": "Global cap on the number of location records saved across all queries or URLs.",
+      "maximum": 10000,
       "minimum": 1,
-      "title": "Maximum Delay Between Requests (seconds)",
+      "prefill": 1,
+      "title": "Maximum records",
       "type": "integer"
     },
-    "minDelayBetweenRequests": {
-      "default": 2,
-      "description": "Minimum delay in seconds between queries to avoid rate limiting.",
-      "example": 2,
-      "maximum": 30,
+    "maxResultsPerQuery": {
+      "default": 1,
+      "description": "How many Google Earth matches to save for each search query. The default of 1 keeps the exact-name match. Raise it to collect every ranked match; the 'rank' field preserves Google's original order.",
+      "maximum": 200,
       "minimum": 1,
-      "title": "Minimum Delay Between Requests (seconds)",
+      "prefill": 1,
+      "title": "Results per query",
       "type": "integer"
+    },
+    "mode": {
+      "default": "search",
+      "description": "Choose whether to search by text or resolve Google Earth URLs. (mode=search / mode=byUrls)",
+      "editor": "select",
+      "enum": [
+        "search",
+        "byUrls"
+      ],
+      "enumTitles": [
+        "Search by place name or address",
+        "Resolve Google Earth URLs"
+      ],
+      "prefill": "search",
+      "title": "Mode",
+      "type": "string"
+    },
+    "searchArea": {
+      "description": "Optional north/south/east/west bounding box that biases Google Earth's ranking toward a region. Leave it unset to search worldwide. All four bounds are recommended; missing bounds fall back to the world.",
+      "editor": "json",
+      "properties": {
+        "east": {
+          "description": "Eastern longitude bound of the search area.",
+          "example": -73.5,
+          "maximum": 180,
+          "minimum": -180,
+          "title": "East longitude",
+          "type": "number"
+        },
+        "north": {
+          "description": "Northern latitude bound of the search area.",
+          "example": 41,
+          "maximum": 90,
+          "minimum": -90,
+          "title": "North latitude",
+          "type": "number"
+        },
+        "south": {
+          "description": "Southern latitude bound of the search area.",
+          "example": 40.4,
+          "maximum": 90,
+          "minimum": -90,
+          "title": "South latitude",
+          "type": "number"
+        },
+        "west": {
+          "description": "Western longitude bound of the search area.",
+          "example": -74.3,
+          "maximum": 180,
+          "minimum": -180,
+          "title": "West longitude",
+          "type": "number"
+        }
+      },
+      "title": "Search area (viewport)",
+      "type": "object"
     },
     "searchQueries": {
-      "default": [
-        "Eiffel Tower"
-      ],
-      "description": "List of location names or addresses to search for on Google Earth. Each query returns ONE result (the primary location Google Earth identifies). For multiple franchise locations (e.g., 'KFC'), use specific queries like 'KFC New York', 'KFC Los Angeles'.",
+      "description": "Place names, addresses, postal codes or coordinate strings to search on Google Earth. (mode=search) Each query returns one result by default; raise 'Results per query' to collect more. Use specific queries such as 'KFC New York' for a particular branch.",
       "editor": "stringList",
       "example": [
         "Eiffel Tower",
-        "Grand Canyon",
-        "Tokyo Tower",
-        "Statue of Liberty"
+        "1600 Pennsylvania Avenue NW, Washington, DC",
+        "48.8584, 2.2945"
       ],
       "items": {
         "minLength": 1,
@@ -36,14 +190,34 @@
       },
       "maxItems": 100,
       "minItems": 1,
-      "title": "Search Queries",
+      "prefill": [
+        "Eiffel Tower"
+      ],
+      "title": "Search queries",
+      "type": "array"
+    },
+    "startUrls": {
+      "description": "Public earth.google.com/web URLs to resolve. A URL can contain a search text, a resolved view with coordinates and a data token, or both. URLs with a data token also unlock the place knowledge card (address, website, Wikipedia, photos and opening hours). (mode=byUrls)",
+      "editor": "requestListSources",
+      "items": {
+        "properties": {
+          "url": {
+            "description": "Public earth.google.com/web URL.",
+            "title": "URL",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "maxItems": 100,
+      "title": "Google Earth URLs",
       "type": "array"
     }
   },
   "required": [
-    "searchQueries"
+    "mode"
   ],
   "schemaVersion": 1,
-  "title": "Google Earth Scraper Input",
+  "title": "Google Earth Location Coordinate Finder Input",
   "type": "object"
 }

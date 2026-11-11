@@ -1,22 +1,36 @@
 {
-  "description": "Scrape Amazon influencer/creator storefronts (/shop/{handle}): profile info, Idea Lists, and creator videos.",
+  "description": "Scrape Amazon creator storefronts (/shop/{handle}): profile and social links, Idea Lists and their products, shoppable photos and videos, curations, and trending picks across 23 Amazon marketplaces.",
   "properties": {
     "crawlIdeaLists": {
       "default": true,
-      "description": "When true, opens each Idea List (up to `maxLists`) and extracts individual products (up to `maxItemsPerList`). When false, only the list summary cards (title, declared item count, image) are emitted.",
+      "description": "When true, opens each Idea List (up to `maxLists`) and extracts individual products (up to `maxItemsPerList`). When false, only the list summary cards (title, declared item count, image, hearts, pinned) are emitted.",
       "prefill": true,
       "title": "Crawl Idea List items",
       "type": "boolean"
     },
     "handles": {
       "default": [],
-      "description": "Amazon influencer handles, e.g. `gearvlogz` (from amazon.com/shop/gearvlogz). Combined with `marketplaceDomain` to build the shop URL.",
+      "description": "Amazon influencer handles, e.g. `gearvlogz` (from amazon.com/shop/gearvlogz). Combined with `marketplaceDomain` to build the shop URL. At least one handle or `shopUrls` entry is required.",
       "editor": "stringList",
       "prefill": [
         "gearvlogz"
       ],
       "title": "Creator handles",
       "type": "array"
+    },
+    "includeCurations": {
+      "default": true,
+      "description": "Emit the creator's curations (themed post collections shown on the profile page) when tabs=all or profile.",
+      "prefill": false,
+      "title": "Include curations",
+      "type": "boolean"
+    },
+    "includeTrendingPicks": {
+      "default": true,
+      "description": "Emit the creator's trending-picks product carousel when tabs=all or profile.",
+      "prefill": false,
+      "title": "Include trending picks",
+      "type": "boolean"
     },
     "marketplaceDomain": {
       "default": "amazon.com",
@@ -81,7 +95,7 @@
       "description": "Maximum number of product items to extract per Idea List.",
       "maximum": 100,
       "minimum": 1,
-      "prefill": 15,
+      "prefill": 3,
       "title": "Max items per Idea List",
       "type": "integer"
     },
@@ -94,12 +108,21 @@
       "title": "Max Idea Lists per shop",
       "type": "integer"
     },
+    "maxPhotos": {
+      "default": 20,
+      "description": "Maximum number of shoppable photo posts to extract per shop (tabs=all or photos).",
+      "maximum": 100,
+      "minimum": 1,
+      "prefill": 1,
+      "title": "Max photos per shop",
+      "type": "integer"
+    },
     "maxVideos": {
       "default": 20,
       "description": "Maximum number of creator videos to extract per shop (tabs=all or videos).",
       "maximum": 100,
       "minimum": 1,
-      "prefill": 10,
+      "prefill": 1,
       "title": "Max videos per shop",
       "type": "integer"
     },
@@ -107,7 +130,7 @@
       "default": {
         "useApifyProxy": true
       },
-      "description": "Apify proxy configuration. Defaults to the free AUTO (datacenter) group.",
+      "description": "Optional. The actor chooses a working connection automatically (direct, then free AUTO, then residential only after repeated blocks). Change this only if you need a specific proxy setup.",
       "editor": "proxy",
       "prefill": {
         "useApifyProxy": true
@@ -115,9 +138,17 @@
       "title": "Proxy configuration",
       "type": "object"
     },
+    "searchPosts": {
+      "default": "",
+      "description": "Optional keyword to filter the creator's posts (Idea Lists, photos, videos) before extraction. Leave empty to return the full feed.",
+      "editor": "textfield",
+      "prefill": "",
+      "title": "Search posts",
+      "type": "string"
+    },
     "shopUrls": {
       "default": [],
-      "description": "Full creator storefront URLs, e.g. `https://www.amazon.com/shop/gearvlogz`. Use this for non-default marketplaces or when you already have the exact URL.",
+      "description": "Full creator storefront URLs, e.g. `https://www.amazon.com/shop/gearvlogz`. Use this for non-default marketplaces or when you already have the exact URL. Provide at least one handle or shop URL.",
       "editor": "stringList",
       "prefill": [],
       "title": "Shop URLs",
@@ -125,35 +156,28 @@
     },
     "tabs": {
       "default": "all",
-      "description": "Which tab(s) of the storefront to extract.",
+      "description": "Which storefront content to extract. `all` includes profile, Idea Lists, photos, videos, curations, and trending picks.",
       "editor": "select",
       "enum": [
         "all",
         "profile",
         "ideaLists",
+        "photos",
         "videos"
       ],
       "enumTitles": [
-        "All (profile + Idea Lists + Videos)",
-        "Profile only",
+        "All (profile + Idea Lists + photos + videos + curations + trending)",
+        "Profile only (includes curations and trending picks)",
         "Idea Lists only",
+        "Photos only",
         "Videos only"
       ],
       "prefill": "all",
       "title": "Content to scrape",
       "type": "string"
-    },
-    "useResidentialProxy": {
-      "default": false,
-      "description": "By default the actor uses the free AUTO (datacenter) proxy group with a homepage-priming retry, escalating to residential only after repeated blocks. Enable this to always use residential proxy from the start (higher reliability, uses paid proxy credit).",
-      "prefill": false,
-      "title": "Force residential proxy",
-      "type": "boolean"
     }
   },
-  "required": [
-    "handles"
-  ],
+  "required": [],
   "schemaVersion": 1,
   "title": "Amazon Creator Shop Scraper Input",
   "type": "object"

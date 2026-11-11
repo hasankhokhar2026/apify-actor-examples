@@ -1,54 +1,169 @@
 {
-  "description": "Scrape user reviews for a Google Workspace Marketplace app by its App ID.",
+  "description": "Extract public reviews for one or more Google Workspace Marketplace apps by App ID or app URL. No login, API key or proxy needed.",
   "properties": {
-    "appId": {
-      "description": "Numeric App ID from Google Workspace Marketplace URL (e.g. 539341275670 for Autocrat).",
-      "editor": "textfield",
-      "prefill": "539341275670",
-      "title": "App ID",
-      "type": "string"
+    "appIds": {
+      "description": "One or more Google Workspace Marketplace apps. Paste numeric App IDs (e.g. 539341275670) or full app URLs. Duplicate IDs are removed automatically.",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "prefill": [
+        "539341275670"
+      ],
+      "sectionCaption": "Apps",
+      "sectionDescription": "Each app is scraped separately and its reviews are combined in one dataset.",
+      "title": "App IDs or app URLs",
+      "type": "array"
     },
     "maxItems": {
       "default": 100,
-      "description": "Maximum number of reviews to collect.",
-      "maximum": 500,
+      "description": "Maximum number of reviews to save across all apps.",
+      "maximum": 5000,
       "minimum": 1,
-      "prefill": 100,
-      "title": "Max reviews",
+      "prefill": 3,
+      "sectionCaption": "Output limits",
+      "sectionDescription": "Caps keep runs fast and predictable. Unused slots are offered to the next app.",
+      "title": "Max reviews (total)",
+      "type": "integer"
+    },
+    "maxRating": {
+      "description": "Only include reviews with this rating or lower (1-5). Use 2 to collect complaints only. Leave empty for all ratings.",
+      "maximum": 5,
+      "minimum": 1,
+      "title": "Maximum star rating",
+      "type": "integer"
+    },
+    "maxReviewsPerApp": {
+      "default": 2000,
+      "description": "Maximum reviews to save for any single app. Raise this to scan deeper for sparse filters or rating sorts.",
+      "maximum": 2000,
+      "minimum": 1,
+      "prefill": 3,
+      "title": "Max reviews per app",
       "type": "integer"
     },
     "minRating": {
-      "description": "Only include reviews with this star rating or higher (1–5). Leave blank for all ratings.",
+      "description": "Only include reviews with this rating or higher (1-5). Leave empty for all ratings.",
       "maximum": 5,
       "minimum": 1,
       "title": "Minimum star rating",
       "type": "integer"
     },
+    "reviewKeyword": {
+      "description": "Case-insensitive text that must appear in the review. Useful for complaints, feature names or product terms. Leave empty for all reviews.",
+      "editor": "textfield",
+      "title": "Review text contains",
+      "type": "string"
+    },
+    "reviewLanguage": {
+      "default": "en",
+      "description": "The Marketplace serves reviews one language at a time. Pick a language for a complete slice, or All languages for the mixed stream the site shows under 'All languages'.",
+      "editor": "select",
+      "enum": [
+        "en",
+        "all",
+        "de",
+        "es",
+        "fr",
+        "pt-BR",
+        "it",
+        "ru",
+        "ja",
+        "ko",
+        "zh-CN",
+        "zh-TW",
+        "id",
+        "vi",
+        "nl",
+        "pl",
+        "tr",
+        "ar",
+        "hi",
+        "th",
+        "he",
+        "uk",
+        "sv",
+        "da",
+        "fi",
+        "no",
+        "cs",
+        "hu",
+        "fil"
+      ],
+      "enumTitles": [
+        "English",
+        "All languages (mixed stream)",
+        "German",
+        "Spanish",
+        "French",
+        "Portuguese (Brazil)",
+        "Italian",
+        "Russian",
+        "Japanese",
+        "Korean",
+        "Chinese (Simplified)",
+        "Chinese (Traditional)",
+        "Indonesian",
+        "Vietnamese",
+        "Dutch",
+        "Polish",
+        "Turkish",
+        "Arabic",
+        "Hindi",
+        "Thai",
+        "Hebrew",
+        "Ukrainian",
+        "Swedish",
+        "Danish",
+        "Finnish",
+        "Norwegian",
+        "Czech",
+        "Hungarian",
+        "Filipino"
+      ],
+      "prefill": "en",
+      "title": "Review language",
+      "type": "string"
+    },
+    "sinceDate": {
+      "description": "Only reviews posted on or after this date. Use an ISO date (2026-01-01), an ISO datetime, or a relative period such as '30 days', '2 weeks' or '6 months'.",
+      "editor": "textfield",
+      "title": "Reviews from",
+      "type": "string"
+    },
     "sortBy": {
       "default": "MostRelevant",
-      "description": "Order in which to return reviews.",
+      "description": "Most relevant and Most helpful use Google's helpful ranking. Newest uses the date ranking. Highest rated and Lowest rated sort the fetched reviews in the actor; increase Max reviews per app to widen the window.",
       "editor": "select",
       "enum": [
         "MostRelevant",
+        "MostHelpful",
         "Newest",
         "HighestRated",
         "LowestRated"
       ],
       "enumTitles": [
-        "Most relevant",
+        "Most relevant (Google default)",
+        "Most helpful first",
         "Newest first",
         "Highest rated first",
         "Lowest rated first"
       ],
       "prefill": "MostRelevant",
+      "sectionCaption": "Review filters",
+      "sectionDescription": "All filters are applied to the reviews that the Marketplace serves for the selected language.",
       "title": "Sort reviews by",
+      "type": "string"
+    },
+    "untilDate": {
+      "description": "Only reviews posted on or before this date. Use an ISO date (2026-12-31) or an ISO datetime. A bare date includes the whole day.",
+      "editor": "textfield",
+      "title": "Reviews until",
       "type": "string"
     }
   },
-  "required": [
-    "appId"
-  ],
+  "required": [],
   "schemaVersion": 1,
-  "title": "Google Workspace Marketplace Reviews Scraper Input",
+  "title": "Google Workspace Marketplace App Review Extractor Input",
   "type": "object"
 }

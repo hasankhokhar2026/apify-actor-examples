@@ -1,21 +1,104 @@
 {
-  "description": "Scrape tours, activities, and things to do from Booking.com by city.",
+  "description": "Choose a mode, a destination (or product URLs/IDs) and optional filters. The actor reads Booking.com's public attractions data with no account, cookies or proxy setup.",
   "properties": {
-    "customCity": {
-      "description": "City slug as in Booking.com URLs (e.g., 'san-francisco', 'kuala-lumpur'). Lowercase with hyphens.",
+    "availabilityDate": {
+      "description": "Date for time-slot availability in YYYY-MM-DD format. Defaults to tomorrow (mode=availability or includeAvailability).",
       "editor": "textfield",
-      "title": "Custom City (if destination = Custom)",
+      "title": "Availability date",
+      "type": "string"
+    },
+    "category": {
+      "default": "",
+      "description": "Keep activities in this category. Applied after fetch and verified against each product's own categories (mode=search).",
+      "editor": "select",
+      "enum": [
+        "",
+        "Tours",
+        "Museums",
+        "Nature & outdoor",
+        "Entertainment & tickets",
+        "Food & drink",
+        "Services & rentals"
+      ],
+      "enumTitles": [
+        "Any category",
+        "Tours",
+        "Museums, arts & culture",
+        "Nature & outdoor",
+        "Entertainment & tickets",
+        "Food & drink",
+        "Services & rentals"
+      ],
+      "prefill": "",
+      "title": "Category",
+      "type": "string"
+    },
+    "currency": {
+      "default": "EUR",
+      "description": "Currency for representative prices.",
+      "editor": "select",
+      "enum": [
+        "EUR",
+        "USD",
+        "GBP",
+        "CHF",
+        "SEK",
+        "DKK",
+        "NOK",
+        "PLN",
+        "CZK",
+        "HUF",
+        "TRY",
+        "AED",
+        "AUD",
+        "CAD",
+        "JPY",
+        "SGD",
+        "THB",
+        "BRL",
+        "MYR",
+        "INR"
+      ],
+      "enumTitles": [
+        "Euro",
+        "US dollar",
+        "British pound",
+        "Swiss franc",
+        "Swedish krona",
+        "Danish krone",
+        "Norwegian krone",
+        "Polish zloty",
+        "Czech koruna",
+        "Hungarian forint",
+        "Turkish lira",
+        "UAE dirham",
+        "Australian dollar",
+        "Canadian dollar",
+        "Japanese yen",
+        "Singapore dollar",
+        "Thai baht",
+        "Brazilian real",
+        "Malaysian ringgit",
+        "Indian rupee"
+      ],
+      "prefill": "EUR",
+      "title": "Currency",
+      "type": "string"
+    },
+    "customCity": {
+      "description": "City name or Booking.com city slug (e.g. 'kuala-lumpur', 'Porto'). Used when destination=custom.",
+      "editor": "textfield",
+      "title": "Custom city",
       "type": "string"
     },
     "customCountry": {
-      "description": "Two-letter country code (e.g., 'us', 'my', 'br').",
+      "description": "Two-letter country code or country name (e.g. 'my', 'Portugal'). Used when destination=custom.",
       "editor": "textfield",
-      "title": "Custom Country Code (if destination = Custom)",
+      "title": "Custom country",
       "type": "string"
     },
     "destination": {
-      "default": "fr/paris",
-      "description": "Select a popular destination or choose 'Custom' and enter your own city/country below.",
+      "description": "City to search. Pick a popular destination or choose Custom and enter a city slug and country code below. Used by mode=search.",
       "editor": "select",
       "enum": [
         "fr/paris",
@@ -80,37 +163,326 @@
         "Krakow, Poland",
         "Dubrovnik, Croatia",
         "Cairo, Egypt",
-        "Marrakech, Morocco",
-        "Custom (enter below)"
+        "Marrakesh, Morocco",
+        "Custom (enter city and country below)"
       ],
       "prefill": "fr/paris",
+      "sectionCaption": "Destination",
+      "sectionDescription": "A destination is required for mode=search. Product modes use productIds or productUrls instead.",
       "title": "Destination",
       "type": "string"
     },
+    "endDate": {
+      "description": "Optional availability window end in YYYY-MM-DD format (mode=search or availability).",
+      "editor": "textfield",
+      "title": "End date",
+      "type": "string"
+    },
+    "freeCancellationOnly": {
+      "default": false,
+      "description": "Keep only activities with free cancellation (mode=search).",
+      "prefill": false,
+      "title": "Free cancellation only",
+      "type": "boolean"
+    },
+    "guideLanguage": {
+      "default": "",
+      "description": "Keep activities available with a guide in this language (mode=search).",
+      "editor": "select",
+      "enum": [
+        "",
+        "en",
+        "fr",
+        "es",
+        "it",
+        "de",
+        "ru",
+        "pt",
+        "ja",
+        "ar",
+        "nl"
+      ],
+      "enumTitles": [
+        "Any language",
+        "English",
+        "French",
+        "Spanish",
+        "Italian",
+        "German",
+        "Russian",
+        "Portuguese",
+        "Japanese",
+        "Arabic",
+        "Dutch"
+      ],
+      "prefill": "",
+      "title": "Guide language",
+      "type": "string"
+    },
+    "includeAvailability": {
+      "default": false,
+      "description": "Fetch time slots for each product in search or product modes. Adds one request per product.",
+      "prefill": false,
+      "title": "Include availability",
+      "type": "boolean"
+    },
+    "includeCalendar": {
+      "default": false,
+      "description": "Also fetch available dates and cheapest-price groups for the startDate/endDate range (mode=availability or productDetails).",
+      "prefill": false,
+      "title": "Include availability calendar",
+      "type": "boolean"
+    },
+    "includeDetails": {
+      "default": false,
+      "description": "Fetch the full product record (all photos, inclusions, accessibility, additional info) for each search result. Adds one request per product.",
+      "prefill": false,
+      "title": "Include full product details",
+      "type": "boolean"
+    },
+    "includeReviews": {
+      "default": false,
+      "description": "Fetch guest reviews for each product. Adds one or more requests per product.",
+      "prefill": false,
+      "sectionCaption": "Enrichment and output",
+      "sectionDescription": "Optional enrichments add requests per product. The daily prefill keeps them off.",
+      "title": "Include reviews",
+      "type": "boolean"
+    },
+    "language": {
+      "default": "en",
+      "description": "Language for names and descriptions. Prices use the selected currency.",
+      "editor": "select",
+      "enum": [
+        "en",
+        "fr",
+        "de",
+        "es",
+        "it",
+        "pt",
+        "nl",
+        "ru",
+        "ja",
+        "ar"
+      ],
+      "enumTitles": [
+        "English",
+        "French",
+        "German",
+        "Spanish",
+        "Italian",
+        "Portuguese",
+        "Dutch",
+        "Russian",
+        "Japanese",
+        "Arabic"
+      ],
+      "prefill": "en",
+      "title": "Content language",
+      "type": "string"
+    },
+    "maxPrice": {
+      "description": "Keep activities at or below this representative price (mode=search).",
+      "maximum": 100000,
+      "minimum": 0,
+      "title": "Maximum price",
+      "type": "number"
+    },
     "maxResults": {
       "default": 50,
-      "description": "Maximum number of attractions to scrape.",
-      "maximum": 200,
+      "description": "Maximum records to return (attractions, products, reviews products or destinations depending on mode).",
+      "maximum": 1000,
       "minimum": 1,
-      "prefill": 10,
-      "title": "Maximum Results",
+      "prefill": 3,
+      "title": "Maximum results",
       "type": "integer"
     },
-    "proxyConfiguration": {
-      "description": "Proxy configuration. Residential proxy recommended for reliability.",
-      "editor": "proxy",
-      "prefill": {
-        "apifyProxyGroups": [
-          "RESIDENTIAL"
-        ],
-        "useApifyProxy": true
+    "maxReviewsPerProduct": {
+      "default": 10,
+      "description": "Maximum guest reviews to include per product.",
+      "maximum": 50,
+      "minimum": 1,
+      "prefill": 10,
+      "title": "Max reviews per product",
+      "type": "integer"
+    },
+    "minPrice": {
+      "description": "Keep activities at or above this representative price (mode=search).",
+      "maximum": 100000,
+      "minimum": 0,
+      "title": "Minimum price",
+      "type": "number"
+    },
+    "minRating": {
+      "default": "",
+      "description": "Minimum guest rating on Booking.com's 5-point scale (mode=search).",
+      "editor": "select",
+      "enum": [
+        "",
+        "4.5",
+        "4.0",
+        "3.5",
+        "3.0"
+      ],
+      "enumTitles": [
+        "Any rating",
+        "4.5 and up",
+        "4.0 and up",
+        "3.5 and up",
+        "3.0 and up"
+      ],
+      "prefill": "",
+      "title": "Minimum rating",
+      "type": "string"
+    },
+    "minReviews": {
+      "description": "Keep activities with at least this many guest reviews (mode=search).",
+      "maximum": 1000000,
+      "minimum": 0,
+      "title": "Minimum review count",
+      "type": "integer"
+    },
+    "mode": {
+      "default": "search",
+      "description": "What to fetch. Search lists activities for a destination; productDetails looks up specific products; availability returns time slots; reviews returns guest reviews; destinations lists the city catalogue.",
+      "editor": "select",
+      "enum": [
+        "search",
+        "productDetails",
+        "availability",
+        "reviews",
+        "destinations"
+      ],
+      "enumTitles": [
+        "Search by destination",
+        "Product details by URL or ID",
+        "Availability and time slots",
+        "Reviews",
+        "Destination catalogue"
+      ],
+      "prefill": "search",
+      "title": "Mode",
+      "type": "string"
+    },
+    "productIds": {
+      "default": [],
+      "description": "Booking.com attraction IDs (e.g. 'PRe4kSVWXdrD') or product URLs. Used by productDetails, availability and reviews modes.",
+      "editor": "stringList",
+      "prefill": [],
+      "sectionCaption": "Product modes",
+      "sectionDescription": "Use productIds or productUrls for productDetails, availability and reviews. A destination is not required for these modes.",
+      "title": "Product IDs or URLs",
+      "type": "array"
+    },
+    "productUrls": {
+      "default": [],
+      "description": "One or more Booking.com attraction product URLs. Used by productDetails, availability and reviews modes.",
+      "editor": "requestListSources",
+      "items": {
+        "properties": {
+          "url": {
+            "description": "A public Booking.com attraction product URL.",
+            "title": "Product URL",
+            "type": "string"
+          }
+        },
+        "type": "object"
       },
-      "title": "Proxy Configuration",
-      "type": "object"
+      "prefill": [],
+      "title": "Product URLs",
+      "type": "array"
+    },
+    "query": {
+      "description": "Optional free-text search inside the destination, e.g. 'Eiffel', 'Louvre', 'food tour' (mode=search).",
+      "editor": "textfield",
+      "sectionCaption": "Filters",
+      "sectionDescription": "Server-side filters narrow the result set. Category, price and minimum review count are verified after fetch for accuracy.",
+      "title": "Search query",
+      "type": "string"
+    },
+    "reviewSortBy": {
+      "default": "most_relevant",
+      "description": "Review order when includeReviews or mode=reviews is active.",
+      "editor": "select",
+      "enum": [
+        "most_relevant",
+        "newest",
+        "oldest",
+        "highest_rating",
+        "lowest_rating"
+      ],
+      "enumTitles": [
+        "Most relevant",
+        "Newest first",
+        "Oldest first",
+        "Highest rating",
+        "Lowest rating"
+      ],
+      "prefill": "most_relevant",
+      "title": "Review sort",
+      "type": "string"
+    },
+    "skipTheLineOnly": {
+      "default": false,
+      "description": "Keep only activities labelled skip the line (mode=search).",
+      "prefill": false,
+      "title": "Skip-the-line only",
+      "type": "boolean"
+    },
+    "sortBy": {
+      "default": "trending",
+      "description": "Result order (mode=search).",
+      "editor": "select",
+      "enum": [
+        "trending",
+        "lowest_price",
+        "highest_weighted_rating"
+      ],
+      "enumTitles": [
+        "Trending (top picks)",
+        "Lowest price first",
+        "Best reviewed first"
+      ],
+      "prefill": "trending",
+      "title": "Sort by",
+      "type": "string"
+    },
+    "startDate": {
+      "description": "Optional availability window start in YYYY-MM-DD format (mode=search or availability).",
+      "editor": "textfield",
+      "title": "Start date",
+      "type": "string"
+    },
+    "timeOfDay": {
+      "default": "",
+      "description": "Filter by start time (mode=search).",
+      "editor": "select",
+      "enum": [
+        "",
+        "morning",
+        "afternoon",
+        "evening"
+      ],
+      "enumTitles": [
+        "Any time",
+        "Morning (before 12:00)",
+        "Afternoon (12:00-18:00)",
+        "Evening and night (after 18:00)"
+      ],
+      "prefill": "",
+      "title": "Time of day",
+      "type": "string"
+    },
+    "wheelchairAccessibleOnly": {
+      "default": false,
+      "description": "Keep only activities labelled wheelchair accessible (mode=search).",
+      "prefill": false,
+      "title": "Wheelchair accessible only",
+      "type": "boolean"
     }
   },
   "required": [
-    "destination"
+    "mode"
   ],
   "schemaVersion": 1,
   "title": "Booking.com Attractions Scraper Input",
