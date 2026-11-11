@@ -1,0 +1,396 @@
+{
+  "properties": {
+    "contributorRoles": {
+      "default": [
+        "owner",
+        "moderator",
+        "admin",
+        "contributor"
+      ],
+      "description": "Role labels accepted for contributor rows.",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "title": "Contributor Roles",
+      "type": "array"
+    },
+    "cookieString": {
+      "description": "Optional browser-exported name=value; name2=value2 header. Parsed locally into authorized session cookies; the raw header is never emitted or logged.",
+      "editor": "textfield",
+      "isSecret": true,
+      "title": "Optional Cookie Header String",
+      "type": "string"
+    },
+    "cookies": {
+      "default": [],
+      "description": "Optional user-supplied session cookies.",
+      "editor": "json",
+      "items": {
+        "type": "object"
+      },
+      "title": "Cookies",
+      "type": "array"
+    },
+    "diffMode": {
+      "default": "hash_and_summary",
+      "description": "Change evidence detail level.",
+      "editor": "select",
+      "enum": [
+        "hash_only",
+        "field_summary",
+        "field_values",
+        "hash_and_summary"
+      ],
+      "title": "Diff Mode",
+      "type": "string"
+    },
+    "feedTab": {
+      "default": "all",
+      "description": "Requested tab; only exact visible labels are selected, and unavailable tabs produce no feed rows.",
+      "editor": "select",
+      "enum": [
+        "all",
+        "posts",
+        "questions",
+        "top",
+        "unanswered",
+        "about",
+        "rules"
+      ],
+      "title": "Requested Feed Tab",
+      "type": "string"
+    },
+    "includeContributors": {
+      "default": false,
+      "description": "Emit only contributors found inside explicitly labeled role regions.",
+      "editor": "checkbox",
+      "prefill": false,
+      "title": "Include Contributors",
+      "type": "boolean"
+    },
+    "includeFeed": {
+      "default": true,
+      "description": "Emit bounded visible feed item rows.",
+      "editor": "checkbox",
+      "prefill": true,
+      "title": "Include Feed",
+      "type": "boolean"
+    },
+    "includeFeedText": {
+      "default": true,
+      "description": "Include visible feed text evidence.",
+      "editor": "checkbox",
+      "prefill": true,
+      "title": "Include Feed Text",
+      "type": "boolean"
+    },
+    "includeFieldEvidence": {
+      "default": true,
+      "description": "Retain field_sources and fields_present after projection; disabling removes only these evidence maps.",
+      "editor": "checkbox",
+      "prefill": true,
+      "title": "Include Field Evidence",
+      "type": "boolean"
+    },
+    "includeMedia": {
+      "default": false,
+      "description": "Include visible media URLs when present.",
+      "editor": "checkbox",
+      "prefill": false,
+      "title": "Include Media",
+      "type": "boolean"
+    },
+    "includeMetadata": {
+      "default": true,
+      "description": "Emit one Space metadata row per successfully observed Space.",
+      "editor": "checkbox",
+      "prefill": true,
+      "title": "Include Metadata",
+      "type": "boolean"
+    },
+    "includeOutboundLinks": {
+      "default": false,
+      "description": "Include bounded outbound links from feed cards.",
+      "editor": "checkbox",
+      "prefill": false,
+      "title": "Include Outbound Links",
+      "type": "boolean"
+    },
+    "includeRules": {
+      "default": true,
+      "description": "Include explicitly headed rules or guidelines text.",
+      "editor": "checkbox",
+      "prefill": true,
+      "title": "Include Rules",
+      "type": "boolean"
+    },
+    "includeSettings": {
+      "default": false,
+      "description": "Opt in to explicitly labeled public/authorized Space settings and content-permission evidence; missing settings remain not_observed and admin-only submission queues are never scraped.",
+      "editor": "checkbox",
+      "prefill": false,
+      "title": "Include Explicit Space Settings",
+      "type": "boolean"
+    },
+    "includeTopics": {
+      "default": true,
+      "description": "Include visible topic links.",
+      "editor": "checkbox",
+      "prefill": true,
+      "title": "Include Topics",
+      "type": "boolean"
+    },
+    "includeUnchanged": {
+      "default": true,
+      "description": "Keep unchanged event rows when onlyNewItems is enabled.",
+      "editor": "checkbox",
+      "prefill": true,
+      "title": "Include Unchanged",
+      "type": "boolean"
+    },
+    "language": {
+      "default": "auto",
+      "description": "Browser language hint. Short language codes and supported regional aliases are accepted and normalize to the short code; auto keeps the actor default. This does not translate content or prove access.",
+      "editor": "select",
+      "enum": [
+        "auto",
+        "en",
+        "es",
+        "fr",
+        "de",
+        "it",
+        "pt",
+        "ja",
+        "ko",
+        "zh",
+        "hi",
+        "tr",
+        "ru",
+        "en-US",
+        "en-GB",
+        "de-DE",
+        "fr-FR",
+        "es-ES",
+        "pt-BR",
+        "it-IT",
+        "ja-JP",
+        "ko-KR",
+        "zh-CN",
+        "zh-TW",
+        "hi-IN",
+        "tr-TR",
+        "ru-RU"
+      ],
+      "title": "Browser Language",
+      "type": "string"
+    },
+    "maxConcurrency": {
+      "default": 1,
+      "description": "Bounded number of source pages processed concurrently.",
+      "editor": "number",
+      "maximum": 3,
+      "minimum": 1,
+      "title": "Maximum Concurrency",
+      "type": "integer"
+    },
+    "maxContributors": {
+      "default": 50,
+      "description": "Maximum contributor rows per Space.",
+      "editor": "number",
+      "maximum": 5000,
+      "minimum": 0,
+      "title": "Maximum Contributors",
+      "type": "integer"
+    },
+    "maxDiscoveryResults": {
+      "default": 20,
+      "description": "Maximum Space links emitted by each query discovery row.",
+      "editor": "number",
+      "maximum": 500,
+      "minimum": 1,
+      "title": "Maximum Discovered Spaces",
+      "type": "integer"
+    },
+    "maxFeedItems": {
+      "default": 50,
+      "description": "Maximum feed rows per Space.",
+      "editor": "number",
+      "maximum": 5000,
+      "minimum": 0,
+      "title": "Maximum Feed Items",
+      "type": "integer"
+    },
+    "maxFeedQuestionExpansions": {
+      "default": 0,
+      "description": "When Scrape Depth is detail, bounded number of question-type feed items to open and expand into full question fields (question_id, question_answer_count, question_view_count, question_details, question_created_at, question_updated_at). Zero keeps the feed-digest-only behavior.",
+      "editor": "number",
+      "maximum": 500,
+      "minimum": 0,
+      "prefill": 0,
+      "title": "Maximum Feed Question Expansions",
+      "type": "integer"
+    },
+    "maxItems": {
+      "default": 0,
+      "description": "Global output row cap; zero means no explicit cap.",
+      "editor": "number",
+      "maximum": 50000,
+      "minimum": 0,
+      "title": "Maximum Output Rows",
+      "type": "integer"
+    },
+    "maxItemsPerSource": {
+      "default": 0,
+      "description": "Maximum semantic records emitted from each direct URL, query, or typed source. Status and run-manifest rows are preserved. Use 0 for no per-source cap.",
+      "maximum": 5000,
+      "minimum": 0,
+      "prefill": 0,
+      "title": "Maximum Items Per Source",
+      "type": "integer"
+    },
+    "maxLoadMoreAttempts": {
+      "default": 5,
+      "description": "Bounded attempts to activate visible feed load-more controls; click and termination state are reported.",
+      "editor": "number",
+      "maximum": 20,
+      "minimum": 0,
+      "title": "Maximum Load More Attempts",
+      "type": "integer"
+    },
+    "maxNavigationRetries": {
+      "default": 2,
+      "description": "Bounded retries for transient navigation failures; retry counts and delays are reported.",
+      "editor": "number",
+      "maximum": 3,
+      "minimum": 0,
+      "title": "Maximum Navigation Retries",
+      "type": "integer"
+    },
+    "maxScrollAttempts": {
+      "default": 5,
+      "description": "Bounded scroll budget for visible feed traversal; termination state is reported per run.",
+      "editor": "number",
+      "maximum": 20,
+      "minimum": 0,
+      "title": "Maximum Scroll Attempts",
+      "type": "integer"
+    },
+    "onlyNewItems": {
+      "default": false,
+      "description": "Suppress unchanged state events when configured with a state store.",
+      "editor": "checkbox",
+      "prefill": false,
+      "title": "Only New Items",
+      "type": "boolean"
+    },
+    "outputFields": {
+      "default": [],
+      "description": "Optional allowlist for compact rows, including bounded dotted paths through nested collections (for example answers.answer_text, comments.comment_text, feed.feed_text, or contributors.contributor_name where applicable). Child identity/URL fields and the actor identity, access/status, source, traversal, graph, filter, and parser-envelope fields remain protected.",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 3000,
+      "title": "Output Fields (Optional)",
+      "type": "array"
+    },
+    "proxyConfiguration": {
+      "default": {
+        "apifyProxyGroups": [
+          "RESIDENTIAL"
+        ],
+        "useApifyProxy": true
+      },
+      "description": "Apify proxy configuration. Defaults to the RESIDENTIAL proxy group, which real-world testing showed is required for reliable access to Quora's Cloudflare-protected pages (the un-grouped AUTO/datacenter tier is measurably blocked/redirected on a meaningful share of requests); the actor also forces RESIDENTIAL whenever a group is left unspecified. Choose a different group, or disable the proxy, only if you understand the reliability tradeoff.",
+      "editor": "proxy",
+      "prefill": {
+        "apifyProxyGroups": [
+          "RESIDENTIAL"
+        ],
+        "useApifyProxy": true
+      },
+      "title": "Proxy configuration",
+      "type": "object"
+    },
+    "requestDelay": {
+      "default": 2,
+      "description": "Delay between source pages in seconds.",
+      "editor": "number",
+      "maximum": 30,
+      "minimum": 0,
+      "title": "Request Delay",
+      "type": "number"
+    },
+    "scrapeDepth": {
+      "default": "detail",
+      "description": "Overview captures metadata/status only and disables feed, contributor, scroll, and load-more work. Detail preserves bounded monitoring traversal; it is not complete history.",
+      "enum": [
+        "overview",
+        "detail"
+      ],
+      "prefill": "overview",
+      "title": "Scrape Depth",
+      "type": "string"
+    },
+    "searchQueries": {
+      "default": [],
+      "description": "Native Quora search queries used for bounded Space-link and entity-link discovery evidence.",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "title": "Discovery Queries",
+      "type": "array"
+    },
+    "spaceUrls": {
+      "default": [],
+      "description": "Direct /q/ Space routes or Space subdomain URLs.",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "prefill": [
+        "https://cryptocurrency.quora.com/"
+      ],
+      "title": "Space URLs",
+      "type": "array"
+    },
+    "startUrls": {
+      "default": [],
+      "description": "API-compatible request objects for any public Quora URL (Space, question, answer, profile, topic, or post); auto-routed by URL shape the same way as spaceUrls/urls.",
+      "editor": "requestListSources",
+      "title": "Start URLs",
+      "type": "array"
+    },
+    "stateRetentionDays": {
+      "default": 0,
+      "description": "Opt-in age-based pruning for unseen state snapshots; zero disables pruning.",
+      "editor": "number",
+      "maximum": 3650,
+      "minimum": 0,
+      "title": "State Retention Days",
+      "type": "integer"
+    },
+    "stateStoreId": {
+      "default": "",
+      "description": "Key-value store used for bounded feed/Space/generic-URL snapshots and change evidence. Required when onlyNewItems is enabled, and required whenever urls (entity-agnostic monitoring) is populated.",
+      "editor": "textfield",
+      "title": "State Store ID",
+      "type": "string"
+    },
+    "urls": {
+      "default": [],
+      "description": "Any public Quora URL (question, answer, profile, topic, or standalone post) to monitor for content-level changes (title/body changed) between runs. Space URLs are automatically routed to the richer Space-aware path below; every other Quora URL is monitored via the generic title/content-hash change mechanism. Requires stateStoreId.",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "title": "Any Quora URLs (Entity-Agnostic Monitoring)",
+      "type": "array"
+    }
+  },
+  "schemaVersion": 1,
+  "title": "Quora Space Community Monitor Input",
+  "type": "object"
+}
