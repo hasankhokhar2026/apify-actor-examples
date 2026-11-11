@@ -1,0 +1,160 @@
+{
+  "description": "Scrape Trustpilot business reviews, ratings, and replies across any business domain.",
+  "properties": {
+    "businessDomains": {
+      "default": [
+        "amazon.com"
+      ],
+      "description": "List of business domains as they appear on Trustpilot URLs (e.g. `amazon.com`, `airbnb.com`, `apple.com`). The domain is the part after `/review/` in the Trustpilot URL.",
+      "editor": "stringList",
+      "prefill": [
+        "amazon.com"
+      ],
+      "title": "Business domains",
+      "type": "array"
+    },
+    "containsKeyword": {
+      "description": "Only emit reviews whose title or body contains this substring (case-insensitive).",
+      "editor": "textfield",
+      "title": "Contains keyword",
+      "type": "string"
+    },
+    "dateRangeFrom": {
+      "description": "Drop reviews older than this date.",
+      "editor": "textfield",
+      "title": "Date range from (YYYY-MM-DD)",
+      "type": "string"
+    },
+    "dateRangeTo": {
+      "description": "Drop reviews newer than this date.",
+      "editor": "textfield",
+      "title": "Date range to (YYYY-MM-DD)",
+      "type": "string"
+    },
+    "language": {
+      "default": "",
+      "description": "Limit reviews to a specific language code (e.g. `en` for English, `de` for German). Leave empty for all languages.",
+      "editor": "select",
+      "enum": [
+        "",
+        "en",
+        "de",
+        "fr",
+        "es",
+        "it",
+        "nl",
+        "da",
+        "no",
+        "sv",
+        "fi",
+        "pt",
+        "pl"
+      ],
+      "enumTitles": [
+        "All languages",
+        "English (en)",
+        "German (de)",
+        "French (fr)",
+        "Spanish (es)",
+        "Italian (it)",
+        "Dutch (nl)",
+        "Danish (da)",
+        "Norwegian (no)",
+        "Swedish (sv)",
+        "Finnish (fi)",
+        "Portuguese (pt)",
+        "Polish (pl)"
+      ],
+      "title": "Language filter",
+      "type": "string"
+    },
+    "maxItems": {
+      "default": 500,
+      "description": "Hard cap on total emitted records across all businesses.",
+      "maximum": 50000,
+      "minimum": 1,
+      "prefill": 500,
+      "title": "Global max items",
+      "type": "integer"
+    },
+    "maxRating": {
+      "description": "Drop reviews with a rating above this value.",
+      "maximum": 5,
+      "minimum": 1,
+      "title": "Max rating (1-5)",
+      "type": "integer"
+    },
+    "maxReviewsPerBusiness": {
+      "default": 100,
+      "description": "Hard cap on reviews fetched per business domain (mode=reviews). Trustpilot shows 20 reviews per page; this paginates.",
+      "maximum": 1000,
+      "minimum": 1,
+      "prefill": 100,
+      "title": "Max reviews per business",
+      "type": "integer"
+    },
+    "minRating": {
+      "description": "Drop reviews with a rating below this value.",
+      "maximum": 5,
+      "minimum": 1,
+      "title": "Min rating (1-5)",
+      "type": "integer"
+    },
+    "mode": {
+      "default": "reviews",
+      "description": "What to emit. `reviews` returns one record per review (default). `summary` returns one record per business with TrustScore, total reviews, and rating distribution.",
+      "editor": "select",
+      "enum": [
+        "reviews",
+        "summary"
+      ],
+      "enumTitles": [
+        "Per-review records (default)",
+        "Per-business summary records"
+      ],
+      "prefill": "reviews",
+      "title": "Mode",
+      "type": "string"
+    },
+    "proxyConfiguration": {
+      "default": {
+        "apifyProxyGroups": [
+          "RESIDENTIAL"
+        ],
+        "useApifyProxy": true
+      },
+      "description": "Apify proxy. Residential proxy is REQUIRED for Trustpilot — datacenter IPs are blocked by AWS WAF.",
+      "editor": "proxy",
+      "prefill": {
+        "apifyProxyGroups": [
+          "RESIDENTIAL"
+        ],
+        "useApifyProxy": true
+      },
+      "title": "Proxy configuration",
+      "type": "object"
+    },
+    "responseRequired": {
+      "default": false,
+      "description": "Only emit reviews that received a reply from the business.",
+      "prefill": false,
+      "title": "Has business reply",
+      "type": "boolean"
+    },
+    "verifiedOnly": {
+      "default": false,
+      "description": "Only emit reviews flagged as verified.",
+      "prefill": false,
+      "title": "Verified only",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "businessDomains",
+    "mode",
+    "proxyConfiguration"
+  ],
+  "schemaVersion": 1,
+  "title": "Trustpilot Reviews Scraper Input",
+  "type": "object"
+}

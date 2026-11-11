@@ -1,0 +1,132 @@
+# Trustpilot Review & Business Rating Scraper
+
+Trustpilot hosts consumer reviews for millions of businesses, each with its own TrustScore and rating distribution. This actor reads any number of business review pages in one run and returns either every individual review or a per-business rating summary, with rating, language, date, verification and reply filters applied before you see the data.
+
+## What this actor does
+
+- Returns per-review records for any number of business domains in a single run
+- Or returns per-business summary records (TrustScore, total reviews, rating distribution, categories, claimed status)
+- Filters: `minRating` / `maxRating`, `verifiedOnly`, `responseRequired`, `language`, `dateRangeFrom` / `dateRangeTo`, `containsKeyword`
+- Collects up to 1,000 reviews per business
+- Requires a residential proxy, since Trustpilot blocks datacenter IPs behind a JS challenge — see the FAQ
+- No empty or null fields ever appear in records — only data that was actually found
+
+## Output: per-review (mode = `reviews`)
+
+- `businessDomain`, `businessName`
+- `reviewId`, `reviewUrl`
+- `rating` (1-5), `title`, `body`
+- `reviewerName`, `reviewerCountry`, `reviewerId`, `reviewerReviewCount`
+- `reviewedAt` (publish date), `experiencedAt` (when the customer used the service)
+- `verified` (bool), `language`
+- `helpfulCount`
+- `businessReply` — `{text, repliedAt}` when present
+- `recordType: "review"`, `scrapedAt`
+
+## Output: per-business (mode = `summary`)
+
+- `businessDomain`, `businessName`, `identifyingName`, `businessUnitId`
+- `websiteUrl`, `trustpilotUrl`
+- `trustScore` (1.0–5.0), `stars` (rounded), `totalReviews`
+- `ratingDistribution` — `{"1": n, "2": n, "3": n, "4": n, "5": n}`
+- `categories[]`
+- `verified` (bool), `claimedAt`
+- `address` — `{city, country, ...}` when available
+- `recordType: "businessSummary"`, `scrapedAt`
+
+## Input
+
+| Field | Type | Default | Description |
+|---|---|---|---|
+| `businessDomains` | array | `["amazon.com"]` | List of business domains (e.g. `amazon.com`, `airbnb.com`). Trustpilot URLs are accepted too. |
+| `mode` | string | `reviews` | `reviews` (per-review records) / `summary` (one record per business) |
+| `maxReviewsPerBusiness` | int | `100` | Hard cap per business in `reviews` mode (1–1000) |
+| `language` | string | `""` | Filter to a single language (`en`, `de`, `fr`, …) |
+| `minRating` / `maxRating` | int | – | 1–5 bounds for the `rating` field |
+| `verifiedOnly` | bool | `false` | Only emit reviews flagged as verified |
+| `responseRequired` | bool | `false` | Only emit reviews that received a business reply |
+| `dateRangeFrom` / `dateRangeTo` | string | – | ISO date filters on `reviewedAt` |
+| `containsKeyword` | string | – | Case-insensitive substring match on title/body |
+| `maxItems` | int | `500` | Global hard cap across all businesses (1–50000) |
+| `proxyConfiguration` | object | RESIDENTIAL | Apify residential proxy — required (datacenter IPs are blocked) |
+
+### Example: latest 1-star reviews of Amazon with replies
+
+```json
+{
+  "businessDomains": ["amazon.com"],
+  "mode": "reviews",
+  "maxReviewsPerBusiness": 100,
+  "minRating": 1,
+  "maxRating": 1,
+  "responseRequired": true,
+  "language": "en"
+}
+```
+
+### Example: bulk summary of competitors
+
+```json
+{
+  "businessDomains": ["airbnb.com", "vrbo.com", "booking.com"],
+  "mode": "summary"
+}
+```
+
+### Example: keyword monitor for a brand
+
+```json
+{
+  "businessDomains": ["mybrand.com"],
+  "mode": "reviews",
+  "containsKeyword": "shipping",
+  "dateRangeFrom": "2025-01-01"
+}
+```
+
+### Example: 5-star reviews mentioning "support" — German market
+
+```json
+{
+  "businessDomains": ["yourcompany.de"],
+  "mode": "reviews",
+  "minRating": 5,
+  "language": "de",
+  "containsKeyword": "support"
+}
+```
+
+## Use cases
+
+- **Reputation management** — daily monitor of new reviews and replies for tracked brands
+- **Competitor research** — bulk-summarize TrustScores + rating distributions across competitors
+- **Brand sentiment tracking** — keyword filter (e.g. `delivery`, `cancel`) for high-volume brands
+- **Compliance / consumer protection** — pull every 1-star review citing specific issues
+- **Customer-success ROI** — count replies-to-reviews ratio per business
+- **Localization research** — filter by `language` to compare sentiment across markets
+- **Investor due diligence** — track multi-month rating-distribution trends for a private brand
+- **Journalism** — bulk-export negative reviews for an investigative piece
+
+## FAQ
+
+**Why is residential proxy required?**  Trustpilot's pages are protected by AWS WAF, which blocks datacenter IPs with a JS-challenge interstitial. Residential IPs pass the challenge transparently. The actor fails fast if no residential proxy is configured.
+
+**Does it require login or cookies?**  No. All Trustpilot business pages are public.
+
+**What's the difference between `reviewedAt` and `experiencedAt`?**  `reviewedAt` is when the consumer published the review on Trustpilot. `experiencedAt` is the service date the consumer reported (when they actually used the service). Both are extracted when present.
+
+**Are reviewer profiles included?**  Yes — `reviewerName`, `reviewerCountry`, and `reviewerId` (when public). Some reviewers post anonymously and only the display name is available.
+
+**Can I scrape replies-only?**  Yes — set `responseRequired: true`. Note: many high-volume retailers (Amazon, Walmart, etc.) don't reply to most recent reviews on Trustpilot, so this filter may return 0 results for big brands; smaller businesses with active customer-care typically yield more matches.
+
+**What's the throughput?**  Trustpilot loads 20 reviews per page. Expect roughly 1,000 reviews per business within about a minute, including initial proxy session setup.
+
+**Are old reviews available?**  Yes — Trustpilot keeps reviews dating back years. `dateRangeFrom` lets you filter the window. Heads-up: Trustpilot returns reviews newest-first and caps deep pagination at ~10-12 pages (~200-240 reviews) from many IPs, so a tight `dateRangeFrom`/`dateRangeTo` window targeting reviews older than the actor can reach may return 0 records on high-volume businesses. For the broadest result set, use `dateRangeFrom` alone (no upper bound) or run on a smaller, lower-traffic business.
+
+**What's a "verified" review?**  Trustpilot flags a review as verified if it can confirm the reviewer used the service (e.g. via the company's review-invitation flow).
+
+**Can I scrape Trustpilot consumer profiles?**  Not in v1 — only business pages are supported.
+
+**Why don't I see a `helpfulCount` on every review?**  Trustpilot only surfaces helpful counts on reviews with at least one upvote. Reviews with zero helpful votes have `helpfulCount: 0` (kept) or omit the field if Trustpilot doesn't expose it.
+
+**Is this affiliated with Trustpilot?**  No, this actor is third-party and uses publicly accessible business pages.
