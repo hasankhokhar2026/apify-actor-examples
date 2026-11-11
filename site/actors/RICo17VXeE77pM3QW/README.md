@@ -1,0 +1,100 @@
+# GitHub Marketplace App & Action Listings by Category
+
+Pull app, integration and GitHub Actions listings from [GitHub Marketplace](https://github.com/marketplace), with no GitHub account or API token needed. Search by keyword, browse an entire category, or fetch specific listings by their URL slug.
+
+## What this actor does
+
+- **Search apps & integrations** by keyword across the whole marketplace
+- **Search GitHub Actions** separately from apps, since they're a distinct listing type
+- **Browse by category** — pull every listing in one of 17 marketplace categories
+- **Fetch by slug** — retrieve specific listings directly from their URL slug
+- **Plan-type filter** — narrow results to free, paid, or free-trial listings
+- Fields a listing doesn't have (e.g. `planType`, `categories`) are left out rather than returned empty
+
+## Output per listing
+
+- `slug` — URL slug identifier (e.g. `codecov`)
+- `name` — display name
+- `shortDescription` — one-line summary shown on the listing page
+- `url` — full GitHub Marketplace listing URL
+- `logoUrl` — listing logo/icon
+- `planType` — `free` or `paid`, when the listing page's visible pricing text makes it detectable
+- `categories` — category slugs the listing belongs to
+- `recordType` — always `"githubMarketplaceListing"`
+- `scrapedAt` — ISO timestamp of the scrape
+
+## Input
+
+| Field | Type | Default | Description |
+|---|---|---|---|
+| `mode` | string | `searchApps` | `searchApps`, `searchActions`, `byCategory`, or `bySlug` |
+| `searchQuery` | string | `code review` | Keyword (mode=searchApps, searchActions) |
+| `category` | string | – | One of 17 marketplace categories (mode=byCategory, or to narrow a search) |
+| `planType` | string | `all` | `all`, `free`, `paid`, or `free_trials`; in practice only `free` and `paid` listings are currently distinguishable and filterable |
+| `sortBy` | string | `best-match` | `best-match`, `most-installed`, or `newest`; does not currently change the order results are returned in |
+| `slugs` | array | `[]` | Listing slugs to fetch directly (mode=bySlug) |
+| `maxItems` | integer | `50` | Maximum listings to return (1–1000) |
+
+### Example: search for code-review apps
+
+```json
+{
+  "mode": "searchApps",
+  "searchQuery": "code review",
+  "planType": "free",
+  "maxItems": 30
+}
+```
+
+### Example: browse the security category
+
+```json
+{
+  "mode": "byCategory",
+  "category": "security",
+  "maxItems": 50
+}
+```
+
+### Example: search GitHub Actions for deployment automation
+
+```json
+{
+  "mode": "searchActions",
+  "searchQuery": "deploy to aws",
+  "maxItems": 25
+}
+```
+
+### Example: fetch specific listings by slug
+
+```json
+{
+  "mode": "bySlug",
+  "slugs": ["github-actions", "dependabot"]
+}
+```
+
+## Use cases
+
+- **DevOps tooling research** — find CI/CD, deployment, or monitoring integrations before adding one to your pipeline
+- **Vendor and market mapping** — catalog every listing in a category to track the competitive landscape
+- **Category audits** — list every app or Action tagged to a category alongside its description and logo
+- **Free-tool shortlisting** — filter to `free` listings before evaluating paid alternatives
+- **Link collection** — gather canonical GitHub Marketplace URLs for a set of known slugs in one run
+
+## FAQ
+
+**Do I need a GitHub account or API token?** No — the actor reads publicly available GitHub Marketplace pages without any authentication.
+
+**What's the difference between apps and Actions?** Apps are integrations that connect to your repositories or organization; Actions are reusable steps for GitHub Actions workflows. Use `searchApps` for the former and `searchActions` for the latter.
+
+**Can I filter listings by price?** Yes — set `planType` to `free` or `paid` to narrow results by pricing model; `free_trials` is accepted but currently matches no listings since that distinction isn't detectable on the listing page.
+
+**How do I fetch one specific listing's details?** Use `mode=bySlug` with the slug from its URL — the part after `/marketplace/`, e.g. `dependabot` for `github.com/marketplace/dependabot`.
+
+**Why is `planType` missing from some listings?** It's only set when the listing page's visible text clearly states a free or paid plan; when that isn't detectable, the field is omitted instead of guessed.
+
+**How do I find a category's slug?** It matches the `category` URL parameter on GitHub Marketplace itself — for example, browsing `github.com/marketplace?type=apps&category=security` corresponds to the `security` category value.
+
+**Is this affiliated with GitHub?** No — this is an independent actor that reads GitHub Marketplace's public pages; it is not operated by GitHub.
