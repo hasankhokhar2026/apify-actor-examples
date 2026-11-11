@@ -138,6 +138,19 @@ def code_block(text, block_id, language="json", label=None):
             f'<button type="button" class="copy" data-copy="{esc(block_id)}">Copy</button></figure>')
 
 
+def split_table(css, caption, heads, rows, first, noun):
+    """A long reference table: the first rows stay visible (scannable, and cheap to lay out);
+    the rest sit in a native disclosure in the same HTML, so they stay indexable and searchable."""
+    head = "<thead><tr>" + "".join(f'<th scope="col">{h}</th>' for h in heads) + "</tr></thead>"
+    def table(chunk, title):
+        return f'<div class="table-wrap"><table class="{css} stack"><caption>{title}</caption>{head}<tbody>{"".join(chunk)}</tbody></table></div>'
+    if len(rows) <= first + 3:
+        return table(rows, caption)
+    rest = rows[first:]
+    return (table(rows[:first], caption) + f'<details class="more-rows"><summary>Show the other {len(rest)} {noun}</summary>'
+            + table(rest, f"{caption}, continued") + "</details>")
+
+
 def py_literal(value, indent=0):
     """A JSON value written as a Python literal (True/False/None), pretty-printed."""
     pad, inner = "    " * indent, "    " * (indent + 1)
@@ -721,8 +734,7 @@ class Site:
             rows.append(f'<tr><th scope="row"><code>{esc(field)}</code>' + (f'<span class="field-title">{esc(title)}</span>' if title else "") + "</th>"
                         f'<td data-label="Type">{esc(kind)}' + (' <span class="req">required</span>' if field in required else "") + "</td>"
                         f'<td data-label="Description">{inline_md(description) if description else ""}' + (f'<span class="field-meta">{"; ".join(details)}</span>' if details else "") + "</td></tr>")
-        table = ('<div class="table-wrap"><table class="input-table stack"><caption>Input fields in the published schema</caption><thead><tr><th scope="col">Field</th>'
-                 '<th scope="col">Type</th><th scope="col">Description</th></tr></thead><tbody>' + "".join(rows) + "</tbody></table></div>")
+        table = split_table("input-table", "Input fields in the published schema", ["Field", "Type", "Description"], rows, 12, "input fields")
         return (f'<section id="input"><h2>Input reference</h2><p>All {len(properties)} fields of the published input schema, in the publisher\'s order. '
                 + ("Required fields are marked. " if required else "No field is required at the top level, but the README can describe conditions. ")
                 + f'Download the <a href="input-schema.json">input schema</a> as JSON.</p>{table}{notes_html}</section>')
@@ -751,8 +763,7 @@ class Site:
                 note = notes.get(field) or description
                 rows.append(f'<tr><th scope="row"><code>{esc(field)}</code></th><td data-label="Label">{esc(label)}</td>'
                             f'<td data-label="What it holds">{inline_md(note) if note else ""}</td></tr>')
-            parts.append('<div class="table-wrap"><table class="output-table stack"><caption>Output fields</caption><thead><tr><th scope="col">Field</th>'
-                         '<th scope="col">Label</th><th scope="col">What it holds</th></tr></thead><tbody>' + "".join(rows) + "</tbody></table></div>")
+            parts.append(split_table("output-table", "Output fields", ["Field", "Label", "What it holds"], rows, 20, "output fields"))
         else:
             parts.append('<p>The build declares no dataset fields. The publisher\'s notes below describe the records.</p>')
         if record:
