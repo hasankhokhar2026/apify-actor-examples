@@ -1,0 +1,122 @@
+{
+  "actorSpecification": 1,
+  "fields": {
+    "properties": {
+      "address": {
+        "description": "Street address",
+        "type": "string"
+      },
+      "breadcrumbs": {
+        "description": "Page breadcrumb names (cuisine, neighborhood, etc.)",
+        "type": "array"
+      },
+      "city": {
+        "description": "City",
+        "type": "string"
+      },
+      "description": {
+        "description": "Meta description",
+        "type": "string"
+      },
+      "faq": {
+        "description": "FAQ Q&A pairs",
+        "type": "array"
+      },
+      "faqCount": {
+        "description": "Number of FAQ Q&A pairs",
+        "type": "integer"
+      },
+      "menuItemCount": {
+        "description": "Total menu items across all sections",
+        "type": "integer"
+      },
+      "menuItems": {
+        "description": "Flat list of all menu items: {section, name, description, price}",
+        "type": "array"
+      },
+      "menuSectionCount": {
+        "description": "Number of menu sections",
+        "type": "integer"
+      },
+      "menuSections": {
+        "description": "Section names (e.g., Salads, Burgers, Drinks)",
+        "type": "array"
+      },
+      "scrapedAt": {
+        "description": "ISO 8601 scrape timestamp",
+        "type": "string"
+      },
+      "state": {
+        "description": "State / region",
+        "type": "string"
+      },
+      "storeId": {
+        "description": "DoorDash store ID (from URL)",
+        "type": "string"
+      },
+      "storeName": {
+        "description": "Restaurant name",
+        "type": "string"
+      },
+      "storeUrl": {
+        "description": "Store page URL",
+        "type": "string"
+      },
+      "title": {
+        "description": "Page title",
+        "type": "string"
+      }
+    },
+    "type": "object"
+  },
+  "title": "DoorDash Restaurants",
+  "views": {
+    "overview": {
+      "display": {
+        "component": "table",
+        "properties": {
+          "address": {
+            "format": "text",
+            "label": "Address"
+          },
+          "city": {
+            "format": "text",
+            "label": "City"
+          },
+          "menuItemCount": {
+            "format": "number",
+            "label": "Menu Items"
+          },
+          "menuSectionCount": {
+            "format": "number",
+            "label": "Sections"
+          },
+          "state": {
+            "format": "text",
+            "label": "State"
+          },
+          "storeName": {
+            "format": "text",
+            "label": "Restaurant"
+          },
+          "storeUrl": {
+            "format": "link",
+            "label": "URL"
+          }
+        }
+      },
+      "title": "Overview",
+      "transformation": {
+        "fields": [
+          "storeName",
+          "address",
+          "city",
+          "state",
+          "menuItemCount",
+          "menuSectionCount",
+          "storeUrl"
+        ]
+      }
+    }
+  }
+}
