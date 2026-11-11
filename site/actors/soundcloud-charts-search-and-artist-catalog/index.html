@@ -1,443 +1,8 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src &#x27;self&#x27;; script-src &#x27;self&#x27; &#x27;sha256-KaLEl2IWzsdGDpgClmpw5x9azJcfitWc2WSgHhmJI3k=&#x27;; style-src &#x27;self&#x27;; img-src &#x27;self&#x27; https: data:; base-uri &#x27;self&#x27;; form-action &#x27;self&#x27;; object-src &#x27;none&#x27;"><title>SoundCloud Charts, Search &amp; Artist Catalog Scraper | Nimbryxo Studio</title><meta name="description" content="Scrape SoundCloud without an API key: global and genre New &amp; Hot charts, keyword search with real genre filters, full artist catalogs, playlist contents, comments, followers, engag"><meta name="robots" content="index,follow"><link rel="canonical" href="https://hasankhokhar2026.github.io/apify-actor-examples/actors/soundcloud-charts-search-and-artist-catalog/"><meta property="og:title" content="SoundCloud Charts, Search &amp; Artist Catalog Scraper | Nimbryxo Studio"><meta property="og:description" content="Scrape SoundCloud without an API key: global and genre New &amp; Hot charts, keyword search with real genre filters, full artist catalogs, playlist contents, comments, followers, engag"><meta property="og:type" content="website"><meta property="og:url" content="https://hasankhokhar2026.github.io/apify-actor-examples/actors/soundcloud-charts-search-and-artist-catalog/"><meta property="og:site_name" content="Nimbryxo Studio"><meta name="twitter:card" content="summary"><link rel="icon" href="/apify-actor-examples/assets/mark.svg?v=2d20f9dc334a" type="image/svg+xml"><link rel="stylesheet" href="/apify-actor-examples/assets/site.css?v=39545fd4a399"><link rel="stylesheet" href="/apify-actor-examples/assets/brand.css?v=eb0f935ade25"><link rel="alternate" type="application/rss+xml" title="Nimbryxo Studio guides" href="/apify-actor-examples/feed.xml"><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization","name":"Nimbryxo Studio","url":"https://hasankhokhar2026.github.io/apify-actor-examples/","sameAs":["https://apify.com/nimbryxo-studio"]},{"@type":"WebSite","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#website","name":"Nimbryxo Studio","url":"https://hasankhokhar2026.github.io/apify-actor-examples/","publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"inLanguage":"en"},{"@type":"WebPage","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/soundcloud-charts-search-and-artist-catalog/#webpage","name":"SoundCloud Charts, Search & Artist Catalog Scraper","description":"Scrape SoundCloud without an API key: global and genre New & Hot charts, keyword search with real genre filters, full artist catalogs, playlist contents, comments, followers, engagement metrics, artwork, waveform and stream metadata.","url":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/soundcloud-charts-search-and-artist-catalog/","isPartOf":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#website"},"publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"inLanguage":"en","mainEntity":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/soundcloud-charts-search-and-artist-catalog/#article"},"breadcrumb":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/soundcloud-charts-search-and-artist-catalog/#breadcrumb"}},{"@type":"TechArticle","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/soundcloud-charts-search-and-artist-catalog/#article","headline":"SoundCloud Charts, Search & Artist Catalog Scraper","name":"SoundCloud Charts, Search & Artist Catalog Scraper","description":"Scrape SoundCloud without an API key: global and genre New & Hot charts, keyword search with real genre filters, full artist catalogs, playlist contents, comments, followers, engagement metrics, artwork, waveform and stream metadata.","url":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/soundcloud-charts-search-and-artist-catalog/","author":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"mainEntityOfPage":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/soundcloud-charts-search-and-artist-catalog/#webpage"},"inLanguage":"en","dateModified":"2026-11-05T12:30:25.938Z"},{"@type":"BreadcrumbList","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/soundcloud-charts-search-and-artist-catalog/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Nimbryxo Studio","item":"https://hasankhokhar2026.github.io/apify-actor-examples/"},{"@type":"ListItem","position":2,"name":"Actors","item":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/"},{"@type":"ListItem","position":3,"name":"SoundCloud Charts, Search & Artist Catalog Scraper","item":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/soundcloud-charts-search-and-artist-catalog/"}]}]}</script><script src="/apify-actor-examples/assets/site.js?v=7cabac48dd31" defer></script></head><body class="theme-studio"><a href="#main" class="skip-link">Skip to content</a><header><div class="inner"><a href="/apify-actor-examples/" class="brand"><img src="/apify-actor-examples/assets/mark.svg?v=2d20f9dc334a" alt="" width="29" height="29">Nimbryxo Studio</a><nav aria-label="Main navigation"><a href="/apify-actor-examples/actors/" aria-current="page">Actors</a><a href="/apify-actor-examples/guides/">Guides</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></nav></div></header><main id="main"><div class="doc-layout"><aside class="contents" aria-label="On this page"><strong>Contents</strong><a href="#overview">Overview</a><a href="#published-readme">Published README</a><a href="#input-schema">Input schema</a><a href="#output-schema">Output schema</a><a href="#dataset-schema">Dataset schema</a><a href="#python-quickstart">Python quickstart</a></aside><article class="prose"><div class="breadcrumb"><a href="/apify-actor-examples/actors/">Actors</a><span>/</span><span>SoundCloud Charts, Search &amp; Artist Catalog Scraper</span></div><section id="overview"><h1 class="doc-title">SoundCloud Charts, Search &amp; Artist Catalog Scraper</h1><p class="lede">Scrape SoundCloud without an API key: global and genre New &amp; Hot charts, keyword search with real genre filters, full artist catalogs, playlist contents, comments, followers, engagement metrics, artwork, waveform and stream metadata.</p><p class="summary">SoundCloud Charts, Search &amp; Artist Catalog Scraper is an Apify Actor published by Nimbryxo Studio. It accepts 22 input fields, and <code>mode</code> is required. Its build declares a results dataset with 1 view. Runs happen on Apify, where the Store page lists the current price.</p><div class="actions"><a class="button" href="https://apify.com/nimbryxo-studio/soundcloud-charts-search-and-artist-catalog">Open on Apify</a><a class="text-link" href="https://github.com/hasankhokhar2026/apify-actor-examples/blob/main/docs/actors/xauSnBo64ZqngihHG/README.md">GitHub source</a></div></section><section class="schema-section" id="input-schema"><h2>Input schema</h2><p>Input fields, types, required flags, descriptions, defaults, and prefills come from the published definition. Prefill examples are distinct from defaults.</p><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>mode</code></td><td>string</td><td>required</td><td>Choose the intent. Keyword search, New &amp; Hot charts, an artist catalog, specific URLs, track comments, or an artist&#x27;s followers.</td></tr><tr><td><code>searchQueries</code></td><td>array</td><td>optional</td><td>One or more keywords or artist names (mode=search). Example: lofi, techno, ambient jazz.</td></tr><tr><td><code>searchType</code></td><td>string</td><td>optional</td><td>What kind of results to return (mode=search).</td></tr></tbody></table></div><details><summary>Show all input fields</summary><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>mode</code></td><td>string</td><td>required</td><td>Choose the intent. Keyword search, New &amp; Hot charts, an artist catalog, specific URLs, track comments, or an artist&#x27;s followers.</td></tr><tr><td><code>searchQueries</code></td><td>array</td><td>optional</td><td>One or more keywords or artist names (mode=search). Example: lofi, techno, ambient jazz.</td></tr><tr><td><code>searchType</code></td><td>string</td><td>optional</td><td>What kind of results to return (mode=search).</td></tr><tr><td><code>chartGenre</code></td><td>string</td><td>optional</td><td>Global New &amp; Hot returns up to 100 tracks. Genre values use SoundCloud&#x27;s current trending-by-genre lists (about 50 tracks each).</td></tr><tr><td><code>searchGenre</code></td><td>string</td><td>optional</td><td>Optional SoundCloud genre filter for track and playlist searches. Leave as any genre to search everything. This is a real SoundCloud filter, not a client-side guess.</td></tr><tr><td><code>sortBy</code></td><td>string</td><td>optional</td><td>How to order the rows already fetched. SoundCloud search itself is relevance-ordered, so this is a client-side sort of that result set.</td></tr><tr><td><code>minPlayCount</code></td><td>integer</td><td>optional</td><td>Drop track/playlist rows below this play count after fetching. 0 means no filter.</td></tr><tr><td><code>minLikeCount</code></td><td>integer</td><td>optional</td><td>Drop track/playlist rows below this like count after fetching. 0 means no filter.</td></tr><tr><td><code>artistUrls</code></td><td>array</td><td>optional</td><td>Artist profile URLs, usernames, or numeric user IDs. Used by artistTracks and followers modes.</td></tr><tr><td><code>includeTracks</code></td><td>boolean</td><td>optional</td><td>Include the artist&#x27;s uploaded tracks.</td></tr><tr><td><code>includeAlbums</code></td><td>boolean</td><td>optional</td><td>Include the artist&#x27;s albums/EPs as playlist rows.</td></tr><tr><td><code>includePlaylists</code></td><td>boolean</td><td>optional</td><td>Include the artist&#x27;s playlists as playlist rows.</td></tr><tr><td><code>includeTopTracks</code></td><td>boolean</td><td>optional</td><td>Include SoundCloud&#x27;s small top-tracks list for each artist.</td></tr><tr><td><code>includeWebProfiles</code></td><td>boolean</td><td>optional</td><td>Add the artist&#x27;s public social/web profile links to the profile row.</td></tr><tr><td><code>startUrls</code></td><td>array</td><td>optional</td><td>Track, playlist/album, or artist URLs. Numeric track IDs are also accepted. Used by mode=byUrl.</td></tr><tr><td><code>includePlaylistTracks</code></td><td>boolean</td><td>optional</td><td>For playlist URLs, hydrate and emit every track (not just the first five).</td></tr><tr><td><code>includeUserProfile</code></td><td>boolean</td><td>optional</td><td>For artist URLs in mode=byUrl, emit the profile row before the tracks.</td></tr><tr><td><code>trackUrls</code></td><td>array</td><td>optional</td><td>Tracks whose public comments should be collected. Used by mode=comments.</td></tr><tr><td><code>commentsSort</code></td><td>string</td><td>optional</td><td>How SoundCloud should order comments.</td></tr><tr><td><code>relationship</code></td><td>string</td><td>optional</td><td>For mode=followers, collect the artist&#x27;s followers or the accounts the artist follows.</td></tr><tr><td><code>resolveStreamUrls</code></td><td>boolean</td><td>optional</td><td>Add a playable signed stream URL plus protocol, preview and expiry fields. Signed URLs expire after about two hours. Turn off for large runs if you only need the stable API endpoint.</td></tr><tr><td><code>maxItems</code></td><td>integer</td><td>optional</td><td>Hard cap on dataset rows. SoundCloud search still returns at most 300 rows per query; charts and per-artist sections have their own source limits.</td></tr></tbody></table></div></details><p><a href="input-schema.json">Download the published input schema</a></p><details><summary>View complete JSON</summary><pre><code>{
-  &quot;description&quot;: &quot;Search SoundCloud, read the global or genre New &amp; Hot charts, export an artist catalog, resolve track/playlist/profile URLs, collect comments, or list followers.&quot;,
-  &quot;properties&quot;: {
-    &quot;artistUrls&quot;: {
-      &quot;default&quot;: [],
-      &quot;description&quot;: &quot;Artist profile URLs, usernames, or numeric user IDs. Used by artistTracks and followers modes.&quot;,
-      &quot;editor&quot;: &quot;stringList&quot;,
-      &quot;items&quot;: {
-        &quot;type&quot;: &quot;string&quot;
-      },
-      &quot;prefill&quot;: [],
-      &quot;sectionCaption&quot;: &quot;Artist catalog&quot;,
-      &quot;sectionDescription&quot;: &quot;Controls what is exported for each artist profile. The profile row is always included in artistTracks.&quot;,
-      &quot;title&quot;: &quot;Artists&quot;,
-      &quot;type&quot;: &quot;array&quot;
-    },
-    &quot;chartGenre&quot;: {
-      &quot;default&quot;: &quot;all&quot;,
-      &quot;description&quot;: &quot;Global New &amp; Hot returns up to 100 tracks. Genre values use SoundCloud&#x27;s current trending-by-genre lists (about 50 tracks each).&quot;,
-      &quot;editor&quot;: &quot;select&quot;,
-      &quot;enum&quot;: [
-        &quot;all&quot;,
-        &quot;all-genres&quot;,
-        &quot;trap&quot;,
-        &quot;hip-hop&quot;,
-        &quot;pop&quot;,
-        &quot;electronic&quot;,
-        &quot;r-n-b&quot;,
-        &quot;alternative-hip-hop&quot;,
-        &quot;indie&quot;,
-        &quot;dubstep&quot;,
-        &quot;house&quot;,
-        &quot;folk&quot;,
-        &quot;alternative-rock&quot;,
-        &quot;ambient&quot;,
-        &quot;hardcore&quot;,
-        &quot;rock&quot;,
-        &quot;reggae&quot;,
-        &quot;latin&quot;,
-        &quot;metal&quot;,
-        &quot;dancehall&quot;,
-        &quot;afrobeat&quot;
-      ],
-      &quot;enumTitles&quot;: [
-        &quot;Global New &amp; Hot (100)&quot;,
-        &quot;All Genres (system list, ~50)&quot;,
-        &quot;Trap&quot;,
-        &quot;Hip Hop&quot;,
-        &quot;Pop&quot;,
-        &quot;Electronic&quot;,
-        &quot;R&amp;B&quot;,
-        &quot;Alternative Hip Hop&quot;,
-        &quot;Indie&quot;,
-        &quot;Dubstep&quot;,
-        &quot;House&quot;,
-        &quot;Folk&quot;,
-        &quot;Alternative Rock&quot;,
-        &quot;Ambient&quot;,
-        &quot;Hardcore&quot;,
-        &quot;Rock&quot;,
-        &quot;Reggae&quot;,
-        &quot;Latin&quot;,
-        &quot;Metal&quot;,
-        &quot;Dancehall&quot;,
-        &quot;Afrobeat&quot;
-      ],
-      &quot;prefill&quot;: &quot;all&quot;,
-      &quot;title&quot;: &quot;Chart genre&quot;,
-      &quot;type&quot;: &quot;string&quot;
-    },
-    &quot;commentsSort&quot;: {
-      &quot;default&quot;: &quot;newest&quot;,
-      &quot;description&quot;: &quot;How SoundCloud should order comments.&quot;,
-      &quot;editor&quot;: &quot;select&quot;,
-      &quot;enum&quot;: [
-        &quot;newest&quot;,
-        &quot;oldest&quot;,
-        &quot;track-timestamp&quot;
-      ],
-      &quot;enumTitles&quot;: [
-        &quot;Newest first&quot;,
-        &quot;Oldest first&quot;,
-        &quot;By time in track&quot;
-      ],
-      &quot;prefill&quot;: &quot;newest&quot;,
-      &quot;title&quot;: &quot;Comment order&quot;,
-      &quot;type&quot;: &quot;string&quot;
-    },
-    &quot;includeAlbums&quot;: {
-      &quot;default&quot;: false,
-      &quot;description&quot;: &quot;Include the artist&#x27;s albums/EPs as playlist rows.&quot;,
-      &quot;prefill&quot;: false,
-      &quot;title&quot;: &quot;Include albums&quot;,
-      &quot;type&quot;: &quot;boolean&quot;
-    },
-    &quot;includePlaylistTracks&quot;: {
-      &quot;default&quot;: true,
-      &quot;description&quot;: &quot;For playlist URLs, hydrate and emit every track (not just the first five).&quot;,
-      &quot;prefill&quot;: true,
-      &quot;title&quot;: &quot;Expand playlist tracks&quot;,
-      &quot;type&quot;: &quot;boolean&quot;
-    },
-    &quot;includePlaylists&quot;: {
-      &quot;default&quot;: false,
-      &quot;description&quot;: &quot;Include the artist&#x27;s playlists as playlist rows.&quot;,
-      &quot;prefill&quot;: false,
-      &quot;title&quot;: &quot;Include playlists&quot;,
-      &quot;type&quot;: &quot;boolean&quot;
-    },
-    &quot;includeTopTracks&quot;: {
-      &quot;default&quot;: false,
-      &quot;description&quot;: &quot;Include SoundCloud&#x27;s small top-tracks list for each artist.&quot;,
-      &quot;prefill&quot;: false,
-      &quot;title&quot;: &quot;Include top tracks&quot;,
-      &quot;type&quot;: &quot;boolean&quot;
-    },
-    &quot;includeTracks&quot;: {
-      &quot;default&quot;: true,
-      &quot;description&quot;: &quot;Include the artist&#x27;s uploaded tracks.&quot;,
-      &quot;prefill&quot;: true,
-      &quot;title&quot;: &quot;Include tracks&quot;,
-      &quot;type&quot;: &quot;boolean&quot;
-    },
-    &quot;includeUserProfile&quot;: {
-      &quot;default&quot;: true,
-      &quot;description&quot;: &quot;For artist URLs in mode=byUrl, emit the profile row before the tracks.&quot;,
-      &quot;prefill&quot;: true,
-      &quot;title&quot;: &quot;Include artist profile row&quot;,
-      &quot;type&quot;: &quot;boolean&quot;
-    },
-    &quot;includeWebProfiles&quot;: {
-      &quot;default&quot;: false,
-      &quot;description&quot;: &quot;Add the artist&#x27;s public social/web profile links to the profile row.&quot;,
-      &quot;prefill&quot;: false,
-      &quot;title&quot;: &quot;Include web profiles&quot;,
-      &quot;type&quot;: &quot;boolean&quot;
-    },
-    &quot;maxItems&quot;: {
-      &quot;default&quot;: 100,
-      &quot;description&quot;: &quot;Hard cap on dataset rows. SoundCloud search still returns at most 300 rows per query; charts and per-artist sections have their own source limits.&quot;,
-      &quot;maximum&quot;: 5000,
-      &quot;minimum&quot;: 1,
-      &quot;prefill&quot;: 2,
-      &quot;title&quot;: &quot;Maximum records&quot;,
-      &quot;type&quot;: &quot;integer&quot;
-    },
-    &quot;minLikeCount&quot;: {
-      &quot;default&quot;: 0,
-      &quot;description&quot;: &quot;Drop track/playlist rows below this like count after fetching. 0 means no filter.&quot;,
-      &quot;maximum&quot;: 1000000000,
-      &quot;minimum&quot;: 0,
-      &quot;prefill&quot;: 0,
-      &quot;title&quot;: &quot;Minimum likes&quot;,
-      &quot;type&quot;: &quot;integer&quot;
-    },
-    &quot;minPlayCount&quot;: {
-      &quot;default&quot;: 0,
-      &quot;description&quot;: &quot;Drop track/playlist rows below this play count after fetching. 0 means no filter.&quot;,
-      &quot;maximum&quot;: 1000000000,
-      &quot;minimum&quot;: 0,
-      &quot;prefill&quot;: 0,
-      &quot;title&quot;: &quot;Minimum plays&quot;,
-      &quot;type&quot;: &quot;integer&quot;
-    },
-    &quot;mode&quot;: {
-      &quot;default&quot;: &quot;search&quot;,
-      &quot;description&quot;: &quot;Choose the intent. Keyword search, New &amp; Hot charts, an artist catalog, specific URLs, track comments, or an artist&#x27;s followers.&quot;,
-      &quot;editor&quot;: &quot;select&quot;,
-      &quot;enum&quot;: [
-        &quot;search&quot;,
-        &quot;charts&quot;,
-        &quot;artistTracks&quot;,
-        &quot;byUrl&quot;,
-        &quot;comments&quot;,
-        &quot;followers&quot;
-      ],
-      &quot;enumTitles&quot;: [
-        &quot;Search by keyword - tracks, users, playlists or albums&quot;,
-        &quot;Charts - global New &amp; Hot or a genre trending list&quot;,
-        &quot;Artist catalog - profile, tracks, albums, playlists&quot;,
-        &quot;Track, playlist or artist URLs&quot;,
-        &quot;Track comments&quot;,
-        &quot;Artist followers or followings&quot;
-      ],
-      &quot;prefill&quot;: &quot;search&quot;,
-      &quot;title&quot;: &quot;What to collect&quot;,
-      &quot;type&quot;: &quot;string&quot;
-    },
-    &quot;relationship&quot;: {
-      &quot;default&quot;: &quot;followers&quot;,
-      &quot;description&quot;: &quot;For mode=followers, collect the artist&#x27;s followers or the accounts the artist follows.&quot;,
-      &quot;editor&quot;: &quot;select&quot;,
-      &quot;enum&quot;: [
-        &quot;followers&quot;,
-        &quot;followings&quot;
-      ],
-      &quot;enumTitles&quot;: [
-        &quot;Followers&quot;,
-        &quot;Accounts followed&quot;
-      ],
-      &quot;prefill&quot;: &quot;followers&quot;,
-      &quot;title&quot;: &quot;Follower relationship&quot;,
-      &quot;type&quot;: &quot;string&quot;
-    },
-    &quot;resolveStreamUrls&quot;: {
-      &quot;default&quot;: true,
-      &quot;description&quot;: &quot;Add a playable signed stream URL plus protocol, preview and expiry fields. Signed URLs expire after about two hours. Turn off for large runs if you only need the stable API endpoint.&quot;,
-      &quot;prefill&quot;: true,
-      &quot;sectionCaption&quot;: &quot;Advanced&quot;,
-      &quot;sectionDescription&quot;: &quot;Stream resolution and the overall record cap.&quot;,
-      &quot;title&quot;: &quot;Resolve playable stream URLs&quot;,
-      &quot;type&quot;: &quot;boolean&quot;
-    },
-    &quot;searchGenre&quot;: {
-      &quot;default&quot;: &quot;&quot;,
-      &quot;description&quot;: &quot;Optional SoundCloud genre filter for track and playlist searches. Leave as any genre to search everything. This is a real SoundCloud filter, not a client-side guess.&quot;,
-      &quot;editor&quot;: &quot;select&quot;,
-      &quot;enum&quot;: [
-        &quot;&quot;,
-        &quot;Alternative Rock&quot;,
-        &quot;Ambient&quot;,
-        &quot;Classical&quot;,
-        &quot;Country&quot;,
-        &quot;Dance &amp; EDM&quot;,
-        &quot;Dancehall&quot;,
-        &quot;Deep House&quot;,
-        &quot;Disco&quot;,
-        &quot;Drum &amp; Bass&quot;,
-        &quot;Dubstep&quot;,
-        &quot;Electronic&quot;,
-        &quot;Folk &amp; Singer-Songwriter&quot;,
-        &quot;Hip-hop &amp; Rap&quot;,
-        &quot;House&quot;,
-        &quot;Indie&quot;,
-        &quot;Jazz &amp; Blues&quot;,
-        &quot;Latin&quot;,
-        &quot;Metal&quot;,
-        &quot;Piano&quot;,
-        &quot;Pop&quot;,
-        &quot;R&amp;B &amp; Soul&quot;,
-        &quot;Reggae&quot;,
-        &quot;Reggaeton&quot;,
-        &quot;Rock&quot;,
-        &quot;Soundtrack&quot;,
-        &quot;Techno&quot;,
-        &quot;Trance&quot;,
-        &quot;Trap&quot;,
-        &quot;Trip Hop&quot;,
-        &quot;World&quot;,
-        &quot;Lo-fi&quot;,
-        &quot;Lofi&quot;
-      ],
-      &quot;enumTitles&quot;: [
-        &quot;(any genre)&quot;,
-        &quot;Alternative Rock&quot;,
-        &quot;Ambient&quot;,
-        &quot;Classical&quot;,
-        &quot;Country&quot;,
-        &quot;Dance &amp; EDM&quot;,
-        &quot;Dancehall&quot;,
-        &quot;Deep House&quot;,
-        &quot;Disco&quot;,
-        &quot;Drum &amp; Bass&quot;,
-        &quot;Dubstep&quot;,
-        &quot;Electronic&quot;,
-        &quot;Folk &amp; Singer-Songwriter&quot;,
-        &quot;Hip-hop &amp; Rap&quot;,
-        &quot;House&quot;,
-        &quot;Indie&quot;,
-        &quot;Jazz &amp; Blues&quot;,
-        &quot;Latin&quot;,
-        &quot;Metal&quot;,
-        &quot;Piano&quot;,
-        &quot;Pop&quot;,
-        &quot;R&amp;B &amp; Soul&quot;,
-        &quot;Reggae&quot;,
-        &quot;Reggaeton&quot;,
-        &quot;Rock&quot;,
-        &quot;Soundtrack&quot;,
-        &quot;Techno&quot;,
-        &quot;Trance&quot;,
-        &quot;Trap&quot;,
-        &quot;Trip Hop&quot;,
-        &quot;World&quot;,
-        &quot;Lo-fi&quot;,
-        &quot;Lofi&quot;
-      ],
-      &quot;prefill&quot;: &quot;&quot;,
-      &quot;sectionCaption&quot;: &quot;Search filters&quot;,
-      &quot;sectionDescription&quot;: &quot;Optional refinements for mode=search. Genre is applied by SoundCloud; sort and minimum counts are applied to the fetched rows.&quot;,
-      &quot;title&quot;: &quot;Genre filter&quot;,
-      &quot;type&quot;: &quot;string&quot;
-    },
-    &quot;searchQueries&quot;: {
-      &quot;default&quot;: [],
-      &quot;description&quot;: &quot;One or more keywords or artist names (mode=search). Example: lofi, techno, ambient jazz.&quot;,
-      &quot;editor&quot;: &quot;stringList&quot;,
-      &quot;items&quot;: {
-        &quot;type&quot;: &quot;string&quot;
-      },
-      &quot;prefill&quot;: [
-        &quot;lofi&quot;
-      ],
-      &quot;title&quot;: &quot;Search queries&quot;,
-      &quot;type&quot;: &quot;array&quot;
-    },
-    &quot;searchType&quot;: {
-      &quot;default&quot;: &quot;tracks&quot;,
-      &quot;description&quot;: &quot;What kind of results to return (mode=search).&quot;,
-      &quot;editor&quot;: &quot;select&quot;,
-      &quot;enum&quot;: [
-        &quot;tracks&quot;,
-        &quot;users&quot;,
-        &quot;playlists&quot;,
-        &quot;albums&quot;,
-        &quot;all&quot;
-      ],
-      &quot;enumTitles&quot;: [
-        &quot;Tracks&quot;,
-        &quot;Users / artists&quot;,
-        &quot;Playlists&quot;,
-        &quot;Albums&quot;,
-        &quot;All result types&quot;
-      ],
-      &quot;prefill&quot;: &quot;tracks&quot;,
-      &quot;title&quot;: &quot;Search result type&quot;,
-      &quot;type&quot;: &quot;string&quot;
-    },
-    &quot;sortBy&quot;: {
-      &quot;default&quot;: &quot;relevance&quot;,
-      &quot;description&quot;: &quot;How to order the rows already fetched. SoundCloud search itself is relevance-ordered, so this is a client-side sort of that result set.&quot;,
-      &quot;editor&quot;: &quot;select&quot;,
-      &quot;enum&quot;: [
-        &quot;relevance&quot;,
-        &quot;newest&quot;,
-        &quot;mostPlayed&quot;,
-        &quot;mostLiked&quot;
-      ],
-      &quot;enumTitles&quot;: [
-        &quot;Relevance (source order)&quot;,
-        &quot;Newest upload&quot;,
-        &quot;Most played&quot;,
-        &quot;Most liked&quot;
-      ],
-      &quot;prefill&quot;: &quot;relevance&quot;,
-      &quot;title&quot;: &quot;Sort fetched rows&quot;,
-      &quot;type&quot;: &quot;string&quot;
-    },
-    &quot;startUrls&quot;: {
-      &quot;default&quot;: [],
-      &quot;description&quot;: &quot;Track, playlist/album, or artist URLs. Numeric track IDs are also accepted. Used by mode=byUrl.&quot;,
-      &quot;editor&quot;: &quot;requestListSources&quot;,
-      &quot;items&quot;: {
-        &quot;properties&quot;: {
-          &quot;url&quot;: {
-            &quot;description&quot;: &quot;SoundCloud track, playlist, album, user, or search URL.&quot;,
-            &quot;title&quot;: &quot;URL&quot;,
-            &quot;type&quot;: &quot;string&quot;
-          }
-        },
-        &quot;type&quot;: &quot;object&quot;
-      },
-      &quot;prefill&quot;: [],
-      &quot;sectionCaption&quot;: &quot;URLs and playlists&quot;,
-      &quot;sectionDescription&quot;: &quot;Playlist URLs export the playlist row and, when enabled, every track in it. Artist URLs export the profile and uploaded tracks.&quot;,
-      &quot;title&quot;: &quot;SoundCloud URLs or IDs&quot;,
-      &quot;type&quot;: &quot;array&quot;
-    },
-    &quot;trackUrls&quot;: {
-      &quot;default&quot;: [],
-      &quot;description&quot;: &quot;Tracks whose public comments should be collected. Used by mode=comments.&quot;,
-      &quot;editor&quot;: &quot;requestListSources&quot;,
-      &quot;items&quot;: {
-        &quot;properties&quot;: {
-          &quot;url&quot;: {
-            &quot;description&quot;: &quot;SoundCloud track URL used for comments mode.&quot;,
-            &quot;title&quot;: &quot;URL&quot;,
-            &quot;type&quot;: &quot;string&quot;
-          }
-        },
-        &quot;type&quot;: &quot;object&quot;
-      },
-      &quot;prefill&quot;: [],
-      &quot;sectionCaption&quot;: &quot;Comments and audience&quot;,
-      &quot;sectionDescription&quot;: &quot;Comment collection and follower/following collection. These modes keep the track or artist context on every row.&quot;,
-      &quot;title&quot;: &quot;Track URLs or IDs&quot;,
-      &quot;type&quot;: &quot;array&quot;
-    }
-  },
-  &quot;required&quot;: [
-    &quot;mode&quot;
-  ],
-  &quot;schemaVersion&quot;: 1,
-  &quot;title&quot;: &quot;SoundCloud Scraper Input&quot;,
-  &quot;type&quot;: &quot;object&quot;
-}
-</code></pre></details></section><section class="schema-section" id="output-schema"><h2>Output schema</h2><p>Published result links and storage locations. This schema is not an exhaustive contract for every field in a dataset record.</p><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>soundcloud</code></td><td>string</td><td>optional</td><td>Dataset containing every scraped SoundCloud track, artist, playlist/album and comment row.</td></tr></tbody></table></div><p><a href="output-schema.json">Download the published output schema</a></p><details><summary>View complete JSON</summary><pre><code>{
-  &quot;actorOutputSchemaVersion&quot;: 1,
-  &quot;description&quot;: &quot;SoundCloud tracks, artists, playlists, albums and comments - charts, search results, full artist catalogs, playlist contents, engagement metrics, creator details, artwork, waveform and stream metadata.&quot;,
-  &quot;properties&quot;: {
-    &quot;soundcloud&quot;: {
-      &quot;description&quot;: &quot;Dataset containing every scraped SoundCloud track, artist, playlist/album and comment row.&quot;,
-      &quot;template&quot;: &quot;{{links.apiDefaultDatasetUrl}}/items&quot;,
-      &quot;title&quot;: &quot;SoundCloud records&quot;,
-      &quot;type&quot;: &quot;string&quot;
-    }
-  },
-  &quot;title&quot;: &quot;SoundCloud Charts, Search &amp; Artist Catalog Scraper Output&quot;
-}
-</code></pre></details></section><section class="schema-section" id="dataset-schema"><h2>Dataset schema</h2><p>Published dataset views and any declared field definitions. A view can select only a subset of the returned record fields.</p><p><a href="dataset-schema.json">Download the published dataset schema</a></p><details><summary>View complete JSON</summary><pre><code>{
-  &quot;actorSpecification&quot;: 1,
-  &quot;views&quot;: {
-    &quot;overview&quot;: {
-      &quot;display&quot;: {
-        &quot;component&quot;: &quot;table&quot;,
-        &quot;properties&quot;: {}
-      },
-      &quot;title&quot;: &quot;SoundCloud records&quot;,
-      &quot;transformation&quot;: {
-        &quot;fields&quot;: [
-          &quot;recordType&quot;,
-          &quot;title&quot;,
-          &quot;artist&quot;,
-          &quot;playCount&quot;,
-          &quot;likeCount&quot;,
-          &quot;genre&quot;,
-          &quot;uploadDate&quot;,
-          &quot;url&quot;
-        ]
-      }
-    }
-  }
-}
-</code></pre></details></section><section class="schema-section" id="key-value-schema"><h2>Key-value schema</h2><p>Published key-value store definitions, when provided by this build.</p><p>This definition is not present in the default published build. See the published README for available documentation.</p></section><section id="published-readme"><h2>Published README</h2><details><summary>Read the full published documentation</summary><h2 id="readme-soundcloud-charts-search-artist-catalog-scraper">SoundCloud Charts, Search &amp; Artist Catalog Scraper</h2>
-<p>Pull public SoundCloud data into one clean dataset: the current global New &amp; Hot
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src &#x27;self&#x27;; script-src &#x27;self&#x27; &#x27;sha256-DGY7AaekNIXjGYHWeV3WFZq2lKdW7y0iS1hJUMhMPj0=&#x27;; style-src &#x27;self&#x27;; img-src &#x27;self&#x27; https: data:; connect-src &#x27;self&#x27;; base-uri &#x27;self&#x27;; form-action &#x27;self&#x27;; object-src &#x27;none&#x27;"><title>SoundCloud Charts, Search &amp; Artist Catalog Scraper – docs and price | Nimbryxo Studio</title><meta name="description" content="Scrape SoundCloud without an API key: global and genre New &amp; Hot charts, keyword search with real genre filters, full artist catalogs, playlist contents, comments, followers, engagement metrics, artwo"><meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1"><link rel="canonical" href="https://hasankhokhar2026.github.io/apify-actor-examples/actors/soundcloud-charts-search-and-artist-catalog/"><meta property="og:title" content="SoundCloud Charts, Search &amp; Artist Catalog Scraper – docs and price | Nimbryxo Studio"><meta property="og:description" content="Scrape SoundCloud without an API key: global and genre New &amp; Hot charts, keyword search with real genre filters, full artist catalogs, playlist contents, comments, followers, engagement metrics, artwo"><meta property="og:type" content="article"><meta property="og:url" content="https://hasankhokhar2026.github.io/apify-actor-examples/actors/soundcloud-charts-search-and-artist-catalog/"><meta property="og:site_name" content="Nimbryxo Studio"><meta property="og:image" content="https://apify-image-uploads-prod.s3.us-east-1.amazonaws.com/IYgBDiXtHOijAaUel-actor-xauSnBo64ZqngihHG-OdIxcsdr5w-logo.png"><meta name="twitter:card" content="summary"><meta name="theme-color" content="#155dfb"><link rel="icon" href="/apify-actor-examples/assets/mark.svg?v=2d20f9dc334a" type="image/svg+xml"><link rel="stylesheet" href="/apify-actor-examples/assets/site.css?v=acaeb75ff5bd"><link rel="stylesheet" href="/apify-actor-examples/assets/brand.css?v=c1167bcbeb95"><link rel="alternate" type="application/rss+xml" title="Nimbryxo Studio guides" href="/apify-actor-examples/feed.xml"><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization","name":"Nimbryxo Studio","url":"https://hasankhokhar2026.github.io/apify-actor-examples/","sameAs":["https://apify.com/nimbryxo-studio","https://github.com/hasankhokhar2026/apify-actor-examples"]},{"@type":"WebSite","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#website","name":"Nimbryxo Studio Actor documentation","url":"https://hasankhokhar2026.github.io/apify-actor-examples/","publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"inLanguage":"en"},{"@type":"WebPage","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/soundcloud-charts-search-and-artist-catalog/#webpage","name":"SoundCloud Charts, Search & Artist Catalog Scraper – docs and price","description":"Scrape SoundCloud without an API key: global and genre New & Hot charts, keyword search with real genre filters, full artist catalogs, playlist contents, comments, followers, engagement metrics, artwork, waveform and stream metadata.","url":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/soundcloud-charts-search-and-artist-catalog/","isPartOf":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#website"},"publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"inLanguage":"en","mainEntity":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/soundcloud-charts-search-and-artist-catalog/#article"},"dateModified":"2026-11-05T12:30:25.938Z","breadcrumb":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/soundcloud-charts-search-and-artist-catalog/#breadcrumb"}},{"@type":"TechArticle","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/soundcloud-charts-search-and-artist-catalog/#article","headline":"SoundCloud Charts, Search & Artist Catalog Scraper – docs and price","name":"SoundCloud Charts, Search & Artist Catalog Scraper – docs and price","description":"Scrape SoundCloud without an API key: global and genre New & Hot charts, keyword search with real genre filters, full artist catalogs, playlist contents, comments, followers, engagement metrics, artwork, waveform and stream metadata.","url":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/soundcloud-charts-search-and-artist-catalog/","author":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"mainEntityOfPage":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/soundcloud-charts-search-and-artist-catalog/#webpage"},"inLanguage":"en","dateModified":"2026-11-05T12:30:25.938Z","image":"https://apify-image-uploads-prod.s3.us-east-1.amazonaws.com/IYgBDiXtHOijAaUel-actor-xauSnBo64ZqngihHG-OdIxcsdr5w-logo.png"},{"@type":"BreadcrumbList","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/soundcloud-charts-search-and-artist-catalog/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Nimbryxo Studio","item":"https://hasankhokhar2026.github.io/apify-actor-examples/"},{"@type":"ListItem","position":2,"name":"Topics","item":"https://hasankhokhar2026.github.io/apify-actor-examples/topics/"},{"@type":"ListItem","position":3,"name":"Developer Tools","item":"https://hasankhokhar2026.github.io/apify-actor-examples/topics/developer-tools/"},{"@type":"ListItem","position":4,"name":"SoundCloud Charts, Search & Artist Catalog Scraper","item":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/soundcloud-charts-search-and-artist-catalog/"}]},{"@type":"SoftwareApplication","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/soundcloud-charts-search-and-artist-catalog/#software","name":"SoundCloud Charts, Search & Artist Catalog Scraper","description":"Scrape SoundCloud without an API key: global and genre New & Hot charts, keyword search with real genre filters, full artist catalogs, playlist contents, comments, followers, engagement metrics, artwork, waveform and stream metadata.","url":"https://apify.com/nimbryxo-studio/soundcloud-charts-search-and-artist-catalog","applicationCategory":"DeveloperApplication","operatingSystem":"Apify platform (web)","publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"image":"https://apify-image-uploads-prod.s3.us-east-1.amazonaws.com/IYgBDiXtHOijAaUel-actor-xauSnBo64ZqngihHG-OdIxcsdr5w-logo.png","offers":{"@type":"Offer","url":"https://apify.com/nimbryxo-studio/soundcloud-charts-search-and-artist-catalog","priceCurrency":"USD","price":"0","priceSpecification":{"@type":"UnitPriceSpecification","price":0.00099,"priceCurrency":"USD","unitText":"result","referenceQuantity":{"@type":"QuantitativeValue","value":1,"unitText":"result"}},"description":"Pay per event: the price per result on Apify's Free plan; a start fee and platform usage are billed separately."}},{"@type":"FAQPage","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/soundcloud-charts-search-and-artist-catalog/#faq","mainEntity":[{"@type":"Question","name":"Do I need a SoundCloud account or API key?","acceptedAnswer":{"@type":"Answer","text":"No. The actor reads the same public pages and public v2 JSON the SoundCloud web player uses, with no login."}},{"@type":"Question","name":"Why is `streamUrl` sometimes missing?","acceptedAnswer":{"@type":"Answer","text":"SoundCloud may expose only encrypted/DRM transcodings or a preview for that track. streamUrlApi, policy and the preview flag still describe what is available."}},{"@type":"Question","name":"Why does a search stop at 300 rows?","acceptedAnswer":{"@type":"Answer","text":"That is SoundCloud's public search window per query. Split the job into more queries or use searchGenre to partition it."}},{"@type":"Question","name":"Why is `waveformUrl` a JSON file?","acceptedAnswer":{"@type":"Answer","text":"SoundCloud's waveform field points to amplitude JSON, not an image. It is kept under the existing field name for compatibility."}},{"@type":"Question","name":"Can I schedule monitoring?","acceptedAnswer":{"@type":"Answer","text":"Yes. Run the actor on a schedule and compare playCount, likeCount, repostCount and followersCount snapshots. Monitoring helpers are not part of this version; the dataset is designed for external diffing."}},{"@type":"Question","name":"Is this affiliated with SoundCloud?","acceptedAnswer":{"@type":"Answer","text":"No. This is an independent actor that reads publicly visible data and is not endorsed by SoundCloud."}}],"isPartOf":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/soundcloud-charts-search-and-artist-catalog/#webpage"}}]}</script><script src="/apify-actor-examples/assets/site.js?v=7b7086957d37" defer></script></head><body class="theme-studio"><a href="#main" class="skip-link">Skip to content</a><header class="masthead"><div class="inner"><a href="/apify-actor-examples/" class="brand"><img src="/apify-actor-examples/assets/mark.svg?v=2d20f9dc334a" alt="" width="32" height="32"><span>Nimbryxo Studio</span></a><form class="site-search" action="/apify-actor-examples/actors/" role="search" data-search-index="/apify-actor-examples/search.json"><label class="sr-only" for="site-search">Search this site</label><input type="search" role="combobox" id="site-search" name="q" placeholder="Search by site or data" autocomplete="off" aria-autocomplete="list" aria-controls="site-search-results" aria-expanded="false"><ul id="site-search-results" class="search-results" role="listbox" hidden></ul></form><nav class="primary" aria-label="Main"><a href="/apify-actor-examples/actors/" aria-current="page">Actors</a><a href="/apify-actor-examples/sites/">Sites</a><a href="/apify-actor-examples/topics/">Topics</a><a href="/apify-actor-examples/guides/">Guides</a></nav></div></header><main id="main"><nav class="breadcrumb" aria-label="Breadcrumb"><ol><li><a href="/apify-actor-examples/">Home</a></li><li><a href="/apify-actor-examples/topics/">Topics</a></li><li><a href="/apify-actor-examples/topics/developer-tools/">Developer Tools</a></li><li aria-current="page">SoundCloud Charts, Search &amp; Artist Catalog Scraper</li></ol></nav><div class="doc"><div class="doc-head"><h1>SoundCloud Charts, Search &amp; Artist Catalog Scraper</h1><p class="lead">Scrape SoundCloud without an API key: global and genre New &amp; Hot charts, keyword search with real genre filters, full artist catalogs, playlist contents, comments, followers, engagement metrics, artwork, waveform and stream metadata.</p><dl class="facts"><div><dt>Updated</dt><dd><time datetime="2026-11-05">5 November 2026</time></dd></div><div><dt>Free plan</dt><dd>$0.99 per 1,000 results</dd></div><div><dt>Business plan</dt><dd>$0.49 per 1,000 results</dd></div><div><dt>Input</dt><dd>22 fields, 1 required</dd></div><div><dt>Output</dt><dd>8 declared fields</dd></div><div><dt>Site</dt><dd><a href="/apify-actor-examples/actors/soundcloud-charts-search-and-artist-catalog/">SoundCloud</a></dd></div></dl><div class="cta"><a class="button" href="https://apify.com/nimbryxo-studio/soundcloud-charts-search-and-artist-catalog">Open in Apify Store</a><a class="button secondary" href="#run">Copy the API call</a></div></div><div class="doc-body"><nav class="toc" aria-label="On this page"><h2 class="toc-title">On this page</h2><ol><li><a href="#summary">In short</a></li><li><a href="#about">What it does</a></li><li><a href="#output">What you get</a></li><li><a href="#run">Run it</a></li><li><a href="#cost">What it costs</a></li><li><a href="#input">Input reference</a></li><li><a href="#faq">Questions</a></li><li><a href="#notes">Limits and notes</a></li><li><a href="#related">Related Actors</a></li></ol></nav><article class="prose"><p class="summary" id="summary">SoundCloud Charts, Search &amp; Artist Catalog Scraper is an Apify Actor published by Nimbryxo Studio. It accepts 22 input fields, and <code>mode</code> is required. Each result can carry up to 8 declared fields, including <code>recordType</code>, <code>title</code>, <code>artist</code>, <code>playCount</code>, <code>likeCount</code> and <code>genre</code>. It costs $0.99 per 1,000 results on Apify's Free plan and $0.49 on the Business plan.</p><section id="about"><h2>What it does</h2><!--readme--><p>Pull public SoundCloud data into one clean dataset: the current global New &amp; Hot
 chart, 20 genre trending lists, keyword search across tracks, artists, playlists and
 albums, complete artist catalogs, playlist contents, track comments, and artist
 followers. No SoundCloud account, cookie or API key is required.</p>
-<h2 id="readme-what-this-actor-does">What this actor does</h2>
-<ul>
+<!--/readme--><h3 id="readme-what-this-actor-does">What this actor does</h3><!--readme--><ul>
 <li><strong>Search</strong> tracks, users/artists, playlists or albums by keyword, with a real
 SoundCloud genre filter for tracks and playlists.</li>
 <li><strong>Charts</strong> the global New &amp; Hot list (up to 100 tracks) or one of 20 current
@@ -453,10 +18,9 @@ commenter's profile fields and the time in the track.</li>
 <li>Empty fields are omitted from records. No <code>null</code>, blank strings or empty arrays
 are pushed.</li>
 </ul>
-<h2 id="readme-output-records">Output records</h2>
-<p>Every row has a <code>recordType</code>: <code>track</code>, <code>user</code>, <code>playlist</code> or <code>comment</code>. Existing
+<!--/readme--></section><section id="output"><h2>What you get</h2><p>The Actor saves one record per result to an Apify dataset. Its build declares 8 fields in 1 dataset view, and the README documents 7 more. Fields without a value can be left out of a record.</p><div class="table-wrap"><table class="output-table stack"><caption>Output fields</caption><thead><tr><th scope="col">Field</th><th scope="col">Label</th><th scope="col">What it holds</th></tr></thead><tbody><tr><th scope="row"><code>recordType</code></th><td data-label="Label"></td><td data-label="What it holds"><!--readme--><code>track</code><!--/readme--></td></tr><tr><th scope="row"><code>title</code></th><td data-label="Label"></td><td data-label="What it holds"></td></tr><tr><th scope="row"><code>artist</code></th><td data-label="Label"></td><td data-label="What it holds"></td></tr><tr><th scope="row"><code>playCount</code></th><td data-label="Label"></td><td data-label="What it holds"></td></tr><tr><th scope="row"><code>likeCount</code></th><td data-label="Label"></td><td data-label="What it holds"></td></tr><tr><th scope="row"><code>genre</code></th><td data-label="Label"></td><td data-label="What it holds"></td></tr><tr><th scope="row"><code>uploadDate</code></th><td data-label="Label"></td><td data-label="What it holds"></td></tr><tr><th scope="row"><code>url</code></th><td data-label="Label"></td><td data-label="What it holds"></td></tr><tr><th scope="row"><code>duration</code></th><td data-label="Label"></td><td data-label="What it holds"><!--readme--><code>M:SS</code> / <code>H:MM:SS</code> (unchanged legacy field)<!--/readme--></td></tr><tr><th scope="row"><code>streamUrl</code></th><td data-label="Label"></td><td data-label="What it holds"><!--readme-->Playable signed media URL when <code>resolveStreamUrls=true</code>; otherwise the stable API transcoding URL<!--/readme--></td></tr><tr><th scope="row"><code>streamUrlApi</code></th><td data-label="Label"></td><td data-label="What it holds"><!--readme-->Stable SoundCloud transcoding endpoint (not directly playable without a <code>client_id</code>)<!--/readme--></td></tr><tr><th scope="row"><code>streamUrlExpiresAt</code></th><td data-label="Label"></td><td data-label="What it holds"><!--readme-->Expiry of the signed media URL (about two hours)<!--/readme--></td></tr><tr><th scope="row"><code>streamUrlIsPreview</code></th><td data-label="Label"></td><td data-label="What it holds"><!--readme--><code>true</code> for a 30-second preview / <code>SNIP</code> track<!--/readme--></td></tr><tr><th scope="row"><code>waveformUrl</code></th><td data-label="Label"></td><td data-label="What it holds"><!--readme-->Waveform amplitude JSON (not an image)<!--/readme--></td></tr><tr><th scope="row"><code>scrapedAt</code></th><td data-label="Label"></td><td data-label="What it holds"><!--readme-->ISO-8601 scrape time<!--/readme--></td></tr></tbody></table></div><details class="publisher-notes"><summary>The publisher's output notes</summary><h3 id="readme-output-records">Output records</h3><!--readme--><p>Every row has a <code>recordType</code>: <code>track</code>, <code>user</code>, <code>playlist</code> or <code>comment</code>. Existing
 field names are preserved; the revamp adds fields beside them.</p>
-<h3 id="readme-track-fields">Track fields</h3>
+<h4 id="readme-track-fields">Track fields</h4>
 <div class="table-wrap"><table>
 <thead>
 <tr>
@@ -559,24 +123,118 @@ field names are preserved; the revamp adds fields beside them.</p>
 </tr>
 </tbody>
 </table></div>
-<h3 id="readme-user-artist-fields">User / artist fields</h3>
+<h4 id="readme-user-artist-fields">User / artist fields</h4>
 <p><code>recordType=user</code>; keeps <code>title</code>, <code>url</code>, <code>trackId</code>, <code>artist</code>, <code>artistUrl</code>,
 <code>playCount</code>, <code>likeCount</code>, <code>repostCount</code>, <code>description</code>, <code>artworkUrl</code>, <code>scrapedAt</code>.
 Adds <code>userId</code>, <code>username</code>, <code>fullName</code>, <code>followersCount</code>, <code>followingsCount</code>,
 <code>trackCount</code>, <code>playlistCount</code>, <code>commentsCount</code>, <code>verified</code>, <code>pro</code>, <code>city</code>,
 <code>countryCode</code>, <code>lastModified</code>, <code>webProfiles</code>, <code>relationship</code> (followers mode),
 <code>sourceArtistId</code>, <code>sourceArtistUsername</code>.</p>
-<h3 id="readme-playlist-album-fields">Playlist / album fields</h3>
+<h4 id="readme-playlist-album-fields">Playlist / album fields</h4>
 <p><code>recordType=playlist</code>; keeps <code>title</code>, <code>url</code>, <code>trackId</code>, <code>artist</code>, <code>artistUrl</code>,
 <code>duration</code>, <code>likeCount</code>, <code>repostCount</code>, <code>genre</code>, <code>description</code>, <code>uploadDate</code>,
 <code>artworkUrl</code>, <code>scrapedAt</code>. Adds <code>playlistId</code>, <code>urn</code>, <code>trackCount</code>, <code>setType</code>,
 <code>isAlbum</code>, <code>tags</code>, <code>releaseDate</code>, <code>lastModified</code>, <code>durationMs</code>, <code>labelName</code>.</p>
-<h3 id="readme-comment-fields">Comment fields</h3>
+<h4 id="readme-comment-fields">Comment fields</h4>
 <p><code>recordType=comment</code>; <code>commentId</code>, <code>body</code>, <code>createdAt</code>, <code>timestampMs</code>,
 <code>timestampFormatted</code>, <code>trackId</code>, <code>trackTitle</code>, <code>trackUrl</code>, <code>userId</code>, <code>username</code>,
 <code>userUrl</code>, <code>userFollowers</code>, <code>userCity</code>, <code>userCountry</code>, <code>scrapedAt</code>.</p>
-<h2 id="readme-input">Input</h2>
-<div class="table-wrap"><table>
+<!--/readme--></details></section><section id="run"><h2>Run it</h2><p>Set <code>APIFY_TOKEN</code> to your <a href="https://console.apify.com/settings/integrations">Apify API token</a>, then run the Actor with the input below (s). Each run is billed to your Apify account. The <a href="/apify-actor-examples/guides/soundcloud-charts-search-and-artist-catalog/">export tutorial</a> turns the results into a CSV file or an Excel workbook.</p><div class="tabs" data-tabs><div class="tab-list" role="tablist" aria-label="Language"><button type="button" role="tab" id="run-tab-python" aria-controls="run-panel-python" aria-selected="true">Python</button><button type="button" role="tab" id="run-tab-javascript" aria-controls="run-panel-javascript" aria-selected="false" tabindex="-1">JavaScript</button><button type="button" role="tab" id="run-tab-curl" aria-controls="run-panel-curl" aria-selected="false" tabindex="-1">cURL</button><button type="button" role="tab" id="run-tab-mcp" aria-controls="run-panel-mcp" aria-selected="false" tabindex="-1">MCP</button></div><div role="tabpanel" id="run-panel-python" aria-labelledby="run-tab-python" class="tab-panel"><h3 class="tab-title">Python</h3><figure class="code"><pre><code id="run-python" class="language-python"># pip install apify-client
+import os
+from apify_client import ApifyClient
+
+ACTOR = &quot;nimbryxo-studio/soundcloud-charts-search-and-artist-catalog&quot;
+client = ApifyClient(os.environ[&quot;APIFY_TOKEN&quot;])
+run_input = {
+    &quot;mode&quot;: &quot;search&quot;,
+    &quot;searchQueries&quot;: [&quot;lofi&quot;, &quot;ambient jazz&quot;],
+    &quot;searchType&quot;: &quot;tracks&quot;,
+    &quot;searchGenre&quot;: &quot;Jazz &amp; Blues&quot;,
+    &quot;maxItems&quot;: 100,
+}
+
+run = client.actor(ACTOR).call(run_input=run_input)
+for item in client.dataset(run[&quot;defaultDatasetId&quot;]).iterate_items():
+    print(item)
+</code></pre><button type="button" class="copy" data-copy="run-python">Copy</button></figure></div><div role="tabpanel" id="run-panel-javascript" aria-labelledby="run-tab-javascript" class="tab-panel"><h3 class="tab-title">JavaScript</h3><figure class="code"><pre><code id="run-javascript" class="language-javascript">// npm install apify-client
+import { ApifyClient } from &#x27;apify-client&#x27;;
+
+const ACTOR = &#x27;nimbryxo-studio/soundcloud-charts-search-and-artist-catalog&#x27;;
+const client = new ApifyClient({ token: process.env.APIFY_TOKEN });
+const input = {
+  &quot;mode&quot;: &quot;search&quot;,
+  &quot;searchQueries&quot;: [
+    &quot;lofi&quot;,
+    &quot;ambient jazz&quot;
+  ],
+  &quot;searchType&quot;: &quot;tracks&quot;,
+  &quot;searchGenre&quot;: &quot;Jazz &amp; Blues&quot;,
+  &quot;maxItems&quot;: 100
+};
+
+const run = await client.actor(ACTOR).call(input);
+const { items } = await client.dataset(run.defaultDatasetId).listItems();
+console.log(items);
+</code></pre><button type="button" class="copy" data-copy="run-javascript">Copy</button></figure></div><div role="tabpanel" id="run-panel-curl" aria-labelledby="run-tab-curl" class="tab-panel"><h3 class="tab-title">cURL</h3><figure class="code"><pre><code id="run-curl" class="language-bash">curl -X POST &quot;https://api.apify.com/v2/acts/nimbryxo-studio~soundcloud-charts-search-and-artist-catalog/run-sync-get-dataset-items?format=json&quot; \
+  -H &quot;Authorization: Bearer $APIFY_TOKEN&quot; \
+  -H &quot;Content-Type: application/json&quot; \
+  -d &#x27;{&quot;mode&quot;: &quot;search&quot;, &quot;searchQueries&quot;: [&quot;lofi&quot;, &quot;ambient jazz&quot;], &quot;searchType&quot;: &quot;tracks&quot;, &quot;searchGenre&quot;: &quot;Jazz &amp; Blues&quot;, &quot;maxItems&quot;: 100}&#x27;
+</code></pre><button type="button" class="copy" data-copy="run-curl">Copy</button></figure></div><div role="tabpanel" id="run-panel-mcp" aria-labelledby="run-tab-mcp" class="tab-panel"><h3 class="tab-title">MCP</h3><figure class="code"><pre><code id="run-mcp" class="language-json">{
+  &quot;mcpServers&quot;: {
+    &quot;apify&quot;: {
+      &quot;url&quot;: &quot;https://mcp.apify.com?tools=nimbryxo-studio/soundcloud-charts-search-and-artist-catalog&quot;
+    }
+  }
+}</code></pre><button type="button" class="copy" data-copy="run-mcp">Copy</button></figure></div></div><div class="examples" id="example-inputs"><p class="examples-intro">More inputs from the publisher's README:</p><h3 id="readme-examples">Examples</h3><!--readme--><p><strong>Search tracks with a genre filter</strong></p>
+<pre><code class="language-json">{
+  &quot;mode&quot;: &quot;search&quot;,
+  &quot;searchQueries&quot;: [&quot;lofi&quot;, &quot;ambient jazz&quot;],
+  &quot;searchType&quot;: &quot;tracks&quot;,
+  &quot;searchGenre&quot;: &quot;Jazz &amp; Blues&quot;,
+  &quot;maxItems&quot;: 100
+}
+</code></pre>
+<p><strong>Global New &amp; Hot chart</strong></p>
+<pre><code class="language-json">{ &quot;mode&quot;: &quot;charts&quot;, &quot;chartGenre&quot;: &quot;all&quot;, &quot;maxItems&quot;: 100 }
+</code></pre>
+<p><strong>Trap trending list</strong></p>
+<pre><code class="language-json">{ &quot;mode&quot;: &quot;charts&quot;, &quot;chartGenre&quot;: &quot;trap&quot;, &quot;maxItems&quot;: 50 }
+</code></pre>
+<p><strong>Full artist catalog</strong></p>
+<pre><code class="language-json">{
+  &quot;mode&quot;: &quot;artistTracks&quot;,
+  &quot;artistUrls&quot;: [&quot;https://soundcloud.com/chillhopdotcom&quot;],
+  &quot;includeTracks&quot;: true,
+  &quot;includeAlbums&quot;: true,
+  &quot;includePlaylists&quot;: true,
+  &quot;maxItems&quot;: 500
+}
+</code></pre>
+<p><strong>Expand a playlist</strong></p>
+<pre><code class="language-json">{
+  &quot;mode&quot;: &quot;byUrl&quot;,
+  &quot;startUrls&quot;: [&quot;https://soundcloud.com/chillhopdotcom/sets/chillhop-essentials-summer-2026&quot;],
+  &quot;includePlaylistTracks&quot;: true,
+  &quot;maxItems&quot;: 300
+}
+</code></pre>
+<p><strong>Track comments</strong></p>
+<pre><code class="language-json">{
+  &quot;mode&quot;: &quot;comments&quot;,
+  &quot;trackUrls&quot;: [&quot;https://soundcloud.com/user/track&quot;],
+  &quot;commentsSort&quot;: &quot;newest&quot;,
+  &quot;maxItems&quot;: 200
+}
+</code></pre>
+<p><strong>Artist followers</strong></p>
+<pre><code class="language-json">{
+  &quot;mode&quot;: &quot;followers&quot;,
+  &quot;artistUrls&quot;: [&quot;https://soundcloud.com/chillhopdotcom&quot;],
+  &quot;relationship&quot;: &quot;followers&quot;,
+  &quot;maxItems&quot;: 500
+}
+</code></pre>
+<!--/readme--></div></section><section id="cost"><h2>What it costs</h2><p>SoundCloud Charts, Search &amp; Artist Catalog Scraper uses pay-per-event pricing: a fee for each result saved to the dataset, plus a start fee per run. Paid Apify plans pay less per result. The start fee is charged once per GB of run memory (at least once); the default run uses 1 GB, so a run starts with 1 start event, as the run totals include. You also pay Apify platform usage (compute and proxy) for the run, which these totals do not include.</p><div class="table-wrap"><table class="price-table stack"><caption>Published prices and run totals by Apify plan</caption><thead><tr><th scope="col">Plan</th><th scope="col">Per result</th><th scope="col">Per 1,000</th><th scope="col">Start fee</th><th scope="col">100 results</th><th scope="col">1,000 results</th><th scope="col">10,000 results</th></tr></thead><tbody><tr><th scope="row">Free plan</th><td data-label="Per result">$0.00099</td><td data-label="Per 1,000">$0.99</td><td data-label="Start fee">$0.10</td><td data-label="100 results">$0.20</td><td data-label="1,000 results">$1.09</td><td data-label="10,000 results">$10.00</td></tr><tr><th scope="row">Starter plan</th><td data-label="Per result">$0.00082</td><td data-label="Per 1,000">$0.82</td><td data-label="Start fee">$0.077</td><td data-label="100 results">$0.16</td><td data-label="1,000 results">$0.90</td><td data-label="10,000 results">$8.28</td></tr><tr><th scope="row">Scale plan</th><td data-label="Per result">$0.00066</td><td data-label="Per 1,000">$0.66</td><td data-label="Start fee">$0.053</td><td data-label="100 results">$0.12</td><td data-label="1,000 results">$0.71</td><td data-label="10,000 results">$6.65</td></tr><tr><th scope="row">Business plan</th><td data-label="Per result">$0.00049</td><td data-label="Per 1,000">$0.49</td><td data-label="Start fee">$0.03</td><td data-label="100 results">$0.08</td><td data-label="1,000 results">$0.52</td><td data-label="10,000 results">$4.93</td></tr></tbody></table></div><p class="fine">Run totals are the Actor's charges at the default memory: start fees plus the per-result price. Check the <a href="https://apify.com/nimbryxo-studio/soundcloud-charts-search-and-artist-catalog">Store page</a> before a large run; prices can change with notice.</p></section><section id="input"><h2>Input reference</h2><p>All 22 fields of the published input schema, in the publisher's order. Required fields are marked. Download the <a href="input-schema.json">input schema</a> as JSON.</p><div class="table-wrap"><table class="input-table stack"><caption>Input fields in the published schema</caption><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Description</th></tr></thead><tbody><tr><th scope="row"><code>mode</code><span class="field-title">What to collect</span></th><td data-label="Type">string <span class="req">required</span></td><td data-label="Description"><!--readme-->Choose the intent. Keyword search, New &amp; Hot charts, an artist catalog, specific URLs, track comments, or an artist's followers.<!--/readme--><span class="field-meta">Default <code>&quot;search&quot;</code>; Allowed search, charts, artistTracks, byUrl, comments, followers</span></td></tr><tr><th scope="row"><code>searchQueries</code><span class="field-title">Search queries</span></th><td data-label="Type">array</td><td data-label="Description"><!--readme-->One or more keywords or artist names (mode=search). Example: lofi, techno, ambient jazz.<!--/readme--><span class="field-meta">Default <code>[]</code>; Example <code>[&quot;lofi&quot;]</code></span></td></tr><tr><th scope="row"><code>searchType</code><span class="field-title">Search result type</span></th><td data-label="Type">string</td><td data-label="Description"><!--readme-->What kind of results to return (mode=search).<!--/readme--><span class="field-meta">Default <code>&quot;tracks&quot;</code>; Allowed tracks, users, playlists, albums, all</span></td></tr><tr><th scope="row"><code>chartGenre</code><span class="field-title">Chart genre</span></th><td data-label="Type">string</td><td data-label="Description"><!--readme-->Global New &amp; Hot returns up to 100 tracks. Genre values use SoundCloud's current trending-by-genre lists (about 50 tracks each).<!--/readme--><span class="field-meta">Default <code>&quot;all&quot;</code>; Allowed all, all-genres, trap, hip-hop, pop, electronic, r-n-b, alternative-hip-hop and 13 more</span></td></tr><tr><th scope="row"><code>searchGenre</code><span class="field-title">Genre filter</span></th><td data-label="Type">string</td><td data-label="Description"><!--readme-->Optional SoundCloud genre filter for track and playlist searches. Leave as any genre to search everything. This is a real SoundCloud filter, not a client-side guess.<!--/readme--><span class="field-meta">Default <code>&quot;&quot;</code>; Allowed , Alternative Rock, Ambient, Classical, Country, Dance &amp; EDM, Dancehall, Deep House and 25 more</span></td></tr><tr><th scope="row"><code>sortBy</code><span class="field-title">Sort fetched rows</span></th><td data-label="Type">string</td><td data-label="Description"><!--readme-->How to order the rows already fetched. SoundCloud search itself is relevance-ordered, so this is a client-side sort of that result set.<!--/readme--><span class="field-meta">Default <code>&quot;relevance&quot;</code>; Allowed relevance, newest, mostPlayed, mostLiked</span></td></tr><tr><th scope="row"><code>minPlayCount</code><span class="field-title">Minimum plays</span></th><td data-label="Type">integer</td><td data-label="Description"><!--readme-->Drop track/playlist rows below this play count after fetching. 0 means no filter.<!--/readme--><span class="field-meta">Default <code>0</code>; Allowed 0 to 1000000000</span></td></tr><tr><th scope="row"><code>minLikeCount</code><span class="field-title">Minimum likes</span></th><td data-label="Type">integer</td><td data-label="Description"><!--readme-->Drop track/playlist rows below this like count after fetching. 0 means no filter.<!--/readme--><span class="field-meta">Default <code>0</code>; Allowed 0 to 1000000000</span></td></tr><tr><th scope="row"><code>artistUrls</code><span class="field-title">Artists</span></th><td data-label="Type">array</td><td data-label="Description"><!--readme-->Artist profile URLs, usernames, or numeric user IDs. Used by artistTracks and followers modes.<!--/readme--><span class="field-meta">Default <code>[]</code></span></td></tr><tr><th scope="row"><code>includeTracks</code><span class="field-title">Include tracks</span></th><td data-label="Type">boolean</td><td data-label="Description"><!--readme-->Include the artist's uploaded tracks.<!--/readme--><span class="field-meta">Default <code>true</code></span></td></tr><tr><th scope="row"><code>includeAlbums</code><span class="field-title">Include albums</span></th><td data-label="Type">boolean</td><td data-label="Description"><!--readme-->Include the artist's albums/EPs as playlist rows.<!--/readme--><span class="field-meta">Default <code>false</code></span></td></tr><tr><th scope="row"><code>includePlaylists</code><span class="field-title">Include playlists</span></th><td data-label="Type">boolean</td><td data-label="Description"><!--readme-->Include the artist's playlists as playlist rows.<!--/readme--><span class="field-meta">Default <code>false</code></span></td></tr><tr><th scope="row"><code>includeTopTracks</code><span class="field-title">Include top tracks</span></th><td data-label="Type">boolean</td><td data-label="Description"><!--readme-->Include SoundCloud's small top-tracks list for each artist.<!--/readme--><span class="field-meta">Default <code>false</code></span></td></tr><tr><th scope="row"><code>includeWebProfiles</code><span class="field-title">Include web profiles</span></th><td data-label="Type">boolean</td><td data-label="Description"><!--readme-->Add the artist's public social/web profile links to the profile row.<!--/readme--><span class="field-meta">Default <code>false</code></span></td></tr><tr><th scope="row"><code>startUrls</code><span class="field-title">SoundCloud URLs or IDs</span></th><td data-label="Type">array</td><td data-label="Description"><!--readme-->Track, playlist/album, or artist URLs. Numeric track IDs are also accepted. Used by mode=byUrl.<!--/readme--><span class="field-meta">Default <code>[]</code></span></td></tr><tr><th scope="row"><code>includePlaylistTracks</code><span class="field-title">Expand playlist tracks</span></th><td data-label="Type">boolean</td><td data-label="Description"><!--readme-->For playlist URLs, hydrate and emit every track (not just the first five).<!--/readme--><span class="field-meta">Default <code>true</code></span></td></tr><tr><th scope="row"><code>includeUserProfile</code><span class="field-title">Include artist profile row</span></th><td data-label="Type">boolean</td><td data-label="Description"><!--readme-->For artist URLs in mode=byUrl, emit the profile row before the tracks.<!--/readme--><span class="field-meta">Default <code>true</code></span></td></tr><tr><th scope="row"><code>trackUrls</code><span class="field-title">Track URLs or IDs</span></th><td data-label="Type">array</td><td data-label="Description"><!--readme-->Tracks whose public comments should be collected. Used by mode=comments.<!--/readme--><span class="field-meta">Default <code>[]</code></span></td></tr><tr><th scope="row"><code>commentsSort</code><span class="field-title">Comment order</span></th><td data-label="Type">string</td><td data-label="Description"><!--readme-->How SoundCloud should order comments.<!--/readme--><span class="field-meta">Default <code>&quot;newest&quot;</code>; Allowed newest, oldest, track-timestamp</span></td></tr><tr><th scope="row"><code>relationship</code><span class="field-title">Follower relationship</span></th><td data-label="Type">string</td><td data-label="Description"><!--readme-->For mode=followers, collect the artist's followers or the accounts the artist follows.<!--/readme--><span class="field-meta">Default <code>&quot;followers&quot;</code>; Allowed followers, followings</span></td></tr><tr><th scope="row"><code>resolveStreamUrls</code><span class="field-title">Resolve playable stream URLs</span></th><td data-label="Type">boolean</td><td data-label="Description"><!--readme-->Add a playable signed stream URL plus protocol, preview and expiry fields. Signed URLs expire after about two hours. Turn off for large runs if you only need the stable API endpoint.<!--/readme--><span class="field-meta">Default <code>true</code></span></td></tr><tr><th scope="row"><code>maxItems</code><span class="field-title">Maximum records</span></th><td data-label="Type">integer</td><td data-label="Description"><!--readme-->Hard cap on dataset rows. SoundCloud search still returns at most 300 rows per query; charts and per-artist sections have their own source limits.<!--/readme--><span class="field-meta">Default <code>100</code>; Example <code>2</code>; Allowed 1 to 5000</span></td></tr></tbody></table></div><details class="publisher-notes"><summary>The publisher's input notes</summary><h3 id="readme-input">Input</h3><!--readme--><div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Field</th>
@@ -714,58 +372,21 @@ Adds <code>userId</code>, <code>username</code>, <code>fullName</code>, <code>fo
 </tr>
 </tbody>
 </table></div>
-<h2 id="readme-examples">Examples</h2>
-<p><strong>Search tracks with a genre filter</strong></p>
-<pre><code class="language-json">{
-  &quot;mode&quot;: &quot;search&quot;,
-  &quot;searchQueries&quot;: [&quot;lofi&quot;, &quot;ambient jazz&quot;],
-  &quot;searchType&quot;: &quot;tracks&quot;,
-  &quot;searchGenre&quot;: &quot;Jazz &amp; Blues&quot;,
-  &quot;maxItems&quot;: 100
-}
-</code></pre>
-<p><strong>Global New &amp; Hot chart</strong></p>
-<pre><code class="language-json">{ &quot;mode&quot;: &quot;charts&quot;, &quot;chartGenre&quot;: &quot;all&quot;, &quot;maxItems&quot;: 100 }
-</code></pre>
-<p><strong>Trap trending list</strong></p>
-<pre><code class="language-json">{ &quot;mode&quot;: &quot;charts&quot;, &quot;chartGenre&quot;: &quot;trap&quot;, &quot;maxItems&quot;: 50 }
-</code></pre>
-<p><strong>Full artist catalog</strong></p>
-<pre><code class="language-json">{
-  &quot;mode&quot;: &quot;artistTracks&quot;,
-  &quot;artistUrls&quot;: [&quot;https://soundcloud.com/chillhopdotcom&quot;],
-  &quot;includeTracks&quot;: true,
-  &quot;includeAlbums&quot;: true,
-  &quot;includePlaylists&quot;: true,
-  &quot;maxItems&quot;: 500
-}
-</code></pre>
-<p><strong>Expand a playlist</strong></p>
-<pre><code class="language-json">{
-  &quot;mode&quot;: &quot;byUrl&quot;,
-  &quot;startUrls&quot;: [&quot;https://soundcloud.com/chillhopdotcom/sets/chillhop-essentials-summer-2026&quot;],
-  &quot;includePlaylistTracks&quot;: true,
-  &quot;maxItems&quot;: 300
-}
-</code></pre>
-<p><strong>Track comments</strong></p>
-<pre><code class="language-json">{
-  &quot;mode&quot;: &quot;comments&quot;,
-  &quot;trackUrls&quot;: [&quot;https://soundcloud.com/user/track&quot;],
-  &quot;commentsSort&quot;: &quot;newest&quot;,
-  &quot;maxItems&quot;: 200
-}
-</code></pre>
-<p><strong>Artist followers</strong></p>
-<pre><code class="language-json">{
-  &quot;mode&quot;: &quot;followers&quot;,
-  &quot;artistUrls&quot;: [&quot;https://soundcloud.com/chillhopdotcom&quot;],
-  &quot;relationship&quot;: &quot;followers&quot;,
-  &quot;maxItems&quot;: 500
-}
-</code></pre>
-<h2 id="readme-charts-what-is-available">Charts: what is available</h2>
-<p>SoundCloud's current public chart surface is <strong>New &amp; Hot</strong>, not the retired all-time
+<!--/readme--></details></section><section id="faq"><h2>Questions</h2><div class="qa"><h3 id="faq-do-i-need-a-soundcloud-account-or-api-key"><!--readme-->Do I need a SoundCloud account or API key?<!--/readme--></h3><!--readme--><p>No. The actor reads the same public
+pages and public v2 JSON the SoundCloud web player uses, with no login.</p>
+<!--/readme--></div><div class="qa"><h3 id="faq-why-is-streamurl-sometimes-missing"><!--readme-->Why is <code>streamUrl</code> sometimes missing?<!--/readme--></h3><!--readme--><p>SoundCloud may expose only encrypted/DRM
+transcodings or a preview for that track. <code>streamUrlApi</code>, <code>policy</code> and the preview
+flag still describe what is available.</p>
+<!--/readme--></div><div class="qa"><h3 id="faq-why-does-a-search-stop-at-300-rows"><!--readme-->Why does a search stop at 300 rows?<!--/readme--></h3><!--readme--><p>That is SoundCloud's public search window
+per query. Split the job into more queries or use <code>searchGenre</code> to partition it.</p>
+<!--/readme--></div><div class="qa"><h3 id="faq-why-is-waveformurl-a-json-file"><!--readme-->Why is <code>waveformUrl</code> a JSON file?<!--/readme--></h3><!--readme--><p>SoundCloud's waveform field points to amplitude
+JSON, not an image. It is kept under the existing field name for compatibility.</p>
+<!--/readme--></div><div class="qa"><h3 id="faq-can-i-schedule-monitoring"><!--readme-->Can I schedule monitoring?<!--/readme--></h3><!--readme--><p>Yes. Run the actor on a schedule and compare
+<code>playCount</code>, <code>likeCount</code>, <code>repostCount</code> and <code>followersCount</code> snapshots. Monitoring
+helpers are not part of this version; the dataset is designed for external diffing.</p>
+<!--/readme--></div><div class="qa"><h3 id="faq-is-this-affiliated-with-soundcloud"><!--readme-->Is this affiliated with SoundCloud?<!--/readme--></h3><!--readme--><p>No. This is an independent actor that reads
+publicly visible data and is not endorsed by SoundCloud.</p>
+<!--/readme--></div></section><section id="notes"><h2>Limits and notes</h2><h3 id="readme-charts-what-is-available">Charts: what is available</h3><!--readme--><p>SoundCloud's current public chart surface is <strong>New &amp; Hot</strong>, not the retired all-time
 Top chart. The actor returns:</p>
 <ul>
 <li>the global New &amp; Hot list (up to 100 tracks), and</li>
@@ -774,8 +395,7 @@ Top chart. The actor returns:</p>
 <p>The old per-genre chart endpoint and the all-time Top chart are no longer available
 from SoundCloud's public API. Requests for the legacy <code>top</code> value are mapped to the
 current global New &amp; Hot list and the status message says so.</p>
-<h2 id="readme-stream-urls-previews-and-rights">Stream URLs, previews and rights</h2>
-<p>Stream metadata comes from SoundCloud's public transcodings. <code>streamUrl</code> is a
+<!--/readme--><h3 id="readme-stream-urls-previews-and-rights">Stream URLs, previews and rights</h3><!--readme--><p>Stream metadata comes from SoundCloud's public transcodings. <code>streamUrl</code> is a
 <strong>signed</strong> media URL and expires after about two hours; <code>streamUrlExpiresAt</code> records
 the exact time. <code>streamUrlApi</code> is the stable API endpoint, but it is not playable on
 its own without a <code>client_id</code>.</p>
@@ -783,8 +403,7 @@ its own without a <code>client_id</code>.</p>
 (<code>streamUrlIsPreview=true</code>), use DRM/encrypted transcodings, or disable downloads.
 The actor reports the metadata it can see and never fabricates an audio file. This
 actor does not download or rehost audio.</p>
-<h2 id="readme-limitations">Limitations</h2>
-<ul>
+<!--/readme--><h3 id="readme-limitations">Limitations</h3><!--readme--><ul>
 <li>Search returns at most <strong>300 rows per query</strong>. Use more queries or a genre filter
 to reach further.</li>
 <li>The all-time Top chart and regional/country charts are not available from the
@@ -801,19 +420,4 @@ conditional; fields are omitted when SoundCloud does not provide them.</li>
 content is out of scope.</li>
 <li>Huge follower lists can be expensive; use <code>maxItems</code> to cap them.</li>
 </ul>
-<h2 id="readme-faq">FAQ</h2>
-<p><strong>Do I need a SoundCloud account or API key?</strong> No. The actor reads the same public
-pages and public v2 JSON the SoundCloud web player uses, with no login.</p>
-<p><strong>Why is <code>streamUrl</code> sometimes missing?</strong> SoundCloud may expose only encrypted/DRM
-transcodings or a preview for that track. <code>streamUrlApi</code>, <code>policy</code> and the preview
-flag still describe what is available.</p>
-<p><strong>Why does a search stop at 300 rows?</strong> That is SoundCloud's public search window
-per query. Split the job into more queries or use <code>searchGenre</code> to partition it.</p>
-<p><strong>Why is <code>waveformUrl</code> a JSON file?</strong> SoundCloud's waveform field points to amplitude
-JSON, not an image. It is kept under the existing field name for compatibility.</p>
-<p><strong>Can I schedule monitoring?</strong> Yes. Run the actor on a schedule and compare
-<code>playCount</code>, <code>likeCount</code>, <code>repostCount</code> and <code>followersCount</code> snapshots. Monitoring
-helpers are not part of this version; the dataset is designed for external diffing.</p>
-<p><strong>Is this affiliated with SoundCloud?</strong> No. This is an independent actor that reads
-publicly visible data and is not endorsed by SoundCloud.</p>
-</details></section><section id="python-quickstart"><h2>Python quickstart</h2><p>Use a schema-derived input and the Python standard library to start a run. An Apify account and token are required for execution.</p><p><a href="/apify-actor-examples/guides/soundcloud-charts-search-and-artist-catalog/">Open the step-by-step Python guide →</a></p></section><p class="source-note">Source build <code>kzMuZBsSVkEqN6Prx</code>. Documentation is regenerated from the default published build; private drafts are not included.</p></article></div></main><footer class="footer"><strong>Nimbryxo Studio</strong><div class="footer-links"><a href="/apify-actor-examples/topics/">Topics</a><a href="/apify-actor-examples/sources/">Documentation sources</a><a href="https://apify.com/nimbryxo-studio">Apify</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></div></footer></body></html>
+<!--/readme--></section><section id="related"><h2>Related Actors</h2><ul class="related" role="list"><li><a href="/apify-actor-examples/actors/amazon-all-offers-and-buy-box-tracker/">Amazon All Offers &amp; Buy Box Tracker</a><p>Collect every seller offer for Amazon ASINs you supply - condition, price, seller name and rating, shipping terms, delivery estimate, and which offer currently holds the buy box.</p></li><li><a href="/apify-actor-examples/actors/amazon-multi-domain-product-price-and-detail/">Amazon Multi-Domain Product Price &amp; Detail Scraper</a><p>Pull pricing, ratings, seller, variant and technical detail for Amazon products by URL or ASIN, across 21 country domains, with optional delivery postal-code targeting.</p></li><li><a href="/apify-actor-examples/actors/app-store-search-lookup-and-reviews-scraper/">App Store Search, Lookup &amp; Reviews Scraper</a><p>Search the Apple App Store by keyword or look up apps by ID or URL, with pricing, ratings, screenshots, developer info, and optional customer reviews across any App Store country.</p></li><li><a href="/apify-actor-examples/actors/ashby-job-board-compensation-and-openings-scraper/">Ashby Job Board Compensation &amp; Openings Scraper</a><p>Scrape public Ashby job boards for any company hiring on jobs.ashbyhq.com. Get every open role with title, department, team, location, remote status, salary/compensation ranges, apply links, and full job descriptions. No login, no API key.</p></li><li><a href="/apify-actor-examples/actors/bluesky-posts-profiles-feeds-and-threads-scraper/">Bluesky Posts, Profiles, Feeds &amp; Threads Scraper</a><p>Search Bluesky posts by keyword, hashtag, author, mention, domain or URL; read profiles, threads, lists, starter packs, feeds and followers; export likes, reposts, follows, quotes and relationships.</p></li><li><a href="/apify-actor-examples/actors/bulk-email-deliverability-and-smtp-verification/">Bulk Email Deliverability &amp; SMTP Verification</a><p>Check email addresses for syntax, MX records, disposable and role-based domains, and optionally SMTP mailbox existence and catch-all behavior, with a verdict and confidence score per address.</p></li></ul><p class="more"><a href="/apify-actor-examples/topics/developer-tools/">All developer tools Actors</a></p></section><section id="files"><h2>Source files</h2><p>This page is rebuilt from the default published build <code>kzMuZBsSVkEqN6Prx</code>. Download what it was built from: <a href="README.md">README</a>, <a href="input-schema.json">input schema</a>, <a href="output-schema.json">output schema</a>, <a href="dataset-schema.json">dataset schema</a>, <a href="key-value-schema.json">key-value store schema</a>.</p></section></article></div></div></main><footer class="footer"><div class="inner"><p><strong>Nimbryxo Studio</strong> publishes these Actors on Apify. Pages are rebuilt from each Actor&#x27;s published README, schemas and Store pricing.</p><nav aria-label="Footer"><a href="/apify-actor-examples/actors/">All Actors</a><a href="/apify-actor-examples/sites/">Sites</a><a href="/apify-actor-examples/topics/">Topics</a><a href="/apify-actor-examples/guides/">Guides</a><a href="/apify-actor-examples/sources/">How these pages are made</a><a href="https://apify.com/nimbryxo-studio">Nimbryxo Studio on Apify</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></nav></div></footer></body></html>

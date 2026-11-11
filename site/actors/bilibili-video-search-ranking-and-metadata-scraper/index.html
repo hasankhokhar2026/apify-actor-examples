@@ -1,242 +1,5 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src &#x27;self&#x27;; script-src &#x27;self&#x27; &#x27;sha256-6k7ElYTp1mfI1asMSy2k+3vJad+wei17iA6Y3xUCMRk=&#x27;; style-src &#x27;self&#x27;; img-src &#x27;self&#x27; https: data:; base-uri &#x27;self&#x27;; form-action &#x27;self&#x27;; object-src &#x27;none&#x27;"><title>Bilibili Video Search, Ranking &amp; Metadata Scraper | Nimbryxo Studio</title><meta name="description" content="Search Bilibili videos by keyword, look up specific videos by URL or ID, or pull the popular feed and partition ranking charts, with view, like and danmaku counts."><meta name="robots" content="index,follow"><link rel="canonical" href="https://hasankhokhar2026.github.io/apify-actor-examples/actors/bilibili-video-search-ranking-and-metadata-scraper/"><meta property="og:title" content="Bilibili Video Search, Ranking &amp; Metadata Scraper | Nimbryxo Studio"><meta property="og:description" content="Search Bilibili videos by keyword, look up specific videos by URL or ID, or pull the popular feed and partition ranking charts, with view, like and danmaku counts."><meta property="og:type" content="website"><meta property="og:url" content="https://hasankhokhar2026.github.io/apify-actor-examples/actors/bilibili-video-search-ranking-and-metadata-scraper/"><meta property="og:site_name" content="Nimbryxo Studio"><meta name="twitter:card" content="summary"><link rel="icon" href="/apify-actor-examples/assets/mark.svg?v=2d20f9dc334a" type="image/svg+xml"><link rel="stylesheet" href="/apify-actor-examples/assets/site.css?v=39545fd4a399"><link rel="stylesheet" href="/apify-actor-examples/assets/brand.css?v=eb0f935ade25"><link rel="alternate" type="application/rss+xml" title="Nimbryxo Studio guides" href="/apify-actor-examples/feed.xml"><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization","name":"Nimbryxo Studio","url":"https://hasankhokhar2026.github.io/apify-actor-examples/","sameAs":["https://apify.com/nimbryxo-studio"]},{"@type":"WebSite","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#website","name":"Nimbryxo Studio","url":"https://hasankhokhar2026.github.io/apify-actor-examples/","publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"inLanguage":"en"},{"@type":"WebPage","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/bilibili-video-search-ranking-and-metadata-scraper/#webpage","name":"Bilibili Video Search, Ranking & Metadata Scraper","description":"Search Bilibili videos by keyword, look up specific videos by URL or ID, or pull the popular feed and partition ranking charts, with view, like and danmaku counts.","url":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/bilibili-video-search-ranking-and-metadata-scraper/","isPartOf":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#website"},"publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"inLanguage":"en","mainEntity":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/bilibili-video-search-ranking-and-metadata-scraper/#article"},"breadcrumb":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/bilibili-video-search-ranking-and-metadata-scraper/#breadcrumb"}},{"@type":"TechArticle","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/bilibili-video-search-ranking-and-metadata-scraper/#article","headline":"Bilibili Video Search, Ranking & Metadata Scraper","name":"Bilibili Video Search, Ranking & Metadata Scraper","description":"Search Bilibili videos by keyword, look up specific videos by URL or ID, or pull the popular feed and partition ranking charts, with view, like and danmaku counts.","url":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/bilibili-video-search-ranking-and-metadata-scraper/","author":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"mainEntityOfPage":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/bilibili-video-search-ranking-and-metadata-scraper/#webpage"},"inLanguage":"en","dateModified":"2026-10-24T15:52:01.905Z"},{"@type":"BreadcrumbList","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/bilibili-video-search-ranking-and-metadata-scraper/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Nimbryxo Studio","item":"https://hasankhokhar2026.github.io/apify-actor-examples/"},{"@type":"ListItem","position":2,"name":"Actors","item":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/"},{"@type":"ListItem","position":3,"name":"Bilibili Video Search, Ranking & Metadata Scraper","item":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/bilibili-video-search-ranking-and-metadata-scraper/"}]}]}</script><script src="/apify-actor-examples/assets/site.js?v=7cabac48dd31" defer></script></head><body class="theme-studio"><a href="#main" class="skip-link">Skip to content</a><header><div class="inner"><a href="/apify-actor-examples/" class="brand"><img src="/apify-actor-examples/assets/mark.svg?v=2d20f9dc334a" alt="" width="29" height="29">Nimbryxo Studio</a><nav aria-label="Main navigation"><a href="/apify-actor-examples/actors/" aria-current="page">Actors</a><a href="/apify-actor-examples/guides/">Guides</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></nav></div></header><main id="main"><div class="doc-layout"><aside class="contents" aria-label="On this page"><strong>Contents</strong><a href="#overview">Overview</a><a href="#published-readme">Published README</a><a href="#input-schema">Input schema</a><a href="#output-schema">Output schema</a><a href="#dataset-schema">Dataset schema</a><a href="#python-quickstart">Python quickstart</a></aside><article class="prose"><div class="breadcrumb"><a href="/apify-actor-examples/actors/">Actors</a><span>/</span><span>Bilibili Video Search, Ranking &amp; Metadata Scraper</span></div><section id="overview"><h1 class="doc-title">Bilibili Video Search, Ranking &amp; Metadata Scraper</h1><p class="lede">Search Bilibili videos by keyword, look up specific videos by URL or ID, or pull the popular feed and partition ranking charts, with view, like and danmaku counts.</p><p class="summary">Bilibili Video Search, Ranking &amp; Metadata Scraper is an Apify Actor published by Nimbryxo Studio. It accepts 13 input fields, and <code>mode</code> is required. Its build declares a results dataset with 1 view. Runs happen on Apify, where the Store page lists the current price.</p><div class="actions"><a class="button" href="https://apify.com/nimbryxo-studio/bilibili-video-search-ranking-and-metadata-scraper">Open on Apify</a><a class="text-link" href="https://github.com/hasankhokhar2026/apify-actor-examples/blob/main/docs/actors/f6Gftf5vOWMMfxpe1/README.md">GitHub source</a></div></section><section class="schema-section" id="input-schema"><h2>Input schema</h2><p>Input fields, types, required flags, descriptions, defaults, and prefills come from the published definition. Prefill examples are distinct from defaults.</p><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>mode</code></td><td>string</td><td>required</td><td>What to collect.</td></tr><tr><td><code>searchQueries</code></td><td>array</td><td>optional</td><td>One keyword per entry, e.g. `python`, `原神`, `Genshin`. Provide Chinese and English aliases explicitly; Bilibili does not translate them.</td></tr><tr><td><code>videoUrls</code></td><td>array</td><td>optional</td><td>Accepts https://www.bilibili.com/video/BV..., https://b23.tv/... short links, bare BV IDs, av123... IDs, or numeric aids.</td></tr></tbody></table></div><details><summary>Show all input fields</summary><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>mode</code></td><td>string</td><td>required</td><td>What to collect.</td></tr><tr><td><code>searchQueries</code></td><td>array</td><td>optional</td><td>One keyword per entry, e.g. `python`, `原神`, `Genshin`. Provide Chinese and English aliases explicitly; Bilibili does not translate them.</td></tr><tr><td><code>videoUrls</code></td><td>array</td><td>optional</td><td>Accepts https://www.bilibili.com/video/BV..., https://b23.tv/... short links, bare BV IDs, av123... IDs, or numeric aids.</td></tr><tr><td><code>maxItems</code></td><td>integer</td><td>optional</td><td>Hard cap on emitted video records. Error records do not count toward it.</td></tr><tr><td><code>sort</code></td><td>string</td><td>optional</td><td>Result ordering. `dm` is most danmaku and `scores` is most comments.</td></tr><tr><td><code>publishedAfter</code></td><td>string</td><td>optional</td><td>Only videos published on or after this date, `YYYY-MM-DD` (mode=search). Can be used alone.</td></tr><tr><td><code>publishedBefore</code></td><td>string</td><td>optional</td><td>Only videos published on or before this date, `YYYY-MM-DD` (mode=search). Can be used alone.</td></tr><tr><td><code>duration</code></td><td>string</td><td>optional</td><td>Keep only videos in this length range.</td></tr><tr><td><code>partition</code></td><td>string</td><td>optional</td><td>Search partition filter (mode=search) or ranking chart (mode=ranking). Ignored for weekly charts.</td></tr><tr><td><code>rankingType</code></td><td>string</td><td>optional</td><td>All-time, originals-only, rookie, or the weekly series.</td></tr><tr><td><code>weekNumber</code></td><td>integer</td><td>optional</td><td>Specific weekly issue. Omit to use the latest issue.</td></tr><tr><td><code>enrichDetails</code></td><td>boolean</td><td>optional</td><td>Add one detail request per unique video in search, popular, and ranking modes to fill tags, coin/share counts, cid, parts, resolution, and uploader followers. Usually adds 3-10 seconds per video, depending on Bilibili latency. byVideoUrl lookups are always enriched.</td></tr><tr><td><code>proxyConfiguration</code></td><td>object</td><td>optional</td><td>Optional. The actor starts direct and retries through fresh and anonymous browser sessions; this proxy is used only as the final escalation stage.</td></tr></tbody></table></div></details><p><a href="input-schema.json">Download the published input schema</a></p><details><summary>View complete JSON</summary><pre><code>{
-  &quot;description&quot;: &quot;Search Bilibili videos by keyword, resolve video URLs or IDs, read the popular feed, or pull partition, rookie, origin, and weekly ranking charts. Public metadata only; no login or cookies required.&quot;,
-  &quot;properties&quot;: {
-    &quot;duration&quot;: {
-      &quot;default&quot;: &quot;all&quot;,
-      &quot;description&quot;: &quot;Keep only videos in this length range.&quot;,
-      &quot;editor&quot;: &quot;select&quot;,
-      &quot;enum&quot;: [
-        &quot;all&quot;,
-        &quot;short&quot;,
-        &quot;medium&quot;,
-        &quot;long&quot;,
-        &quot;verylong&quot;
-      ],
-      &quot;enumTitles&quot;: [
-        &quot;All lengths&quot;,
-        &quot;Under 10 minutes&quot;,
-        &quot;10-30 minutes&quot;,
-        &quot;30-60 minutes&quot;,
-        &quot;Over 60 minutes&quot;
-      ],
-      &quot;prefill&quot;: &quot;all&quot;,
-      &quot;title&quot;: &quot;Duration filter (mode=search)&quot;,
-      &quot;type&quot;: &quot;string&quot;
-    },
-    &quot;enrichDetails&quot;: {
-      &quot;default&quot;: false,
-      &quot;description&quot;: &quot;Add one detail request per unique video in search, popular, and ranking modes to fill tags, coin/share counts, cid, parts, resolution, and uploader followers. Usually adds 3-10 seconds per video, depending on Bilibili latency. byVideoUrl lookups are always enriched.&quot;,
-      &quot;prefill&quot;: false,
-      &quot;title&quot;: &quot;Enrich with video details&quot;,
-      &quot;type&quot;: &quot;boolean&quot;
-    },
-    &quot;maxItems&quot;: {
-      &quot;default&quot;: 20,
-      &quot;description&quot;: &quot;Hard cap on emitted video records. Error records do not count toward it.&quot;,
-      &quot;maximum&quot;: 1000,
-      &quot;minimum&quot;: 1,
-      &quot;prefill&quot;: 3,
-      &quot;title&quot;: &quot;Max videos&quot;,
-      &quot;type&quot;: &quot;integer&quot;
-    },
-    &quot;mode&quot;: {
-      &quot;default&quot;: &quot;search&quot;,
-      &quot;description&quot;: &quot;What to collect.&quot;,
-      &quot;editor&quot;: &quot;select&quot;,
-      &quot;enum&quot;: [
-        &quot;search&quot;,
-        &quot;byVideoUrl&quot;,
-        &quot;popular&quot;,
-        &quot;ranking&quot;
-      ],
-      &quot;enumTitles&quot;: [
-        &quot;Search videos by keyword&quot;,
-        &quot;Fetch videos by URL / BV / AV / b23.tv&quot;,
-        &quot;Popular feed&quot;,
-        &quot;Ranking chart&quot;
-      ],
-      &quot;prefill&quot;: &quot;search&quot;,
-      &quot;title&quot;: &quot;Mode&quot;,
-      &quot;type&quot;: &quot;string&quot;
-    },
-    &quot;partition&quot;: {
-      &quot;default&quot;: &quot;0&quot;,
-      &quot;description&quot;: &quot;Search partition filter (mode=search) or ranking chart (mode=ranking). Ignored for weekly charts.&quot;,
-      &quot;editor&quot;: &quot;select&quot;,
-      &quot;enum&quot;: [
-        &quot;0&quot;,
-        &quot;1&quot;,
-        &quot;3&quot;,
-        &quot;4&quot;,
-        &quot;5&quot;,
-        &quot;36&quot;,
-        &quot;119&quot;,
-        &quot;129&quot;,
-        &quot;155&quot;,
-        &quot;160&quot;,
-        &quot;181&quot;,
-        &quot;188&quot;,
-        &quot;211&quot;,
-        &quot;217&quot;,
-        &quot;223&quot;
-      ],
-      &quot;enumTitles&quot;: [
-        &quot;All (全站)&quot;,
-        &quot;Anime (动画)&quot;,
-        &quot;Music (音乐)&quot;,
-        &quot;Game (游戏)&quot;,
-        &quot;Entertainment (娱乐)&quot;,
-        &quot;Knowledge (知识)&quot;,
-        &quot;Guichu (鬼畜)&quot;,
-        &quot;Dance (舞蹈)&quot;,
-        &quot;Fashion (时尚)&quot;,
-        &quot;Life (生活)&quot;,
-        &quot;Movie (影视)&quot;,
-        &quot;Digital (数码)&quot;,
-        &quot;Food (美食)&quot;,
-        &quot;Animal (动物圈)&quot;,
-        &quot;Car (汽车)&quot;
-      ],
-      &quot;prefill&quot;: &quot;0&quot;,
-      &quot;title&quot;: &quot;Partition&quot;,
-      &quot;type&quot;: &quot;string&quot;
-    },
-    &quot;proxyConfiguration&quot;: {
-      &quot;description&quot;: &quot;Optional. The actor starts direct and retries through fresh and anonymous browser sessions; this proxy is used only as the final escalation stage.&quot;,
-      &quot;editor&quot;: &quot;proxy&quot;,
-      &quot;title&quot;: &quot;Proxy configuration (optional)&quot;,
-      &quot;type&quot;: &quot;object&quot;
-    },
-    &quot;publishedAfter&quot;: {
-      &quot;description&quot;: &quot;Only videos published on or after this date, `YYYY-MM-DD` (mode=search). Can be used alone.&quot;,
-      &quot;editor&quot;: &quot;datepicker&quot;,
-      &quot;title&quot;: &quot;Published after (UTC)&quot;,
-      &quot;type&quot;: &quot;string&quot;
-    },
-    &quot;publishedBefore&quot;: {
-      &quot;description&quot;: &quot;Only videos published on or before this date, `YYYY-MM-DD` (mode=search). Can be used alone.&quot;,
-      &quot;editor&quot;: &quot;datepicker&quot;,
-      &quot;title&quot;: &quot;Published before (UTC)&quot;,
-      &quot;type&quot;: &quot;string&quot;
-    },
-    &quot;rankingType&quot;: {
-      &quot;default&quot;: &quot;all&quot;,
-      &quot;description&quot;: &quot;All-time, originals-only, rookie, or the weekly series.&quot;,
-      &quot;editor&quot;: &quot;select&quot;,
-      &quot;enum&quot;: [
-        &quot;all&quot;,
-        &quot;origin&quot;,
-        &quot;rookie&quot;,
-        &quot;weekly&quot;
-      ],
-      &quot;enumTitles&quot;: [
-        &quot;All-time chart&quot;,
-        &quot;Originals only&quot;,
-        &quot;Rookie chart&quot;,
-        &quot;Weekly series&quot;
-      ],
-      &quot;prefill&quot;: &quot;all&quot;,
-      &quot;title&quot;: &quot;Ranking type (mode=ranking)&quot;,
-      &quot;type&quot;: &quot;string&quot;
-    },
-    &quot;searchQueries&quot;: {
-      &quot;default&quot;: [],
-      &quot;description&quot;: &quot;One keyword per entry, e.g. `python`, `原神`, `Genshin`. Provide Chinese and English aliases explicitly; Bilibili does not translate them.&quot;,
-      &quot;editor&quot;: &quot;stringList&quot;,
-      &quot;maxItems&quot;: 10,
-      &quot;prefill&quot;: [
-        &quot;python&quot;
-      ],
-      &quot;title&quot;: &quot;Search queries / aliases (mode=search)&quot;,
-      &quot;type&quot;: &quot;array&quot;
-    },
-    &quot;sort&quot;: {
-      &quot;default&quot;: &quot;totalrank&quot;,
-      &quot;description&quot;: &quot;Result ordering. `dm` is most danmaku and `scores` is most comments.&quot;,
-      &quot;editor&quot;: &quot;select&quot;,
-      &quot;enum&quot;: [
-        &quot;totalrank&quot;,
-        &quot;click&quot;,
-        &quot;pubdate&quot;,
-        &quot;dm&quot;,
-        &quot;stow&quot;,
-        &quot;scores&quot;
-      ],
-      &quot;enumTitles&quot;: [
-        &quot;Relevance (default)&quot;,
-        &quot;Most viewed&quot;,
-        &quot;Newest&quot;,
-        &quot;Most danmaku&quot;,
-        &quot;Most favorites&quot;,
-        &quot;Most comments&quot;
-      ],
-      &quot;prefill&quot;: &quot;totalrank&quot;,
-      &quot;title&quot;: &quot;Search sort (mode=search)&quot;,
-      &quot;type&quot;: &quot;string&quot;
-    },
-    &quot;videoUrls&quot;: {
-      &quot;default&quot;: [],
-      &quot;description&quot;: &quot;Accepts https://www.bilibili.com/video/BV..., https://b23.tv/... short links, bare BV IDs, av123... IDs, or numeric aids.&quot;,
-      &quot;editor&quot;: &quot;stringList&quot;,
-      &quot;maxItems&quot;: 1000,
-      &quot;prefill&quot;: [],
-      &quot;title&quot;: &quot;Video URLs or IDs (mode=byVideoUrl)&quot;,
-      &quot;type&quot;: &quot;array&quot;
-    },
-    &quot;weekNumber&quot;: {
-      &quot;description&quot;: &quot;Specific weekly issue. Omit to use the latest issue.&quot;,
-      &quot;maximum&quot;: 10000,
-      &quot;minimum&quot;: 1,
-      &quot;title&quot;: &quot;Weekly issue number (mode=ranking)&quot;,
-      &quot;type&quot;: &quot;integer&quot;
-    }
-  },
-  &quot;required&quot;: [
-    &quot;mode&quot;
-  ],
-  &quot;schemaVersion&quot;: 1,
-  &quot;title&quot;: &quot;Bilibili Video Search, Ranking &amp; Metadata Scraper Input&quot;,
-  &quot;type&quot;: &quot;object&quot;
-}
-</code></pre></details></section><section class="schema-section" id="output-schema"><h2>Output schema</h2><p>Published result links and storage locations. This schema is not an exhaustive contract for every field in a dataset record.</p><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>videos</code></td><td>string</td><td>optional</td><td>Dataset containing all collected Bilibili video and error records.</td></tr></tbody></table></div><p><a href="output-schema.json">Download the published output schema</a></p><details><summary>View complete JSON</summary><pre><code>{
-  &quot;actorOutputSchemaVersion&quot;: 1,
-  &quot;description&quot;: &quot;Bilibili videos with IDs, title, description, tags, category, uploader details, engagement counters, duration, publish time, cover, parts, resolution, and ranking position.&quot;,
-  &quot;properties&quot;: {
-    &quot;videos&quot;: {
-      &quot;description&quot;: &quot;Dataset containing all collected Bilibili video and error records.&quot;,
-      &quot;template&quot;: &quot;{{links.apiDefaultDatasetUrl}}/items&quot;,
-      &quot;title&quot;: &quot;Bilibili videos&quot;,
-      &quot;type&quot;: &quot;string&quot;
-    }
-  },
-  &quot;title&quot;: &quot;Bilibili Video Search, Ranking &amp; Metadata Scraper Output&quot;
-}
-</code></pre></details></section><section class="schema-section" id="dataset-schema"><h2>Dataset schema</h2><p>Published dataset views and any declared field definitions. A view can select only a subset of the returned record fields.</p><p><a href="dataset-schema.json">Download the published dataset schema</a></p><details><summary>View complete JSON</summary><pre><code>{
-  &quot;actorSpecification&quot;: 1,
-  &quot;views&quot;: {
-    &quot;overview&quot;: {
-      &quot;display&quot;: {
-        &quot;component&quot;: &quot;table&quot;,
-        &quot;properties&quot;: {}
-      },
-      &quot;title&quot;: &quot;Videos&quot;,
-      &quot;transformation&quot;: {
-        &quot;fields&quot;: [
-          &quot;title&quot;,
-          &quot;author&quot;,
-          &quot;viewCount&quot;,
-          &quot;likeCount&quot;,
-          &quot;publishTime&quot;,
-          &quot;videoUrl&quot;
-        ]
-      }
-    }
-  }
-}
-</code></pre></details></section><section class="schema-section" id="key-value-schema"><h2>Key-value schema</h2><p>Published key-value store definitions, when provided by this build.</p><p>This definition is not present in the default published build. See the published README for available documentation.</p></section><section id="published-readme"><h2>Published README</h2><details><summary>Read the full published documentation</summary><h2 id="readme-bilibili-video-search-ranking-metadata-scraper">Bilibili Video Search, Ranking &amp; Metadata Scraper</h2>
-<p>Collect public video metadata from Bilibili without an account. Search a keyword with Bilibili's own sort and filter options, resolve video links or IDs, walk the popular feed, or pull all-time, origin, rookie, and weekly ranking charts. Each row carries the identifiers, uploader, engagement counters, duration, publish time, cover, and optional detail fields such as tags, coin/share counts, parts, resolution, and uploader followers.</p>
-<h2 id="readme-what-this-actor-does">What this actor does</h2>
-<ul>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src &#x27;self&#x27;; script-src &#x27;self&#x27; &#x27;sha256-dbR8lrZLKwUGf5j1CAO03VhkIQWg8wejqQDyH5t/+T0=&#x27;; style-src &#x27;self&#x27;; img-src &#x27;self&#x27; https: data:; connect-src &#x27;self&#x27;; base-uri &#x27;self&#x27;; form-action &#x27;self&#x27;; object-src &#x27;none&#x27;"><title>Bilibili Video Search, Ranking &amp; Metadata Scraper – docs and price | Nimbryxo Studio</title><meta name="description" content="Search Bilibili videos by keyword, look up specific videos by URL or ID, or pull the popular feed and partition ranking charts, with view, like and danmaku counts. From $0.99 per 1,000 results on the "><meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1"><link rel="canonical" href="https://hasankhokhar2026.github.io/apify-actor-examples/actors/bilibili-video-search-ranking-and-metadata-scraper/"><meta property="og:title" content="Bilibili Video Search, Ranking &amp; Metadata Scraper – docs and price | Nimbryxo Studio"><meta property="og:description" content="Search Bilibili videos by keyword, look up specific videos by URL or ID, or pull the popular feed and partition ranking charts, with view, like and danmaku counts. From $0.99 per 1,000 results on the "><meta property="og:type" content="article"><meta property="og:url" content="https://hasankhokhar2026.github.io/apify-actor-examples/actors/bilibili-video-search-ranking-and-metadata-scraper/"><meta property="og:site_name" content="Nimbryxo Studio"><meta property="og:image" content="https://apify-image-uploads-prod.s3.us-east-1.amazonaws.com/IYgBDiXtHOijAaUel-actor-f6Gftf5vOWMMfxpe1-rCFeQYOMQV-logo.png"><meta name="twitter:card" content="summary"><meta name="theme-color" content="#155dfb"><link rel="icon" href="/apify-actor-examples/assets/mark.svg?v=2d20f9dc334a" type="image/svg+xml"><link rel="stylesheet" href="/apify-actor-examples/assets/site.css?v=acaeb75ff5bd"><link rel="stylesheet" href="/apify-actor-examples/assets/brand.css?v=c1167bcbeb95"><link rel="alternate" type="application/rss+xml" title="Nimbryxo Studio guides" href="/apify-actor-examples/feed.xml"><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization","name":"Nimbryxo Studio","url":"https://hasankhokhar2026.github.io/apify-actor-examples/","sameAs":["https://apify.com/nimbryxo-studio","https://github.com/hasankhokhar2026/apify-actor-examples"]},{"@type":"WebSite","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#website","name":"Nimbryxo Studio Actor documentation","url":"https://hasankhokhar2026.github.io/apify-actor-examples/","publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"inLanguage":"en"},{"@type":"WebPage","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/bilibili-video-search-ranking-and-metadata-scraper/#webpage","name":"Bilibili Video Search, Ranking & Metadata Scraper – docs and price","description":"Search Bilibili videos by keyword, look up specific videos by URL or ID, or pull the popular feed and partition ranking charts, with view, like and danmaku counts. From $0.99 per 1,000 results on the Free plan.","url":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/bilibili-video-search-ranking-and-metadata-scraper/","isPartOf":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#website"},"publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"inLanguage":"en","mainEntity":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/bilibili-video-search-ranking-and-metadata-scraper/#article"},"dateModified":"2026-10-24T15:52:01.905Z","breadcrumb":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/bilibili-video-search-ranking-and-metadata-scraper/#breadcrumb"}},{"@type":"TechArticle","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/bilibili-video-search-ranking-and-metadata-scraper/#article","headline":"Bilibili Video Search, Ranking & Metadata Scraper – docs and price","name":"Bilibili Video Search, Ranking & Metadata Scraper – docs and price","description":"Search Bilibili videos by keyword, look up specific videos by URL or ID, or pull the popular feed and partition ranking charts, with view, like and danmaku counts. From $0.99 per 1,000 results on the Free plan.","url":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/bilibili-video-search-ranking-and-metadata-scraper/","author":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"mainEntityOfPage":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/bilibili-video-search-ranking-and-metadata-scraper/#webpage"},"inLanguage":"en","dateModified":"2026-10-24T15:52:01.905Z","image":"https://apify-image-uploads-prod.s3.us-east-1.amazonaws.com/IYgBDiXtHOijAaUel-actor-f6Gftf5vOWMMfxpe1-rCFeQYOMQV-logo.png"},{"@type":"BreadcrumbList","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/bilibili-video-search-ranking-and-metadata-scraper/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Nimbryxo Studio","item":"https://hasankhokhar2026.github.io/apify-actor-examples/"},{"@type":"ListItem","position":2,"name":"Topics","item":"https://hasankhokhar2026.github.io/apify-actor-examples/topics/"},{"@type":"ListItem","position":3,"name":"Social Media","item":"https://hasankhokhar2026.github.io/apify-actor-examples/topics/social-media/"},{"@type":"ListItem","position":4,"name":"Bilibili Video Search, Ranking & Metadata Scraper","item":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/bilibili-video-search-ranking-and-metadata-scraper/"}]},{"@type":"SoftwareApplication","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/bilibili-video-search-ranking-and-metadata-scraper/#software","name":"Bilibili Video Search, Ranking & Metadata Scraper","description":"Search Bilibili videos by keyword, look up specific videos by URL or ID, or pull the popular feed and partition ranking charts, with view, like and danmaku counts.","url":"https://apify.com/nimbryxo-studio/bilibili-video-search-ranking-and-metadata-scraper","applicationCategory":"DeveloperApplication","operatingSystem":"Apify platform (web)","publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"image":"https://apify-image-uploads-prod.s3.us-east-1.amazonaws.com/IYgBDiXtHOijAaUel-actor-f6Gftf5vOWMMfxpe1-rCFeQYOMQV-logo.png","offers":{"@type":"Offer","url":"https://apify.com/nimbryxo-studio/bilibili-video-search-ranking-and-metadata-scraper","priceCurrency":"USD","price":"0","priceSpecification":{"@type":"UnitPriceSpecification","price":0.00099,"priceCurrency":"USD","unitText":"result","referenceQuantity":{"@type":"QuantitativeValue","value":1,"unitText":"result"}},"description":"Pay per event: the price per result on Apify's Free plan; a start fee and platform usage are billed separately."}},{"@type":"FAQPage","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/bilibili-video-search-ranking-and-metadata-scraper/#faq","mainEntity":[{"@type":"Question","name":"Do I need a Bilibili account or cookies?","acceptedAnswer":{"@type":"Answer","text":"No. Search, video lookups, the popular feed, and every ranking chart are read from public pages without a login."}},{"@type":"Question","name":"Does this actor collect comments, danmaku text, subtitles, creator video lists, or video files?","acceptedAnswer":{"@type":"Answer","text":"No. The actor returns public video metadata and aggregate counters only. Comment text, individual danmaku messages, subtitles, creator video lists, and media downloads are outside its scope. Uploader details and follower counts come from the videos themselves."}},{"@type":"Question","name":"Why are coinCount and shareCount missing on some search rows?","acceptedAnswer":{"@type":"Answer","text":"Bilibili's search results do not include coin or share counts. Set enrichDetails to true (or use byVideoUrl) to fill them from the video detail data."}},{"@type":"Question","name":"How much slower is detail enrichment?","acceptedAnswer":{"@type":"Answer","text":"Each enriched video usually adds 3-10 seconds, depending on Bilibili latency. A 1,000-row search with enrichment can take an hour or more; the default run is intentionally small."}},{"@type":"Question","name":"Why do I get fewer videos than maxItems?","acceptedAnswer":{"@type":"Answer","text":"Search returns at most 1,000 rows across 20 pages, the popular feed currently holds about 643 videos, a ranking chart has roughly 87-100 entries, and a weekly issue has about 48-49. Filters applied after collection can reduce the count further."}},{"@type":"Question","name":"What do dm and scores mean in the sort list?","acceptedAnswer":{"@type":"Answer","text":"dm sorts by danmaku count and scores sorts by comment count. Older actors labelled scores as a rating; that is not what Bilibili returns."}},{"@type":"Question","name":"Are course ads included in search results?","acceptedAnswer":{"@type":"Answer","text":"No. Search pages can contain course-promotion rows without a video ID; those are skipped, so a page of 50 results can yield fewer than 50 videos."}},{"@type":"Question","name":"What timezone are the date filters in?","acceptedAnswer":{"@type":"Answer","text":"Both publishedAfter and publishedBefore are interpreted in UTC, and publishTime is emitted in UTC ISO format."}},{"@type":"Question","name":"Can I fetch a specific weekly issue?","acceptedAnswer":{"@type":"Answer","text":"Yes. Set rankingType to weekly and pass the issue number in weekNumber. Leave weekNumber empty to get the latest issue."}},{"@type":"Question","name":"What happens with an invalid link or ID?","acceptedAnswer":{"@type":"Answer","text":"That input produces an error row with recordType: \"error\" and an errorType, so you can see exactly which entry failed. Valid entries in the same run still produce video rows."}},{"@type":"Question","name":"Do I need to configure a proxy?","acceptedAnswer":{"@type":"Answer","text":"No. The actor starts with a direct connection and retries through a fresh session and an anonymous browser session. If you provide a proxy, it is used only after those stages; without one, a persistent block ends in a typed error record."}},{"@type":"Question","name":"Is this actor affiliated with Bilibili?","acceptedAnswer":{"@type":"Answer","text":"No. It is an independent third-party tool and is not affiliated with, endorsed by, or sponsored by Bilibili or its operators."}}],"isPartOf":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/bilibili-video-search-ranking-and-metadata-scraper/#webpage"}}]}</script><script src="/apify-actor-examples/assets/site.js?v=7b7086957d37" defer></script></head><body class="theme-studio"><a href="#main" class="skip-link">Skip to content</a><header class="masthead"><div class="inner"><a href="/apify-actor-examples/" class="brand"><img src="/apify-actor-examples/assets/mark.svg?v=2d20f9dc334a" alt="" width="32" height="32"><span>Nimbryxo Studio</span></a><form class="site-search" action="/apify-actor-examples/actors/" role="search" data-search-index="/apify-actor-examples/search.json"><label class="sr-only" for="site-search">Search this site</label><input type="search" role="combobox" id="site-search" name="q" placeholder="Search by site or data" autocomplete="off" aria-autocomplete="list" aria-controls="site-search-results" aria-expanded="false"><ul id="site-search-results" class="search-results" role="listbox" hidden></ul></form><nav class="primary" aria-label="Main"><a href="/apify-actor-examples/actors/" aria-current="page">Actors</a><a href="/apify-actor-examples/sites/">Sites</a><a href="/apify-actor-examples/topics/">Topics</a><a href="/apify-actor-examples/guides/">Guides</a></nav></div></header><main id="main"><nav class="breadcrumb" aria-label="Breadcrumb"><ol><li><a href="/apify-actor-examples/">Home</a></li><li><a href="/apify-actor-examples/topics/">Topics</a></li><li><a href="/apify-actor-examples/topics/social-media/">Social Media</a></li><li aria-current="page">Bilibili Video Search, Ranking &amp; Metadata Scraper</li></ol></nav><div class="doc"><div class="doc-head"><h1>Bilibili Video Search, Ranking &amp; Metadata Scraper</h1><p class="lead">Search Bilibili videos by keyword, look up specific videos by URL or ID, or pull the popular feed and partition ranking charts, with view, like and danmaku counts.</p><dl class="facts"><div><dt>Updated</dt><dd><time datetime="2026-10-24">24 October 2026</time></dd></div><div><dt>Free plan</dt><dd>$0.99 per 1,000 results</dd></div><div><dt>Business plan</dt><dd>$0.49 per 1,000 results</dd></div><div><dt>Input</dt><dd>13 fields, 1 required</dd></div><div><dt>Output</dt><dd>6 declared fields</dd></div><div><dt>Site</dt><dd><a href="/apify-actor-examples/actors/bilibili-video-search-ranking-and-metadata-scraper/">Bilibili</a></dd></div></dl><div class="cta"><a class="button" href="https://apify.com/nimbryxo-studio/bilibili-video-search-ranking-and-metadata-scraper">Open in Apify Store</a><a class="button secondary" href="#run">Copy the API call</a></div></div><div class="doc-body"><nav class="toc" aria-label="On this page"><h2 class="toc-title">On this page</h2><ol><li><a href="#summary">In short</a></li><li><a href="#about">What it does</a></li><li><a href="#output">What you get</a></li><li><a href="#run">Run it</a></li><li><a href="#cost">What it costs</a></li><li><a href="#input">Input reference</a></li><li><a href="#faq">Questions</a></li><li><a href="#related">Related Actors</a></li></ol></nav><article class="prose"><p class="summary" id="summary">Bilibili Video Search, Ranking &amp; Metadata Scraper is an Apify Actor published by Nimbryxo Studio. It accepts 13 input fields, and <code>mode</code> is required. Each result can carry up to 6 declared fields, including <code>title</code>, <code>author</code>, <code>viewCount</code>, <code>likeCount</code>, <code>publishTime</code> and <code>videoUrl</code>. It costs $0.99 per 1,000 results on Apify's Free plan and $0.49 on the Business plan.</p><section id="about"><h2>What it does</h2><!--readme--><p>Collect public video metadata from Bilibili without an account. Search a keyword with Bilibili's own sort and filter options, resolve video links or IDs, walk the popular feed, or pull all-time, origin, rookie, and weekly ranking charts. Each row carries the identifiers, uploader, engagement counters, duration, publish time, cover, and optional detail fields such as tags, coin/share counts, parts, resolution, and uploader followers.</p>
+<!--/readme--><h3 id="readme-what-this-actor-does">What this actor does</h3><!--readme--><ul>
 <li><strong>Four modes:</strong> <code>search</code>, <code>byVideoUrl</code>, <code>popular</code>, and <code>ranking</code> (weekly charts are a ranking type).</li>
 <li><strong>Search filters:</strong> sort by relevance, views, newest, danmaku, favorites, or comments; publication date range; duration bucket; and partition.</li>
 <li><strong>Ranking coverage:</strong> 15 partitions across all-time, originals-only, rookie, and the weekly series (one issue per run, or a specific issue number).</li>
@@ -245,8 +8,15 @@
 <li><strong>Stable field names:</strong> every mode uses the same names, and a field is omitted only when Bilibili has no real value for that video, never replaced with a placeholder.</li>
 <li><strong>Empty fields are omitted:</strong> missing values are left out instead of being returned as <code>null</code>.</li>
 </ul>
-<h2 id="readme-output-per-video">Output per video</h2>
-<ul>
+<!--/readme--><h3 id="readme-use-cases">Use cases</h3><!--readme--><ul>
+<li><strong>Creator and niche research</strong> — search Chinese and English keywords with date and duration filters to see who is active in a topic.</li>
+<li><strong>Trend tracking</strong> — schedule daily pulls of a partition's all-time, origin, rookie, or weekly chart and compare rank movement.</li>
+<li><strong>Content benchmarking</strong> — compare views, likes, coins, favorites, and comments across videos and partitions.</li>
+<li><strong>Dataset building</strong> — export stable video metadata for recommendation models, topic analysis, or media monitoring.</li>
+<li><strong>Catalog resolution</strong> — turn a list of saved links or BV IDs into complete metadata with one run.</li>
+<li><strong>Engagement analysis</strong> — use the derived engagement rate and coin-to-like ratio to screen videos for authentic interaction.</li>
+</ul>
+<!--/readme--></section><section id="output"><h2>What you get</h2><p>The Actor saves one record per result to an Apify dataset. Its build declares 6 fields in 1 dataset view, and the README documents 35 more. Fields without a value can be left out of a record.</p><div class="table-wrap"><table class="output-table stack"><caption>Output fields</caption><thead><tr><th scope="col">Field</th><th scope="col">Label</th><th scope="col">What it holds</th></tr></thead><tbody><tr><th scope="row"><code>title</code></th><td data-label="Label"></td><td data-label="What it holds"><!--readme-->video title, with search highlighting and HTML entities cleaned.<!--/readme--></td></tr><tr><th scope="row"><code>author</code></th><td data-label="Label"></td><td data-label="What it holds"><!--readme-->uploader display name.<!--/readme--></td></tr><tr><th scope="row"><code>viewCount</code></th><td data-label="Label"></td><td data-label="What it holds"><!--readme-->total views.<!--/readme--></td></tr><tr><th scope="row"><code>likeCount</code></th><td data-label="Label"></td><td data-label="What it holds"><!--readme-->likes.<!--/readme--></td></tr><tr><th scope="row"><code>publishTime</code></th><td data-label="Label"></td><td data-label="What it holds"><!--readme-->publish time in UTC ISO format.<!--/readme--></td></tr><tr><th scope="row"><code>videoUrl</code></th><td data-label="Label"></td><td data-label="What it holds"><!--readme-->canonical Bilibili video page.<!--/readme--></td></tr><tr><th scope="row"><code>recordType</code></th><td data-label="Label"></td><td data-label="What it holds"><!--readme--><code>&quot;video&quot;</code> for normal rows, <code>&quot;error&quot;</code> for error rows.<!--/readme--></td></tr><tr><th scope="row"><code>bvid</code></th><td data-label="Label"></td><td data-label="What it holds"><!--readme-->BV-format video ID.<!--/readme--></td></tr><tr><th scope="row"><code>aid</code></th><td data-label="Label"></td><td data-label="What it holds"><!--readme-->numeric AV video ID.<!--/readme--></td></tr><tr><th scope="row"><code>cid</code></th><td data-label="Label"></td><td data-label="What it holds"><!--readme-->main part content ID (detail, popular, ranking, weekly, and enriched rows).<!--/readme--></td></tr><tr><th scope="row"><code>description</code></th><td data-label="Label"></td><td data-label="What it holds"><!--readme-->video description.<!--/readme--></td></tr><tr><th scope="row"><code>tags</code></th><td data-label="Label"></td><td data-label="What it holds"><!--readme-->video tags (search rows and enriched rows).<!--/readme--></td></tr><tr><th scope="row"><code>typeName</code></th><td data-label="Label"></td><td data-label="What it holds"><!--readme-->partition or category label.<!--/readme--></td></tr><tr><th scope="row"><code>partitionId</code></th><td data-label="Label"></td><td data-label="What it holds"><!--readme-->Bilibili category ID for the video (often a subcategory of the selected partition).<!--/readme--></td></tr><tr><th scope="row"><code>authorMid</code></th><td data-label="Label"></td><td data-label="What it holds"><!--readme-->uploader numeric member ID.<!--/readme--></td></tr><tr><th scope="row"><code>authorAvatar</code></th><td data-label="Label"></td><td data-label="What it holds"><!--readme-->uploader avatar URL.<!--/readme--></td></tr><tr><th scope="row"><code>authorFollowers</code></th><td data-label="Label"></td><td data-label="What it holds"><!--readme-->uploader follower count (enriched rows).<!--/readme--></td></tr><tr><th scope="row"><code>coinCount</code></th><td data-label="Label"></td><td data-label="What it holds"><!--readme-->coins (enriched, popular, ranking, and weekly rows; absent on raw search rows).<!--/readme--></td></tr><tr><th scope="row"><code>favorites</code></th><td data-label="Label"></td><td data-label="What it holds"><!--readme-->favorites/collections.<!--/readme--></td></tr><tr><th scope="row"><code>shareCount</code></th><td data-label="Label"></td><td data-label="What it holds"><!--readme-->shares (enriched, popular, ranking, and weekly rows; absent on raw search rows).<!--/readme--></td></tr><tr><th scope="row"><code>danmaku</code></th><td data-label="Label"></td><td data-label="What it holds"><!--readme-->aggregate danmaku count.<!--/readme--></td></tr><tr><th scope="row"><code>replyCount</code></th><td data-label="Label"></td><td data-label="What it holds"><!--readme-->comment count.<!--/readme--></td></tr><tr><th scope="row"><code>duration</code></th><td data-label="Label"></td><td data-label="What it holds"><!--readme-->length in seconds.<!--/readme--></td></tr><tr><th scope="row"><code>durationText</code></th><td data-label="Label"></td><td data-label="What it holds"><!--readme-->length formatted as <code>H:MM:SS</code> or <code>M:SS</code>.<!--/readme--></td></tr><tr><th scope="row"><code>publishDate</code></th><td data-label="Label"></td><td data-label="What it holds"><!--readme-->publish date in <code>YYYY-MM-DD</code> (UTC).<!--/readme--></td></tr><tr><th scope="row"><code>coverUrl</code></th><td data-label="Label"></td><td data-label="What it holds"><!--readme-->cover image URL.<!--/readme--></td></tr><tr><th scope="row"><code>pageCount</code></th><td data-label="Label"></td><td data-label="What it holds"><!--readme-->number of parts in a multi-part upload.<!--/readme--></td></tr><tr><th scope="row"><code>pages</code></th><td data-label="Label"></td><td data-label="What it holds"><!--readme-->per-part objects with <code>page</code>, <code>cid</code>, <code>title</code>, <code>duration</code>, <code>width</code>, and <code>height</code> (enriched rows).<!--/readme--></td></tr><tr><th scope="row"><code>resolution</code></th><td data-label="Label"></td><td data-label="What it holds"><!--readme-->main part resolution, for example <code>1920x1080</code>.<!--/readme--></td></tr><tr><th scope="row"><code>dynamic</code></th><td data-label="Label"></td><td data-label="What it holds"><!--readme-->the uploader's video dynamic text, when present.<!--/readme--></td></tr><tr><th scope="row"><code>copyright</code></th><td data-label="Label"></td><td data-label="What it holds"><!--readme-->Bilibili copyright flag.<!--/readme--></td></tr><tr><th scope="row"><code>uploadRegion</code></th><td data-label="Label"></td><td data-label="What it holds"><!--readme-->uploader's declared location, when published.<!--/readme--></td></tr><tr><th scope="row"><code>rankIndex</code></th><td data-label="Label"></td><td data-label="What it holds"><!--readme-->1-based chart position (ranking and weekly rows).<!--/readme--></td></tr><tr><th scope="row"><code>recReason</code></th><td data-label="Label"></td><td data-label="What it holds"><!--readme-->recommendation reason shown by Bilibili (popular and weekly rows, when present).<!--/readme--></td></tr><tr><th scope="row"><code>engagementRate</code></th><td data-label="Label"></td><td data-label="What it holds"><!--readme--><code>(likes + coins + favorites + shares + replies) / views</code>, rounded to four decimals. Raw search rows have no coin/share counters, so their rate uses the counters Bilibili returns there.<!--/readme--></td></tr><tr><th scope="row"><code>coinLikeRatio</code></th><td data-label="Label"></td><td data-label="What it holds"><!--readme--><code>coins / likes</code>, rounded to four decimals, when likes are non-zero. Absent on raw search rows because Bilibili does not return coins in search results.<!--/readme--></td></tr><tr><th scope="row"><code>sourceUrl</code></th><td data-label="Label"></td><td data-label="What it holds"><!--readme-->the search page, chart, or video page the row came from.<!--/readme--></td></tr><tr><th scope="row"><code>sourceQuery</code></th><td data-label="Label"></td><td data-label="What it holds"><!--readme-->original search keyword (search rows only).<!--/readme--></td></tr><tr><th scope="row"><code>dataSource</code></th><td data-label="Label"></td><td data-label="What it holds"><!--readme--><code>search</code>, <code>video</code>, <code>popular</code>, <code>ranking</code>, or <code>weekly</code>.<!--/readme--></td></tr><tr><th scope="row"><code>enriched</code></th><td data-label="Label"></td><td data-label="What it holds"><!--readme--><code>true</code> when per-video detail data was merged.<!--/readme--></td></tr><tr><th scope="row"><code>scrapedAt</code></th><td data-label="Label"></td><td data-label="What it holds"><!--readme-->UTC timestamp of collection.<!--/readme--></td></tr></tbody></table></div><details class="publisher-notes"><summary>The publisher's output notes</summary><h3 id="readme-output-per-video">Output per video</h3><!--readme--><ul>
 <li><code>recordType</code> — <code>&quot;video&quot;</code> for normal rows, <code>&quot;error&quot;</code> for error rows.</li>
 <li><code>bvid</code> — BV-format video ID.</li>
 <li><code>aid</code> — numeric AV video ID.</li>
@@ -289,10 +59,57 @@
 <li><code>enriched</code> — <code>true</code> when per-video detail data was merged.</li>
 <li><code>scrapedAt</code> — UTC timestamp of collection.</li>
 </ul>
-<h2 id="readme-output-per-error-record">Output per error record</h2>
-<p>Error rows carry <code>recordType: &quot;error&quot;</code>, an <code>errorType</code> (<code>invalid_input</code>, <code>not_found</code>, <code>blocked</code>, <code>rate_limited</code>, <code>upstream_error</code>, <code>parse_error</code>, or <code>empty_response</code>), a <code>message</code>, the <code>sourceUrl</code> that failed, optional <code>statusCode</code> and <code>biliCode</code> values, a <code>retryable</code> flag, and <code>scrapedAt</code>. Error rows never count toward <code>maxItems</code>.</p>
-<h2 id="readme-input">Input</h2>
-<div class="table-wrap"><table>
+<!--/readme--><h3 id="readme-output-per-error-record">Output per error record</h3><!--readme--><p>Error rows carry <code>recordType: &quot;error&quot;</code>, an <code>errorType</code> (<code>invalid_input</code>, <code>not_found</code>, <code>blocked</code>, <code>rate_limited</code>, <code>upstream_error</code>, <code>parse_error</code>, or <code>empty_response</code>), a <code>message</code>, the <code>sourceUrl</code> that failed, optional <code>statusCode</code> and <code>biliCode</code> values, a <code>retryable</code> flag, and <code>scrapedAt</code>. Error rows never count toward <code>maxItems</code>.</p>
+<!--/readme--></details></section><section id="run"><h2>Run it</h2><p>Set <code>APIFY_TOKEN</code> to your <a href="https://console.apify.com/settings/integrations">Apify API token</a>, then run the Actor with the input below (newest short python videos from the knowledge partition). Each run is billed to your Apify account. The <a href="/apify-actor-examples/guides/bilibili-video-search-ranking-and-metadata-scraper/">export tutorial</a> turns the results into a CSV file or an Excel workbook.</p><div class="tabs" data-tabs><div class="tab-list" role="tablist" aria-label="Language"><button type="button" role="tab" id="run-tab-python" aria-controls="run-panel-python" aria-selected="true">Python</button><button type="button" role="tab" id="run-tab-javascript" aria-controls="run-panel-javascript" aria-selected="false" tabindex="-1">JavaScript</button><button type="button" role="tab" id="run-tab-curl" aria-controls="run-panel-curl" aria-selected="false" tabindex="-1">cURL</button><button type="button" role="tab" id="run-tab-mcp" aria-controls="run-panel-mcp" aria-selected="false" tabindex="-1">MCP</button></div><div role="tabpanel" id="run-panel-python" aria-labelledby="run-tab-python" class="tab-panel"><h3 class="tab-title">Python</h3><figure class="code"><pre><code id="run-python" class="language-python"># pip install apify-client
+import os
+from apify_client import ApifyClient
+
+ACTOR = &quot;nimbryxo-studio/bilibili-video-search-ranking-and-metadata-scraper&quot;
+client = ApifyClient(os.environ[&quot;APIFY_TOKEN&quot;])
+run_input = {
+    &quot;mode&quot;: &quot;search&quot;,
+    &quot;searchQueries&quot;: [&quot;python&quot;],
+    &quot;sort&quot;: &quot;pubdate&quot;,
+    &quot;partition&quot;: &quot;36&quot;,
+    &quot;duration&quot;: &quot;short&quot;,
+    &quot;publishedAfter&quot;: &quot;2026-01-01&quot;,
+    &quot;maxItems&quot;: 40,
+}
+
+run = client.actor(ACTOR).call(run_input=run_input)
+for item in client.dataset(run[&quot;defaultDatasetId&quot;]).iterate_items():
+    print(item)
+</code></pre><button type="button" class="copy" data-copy="run-python">Copy</button></figure></div><div role="tabpanel" id="run-panel-javascript" aria-labelledby="run-tab-javascript" class="tab-panel"><h3 class="tab-title">JavaScript</h3><figure class="code"><pre><code id="run-javascript" class="language-javascript">// npm install apify-client
+import { ApifyClient } from &#x27;apify-client&#x27;;
+
+const ACTOR = &#x27;nimbryxo-studio/bilibili-video-search-ranking-and-metadata-scraper&#x27;;
+const client = new ApifyClient({ token: process.env.APIFY_TOKEN });
+const input = {
+  &quot;mode&quot;: &quot;search&quot;,
+  &quot;searchQueries&quot;: [
+    &quot;python&quot;
+  ],
+  &quot;sort&quot;: &quot;pubdate&quot;,
+  &quot;partition&quot;: &quot;36&quot;,
+  &quot;duration&quot;: &quot;short&quot;,
+  &quot;publishedAfter&quot;: &quot;2026-01-01&quot;,
+  &quot;maxItems&quot;: 40
+};
+
+const run = await client.actor(ACTOR).call(input);
+const { items } = await client.dataset(run.defaultDatasetId).listItems();
+console.log(items);
+</code></pre><button type="button" class="copy" data-copy="run-javascript">Copy</button></figure></div><div role="tabpanel" id="run-panel-curl" aria-labelledby="run-tab-curl" class="tab-panel"><h3 class="tab-title">cURL</h3><figure class="code"><pre><code id="run-curl" class="language-bash">curl -X POST &quot;https://api.apify.com/v2/acts/nimbryxo-studio~bilibili-video-search-ranking-and-metadata-scraper/run-sync-get-dataset-items?format=json&quot; \
+  -H &quot;Authorization: Bearer $APIFY_TOKEN&quot; \
+  -H &quot;Content-Type: application/json&quot; \
+  -d &#x27;{&quot;mode&quot;: &quot;search&quot;, &quot;searchQueries&quot;: [&quot;python&quot;], &quot;sort&quot;: &quot;pubdate&quot;, &quot;partition&quot;: &quot;36&quot;, &quot;duration&quot;: &quot;short&quot;, &quot;publishedAfter&quot;: &quot;2026-01-01&quot;, &quot;maxItems&quot;: 40}&#x27;
+</code></pre><button type="button" class="copy" data-copy="run-curl">Copy</button></figure></div><div role="tabpanel" id="run-panel-mcp" aria-labelledby="run-tab-mcp" class="tab-panel"><h3 class="tab-title">MCP</h3><figure class="code"><pre><code id="run-mcp" class="language-json">{
+  &quot;mcpServers&quot;: {
+    &quot;apify&quot;: {
+      &quot;url&quot;: &quot;https://mcp.apify.com?tools=nimbryxo-studio/bilibili-video-search-ranking-and-metadata-scraper&quot;
+    }
+  }
+}</code></pre><button type="button" class="copy" data-copy="run-mcp">Copy</button></figure></div></div></section><section id="cost"><h2>What it costs</h2><p>Bilibili Video Search, Ranking &amp; Metadata Scraper uses pay-per-event pricing: a fee for each result saved to the dataset, plus a start fee per run. Paid Apify plans pay less per result. The start fee is charged once per GB of run memory (at least once); the default run uses 4 GB, so a run starts with 4 start events, as the run totals include. You also pay Apify platform usage (compute and proxy) for the run, which these totals do not include.</p><div class="table-wrap"><table class="price-table stack"><caption>Published prices and run totals by Apify plan</caption><thead><tr><th scope="col">Plan</th><th scope="col">Per result</th><th scope="col">Per 1,000</th><th scope="col">Start fee</th><th scope="col">100 results</th><th scope="col">1,000 results</th><th scope="col">10,000 results</th></tr></thead><tbody><tr><th scope="row">Free plan</th><td data-label="Per result">$0.00099</td><td data-label="Per 1,000">$0.99</td><td data-label="Start fee">$0.10</td><td data-label="100 results">$0.50</td><td data-label="1,000 results">$1.39</td><td data-label="10,000 results">$10.30</td></tr><tr><th scope="row">Starter plan</th><td data-label="Per result">$0.00082</td><td data-label="Per 1,000">$0.82</td><td data-label="Start fee">$0.077</td><td data-label="100 results">$0.39</td><td data-label="1,000 results">$1.13</td><td data-label="10,000 results">$8.51</td></tr><tr><th scope="row">Scale plan</th><td data-label="Per result">$0.00066</td><td data-label="Per 1,000">$0.66</td><td data-label="Start fee">$0.053</td><td data-label="100 results">$0.28</td><td data-label="1,000 results">$0.87</td><td data-label="10,000 results">$6.81</td></tr><tr><th scope="row">Business plan</th><td data-label="Per result">$0.00049</td><td data-label="Per 1,000">$0.49</td><td data-label="Start fee">$0.03</td><td data-label="100 results">$0.17</td><td data-label="1,000 results">$0.61</td><td data-label="10,000 results">$5.02</td></tr></tbody></table></div><p class="fine">Run totals are the Actor's charges at the default memory: start fees plus the per-result price. Check the <a href="https://apify.com/nimbryxo-studio/bilibili-video-search-ranking-and-metadata-scraper">Store page</a> before a large run; prices can change with notice.</p></section><section id="input"><h2>Input reference</h2><p>All 13 fields of the published input schema, in the publisher's order. Required fields are marked. Download the <a href="input-schema.json">input schema</a> as JSON.</p><div class="table-wrap"><table class="input-table stack"><caption>Input fields in the published schema</caption><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Description</th></tr></thead><tbody><tr><th scope="row"><code>mode</code><span class="field-title">Mode</span></th><td data-label="Type">string <span class="req">required</span></td><td data-label="Description"><!--readme-->What to collect.<!--/readme--><span class="field-meta">Default <code>&quot;search&quot;</code>; Allowed search, byVideoUrl, popular, ranking</span></td></tr><tr><th scope="row"><code>searchQueries</code><span class="field-title">Search queries / aliases (mode=search)</span></th><td data-label="Type">array</td><td data-label="Description"><!--readme-->One keyword per entry, e.g. <code>python</code>, <code>原神</code>, <code>Genshin</code>. Provide Chinese and English aliases explicitly; Bilibili does not translate them.<!--/readme--><span class="field-meta">Default <code>[]</code>; Example <code>[&quot;python&quot;]</code></span></td></tr><tr><th scope="row"><code>videoUrls</code><span class="field-title">Video URLs or IDs (mode=byVideoUrl)</span></th><td data-label="Type">array</td><td data-label="Description"><!--readme-->Accepts https://www.bilibili.com/video/BV..., https://b23.tv/... short links, bare BV IDs, av123... IDs, or numeric aids.<!--/readme--><span class="field-meta">Default <code>[]</code></span></td></tr><tr><th scope="row"><code>maxItems</code><span class="field-title">Max videos</span></th><td data-label="Type">integer</td><td data-label="Description"><!--readme-->Hard cap on emitted video records. Error records do not count toward it.<!--/readme--><span class="field-meta">Default <code>20</code>; Example <code>3</code>; Allowed 1 to 1000</span></td></tr><tr><th scope="row"><code>sort</code><span class="field-title">Search sort (mode=search)</span></th><td data-label="Type">string</td><td data-label="Description"><!--readme-->Result ordering. <code>dm</code> is most danmaku and <code>scores</code> is most comments.<!--/readme--><span class="field-meta">Default <code>&quot;totalrank&quot;</code>; Allowed totalrank, click, pubdate, dm, stow, scores</span></td></tr><tr><th scope="row"><code>publishedAfter</code><span class="field-title">Published after (UTC)</span></th><td data-label="Type">string</td><td data-label="Description"><!--readme-->Only videos published on or after this date, <code>YYYY-MM-DD</code> (mode=search). Can be used alone.<!--/readme--></td></tr><tr><th scope="row"><code>publishedBefore</code><span class="field-title">Published before (UTC)</span></th><td data-label="Type">string</td><td data-label="Description"><!--readme-->Only videos published on or before this date, <code>YYYY-MM-DD</code> (mode=search). Can be used alone.<!--/readme--></td></tr><tr><th scope="row"><code>duration</code><span class="field-title">Duration filter (mode=search)</span></th><td data-label="Type">string</td><td data-label="Description"><!--readme-->Keep only videos in this length range.<!--/readme--><span class="field-meta">Default <code>&quot;all&quot;</code>; Allowed all, short, medium, long, verylong</span></td></tr><tr><th scope="row"><code>partition</code><span class="field-title">Partition</span></th><td data-label="Type">string</td><td data-label="Description"><!--readme-->Search partition filter (mode=search) or ranking chart (mode=ranking). Ignored for weekly charts.<!--/readme--><span class="field-meta">Default <code>&quot;0&quot;</code>; Allowed 0, 1, 3, 4, 5, 36, 119, 129 and 7 more</span></td></tr><tr><th scope="row"><code>rankingType</code><span class="field-title">Ranking type (mode=ranking)</span></th><td data-label="Type">string</td><td data-label="Description"><!--readme-->All-time, originals-only, rookie, or the weekly series.<!--/readme--><span class="field-meta">Default <code>&quot;all&quot;</code>; Allowed all, origin, rookie, weekly</span></td></tr><tr><th scope="row"><code>weekNumber</code><span class="field-title">Weekly issue number (mode=ranking)</span></th><td data-label="Type">integer</td><td data-label="Description"><!--readme-->Specific weekly issue. Omit to use the latest issue.<!--/readme--><span class="field-meta">Allowed 1 to 10000</span></td></tr><tr><th scope="row"><code>enrichDetails</code><span class="field-title">Enrich with video details</span></th><td data-label="Type">boolean</td><td data-label="Description"><!--readme-->Add one detail request per unique video in search, popular, and ranking modes to fill tags, coin/share counts, cid, parts, resolution, and uploader followers. Usually adds 3-10 seconds per video, depending on Bilibili latency. byVideoUrl lookups are always enriched.<!--/readme--><span class="field-meta">Default <code>false</code></span></td></tr><tr><th scope="row"><code>proxyConfiguration</code><span class="field-title">Proxy configuration (optional)</span></th><td data-label="Type">object</td><td data-label="Description"><!--readme-->Optional. The actor starts direct and retries through fresh and anonymous browser sessions; this proxy is used only as the final escalation stage.<!--/readme--></td></tr></tbody></table></div><details class="publisher-notes"><summary>The publisher's input notes</summary><h3 id="readme-input">Input</h3><!--readme--><div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Field</th>
@@ -383,7 +200,7 @@
 </tbody>
 </table></div>
 <p>Either date bound can be used alone; the scraper fills in the missing bound because Bilibili applies a publish-date filter only when both bounds are supplied.</p>
-<h3 id="readme-example-newest-short-python-videos-from-the-knowledge-partition">Example: newest short Python videos from the knowledge partition</h3>
+<h4 id="readme-example-newest-short-python-videos-from-the-knowledge-partit">Example: newest short Python videos from the knowledge partition</h4>
 <pre><code class="language-json">{
   &quot;mode&quot;: &quot;search&quot;,
   &quot;searchQueries&quot;: [&quot;python&quot;],
@@ -394,7 +211,7 @@
   &quot;maxItems&quot;: 40
 }
 </code></pre>
-<h3 id="readme-example-enrich-a-batch-of-mixed-video-links">Example: enrich a batch of mixed video links</h3>
+<h4 id="readme-example-enrich-a-batch-of-mixed-video-links">Example: enrich a batch of mixed video links</h4>
 <pre><code class="language-json">{
   &quot;mode&quot;: &quot;byVideoUrl&quot;,
   &quot;videoUrls&quot;: [
@@ -405,14 +222,14 @@
   ]
 }
 </code></pre>
-<h3 id="readme-example-top-popular-videos-with-full-detail">Example: top popular videos with full detail</h3>
+<h4 id="readme-example-top-popular-videos-with-full-detail">Example: top popular videos with full detail</h4>
 <pre><code class="language-json">{
   &quot;mode&quot;: &quot;popular&quot;,
   &quot;maxItems&quot;: 100,
   &quot;enrichDetails&quot;: true
 }
 </code></pre>
-<h3 id="readme-example-latest-weekly-chart-in-the-food-partition">Example: latest weekly chart in the food partition</h3>
+<h4 id="readme-example-latest-weekly-chart-in-the-food-partition">Example: latest weekly chart in the food partition</h4>
 <pre><code class="language-json">{
   &quot;mode&quot;: &quot;ranking&quot;,
   &quot;rankingType&quot;: &quot;weekly&quot;,
@@ -420,38 +237,16 @@
   &quot;maxItems&quot;: 50
 }
 </code></pre>
-<h2 id="readme-use-cases">Use cases</h2>
-<ul>
-<li><strong>Creator and niche research</strong> — search Chinese and English keywords with date and duration filters to see who is active in a topic.</li>
-<li><strong>Trend tracking</strong> — schedule daily pulls of a partition's all-time, origin, rookie, or weekly chart and compare rank movement.</li>
-<li><strong>Content benchmarking</strong> — compare views, likes, coins, favorites, and comments across videos and partitions.</li>
-<li><strong>Dataset building</strong> — export stable video metadata for recommendation models, topic analysis, or media monitoring.</li>
-<li><strong>Catalog resolution</strong> — turn a list of saved links or BV IDs into complete metadata with one run.</li>
-<li><strong>Engagement analysis</strong> — use the derived engagement rate and coin-to-like ratio to screen videos for authentic interaction.</li>
-</ul>
-<h2 id="readme-faq">FAQ</h2>
-<h3 id="readme-do-i-need-a-bilibili-account-or-cookies">Do I need a Bilibili account or cookies?</h3>
-<p>No. Search, video lookups, the popular feed, and every ranking chart are read from public pages without a login.</p>
-<h3 id="readme-does-this-actor-collect-comments-danmaku-text-subtitles-creator-video-lists-or-video-files">Does this actor collect comments, danmaku text, subtitles, creator video lists, or video files?</h3>
-<p>No. The actor returns public video metadata and aggregate counters only. Comment text, individual danmaku messages, subtitles, creator video lists, and media downloads are outside its scope. Uploader details and follower counts come from the videos themselves.</p>
-<h3 id="readme-why-are-coincount-and-sharecount-missing-on-some-search-rows">Why are <code>coinCount</code> and <code>shareCount</code> missing on some search rows?</h3>
-<p>Bilibili's search results do not include coin or share counts. Set <code>enrichDetails</code> to <code>true</code> (or use <code>byVideoUrl</code>) to fill them from the video detail data.</p>
-<h3 id="readme-how-much-slower-is-detail-enrichment">How much slower is detail enrichment?</h3>
-<p>Each enriched video usually adds 3-10 seconds, depending on Bilibili latency. A 1,000-row search with enrichment can take an hour or more; the default run is intentionally small.</p>
-<h3 id="readme-why-do-i-get-fewer-videos-than-maxitems">Why do I get fewer videos than <code>maxItems</code>?</h3>
-<p>Search returns at most 1,000 rows across 20 pages, the popular feed currently holds about 643 videos, a ranking chart has roughly 87-100 entries, and a weekly issue has about 48-49. Filters applied after collection can reduce the count further.</p>
-<h3 id="readme-what-do-dm-and-scores-mean-in-the-sort-list">What do <code>dm</code> and <code>scores</code> mean in the sort list?</h3>
-<p><code>dm</code> sorts by danmaku count and <code>scores</code> sorts by comment count. Older actors labelled <code>scores</code> as a rating; that is not what Bilibili returns.</p>
-<h3 id="readme-are-course-ads-included-in-search-results">Are course ads included in search results?</h3>
-<p>No. Search pages can contain course-promotion rows without a video ID; those are skipped, so a page of 50 results can yield fewer than 50 videos.</p>
-<h3 id="readme-what-timezone-are-the-date-filters-in">What timezone are the date filters in?</h3>
-<p>Both <code>publishedAfter</code> and <code>publishedBefore</code> are interpreted in UTC, and <code>publishTime</code> is emitted in UTC ISO format.</p>
-<h3 id="readme-can-i-fetch-a-specific-weekly-issue">Can I fetch a specific weekly issue?</h3>
-<p>Yes. Set <code>rankingType</code> to <code>weekly</code> and pass the issue number in <code>weekNumber</code>. Leave <code>weekNumber</code> empty to get the latest issue.</p>
-<h3 id="readme-what-happens-with-an-invalid-link-or-id">What happens with an invalid link or ID?</h3>
-<p>That input produces an error row with <code>recordType: &quot;error&quot;</code> and an <code>errorType</code>, so you can see exactly which entry failed. Valid entries in the same run still produce video rows.</p>
-<h3 id="readme-do-i-need-to-configure-a-proxy">Do I need to configure a proxy?</h3>
-<p>No. The actor starts with a direct connection and retries through a fresh session and an anonymous browser session. If you provide a proxy, it is used only after those stages; without one, a persistent block ends in a typed error record.</p>
-<h3 id="readme-is-this-actor-affiliated-with-bilibili">Is this actor affiliated with Bilibili?</h3>
-<p>No. It is an independent third-party tool and is not affiliated with, endorsed by, or sponsored by Bilibili or its operators.</p>
-</details></section><section id="python-quickstart"><h2>Python quickstart</h2><p>Use a schema-derived input and the Python standard library to start a run. An Apify account and token are required for execution.</p><p><a href="/apify-actor-examples/guides/bilibili-video-search-ranking-and-metadata-scraper/">Open the step-by-step Python guide →</a></p></section><p class="source-note">Source build <code>ZsdGtcAjKAaeE8fhO</code>. Documentation is regenerated from the default published build; private drafts are not included.</p></article></div></main><footer class="footer"><strong>Nimbryxo Studio</strong><div class="footer-links"><a href="/apify-actor-examples/topics/">Topics</a><a href="/apify-actor-examples/sources/">Documentation sources</a><a href="https://apify.com/nimbryxo-studio">Apify</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></div></footer></body></html>
+<!--/readme--></details></section><section id="faq"><h2>Questions</h2><div class="qa"><h3 id="faq-do-i-need-a-bilibili-account-or-cookies"><!--readme-->Do I need a Bilibili account or cookies?<!--/readme--></h3><!--readme--><p>No. Search, video lookups, the popular feed, and every ranking chart are read from public pages without a login.</p>
+<!--/readme--></div><div class="qa"><h3 id="faq-does-this-actor-collect-comments-danmaku-text-subtitles-crea"><!--readme-->Does this actor collect comments, danmaku text, subtitles, creator video lists, or video files?<!--/readme--></h3><!--readme--><p>No. The actor returns public video metadata and aggregate counters only. Comment text, individual danmaku messages, subtitles, creator video lists, and media downloads are outside its scope. Uploader details and follower counts come from the videos themselves.</p>
+<!--/readme--></div><div class="qa"><h3 id="faq-why-are-coincount-and-sharecount-missing-on-some-search-rows"><!--readme-->Why are coinCount and shareCount missing on some search rows?<!--/readme--></h3><!--readme--><p>Bilibili's search results do not include coin or share counts. Set <code>enrichDetails</code> to <code>true</code> (or use <code>byVideoUrl</code>) to fill them from the video detail data.</p>
+<!--/readme--></div><div class="qa"><h3 id="faq-how-much-slower-is-detail-enrichment"><!--readme-->How much slower is detail enrichment?<!--/readme--></h3><!--readme--><p>Each enriched video usually adds 3-10 seconds, depending on Bilibili latency. A 1,000-row search with enrichment can take an hour or more; the default run is intentionally small.</p>
+<!--/readme--></div><div class="qa"><h3 id="faq-why-do-i-get-fewer-videos-than-maxitems"><!--readme-->Why do I get fewer videos than maxItems?<!--/readme--></h3><!--readme--><p>Search returns at most 1,000 rows across 20 pages, the popular feed currently holds about 643 videos, a ranking chart has roughly 87-100 entries, and a weekly issue has about 48-49. Filters applied after collection can reduce the count further.</p>
+<!--/readme--></div><div class="qa"><h3 id="faq-what-do-dm-and-scores-mean-in-the-sort-list"><!--readme-->What do dm and scores mean in the sort list?<!--/readme--></h3><!--readme--><p><code>dm</code> sorts by danmaku count and <code>scores</code> sorts by comment count. Older actors labelled <code>scores</code> as a rating; that is not what Bilibili returns.</p>
+<!--/readme--></div><div class="qa"><h3 id="faq-are-course-ads-included-in-search-results"><!--readme-->Are course ads included in search results?<!--/readme--></h3><!--readme--><p>No. Search pages can contain course-promotion rows without a video ID; those are skipped, so a page of 50 results can yield fewer than 50 videos.</p>
+<!--/readme--></div><div class="qa"><h3 id="faq-what-timezone-are-the-date-filters-in"><!--readme-->What timezone are the date filters in?<!--/readme--></h3><!--readme--><p>Both <code>publishedAfter</code> and <code>publishedBefore</code> are interpreted in UTC, and <code>publishTime</code> is emitted in UTC ISO format.</p>
+<!--/readme--></div><div class="qa"><h3 id="faq-can-i-fetch-a-specific-weekly-issue"><!--readme-->Can I fetch a specific weekly issue?<!--/readme--></h3><!--readme--><p>Yes. Set <code>rankingType</code> to <code>weekly</code> and pass the issue number in <code>weekNumber</code>. Leave <code>weekNumber</code> empty to get the latest issue.</p>
+<!--/readme--></div><div class="qa"><h3 id="faq-what-happens-with-an-invalid-link-or-id"><!--readme-->What happens with an invalid link or ID?<!--/readme--></h3><!--readme--><p>That input produces an error row with <code>recordType: &quot;error&quot;</code> and an <code>errorType</code>, so you can see exactly which entry failed. Valid entries in the same run still produce video rows.</p>
+<!--/readme--></div><div class="qa"><h3 id="faq-do-i-need-to-configure-a-proxy"><!--readme-->Do I need to configure a proxy?<!--/readme--></h3><!--readme--><p>No. The actor starts with a direct connection and retries through a fresh session and an anonymous browser session. If you provide a proxy, it is used only after those stages; without one, a persistent block ends in a typed error record.</p>
+<!--/readme--></div><div class="qa"><h3 id="faq-is-this-actor-affiliated-with-bilibili"><!--readme-->Is this actor affiliated with Bilibili?<!--/readme--></h3><!--readme--><p>No. It is an independent third-party tool and is not affiliated with, endorsed by, or sponsored by Bilibili or its operators.</p>
+<!--/readme--></div></section><section id="related"><h2>Related Actors</h2><ul class="related" role="list"><li><a href="/apify-actor-examples/actors/amazon-creator-storefront-and-idea-list-scraper/">Amazon Creator Storefront &amp; Idea List Scraper</a><p>Pull Amazon creator storefronts by handle: profile info and affiliate disclosure, every curated Idea List with its products and prices, and shoppable creator videos with tagged products.</p></li><li><a href="/apify-actor-examples/actors/bluesky-posts-profiles-feeds-and-threads-scraper/">Bluesky Posts, Profiles, Feeds &amp; Threads Scraper</a><p>Search Bluesky posts by keyword, hashtag, author, mention, domain or URL; read profiles, threads, lists, starter packs, feeds and followers; export likes, reposts, follows, quotes and relationships.</p></li><li><a href="/apify-actor-examples/actors/facebook-ad-library-byline-and-advertiser-ad/">Facebook Ad Library Byline &amp; Advertiser Ad Finder</a><p>Pull Facebook Ad Library ads by advertiser Page ID, keyword, Ad ID, or &quot;Paid for by&quot; byline, with ad text, media, run dates, creative-reuse counts, and spend or impression ranges for political ads.</p></li><li><a href="/apify-actor-examples/actors/facebook-business-page-finder-by-keyword-and-city/">Facebook Business Page Finder by Keyword &amp; City</a><p>Find Facebook business pages by direct URL, or discover them by keyword and city, and get names, categories, addresses, follower counts, contact details, business hours, ratings, and reviews. A Facebook login cookie is recommended for full coverage.</p></li><li><a href="/apify-actor-examples/actors/facebook-business-page-recommendation-and-review/">Facebook Business Page Recommendation &amp; Review Scraper</a><p>Get Facebook business page reviews by direct URL, business name search, or Page ID, with Recommended/Not Recommended status, owner replies, and filters for date, keyword, and recommendation status.</p></li><li><a href="/apify-actor-examples/actors/facebook-marketplace-listing-and-price-extractor/">Facebook Marketplace Listing &amp; Price Extractor</a><p>Extract public Facebook Marketplace listings by city feed, category, keyword search, or direct item URL, with price, location, photos, delivery method, seller, and listing status per item.</p></li></ul><p class="more"><a href="/apify-actor-examples/topics/social-media/">All social media Actors</a></p></section><section id="files"><h2>Source files</h2><p>This page is rebuilt from the default published build <code>ZsdGtcAjKAaeE8fhO</code>. Download what it was built from: <a href="README.md">README</a>, <a href="input-schema.json">input schema</a>, <a href="output-schema.json">output schema</a>, <a href="dataset-schema.json">dataset schema</a>, <a href="key-value-schema.json">key-value store schema</a>.</p></section></article></div></div></main><footer class="footer"><div class="inner"><p><strong>Nimbryxo Studio</strong> publishes these Actors on Apify. Pages are rebuilt from each Actor&#x27;s published README, schemas and Store pricing.</p><nav aria-label="Footer"><a href="/apify-actor-examples/actors/">All Actors</a><a href="/apify-actor-examples/sites/">Sites</a><a href="/apify-actor-examples/topics/">Topics</a><a href="/apify-actor-examples/guides/">Guides</a><a href="/apify-actor-examples/sources/">How these pages are made</a><a href="https://apify.com/nimbryxo-studio">Nimbryxo Studio on Apify</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></nav></div></footer></body></html>

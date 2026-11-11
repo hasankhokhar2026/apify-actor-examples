@@ -1,39 +1,180 @@
 "use strict";
 (() => {
+  document.documentElement.classList.add("js");
+  document.body.classList.add("js");
+
+  // Catalog filter: static rows, filtered in place (the list works without JavaScript).
   const search = document.querySelector("#actor-search");
   const category = document.querySelector("#category-filter");
   const rows = Array.from(document.querySelectorAll("[data-actor-row]"));
   const count = document.querySelector("#result-count");
   const empty = document.querySelector("#empty-results");
-  const homeLimit = Number(document.querySelector("[data-home-limit]")?.dataset.homeLimit || 0);
   const params = new URLSearchParams(location.search);
   if (search && params.has("q")) search.value = params.get("q");
   if (category && params.has("category")) category.value = params.get("category");
+  const words = (text) => text.toLowerCase().split(/\s+/).filter(Boolean);
   function filter() {
-    const term = (search?.value || "").trim().toLowerCase();
+    const terms = words(search?.value || "");
     const selected = category?.value || "";
     let visible = 0;
     for (const row of rows) {
-      const matches = (!term || row.dataset.search.includes(term)) && (!selected || row.dataset.categories.split("|").includes(selected)) && (!homeLimit || term || selected || visible < homeLimit);
+      const hay = row.dataset.search || "";
+      const matches = terms.every((t) => hay.includes(t)) && (!selected || (row.dataset.categories || "").split("|").includes(selected));
       row.hidden = !matches;
       if (matches) visible++;
     }
-    if (count) count.textContent = homeLimit && !term && !selected ? `Showing ${visible} of ${rows.length} Actors` : `${visible} ${visible === 1 ? "Actor" : "Actors"}`;
+    if (count) count.textContent = `${visible} ${visible === 1 ? "Actor" : "Actors"}`;
     if (empty) empty.hidden = visible !== 0;
   }
-  search?.addEventListener("input", filter);
-  category?.addEventListener("change", filter);
-  if (search || category) filter();
-  for (const button of document.querySelectorAll("[data-copy]")) {
-    button.addEventListener("click", async () => {
-      const target = document.getElementById(button.dataset.copy);
-      if (!target) return;
+  if (search && rows.length) {
+    search.addEventListener("input", filter);
+    category?.addEventListener("change", filter);
+    filter();
+  }
+
+  // Search suggestions from search.json, loaded on first use.
+  let index = null;
+  async function load(url) {
+    if (!index) {
       try {
-        await navigator.clipboard.writeText(target.textContent);
-        button.textContent = "Copied";
+        const response = await fetch(url);
+        index = response.ok ? await response.json() : [];
       } catch {
-        button.textContent = "Select and copy the code below";
+        index = [];
+      }
+    }
+    return index;
+  }
+  function rank(entry, terms) {
+    const title = entry.t.toLowerCase();
+    const site = (entry.s || "").toLowerCase();
+    const hay = `${title} ${site} ${entry.d.toLowerCase()} ${entry.c.toLowerCase()}`;
+    if (!terms.every((t) => hay.includes(t))) return -1;
+    let score = 0;
+    for (const t of terms) {
+      if (site.startsWith(t)) score += 4;
+      if (title.includes(t)) score += 2;
+    }
+    return score;
+  }
+  for (const form of document.querySelectorAll("[data-search-index]")) {
+    const input = form.querySelector("input[type=search]");
+    const list = form.querySelector(".search-results");
+    if (!input || !list) continue;
+    let active = -1;
+    const close = () => {
+      list.hidden = true;
+      input.setAttribute("aria-expanded", "false");
+      input.removeAttribute("aria-activedescendant");
+      active = -1;
+    };
+    const mark = (next) => {
+      const items = list.querySelectorAll("[role=option]");
+      if (!items.length) return;
+      active = (next + items.length) % items.length;
+      items.forEach((item, i) => item.setAttribute("aria-selected", i === active ? "true" : "false"));
+      input.setAttribute("aria-activedescendant", items[active].id);
+      items[active].scrollIntoView({ block: "nearest" });
+    };
+    input.addEventListener("focus", () => load(form.dataset.searchIndex), { once: true });
+    input.addEventListener("input", async () => {
+      const terms = words(input.value);
+      if (!terms.length) return close();
+      const data = await load(form.dataset.searchIndex);
+      const hits = data.map((e) => [rank(e, terms), e]).filter(([s]) => s >= 0).sort((a, b) => b[0] - a[0]).slice(0, 8);
+      list.replaceChildren();
+      if (!hits.length) {
+        const li = document.createElement("li");
+        li.className = "none";
+        li.textContent = "No Actor matches. Press Enter to search the full catalog.";
+        list.append(li);
+      }
+      hits.forEach(([, entry], i) => {
+        const li = document.createElement("li");
+        li.setAttribute("role", "option");
+        li.id = `${list.id}-${i}`;
+        const a = document.createElement("a");
+        a.href = entry.u;
+        a.textContent = entry.t;
+        const span = document.createElement("span");
+        span.textContent = entry.d;
+        a.append(span);
+        li.append(a);
+        list.append(li);
+      });
+      list.hidden = false;
+      input.setAttribute("aria-expanded", "true");
+      active = -1;
+    });
+    input.addEventListener("keydown", (event) => {
+      if (list.hidden) return;
+      if (event.key === "ArrowDown") { event.preventDefault(); mark(active + 1); }
+      else if (event.key === "ArrowUp") { event.preventDefault(); mark(active - 1); }
+      else if (event.key === "Escape") { close(); }
+      else if (event.key === "Enter" && active >= 0) {
+        const link = list.querySelectorAll("[role=option] a")[active];
+        if (link) { event.preventDefault(); location.href = link.href; }
       }
     });
+    document.addEventListener("click", (event) => { if (!form.contains(event.target)) close(); });
   }
+
+  // Tabs (ARIA tabs pattern): every panel is visible without JavaScript.
+  for (const tabs of document.querySelectorAll("[data-tabs]")) {
+    const buttons = Array.from(tabs.querySelectorAll("[role=tab]"));
+    const select = (button, focus) => {
+      for (const b of buttons) {
+        const on = b === button;
+        b.setAttribute("aria-selected", on ? "true" : "false");
+        b.tabIndex = on ? 0 : -1;
+        document.getElementById(b.getAttribute("aria-controls")).hidden = !on;
+      }
+      if (focus) button.focus();
+    };
+    buttons.forEach((button, i) => {
+      button.addEventListener("click", () => select(button, false));
+      button.addEventListener("keydown", (event) => {
+        const step = event.key === "ArrowRight" ? 1 : event.key === "ArrowLeft" ? -1 : 0;
+        if (step) { event.preventDefault(); select(buttons[(i + step + buttons.length) % buttons.length], true); }
+      });
+    });
+    const current = buttons.find((b) => b.getAttribute("aria-selected") === "true") || buttons[0];
+    if (current) select(current, false);
+  }
+
+  // Copy buttons: on generated blocks, and added to every code block from the README.
+  let counter = 0;
+  for (const pre of document.querySelectorAll(".prose pre")) {
+    if (pre.closest(".code")) continue;
+    const code = pre.querySelector("code") || pre;
+    if (!code.id) code.id = `readme-code-${++counter}`;
+    const wrap = document.createElement("div");
+    wrap.className = "code";
+    pre.replaceWith(wrap);
+    wrap.append(pre);
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "copy";
+    button.dataset.copy = code.id;
+    button.textContent = "Copy";
+    wrap.append(button);
+  }
+  document.addEventListener("click", async (event) => {
+    const button = event.target.closest("[data-copy]");
+    if (!button) return;
+    const target = document.getElementById(button.dataset.copy);
+    if (!target) return;
+    try {
+      await navigator.clipboard.writeText(target.textContent);
+      button.textContent = "Copied";
+    } catch {
+      const range = document.createRange();
+      range.selectNodeContents(target);
+      const selection = getSelection();
+      selection.removeAllRanges();
+      selection.addRange(range);
+      button.textContent = "Selected, press Ctrl+C";
+    }
+    setTimeout(() => { button.textContent = "Copy"; }, 2500);
+  });
 })();

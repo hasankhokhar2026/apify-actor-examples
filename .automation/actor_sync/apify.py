@@ -24,6 +24,48 @@ def schema_object(value, name):
     return value
 
 
+TIER_NAMES = ("FREE", "BRONZE", "SILVER", "GOLD", "PLATINUM", "DIAMOND")
+
+
+def price(value):
+    return float(value) if isinstance(value, (int, float)) and not isinstance(value, bool) and 0 <= value < 10000 else None
+
+
+def current_pricing(infos, now=None):
+    """The Store pricing in force now (the latest entry that has started), normalised to the
+    published event titles and per-tier prices. Unknown shapes return None (the page then
+    points to the Store's pricing instead of guessing)."""
+    from datetime import datetime, timezone
+    if not isinstance(infos, list):
+        return None
+    now = now or datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S")
+    started = [i for i in infos if isinstance(i, dict) and str(i.get("startedAt") or "")[:19] <= now]
+    if not started:
+        return None
+    info = max(started, key=lambda i: str(i.get("startedAt") or ""))
+    if info.get("pricingModel") != "PAY_PER_EVENT":
+        return {"model": str(info.get("pricingModel") or "UNKNOWN")[:40]}
+    events = []
+    raw = ((info.get("pricingPerEvent") or {}).get("actorChargeEvents") or {})
+    for key in sorted(raw):
+        event = raw[key]
+        if not isinstance(event, dict) or not re.fullmatch(r"[A-Za-z0-9_-]{1,80}", key):
+            continue
+        tiers = {}
+        for tier, value in (event.get("eventTieredPricingUsd") or {}).items():
+            amount = price((value or {}).get("tieredEventPriceUsd")) if isinstance(value, dict) else None
+            if tier in TIER_NAMES and amount is not None:
+                tiers[tier] = amount
+        flat = price(event.get("eventPriceUsd"))
+        if not tiers and flat is None:
+            continue
+        events.append({"key": key, "title": str(event.get("eventTitle") or key)[:80],
+                       "description": str(event.get("eventDescription") or "")[:300],
+                       "primary": bool(event.get("isPrimaryEvent")), "tiers": tiers, "flat": flat})
+    return {"model": "PAY_PER_EVENT", "events": events,
+            "platform_usage_paid_by_user": bool(info.get("isPPEPlatformUsagePaidByUser"))}
+
+
 class Apify:
     def __init__(self, api=None):
         self.api = api or Api("https://api.apify.com")
@@ -82,9 +124,14 @@ class Apify:
             raise SyncError(f"Actor {actor_id} has invalid storage definitions")
         dataset_schema = schema_object(storages.get("dataset"), "dataset schema")
         key_value_schema = schema_object(storages.get("keyValueStore"), "key-value store schema")
+        memory = (actor.get("defaultRunOptions") or {}).get("memoryMbytes")
+        picture = actor.get("pictureUrl")
         # Explicit allowlist: do not serialize builds, environment variables, versions,
         # deployment settings, source files, or the raw Actor API response.
         return {
+            "pricing": current_pricing(actor.get("pricingInfos")),
+            "memory_mb": memory if isinstance(memory, int) and 128 <= memory <= 65536 else None,
+            "picture_url": picture if isinstance(picture, str) and re.fullmatch(r"https://[A-Za-z0-9.-]+\.amazonaws\.com/[\w./-]+\.(?:png|jpe?g|webp)", picture) else None,
             "id": actor_id,
             "name": actor["name"],
             "username": actor["username"],

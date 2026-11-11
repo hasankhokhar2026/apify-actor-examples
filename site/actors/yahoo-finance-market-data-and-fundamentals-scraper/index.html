@@ -1,817 +1,5 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src &#x27;self&#x27;; script-src &#x27;self&#x27; &#x27;sha256-nsqqR1BzpRIguGispwdJE3eEdGsUQreBPhGqdXuWYrg=&#x27;; style-src &#x27;self&#x27;; img-src &#x27;self&#x27; https: data:; base-uri &#x27;self&#x27;; form-action &#x27;self&#x27;; object-src &#x27;none&#x27;"><title>Yahoo Finance Market Data &amp; Fundamentals Scraper | Nimbryxo Studio</title><meta name="description" content="Pull live quotes, historical OHLCV candles, financial statements, dividends, splits, news, analyst ratings and holder data from Yahoo Finance for any ticker, ETF, index, currency p"><meta name="robots" content="index,follow"><link rel="canonical" href="https://hasankhokhar2026.github.io/apify-actor-examples/actors/yahoo-finance-market-data-and-fundamentals-scraper/"><meta property="og:title" content="Yahoo Finance Market Data &amp; Fundamentals Scraper | Nimbryxo Studio"><meta property="og:description" content="Pull live quotes, historical OHLCV candles, financial statements, dividends, splits, news, analyst ratings and holder data from Yahoo Finance for any ticker, ETF, index, currency p"><meta property="og:type" content="website"><meta property="og:url" content="https://hasankhokhar2026.github.io/apify-actor-examples/actors/yahoo-finance-market-data-and-fundamentals-scraper/"><meta property="og:site_name" content="Nimbryxo Studio"><meta name="twitter:card" content="summary"><link rel="icon" href="/apify-actor-examples/assets/mark.svg?v=2d20f9dc334a" type="image/svg+xml"><link rel="stylesheet" href="/apify-actor-examples/assets/site.css?v=39545fd4a399"><link rel="stylesheet" href="/apify-actor-examples/assets/brand.css?v=eb0f935ade25"><link rel="alternate" type="application/rss+xml" title="Nimbryxo Studio guides" href="/apify-actor-examples/feed.xml"><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization","name":"Nimbryxo Studio","url":"https://hasankhokhar2026.github.io/apify-actor-examples/","sameAs":["https://apify.com/nimbryxo-studio"]},{"@type":"WebSite","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#website","name":"Nimbryxo Studio","url":"https://hasankhokhar2026.github.io/apify-actor-examples/","publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"inLanguage":"en"},{"@type":"WebPage","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/yahoo-finance-market-data-and-fundamentals-scraper/#webpage","name":"Yahoo Finance Market Data & Fundamentals Scraper","description":"Pull live quotes, historical OHLCV candles, financial statements, dividends, splits, news, analyst ratings and holder data from Yahoo Finance for any ticker, ETF, index, currency pair or crypto symbol.","url":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/yahoo-finance-market-data-and-fundamentals-scraper/","isPartOf":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#website"},"publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"inLanguage":"en","mainEntity":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/yahoo-finance-market-data-and-fundamentals-scraper/#article"},"breadcrumb":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/yahoo-finance-market-data-and-fundamentals-scraper/#breadcrumb"}},{"@type":"TechArticle","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/yahoo-finance-market-data-and-fundamentals-scraper/#article","headline":"Yahoo Finance Market Data & Fundamentals Scraper","name":"Yahoo Finance Market Data & Fundamentals Scraper","description":"Pull live quotes, historical OHLCV candles, financial statements, dividends, splits, news, analyst ratings and holder data from Yahoo Finance for any ticker, ETF, index, currency pair or crypto symbol.","url":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/yahoo-finance-market-data-and-fundamentals-scraper/","author":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"mainEntityOfPage":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/yahoo-finance-market-data-and-fundamentals-scraper/#webpage"},"inLanguage":"en","dateModified":"2026-10-29T06:58:17.518Z"},{"@type":"BreadcrumbList","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/yahoo-finance-market-data-and-fundamentals-scraper/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Nimbryxo Studio","item":"https://hasankhokhar2026.github.io/apify-actor-examples/"},{"@type":"ListItem","position":2,"name":"Actors","item":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/"},{"@type":"ListItem","position":3,"name":"Yahoo Finance Market Data & Fundamentals Scraper","item":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/yahoo-finance-market-data-and-fundamentals-scraper/"}]}]}</script><script src="/apify-actor-examples/assets/site.js?v=7cabac48dd31" defer></script></head><body class="theme-studio"><a href="#main" class="skip-link">Skip to content</a><header><div class="inner"><a href="/apify-actor-examples/" class="brand"><img src="/apify-actor-examples/assets/mark.svg?v=2d20f9dc334a" alt="" width="29" height="29">Nimbryxo Studio</a><nav aria-label="Main navigation"><a href="/apify-actor-examples/actors/" aria-current="page">Actors</a><a href="/apify-actor-examples/guides/">Guides</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></nav></div></header><main id="main"><div class="doc-layout"><aside class="contents" aria-label="On this page"><strong>Contents</strong><a href="#overview">Overview</a><a href="#published-readme">Published README</a><a href="#input-schema">Input schema</a><a href="#output-schema">Output schema</a><a href="#dataset-schema">Dataset schema</a><a href="#python-quickstart">Python quickstart</a></aside><article class="prose"><div class="breadcrumb"><a href="/apify-actor-examples/actors/">Actors</a><span>/</span><span>Yahoo Finance Market Data &amp; Fundamentals Scraper</span></div><section id="overview"><h1 class="doc-title">Yahoo Finance Market Data &amp; Fundamentals Scraper</h1><p class="lede">Pull live quotes, historical OHLCV candles, financial statements, dividends, splits, news, analyst ratings and holder data from Yahoo Finance for any ticker, ETF, index, currency pair or crypto symbol.</p><p class="summary">Yahoo Finance Market Data &amp; Fundamentals Scraper is an Apify Actor published by Nimbryxo Studio. It accepts 43 input fields, and <code>mode</code> is required. Its build declares a results dataset with 3 views. Runs happen on Apify, where the Store page lists the current price.</p><div class="actions"><a class="button" href="https://apify.com/nimbryxo-studio/yahoo-finance-market-data-and-fundamentals-scraper">Open on Apify</a><a class="text-link" href="https://github.com/hasankhokhar2026/apify-actor-examples/blob/main/docs/actors/pKSuSrtPEecMXeM4a/README.md">GitHub source</a></div></section><section class="schema-section" id="input-schema"><h2>Input schema</h2><p>Input fields, types, required flags, descriptions, defaults, and prefills come from the published definition. Prefill examples are distinct from defaults.</p><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>mode</code></td><td>string</td><td>required</td><td>What to scrape.</td></tr><tr><td><code>tickers</code></td><td>array</td><td>optional</td><td>Symbols or Yahoo Finance quote URLs (mode=tickers). Examples: `AAPL`, `BRK.B`, `^GSPC`, `EURUSD=X`, `BTC-USD`, `7203.T`, `https://finance.yahoo.com/quote/AAPL/`.</td></tr><tr><td><code>searchQuery</code></td><td>string</td><td>optional</td><td>Company, fund, index, currency or crypto name to search for (mode=search).</td></tr></tbody></table></div><details><summary>Show all input fields</summary><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>mode</code></td><td>string</td><td>required</td><td>What to scrape.</td></tr><tr><td><code>tickers</code></td><td>array</td><td>optional</td><td>Symbols or Yahoo Finance quote URLs (mode=tickers). Examples: `AAPL`, `BRK.B`, `^GSPC`, `EURUSD=X`, `BTC-USD`, `7203.T`, `https://finance.yahoo.com/quote/AAPL/`.</td></tr><tr><td><code>searchQuery</code></td><td>string</td><td>optional</td><td>Company, fund, index, currency or crypto name to search for (mode=search).</td></tr><tr><td><code>maxSearchResults</code></td><td>integer</td><td>optional</td><td>Maximum number of search results to return (mode=search).</td></tr><tr><td><code>screenerId</code></td><td>string</td><td>optional</td><td>Yahoo predefined screener to run (mode=screener). Predefined screeners are US-centric; use mode=customScreener for a region-aware list.</td></tr><tr><td><code>screenerSort</code></td><td>string</td><td>optional</td><td>Sort field for mode=customScreener.</td></tr><tr><td><code>region</code></td><td>string</td><td>optional</td><td>Yahoo market region used for quotes, search, trending, localization and mode=customScreener.</td></tr><tr><td><code>language</code></td><td>string</td><td>optional</td><td>Language used for names, news and localized labels.</td></tr><tr><td><code>range</code></td><td>string</td><td>optional</td><td>History range used when no start/end dates are supplied (mode=tickers).</td></tr><tr><td><code>startDate</code></td><td>string</td><td>optional</td><td>Earliest date for historical bars (`YYYY-MM-DD`). Overrides `range` (mode=tickers).</td></tr><tr><td><code>endDate</code></td><td>string</td><td>optional</td><td>Latest date for historical bars (`YYYY-MM-DD`). Overrides `range` (mode=tickers).</td></tr><tr><td><code>interval</code></td><td>string</td><td>optional</td><td>Candle interval. Intraday intervals have shorter Yahoo range limits; incompatible combinations are clamped and reported in the run status.</td></tr><tr><td><code>includePrePost</code></td><td>boolean</td><td>optional</td><td>Include extended-hours bars for intraday history.</td></tr><tr><td><code>includeHistory</code></td><td>boolean</td><td>optional</td><td>Include historical bars with adjusted close.</td></tr><tr><td><code>includeDividends</code></td><td>boolean</td><td>optional</td><td>Include the full dividend history from Yahoo chart events.</td></tr><tr><td><code>includeSplits</code></td><td>boolean</td><td>optional</td><td>Include stock-split history with numerator and denominator.</td></tr><tr><td><code>includeNews</code></td><td>boolean</td><td>optional</td><td>Include ticker-related news headlines.</td></tr><tr><td><code>maxNews</code></td><td>integer</td><td>optional</td><td>Maximum news items per ticker. Yahoo&#x27;s news graph serves 200+ items through cursor pagination; the actor caps this request at 200.</td></tr><tr><td><code>includeFinancials</code></td><td>boolean</td><td>optional</td><td>Include annual income statement, balance sheet and cash-flow statement.</td></tr><tr><td><code>includeQuarterlyFinancials</code></td><td>boolean</td><td>optional</td><td>Add quarterly statements under `financials.quarterly`. Takes effect only when `includeFinancials` is also on.</td></tr><tr><td><code>includeHolders</code></td><td>boolean</td><td>optional</td><td>Include institutional, mutual-fund, major-holder and insider-holder summaries.</td></tr><tr><td><code>includeInsiders</code></td><td>boolean</td><td>optional</td><td>Include insider transactions, insider holders and net share-purchase activity.</td></tr><tr><td><code>includeOptions</code></td><td>boolean</td><td>optional</td><td>Include option chains for optionable symbols.</td></tr><tr><td><code>optionExpirations</code></td><td>integer</td><td>optional</td><td>How many upcoming option expirations to fetch (mode=tickers, includeOptions=true).</td></tr><tr><td><code>maxOptionContracts</code></td><td>integer</td><td>optional</td><td>Maximum calls and maximum puts per expiration.</td></tr><tr><td><code>optionContractType</code></td><td>string</td><td>optional</td><td>Which option sides to return.</td></tr><tr><td><code>minStrike</code></td><td>number</td><td>optional</td><td>Drop option contracts below this strike.</td></tr><tr><td><code>maxStrike</code></td><td>number</td><td>optional</td><td>Drop option contracts above this strike.</td></tr><tr><td><code>minVolume</code></td><td>integer</td><td>optional</td><td>Drop option contracts below this volume. Contracts with no volume are excluded when this is set.</td></tr><tr><td><code>minOpenInterest</code></td><td>integer</td><td>optional</td><td>Drop option contracts below this open interest. Contracts with no open interest are excluded when this is set.</td></tr><tr><td><code>minImpliedVolatilityPercent</code></td><td>number</td><td>optional</td><td>Drop contracts below this implied volatility in percent, e.g. 25 means 25%.</td></tr><tr><td><code>includeRecommendations</code></td><td>boolean</td><td>optional</td><td>Include the analyst recommendation summary and four-period recommendation trend.</td></tr><tr><td><code>includeUpgradesDowngrades</code></td><td>boolean</td><td>optional</td><td>Include the latest analyst rating changes.</td></tr><tr><td><code>includeAnalystPriceTargets</code></td><td>boolean</td><td>optional</td><td>Include the analyst price-target summary.</td></tr><tr><td><code>includeEarningsHistory</code></td><td>boolean</td><td>optional</td><td>Include recent quarters with EPS actual, estimate, difference and surprise.</td></tr><tr><td><code>includeEarningsEstimates</code></td><td>boolean</td><td>optional</td><td>Include EPS and revenue estimates plus growth estimates.</td></tr><tr><td><code>includeEarningsCalendar</code></td><td>boolean</td><td>optional</td><td>Include upcoming earnings dates, estimates and dividend dates.</td></tr><tr><td><code>includeFundData</code></td><td>boolean</td><td>optional</td><td>Include fund profile, top holdings and performance for ETFs and mutual funds.</td></tr><tr><td><code>includeSecFilings</code></td><td>boolean</td><td>optional</td><td>Include recent SEC filings with EDGAR links and exhibits.</td></tr><tr><td><code>includeInsights</code></td><td>boolean</td><td>optional</td><td>Include technical outlook, research reports and significant developments.</td></tr><tr><td><code>includeRelatedSymbols</code></td><td>boolean</td><td>optional</td><td>Include Yahoo&#x27;s related-symbol recommendations.</td></tr><tr><td><code>maxResults</code></td><td>integer</td><td>optional</td><td>Maximum records for screener, customScreener, trending and marketSummary modes. Search uses maxSearchResults.</td></tr><tr><td><code>concurrency</code></td><td>integer</td><td>optional</td><td>Number of tickers fetched in parallel (mode=tickers).</td></tr></tbody></table></div></details><p><a href="input-schema.json">Download the published input schema</a></p><details><summary>View complete JSON</summary><pre><code>{
-  &quot;description&quot;: &quot;Quote, chart, fundamentals, news, analyst, holder, option, fund, filing, search, screener, trending and market-summary data from Yahoo Finance. No account, API key or proxy setup is required.&quot;,
-  &quot;properties&quot;: {
-    &quot;concurrency&quot;: {
-      &quot;default&quot;: 4,
-      &quot;description&quot;: &quot;Number of tickers fetched in parallel (mode=tickers).&quot;,
-      &quot;maximum&quot;: 16,
-      &quot;minimum&quot;: 1,
-      &quot;prefill&quot;: 1,
-      &quot;title&quot;: &quot;Concurrency&quot;,
-      &quot;type&quot;: &quot;integer&quot;
-    },
-    &quot;endDate&quot;: {
-      &quot;description&quot;: &quot;Latest date for historical bars (`YYYY-MM-DD`). Overrides `range` (mode=tickers).&quot;,
-      &quot;editor&quot;: &quot;textfield&quot;,
-      &quot;title&quot;: &quot;History end date&quot;,
-      &quot;type&quot;: &quot;string&quot;
-    },
-    &quot;includeAnalystPriceTargets&quot;: {
-      &quot;default&quot;: true,
-      &quot;description&quot;: &quot;Include the analyst price-target summary.&quot;,
-      &quot;prefill&quot;: false,
-      &quot;title&quot;: &quot;Include price targets&quot;,
-      &quot;type&quot;: &quot;boolean&quot;
-    },
-    &quot;includeDividends&quot;: {
-      &quot;default&quot;: true,
-      &quot;description&quot;: &quot;Include the full dividend history from Yahoo chart events.&quot;,
-      &quot;prefill&quot;: false,
-      &quot;title&quot;: &quot;Include dividends&quot;,
-      &quot;type&quot;: &quot;boolean&quot;
-    },
-    &quot;includeEarningsCalendar&quot;: {
-      &quot;default&quot;: true,
-      &quot;description&quot;: &quot;Include upcoming earnings dates, estimates and dividend dates.&quot;,
-      &quot;prefill&quot;: false,
-      &quot;title&quot;: &quot;Include earnings calendar&quot;,
-      &quot;type&quot;: &quot;boolean&quot;
-    },
-    &quot;includeEarningsEstimates&quot;: {
-      &quot;default&quot;: false,
-      &quot;description&quot;: &quot;Include EPS and revenue estimates plus growth estimates.&quot;,
-      &quot;prefill&quot;: false,
-      &quot;title&quot;: &quot;Include earnings estimates&quot;,
-      &quot;type&quot;: &quot;boolean&quot;
-    },
-    &quot;includeEarningsHistory&quot;: {
-      &quot;default&quot;: true,
-      &quot;description&quot;: &quot;Include recent quarters with EPS actual, estimate, difference and surprise.&quot;,
-      &quot;prefill&quot;: false,
-      &quot;title&quot;: &quot;Include earnings history&quot;,
-      &quot;type&quot;: &quot;boolean&quot;
-    },
-    &quot;includeFinancials&quot;: {
-      &quot;default&quot;: false,
-      &quot;description&quot;: &quot;Include annual income statement, balance sheet and cash-flow statement.&quot;,
-      &quot;prefill&quot;: false,
-      &quot;title&quot;: &quot;Include annual financials&quot;,
-      &quot;type&quot;: &quot;boolean&quot;
-    },
-    &quot;includeFundData&quot;: {
-      &quot;default&quot;: false,
-      &quot;description&quot;: &quot;Include fund profile, top holdings and performance for ETFs and mutual funds.&quot;,
-      &quot;prefill&quot;: false,
-      &quot;title&quot;: &quot;Include fund data&quot;,
-      &quot;type&quot;: &quot;boolean&quot;
-    },
-    &quot;includeHistory&quot;: {
-      &quot;default&quot;: true,
-      &quot;description&quot;: &quot;Include historical bars with adjusted close.&quot;,
-      &quot;prefill&quot;: false,
-      &quot;title&quot;: &quot;Include OHLCV history&quot;,
-      &quot;type&quot;: &quot;boolean&quot;
-    },
-    &quot;includeHolders&quot;: {
-      &quot;default&quot;: false,
-      &quot;description&quot;: &quot;Include institutional, mutual-fund, major-holder and insider-holder summaries.&quot;,
-      &quot;prefill&quot;: false,
-      &quot;title&quot;: &quot;Include holders&quot;,
-      &quot;type&quot;: &quot;boolean&quot;
-    },
-    &quot;includeInsiders&quot;: {
-      &quot;default&quot;: false,
-      &quot;description&quot;: &quot;Include insider transactions, insider holders and net share-purchase activity.&quot;,
-      &quot;prefill&quot;: false,
-      &quot;title&quot;: &quot;Include insider activity&quot;,
-      &quot;type&quot;: &quot;boolean&quot;
-    },
-    &quot;includeInsights&quot;: {
-      &quot;default&quot;: false,
-      &quot;description&quot;: &quot;Include technical outlook, research reports and significant developments.&quot;,
-      &quot;prefill&quot;: false,
-      &quot;title&quot;: &quot;Include analyst insights&quot;,
-      &quot;type&quot;: &quot;boolean&quot;
-    },
-    &quot;includeNews&quot;: {
-      &quot;default&quot;: true,
-      &quot;description&quot;: &quot;Include ticker-related news headlines.&quot;,
-      &quot;prefill&quot;: false,
-      &quot;title&quot;: &quot;Include news&quot;,
-      &quot;type&quot;: &quot;boolean&quot;
-    },
-    &quot;includeOptions&quot;: {
-      &quot;default&quot;: false,
-      &quot;description&quot;: &quot;Include option chains for optionable symbols.&quot;,
-      &quot;prefill&quot;: false,
-      &quot;title&quot;: &quot;Include options chain&quot;,
-      &quot;type&quot;: &quot;boolean&quot;
-    },
-    &quot;includePrePost&quot;: {
-      &quot;default&quot;: false,
-      &quot;description&quot;: &quot;Include extended-hours bars for intraday history.&quot;,
-      &quot;prefill&quot;: false,
-      &quot;title&quot;: &quot;Include pre/post market bars&quot;,
-      &quot;type&quot;: &quot;boolean&quot;
-    },
-    &quot;includeQuarterlyFinancials&quot;: {
-      &quot;default&quot;: false,
-      &quot;description&quot;: &quot;Add quarterly statements under `financials.quarterly`. Takes effect only when `includeFinancials` is also on.&quot;,
-      &quot;prefill&quot;: false,
-      &quot;title&quot;: &quot;Include quarterly financials&quot;,
-      &quot;type&quot;: &quot;boolean&quot;
-    },
-    &quot;includeRecommendations&quot;: {
-      &quot;default&quot;: true,
-      &quot;description&quot;: &quot;Include the analyst recommendation summary and four-period recommendation trend.&quot;,
-      &quot;prefill&quot;: false,
-      &quot;title&quot;: &quot;Include recommendations&quot;,
-      &quot;type&quot;: &quot;boolean&quot;
-    },
-    &quot;includeRelatedSymbols&quot;: {
-      &quot;default&quot;: false,
-      &quot;description&quot;: &quot;Include Yahoo&#x27;s related-symbol recommendations.&quot;,
-      &quot;prefill&quot;: false,
-      &quot;title&quot;: &quot;Include related symbols&quot;,
-      &quot;type&quot;: &quot;boolean&quot;
-    },
-    &quot;includeSecFilings&quot;: {
-      &quot;default&quot;: false,
-      &quot;description&quot;: &quot;Include recent SEC filings with EDGAR links and exhibits.&quot;,
-      &quot;prefill&quot;: false,
-      &quot;title&quot;: &quot;Include SEC filings&quot;,
-      &quot;type&quot;: &quot;boolean&quot;
-    },
-    &quot;includeSplits&quot;: {
-      &quot;default&quot;: true,
-      &quot;description&quot;: &quot;Include stock-split history with numerator and denominator.&quot;,
-      &quot;prefill&quot;: false,
-      &quot;title&quot;: &quot;Include splits&quot;,
-      &quot;type&quot;: &quot;boolean&quot;
-    },
-    &quot;includeUpgradesDowngrades&quot;: {
-      &quot;default&quot;: false,
-      &quot;description&quot;: &quot;Include the latest analyst rating changes.&quot;,
-      &quot;prefill&quot;: false,
-      &quot;title&quot;: &quot;Include upgrades and downgrades&quot;,
-      &quot;type&quot;: &quot;boolean&quot;
-    },
-    &quot;interval&quot;: {
-      &quot;default&quot;: &quot;1d&quot;,
-      &quot;description&quot;: &quot;Candle interval. Intraday intervals have shorter Yahoo range limits; incompatible combinations are clamped and reported in the run status.&quot;,
-      &quot;editor&quot;: &quot;select&quot;,
-      &quot;enum&quot;: [
-        &quot;1m&quot;,
-        &quot;2m&quot;,
-        &quot;5m&quot;,
-        &quot;15m&quot;,
-        &quot;30m&quot;,
-        &quot;60m&quot;,
-        &quot;90m&quot;,
-        &quot;1h&quot;,
-        &quot;1d&quot;,
-        &quot;5d&quot;,
-        &quot;1wk&quot;,
-        &quot;1mo&quot;,
-        &quot;3mo&quot;
-      ],
-      &quot;enumTitles&quot;: [
-        &quot;1 minute&quot;,
-        &quot;2 minutes&quot;,
-        &quot;5 minutes&quot;,
-        &quot;15 minutes&quot;,
-        &quot;30 minutes&quot;,
-        &quot;60 minutes&quot;,
-        &quot;90 minutes&quot;,
-        &quot;1 hour&quot;,
-        &quot;1 day&quot;,
-        &quot;5 days&quot;,
-        &quot;1 week&quot;,
-        &quot;1 month&quot;,
-        &quot;3 months&quot;
-      ],
-      &quot;prefill&quot;: &quot;1d&quot;,
-      &quot;title&quot;: &quot;Chart interval&quot;,
-      &quot;type&quot;: &quot;string&quot;
-    },
-    &quot;language&quot;: {
-      &quot;default&quot;: &quot;en-US&quot;,
-      &quot;description&quot;: &quot;Language used for names, news and localized labels.&quot;,
-      &quot;editor&quot;: &quot;select&quot;,
-      &quot;enum&quot;: [
-        &quot;en-US&quot;,
-        &quot;en-GB&quot;,
-        &quot;de-DE&quot;,
-        &quot;fr-FR&quot;,
-        &quot;es-ES&quot;,
-        &quot;it-IT&quot;,
-        &quot;nl-NL&quot;,
-        &quot;pt-BR&quot;,
-        &quot;ja-JP&quot;,
-        &quot;zh-Hant-HK&quot;,
-        &quot;zh-Hans-CN&quot;,
-        &quot;ko-KR&quot;,
-        &quot;ru-RU&quot;,
-        &quot;ar-SA&quot;,
-        &quot;hi-IN&quot;,
-        &quot;tr-TR&quot;,
-        &quot;pl-PL&quot;,
-        &quot;sv-SE&quot;,
-        &quot;da-DK&quot;,
-        &quot;fi-FI&quot;,
-        &quot;no-NO&quot;
-      ],
-      &quot;enumTitles&quot;: [
-        &quot;English (US)&quot;,
-        &quot;English (UK)&quot;,
-        &quot;German&quot;,
-        &quot;French&quot;,
-        &quot;Spanish&quot;,
-        &quot;Italian&quot;,
-        &quot;Dutch&quot;,
-        &quot;Portuguese (Brazil)&quot;,
-        &quot;Japanese&quot;,
-        &quot;Chinese (Traditional, Hong Kong)&quot;,
-        &quot;Chinese (Simplified, China)&quot;,
-        &quot;Korean&quot;,
-        &quot;Russian&quot;,
-        &quot;Arabic&quot;,
-        &quot;Hindi&quot;,
-        &quot;Turkish&quot;,
-        &quot;Polish&quot;,
-        &quot;Swedish&quot;,
-        &quot;Danish&quot;,
-        &quot;Finnish&quot;,
-        &quot;Norwegian&quot;
-      ],
-      &quot;prefill&quot;: &quot;en-US&quot;,
-      &quot;title&quot;: &quot;Language&quot;,
-      &quot;type&quot;: &quot;string&quot;
-    },
-    &quot;maxNews&quot;: {
-      &quot;default&quot;: 25,
-      &quot;description&quot;: &quot;Maximum news items per ticker. Yahoo&#x27;s news graph serves 200+ items through cursor pagination; the actor caps this request at 200.&quot;,
-      &quot;maximum&quot;: 200,
-      &quot;minimum&quot;: 1,
-      &quot;prefill&quot;: 10,
-      &quot;title&quot;: &quot;Max news items&quot;,
-      &quot;type&quot;: &quot;integer&quot;
-    },
-    &quot;maxOptionContracts&quot;: {
-      &quot;default&quot;: 50,
-      &quot;description&quot;: &quot;Maximum calls and maximum puts per expiration.&quot;,
-      &quot;maximum&quot;: 500,
-      &quot;minimum&quot;: 1,
-      &quot;prefill&quot;: 50,
-      &quot;title&quot;: &quot;Max contracts per side&quot;,
-      &quot;type&quot;: &quot;integer&quot;
-    },
-    &quot;maxResults&quot;: {
-      &quot;default&quot;: 50,
-      &quot;description&quot;: &quot;Maximum records for screener, customScreener, trending and marketSummary modes. Search uses maxSearchResults.&quot;,
-      &quot;maximum&quot;: 5000,
-      &quot;minimum&quot;: 1,
-      &quot;prefill&quot;: 1,
-      &quot;title&quot;: &quot;Max results&quot;,
-      &quot;type&quot;: &quot;integer&quot;
-    },
-    &quot;maxSearchResults&quot;: {
-      &quot;default&quot;: 10,
-      &quot;description&quot;: &quot;Maximum number of search results to return (mode=search).&quot;,
-      &quot;maximum&quot;: 50,
-      &quot;minimum&quot;: 1,
-      &quot;prefill&quot;: 10,
-      &quot;title&quot;: &quot;Max search results&quot;,
-      &quot;type&quot;: &quot;integer&quot;
-    },
-    &quot;maxStrike&quot;: {
-      &quot;description&quot;: &quot;Drop option contracts above this strike.&quot;,
-      &quot;maximum&quot;: 1000000000,
-      &quot;minimum&quot;: 0,
-      &quot;title&quot;: &quot;Maximum strike&quot;,
-      &quot;type&quot;: &quot;number&quot;
-    },
-    &quot;minImpliedVolatilityPercent&quot;: {
-      &quot;description&quot;: &quot;Drop contracts below this implied volatility in percent, e.g. 25 means 25%.&quot;,
-      &quot;maximum&quot;: 1000,
-      &quot;minimum&quot;: 0,
-      &quot;title&quot;: &quot;Minimum implied volatility (%)&quot;,
-      &quot;type&quot;: &quot;number&quot;
-    },
-    &quot;minOpenInterest&quot;: {
-      &quot;description&quot;: &quot;Drop option contracts below this open interest. Contracts with no open interest are excluded when this is set.&quot;,
-      &quot;maximum&quot;: 1000000000,
-      &quot;minimum&quot;: 0,
-      &quot;title&quot;: &quot;Minimum open interest&quot;,
-      &quot;type&quot;: &quot;integer&quot;
-    },
-    &quot;minStrike&quot;: {
-      &quot;description&quot;: &quot;Drop option contracts below this strike.&quot;,
-      &quot;maximum&quot;: 1000000000,
-      &quot;minimum&quot;: 0,
-      &quot;title&quot;: &quot;Minimum strike&quot;,
-      &quot;type&quot;: &quot;number&quot;
-    },
-    &quot;minVolume&quot;: {
-      &quot;description&quot;: &quot;Drop option contracts below this volume. Contracts with no volume are excluded when this is set.&quot;,
-      &quot;maximum&quot;: 1000000000,
-      &quot;minimum&quot;: 0,
-      &quot;title&quot;: &quot;Minimum option volume&quot;,
-      &quot;type&quot;: &quot;integer&quot;
-    },
-    &quot;mode&quot;: {
-      &quot;default&quot;: &quot;tickers&quot;,
-      &quot;description&quot;: &quot;What to scrape.&quot;,
-      &quot;editor&quot;: &quot;select&quot;,
-      &quot;enum&quot;: [
-        &quot;tickers&quot;,
-        &quot;search&quot;,
-        &quot;screener&quot;,
-        &quot;customScreener&quot;,
-        &quot;trending&quot;,
-        &quot;marketSummary&quot;
-      ],
-      &quot;enumTitles&quot;: [
-        &quot;Tickers&quot;,
-        &quot;Symbol search&quot;,
-        &quot;Predefined screener&quot;,
-        &quot;Custom region screener&quot;,
-        &quot;Trending symbols&quot;,
-        &quot;Market summary&quot;
-      ],
-      &quot;prefill&quot;: &quot;tickers&quot;,
-      &quot;title&quot;: &quot;Mode&quot;,
-      &quot;type&quot;: &quot;string&quot;
-    },
-    &quot;optionContractType&quot;: {
-      &quot;default&quot;: &quot;both&quot;,
-      &quot;description&quot;: &quot;Which option sides to return.&quot;,
-      &quot;editor&quot;: &quot;select&quot;,
-      &quot;enum&quot;: [
-        &quot;both&quot;,
-        &quot;calls&quot;,
-        &quot;puts&quot;
-      ],
-      &quot;enumTitles&quot;: [
-        &quot;Calls and puts&quot;,
-        &quot;Calls only&quot;,
-        &quot;Puts only&quot;
-      ],
-      &quot;prefill&quot;: &quot;both&quot;,
-      &quot;title&quot;: &quot;Option contract type&quot;,
-      &quot;type&quot;: &quot;string&quot;
-    },
-    &quot;optionExpirations&quot;: {
-      &quot;default&quot;: 1,
-      &quot;description&quot;: &quot;How many upcoming option expirations to fetch (mode=tickers, includeOptions=true).&quot;,
-      &quot;maximum&quot;: 25,
-      &quot;minimum&quot;: 1,
-      &quot;prefill&quot;: 1,
-      &quot;title&quot;: &quot;Option expirations&quot;,
-      &quot;type&quot;: &quot;integer&quot;
-    },
-    &quot;range&quot;: {
-      &quot;default&quot;: &quot;1mo&quot;,
-      &quot;description&quot;: &quot;History range used when no start/end dates are supplied (mode=tickers).&quot;,
-      &quot;editor&quot;: &quot;select&quot;,
-      &quot;enum&quot;: [
-        &quot;1d&quot;,
-        &quot;5d&quot;,
-        &quot;1mo&quot;,
-        &quot;3mo&quot;,
-        &quot;6mo&quot;,
-        &quot;1y&quot;,
-        &quot;2y&quot;,
-        &quot;5y&quot;,
-        &quot;10y&quot;,
-        &quot;ytd&quot;,
-        &quot;max&quot;
-      ],
-      &quot;enumTitles&quot;: [
-        &quot;1 day&quot;,
-        &quot;5 days&quot;,
-        &quot;1 month&quot;,
-        &quot;3 months&quot;,
-        &quot;6 months&quot;,
-        &quot;1 year&quot;,
-        &quot;2 years&quot;,
-        &quot;5 years&quot;,
-        &quot;10 years&quot;,
-        &quot;Year to date&quot;,
-        &quot;Max&quot;
-      ],
-      &quot;prefill&quot;: &quot;5d&quot;,
-      &quot;title&quot;: &quot;Chart range&quot;,
-      &quot;type&quot;: &quot;string&quot;
-    },
-    &quot;region&quot;: {
-      &quot;default&quot;: &quot;US&quot;,
-      &quot;description&quot;: &quot;Yahoo market region used for quotes, search, trending, localization and mode=customScreener.&quot;,
-      &quot;editor&quot;: &quot;select&quot;,
-      &quot;enum&quot;: [
-        &quot;US&quot;,
-        &quot;GB&quot;,
-        &quot;DE&quot;,
-        &quot;FR&quot;,
-        &quot;JP&quot;,
-        &quot;HK&quot;,
-        &quot;IN&quot;,
-        &quot;CA&quot;,
-        &quot;AU&quot;,
-        &quot;BR&quot;,
-        &quot;CN&quot;,
-        &quot;KR&quot;,
-        &quot;TW&quot;,
-        &quot;SG&quot;,
-        &quot;CH&quot;,
-        &quot;NL&quot;,
-        &quot;ES&quot;,
-        &quot;IT&quot;,
-        &quot;SE&quot;,
-        &quot;NO&quot;,
-        &quot;DK&quot;,
-        &quot;FI&quot;,
-        &quot;BE&quot;,
-        &quot;AT&quot;,
-        &quot;IE&quot;,
-        &quot;NZ&quot;,
-        &quot;ZA&quot;,
-        &quot;MX&quot;,
-        &quot;AR&quot;,
-        &quot;CL&quot;,
-        &quot;PE&quot;
-      ],
-      &quot;enumTitles&quot;: [
-        &quot;United States&quot;,
-        &quot;United Kingdom&quot;,
-        &quot;Germany&quot;,
-        &quot;France&quot;,
-        &quot;Japan&quot;,
-        &quot;Hong Kong&quot;,
-        &quot;India&quot;,
-        &quot;Canada&quot;,
-        &quot;Australia&quot;,
-        &quot;Brazil&quot;,
-        &quot;China&quot;,
-        &quot;South Korea&quot;,
-        &quot;Taiwan&quot;,
-        &quot;Singapore&quot;,
-        &quot;Switzerland&quot;,
-        &quot;Netherlands&quot;,
-        &quot;Spain&quot;,
-        &quot;Italy&quot;,
-        &quot;Sweden&quot;,
-        &quot;Norway&quot;,
-        &quot;Denmark&quot;,
-        &quot;Finland&quot;,
-        &quot;Belgium&quot;,
-        &quot;Austria&quot;,
-        &quot;Ireland&quot;,
-        &quot;New Zealand&quot;,
-        &quot;South Africa&quot;,
-        &quot;Mexico&quot;,
-        &quot;Argentina&quot;,
-        &quot;Chile&quot;,
-        &quot;Peru&quot;
-      ],
-      &quot;prefill&quot;: &quot;US&quot;,
-      &quot;title&quot;: &quot;Region&quot;,
-      &quot;type&quot;: &quot;string&quot;
-    },
-    &quot;screenerId&quot;: {
-      &quot;default&quot;: &quot;day_gainers&quot;,
-      &quot;description&quot;: &quot;Yahoo predefined screener to run (mode=screener). Predefined screeners are US-centric; use mode=customScreener for a region-aware list.&quot;,
-      &quot;editor&quot;: &quot;select&quot;,
-      &quot;enum&quot;: [
-        &quot;day_gainers&quot;,
-        &quot;day_losers&quot;,
-        &quot;most_actives&quot;,
-        &quot;most_shorted_stocks&quot;,
-        &quot;undervalued_growth_stocks&quot;,
-        &quot;growth_technology_stocks&quot;,
-        &quot;aggressive_small_caps&quot;,
-        &quot;small_cap_gainers&quot;,
-        &quot;all_cryptocurrencies_us&quot;,
-        &quot;day_gainers_cryptocurrencies&quot;,
-        &quot;day_losers_cryptocurrencies&quot;,
-        &quot;most_actives_cryptocurrencies&quot;,
-        &quot;highest_valuation_private_company&quot;,
-        &quot;recently_funded_private_company&quot;,
-        &quot;most_funded_private_company&quot;,
-        &quot;top_mutual_funds&quot;,
-        &quot;day_gainers_mutual_funds&quot;,
-        &quot;portfolio_anchors&quot;,
-        &quot;solid_large_growth_funds&quot;,
-        &quot;solid_midcap_growth_funds&quot;,
-        &quot;conservative_foreign_funds&quot;,
-        &quot;high_yield_bond&quot;
-      ],
-      &quot;enumTitles&quot;: [
-        &quot;Day Gainers&quot;,
-        &quot;Day Losers&quot;,
-        &quot;Most Actives&quot;,
-        &quot;Most Shorted Stocks&quot;,
-        &quot;Undervalued Growth Stocks&quot;,
-        &quot;Growth Technology Stocks&quot;,
-        &quot;Aggressive Small Caps&quot;,
-        &quot;Small Cap Gainers&quot;,
-        &quot;All Cryptocurrencies (US)&quot;,
-        &quot;Day Gainers - Cryptocurrencies&quot;,
-        &quot;Day Losers - Cryptocurrencies&quot;,
-        &quot;Most Actives - Cryptocurrencies&quot;,
-        &quot;Highest Valuation Private Companies&quot;,
-        &quot;Recently Funded Private Companies&quot;,
-        &quot;Most Funded Private Companies&quot;,
-        &quot;Top Mutual Funds&quot;,
-        &quot;Day Gainers - Mutual Funds&quot;,
-        &quot;Portfolio Anchors&quot;,
-        &quot;Solid Large Growth Funds&quot;,
-        &quot;Solid Mid-Cap Growth Funds&quot;,
-        &quot;Conservative Foreign Funds&quot;,
-        &quot;High Yield Bond&quot;
-      ],
-      &quot;prefill&quot;: &quot;day_gainers&quot;,
-      &quot;title&quot;: &quot;Screener&quot;,
-      &quot;type&quot;: &quot;string&quot;
-    },
-    &quot;screenerSort&quot;: {
-      &quot;default&quot;: &quot;intradaymarketcap&quot;,
-      &quot;description&quot;: &quot;Sort field for mode=customScreener.&quot;,
-      &quot;editor&quot;: &quot;select&quot;,
-      &quot;enum&quot;: [
-        &quot;intradaymarketcap&quot;,
-        &quot;percentchange&quot;,
-        &quot;dayvolume&quot;
-      ],
-      &quot;enumTitles&quot;: [
-        &quot;Market cap&quot;,
-        &quot;Percent change&quot;,
-        &quot;Volume&quot;
-      ],
-      &quot;prefill&quot;: &quot;intradaymarketcap&quot;,
-      &quot;title&quot;: &quot;Custom screener sort&quot;,
-      &quot;type&quot;: &quot;string&quot;
-    },
-    &quot;searchQuery&quot;: {
-      &quot;description&quot;: &quot;Company, fund, index, currency or crypto name to search for (mode=search).&quot;,
-      &quot;editor&quot;: &quot;textfield&quot;,
-      &quot;prefill&quot;: &quot;Apple&quot;,
-      &quot;title&quot;: &quot;Search query&quot;,
-      &quot;type&quot;: &quot;string&quot;
-    },
-    &quot;startDate&quot;: {
-      &quot;description&quot;: &quot;Earliest date for historical bars (`YYYY-MM-DD`). Overrides `range` (mode=tickers).&quot;,
-      &quot;editor&quot;: &quot;textfield&quot;,
-      &quot;title&quot;: &quot;History start date&quot;,
-      &quot;type&quot;: &quot;string&quot;
-    },
-    &quot;tickers&quot;: {
-      &quot;default&quot;: [],
-      &quot;description&quot;: &quot;Symbols or Yahoo Finance quote URLs (mode=tickers). Examples: `AAPL`, `BRK.B`, `^GSPC`, `EURUSD=X`, `BTC-USD`, `7203.T`, `https://finance.yahoo.com/quote/AAPL/`.&quot;,
-      &quot;editor&quot;: &quot;stringList&quot;,
-      &quot;prefill&quot;: [
-        &quot;AAPL&quot;
-      ],
-      &quot;title&quot;: &quot;Tickers&quot;,
-      &quot;type&quot;: &quot;array&quot;
-    }
-  },
-  &quot;required&quot;: [
-    &quot;mode&quot;
-  ],
-  &quot;schemaVersion&quot;: 1,
-  &quot;title&quot;: &quot;Yahoo Finance Scraper Input&quot;,
-  &quot;type&quot;: &quot;object&quot;
-}
-</code></pre></details></section><section class="schema-section" id="output-schema"><h2>Output schema</h2><p>Published result links and storage locations. This schema is not an exhaustive contract for every field in a dataset record.</p><div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Required</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>tickers</code></td><td>string</td><td>optional</td><td>Dataset containing every scraped record (ticker, discovery or error).</td></tr></tbody></table></div><p><a href="output-schema.json">Download the published output schema</a></p><details><summary>View complete JSON</summary><pre><code>{
-  &quot;actorOutputSchemaVersion&quot;: 1,
-  &quot;description&quot;: &quot;Dataset with ticker quotes (including US post-market fields), OHLCV history, expanded financial statements, dividends, splits, up to 200 news items, analyst and earnings data, holders, options, fund data with bond ratings and sector weights, SEC filings, insights, search results, custom and predefined screener rows, trending symbols and market summary rows.&quot;,
-  &quot;properties&quot;: {
-    &quot;tickers&quot;: {
-      &quot;description&quot;: &quot;Dataset containing every scraped record (ticker, discovery or error).&quot;,
-      &quot;template&quot;: &quot;{{links.apiDefaultDatasetUrl}}/items&quot;,
-      &quot;title&quot;: &quot;Yahoo Finance records&quot;,
-      &quot;type&quot;: &quot;string&quot;
-    }
-  },
-  &quot;title&quot;: &quot;Yahoo Finance Market Data &amp; Fundamentals Scraper Output&quot;
-}
-</code></pre></details></section><section class="schema-section" id="dataset-schema"><h2>Dataset schema</h2><p>Published dataset views and any declared field definitions. A view can select only a subset of the returned record fields.</p><p><a href="dataset-schema.json">Download the published dataset schema</a></p><details><summary>View complete JSON</summary><pre><code>{
-  &quot;actorSpecification&quot;: 1,
-  &quot;title&quot;: &quot;Yahoo Finance records&quot;,
-  &quot;views&quot;: {
-    &quot;discovery&quot;: {
-      &quot;display&quot;: {
-        &quot;component&quot;: &quot;table&quot;,
-        &quot;properties&quot;: {
-          &quot;currentPrice&quot;: {
-            &quot;format&quot;: &quot;number&quot;,
-            &quot;label&quot;: &quot;Price&quot;
-          },
-          &quot;dayChangePercent&quot;: {
-            &quot;format&quot;: &quot;number&quot;,
-            &quot;label&quot;: &quot;%&quot;
-          },
-          &quot;exchange&quot;: {
-            &quot;format&quot;: &quot;text&quot;,
-            &quot;label&quot;: &quot;Exchange&quot;
-          },
-          &quot;industry&quot;: {
-            &quot;format&quot;: &quot;text&quot;,
-            &quot;label&quot;: &quot;Industry&quot;
-          },
-          &quot;longName&quot;: {
-            &quot;format&quot;: &quot;text&quot;,
-            &quot;label&quot;: &quot;Long name&quot;
-          },
-          &quot;name&quot;: {
-            &quot;format&quot;: &quot;text&quot;,
-            &quot;label&quot;: &quot;Name&quot;
-          },
-          &quot;quoteType&quot;: {
-            &quot;format&quot;: &quot;text&quot;,
-            &quot;label&quot;: &quot;Quote type&quot;
-          },
-          &quot;rank&quot;: {
-            &quot;format&quot;: &quot;number&quot;,
-            &quot;label&quot;: &quot;Rank&quot;
-          },
-          &quot;recordType&quot;: {
-            &quot;format&quot;: &quot;text&quot;,
-            &quot;label&quot;: &quot;Type&quot;
-          },
-          &quot;region&quot;: {
-            &quot;format&quot;: &quot;text&quot;,
-            &quot;label&quot;: &quot;Region&quot;
-          },
-          &quot;screenerId&quot;: {
-            &quot;format&quot;: &quot;text&quot;,
-            &quot;label&quot;: &quot;Screener&quot;
-          },
-          &quot;screenerName&quot;: {
-            &quot;format&quot;: &quot;text&quot;,
-            &quot;label&quot;: &quot;Screener name&quot;
-          },
-          &quot;sector&quot;: {
-            &quot;format&quot;: &quot;text&quot;,
-            &quot;label&quot;: &quot;Sector&quot;
-          },
-          &quot;shortName&quot;: {
-            &quot;format&quot;: &quot;text&quot;,
-            &quot;label&quot;: &quot;Short name&quot;
-          },
-          &quot;sourceUrl&quot;: {
-            &quot;format&quot;: &quot;link&quot;,
-            &quot;label&quot;: &quot;Yahoo URL&quot;
-          },
-          &quot;ticker&quot;: {
-            &quot;format&quot;: &quot;text&quot;,
-            &quot;label&quot;: &quot;Ticker&quot;
-          }
-        }
-      },
-      &quot;title&quot;: &quot;Discovery results&quot;,
-      &quot;transformation&quot;: {
-        &quot;fields&quot;: [
-          &quot;recordType&quot;,
-          &quot;ticker&quot;,
-          &quot;name&quot;,
-          &quot;longName&quot;,
-          &quot;shortName&quot;,
-          &quot;exchange&quot;,
-          &quot;quoteType&quot;,
-          &quot;sector&quot;,
-          &quot;industry&quot;,
-          &quot;screenerId&quot;,
-          &quot;screenerName&quot;,
-          &quot;region&quot;,
-          &quot;rank&quot;,
-          &quot;currentPrice&quot;,
-          &quot;dayChangePercent&quot;,
-          &quot;sourceUrl&quot;
-        ]
-      }
-    },
-    &quot;errors&quot;: {
-      &quot;display&quot;: {
-        &quot;component&quot;: &quot;table&quot;,
-        &quot;properties&quot;: {
-          &quot;error&quot;: {
-            &quot;format&quot;: &quot;text&quot;,
-            &quot;label&quot;: &quot;Error&quot;
-          },
-          &quot;message&quot;: {
-            &quot;format&quot;: &quot;text&quot;,
-            &quot;label&quot;: &quot;Message&quot;
-          },
-          &quot;reason&quot;: {
-            &quot;format&quot;: &quot;text&quot;,
-            &quot;label&quot;: &quot;Reason&quot;
-          },
-          &quot;recordType&quot;: {
-            &quot;format&quot;: &quot;text&quot;,
-            &quot;label&quot;: &quot;Type&quot;
-          },
-          &quot;scrapedAt&quot;: {
-            &quot;format&quot;: &quot;text&quot;,
-            &quot;label&quot;: &quot;Scraped at&quot;
-          },
-          &quot;sourceUrl&quot;: {
-            &quot;format&quot;: &quot;link&quot;,
-            &quot;label&quot;: &quot;Yahoo URL&quot;
-          },
-          &quot;ticker&quot;: {
-            &quot;format&quot;: &quot;text&quot;,
-            &quot;label&quot;: &quot;Ticker&quot;
-          },
-          &quot;type&quot;: {
-            &quot;format&quot;: &quot;text&quot;,
-            &quot;label&quot;: &quot;Error type&quot;
-          }
-        }
-      },
-      &quot;title&quot;: &quot;Errors&quot;,
-      &quot;transformation&quot;: {
-        &quot;fields&quot;: [
-          &quot;recordType&quot;,
-          &quot;type&quot;,
-          &quot;error&quot;,
-          &quot;ticker&quot;,
-          &quot;reason&quot;,
-          &quot;message&quot;,
-          &quot;sourceUrl&quot;,
-          &quot;scrapedAt&quot;
-        ]
-      }
-    },
-    &quot;tickers&quot;: {
-      &quot;display&quot;: {
-        &quot;component&quot;: &quot;table&quot;,
-        &quot;properties&quot;: {
-          &quot;companyName&quot;: {
-            &quot;format&quot;: &quot;text&quot;,
-            &quot;label&quot;: &quot;Company&quot;
-          },
-          &quot;currency&quot;: {
-            &quot;format&quot;: &quot;text&quot;,
-            &quot;label&quot;: &quot;Cur&quot;
-          },
-          &quot;currentPrice&quot;: {
-            &quot;format&quot;: &quot;number&quot;,
-            &quot;label&quot;: &quot;Price&quot;
-          },
-          &quot;dayChangePercent&quot;: {
-            &quot;format&quot;: &quot;number&quot;,
-            &quot;label&quot;: &quot;%&quot;
-          },
-          &quot;industry&quot;: {
-            &quot;format&quot;: &quot;text&quot;,
-            &quot;label&quot;: &quot;Industry&quot;
-          },
-          &quot;marketCap&quot;: {
-            &quot;format&quot;: &quot;number&quot;,
-            &quot;label&quot;: &quot;Market Cap&quot;
-          },
-          &quot;marketState&quot;: {
-            &quot;format&quot;: &quot;text&quot;,
-            &quot;label&quot;: &quot;Market&quot;
-          },
-          &quot;sector&quot;: {
-            &quot;format&quot;: &quot;text&quot;,
-            &quot;label&quot;: &quot;Sector&quot;
-          },
-          &quot;sourceUrl&quot;: {
-            &quot;format&quot;: &quot;link&quot;,
-            &quot;label&quot;: &quot;Yahoo URL&quot;
-          },
-          &quot;ticker&quot;: {
-            &quot;format&quot;: &quot;text&quot;,
-            &quot;label&quot;: &quot;Ticker&quot;
-          }
-        }
-      },
-      &quot;title&quot;: &quot;Ticker overview&quot;,
-      &quot;transformation&quot;: {
-        &quot;fields&quot;: [
-          &quot;ticker&quot;,
-          &quot;companyName&quot;,
-          &quot;sector&quot;,
-          &quot;industry&quot;,
-          &quot;currency&quot;,
-          &quot;currentPrice&quot;,
-          &quot;marketCap&quot;,
-          &quot;dayChangePercent&quot;,
-          &quot;marketState&quot;,
-          &quot;sourceUrl&quot;
-        ]
-      }
-    }
-  }
-}
-</code></pre></details></section><section class="schema-section" id="key-value-schema"><h2>Key-value schema</h2><p>Published key-value store definitions, when provided by this build.</p><p>This definition is not present in the default published build. See the published README for available documentation.</p></section><section id="published-readme"><h2>Published README</h2><details><summary>Read the full published documentation</summary><h2 id="readme-yahoo-finance-market-data-fundamentals-scraper">Yahoo Finance Market Data &amp; Fundamentals Scraper</h2>
-<p>Yahoo Finance is the default reference point for public market data, but its quote pages mix delayed prices, statements, analyst views, holder tables and option chains across dozens of separate views. This actor turns those views into one clean dataset: give it a watchlist, a search phrase, a screener, a region or nothing at all for a market overview, and receive structured records with source URLs and timestamps. It works for stocks, ETFs, mutual funds, indices, currency pairs, futures and crypto, and needs no account, API key or proxy setup.</p>
-<h2 id="readme-what-this-actor-does">What this actor does</h2>
-<ul>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src &#x27;self&#x27;; script-src &#x27;self&#x27; &#x27;sha256-pPrVYwMCWbYL3W+qzPSBs7QHPF1MU7xJa7kBsrrpvSQ=&#x27;; style-src &#x27;self&#x27;; img-src &#x27;self&#x27; https: data:; connect-src &#x27;self&#x27;; base-uri &#x27;self&#x27;; form-action &#x27;self&#x27;; object-src &#x27;none&#x27;"><title>Yahoo Finance Market Data &amp; Fundamentals Scraper – docs and price | Nimbryxo Studio</title><meta name="description" content="Pull live quotes, historical OHLCV candles, financial statements, dividends, splits, news, analyst ratings and holder data from Yahoo Finance for any ticker, ETF, index, currency pair or crypto symbol"><meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1"><link rel="canonical" href="https://hasankhokhar2026.github.io/apify-actor-examples/actors/yahoo-finance-market-data-and-fundamentals-scraper/"><meta property="og:title" content="Yahoo Finance Market Data &amp; Fundamentals Scraper – docs and price | Nimbryxo Studio"><meta property="og:description" content="Pull live quotes, historical OHLCV candles, financial statements, dividends, splits, news, analyst ratings and holder data from Yahoo Finance for any ticker, ETF, index, currency pair or crypto symbol"><meta property="og:type" content="article"><meta property="og:url" content="https://hasankhokhar2026.github.io/apify-actor-examples/actors/yahoo-finance-market-data-and-fundamentals-scraper/"><meta property="og:site_name" content="Nimbryxo Studio"><meta property="og:image" content="https://apify-image-uploads-prod.s3.us-east-1.amazonaws.com/IYgBDiXtHOijAaUel-actor-pKSuSrtPEecMXeM4a-LJs9EHXTIS-logo.png"><meta name="twitter:card" content="summary"><meta name="theme-color" content="#155dfb"><link rel="icon" href="/apify-actor-examples/assets/mark.svg?v=2d20f9dc334a" type="image/svg+xml"><link rel="stylesheet" href="/apify-actor-examples/assets/site.css?v=acaeb75ff5bd"><link rel="stylesheet" href="/apify-actor-examples/assets/brand.css?v=c1167bcbeb95"><link rel="alternate" type="application/rss+xml" title="Nimbryxo Studio guides" href="/apify-actor-examples/feed.xml"><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization","name":"Nimbryxo Studio","url":"https://hasankhokhar2026.github.io/apify-actor-examples/","sameAs":["https://apify.com/nimbryxo-studio","https://github.com/hasankhokhar2026/apify-actor-examples"]},{"@type":"WebSite","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#website","name":"Nimbryxo Studio Actor documentation","url":"https://hasankhokhar2026.github.io/apify-actor-examples/","publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"inLanguage":"en"},{"@type":"WebPage","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/yahoo-finance-market-data-and-fundamentals-scraper/#webpage","name":"Yahoo Finance Market Data & Fundamentals Scraper – docs and price","description":"Pull live quotes, historical OHLCV candles, financial statements, dividends, splits, news, analyst ratings and holder data from Yahoo Finance for any ticker, ETF, index, currency pair or crypto symbol.","url":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/yahoo-finance-market-data-and-fundamentals-scraper/","isPartOf":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#website"},"publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"inLanguage":"en","mainEntity":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/yahoo-finance-market-data-and-fundamentals-scraper/#article"},"dateModified":"2026-10-29T06:58:17.518Z","breadcrumb":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/yahoo-finance-market-data-and-fundamentals-scraper/#breadcrumb"}},{"@type":"TechArticle","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/yahoo-finance-market-data-and-fundamentals-scraper/#article","headline":"Yahoo Finance Market Data & Fundamentals Scraper – docs and price","name":"Yahoo Finance Market Data & Fundamentals Scraper – docs and price","description":"Pull live quotes, historical OHLCV candles, financial statements, dividends, splits, news, analyst ratings and holder data from Yahoo Finance for any ticker, ETF, index, currency pair or crypto symbol.","url":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/yahoo-finance-market-data-and-fundamentals-scraper/","author":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"mainEntityOfPage":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/yahoo-finance-market-data-and-fundamentals-scraper/#webpage"},"inLanguage":"en","dateModified":"2026-10-29T06:58:17.518Z","image":"https://apify-image-uploads-prod.s3.us-east-1.amazonaws.com/IYgBDiXtHOijAaUel-actor-pKSuSrtPEecMXeM4a-LJs9EHXTIS-logo.png"},{"@type":"BreadcrumbList","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/yahoo-finance-market-data-and-fundamentals-scraper/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Nimbryxo Studio","item":"https://hasankhokhar2026.github.io/apify-actor-examples/"},{"@type":"ListItem","position":2,"name":"Topics","item":"https://hasankhokhar2026.github.io/apify-actor-examples/topics/"},{"@type":"ListItem","position":3,"name":"Developer Tools","item":"https://hasankhokhar2026.github.io/apify-actor-examples/topics/developer-tools/"},{"@type":"ListItem","position":4,"name":"Yahoo Finance Market Data & Fundamentals Scraper","item":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/yahoo-finance-market-data-and-fundamentals-scraper/"}]},{"@type":"SoftwareApplication","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/yahoo-finance-market-data-and-fundamentals-scraper/#software","name":"Yahoo Finance Market Data & Fundamentals Scraper","description":"Pull live quotes, historical OHLCV candles, financial statements, dividends, splits, news, analyst ratings and holder data from Yahoo Finance for any ticker, ETF, index, currency pair or crypto symbol.","url":"https://apify.com/nimbryxo-studio/yahoo-finance-market-data-and-fundamentals-scraper","applicationCategory":"DeveloperApplication","operatingSystem":"Apify platform (web)","publisher":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/#organization"},"image":"https://apify-image-uploads-prod.s3.us-east-1.amazonaws.com/IYgBDiXtHOijAaUel-actor-pKSuSrtPEecMXeM4a-LJs9EHXTIS-logo.png","offers":{"@type":"Offer","url":"https://apify.com/nimbryxo-studio/yahoo-finance-market-data-and-fundamentals-scraper","priceCurrency":"USD","price":"0","priceSpecification":{"@type":"UnitPriceSpecification","price":0.00099,"priceCurrency":"USD","unitText":"result","referenceQuantity":{"@type":"QuantitativeValue","value":1,"unitText":"result"}},"description":"Pay per event: the price per result on Apify's Free plan; a start fee and platform usage are billed separately."}},{"@type":"FAQPage","@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/yahoo-finance-market-data-and-fundamentals-scraper/#faq","mainEntity":[{"@type":"Question","name":"Do I need an API key, login, cookies or a proxy?","acceptedAnswer":{"@type":"Answer","text":"No. The actor reads Yahoo Finance's public web data without an account. It uses no user cookies or API keys, and it works without a proxy by default."}},{"@type":"Question","name":"Are quotes real-time?","acceptedAnswer":{"@type":"Answer","text":"Most Yahoo quotes are delayed, often by about 15 minutes for US equities. The record's quoteSource, exchangeDataDelayedBy and marketState fields tell you what Yahoo reported for that snapshot."}},{"@type":"Question","name":"Can I get pre-market and after-hours prices?","acceptedAnswer":{"@type":"Answer","text":"Pre-market fields are included when Yahoo publishes them. postMarket fields (postMarketPrice, postMarketChange, postMarketChangePercent, postMarketTime) are mapped from Yahoo's quote summary (with the quote-v7 fields as fallback). Post-market values were verified for US-listed equities and ETFs (12/12) and were absent for non-US listings, indices, FX, crypto and futures (0/18), so treat these fields as US-only. Intraday history can include pre/post-market bars with includePrePost."}},{"@type":"Question","name":"Why are some fields missing for my ticker?","acceptedAnswer":{"@type":"Answer","text":"Not every instrument type has every data type. Indices, currencies, futures and crypto usually have quotes and charts but no company statements, holders or options. ETFs have fund data instead of company statements. The actor omits a field when Yahoo has no value for it."}},{"@type":"Question","name":"How many news items can I get?","acceptedAnswer":{"@type":"Answer","text":"The actor reads Yahoo's Finance Nexus graph first and paginates its cursor, so maxNews supports up to 200 items per symbol (AAPL returned 148, MSFT 132, NVDA 182 and SPY 138 in verification). News works for equities, ETFs, indices, FX and crypto on this path. If the graph returns nothing, the actor falls back to Yahoo's search feed (about 50 items) and then the HTML news page. Results are deduplicated by URL; news can mention related tickers, so use relatedTickers when you need to filter relevance."}},{"@type":"Question","name":"Why is the options chain missing?","acceptedAnswer":{"@type":"Answer","text":"Options exist only for optionable US-listed symbols. Foreign listings, indices, currencies, futures and crypto do not have a Yahoo option chain. Yahoo exposes only current expirations, not historical chains, and its contract payload contains no delta, gamma, theta or vega. Historical options, source-provided greeks and non-US option chains are confirmed hard limits; the actor does not invent them."}},{"@type":"Question","name":"Why are quarterly statements missing?","acceptedAnswer":{"@type":"Answer","text":"Quarterly statements require both includeFinancials and includeQuarterlyFinancials. Operating companies, not funds, indices, FX, crypto or futures, publish them; those instrument types have no Yahoo income/balance/cash-flow statements (a confirmed hard limit). Use includeFundData for fund profiles and holdings. Some foreign issuers report only annual periods."}},{"@type":"Question","name":"What does `financials` contain?","acceptedAnswer":{"@type":"Answer","text":"financials.income, financials.balance and financials.cashflow are keyed by fiscal period. Values are in the reporting currency shown in financials.currency; financials.periods lists the available dates. Quarterly groups sit under financials.quarterly. Item keys keep the legacy underscore labels such as TotalRevenue, NetIncome and OperatingCashFlow, so existing spreadsheet and API integrations continue to work."}},{"@type":"Question","name":"Why is `dividendYield` a small number like 0.31?","acceptedAnswer":{"@type":"Answer","text":"For backward compatibility, dividendYield keeps Yahoo's percentage number: 0.31 means 0.31%. The additive trailingAnnualDividendYield is a fraction: 0.0031 means the same yield. heldPercentInsiders and heldPercentInstitutions are fractions; debtToEquity is a percentage number."}},{"@type":"Question","name":"Why is the sustainability/ESG field gone?","acceptedAnswer":{"@type":"Answer","text":"Yahoo retired its ESG endpoints and the sustainability page no longer returns scores. The actor does not advertise or emit a sustainability field, and an old task that sends includeSustainability continues to run with a logged no-op."}},{"@type":"Question","name":"Can I search in any language?","acceptedAnswer":{"@type":"Answer","text":"Company names and news localize through the language and region inputs, and unicode names are preserved in output. Yahoo's /v1/finance/search endpoint rejects non-Latin text with HTTP 400 (a confirmed source limit), so for Japanese, Chinese or Korean queries the actor automatically falls back to /v1/finance/lookup with the selected language and region. Lookup returned documents for most JA/ZH-Hans/ZH-Hant/KO probes. If it returns none, the run status says so explicitly; try a ticker (7203.T), an English name, or another region/language."}},{"@type":"Question","name":"How are fund and option values expressed?","acceptedAnswer":{"@type":"Answer","text":"Fund positions (cashPosition, stockPosition, holdingPercent) are fractions: 0.0836 means 8.36%. fundProfile.totalNetAssets is absolute fund assets (USD for US-listed funds), normalized from Yahoo's raw millions when that is the only value available. Option impliedVolatility uses Yahoo's percentage number: 2.0859 means 208.59%, while the minImpliedVolatilityPercent input is a percent: 25 means 25%. marketSummary.dayChangePercent is also Yahoo's percentage number. postMarketChangePercent is normalized to the same percentage-number convention (0.63 means 0.63%). Statement values are in financials.currency."}},{"@type":"Question","name":"Why do predefined screeners return US rows even when I pick another region?","acceptedAnswer":{"@type":"Answer","text":"Yahoo's predefined screener endpoint is US-centric and ignores the region parameter (confirmed hard limit). Use mode: \"customScreener\" instead: it posts a region operand to Yahoo's custom screener and returned regional rows for 30 of 31 region codes (JP 3,814; IN 8,553; PE 0). The actor paginates in 250-row requests until maxResults or source exhaustion. Predefined screeners are unchanged."}},{"@type":"Question","name":"Why does trending return only a few symbols for some regions?","acceptedAnswer":{"@type":"Answer","text":"Yahoo's trending feed is sparse outside the US. A region with one to three symbols is a genuine upstream result, not an early stop. The run status reports the shortfall, and mode: \"customScreener\" provides a region-wide fallback."}},{"@type":"Question","name":"What happens to a delisted or invalid symbol?","acceptedAnswer":{"@type":"Answer","text":"The actor emits an explicit error record with reason: \"nodata\" and continues with the other symbols. It does not emit a silent partial ticker record. Aliases such as BRK.B are resolved to Yahoo's spelling (BRK-B) and return data. Rare-symbol HTTP 500 quote pages were not reproduced locally (306 of 306 rare/crypto pages returned 200); the actor still keeps the quote-v7, chart and HTML fallbacks and reports an error rather than fabricating values."}},{"@type":"Question","name":"Why are some fund fields missing?","acceptedAnswer":{"@type":"Answer","text":"topHoldings.bondRatings and topHoldings.sectorWeightings are present when Yahoo publishes them; equity sector weights are empty for non-equity funds such as GLD and TLT. fundProfile.totalNetAssets is normalized to absolute assets and omitted when Yahoo only returns a zero sentinel; fundProfile.inceptionDate comes from Yahoo's fund inception field, not the current manager's start date, and is omitted when unavailable. Morningstar overall/risk ratings are populated for mutual funds but empty for most ETFs, so they are omitted when absent rather than emitted as zero. SEC filings can be attached to one share class only; for example GOOGL's secFilings module is empty while GOOG returns filings, so the actor falls back to the sibling class and records secFilingsSourceSymbol."}},{"@type":"Question","name":"Is this affiliated with Yahoo?","acceptedAnswer":{"@type":"Answer","text":"No. This is an independent, third-party actor that reads Yahoo Finance's publicly available data and is not affiliated with or endorsed by Yahoo."}}],"isPartOf":{"@id":"https://hasankhokhar2026.github.io/apify-actor-examples/actors/yahoo-finance-market-data-and-fundamentals-scraper/#webpage"}}]}</script><script src="/apify-actor-examples/assets/site.js?v=7b7086957d37" defer></script></head><body class="theme-studio"><a href="#main" class="skip-link">Skip to content</a><header class="masthead"><div class="inner"><a href="/apify-actor-examples/" class="brand"><img src="/apify-actor-examples/assets/mark.svg?v=2d20f9dc334a" alt="" width="32" height="32"><span>Nimbryxo Studio</span></a><form class="site-search" action="/apify-actor-examples/actors/" role="search" data-search-index="/apify-actor-examples/search.json"><label class="sr-only" for="site-search">Search this site</label><input type="search" role="combobox" id="site-search" name="q" placeholder="Search by site or data" autocomplete="off" aria-autocomplete="list" aria-controls="site-search-results" aria-expanded="false"><ul id="site-search-results" class="search-results" role="listbox" hidden></ul></form><nav class="primary" aria-label="Main"><a href="/apify-actor-examples/actors/" aria-current="page">Actors</a><a href="/apify-actor-examples/sites/">Sites</a><a href="/apify-actor-examples/topics/">Topics</a><a href="/apify-actor-examples/guides/">Guides</a></nav></div></header><main id="main"><nav class="breadcrumb" aria-label="Breadcrumb"><ol><li><a href="/apify-actor-examples/">Home</a></li><li><a href="/apify-actor-examples/topics/">Topics</a></li><li><a href="/apify-actor-examples/topics/developer-tools/">Developer Tools</a></li><li aria-current="page">Yahoo Finance Market Data &amp; Fundamentals Scraper</li></ol></nav><div class="doc"><div class="doc-head"><h1>Yahoo Finance Market Data &amp; Fundamentals Scraper</h1><p class="lead">Pull live quotes, historical OHLCV candles, financial statements, dividends, splits, news, analyst ratings and holder data from Yahoo Finance for any ticker, ETF, index, currency pair or crypto symbol.</p><dl class="facts"><div><dt>Updated</dt><dd><time datetime="2026-10-29">29 October 2026</time></dd></div><div><dt>Free plan</dt><dd>$0.99 per 1,000 results</dd></div><div><dt>Business plan</dt><dd>$0.49 per 1,000 results</dd></div><div><dt>Input</dt><dd>43 fields, 1 required</dd></div><div><dt>Output</dt><dd>25 declared fields</dd></div><div><dt>Site</dt><dd><a href="/apify-actor-examples/actors/yahoo-finance-market-data-and-fundamentals-scraper/">Yahoo Finance</a></dd></div></dl><div class="cta"><a class="button" href="https://apify.com/nimbryxo-studio/yahoo-finance-market-data-and-fundamentals-scraper">Open in Apify Store</a><a class="button secondary" href="#run">Copy the API call</a></div></div><div class="doc-body"><nav class="toc" aria-label="On this page"><h2 class="toc-title">On this page</h2><ol><li><a href="#summary">In short</a></li><li><a href="#about">What it does</a></li><li><a href="#output">What you get</a></li><li><a href="#run">Run it</a></li><li><a href="#cost">What it costs</a></li><li><a href="#input">Input reference</a></li><li><a href="#faq">Questions</a></li><li><a href="#notes">Limits and notes</a></li><li><a href="#related">Related Actors</a></li></ol></nav><article class="prose"><p class="summary" id="summary">Yahoo Finance Market Data &amp; Fundamentals Scraper is an Apify Actor published by Nimbryxo Studio. It accepts 43 input fields, and <code>mode</code> is required. Each result can carry up to 25 declared fields, including <code>ticker</code>, <code>companyName</code>, <code>sector</code>, <code>industry</code>, <code>currency</code> and <code>currentPrice</code>. It costs $0.99 per 1,000 results on Apify's Free plan and $0.49 on the Business plan.</p><section id="about"><h2>What it does</h2><!--readme--><p>Yahoo Finance is the default reference point for public market data, but its quote pages mix delayed prices, statements, analyst views, holder tables and option chains across dozens of separate views. This actor turns those views into one clean dataset: give it a watchlist, a search phrase, a screener, a region or nothing at all for a market overview, and receive structured records with source URLs and timestamps. It works for stocks, ETFs, mutual funds, indices, currency pairs, futures and crypto, and needs no account, API key or proxy setup.</p>
+<!--/readme--><h3 id="readme-what-this-actor-does">What this actor does</h3><!--readme--><ul>
 <li><strong>Six modes:</strong> <code>tickers</code> (default), <code>search</code>, <code>screener</code>, <code>customScreener</code>, <code>trending</code>, <code>marketSummary</code></li>
 <li><strong>Deep quote data:</strong> regular, pre-market and US post-market prices, bid/ask, day and 52-week ranges, valuation ratios, margins, growth, short interest, analyst targets and company risk scores</li>
 <li><strong>History and events:</strong> 13 chart intervals, 11 ranges, optional pre/post-market bars, adjusted close, full dividend history and split history</li>
@@ -820,9 +8,18 @@
 <li><strong>Research extras:</strong> search results with a localized lookup fallback, 22 predefined screeners, a region-aware custom screener, region-based trending symbols, market summary, up to 200 news items, analyst ratings, SEC filings and related symbols</li>
 <li><strong>Empty fields are omitted</strong> — optional data that Yahoo does not publish for a symbol is left out rather than emitted as <code>null</code>, <code>&quot;&quot;</code> or <code>[]</code></li>
 </ul>
-<h2 id="readme-output-per-ticker-mode-tickers">Output per ticker (mode = <code>tickers</code>)</h2>
-<p>Every ticker record includes <code>recordType: &quot;ticker&quot;</code>, <code>ticker</code>, <code>summaryUrl</code>, <code>sourceUrl</code>, <code>scrapedAt</code>, and the fields below when Yahoo publishes them. Empty values are omitted.</p>
-<h3 id="readme-identity-and-quote">Identity and quote</h3>
+<!--/readme--><h3 id="readme-use-cases">Use cases</h3><!--readme--><ul>
+<li><strong>Watchlist monitoring</strong> — schedule a small ticker list for daily quote, pre-market and news snapshots</li>
+<li><strong>Backtesting and charting</strong> — export OHLCV bars with adjusted close across 13 intervals and 11 ranges</li>
+<li><strong>Fundamental screening</strong> — pull annual and quarterly statements, margins, growth and analyst targets into a warehouse</li>
+<li><strong>Options research</strong> — collect multiple expirations and filter by strike, volume, open interest or implied volatility</li>
+<li><strong>ETF and fund due diligence</strong> — compare expense ratios, top holdings, sector exposure and trailing returns</li>
+<li><strong>Market discovery</strong> — feed screener, search, trending and market-summary rows into alerting or research dashboards</li>
+<li><strong>Ownership and insider tracking</strong> — monitor institutional positions, insider holders and net purchase activity</li>
+<li><strong>Compliance and filing research</strong> — collect SEC filing links and exhibits for a list of companies</li>
+</ul>
+<!--/readme--></section><section id="output"><h2>What you get</h2><p>The Actor saves one record per result to an Apify dataset. Its build declares 25 fields in 3 dataset views, and the README documents 44 more. Fields without a value can be left out of a record.</p><div class="table-wrap"><table class="output-table stack"><caption>Output fields</caption><thead><tr><th scope="col">Field</th><th scope="col">Label</th><th scope="col">What it holds</th></tr></thead><tbody><tr><th scope="row"><code>ticker</code></th><td data-label="Label">Ticker</td><td data-label="What it holds"></td></tr><tr><th scope="row"><code>companyName</code></th><td data-label="Label">Company</td><td data-label="What it holds"></td></tr><tr><th scope="row"><code>sector</code></th><td data-label="Label">Sector</td><td data-label="What it holds"></td></tr><tr><th scope="row"><code>industry</code></th><td data-label="Label">Industry</td><td data-label="What it holds"></td></tr><tr><th scope="row"><code>currency</code></th><td data-label="Label">Cur</td><td data-label="What it holds"></td></tr><tr><th scope="row"><code>currentPrice</code></th><td data-label="Label">Price</td><td data-label="What it holds"></td></tr><tr><th scope="row"><code>marketCap</code></th><td data-label="Label">Market Cap</td><td data-label="What it holds"></td></tr><tr><th scope="row"><code>dayChangePercent</code></th><td data-label="Label">%</td><td data-label="What it holds"></td></tr><tr><th scope="row"><code>marketState</code></th><td data-label="Label">Market</td><td data-label="What it holds"></td></tr><tr><th scope="row"><code>sourceUrl</code></th><td data-label="Label">Yahoo URL</td><td data-label="What it holds"></td></tr><tr><th scope="row"><code>recordType</code></th><td data-label="Label">Type</td><td data-label="What it holds"></td></tr><tr><th scope="row"><code>name</code></th><td data-label="Label">Name</td><td data-label="What it holds"></td></tr><tr><th scope="row"><code>longName</code></th><td data-label="Label">Long name</td><td data-label="What it holds"></td></tr><tr><th scope="row"><code>shortName</code></th><td data-label="Label">Short name</td><td data-label="What it holds"></td></tr><tr><th scope="row"><code>exchange</code></th><td data-label="Label">Exchange</td><td data-label="What it holds"></td></tr><tr><th scope="row"><code>quoteType</code></th><td data-label="Label">Quote type</td><td data-label="What it holds"></td></tr><tr><th scope="row"><code>screenerId</code></th><td data-label="Label">Screener</td><td data-label="What it holds"></td></tr><tr><th scope="row"><code>screenerName</code></th><td data-label="Label">Screener name</td><td data-label="What it holds"></td></tr><tr><th scope="row"><code>region</code></th><td data-label="Label">Region</td><td data-label="What it holds"></td></tr><tr><th scope="row"><code>rank</code></th><td data-label="Label">Rank</td><td data-label="What it holds"></td></tr><tr><th scope="row"><code>type</code></th><td data-label="Label">Error type</td><td data-label="What it holds"></td></tr><tr><th scope="row"><code>error</code></th><td data-label="Label">Error</td><td data-label="What it holds"></td></tr><tr><th scope="row"><code>reason</code></th><td data-label="Label">Reason</td><td data-label="What it holds"></td></tr><tr><th scope="row"><code>message</code></th><td data-label="Label">Message</td><td data-label="What it holds"></td></tr><tr><th scope="row"><code>scrapedAt</code></th><td data-label="Label">Scraped at</td><td data-label="What it holds"></td></tr><tr><th scope="row"><code>postMarketPrice</code></th><td data-label="Label"></td><td data-label="What it holds"><!--readme-->US-listed equities and ETFs when Yahoo publishes an extended-hours quote<!--/readme--></td></tr><tr><th scope="row"><code>postMarketChange</code></th><td data-label="Label"></td><td data-label="What it holds"><!--readme-->US-listed equities and ETFs when Yahoo publishes an extended-hours quote<!--/readme--></td></tr><tr><th scope="row"><code>postMarketChangePercent</code></th><td data-label="Label"></td><td data-label="What it holds"><!--readme-->US-listed equities and ETFs when Yahoo publishes an extended-hours quote<!--/readme--></td></tr><tr><th scope="row"><code>postMarketTime</code></th><td data-label="Label"></td><td data-label="What it holds"><!--readme-->US-listed equities and ETFs when Yahoo publishes an extended-hours quote<!--/readme--></td></tr><tr><th scope="row"><code>companyOfficers</code></th><td data-label="Label"></td><td data-label="What it holds"><!--readme--><code>name</code>, <code>title</code>, <code>age</code>, <code>totalPay</code>, <code>exercisedValue</code>, <code>unexercisedValue</code><!--/readme--></td></tr><tr><th scope="row"><code>statistics</code></th><td data-label="Label"></td><td data-label="What it holds"><!--readme-->curated key statistics and financial-data ratios<!--/readme--></td></tr><tr><th scope="row"><code>history</code></th><td data-label="Label"></td><td data-label="What it holds"><!--readme--><code>date</code>, <code>datetime</code>, <code>open</code>, <code>high</code>, <code>low</code>, <code>close</code>, <code>adjclose</code>, <code>volume</code>, <code>dividends</code>, <code>stock_splits</code><!--/readme--></td></tr><tr><th scope="row"><code>dividends</code></th><td data-label="Label"></td><td data-label="What it holds"><!--readme--><code>date</code>, <code>value</code>; <code>dividendCount</code>. Dates are actual event dates when Yahoo exposes them, not month-start chart keys<!--/readme--></td></tr><tr><th scope="row"><code>splits</code></th><td data-label="Label"></td><td data-label="What it holds"><!--readme--><code>date</code>, <code>value</code>, <code>numerator</code>, <code>denominator</code>, <code>splitRatio</code>; <code>splitCount</code><!--/readme--></td></tr><tr><th scope="row"><code>capitalGains</code></th><td data-label="Label"></td><td data-label="What it holds"><!--readme-->when Yahoo publishes a capital-gain event<!--/readme--></td></tr><tr><th scope="row"><code>financials.income</code></th><td data-label="Label"></td><td data-label="What it holds"><!--readme-->each keyed by fiscal period, with statement values in the reporting currency. The curated set covers 122 high-fill Yahoo types, including <code>EBIT</code>, <code>EBITDA</code>, <code>Net_Tangible_Assets</code>, <code>Beginning_Cash_Position</code>, <code>Invested_Capital</code> and <code>Tax_Rate_For_Calcs</code>; the legacy nested shape and underscore labels are unchanged<!--/readme--></td></tr><tr><th scope="row"><code>financials.balance</code></th><td data-label="Label"></td><td data-label="What it holds"><!--readme-->each keyed by fiscal period, with statement values in the reporting currency. The curated set covers 122 high-fill Yahoo types, including <code>EBIT</code>, <code>EBITDA</code>, <code>Net_Tangible_Assets</code>, <code>Beginning_Cash_Position</code>, <code>Invested_Capital</code> and <code>Tax_Rate_For_Calcs</code>; the legacy nested shape and underscore labels are unchanged<!--/readme--></td></tr><tr><th scope="row"><code>financials.cashflow</code></th><td data-label="Label"></td><td data-label="What it holds"><!--readme-->each keyed by fiscal period, with statement values in the reporting currency. The curated set covers 122 high-fill Yahoo types, including <code>EBIT</code>, <code>EBITDA</code>, <code>Net_Tangible_Assets</code>, <code>Beginning_Cash_Position</code>, <code>Invested_Capital</code> and <code>Tax_Rate_For_Calcs</code>; the legacy nested shape and underscore labels are unchanged<!--/readme--></td></tr><tr><th scope="row"><code>financials.quarterly.income</code></th><td data-label="Label"></td><td data-label="What it holds"><!--readme-->when <code>includeQuarterlyFinancials</code> is on<!--/readme--></td></tr><tr><th scope="row"><code>financials.quarterly.balance</code></th><td data-label="Label"></td><td data-label="What it holds"><!--readme-->when <code>includeQuarterlyFinancials</code> is on<!--/readme--></td></tr><tr><th scope="row"><code>financials.quarterly.cashflow</code></th><td data-label="Label"></td><td data-label="What it holds"><!--readme-->when <code>includeQuarterlyFinancials</code> is on<!--/readme--></td></tr><tr><th scope="row"><code>financials.currency</code></th><td data-label="Label"></td><td data-label="What it holds"><!--readme-->reporting currency<!--/readme--></td></tr><tr><th scope="row"><code>financials.periods</code></th><td data-label="Label"></td><td data-label="What it holds"><!--readme-->available annual and quarterly period dates<!--/readme--></td></tr><tr><th scope="row"><code>news</code></th><td data-label="Label"></td><td data-label="What it holds"><!--readme--><code>title</code>, <code>url</code>, <code>publisher</code>, <code>publishedAt</code>, <code>type</code>, <code>relatedTickers</code>, <code>thumbnailUrl</code>, <code>summary</code>, <code>description</code> when Yahoo provides them; <code>newsCount</code>. The primary feed is Yahoo's Finance Nexus graph with cursor pagination, so <code>maxNews</code> can go up to 200; search news and the HTML page remain fallbacks<!--/readme--></td></tr><tr><th scope="row"><code>recommendations</code></th><td data-label="Label"></td><td data-label="What it holds"><!--readme--><code>strongBuy</code>, <code>buy</code>, <code>hold</code>, <code>sell</code>, <code>strongSell</code><!--/readme--></td></tr><tr><th scope="row"><code>recommendationTrend</code></th><td data-label="Label"></td><td data-label="What it holds"><!--readme--><code>period</code>, <code>strongBuy</code>, <code>buy</code>, <code>hold</code>, <code>sell</code>, <code>strongSell</code><!--/readme--></td></tr><tr><th scope="row"><code>upgradeDowngradeHistory</code></th><td data-label="Label"></td><td data-label="What it holds"><!--readme--><code>firm</code>, <code>fromGrade</code>, <code>toGrade</code>, <code>action</code>, <code>priceTargetAction</code>, <code>currentPriceTarget</code>, <code>priorPriceTarget</code>, <code>gradeDate</code><!--/readme--></td></tr><tr><th scope="row"><code>analystPriceTargets</code></th><td data-label="Label"></td><td data-label="What it holds"><!--readme--><code>current</code>, <code>high</code>, <code>low</code>, <code>mean</code>, <code>median</code><!--/readme--></td></tr><tr><th scope="row"><code>earningsHistory</code></th><td data-label="Label"></td><td data-label="What it holds"><!--readme--><code>quarter</code>, <code>epsActual</code>, <code>epsEstimate</code>, <code>epsDifference</code>, <code>surprisePercent</code><!--/readme--></td></tr><tr><th scope="row"><code>earningsDates</code></th><td data-label="Label"></td><td data-label="What it holds"><!--readme--><code>date</code>, <code>reportedDate</code>, <code>epsEstimate</code>, <code>reportedEps</code>, <code>surprisePercent</code><!--/readme--></td></tr><tr><th scope="row"><code>earningsEstimates</code></th><td data-label="Label"></td><td data-label="What it holds"><!--readme--><code>earnings[]</code>, <code>revenue[]</code>, <code>growthEstimates[]</code><!--/readme--></td></tr><tr><th scope="row"><code>calendarEvents</code></th><td data-label="Label"></td><td data-label="What it holds"><!--readme--><code>earningsDate</code>, <code>earningsCallDate</code>, <code>isEarningsDateEstimate</code>, <code>earningsAverage</code>, <code>earningsLow</code>, <code>earningsHigh</code>, <code>revenueAverage</code>, <code>revenueLow</code>, <code>revenueHigh</code>, <code>exDividendDate</code>, <code>dividendDate</code><!--/readme--></td></tr><tr><th scope="row"><code>calendar</code></th><td data-label="Label"></td><td data-label="What it holds"><!--readme-->the same dates and estimates with legacy snake-case keys<!--/readme--></td></tr><tr><th scope="row"><code>holders.institutional</code></th><td data-label="Label"></td><td data-label="What it holds"><!--readme--><code>Date_Reported</code>, <code>Holder</code>, <code>pctHeld</code>, <code>Shares</code>, <code>Value</code>, <code>pctChange</code><!--/readme--></td></tr><tr><th scope="row"><code>holders.mutualFund</code></th><td data-label="Label"></td><td data-label="What it holds"><!--readme--><code>Date_Reported</code>, <code>Holder</code>, <code>pctHeld</code>, <code>Shares</code>, <code>Value</code>, <code>pctChange</code><!--/readme--></td></tr><tr><th scope="row"><code>holders.major</code></th><td data-label="Label"></td><td data-label="What it holds"><!--readme--><code>insidersPercentHeld</code>, <code>institutionsPercentHeld</code>, <code>institutionsFloatPercentHeld</code>, <code>institutionsCount</code><!--/readme--></td></tr><tr><th scope="row"><code>holders.insiderHolders</code></th><td data-label="Label"></td><td data-label="What it holds"><!--readme--><code>name</code>, <code>relation</code>, <code>transactionDescription</code>, <code>latestTransDate</code>, <code>positionDirect</code>, <code>positionIndirect</code>, <code>valueDirect</code><!--/readme--></td></tr><tr><th scope="row"><code>holders.netSharePurchaseActivity</code></th><td data-label="Label"></td><td data-label="What it holds"><!--readme-->buy/sell/net counts and shares, insider percentages and institutional net buying<!--/readme--></td></tr><tr><th scope="row"><code>insiderTransactions</code></th><td data-label="Label"></td><td data-label="What it holds"><!--readme--><code>Shares</code>, <code>Value</code>, <code>URL</code>, <code>Text</code>, <code>Insider</code>, <code>Position</code>, <code>Transaction</code>, <code>Start_Date</code>, <code>Ownership</code>; <code>insiderTransactionCount</code><!--/readme--></td></tr><tr><th scope="row"><code>optionExpirations</code></th><td data-label="Label"></td><td data-label="What it holds"><!--readme-->upcoming expiration dates<!--/readme--></td></tr><tr><th scope="row"><code>options</code></th><td data-label="Label"></td><td data-label="What it holds"><!--readme--><code>expiration</code>, <code>calls[]</code>, <code>puts[]</code>, and an underlying <code>quote</code><!--/readme--></td></tr><tr><th scope="row"><code>optionChains</code></th><td data-label="Label"></td><td data-label="What it holds"><!--readme-->present when more than one expiration is requested<!--/readme--></td></tr><tr><th scope="row"><code>fundProfile</code></th><td data-label="Label"></td><td data-label="What it holds"><!--readme--><code>family</code>, <code>categoryName</code>, <code>legalType</code>, <code>annualReportExpenseRatio</code>, <code>annualHoldingsTurnover</code>, <code>totalNetAssets</code> (absolute value, not millions), <code>managerName</code>, <code>managerBio</code>, <code>inceptionDate</code> (fund inception when Yahoo publishes it; omitted otherwise)<!--/readme--></td></tr><tr><th scope="row"><code>topHoldings</code></th><td data-label="Label"></td><td data-label="What it holds"><!--readme--><code>cashPosition</code>, <code>stockPosition</code>, <code>bondPosition</code>, <code>otherPosition</code>, <code>preferredPosition</code>, <code>convertiblePosition</code>, <code>holdings[]</code>, <code>equityHoldings</code>, <code>bondHoldings</code>, <code>otherHoldings</code>, <code>bondRatings[]</code>, <code>sectorWeightings[]</code> (rating and sector rows are <code>{key, value}</code>; equity sector weights are empty for non-equity funds such as GLD and TLT)<!--/readme--></td></tr><tr><th scope="row"><code>fundPerformance</code></th><td data-label="Label"></td><td data-label="What it holds"><!--readme--><code>asOfDate</code>, benchmark fields, period returns, fund averages and <code>morningStarOverallRating</code> / <code>morningStarRiskRating</code> for mutual funds<!--/readme--></td></tr><tr><th scope="row"><code>secFilings</code></th><td data-label="Label"></td><td data-label="What it holds"><!--readme--><code>date</code>, <code>type</code>, <code>title</code>, <code>edgarUrl</code>, <code>exhibits[]</code><!--/readme--></td></tr><tr><th scope="row"><code>insights</code></th><td data-label="Label"></td><td data-label="What it holds"><!--readme-->technical outlook, key technicals, valuation, research reports and significant developments<!--/readme--></td></tr><tr><th scope="row"><code>relatedSymbols</code></th><td data-label="Label"></td><td data-label="What it holds"><!--readme--><code>symbol</code>, <code>score</code><!--/readme--></td></tr><tr><th scope="row"><code>requestedTicker</code></th><td data-label="Label"></td><td data-label="What it holds"><!--readme-->present when an input alias resolved to a different Yahoo symbol (for example <code>BRK.B</code> → <code>BRK-B</code>)<!--/readme--></td></tr></tbody></table></div><details class="publisher-notes"><summary>The publisher's output notes</summary><h3 id="readme-output-per-ticker-mode-tickers">Output per ticker (mode = tickers)</h3><!--readme--><p>Every ticker record includes <code>recordType: &quot;ticker&quot;</code>, <code>ticker</code>, <code>summaryUrl</code>, <code>sourceUrl</code>, <code>scrapedAt</code>, and the fields below when Yahoo publishes them. Empty values are omitted.</p>
+<h4 id="readme-identity-and-quote">Identity and quote</h4>
 <ul>
 <li><code>companyName</code>, <code>shortName</code>, <code>sector</code>, <code>industry</code>, <code>country</code>, <code>website</code>, <code>businessSummary</code>, <code>fullTimeEmployees</code></li>
 <li><code>currency</code>, <code>financialCurrency</code>, <code>exchange</code>, <code>exchangeFullName</code>, <code>market</code>, <code>marketState</code>, <code>quoteType</code>, <code>timezone</code></li>
@@ -834,7 +31,7 @@
 <li><code>fulldayPrice</code>, <code>fulldayChange</code>, <code>fulldayChangePercent</code>, <code>quoteSource</code>, <code>exchangeDataDelayedBy</code>, <code>firstTradeDate</code></li>
 <li><code>marketCap</code>, <code>sharesOutstanding</code>, <code>floatShares</code>, <code>impliedSharesOutstanding</code></li>
 </ul>
-<h3 id="readme-valuation-profitability-and-dividends">Valuation, profitability and dividends</h3>
+<h4 id="readme-valuation-profitability-and-dividends">Valuation, profitability and dividends</h4>
 <ul>
 <li><code>beta</code>, <code>trailingPE</code>, <code>forwardPE</code>, <code>trailingEps</code>, <code>epsForward</code>, <code>epsCurrentYear</code>, <code>priceEpsCurrentYear</code>, <code>priceToBook</code>, <code>bookValue</code></li>
 <li><code>enterpriseValue</code>, <code>enterpriseToRevenue</code>, <code>enterpriseToEbitda</code>, <code>profitMargins</code>, <code>operatingMargins</code>, <code>grossMargins</code>, <code>ebitdaMargins</code></li>
@@ -847,14 +44,14 @@
 <li><code>recommendationKey</code>, <code>recommendationMean</code>, <code>numberOfAnalystOpinions</code>, <code>targetHighPrice</code>, <code>targetLowPrice</code>, <code>targetMeanPrice</code>, <code>targetMedianPrice</code></li>
 <li><code>earningsTimestamp</code>, <code>earningsTimestampStart</code>, <code>earningsTimestampEnd</code>, <code>isEarningsDateEstimate</code>, <code>earningsCallTimestampStart</code>, <code>earningsCallTimestampEnd</code>, <code>averageAnalystRating</code></li>
 </ul>
-<h3 id="readme-company-profile-and-risk">Company profile and risk</h3>
+<h4 id="readme-company-profile-and-risk">Company profile and risk</h4>
 <ul>
 <li><code>address1</code>, <code>city</code>, <code>state</code>, <code>zip</code>, <code>phone</code>, <code>irWebsite</code></li>
 <li><code>auditRisk</code>, <code>boardRisk</code>, <code>compensationRisk</code>, <code>shareHolderRightsRisk</code>, <code>overallRisk</code>, <code>governanceEpochDate</code>, <code>compensationAsOfEpochDate</code></li>
 <li><code>companyOfficers[]</code> — <code>name</code>, <code>title</code>, <code>age</code>, <code>totalPay</code>, <code>exercisedValue</code>, <code>unexercisedValue</code></li>
 <li><code>statistics</code> — curated key statistics and financial-data ratios</li>
 </ul>
-<h3 id="readme-history-and-corporate-actions-when-enabled">History and corporate actions (when enabled)</h3>
+<h4 id="readme-history-and-corporate-actions-when-enabled">History and corporate actions (when enabled)</h4>
 <ul>
 <li><code>history[]</code> — <code>date</code>, <code>datetime</code>, <code>open</code>, <code>high</code>, <code>low</code>, <code>close</code>, <code>adjclose</code>, <code>volume</code>, <code>dividends</code>, <code>stock_splits</code></li>
 <li><code>historyCount</code></li>
@@ -862,14 +59,14 @@
 <li><code>splits[]</code> — <code>date</code>, <code>value</code>, <code>numerator</code>, <code>denominator</code>, <code>splitRatio</code>; <code>splitCount</code></li>
 <li><code>capitalGains[]</code> — when Yahoo publishes a capital-gain event</li>
 </ul>
-<h3 id="readme-financial-statements-when-includefinancials-is-on">Financial statements (when <code>includeFinancials</code> is on)</h3>
+<h4 id="readme-financial-statements-when-includefinancials-is-on">Financial statements (when <code>includeFinancials</code> is on)</h4>
 <ul>
 <li><code>financials.income</code>, <code>financials.balance</code>, <code>financials.cashflow</code> — each keyed by fiscal period, with statement values in the reporting currency. The curated set covers 122 high-fill Yahoo types, including <code>EBIT</code>, <code>EBITDA</code>, <code>Net_Tangible_Assets</code>, <code>Beginning_Cash_Position</code>, <code>Invested_Capital</code> and <code>Tax_Rate_For_Calcs</code>; the legacy nested shape and underscore labels are unchanged</li>
 <li><code>financials.quarterly.income</code>, <code>financials.quarterly.balance</code>, <code>financials.quarterly.cashflow</code> — when <code>includeQuarterlyFinancials</code> is on</li>
 <li><code>financials.currency</code> — reporting currency</li>
 <li><code>financials.periods</code> — available annual and quarterly period dates</li>
 </ul>
-<h3 id="readme-news-analyst-and-earnings">News, analyst and earnings</h3>
+<h4 id="readme-news-analyst-and-earnings">News, analyst and earnings</h4>
 <ul>
 <li><code>news[]</code> — <code>title</code>, <code>url</code>, <code>publisher</code>, <code>publishedAt</code>, <code>type</code>, <code>relatedTickers</code>, <code>thumbnailUrl</code>, <code>summary</code>, <code>description</code> when Yahoo provides them; <code>newsCount</code>. The primary feed is Yahoo's Finance Nexus graph with cursor pagination, so <code>maxNews</code> can go up to 200; search news and the HTML page remain fallbacks</li>
 <li><code>recommendations</code> — <code>strongBuy</code>, <code>buy</code>, <code>hold</code>, <code>sell</code>, <code>strongSell</code></li>
@@ -882,7 +79,7 @@
 <li><code>calendarEvents</code> — <code>earningsDate</code>, <code>earningsCallDate</code>, <code>isEarningsDateEstimate</code>, <code>earningsAverage</code>, <code>earningsLow</code>, <code>earningsHigh</code>, <code>revenueAverage</code>, <code>revenueLow</code>, <code>revenueHigh</code>, <code>exDividendDate</code>, <code>dividendDate</code></li>
 <li><code>calendar</code> — the same dates and estimates with legacy snake-case keys</li>
 </ul>
-<h3 id="readme-holders-and-insiders-when-enabled">Holders and insiders (when enabled)</h3>
+<h4 id="readme-holders-and-insiders-when-enabled">Holders and insiders (when enabled)</h4>
 <ul>
 <li><code>holders.institutional[]</code>, <code>holders.mutualFund[]</code> — <code>Date_Reported</code>, <code>Holder</code>, <code>pctHeld</code>, <code>Shares</code>, <code>Value</code>, <code>pctChange</code></li>
 <li><code>holders.major</code> — <code>insidersPercentHeld</code>, <code>institutionsPercentHeld</code>, <code>institutionsFloatPercentHeld</code>, <code>institutionsCount</code></li>
@@ -890,14 +87,14 @@
 <li><code>holders.netSharePurchaseActivity</code> — buy/sell/net counts and shares, insider percentages and institutional net buying</li>
 <li><code>insiderTransactions[]</code> — <code>Shares</code>, <code>Value</code>, <code>URL</code>, <code>Text</code>, <code>Insider</code>, <code>Position</code>, <code>Transaction</code>, <code>Start_Date</code>, <code>Ownership</code>; <code>insiderTransactionCount</code></li>
 </ul>
-<h3 id="readme-options-when-includeoptions-is-on">Options (when <code>includeOptions</code> is on)</h3>
+<h4 id="readme-options-when-includeoptions-is-on">Options (when <code>includeOptions</code> is on)</h4>
 <ul>
 <li><code>optionExpirations[]</code> — upcoming expiration dates</li>
 <li><code>options</code> — <code>expiration</code>, <code>calls[]</code>, <code>puts[]</code>, and an underlying <code>quote</code></li>
 <li><code>optionChains[]</code> — present when more than one expiration is requested</li>
 <li>Contract fields: <code>contractSymbol</code>, <code>strike</code>, <code>currency</code>, <code>lastPrice</code>, <code>change</code>, <code>percentChange</code>, <code>volume</code>, <code>openInterest</code>, <code>bid</code>, <code>ask</code>, <code>contractSize</code>, <code>expiration</code>, <code>lastTradeDate</code>, <code>impliedVolatility</code>, <code>inTheMoney</code></li>
 </ul>
-<h3 id="readme-funds-filings-and-research-extras">Funds, filings and research extras</h3>
+<h4 id="readme-funds-filings-and-research-extras">Funds, filings and research extras</h4>
 <ul>
 <li><code>fundProfile</code> — <code>family</code>, <code>categoryName</code>, <code>legalType</code>, <code>annualReportExpenseRatio</code>, <code>annualHoldingsTurnover</code>, <code>totalNetAssets</code> (absolute value, not millions), <code>managerName</code>, <code>managerBio</code>, <code>inceptionDate</code> (fund inception when Yahoo publishes it; omitted otherwise)</li>
 <li><code>topHoldings</code> — <code>cashPosition</code>, <code>stockPosition</code>, <code>bondPosition</code>, <code>otherPosition</code>, <code>preferredPosition</code>, <code>convertiblePosition</code>, <code>holdings[]</code>, <code>equityHoldings</code>, <code>bondHoldings</code>, <code>otherHoldings</code>, <code>bondRatings[]</code>, <code>sectorWeightings[]</code> (rating and sector rows are <code>{key, value}</code>; equity sector weights are empty for non-equity funds such as GLD and TLT)</li>
@@ -907,19 +104,66 @@
 <li><code>relatedSymbols[]</code> — <code>symbol</code>, <code>score</code></li>
 <li><code>requestedTicker</code> — present when an input alias resolved to a different Yahoo symbol (for example <code>BRK.B</code> → <code>BRK-B</code>)</li>
 </ul>
-<h2 id="readme-output-discovery-modes">Output: discovery modes</h2>
-<h3 id="readme-searchresult-mode-search"><code>searchResult</code> (mode = <code>search</code>)</h3>
+<!--/readme--><h3 id="readme-output-discovery-modes">Output: discovery modes</h3><!--readme--><h4 id="readme-searchresult-mode-search"><code>searchResult</code> (mode = <code>search</code>)</h4>
 <p><code>recordType</code>, <code>ticker</code>, <code>sourceUrl</code>, <code>scrapedAt</code>, <code>name</code>, <code>longName</code>, <code>exchange</code>, <code>exchangeDisplay</code>, <code>quoteType</code>, <code>typeDisplay</code>, <code>sector</code>, <code>industry</code>, <code>score</code>, <code>isYahooFinance</code>, optional <code>quote</code> snapshot.</p>
-<h3 id="readme-screenerresult-mode-screener-or-customscreener"><code>screenerResult</code> (mode = <code>screener</code> or <code>customScreener</code>)</h3>
+<h4 id="readme-screenerresult-mode-screener-or-customscreener"><code>screenerResult</code> (mode = <code>screener</code> or <code>customScreener</code>)</h4>
 <p><code>recordType</code>, <code>ticker</code>, <code>sourceUrl</code>, <code>scrapedAt</code>, <code>screenerId</code>, <code>screenerName</code>, <code>rank</code>, plus quote fields such as <code>currentPrice</code>, <code>previousClose</code>, <code>marketCap</code>, <code>trailingPE</code>, <code>forwardPE</code>, <code>dividendYield</code>, <code>fiftyTwoWeekHigh</code>, <code>fiftyTwoWeekLow</code>, <code>volume</code>, <code>averageVolume</code>, <code>dayChange</code>, <code>dayChangePercent</code>, <code>quoteType</code>, <code>exchange</code>, <code>currency</code>, <code>marketState</code>, pre-market/post-market fields and <code>fullday*</code> fields. Custom rows also include <code>region</code> and <code>screenerSort</code>.</p>
-<h3 id="readme-trendingsymbol-mode-trending"><code>trendingSymbol</code> (mode = <code>trending</code>)</h3>
+<h4 id="readme-trendingsymbol-mode-trending"><code>trendingSymbol</code> (mode = <code>trending</code>)</h4>
 <p><code>recordType</code>, <code>ticker</code>, <code>sourceUrl</code>, <code>scrapedAt</code>, <code>region</code>, <code>rank</code>, plus the same quote fields when Yahoo returns them.</p>
-<h3 id="readme-marketsummary-mode-marketsummary"><code>marketSummary</code> (mode = <code>marketSummary</code>)</h3>
+<h4 id="readme-marketsummary-mode-marketsummary"><code>marketSummary</code> (mode = <code>marketSummary</code>)</h4>
 <p><code>recordType</code>, <code>ticker</code>, <code>sourceUrl</code>, <code>scrapedAt</code>, <code>shortName</code>, <code>fullExchangeName</code>, <code>quoteType</code>, <code>marketState</code>, <code>currentPrice</code>, <code>dayChange</code>, <code>dayChangePercent</code>, <code>previousClose</code>, <code>regularMarketTime</code>, <code>typeDisplay</code>.</p>
-<h3 id="readme-error"><code>error</code></h3>
+<h4 id="readme-error"><code>error</code></h4>
 <p><code>recordType: &quot;error&quot;</code>, <code>type: &quot;yahoo_finance_error&quot;</code>, <code>error</code>, <code>ticker</code>, <code>reason</code>, <code>message</code>, <code>sourceUrl</code>, <code>scrapedAt</code>. <code>error</code> mirrors the legacy short reason (<code>no_data</code>). Invalid or delisted symbols produce this record instead of a partial ticker record.</p>
-<h2 id="readme-input">Input</h2>
-<div class="table-wrap"><table>
+<!--/readme--></details></section><section id="run"><h2>Run it</h2><p>Set <code>APIFY_TOKEN</code> to your <a href="https://console.apify.com/settings/integrations">Apify API token</a>, then run the Actor with the input below (daily watchlist). Each run is billed to your Apify account. The <a href="/apify-actor-examples/guides/yahoo-finance-market-data-and-fundamentals-scraper/">export tutorial</a> turns the results into a CSV file or an Excel workbook.</p><div class="tabs" data-tabs><div class="tab-list" role="tablist" aria-label="Language"><button type="button" role="tab" id="run-tab-python" aria-controls="run-panel-python" aria-selected="true">Python</button><button type="button" role="tab" id="run-tab-javascript" aria-controls="run-panel-javascript" aria-selected="false" tabindex="-1">JavaScript</button><button type="button" role="tab" id="run-tab-curl" aria-controls="run-panel-curl" aria-selected="false" tabindex="-1">cURL</button><button type="button" role="tab" id="run-tab-mcp" aria-controls="run-panel-mcp" aria-selected="false" tabindex="-1">MCP</button></div><div role="tabpanel" id="run-panel-python" aria-labelledby="run-tab-python" class="tab-panel"><h3 class="tab-title">Python</h3><figure class="code"><pre><code id="run-python" class="language-python"># pip install apify-client
+import os
+from apify_client import ApifyClient
+
+ACTOR = &quot;nimbryxo-studio/yahoo-finance-market-data-and-fundamentals-scraper&quot;
+client = ApifyClient(os.environ[&quot;APIFY_TOKEN&quot;])
+run_input = {
+    &quot;mode&quot;: &quot;tickers&quot;,
+    &quot;tickers&quot;: [&quot;AAPL&quot;, &quot;MSFT&quot;, &quot;NVDA&quot;],
+    &quot;range&quot;: &quot;5d&quot;,
+    &quot;interval&quot;: &quot;1d&quot;,
+    &quot;includeHistory&quot;: True,
+    &quot;includeNews&quot;: False,
+}
+
+run = client.actor(ACTOR).call(run_input=run_input)
+for item in client.dataset(run[&quot;defaultDatasetId&quot;]).iterate_items():
+    print(item)
+</code></pre><button type="button" class="copy" data-copy="run-python">Copy</button></figure></div><div role="tabpanel" id="run-panel-javascript" aria-labelledby="run-tab-javascript" class="tab-panel"><h3 class="tab-title">JavaScript</h3><figure class="code"><pre><code id="run-javascript" class="language-javascript">// npm install apify-client
+import { ApifyClient } from &#x27;apify-client&#x27;;
+
+const ACTOR = &#x27;nimbryxo-studio/yahoo-finance-market-data-and-fundamentals-scraper&#x27;;
+const client = new ApifyClient({ token: process.env.APIFY_TOKEN });
+const input = {
+  &quot;mode&quot;: &quot;tickers&quot;,
+  &quot;tickers&quot;: [
+    &quot;AAPL&quot;,
+    &quot;MSFT&quot;,
+    &quot;NVDA&quot;
+  ],
+  &quot;range&quot;: &quot;5d&quot;,
+  &quot;interval&quot;: &quot;1d&quot;,
+  &quot;includeHistory&quot;: true,
+  &quot;includeNews&quot;: false
+};
+
+const run = await client.actor(ACTOR).call(input);
+const { items } = await client.dataset(run.defaultDatasetId).listItems();
+console.log(items);
+</code></pre><button type="button" class="copy" data-copy="run-javascript">Copy</button></figure></div><div role="tabpanel" id="run-panel-curl" aria-labelledby="run-tab-curl" class="tab-panel"><h3 class="tab-title">cURL</h3><figure class="code"><pre><code id="run-curl" class="language-bash">curl -X POST &quot;https://api.apify.com/v2/acts/nimbryxo-studio~yahoo-finance-market-data-and-fundamentals-scraper/run-sync-get-dataset-items?format=json&quot; \
+  -H &quot;Authorization: Bearer $APIFY_TOKEN&quot; \
+  -H &quot;Content-Type: application/json&quot; \
+  -d &#x27;{&quot;mode&quot;: &quot;tickers&quot;, &quot;tickers&quot;: [&quot;AAPL&quot;, &quot;MSFT&quot;, &quot;NVDA&quot;], &quot;range&quot;: &quot;5d&quot;, &quot;interval&quot;: &quot;1d&quot;, &quot;includeHistory&quot;: true, &quot;includeNews&quot;: false}&#x27;
+</code></pre><button type="button" class="copy" data-copy="run-curl">Copy</button></figure></div><div role="tabpanel" id="run-panel-mcp" aria-labelledby="run-tab-mcp" class="tab-panel"><h3 class="tab-title">MCP</h3><figure class="code"><pre><code id="run-mcp" class="language-json">{
+  &quot;mcpServers&quot;: {
+    &quot;apify&quot;: {
+      &quot;url&quot;: &quot;https://mcp.apify.com?tools=nimbryxo-studio/yahoo-finance-market-data-and-fundamentals-scraper&quot;
+    }
+  }
+}</code></pre><button type="button" class="copy" data-copy="run-mcp">Copy</button></figure></div></div></section><section id="cost"><h2>What it costs</h2><p>Yahoo Finance Market Data &amp; Fundamentals Scraper uses pay-per-event pricing: a fee for each result saved to the dataset, plus a start fee per run. Paid Apify plans pay less per result. The start fee is charged once per GB of run memory (at least once); the default run uses 4 GB, so a run starts with 4 start events, as the run totals include. You also pay Apify platform usage (compute and proxy) for the run, which these totals do not include.</p><div class="table-wrap"><table class="price-table stack"><caption>Published prices and run totals by Apify plan</caption><thead><tr><th scope="col">Plan</th><th scope="col">Per result</th><th scope="col">Per 1,000</th><th scope="col">Start fee</th><th scope="col">100 results</th><th scope="col">1,000 results</th><th scope="col">10,000 results</th></tr></thead><tbody><tr><th scope="row">Free plan</th><td data-label="Per result">$0.00099</td><td data-label="Per 1,000">$0.99</td><td data-label="Start fee">$0.10</td><td data-label="100 results">$0.50</td><td data-label="1,000 results">$1.39</td><td data-label="10,000 results">$10.30</td></tr><tr><th scope="row">Starter plan</th><td data-label="Per result">$0.00082</td><td data-label="Per 1,000">$0.82</td><td data-label="Start fee">$0.077</td><td data-label="100 results">$0.39</td><td data-label="1,000 results">$1.13</td><td data-label="10,000 results">$8.51</td></tr><tr><th scope="row">Scale plan</th><td data-label="Per result">$0.00066</td><td data-label="Per 1,000">$0.66</td><td data-label="Start fee">$0.053</td><td data-label="100 results">$0.28</td><td data-label="1,000 results">$0.87</td><td data-label="10,000 results">$6.81</td></tr><tr><th scope="row">Business plan</th><td data-label="Per result">$0.00049</td><td data-label="Per 1,000">$0.49</td><td data-label="Start fee">$0.03</td><td data-label="100 results">$0.17</td><td data-label="1,000 results">$0.61</td><td data-label="10,000 results">$5.02</td></tr></tbody></table></div><p class="fine">Run totals are the Actor's charges at the default memory: start fees plus the per-result price. Check the <a href="https://apify.com/nimbryxo-studio/yahoo-finance-market-data-and-fundamentals-scraper">Store page</a> before a large run; prices can change with notice.</p></section><section id="input"><h2>Input reference</h2><p>All 43 fields of the published input schema, in the publisher's order. Required fields are marked. Download the <a href="input-schema.json">input schema</a> as JSON.</p><div class="table-wrap"><table class="input-table stack"><caption>Input fields in the published schema</caption><thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Description</th></tr></thead><tbody><tr><th scope="row"><code>mode</code><span class="field-title">Mode</span></th><td data-label="Type">string <span class="req">required</span></td><td data-label="Description"><!--readme-->What to scrape.<!--/readme--><span class="field-meta">Default <code>&quot;tickers&quot;</code>; Allowed tickers, search, screener, customScreener, trending, marketSummary</span></td></tr><tr><th scope="row"><code>tickers</code><span class="field-title">Tickers</span></th><td data-label="Type">array</td><td data-label="Description"><!--readme-->Symbols or Yahoo Finance quote URLs (mode=tickers). Examples: <code>AAPL</code>, <code>BRK.B</code>, <code>^GSPC</code>, <code>EURUSD=X</code>, <code>BTC-USD</code>, <code>7203.T</code>, <code>https://finance.yahoo.com/quote/AAPL/</code>.<!--/readme--><span class="field-meta">Default <code>[]</code>; Example <code>[&quot;AAPL&quot;]</code></span></td></tr><tr><th scope="row"><code>searchQuery</code><span class="field-title">Search query</span></th><td data-label="Type">string</td><td data-label="Description"><!--readme-->Company, fund, index, currency or crypto name to search for (mode=search).<!--/readme--><span class="field-meta">Example <code>&quot;Apple&quot;</code></span></td></tr><tr><th scope="row"><code>maxSearchResults</code><span class="field-title">Max search results</span></th><td data-label="Type">integer</td><td data-label="Description"><!--readme-->Maximum number of search results to return (mode=search).<!--/readme--><span class="field-meta">Default <code>10</code>; Allowed 1 to 50</span></td></tr><tr><th scope="row"><code>screenerId</code><span class="field-title">Screener</span></th><td data-label="Type">string</td><td data-label="Description"><!--readme-->Yahoo predefined screener to run (mode=screener). Predefined screeners are US-centric; use mode=customScreener for a region-aware list.<!--/readme--><span class="field-meta">Default <code>&quot;day_gainers&quot;</code>; Allowed day_gainers, day_losers, most_actives, most_shorted_stocks, undervalued_growth_stocks, growth_technology_stocks, aggressive_small_caps, small_cap_gainers and 14 more</span></td></tr><tr><th scope="row"><code>screenerSort</code><span class="field-title">Custom screener sort</span></th><td data-label="Type">string</td><td data-label="Description"><!--readme-->Sort field for mode=customScreener.<!--/readme--><span class="field-meta">Default <code>&quot;intradaymarketcap&quot;</code>; Allowed intradaymarketcap, percentchange, dayvolume</span></td></tr><tr><th scope="row"><code>region</code><span class="field-title">Region</span></th><td data-label="Type">string</td><td data-label="Description"><!--readme-->Yahoo market region used for quotes, search, trending, localization and mode=customScreener.<!--/readme--><span class="field-meta">Default <code>&quot;US&quot;</code>; Allowed US, GB, DE, FR, JP, HK, IN, CA and 23 more</span></td></tr><tr><th scope="row"><code>language</code><span class="field-title">Language</span></th><td data-label="Type">string</td><td data-label="Description"><!--readme-->Language used for names, news and localized labels.<!--/readme--><span class="field-meta">Default <code>&quot;en-US&quot;</code>; Allowed en-US, en-GB, de-DE, fr-FR, es-ES, it-IT, nl-NL, pt-BR and 13 more</span></td></tr><tr><th scope="row"><code>range</code><span class="field-title">Chart range</span></th><td data-label="Type">string</td><td data-label="Description"><!--readme-->History range used when no start/end dates are supplied (mode=tickers).<!--/readme--><span class="field-meta">Default <code>&quot;1mo&quot;</code>; Example <code>&quot;5d&quot;</code>; Allowed 1d, 5d, 1mo, 3mo, 6mo, 1y, 2y, 5y and 3 more</span></td></tr><tr><th scope="row"><code>startDate</code><span class="field-title">History start date</span></th><td data-label="Type">string</td><td data-label="Description"><!--readme-->Earliest date for historical bars (<code>YYYY-MM-DD</code>). Overrides <code>range</code> (mode=tickers).<!--/readme--></td></tr><tr><th scope="row"><code>endDate</code><span class="field-title">History end date</span></th><td data-label="Type">string</td><td data-label="Description"><!--readme-->Latest date for historical bars (<code>YYYY-MM-DD</code>). Overrides <code>range</code> (mode=tickers).<!--/readme--></td></tr><tr><th scope="row"><code>interval</code><span class="field-title">Chart interval</span></th><td data-label="Type">string</td><td data-label="Description"><!--readme-->Candle interval. Intraday intervals have shorter Yahoo range limits; incompatible combinations are clamped and reported in the run status.<!--/readme--><span class="field-meta">Default <code>&quot;1d&quot;</code>; Allowed 1m, 2m, 5m, 15m, 30m, 60m, 90m, 1h and 5 more</span></td></tr><tr><th scope="row"><code>includePrePost</code><span class="field-title">Include pre/post market bars</span></th><td data-label="Type">boolean</td><td data-label="Description"><!--readme-->Include extended-hours bars for intraday history.<!--/readme--><span class="field-meta">Default <code>false</code></span></td></tr><tr><th scope="row"><code>includeHistory</code><span class="field-title">Include OHLCV history</span></th><td data-label="Type">boolean</td><td data-label="Description"><!--readme-->Include historical bars with adjusted close.<!--/readme--><span class="field-meta">Default <code>true</code>; Example <code>false</code></span></td></tr><tr><th scope="row"><code>includeDividends</code><span class="field-title">Include dividends</span></th><td data-label="Type">boolean</td><td data-label="Description"><!--readme-->Include the full dividend history from Yahoo chart events.<!--/readme--><span class="field-meta">Default <code>true</code>; Example <code>false</code></span></td></tr><tr><th scope="row"><code>includeSplits</code><span class="field-title">Include splits</span></th><td data-label="Type">boolean</td><td data-label="Description"><!--readme-->Include stock-split history with numerator and denominator.<!--/readme--><span class="field-meta">Default <code>true</code>; Example <code>false</code></span></td></tr><tr><th scope="row"><code>includeNews</code><span class="field-title">Include news</span></th><td data-label="Type">boolean</td><td data-label="Description"><!--readme-->Include ticker-related news headlines.<!--/readme--><span class="field-meta">Default <code>true</code>; Example <code>false</code></span></td></tr><tr><th scope="row"><code>maxNews</code><span class="field-title">Max news items</span></th><td data-label="Type">integer</td><td data-label="Description"><!--readme-->Maximum news items per ticker. Yahoo's news graph serves 200+ items through cursor pagination; the actor caps this request at 200.<!--/readme--><span class="field-meta">Default <code>25</code>; Example <code>10</code>; Allowed 1 to 200</span></td></tr><tr><th scope="row"><code>includeFinancials</code><span class="field-title">Include annual financials</span></th><td data-label="Type">boolean</td><td data-label="Description"><!--readme-->Include annual income statement, balance sheet and cash-flow statement.<!--/readme--><span class="field-meta">Default <code>false</code></span></td></tr><tr><th scope="row"><code>includeQuarterlyFinancials</code><span class="field-title">Include quarterly financials</span></th><td data-label="Type">boolean</td><td data-label="Description"><!--readme-->Add quarterly statements under <code>financials.quarterly</code>. Takes effect only when <code>includeFinancials</code> is also on.<!--/readme--><span class="field-meta">Default <code>false</code></span></td></tr><tr><th scope="row"><code>includeHolders</code><span class="field-title">Include holders</span></th><td data-label="Type">boolean</td><td data-label="Description"><!--readme-->Include institutional, mutual-fund, major-holder and insider-holder summaries.<!--/readme--><span class="field-meta">Default <code>false</code></span></td></tr><tr><th scope="row"><code>includeInsiders</code><span class="field-title">Include insider activity</span></th><td data-label="Type">boolean</td><td data-label="Description"><!--readme-->Include insider transactions, insider holders and net share-purchase activity.<!--/readme--><span class="field-meta">Default <code>false</code></span></td></tr><tr><th scope="row"><code>includeOptions</code><span class="field-title">Include options chain</span></th><td data-label="Type">boolean</td><td data-label="Description"><!--readme-->Include option chains for optionable symbols.<!--/readme--><span class="field-meta">Default <code>false</code></span></td></tr><tr><th scope="row"><code>optionExpirations</code><span class="field-title">Option expirations</span></th><td data-label="Type">integer</td><td data-label="Description"><!--readme-->How many upcoming option expirations to fetch (mode=tickers, includeOptions=true).<!--/readme--><span class="field-meta">Default <code>1</code>; Allowed 1 to 25</span></td></tr><tr><th scope="row"><code>maxOptionContracts</code><span class="field-title">Max contracts per side</span></th><td data-label="Type">integer</td><td data-label="Description"><!--readme-->Maximum calls and maximum puts per expiration.<!--/readme--><span class="field-meta">Default <code>50</code>; Allowed 1 to 500</span></td></tr><tr><th scope="row"><code>optionContractType</code><span class="field-title">Option contract type</span></th><td data-label="Type">string</td><td data-label="Description"><!--readme-->Which option sides to return.<!--/readme--><span class="field-meta">Default <code>&quot;both&quot;</code>; Allowed both, calls, puts</span></td></tr><tr><th scope="row"><code>minStrike</code><span class="field-title">Minimum strike</span></th><td data-label="Type">number</td><td data-label="Description"><!--readme-->Drop option contracts below this strike.<!--/readme--><span class="field-meta">Allowed 0 to 1000000000</span></td></tr><tr><th scope="row"><code>maxStrike</code><span class="field-title">Maximum strike</span></th><td data-label="Type">number</td><td data-label="Description"><!--readme-->Drop option contracts above this strike.<!--/readme--><span class="field-meta">Allowed 0 to 1000000000</span></td></tr><tr><th scope="row"><code>minVolume</code><span class="field-title">Minimum option volume</span></th><td data-label="Type">integer</td><td data-label="Description"><!--readme-->Drop option contracts below this volume. Contracts with no volume are excluded when this is set.<!--/readme--><span class="field-meta">Allowed 0 to 1000000000</span></td></tr><tr><th scope="row"><code>minOpenInterest</code><span class="field-title">Minimum open interest</span></th><td data-label="Type">integer</td><td data-label="Description"><!--readme-->Drop option contracts below this open interest. Contracts with no open interest are excluded when this is set.<!--/readme--><span class="field-meta">Allowed 0 to 1000000000</span></td></tr><tr><th scope="row"><code>minImpliedVolatilityPercent</code><span class="field-title">Minimum implied volatility (%)</span></th><td data-label="Type">number</td><td data-label="Description"><!--readme-->Drop contracts below this implied volatility in percent, e.g. 25 means 25%.<!--/readme--><span class="field-meta">Allowed 0 to 1000</span></td></tr><tr><th scope="row"><code>includeRecommendations</code><span class="field-title">Include recommendations</span></th><td data-label="Type">boolean</td><td data-label="Description"><!--readme-->Include the analyst recommendation summary and four-period recommendation trend.<!--/readme--><span class="field-meta">Default <code>true</code>; Example <code>false</code></span></td></tr><tr><th scope="row"><code>includeUpgradesDowngrades</code><span class="field-title">Include upgrades and downgrades</span></th><td data-label="Type">boolean</td><td data-label="Description"><!--readme-->Include the latest analyst rating changes.<!--/readme--><span class="field-meta">Default <code>false</code></span></td></tr><tr><th scope="row"><code>includeAnalystPriceTargets</code><span class="field-title">Include price targets</span></th><td data-label="Type">boolean</td><td data-label="Description"><!--readme-->Include the analyst price-target summary.<!--/readme--><span class="field-meta">Default <code>true</code>; Example <code>false</code></span></td></tr><tr><th scope="row"><code>includeEarningsHistory</code><span class="field-title">Include earnings history</span></th><td data-label="Type">boolean</td><td data-label="Description"><!--readme-->Include recent quarters with EPS actual, estimate, difference and surprise.<!--/readme--><span class="field-meta">Default <code>true</code>; Example <code>false</code></span></td></tr><tr><th scope="row"><code>includeEarningsEstimates</code><span class="field-title">Include earnings estimates</span></th><td data-label="Type">boolean</td><td data-label="Description"><!--readme-->Include EPS and revenue estimates plus growth estimates.<!--/readme--><span class="field-meta">Default <code>false</code></span></td></tr><tr><th scope="row"><code>includeEarningsCalendar</code><span class="field-title">Include earnings calendar</span></th><td data-label="Type">boolean</td><td data-label="Description"><!--readme-->Include upcoming earnings dates, estimates and dividend dates.<!--/readme--><span class="field-meta">Default <code>true</code>; Example <code>false</code></span></td></tr><tr><th scope="row"><code>includeFundData</code><span class="field-title">Include fund data</span></th><td data-label="Type">boolean</td><td data-label="Description"><!--readme-->Include fund profile, top holdings and performance for ETFs and mutual funds.<!--/readme--><span class="field-meta">Default <code>false</code></span></td></tr><tr><th scope="row"><code>includeSecFilings</code><span class="field-title">Include SEC filings</span></th><td data-label="Type">boolean</td><td data-label="Description"><!--readme-->Include recent SEC filings with EDGAR links and exhibits.<!--/readme--><span class="field-meta">Default <code>false</code></span></td></tr><tr><th scope="row"><code>includeInsights</code><span class="field-title">Include analyst insights</span></th><td data-label="Type">boolean</td><td data-label="Description"><!--readme-->Include technical outlook, research reports and significant developments.<!--/readme--><span class="field-meta">Default <code>false</code></span></td></tr><tr><th scope="row"><code>includeRelatedSymbols</code><span class="field-title">Include related symbols</span></th><td data-label="Type">boolean</td><td data-label="Description"><!--readme-->Include Yahoo's related-symbol recommendations.<!--/readme--><span class="field-meta">Default <code>false</code></span></td></tr><tr><th scope="row"><code>maxResults</code><span class="field-title">Max results</span></th><td data-label="Type">integer</td><td data-label="Description"><!--readme-->Maximum records for screener, customScreener, trending and marketSummary modes. Search uses maxSearchResults.<!--/readme--><span class="field-meta">Default <code>50</code>; Example <code>1</code>; Allowed 1 to 5000</span></td></tr><tr><th scope="row"><code>concurrency</code><span class="field-title">Concurrency</span></th><td data-label="Type">integer</td><td data-label="Description"><!--readme-->Number of tickers fetched in parallel (mode=tickers).<!--/readme--><span class="field-meta">Default <code>4</code>; Example <code>1</code>; Allowed 1 to 16</span></td></tr></tbody></table></div><details class="publisher-notes"><summary>The publisher's input notes</summary><h3 id="readme-input">Input</h3><!--readme--><div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Field</th>
@@ -1189,7 +433,7 @@
 </tr>
 </tbody>
 </table></div>
-<h3 id="readme-example-daily-watchlist">Example: daily watchlist</h3>
+<h4 id="readme-example-daily-watchlist">Example: daily watchlist</h4>
 <pre><code class="language-json">{
   &quot;mode&quot;: &quot;tickers&quot;,
   &quot;tickers&quot;: [&quot;AAPL&quot;, &quot;MSFT&quot;, &quot;NVDA&quot;],
@@ -1199,7 +443,7 @@
   &quot;includeNews&quot;: false
 }
 </code></pre>
-<h3 id="readme-example-full-fundamentals-and-ownership">Example: full fundamentals and ownership</h3>
+<h4 id="readme-example-full-fundamentals-and-ownership">Example: full fundamentals and ownership</h4>
 <pre><code class="language-json">{
   &quot;mode&quot;: &quot;tickers&quot;,
   &quot;tickers&quot;: [&quot;AAPL&quot;],
@@ -1211,7 +455,7 @@
   &quot;includeSecFilings&quot;: true
 }
 </code></pre>
-<h3 id="readme-example-option-chain-with-filters">Example: option chain with filters</h3>
+<h4 id="readme-example-option-chain-with-filters">Example: option chain with filters</h4>
 <pre><code class="language-json">{
   &quot;mode&quot;: &quot;tickers&quot;,
   &quot;tickers&quot;: [&quot;TSLA&quot;],
@@ -1225,7 +469,7 @@
   &quot;minImpliedVolatilityPercent&quot;: 20
 }
 </code></pre>
-<h3 id="readme-example-etf-research">Example: ETF research</h3>
+<h4 id="readme-example-etf-research">Example: ETF research</h4>
 <pre><code class="language-json">{
   &quot;mode&quot;: &quot;tickers&quot;,
   &quot;tickers&quot;: [&quot;SPY&quot;, &quot;QQQ&quot;],
@@ -1234,7 +478,7 @@
   &quot;includeHistory&quot;: false
 }
 </code></pre>
-<h3 id="readme-example-discover-symbols-and-market-movers">Example: discover symbols and market movers</h3>
+<h4 id="readme-example-discover-symbols-and-market-movers">Example: discover symbols and market movers</h4>
 <pre><code class="language-json">{
   &quot;mode&quot;: &quot;screener&quot;,
   &quot;screenerId&quot;: &quot;day_gainers&quot;,
@@ -1260,19 +504,24 @@
   &quot;maxResults&quot;: 10
 }
 </code></pre>
-<h2 id="readme-use-cases">Use cases</h2>
-<ul>
-<li><strong>Watchlist monitoring</strong> — schedule a small ticker list for daily quote, pre-market and news snapshots</li>
-<li><strong>Backtesting and charting</strong> — export OHLCV bars with adjusted close across 13 intervals and 11 ranges</li>
-<li><strong>Fundamental screening</strong> — pull annual and quarterly statements, margins, growth and analyst targets into a warehouse</li>
-<li><strong>Options research</strong> — collect multiple expirations and filter by strike, volume, open interest or implied volatility</li>
-<li><strong>ETF and fund due diligence</strong> — compare expense ratios, top holdings, sector exposure and trailing returns</li>
-<li><strong>Market discovery</strong> — feed screener, search, trending and market-summary rows into alerting or research dashboards</li>
-<li><strong>Ownership and insider tracking</strong> — monitor institutional positions, insider holders and net purchase activity</li>
-<li><strong>Compliance and filing research</strong> — collect SEC filing links and exhibits for a list of companies</li>
-</ul>
-<h2 id="readme-known-hard-limits">Known hard limits</h2>
-<p>These are limits of Yahoo's public data, verified during the revamp; the actor does not fabricate values for them:</p>
+<!--/readme--></details></section><section id="faq"><h2>Questions</h2><div class="qa"><h3 id="faq-do-i-need-an-api-key-login-cookies-or-a-proxy"><!--readme-->Do I need an API key, login, cookies or a proxy?<!--/readme--></h3><!--readme--><p>No. The actor reads Yahoo Finance's public web data without an account. It uses no user cookies or API keys, and it works without a proxy by default.</p>
+<!--/readme--></div><div class="qa"><h3 id="faq-are-quotes-real-time"><!--readme-->Are quotes real-time?<!--/readme--></h3><!--readme--><p>Most Yahoo quotes are delayed, often by about 15 minutes for US equities. The record's <code>quoteSource</code>, <code>exchangeDataDelayedBy</code> and <code>marketState</code> fields tell you what Yahoo reported for that snapshot.</p>
+<!--/readme--></div><div class="qa"><h3 id="faq-can-i-get-pre-market-and-after-hours-prices"><!--readme-->Can I get pre-market and after-hours prices?<!--/readme--></h3><!--readme--><p>Pre-market fields are included when Yahoo publishes them. <code>postMarket*</code> fields (<code>postMarketPrice</code>, <code>postMarketChange</code>, <code>postMarketChangePercent</code>, <code>postMarketTime</code>) are mapped from Yahoo's quote summary (with the quote-v7 fields as fallback). Post-market values were verified for US-listed equities and ETFs (12/12) and were absent for non-US listings, indices, FX, crypto and futures (0/18), so treat these fields as US-only. Intraday history can include pre/post-market bars with <code>includePrePost</code>.</p>
+<!--/readme--></div><div class="qa"><h3 id="faq-why-are-some-fields-missing-for-my-ticker"><!--readme-->Why are some fields missing for my ticker?<!--/readme--></h3><!--readme--><p>Not every instrument type has every data type. Indices, currencies, futures and crypto usually have quotes and charts but no company statements, holders or options. ETFs have fund data instead of company statements. The actor omits a field when Yahoo has no value for it.</p>
+<!--/readme--></div><div class="qa"><h3 id="faq-how-many-news-items-can-i-get"><!--readme-->How many news items can I get?<!--/readme--></h3><!--readme--><p>The actor reads Yahoo's Finance Nexus graph first and paginates its cursor, so <code>maxNews</code> supports up to 200 items per symbol (AAPL returned 148, MSFT 132, NVDA 182 and SPY 138 in verification). News works for equities, ETFs, indices, FX and crypto on this path. If the graph returns nothing, the actor falls back to Yahoo's search feed (about 50 items) and then the HTML news page. Results are deduplicated by URL; news can mention related tickers, so use <code>relatedTickers</code> when you need to filter relevance.</p>
+<!--/readme--></div><div class="qa"><h3 id="faq-why-is-the-options-chain-missing"><!--readme-->Why is the options chain missing?<!--/readme--></h3><!--readme--><p>Options exist only for optionable US-listed symbols. Foreign listings, indices, currencies, futures and crypto do not have a Yahoo option chain. Yahoo exposes only current expirations, not historical chains, and its contract payload contains no delta, gamma, theta or vega. Historical options, source-provided greeks and non-US option chains are confirmed hard limits; the actor does not invent them.</p>
+<!--/readme--></div><div class="qa"><h3 id="faq-why-are-quarterly-statements-missing"><!--readme-->Why are quarterly statements missing?<!--/readme--></h3><!--readme--><p>Quarterly statements require both <code>includeFinancials</code> and <code>includeQuarterlyFinancials</code>. Operating companies, not funds, indices, FX, crypto or futures, publish them; those instrument types have no Yahoo income/balance/cash-flow statements (a confirmed hard limit). Use <code>includeFundData</code> for fund profiles and holdings. Some foreign issuers report only annual periods.</p>
+<!--/readme--></div><div class="qa"><h3 id="faq-what-does-financials-contain"><!--readme-->What does <code>financials</code> contain?<!--/readme--></h3><!--readme--><p><code>financials.income</code>, <code>financials.balance</code> and <code>financials.cashflow</code> are keyed by fiscal period. Values are in the reporting currency shown in <code>financials.currency</code>; <code>financials.periods</code> lists the available dates. Quarterly groups sit under <code>financials.quarterly</code>. Item keys keep the legacy underscore labels such as <code>Total_Revenue</code>, <code>Net_Income</code> and <code>Operating_Cash_Flow</code>, so existing spreadsheet and API integrations continue to work.</p>
+<!--/readme--></div><div class="qa"><h3 id="faq-why-is-dividendyield-a-small-number-like-0-31"><!--readme-->Why is <code>dividendYield</code> a small number like 0.31?<!--/readme--></h3><!--readme--><p>For backward compatibility, <code>dividendYield</code> keeps Yahoo's percentage number: <code>0.31</code> means 0.31%. The additive <code>trailingAnnualDividendYield</code> is a fraction: <code>0.0031</code> means the same yield. <code>heldPercentInsiders</code> and <code>heldPercentInstitutions</code> are fractions; <code>debtToEquity</code> is a percentage number.</p>
+<!--/readme--></div><div class="qa"><h3 id="faq-why-is-the-sustainability-esg-field-gone"><!--readme-->Why is the sustainability/ESG field gone?<!--/readme--></h3><!--readme--><p>Yahoo retired its ESG endpoints and the sustainability page no longer returns scores. The actor does not advertise or emit a <code>sustainability</code> field, and an old task that sends <code>includeSustainability</code> continues to run with a logged no-op.</p>
+<!--/readme--></div><div class="qa"><h3 id="faq-can-i-search-in-any-language"><!--readme-->Can I search in any language?<!--/readme--></h3><!--readme--><p>Company names and news localize through the <code>language</code> and <code>region</code> inputs, and unicode names are preserved in output. Yahoo's <code>/v1/finance/search</code> endpoint rejects non-Latin text with HTTP 400 (a confirmed source limit), so for Japanese, Chinese or Korean queries the actor automatically falls back to <code>/v1/finance/lookup</code> with the selected language and region. Lookup returned documents for most JA/ZH-Hans/ZH-Hant/KO probes. If it returns none, the run status says so explicitly; try a ticker (<code>7203.T</code>), an English name, or another region/language.</p>
+<!--/readme--></div><div class="qa"><h3 id="faq-how-are-fund-and-option-values-expressed"><!--readme-->How are fund and option values expressed?<!--/readme--></h3><!--readme--><p>Fund positions (<code>cashPosition</code>, <code>stockPosition</code>, <code>holdingPercent</code>) are fractions: <code>0.0836</code> means 8.36%. <code>fundProfile.totalNetAssets</code> is absolute fund assets (USD for US-listed funds), normalized from Yahoo's raw millions when that is the only value available. Option <code>impliedVolatility</code> uses Yahoo's percentage number: <code>2.0859</code> means 208.59%, while the <code>minImpliedVolatilityPercent</code> input is a percent: <code>25</code> means 25%. <code>marketSummary.dayChangePercent</code> is also Yahoo's percentage number. <code>postMarketChangePercent</code> is normalized to the same percentage-number convention (<code>0.63</code> means 0.63%). Statement values are in <code>financials.currency</code>.</p>
+<!--/readme--></div><div class="qa"><h3 id="faq-why-do-predefined-screeners-return-us-rows-even-when-i-pick"><!--readme-->Why do predefined screeners return US rows even when I pick another region?<!--/readme--></h3><!--readme--><p>Yahoo's predefined screener endpoint is US-centric and ignores the region parameter (confirmed hard limit). Use <code>mode: &quot;customScreener&quot;</code> instead: it posts a region operand to Yahoo's custom screener and returned regional rows for 30 of 31 region codes (JP 3,814; IN 8,553; PE 0). The actor paginates in 250-row requests until <code>maxResults</code> or source exhaustion. Predefined screeners are unchanged.</p>
+<!--/readme--></div><div class="qa"><h3 id="faq-why-does-trending-return-only-a-few-symbols-for-some-regions"><!--readme-->Why does trending return only a few symbols for some regions?<!--/readme--></h3><!--readme--><p>Yahoo's trending feed is sparse outside the US. A region with one to three symbols is a genuine upstream result, not an early stop. The run status reports the shortfall, and <code>mode: &quot;customScreener&quot;</code> provides a region-wide fallback.</p>
+<!--/readme--></div><div class="qa"><h3 id="faq-what-happens-to-a-delisted-or-invalid-symbol"><!--readme-->What happens to a delisted or invalid symbol?<!--/readme--></h3><!--readme--><p>The actor emits an explicit <code>error</code> record with <code>reason: &quot;no_data&quot;</code> and continues with the other symbols. It does not emit a silent partial ticker record. Aliases such as <code>BRK.B</code> are resolved to Yahoo's spelling (<code>BRK-B</code>) and return data. Rare-symbol HTTP 500 quote pages were not reproduced locally (306 of 306 rare/crypto pages returned 200); the actor still keeps the quote-v7, chart and HTML fallbacks and reports an error rather than fabricating values.</p>
+<!--/readme--></div><div class="qa"><h3 id="faq-why-are-some-fund-fields-missing"><!--readme-->Why are some fund fields missing?<!--/readme--></h3><!--readme--><p><code>topHoldings.bondRatings</code> and <code>topHoldings.sectorWeightings</code> are present when Yahoo publishes them; equity sector weights are empty for non-equity funds such as GLD and TLT. <code>fundProfile.totalNetAssets</code> is normalized to absolute assets and omitted when Yahoo only returns a zero sentinel; <code>fundProfile.inceptionDate</code> comes from Yahoo's fund inception field, not the current manager's start date, and is omitted when unavailable. Morningstar overall/risk ratings are populated for mutual funds but empty for most ETFs, so they are omitted when absent rather than emitted as zero. SEC filings can be attached to one share class only; for example GOOGL's <code>secFilings</code> module is empty while GOOG returns filings, so the actor falls back to the sibling class and records <code>secFilingsSourceSymbol</code>.</p>
+<!--/readme--></div><div class="qa"><h3 id="faq-is-this-affiliated-with-yahoo"><!--readme-->Is this affiliated with Yahoo?<!--/readme--></h3><!--readme--><p>No. This is an independent, third-party actor that reads Yahoo Finance's publicly available data and is not affiliated with or endorsed by Yahoo.</p>
+<!--/readme--></div></section><section id="notes"><h2>Limits and notes</h2><h3 id="readme-known-hard-limits">Known hard limits</h3><!--readme--><p>These are limits of Yahoo's public data, verified during the revamp; the actor does not fabricate values for them:</p>
 <ul>
 <li><strong>Options history and source greeks:</strong> only current option chains are served, and there are no source greeks (no delta/gamma/theta/vega in Yahoo's contract payload). Historical chains are unavailable.</li>
 <li><strong>US-only options:</strong> option chains exist only for optionable US-listed symbols; no HK/EU/index/FX/crypto chains.</li>
@@ -1284,39 +533,4 @@
 <li><strong>News source cap:</strong> the graph is paginated by cursor and is capped at 200 items per ticker by this actor; the search fallback is smaller.</li>
 <li><strong>Trending sparsity:</strong> several regions return only 1–4 symbols upstream.</li>
 </ul>
-<h2 id="readme-faq">FAQ</h2>
-<p><strong>Do I need an API key, login, cookies or a proxy?</strong>
-No. The actor reads Yahoo Finance's public web data without an account. It uses no user cookies or API keys, and it works without a proxy by default.</p>
-<p><strong>Are quotes real-time?</strong>
-Most Yahoo quotes are delayed, often by about 15 minutes for US equities. The record's <code>quoteSource</code>, <code>exchangeDataDelayedBy</code> and <code>marketState</code> fields tell you what Yahoo reported for that snapshot.</p>
-<p><strong>Can I get pre-market and after-hours prices?</strong>
-Pre-market fields are included when Yahoo publishes them. <code>postMarket*</code> fields (<code>postMarketPrice</code>, <code>postMarketChange</code>, <code>postMarketChangePercent</code>, <code>postMarketTime</code>) are mapped from Yahoo's quote summary (with the quote-v7 fields as fallback). Post-market values were verified for US-listed equities and ETFs (12/12) and were absent for non-US listings, indices, FX, crypto and futures (0/18), so treat these fields as US-only. Intraday history can include pre/post-market bars with <code>includePrePost</code>.</p>
-<p><strong>Why are some fields missing for my ticker?</strong>
-Not every instrument type has every data type. Indices, currencies, futures and crypto usually have quotes and charts but no company statements, holders or options. ETFs have fund data instead of company statements. The actor omits a field when Yahoo has no value for it.</p>
-<p><strong>How many news items can I get?</strong>
-The actor reads Yahoo's Finance Nexus graph first and paginates its cursor, so <code>maxNews</code> supports up to 200 items per symbol (AAPL returned 148, MSFT 132, NVDA 182 and SPY 138 in verification). News works for equities, ETFs, indices, FX and crypto on this path. If the graph returns nothing, the actor falls back to Yahoo's search feed (about 50 items) and then the HTML news page. Results are deduplicated by URL; news can mention related tickers, so use <code>relatedTickers</code> when you need to filter relevance.</p>
-<p><strong>Why is the options chain missing?</strong>
-Options exist only for optionable US-listed symbols. Foreign listings, indices, currencies, futures and crypto do not have a Yahoo option chain. Yahoo exposes only current expirations, not historical chains, and its contract payload contains no delta, gamma, theta or vega. Historical options, source-provided greeks and non-US option chains are confirmed hard limits; the actor does not invent them.</p>
-<p><strong>Why are quarterly statements missing?</strong>
-Quarterly statements require both <code>includeFinancials</code> and <code>includeQuarterlyFinancials</code>. Operating companies, not funds, indices, FX, crypto or futures, publish them; those instrument types have no Yahoo income/balance/cash-flow statements (a confirmed hard limit). Use <code>includeFundData</code> for fund profiles and holdings. Some foreign issuers report only annual periods.</p>
-<p><strong>What does <code>financials</code> contain?</strong>
-<code>financials.income</code>, <code>financials.balance</code> and <code>financials.cashflow</code> are keyed by fiscal period. Values are in the reporting currency shown in <code>financials.currency</code>; <code>financials.periods</code> lists the available dates. Quarterly groups sit under <code>financials.quarterly</code>. Item keys keep the legacy underscore labels such as <code>Total_Revenue</code>, <code>Net_Income</code> and <code>Operating_Cash_Flow</code>, so existing spreadsheet and API integrations continue to work.</p>
-<p><strong>Why is <code>dividendYield</code> a small number like 0.31?</strong>
-For backward compatibility, <code>dividendYield</code> keeps Yahoo's percentage number: <code>0.31</code> means 0.31%. The additive <code>trailingAnnualDividendYield</code> is a fraction: <code>0.0031</code> means the same yield. <code>heldPercentInsiders</code> and <code>heldPercentInstitutions</code> are fractions; <code>debtToEquity</code> is a percentage number.</p>
-<p><strong>Why is the sustainability/ESG field gone?</strong>
-Yahoo retired its ESG endpoints and the sustainability page no longer returns scores. The actor does not advertise or emit a <code>sustainability</code> field, and an old task that sends <code>includeSustainability</code> continues to run with a logged no-op.</p>
-<p><strong>Can I search in any language?</strong>
-Company names and news localize through the <code>language</code> and <code>region</code> inputs, and unicode names are preserved in output. Yahoo's <code>/v1/finance/search</code> endpoint rejects non-Latin text with HTTP 400 (a confirmed source limit), so for Japanese, Chinese or Korean queries the actor automatically falls back to <code>/v1/finance/lookup</code> with the selected language and region. Lookup returned documents for most JA/ZH-Hans/ZH-Hant/KO probes. If it returns none, the run status says so explicitly; try a ticker (<code>7203.T</code>), an English name, or another region/language.</p>
-<p><strong>How are fund and option values expressed?</strong>
-Fund positions (<code>cashPosition</code>, <code>stockPosition</code>, <code>holdingPercent</code>) are fractions: <code>0.0836</code> means 8.36%. <code>fundProfile.totalNetAssets</code> is absolute fund assets (USD for US-listed funds), normalized from Yahoo's raw millions when that is the only value available. Option <code>impliedVolatility</code> uses Yahoo's percentage number: <code>2.0859</code> means 208.59%, while the <code>minImpliedVolatilityPercent</code> input is a percent: <code>25</code> means 25%. <code>marketSummary.dayChangePercent</code> is also Yahoo's percentage number. <code>postMarketChangePercent</code> is normalized to the same percentage-number convention (<code>0.63</code> means 0.63%). Statement values are in <code>financials.currency</code>.</p>
-<p><strong>Why do predefined screeners return US rows even when I pick another region?</strong>
-Yahoo's predefined screener endpoint is US-centric and ignores the region parameter (confirmed hard limit). Use <code>mode: &quot;customScreener&quot;</code> instead: it posts a region operand to Yahoo's custom screener and returned regional rows for 30 of 31 region codes (JP 3,814; IN 8,553; PE 0). The actor paginates in 250-row requests until <code>maxResults</code> or source exhaustion. Predefined screeners are unchanged.</p>
-<p><strong>Why does trending return only a few symbols for some regions?</strong>
-Yahoo's trending feed is sparse outside the US. A region with one to three symbols is a genuine upstream result, not an early stop. The run status reports the shortfall, and <code>mode: &quot;customScreener&quot;</code> provides a region-wide fallback.</p>
-<p><strong>What happens to a delisted or invalid symbol?</strong>
-The actor emits an explicit <code>error</code> record with <code>reason: &quot;no_data&quot;</code> and continues with the other symbols. It does not emit a silent partial ticker record. Aliases such as <code>BRK.B</code> are resolved to Yahoo's spelling (<code>BRK-B</code>) and return data. Rare-symbol HTTP 500 quote pages were not reproduced locally (306 of 306 rare/crypto pages returned 200); the actor still keeps the quote-v7, chart and HTML fallbacks and reports an error rather than fabricating values.</p>
-<p><strong>Why are some fund fields missing?</strong>
-<code>topHoldings.bondRatings</code> and <code>topHoldings.sectorWeightings</code> are present when Yahoo publishes them; equity sector weights are empty for non-equity funds such as GLD and TLT. <code>fundProfile.totalNetAssets</code> is normalized to absolute assets and omitted when Yahoo only returns a zero sentinel; <code>fundProfile.inceptionDate</code> comes from Yahoo's fund inception field, not the current manager's start date, and is omitted when unavailable. Morningstar overall/risk ratings are populated for mutual funds but empty for most ETFs, so they are omitted when absent rather than emitted as zero. SEC filings can be attached to one share class only; for example GOOGL's <code>secFilings</code> module is empty while GOOG returns filings, so the actor falls back to the sibling class and records <code>secFilingsSourceSymbol</code>.</p>
-<p><strong>Is this affiliated with Yahoo?</strong>
-No. This is an independent, third-party actor that reads Yahoo Finance's publicly available data and is not affiliated with or endorsed by Yahoo.</p>
-</details></section><section id="python-quickstart"><h2>Python quickstart</h2><p>Use a schema-derived input and the Python standard library to start a run. An Apify account and token are required for execution.</p><p><a href="/apify-actor-examples/guides/yahoo-finance-market-data-and-fundamentals-scraper/">Open the step-by-step Python guide →</a></p></section><p class="source-note">Source build <code>z23J6rGwf21tmdpCT</code>. Documentation is regenerated from the default published build; private drafts are not included.</p></article></div></main><footer class="footer"><strong>Nimbryxo Studio</strong><div class="footer-links"><a href="/apify-actor-examples/topics/">Topics</a><a href="/apify-actor-examples/sources/">Documentation sources</a><a href="https://apify.com/nimbryxo-studio">Apify</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></div></footer></body></html>
+<!--/readme--></section><section id="related"><h2>Related Actors</h2><ul class="related" role="list"><li><a href="/apify-actor-examples/actors/amazon-all-offers-and-buy-box-tracker/">Amazon All Offers &amp; Buy Box Tracker</a><p>Collect every seller offer for Amazon ASINs you supply - condition, price, seller name and rating, shipping terms, delivery estimate, and which offer currently holds the buy box.</p></li><li><a href="/apify-actor-examples/actors/amazon-multi-domain-product-price-and-detail/">Amazon Multi-Domain Product Price &amp; Detail Scraper</a><p>Pull pricing, ratings, seller, variant and technical detail for Amazon products by URL or ASIN, across 21 country domains, with optional delivery postal-code targeting.</p></li><li><a href="/apify-actor-examples/actors/app-store-search-lookup-and-reviews-scraper/">App Store Search, Lookup &amp; Reviews Scraper</a><p>Search the Apple App Store by keyword or look up apps by ID or URL, with pricing, ratings, screenshots, developer info, and optional customer reviews across any App Store country.</p></li><li><a href="/apify-actor-examples/actors/ashby-job-board-compensation-and-openings-scraper/">Ashby Job Board Compensation &amp; Openings Scraper</a><p>Scrape public Ashby job boards for any company hiring on jobs.ashbyhq.com. Get every open role with title, department, team, location, remote status, salary/compensation ranges, apply links, and full job descriptions. No login, no API key.</p></li><li><a href="/apify-actor-examples/actors/bluesky-posts-profiles-feeds-and-threads-scraper/">Bluesky Posts, Profiles, Feeds &amp; Threads Scraper</a><p>Search Bluesky posts by keyword, hashtag, author, mention, domain or URL; read profiles, threads, lists, starter packs, feeds and followers; export likes, reposts, follows, quotes and relationships.</p></li><li><a href="/apify-actor-examples/actors/bulk-email-deliverability-and-smtp-verification/">Bulk Email Deliverability &amp; SMTP Verification</a><p>Check email addresses for syntax, MX records, disposable and role-based domains, and optionally SMTP mailbox existence and catch-all behavior, with a verdict and confidence score per address.</p></li></ul><p class="more"><a href="/apify-actor-examples/topics/developer-tools/">All developer tools Actors</a></p></section><section id="files"><h2>Source files</h2><p>This page is rebuilt from the default published build <code>z23J6rGwf21tmdpCT</code>. Download what it was built from: <a href="README.md">README</a>, <a href="input-schema.json">input schema</a>, <a href="output-schema.json">output schema</a>, <a href="dataset-schema.json">dataset schema</a>, <a href="key-value-schema.json">key-value store schema</a>.</p></section></article></div></div></main><footer class="footer"><div class="inner"><p><strong>Nimbryxo Studio</strong> publishes these Actors on Apify. Pages are rebuilt from each Actor&#x27;s published README, schemas and Store pricing.</p><nav aria-label="Footer"><a href="/apify-actor-examples/actors/">All Actors</a><a href="/apify-actor-examples/sites/">Sites</a><a href="/apify-actor-examples/topics/">Topics</a><a href="/apify-actor-examples/guides/">Guides</a><a href="/apify-actor-examples/sources/">How these pages are made</a><a href="https://apify.com/nimbryxo-studio">Nimbryxo Studio on Apify</a><a href="https://github.com/hasankhokhar2026/apify-actor-examples">GitHub</a></nav></div></footer></body></html>
