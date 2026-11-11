@@ -1,9 +1,21 @@
 {
   "actorOutputSchemaVersion": 1,
-  "description": "One record per show featured on Snapchat Discover, with its title, creator profile, cover art, publish time and a preview snap's media URL.",
+  "description": "One dataset containing Discover story records, publisher/show records with nested episodes, or episode records with snap media. Every record carries a recordType field and no empty values.",
   "properties": {
+    "episodes": {
+      "description": "Dataset items with recordType=episode: one episode per input URL, with its snap list and playable HLS URL.",
+      "template": "{{links.apiDefaultDatasetUrl}}/items",
+      "title": "Episodes",
+      "type": "string"
+    },
+    "publishers": {
+      "description": "Dataset items with recordType=publisher: profile, season summary, latest episodes, and optional full season history.",
+      "template": "{{links.apiDefaultDatasetUrl}}/items",
+      "title": "Publishers and shows",
+      "type": "string"
+    },
     "stories": {
-      "description": "Dataset containing all scraped Discover story records.",
+      "description": "Dataset items with recordType=discoverStory: the current Snapchat Discover feed for the selected country and locale.",
       "template": "{{links.apiDefaultDatasetUrl}}/items",
       "title": "Discover stories",
       "type": "string"

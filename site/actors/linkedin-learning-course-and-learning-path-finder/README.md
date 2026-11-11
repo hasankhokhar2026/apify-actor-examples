@@ -1,100 +1,169 @@
 # LinkedIn Learning Course & Learning Path Finder
 
-Search the [LinkedIn Learning](https://www.linkedin.com/learning/) catalog by keyword and get back structured data for the matching courses, learning paths, or videos — no LinkedIn login or Learning subscription needed.
+Read the public LinkedIn Learning catalog without an account, a subscription seat or a cookie. Search by keyword with LinkedIn's own filters, read specific course / learning-path / chapter URLs, or browse every learning path, and get structured records with instructor, duration, level, rating, learner count, skills, syllabus, reviews and certificate data.
 
 ## What this actor does
 
-- Searches LinkedIn Learning's public catalog by keyword, with an optional topic to narrow it further
-- Visits each matching course/path/video page and extracts its published schema.org course data
-- Filters by difficulty level and asset type (course, learning path, video)
-- Returns instructor name/profile, duration, topics and the skills it teaches, when LinkedIn Learning lists them
-- Empty fields are omitted from records rather than returned as null
+- **Searches the public catalog** by keyword, with one query per line for batch runs.
+- **Uses LinkedIn's real filters**: skill level, content type, time to complete, software label and sort order (best match, most viewed, newest).
+- **Collects past the 50-card guest page** by re-running the query across LinkedIn's own filter slices and merging unique records.
+- **Reads detail pages** for the full record: description, skills taught, syllabus sections, chapters, free-preview lessons, rating, rating count, learner count, provider, category path, reviews and certificate.
+- **Accepts URLs**: individual courses, learning paths, video chapters, topic pages and filtered search URLs.
+- **Browses all learning paths** from the public all-paths page.
+- **Skips LinkedIn's no-results fallback.** When nothing matches, LinkedIn renders a page of unrelated popular courses; the actor detects that page and returns zero records with an explanation instead of fabricated relevance.
+- **Empty fields are omitted** instead of writing nulls or sentinels.
 
-## Output per course
+## Modes
 
-- `title`, `description` — course name and overview text
-- `courseUrl` — direct LinkedIn Learning URL
-- `courseId` — numeric ID parsed from the URL, when the slug ends in one
-- `thumbnailUrl` — cover image
-- `language` — content language reported by the page
-- `difficultyLevel` — `BEGINNER`, `INTERMEDIATE`, or `ADVANCED`
-- `durationSeconds`, `durationFormatted` (e.g. `"2h 15m"`), `duration` (minutes, rounded)
-- `instructorName`, `instructorUrl`, `instructor` — object with `name`, `profileUrl`, `bio` when available
-- `assetType` — `COURSE`, `LEARNING_PATH`, or `VIDEO`
-- `releaseDate` — publish date reported by LinkedIn Learning
-- `popularityScore`, `learnerCount` — aggregate rating value and rating/review count, when LinkedIn Learning publishes them
-- `topics` — subject areas the course is filed under
-- `skillsTaught` — specific skills the course teaches
-- `certificate` — `true` when a completion certificate is awarded
-- `scrapedAt` — ISO timestamp of when the record was collected
+| Mode | What it needs | What it returns |
+|---|---|---|
+| `search` (default) | `searchQuery` | Courses, learning paths or video chapters matching the query and filters |
+| `byUrls` | `urls` | One record per course, learning path, chapter or search URL |
+| `learningPaths` | nothing | Up to 50 public learning paths, optionally enriched |
 
 ## Input
 
 | Field | Type | Default | Description |
 |---|---|---|---|
-| `searchQuery` | string | `Python machine learning` | Keyword or skill to search for (required) |
-| `maxResults` | integer | `50` | Maximum courses to return (1–500) |
-| `difficultyLevel` | string | – (all levels) | `BEGINNER`, `INTERMEDIATE`, or `ADVANCED` |
-| `assetType` | string | `COURSE` | `COURSE`, `LEARNING_PATH`, or `VIDEO` |
-| `sortBy` | string | `RELEVANCE` | `RELEVANCE` or `RECENCY` — accepted but not currently applied; results come back in the order LinkedIn Learning's search page returns them |
-| `topic` | string | – | Extra keyword appended to `searchQuery` to narrow results, e.g. "Cloud Computing" |
-| `language` | string | `en` | Content language / search locale: `en`, `es`, `fr`, `de`, `pt` |
-| `proxyConfiguration` | object | `{"useApifyProxy": false}` | Optional Apify proxy — not required for most searches |
+| `mode` | select | `search` | `search`, `byUrls` or `learningPaths` |
+| `searchQuery` | text | - | Keyword or skill. One query per line for several searches; each record is labelled with the query that found it. Required in search mode. |
+| `urls` | URL list | - | Course, learning-path, chapter/lesson, topic or filtered search URLs. Required in URL mode. |
+| `maxResults` | integer | `50` | Records per query (or per URL list). `1`-`500`. |
+| `difficultyLevel` | select | all levels | `BEGINNER`, `INTERMEDIATE`, `ADVANCED` |
+| `assetType` | select | `COURSE` | `COURSE`, `LEARNING_PATH`, `VIDEO`, or `ALL` |
+| `sortBy` | select | `RELEVANCE` | `RELEVANCE`, `POPULARITY` (view count), `RECENCY` |
+| `duration` | select | any length | Under 10 min, 10-30 min, 30-60 min, 1-2 h, 2-3 h, 3+ h |
+| `software` | text | - | One LinkedIn software label, e.g. `Python`, `Microsoft Excel`, `SQL`, `ChatGPT` |
+| `topic` | text | - | Extra words appended to every query to narrow it |
+| `includeDetails` | boolean | `true` | Open each record's public page for the full detail surface. Turn off for a faster catalog snapshot. |
+| `proxyConfiguration` | proxy | direct | Optional override. The actor connects directly by default and only escalates to a datacenter proxy if LinkedIn blocks a request. |
 
-### Example: beginner Python courses
+### Example: beginner Python courses, most viewed
 
 ```json
 {
+  "mode": "search",
   "searchQuery": "Python machine learning",
   "difficultyLevel": "BEGINNER",
   "assetType": "COURSE",
-  "maxResults": 50
+  "sortBy": "POPULARITY",
+  "maxResults": 100
 }
 ```
 
-### Example: learning paths on a topic
+### Example: several skills in one run, card-only
 
 ```json
 {
-  "searchQuery": "cloud computing",
-  "topic": "AWS",
-  "assetType": "LEARNING_PATH",
-  "maxResults": 20
+  "mode": "search",
+  "searchQuery": "python\nleadership\nexcel",
+  "assetType": "ALL",
+  "maxResults": 50,
+  "includeDetails": false
 }
 ```
 
-### Example: videos in Spanish
+### Example: read specific URLs
 
 ```json
 {
-  "searchQuery": "diseño gráfico",
-  "assetType": "VIDEO",
-  "language": "es"
+  "mode": "byUrls",
+  "urls": [
+    {"url": "https://www.linkedin.com/learning/python-essential-training-18764650"},
+    {"url": "https://www.linkedin.com/learning/paths/getting-started-with-python"},
+    {"url": "https://www.linkedin.com/learning/python-quick-start-22667553/starting-with-python"}
+  ]
 }
 ```
+
+## Output per record
+
+Every record carries `sourceUrl`, `scrapedAt` and `recordType` (`course`, `learningPath` or `video`).
+
+| Field | Notes |
+|---|---|
+| `title`, `description` | Course, path or chapter name and overview |
+| `id`, `courseId` | Stable slug id; `courseId` is the numeric slug suffix when present |
+| `courseUrl`, `sourceUrl`, `pathUrl`, `videoUrl` | Canonical public URLs |
+| `thumbnailUrl` | Cover image (public, no Referer needed) |
+| `assetType`, `recordType` | `COURSE`, `LEARNING_PATH`, `VIDEO` |
+| `language` | Content language from the course page |
+| `difficultyLevel` | `BEGINNER`, `INTERMEDIATE`, `ADVANCED` |
+| `durationSeconds`, `durationFormatted`, `duration` | Total length in seconds, e.g. `1h 54m`, and rounded minutes |
+| `instructorName`, `instructorUrl`, `instructor` | First instructor (legacy fields) |
+| `instructorNames`, `instructors` | All listed instructors with profile and image URLs |
+| `viewerCount` | LinkedIn's historical enrollment count |
+| `ratingValue`, `ratingCount` | Aggregate rating and number of ratings |
+| `skillsTaught` | Skills LinkedIn lists under "Skills you'll gain" |
+| `topics` | Catalog subject tags |
+| `categoryPath` | Breadcrumb path such as `Technology > Software Development > Programming Languages` |
+| `syllabus` | Section titles, durations and descriptions |
+| `chapters` | Chapter/lesson titles, URLs, durations, descriptions and free-preview flags |
+| `lessonCount`, `freeLessonCount` | Counts from the public chapter list |
+| `reviews` | Up to 3 public reviews with rating, text, author name, job title, profile URL and date |
+| `certificate`, `certificateName` | Completion certificate when LinkedIn publishes it |
+| `providerName`, `accessModel` | Course provider and access model (e.g. subscription) |
+| `learningPathCourses`, `courseCount` | Ordered member courses for learning paths |
+| `parentCourseTitle`, `parentCourseUrl` | Parent course for video chapters |
+| `releaseDate` | ISO release date |
+| `query` | The search query that produced the record |
+| `popularityScore`, `learnerCount` | Legacy aliases: rating value and rating count |
+
+Fields that LinkedIn does not publish for a record are omitted. The actor never writes `null`, `N/A`, `-1` or an empty string.
 
 ## Use cases
 
-- **Curriculum planning** — survey what courses and learning paths already exist for a skill before building internal training
-- **Skill-gap research** — pull the topics and skills taught across a batch of search queries to map a domain
-- **L&D catalog building** — compile course metadata (duration, difficulty, instructor) into an internal learning catalog
-- **Instructor research** — find which instructors are teaching in a given subject area
-- **Competitive content tracking** — monitor how LinkedIn Learning's catalog for a topic changes over time
+- **Curriculum planning** - compare what already exists for a skill before building internal training.
+- **Skills-gap research** - export the skills and catalog categories across many queries.
+- **Learning & development catalogs** - build a searchable catalog with duration, level, provider and rating.
+- **Instructor discovery** - find who teaches in a subject and which courses they lead.
+- **Free-preview planning** - rank courses by how many lessons LinkedIn exposes for free.
+- **Catalog monitoring** - schedule the same queries and compare snapshots by `id` and `scrapedAt`.
+
+## Limitations
+
+- **50 cards per query and filter slice.** LinkedIn's guest catalog has no next-page control. The actor works around this by re-running the query across LinkedIn's own level, length and sort slices. On a broad course query this reached **about 97% of the total LinkedIn reported** (375 of 385 unique courses in testing); the run status says when a shortfall remains. Requesting more than the source exposes never invents rows.
+- **No content-language filter.** LinkedIn's guest search has no language parameter; changing the locale only changes the page language. Each record still reports the course `language`.
+- **Three reviews.** Course pages publish three review samples; the actor returns those, not the full review history.
+- **No instructor course-list page.** Instructor profile pages do not expose a public course list without a login, so there is no instructor mode.
+- **Video records are chapters.** `assetType=VIDEO` returns individual lessons/chapters with a link to their parent course, which is what LinkedIn's guest catalog exposes.
+- **Detail pages are extra requests.** `includeDetails=true` reads one page per record. Use `false` for large scheduled snapshots or set a smaller `maxResults`.
+- **Instructor profile links.** The profile URLs come from LinkedIn's public course data and open in a browser. LinkedIn sometimes answers a bare command-line request for `/in/...` with its `999` bot check, so an automated HEAD check can fail even though the link is valid.
 
 ## FAQ
 
-**Do I need a LinkedIn account or Learning subscription?** No. The search page and individual course pages used by this actor are publicly accessible without logging in.
+**Do I need a LinkedIn account, a Learning subscription or cookies?**
+No. Every request reads a public page that a signed-out visitor can open. There is no cookie input and no login field.
 
-**Why do some records have fewer fields than others?** Course pages don't all publish the same schema.org fields — things like `popularityScore`, `learnerCount`, `releaseDate` and `certificate` depend on what LinkedIn Learning itself has published for that particular course.
+**Why did I get fewer records than `maxResults`?**
+Either LinkedIn's catalog has fewer matches for that query and filter, or the guest page stopped exposing more. The run status reports the shortfall; split the topic into narrower queries for wider coverage.
 
-**Why is `courseId` sometimes missing?** It's parsed from a numeric suffix in the course's URL slug; some slugs don't end in one, so there's nothing to extract.
+**Why do some records have fewer fields?**
+Not every public course page publishes every field. Skills, syllabus, reviews, certificate data and learner counts are optional on LinkedIn's side and are omitted when absent.
 
-**What's the difference between `topics` and `skillsTaught`?** `topics` are the broader subject areas a course is filed under; `skillsTaught` are the specific skills LinkedIn Learning lists as learning outcomes.
+**What is the difference between a course and a learning path?**
+A course is one multi-lesson unit. A learning path is a curated sequence of courses; its record includes the ordered member courses.
 
-**How is `assetType` different from a learning path search?** Setting `assetType` to `LEARNING_PATH` searches LinkedIn's curated multi-course paths instead of individual courses or standalone videos; the rest of the fields are extracted the same way.
+**What is the difference between a video and a course?**
+A video record is a single chapter or lesson inside a course, with `parentCourseTitle` and `parentCourseUrl` linking back to the course.
 
-**Does `language` translate the results?** No — it selects the LinkedIn Learning locale used for the search and reflects whatever language the matching content was actually published in.
+**What is `popularityScore`?**
+It is the legacy name for LinkedIn's aggregate rating value. New integrations should use `ratingValue`; `learnerCount` is the legacy name for `ratingCount`, not the enrollment count. The enrollment count is `viewerCount`.
 
-**Why did I get fewer results than `maxResults`?** LinkedIn Learning's catalog for a given keyword and asset type may simply have fewer matches than the limit you set.
+**Does `software` accept more than one value?**
+LinkedIn applies only the first software label per request. Use one label per run; a second label in the same field is ignored by the source.
 
-**Is this affiliated with LinkedIn?** No. This actor reads LinkedIn Learning's public catalog pages; it is not operated by or affiliated with LinkedIn.
+**I used to set `language`. Is my saved task broken?**
+No. The old `language` field is still accepted for saved tasks, but it never changed LinkedIn's results. The run status explains that it is no longer a filter, and every enriched record reports the course's real `language`.
+
+**Is this affiliated with LinkedIn?**
+No. It reads LinkedIn Learning's public catalog pages and is not operated or endorsed by LinkedIn.
+
+## Local development
+
+```bash
+python -m pytest tests/ -q
+apify run --purge --input-file input.json
+```
+
+The actor uses `httpx` only; no browser, no login, no cookie.

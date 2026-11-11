@@ -174,7 +174,7 @@ def publish(org, actors, state_dir, templates, push=False, bootstrap=False):
             for name in set(git.run(["ls-files"], checkout).splitlines()) | set(files):
                 path = checkout / name
                 if path.is_file() and (path.suffix in (".md", ".json", ".py", ".yml", ".yaml", ".css", ".js", ".txt") or name == "LICENSE"):
-                    check_brand(path.read_text(encoding="utf-8"), org)
+                    check_brand(path.read_text(encoding="utf-8"), org, {a["id"] for a in actors})
         status = git.run(["status", "--porcelain"], checkout)
         result = {"organization": org["apify_username"], "repository": remote.removesuffix(".git"),
                   "public_actors": len(actors), "changed_files": len(changed), "dry_run": not push,

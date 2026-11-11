@@ -1,82 +1,160 @@
 {
-  "description": "Search GitHub Marketplace for apps, actions, or integrations. Browse by category or fetch specific listings by slug.",
+  "description": "Collect GitHub Marketplace apps, integrations and GitHub Actions listings: search by keyword, browse a category, or look up exact slugs and URLs. Returns pricing plans, install counts, verified-creator status, publisher details, permissions and Action repository stats.",
   "properties": {
     "category": {
-      "description": "Filter by marketplace category (used in byCategory and search modes).",
+      "description": "Marketplace category (mode=byCategory, or as an extra filter in the search modes).",
       "editor": "select",
       "enum": [
+        "agent-apps",
+        "ai-assisted",
         "api-management",
+        "backup-utilities",
         "chat",
         "code-quality",
         "code-review",
+        "code-scanning-ready",
+        "code-search",
+        "container-ci",
         "continuous-integration",
         "dependency-management",
         "deployment",
+        "deployment-protection-rules",
+        "desktop-tools",
+        "game-ci",
+        "github-sponsors",
         "ides",
         "learning",
+        "localization",
+        "mobile",
+        "mobile-ci",
         "monitoring",
+        "open-source-management",
         "project-management",
         "publishing",
         "recently-added",
+        "reporting",
         "security",
         "support",
+        "sustainability",
         "testing",
+        "time-tracking",
         "utilities"
       ],
       "enumTitles": [
-        "API Management",
+        "Agent apps",
+        "AI Assisted",
+        "API management",
+        "Backup Utilities",
         "Chat",
-        "Code Quality",
-        "Code Review",
-        "Continuous Integration",
-        "Dependency Management",
+        "Code quality",
+        "Code review",
+        "Code Scanning Ready",
+        "Code search",
+        "Container CI",
+        "Continuous integration",
+        "Dependency management",
         "Deployment",
+        "Deployment Protection Rules",
+        "Desktop tools",
+        "Game CI",
+        "GitHub Sponsors",
         "IDEs",
         "Learning",
+        "Localization",
+        "Mobile",
+        "Mobile CI",
         "Monitoring",
-        "Project Management",
+        "Open Source management",
+        "Project management",
         "Publishing",
-        "Recently Added",
+        "Recently added",
+        "Reporting",
         "Security",
         "Support",
+        "Sustainability",
         "Testing",
+        "Time tracking",
         "Utilities"
       ],
       "title": "Category",
       "type": "string"
     },
+    "categoryType": {
+      "default": "apps",
+      "description": "Whether to browse apps or Actions in mode=byCategory.",
+      "editor": "select",
+      "enum": [
+        "apps",
+        "actions"
+      ],
+      "enumTitles": [
+        "Apps & integrations",
+        "GitHub Actions"
+      ],
+      "prefill": "apps",
+      "title": "Category listing type",
+      "type": "string"
+    },
     "maxItems": {
       "default": 50,
-      "description": "Maximum number of listings to scrape.",
+      "description": "Maximum number of listings to save.",
       "maximum": 1000,
       "minimum": 1,
       "prefill": 50,
-      "title": "Max items",
+      "title": "Max listings",
+      "type": "integer"
+    },
+    "minInstalls": {
+      "default": 0,
+      "description": "Only return apps with at least this many installations. Actions have stars instead, so this filter excludes them.",
+      "maximum": 100000000,
+      "minimum": 0,
+      "prefill": 0,
+      "title": "Minimum installs (apps)",
+      "type": "integer"
+    },
+    "minStars": {
+      "default": 0,
+      "description": "Only return Actions whose repository has at least this many stars. Apps have install counts instead, so this filter excludes them.",
+      "maximum": 100000000,
+      "minimum": 0,
+      "prefill": 0,
+      "title": "Minimum stars (Actions)",
       "type": "integer"
     },
     "mode": {
       "default": "searchApps",
-      "description": "What to scrape from GitHub Marketplace.",
+      "description": "What to collect from GitHub Marketplace.",
       "editor": "select",
       "enum": [
         "searchApps",
         "searchActions",
+        "searchAll",
         "byCategory",
         "bySlug"
       ],
       "enumTitles": [
         "Search apps & integrations",
         "Search GitHub Actions",
-        "Browse by category",
-        "Fetch by slug"
+        "Search apps and Actions together",
+        "Browse a category",
+        "Look up exact slugs or URLs"
       ],
       "prefill": "searchApps",
       "title": "Mode",
       "type": "string"
     },
+    "owners": {
+      "default": [],
+      "description": "Keep only listings published by these GitHub accounts, e.g. 'actions' or 'hashicorp'. Case-insensitive. Needs detail data, which the actor always fetches.",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Publisher logins (optional)",
+      "type": "array"
+    },
     "planType": {
       "default": "all",
-      "description": "Filter listings by pricing model.",
+      "description": "Filter by pricing model. Free-trial filtering is server-side; free/paid are checked against each listing's published plans.",
       "editor": "select",
       "enum": [
         "all",
@@ -85,18 +163,18 @@
         "free_trials"
       ],
       "enumTitles": [
-        "All plans",
-        "Free only",
-        "Paid only",
-        "Free trials available"
+        "All pricing",
+        "Has a free plan",
+        "Has a paid plan",
+        "Free trial available"
       ],
       "prefill": "all",
-      "title": "Plan type",
+      "title": "Pricing",
       "type": "string"
     },
     "searchQuery": {
-      "default": "code review",
-      "description": "Keyword to search for (used in searchApps and searchActions modes).",
+      "default": "",
+      "description": "Keyword to search for (mode=searchApps, searchActions, searchAll). Leave empty to browse the most popular listings.",
       "editor": "textfield",
       "prefill": "code review",
       "title": "Search query",
@@ -104,15 +182,15 @@
     },
     "slugs": {
       "default": [],
-      "description": "List of marketplace listing slugs to fetch (e.g. 'github-actions', 'dependabot'). Used in bySlug mode.",
+      "description": "Listing slugs, marketplace paths or full URLs, e.g. 'codecov', 'github-pages', '/marketplace/actions/checkout' or 'https://github.com/marketplace/snyk'. Apps and Actions are detected automatically.",
       "editor": "stringList",
       "prefill": [],
-      "title": "Slugs (mode=bySlug)",
+      "title": "Slugs or URLs (mode=bySlug)",
       "type": "array"
     },
     "sortBy": {
       "default": "best-match",
-      "description": "How to sort the results.",
+      "description": "How to order the results.",
       "editor": "select",
       "enum": [
         "best-match",
@@ -121,12 +199,19 @@
       ],
       "enumTitles": [
         "Best match",
-        "Most installed",
-        "Newest"
+        "Most installed / most popular",
+        "Recently added"
       ],
       "prefill": "best-match",
       "title": "Sort by",
       "type": "string"
+    },
+    "verifiedOnly": {
+      "default": false,
+      "description": "Only return listings from GitHub-verified creators.",
+      "prefill": false,
+      "title": "Verified creators only",
+      "type": "boolean"
     }
   },
   "required": [

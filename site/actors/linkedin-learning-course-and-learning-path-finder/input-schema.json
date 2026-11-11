@@ -1,19 +1,21 @@
 {
-  "description": "Search the LinkedIn Learning course catalog by keyword. No authentication required.",
+  "description": "Search the public LinkedIn Learning catalog by keyword, filter by level, type, length, software and sort order, or read specific course, learning-path and chapter URLs. No login or cookie is required.",
   "properties": {
     "assetType": {
       "default": "COURSE",
-      "description": "Type of learning content to search for.",
+      "description": "Kind of learning content. 'All types' mixes courses, learning paths and videos.",
       "editor": "select",
       "enum": [
         "COURSE",
         "LEARNING_PATH",
-        "VIDEO"
+        "VIDEO",
+        "ALL"
       ],
       "enumTitles": [
         "Course",
-        "Learning Path",
-        "Video"
+        "Learning path",
+        "Video (chapter)",
+        "All types"
       ],
       "prefill": "COURSE",
       "title": "Asset type",
@@ -21,7 +23,7 @@
     },
     "difficultyLevel": {
       "default": "",
-      "description": "Filter by course difficulty level. Leave empty to return all levels.",
+      "description": "Filter by skill level. 'All levels' returns every level.",
       "editor": "select",
       "enum": [
         "",
@@ -36,42 +38,80 @@
         "Advanced"
       ],
       "prefill": "",
+      "sectionCaption": "Search filters",
+      "sectionDescription": "Server-side filters from LinkedIn Learning's own catalog. They apply only in search mode (and to search URLs in URL mode).",
       "title": "Difficulty level",
       "type": "string"
     },
-    "language": {
-      "default": "en",
-      "description": "Filter by course language. Also selects the matching LinkedIn Learning locale.",
+    "duration": {
+      "default": "",
+      "description": "Filter by total course length. 'Any length' returns every length.",
       "editor": "select",
       "enum": [
-        "en",
-        "es",
-        "fr",
-        "de",
-        "pt"
+        "",
+        "BETWEEN_0_TO_10_MIN",
+        "BETWEEN_10_TO_30_MIN",
+        "BETWEEN_30_TO_60_MIN",
+        "BETWEEN_1_TO_2_HOURS",
+        "BETWEEN_2_TO_3_HOURS",
+        "MORE_THAN_3_HOURS"
       ],
       "enumTitles": [
-        "English",
-        "Spanish",
-        "French",
-        "German",
-        "Portuguese"
+        "Any length",
+        "Under 10 minutes",
+        "10-30 minutes",
+        "30-60 minutes",
+        "1-2 hours",
+        "2-3 hours",
+        "3+ hours"
       ],
-      "prefill": "en",
-      "title": "Course Language",
+      "prefill": "",
+      "title": "Time to complete",
       "type": "string"
+    },
+    "includeDetails": {
+      "default": true,
+      "description": "Open each record's public page for description, skills, syllabus, chapters, free-preview flags, reviews, rating, learner count, provider and certificate. Turn off for a faster, cheaper catalog snapshot.",
+      "editor": "checkbox",
+      "prefill": false,
+      "sectionCaption": "Output and connection",
+      "sectionDescription": "Detail enrichment and optional connection settings.",
+      "title": "Include full course details",
+      "type": "boolean"
     },
     "maxResults": {
       "default": 50,
-      "description": "Maximum number of courses to return.",
+      "description": "Maximum records per query (or per URL list in URL mode). LinkedIn's guest catalog exposes at most 50 cards per filter slice; the actor re-runs the query across its own filters to collect more.",
+      "editor": "number",
       "maximum": 500,
       "minimum": 1,
-      "prefill": 50,
-      "title": "Max results",
+      "prefill": 3,
+      "title": "Max results per query",
       "type": "integer"
     },
+    "mode": {
+      "default": "search",
+      "description": "What to collect. 'Search the catalog' needs searchQuery. 'Read specific URLs' needs urls. 'Browse learning paths' reads the public all-paths page.",
+      "editor": "select",
+      "enum": [
+        "search",
+        "byUrls",
+        "learningPaths"
+      ],
+      "enumTitles": [
+        "Search the catalog",
+        "Read specific LinkedIn Learning URLs",
+        "Browse all learning paths"
+      ],
+      "prefill": "search",
+      "title": "Mode",
+      "type": "string"
+    },
     "proxyConfiguration": {
-      "description": "Optional proxy settings. Not required for most queries.",
+      "default": {
+        "useApifyProxy": false
+      },
+      "description": "Optional. The actor connects directly by default and only escalates to a datacenter proxy if LinkedIn blocks a request. Change this only if you need a specific proxy setup.",
       "editor": "proxy",
       "prefill": {
         "useApifyProxy": false
@@ -80,40 +120,65 @@
       "type": "object"
     },
     "searchQuery": {
-      "default": "Python machine learning",
-      "description": "Keyword or skill to search for (e.g. 'Python machine learning', 'project management', 'data analysis').",
+      "description": "Keyword or skill to search for, e.g. 'Python machine learning' or 'project management'. Put one query per line to run several searches in one run; each line is labelled in the output.",
       "editor": "textfield",
       "prefill": "Python machine learning",
       "title": "Search query",
       "type": "string"
     },
+    "software": {
+      "description": "Keep only content that teaches this LinkedIn Learning software label, e.g. 'Python', 'Microsoft Excel', 'SQL' or 'ChatGPT'. LinkedIn applies only one software label per request.",
+      "editor": "textfield",
+      "title": "Software",
+      "type": "string"
+    },
     "sortBy": {
       "default": "RELEVANCE",
-      "description": "How to sort the results.",
+      "description": "Order of the results: LinkedIn's best match, view count, or newest release.",
       "editor": "select",
       "enum": [
         "RELEVANCE",
+        "POPULARITY",
         "RECENCY"
       ],
       "enumTitles": [
-        "Relevance",
-        "Most recent"
+        "Best match",
+        "Most viewed",
+        "Newest"
       ],
       "prefill": "RELEVANCE",
       "title": "Sort by",
       "type": "string"
     },
     "topic": {
-      "description": "Narrow results to a specific learning topic (e.g., 'Cloud Computing', 'Web Development'). Combined with the search query.",
+      "description": "Optional words appended to every search query to narrow it, e.g. 'AWS' or 'for beginners'.",
       "editor": "textfield",
-      "title": "Topic",
+      "title": "Extra keywords",
       "type": "string"
+    },
+    "urls": {
+      "default": [],
+      "description": "Course, learning-path, chapter/lesson, topic or filtered search URLs. Used only in 'Read specific LinkedIn Learning URLs' mode.",
+      "editor": "requestListSources",
+      "items": {
+        "properties": {
+          "url": {
+            "description": "LinkedIn Learning course, learning-path, chapter/lesson, topic or filtered search URL.",
+            "title": "URL",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "prefill": [],
+      "title": "LinkedIn Learning URLs",
+      "type": "array"
     }
   },
   "required": [
-    "searchQuery"
+    "mode"
   ],
   "schemaVersion": 1,
-  "title": "LinkedIn Learning Courses Scraper Input",
+  "title": "LinkedIn Learning Catalog Input",
   "type": "object"
 }

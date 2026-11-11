@@ -15,7 +15,7 @@ from .apify import Apify
 from .gitrepo import publish
 from .http import SyncError
 from .render import apply_files, json_text, render
-from .isolation import check_snapshot
+from .isolation import check_snapshot, strip_foreign_actor_links
 
 IDENTIFIER = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_-]{0,100}$")
 ENV_NAME = re.compile(r"^[A-Z][A-Z0-9_]*$")
@@ -88,6 +88,21 @@ def atomic_json(path, value):
         temporary.unlink(missing_ok=True)
 
 
+def own_links_only(actors, org):
+    """Publisher text may link Actors or accounts of other Apify users; the docs never do. Each
+    such link becomes plain text before anything is rendered, and every rewrite is logged."""
+    cleaned, rewritten = [], []
+    own_ids = {a["id"] for a in actors}
+    for actor in actors:
+        actor, urls = strip_foreign_actor_links(actor, org["apify_username"], own_ids)
+        for url in urls:
+            logging.warning("%s: link to another account's Actor rewritten as plain text in %s: %s",
+                            org["apify_username"], actor.get("name", actor.get("id")), url[:200])
+        cleaned.append(actor)
+        rewritten += urls
+    return cleaned, rewritten
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(description="Synchronize public Apify READMEs and schemas into useful GitHub example libraries.")
     parser.add_argument("--config", default="config.json")
@@ -116,7 +131,7 @@ def main(argv=None):
             for org in orgs:
                 logging.info("Reading published documentation for %s", org["apify_username"])
                 try:
-                    actors = Apify().snapshot(org["apify_username"], config.get("workers", 4))
+                    actors, rewritten = own_links_only(Apify().snapshot(org["apify_username"], config.get("workers", 4)), org)
                     check_snapshot(actors, org)
                     if args.command == "export":
                         destination = Path(args.output).resolve() / org["apify_username"]
@@ -133,6 +148,7 @@ def main(argv=None):
                         result = publish(org, actors, state, config_path.parent / "templates",
                                          push=args.command == "bootstrap" or args.push,
                                          bootstrap=args.command == "bootstrap")
+                    result["rewritten_links"] = len(rewritten)
                     results.append(result)
                     logging.info("%s: %s (%d public Actors)", org["apify_username"], result["status"], len(actors))
                 except (SyncError, ValueError, KeyError, TypeError, OSError) as exc:

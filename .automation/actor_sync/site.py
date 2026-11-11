@@ -1351,10 +1351,20 @@ def similarity_check(files):
     return {kind: round(value[0], 3) for kind, value in worst.items()}
 
 
+def own_actor_ids(files):
+    """This site's own Actor IDs, from its actors.json (links that name an Actor by ID are
+    checked against them)."""
+    try:
+        return {a["id"] for a in json.loads(files.get("actors.json") or "{}").get("actors", []) if isinstance(a.get("id"), str)}
+    except (ValueError, AttributeError):
+        return set()
+
+
 def validate_site(files, org, prefix):
     audits = {}
+    own_ids = own_actor_ids(files)
     for name, content in files.items():
-        check_brand(content, org)
+        check_brand(content, org, own_ids)
         if name.endswith(".html") and not GOOGLE_FILE.fullmatch(name):
             audit = LinkAudit()
             audit.feed(content)

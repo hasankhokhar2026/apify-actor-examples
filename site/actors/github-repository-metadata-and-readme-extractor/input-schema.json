@@ -1,76 +1,392 @@
 {
+  "description": "Choose a discovery mode, optionally narrow the search with filters, and pick which repository details to enrich.",
   "properties": {
+    "contributorsLimit": {
+      "default": 30,
+      "description": "How many contributors to keep when 'Include contributors' is on.",
+      "maximum": 500,
+      "minimum": 1,
+      "title": "Contributors per repository",
+      "type": "integer"
+    },
+    "createdAfter": {
+      "default": "",
+      "description": "Only repositories created on or after this date (YYYY-MM-DD).",
+      "editor": "textfield",
+      "example": "2024-01-01",
+      "title": "Created after",
+      "type": "string"
+    },
     "githubToken": {
-      "description": "Optional GitHub personal access token. Mark this field as Secret when pasting. Increases the API rate limit from 60 requests/hour (unauthenticated) to 5000 requests/hour. A classic token with 'public_repo' scope is enough for public repositories.",
+      "description": "Optional personal access token. It only raises the request limit from 60 to 5,000 requests per hour and is never required. A classic token with no scopes is enough for public data.",
       "editor": "textfield",
       "isSecret": true,
+      "sectionCaption": "Advanced",
+      "sectionDescription": "Optional settings for higher limits and private repositories.",
       "title": "GitHub personal access token (optional)",
       "type": "string"
     },
+    "includeActivity": {
+      "default": false,
+      "description": "Fetch 52 weeks of commit activity and the latest commit (up to two requests per repository; GitHub may need a moment to compute the statistics).",
+      "prefill": false,
+      "title": "Include commit activity",
+      "type": "boolean"
+    },
+    "includeArchived": {
+      "default": true,
+      "description": "Keep archived repositories in the results. Turn this off to find actively maintained projects only.",
+      "prefill": true,
+      "title": "Include archived repositories",
+      "type": "boolean"
+    },
+    "includeContributors": {
+      "default": false,
+      "description": "Fetch the ranked contributor list with contribution counts (one request per repository; GitHub caps this endpoint at 500 contributors).",
+      "prefill": false,
+      "title": "Include contributors",
+      "type": "boolean"
+    },
+    "includeForks": {
+      "default": false,
+      "description": "Include fork repositories in search, owner, and topic results. Direct mode always returns the repositories you list.",
+      "prefill": false,
+      "title": "Include forks",
+      "type": "boolean"
+    },
     "includeLanguages": {
       "default": true,
-      "description": "Include the per-language byte counts (e.g. {\"Python\": 123456, \"JavaScript\": 2345}).",
+      "description": "Include the byte count per programming language (one API request per repository).",
+      "prefill": true,
       "title": "Include language breakdown",
       "type": "boolean"
     },
     "includeReadme": {
       "default": true,
-      "description": "Fetch and include the decoded README text for each repository (capped at 500 KB).",
+      "description": "Fetch and include the decoded README text (capped at 500 KB).",
+      "prefill": true,
       "title": "Include README",
+      "type": "boolean"
+    },
+    "includeReleases": {
+      "default": false,
+      "description": "Fetch the newest releases, including tag, dates, prerelease flag, and asset count (one request per repository).",
+      "prefill": false,
+      "title": "Include releases",
+      "type": "boolean"
+    },
+    "includeRepoDetails": {
+      "default": false,
+      "description": "Fetch the repository detail endpoint in search, owner, and topic modes to add the real watcher count, network count, and organisation/parent fields (one extra API request per repository). Direct mode always fetches these.",
+      "prefill": false,
+      "title": "Include full repository details",
       "type": "boolean"
     },
     "includeTopics": {
       "default": true,
-      "description": "Include the repository's topic tags (e.g. 'machine-learning', 'web-scraping').",
+      "description": "Include the repository's topic tags.",
+      "prefill": true,
       "title": "Include topics",
       "type": "boolean"
     },
+    "language": {
+      "default": "",
+      "description": "Only repositories whose primary language matches. Pick a common language here, or type any other language in 'Custom language'.",
+      "editor": "select",
+      "enum": [
+        "",
+        "python",
+        "javascript",
+        "typescript",
+        "java",
+        "go",
+        "rust",
+        "c",
+        "c++",
+        "c#",
+        "ruby",
+        "php",
+        "swift",
+        "kotlin",
+        "scala",
+        "r",
+        "julia",
+        "haskell",
+        "elixir",
+        "erlang",
+        "clojure",
+        "dart",
+        "lua",
+        "perl",
+        "shell",
+        "powershell",
+        "html",
+        "css",
+        "scss",
+        "vue",
+        "svelte",
+        "jupyter notebook",
+        "objective-c",
+        "matlab",
+        "assembly",
+        "solidity",
+        "zig",
+        "nim",
+        "crystal",
+        "ocaml",
+        "f#",
+        "elm",
+        "groovy",
+        "visual basic .net",
+        "fortran",
+        "cobol",
+        "delphi",
+        "vhdl",
+        "verilog",
+        "coffeescript",
+        "hcl",
+        "nix"
+      ],
+      "enumTitles": [
+        "(any language)",
+        "Python",
+        "JavaScript",
+        "TypeScript",
+        "Java",
+        "Go",
+        "Rust",
+        "C",
+        "C++",
+        "C#",
+        "Ruby",
+        "PHP",
+        "Swift",
+        "Kotlin",
+        "Scala",
+        "R",
+        "Julia",
+        "Haskell",
+        "Elixir",
+        "Erlang",
+        "Clojure",
+        "Dart",
+        "Lua",
+        "Perl",
+        "Shell",
+        "PowerShell",
+        "HTML",
+        "CSS",
+        "SCSS",
+        "Vue",
+        "Svelte",
+        "Jupyter Notebook",
+        "Objective-C",
+        "MATLAB",
+        "Assembly",
+        "Solidity",
+        "Zig",
+        "Nim",
+        "Crystal",
+        "OCaml",
+        "F#",
+        "Elm",
+        "Groovy",
+        "Visual Basic .NET",
+        "Fortran",
+        "COBOL",
+        "Delphi",
+        "VHDL",
+        "Verilog",
+        "CoffeeScript",
+        "HCL",
+        "Nix"
+      ],
+      "title": "Language",
+      "type": "string"
+    },
+    "languageCustom": {
+      "default": "",
+      "description": "Any GitHub language name not listed above (e.g. 'Hare', 'Gleam'). Overrides the Language dropdown when non-empty.",
+      "editor": "textfield",
+      "title": "Custom language",
+      "type": "string"
+    },
+    "license": {
+      "default": "",
+      "description": "Only repositories released under this license.",
+      "editor": "select",
+      "enum": [
+        "",
+        "mit",
+        "apache-2.0",
+        "gpl-3.0",
+        "gpl-2.0",
+        "lgpl-3.0",
+        "lgpl-2.1",
+        "agpl-3.0",
+        "mpl-2.0",
+        "bsd-2-clause",
+        "bsd-3-clause",
+        "unlicense",
+        "cc0-1.0",
+        "cc-by-4.0",
+        "cc-by-sa-4.0",
+        "epl-2.0",
+        "isc",
+        "artistic-2.0",
+        "wtfpl",
+        "zlib",
+        "bsl-1.0",
+        "postgresql",
+        "ofl-1.1",
+        "other"
+      ],
+      "enumTitles": [
+        "(any license)",
+        "MIT",
+        "Apache 2.0",
+        "GPL 3.0",
+        "GPL 2.0",
+        "LGPL 3.0",
+        "LGPL 2.1",
+        "AGPL 3.0",
+        "MPL 2.0",
+        "BSD 2-Clause",
+        "BSD 3-Clause",
+        "Unlicense",
+        "CC0 1.0",
+        "CC BY 4.0",
+        "CC BY-SA 4.0",
+        "EPL 2.0",
+        "ISC",
+        "Artistic 2.0",
+        "WTFPL",
+        "zlib",
+        "BSL 1.0",
+        "PostgreSQL",
+        "OFL 1.1",
+        "Other"
+      ],
+      "title": "License",
+      "type": "string"
+    },
     "maxResults": {
       "default": 30,
-      "description": "Hard cap on the number of repositories to return. GitHub's search API itself is capped at 1000 results; direct mode is only limited by this value.",
+      "description": "Hard cap on repositories returned. GitHub's search API itself is capped at 1,000 results.",
       "maximum": 1000,
       "minimum": 1,
       "prefill": 30,
-      "title": "Maximum results",
+      "sectionCaption": "Output controls",
+      "sectionDescription": "Choose how much data to enrich and how many repositories to return.",
+      "title": "Maximum repositories",
+      "type": "integer"
+    },
+    "minForks": {
+      "default": 0,
+      "description": "Only repositories with at least this many forks. 0 means no fork filter.",
+      "maximum": 100000000,
+      "minimum": 0,
+      "title": "Minimum forks",
+      "type": "integer"
+    },
+    "minStars": {
+      "default": 0,
+      "description": "Only repositories with at least this many stars. 0 means no star filter.",
+      "maximum": 1000000000,
+      "minimum": 0,
+      "title": "Minimum stars",
       "type": "integer"
     },
     "mode": {
       "default": "search",
-      "description": "Choose 'search' to query GitHub's search API with a keyword / qualifier expression, or 'direct' to fetch a known list of repository URLs.",
+      "description": "How to find repositories. 'search' runs a GitHub search query, 'direct' fetches an explicit list, 'owner' lists a user or organisation's repositories, and 'topic' lists repositories tagged with a topic.",
       "editor": "select",
       "enum": [
         "search",
-        "direct"
+        "direct",
+        "owner",
+        "topic"
       ],
       "enumTitles": [
-        "Search GitHub",
-        "Direct repository URLs"
+        "Search repositories",
+        "Direct URLs or owner/repo",
+        "All repositories of an owner",
+        "Repositories by topic"
       ],
       "prefill": "search",
+      "sectionCaption": "What to fetch",
+      "sectionDescription": "Pick a discovery path and the repositories it should cover.",
       "title": "Mode",
       "type": "string"
     },
+    "owner": {
+      "default": "",
+      "description": "GitHub user or organisation whose repositories should be listed (mode=owner). Accepts 'apify' or 'https://github.com/apify'.",
+      "editor": "textfield",
+      "title": "Owner",
+      "type": "string"
+    },
+    "pushedAfter": {
+      "default": "",
+      "description": "Only repositories with a push on or after this date (YYYY-MM-DD). Useful for finding maintained projects.",
+      "editor": "textfield",
+      "example": "2025-01-01",
+      "title": "Pushed after",
+      "type": "string"
+    },
+    "releasesLimit": {
+      "default": 10,
+      "description": "How many releases to keep when 'Include releases' is on.",
+      "maximum": 100,
+      "minimum": 1,
+      "title": "Releases per repository",
+      "type": "integer"
+    },
     "repositoryUrls": {
-      "description": "List of full GitHub repository URLs to scrape (used when mode = direct). Accepts https://github.com/owner/repo, ending with .git, trailing slash, or the git@github.com:owner/repo.git SSH form.",
+      "default": [],
+      "description": "Repositories to fetch (mode=direct). Accepts https://github.com/owner/repo, a trailing slash, .git, the git@github.com:owner/repo.git SSH form, or a plain owner/repo slug. Duplicates are removed.",
       "editor": "stringList",
       "prefill": [
         "https://github.com/apify/crawlee"
       ],
-      "title": "Repository URLs",
+      "title": "Repository URLs or slugs",
       "type": "array"
     },
+    "searchIn": {
+      "default": "",
+      "description": "Where the free-text part of searchQuery must match (mode=search). Applies only when searchQuery contains free text.",
+      "editor": "select",
+      "enum": [
+        "",
+        "name,description",
+        "name",
+        "description",
+        "readme",
+        "topics"
+      ],
+      "enumTitles": [
+        "(name and description)",
+        "Name and description",
+        "Name only",
+        "Description only",
+        "README text",
+        "Topic names"
+      ],
+      "title": "Search text in",
+      "type": "string"
+    },
     "searchQuery": {
-      "default": "stars:>10000 language:python",
-      "description": "GitHub search query (used when mode = search). Supports qualifiers like 'stars:>1000', 'language:python', 'topic:llm', 'user:apify'. See GitHub's search syntax docs for the full grammar.",
+      "default": "",
+      "description": "GitHub search expression (mode=search). Supports qualifiers such as 'stars:>10000', 'language:python', 'topic:llm', 'user:apify', 'pushed:>2025-01-01', and 'in:name,description'. In owner/topic mode it is an optional keyword filter added to the owner or topic.",
       "editor": "textfield",
-      "example": "language:rust stars:>5000",
+      "example": "language:rust stars:>5000 pushed:>2025-01-01",
       "prefill": "stars:>10000 language:python",
       "title": "Search query",
       "type": "string"
     },
     "sortBy": {
       "default": "stars",
-      "description": "Sort order for search results. Ignored in direct mode.",
+      "description": "Sort key for search, owner, and topic results.",
       "editor": "select",
       "enum": [
         "stars",
@@ -84,12 +400,36 @@
         "Recently updated",
         "Help-wanted issues"
       ],
-      "title": "Sort results by",
+      "sectionCaption": "Discovery filters",
+      "sectionDescription": "Optional narrowing applied to search, owner, and topic modes.",
+      "title": "Sort by",
+      "type": "string"
+    },
+    "sortOrder": {
+      "default": "desc",
+      "description": "Ascending or descending order for the selected sort key.",
+      "editor": "select",
+      "enum": [
+        "desc",
+        "asc"
+      ],
+      "enumTitles": [
+        "Descending (highest / newest first)",
+        "Ascending (lowest / oldest first)"
+      ],
+      "title": "Sort direction",
+      "type": "string"
+    },
+    "topic": {
+      "default": "",
+      "description": "Topic tag to browse (mode=topic), e.g. 'llm', 'machine-learning', or 'web-scraping'. A leading 'topic:' is accepted and stripped.",
+      "editor": "textfield",
+      "title": "Topic",
       "type": "string"
     }
   },
   "required": [],
   "schemaVersion": 1,
-  "title": "GitHub Repository Intelligence input",
+  "title": "GitHub Repository Metadata & README Extractor input",
   "type": "object"
 }
