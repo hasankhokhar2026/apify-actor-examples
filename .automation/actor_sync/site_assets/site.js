@@ -1,7 +1,5 @@
 "use strict";
 (() => {
-  document.documentElement.classList.add("js");
-  document.body.classList.add("js");
 
   // Catalog filter: static rows, filtered in place (the list works without JavaScript).
   const search = document.querySelector("#actor-search");
@@ -120,8 +118,13 @@
   }
 
   // Tabs (ARIA tabs pattern): every panel is visible without JavaScript.
+  // Enhancements touch only their own elements (no class on <html>): a document-wide class
+  // change forces a full style recalculation, measured at over a second on long pages.
   for (const tabs of document.querySelectorAll("[data-tabs]")) {
     const buttons = Array.from(tabs.querySelectorAll("[role=tab]"));
+    const list = tabs.querySelector("[role=tablist]");
+    if (list) list.hidden = false;
+    for (const title of tabs.querySelectorAll(".tab-title")) title.hidden = true;
     const select = (button, focus) => {
       for (const b of buttons) {
         const on = b === button;

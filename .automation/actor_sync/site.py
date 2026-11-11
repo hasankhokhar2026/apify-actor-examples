@@ -106,6 +106,15 @@ def markdown(text, used=None, anchors=None, shift=0):
     rendered = parser.renderer.render(tokens, parser.options, {})
     # Column alignment comes out as inline styles, which the page's CSP blocks: use classes.
     rendered = re.sub(r' style="text-align:(left|right|center)"', r' class="align-\1"', rendered)
+
+    # Copy buttons for README code blocks are rendered here, not built by script at load time.
+    def wrap(match):
+        used["__code"] = used.get("__code", 0) + 1
+        block_id = f"readme-code-{used['__code']}"
+        attrs = match.group(1) or ""
+        return (f'<div class="code"><pre><code id="{block_id}"{attrs}>{match.group(2)}</code></pre>'
+                f'<button type="button" class="copy" data-copy="{block_id}">Copy</button></div>')
+    rendered = re.sub(r"<pre><code((?: class=\"[^\"]*\")?)>(.*?)</code></pre>", wrap, rendered, flags=re.S)
     return rendered.replace("<table>", '<div class="table-wrap"><table>').replace("</table>", "</table></div>")
 
 
@@ -647,7 +656,7 @@ class Site:
                           + ("" if i == 0 else ' tabindex="-1"') + f'>{label}</button>' for i, (k, label, _, _) in enumerate(tabs))
         panels = "".join(f'<div role="tabpanel" id="{prefix}-panel-{k}" aria-labelledby="{prefix}-tab-{k}" class="tab-panel">'
                          f'<h3 class="tab-title">{label}</h3>{code_block(code, f"{prefix}-{k}", lang)}</div>' for k, label, code, lang in tabs)
-        return f'<div class="tabs" data-tabs><div class="tab-list" role="tablist" aria-label="Language">{buttons}</div>{panels}</div>'
+        return f'<div class="tabs" data-tabs><div class="tab-list" role="tablist" aria-label="Language" hidden>{buttons}</div>{panels}</div>'
 
     def cost_section(self, actor):
         summary = self.pricing.get(actor["id"])
@@ -934,6 +943,11 @@ class Site:
         body.append('<nav class="toc inline" aria-label="Steps"><h2 class="toc-title">Steps</h2><ol>' + "".join(f'<li><a href="#{k}">{v}</a></li>' for k, v in steps) + "</ol></nav>")
         intro_text, sections = facts.split_sections(actor["readme"])
         notes = facts.readme_field_notes(sections)
+        page_ids = {}  # one ID space for every README fragment on this page
+
+        def here(fragment):
+            # README links to its own sections live on the reference page, not on this guide.
+            return re.sub(r'href="#[^"]*"', f'href="{reference}"', fragment)
         if columns:
             rows = "".join(f'<tr><td><code>{esc(f)}</code></td><td data-label="Column header">{esc(l)}</td><td data-label="What it holds">{inline_md(notes[f]) if notes.get(f) else ""}</td></tr>'
                            for f, l in columns)
@@ -944,7 +958,7 @@ class Site:
                         f'<tbody>{rows}</tbody></table></div><p>Swap in any field from the <a href="{reference}#output">output reference</a> to export it too.</p></section>')
         uses = [x for x in sections if x["kind"] == "usecases"]
         if uses:
-            body.append('<section id="uses"><h2>What people export it for</h2>' + readme_html(markdown(uses[0]["body"], {}, {}, shift=1)) + "</section>")
+            body.append('<section id="uses"><h2>What people export it for</h2>' + readme_html(here(markdown(uses[0]["body"], page_ids, {}, shift=1))) + "</section>")
         body.append('<section id="token"><h2>Get an API token</h2><p>Copy it from '
                     '<a href="https://console.apify.com/settings/integrations">Console, Settings, API and Integrations</a>.</p>'
                     + code_block('export APIFY_TOKEN="your-token"', "token-export", "bash") + "</section>")
@@ -1014,7 +1028,7 @@ class Site:
         body.append('<section id="javascript"><h2>The same in JavaScript</h2>' + code_block("npm install apify-client", "js-install", "bash")
                     + code_block(javascript, "js-run", "javascript", "export.mjs") + "</section>")
         trouble = facts.troubleshooting(facts.faq_items(facts.split_sections(actor["readme"])[1]))
-        answers = "".join(f'<div class="qa"><h3>{inline_md(q)}</h3>{readme_html(markdown(a, {}, {}, shift=2))}</div>' for q, a in trouble[:3])
+        answers = "".join(f'<div class="qa"><h3>{inline_md(q)}</h3>{readme_html(here(markdown(a, page_ids, {}, shift=2)))}</div>' for q, a in trouble[:3])
         more = "".join(f'<li><a href="{reference}#{anchor_id(q, "faq-")}">{inline_md(q)}</a></li>' for q, _ in trouble[3:8])
         body.append('<section id="trouble"><h2>Fix common problems</h2>' + answers + (f"<p>More from the publisher:</p><ul>{more}</ul>" if more else "")
                     + '<p>HTTP 401 means the token is missing; an empty file usually means the input matched nothing, which the run log in Console names.</p></section>')
