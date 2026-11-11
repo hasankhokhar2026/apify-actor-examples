@@ -665,11 +665,15 @@ class Site:
         mcp = json.dumps({"mcpServers": {"apify": {"url": f"https://mcp.apify.com?tools={ident}"}}}, indent=2)
         tabs = [("python", "Python", python, "python"), ("javascript", "JavaScript", javascript, "javascript"),
                 ("curl", "cURL", curl, "bash"), ("mcp", "MCP", mcp, "json")]
-        buttons = "".join(f'<button type="button" role="tab" id="{prefix}-tab-{k}" aria-controls="{prefix}-panel-{k}" aria-selected="{"true" if i == 0 else "false"}"'
-                          + ("" if i == 0 else ' tabindex="-1"') + f'>{label}</button>' for i, (k, label, _, _) in enumerate(tabs))
-        panels = "".join(f'<div role="tabpanel" id="{prefix}-panel-{k}" aria-labelledby="{prefix}-tab-{k}" class="tab-panel">'
-                         f'<h3 class="tab-title">{label}</h3>{code_block(code, f"{prefix}-{k}", lang)}</div>' for k, label, code, lang in tabs)
-        return f'<div class="tabs" data-tabs><div class="tab-list" role="tablist" aria-label="Language" hidden>{buttons}</div>{panels}</div>'
+        # The final tab state is rendered here (first panel active, the rest hidden by CSS), so the
+        # script changes nothing visible at load: hiding panels from script forced a full relayout of
+        # long pages after first paint (1.1-1.6 s long tasks in Lighthouse). Tabs are links, so
+        # without JavaScript the :target rule still switches panels.
+        buttons = "".join(f'<a role="tab" href="#{prefix}-panel-{k}" id="{prefix}-tab-{k}" aria-controls="{prefix}-panel-{k}" aria-selected="{"true" if i == 0 else "false"}"'
+                          + ("" if i == 0 else ' tabindex="-1"') + f'>{label}</a>' for i, (k, label, _, _) in enumerate(tabs))
+        panels = "".join(f'<div role="tabpanel" id="{prefix}-panel-{k}" aria-labelledby="{prefix}-tab-{k}" class="tab-panel{" active" if i == 0 else ""}">'
+                         f'{code_block(code, f"{prefix}-{k}", lang)}</div>' for i, (k, label, code, lang) in enumerate(tabs))
+        return f'<div class="tabs" data-tabs><div class="tab-list" role="tablist" aria-label="Language">{buttons}</div>{panels}</div>'
 
     def cost_section(self, actor):
         summary = self.pricing.get(actor["id"])

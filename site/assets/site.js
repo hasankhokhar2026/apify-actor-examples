@@ -117,32 +117,28 @@
     document.addEventListener("click", (event) => { if (!form.contains(event.target)) close(); });
   }
 
-  // Tabs (ARIA tabs pattern): every panel is visible without JavaScript.
-  // Enhancements touch only their own elements (no class on <html>): a document-wide class
-  // change forces a full style recalculation, measured at over a second on long pages.
+  // Tabs (ARIA tabs pattern). The page arrives in its final state; the script only switches it.
   for (const tabs of document.querySelectorAll("[data-tabs]")) {
-    const buttons = Array.from(tabs.querySelectorAll("[role=tab]"));
-    const list = tabs.querySelector("[role=tablist]");
-    if (list) list.hidden = false;
-    for (const title of tabs.querySelectorAll(".tab-title")) title.hidden = true;
-    const select = (button, focus) => {
-      for (const b of buttons) {
-        const on = b === button;
-        b.setAttribute("aria-selected", on ? "true" : "false");
-        b.tabIndex = on ? 0 : -1;
-        document.getElementById(b.getAttribute("aria-controls")).hidden = !on;
+    const links = Array.from(tabs.querySelectorAll("[role=tab]"));
+    const select = (link, focus) => {
+      for (const l of links) {
+        const on = l === link;
+        l.setAttribute("aria-selected", on ? "true" : "false");
+        l.tabIndex = on ? 0 : -1;
+        document.getElementById(l.getAttribute("aria-controls")).classList.toggle("active", on);
       }
-      if (focus) button.focus();
+      if (focus) link.focus();
     };
-    buttons.forEach((button, i) => {
-      button.addEventListener("click", () => select(button, false));
-      button.addEventListener("keydown", (event) => {
+    tabs.dataset.ready = "";
+    const wanted = links.find((l) => l.getAttribute("href") === location.hash);
+    if (wanted) select(wanted, false);
+    links.forEach((link, i) => {
+      link.addEventListener("click", (event) => { event.preventDefault(); select(link, false); });
+      link.addEventListener("keydown", (event) => {
         const step = event.key === "ArrowRight" ? 1 : event.key === "ArrowLeft" ? -1 : 0;
-        if (step) { event.preventDefault(); select(buttons[(i + step + buttons.length) % buttons.length], true); }
+        if (step) { event.preventDefault(); select(links[(i + step + links.length) % links.length], true); }
       });
     });
-    const current = buttons.find((b) => b.getAttribute("aria-selected") === "true") || buttons[0];
-    if (current) select(current, false);
   }
 
   // Copy buttons: on generated blocks, and added to every code block from the README.
