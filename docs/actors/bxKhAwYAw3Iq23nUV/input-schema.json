@@ -1,0 +1,259 @@
+{
+  "description": "Search Wildberries.ru by keyword, browse a category, or fetch full product details by article number / product URL.",
+  "properties": {
+    "brand": {
+      "description": "Only emit products whose brand name contains this text (case-insensitive).",
+      "editor": "textfield",
+      "title": "Brand contains",
+      "type": "string"
+    },
+    "category": {
+      "default": "женские платья и сарафаны",
+      "description": "Pick a popular category, or use `categoryCustom` below for any other category (in Russian, as it appears on wildberries.ru).",
+      "editor": "select",
+      "enum": [
+        "женские блузки и рубашки",
+        "женские брюки",
+        "женская верхняя одежда",
+        "детская обувь",
+        "обувь для девочек",
+        "обувь для мальчиков",
+        "детское белье",
+        "детские блузки и рубашки",
+        "детские брюки и шорты",
+        "мужские брюки",
+        "мужская верхняя одежда",
+        "мужские джемперы и кардиганы",
+        "аксессуары для туалета",
+        "держатели для дома",
+        "корзинки для дома",
+        "средства для бритья",
+        "средства для ванны и душа",
+        "средства для макияжа",
+        "аксессуары для волос",
+        "аксессуары для одежды",
+        "ноутбуки",
+        "спортивные кроссовки",
+        "игрушки антистресс",
+        "игрушки для малышей",
+        "бизиборды игровые центры",
+        "кровати",
+        "шкафы",
+        "диваны",
+        "женские платья и сарафаны",
+        "женские футболки и топы",
+        "мужские джинсы",
+        "автомобильные шины",
+        "автомобили",
+        "художественная литература",
+        "проза книги",
+        "подвески и шармы",
+        "колье цепи шнурки",
+        "грунты для растений",
+        "семена овощей",
+        "рыбий жир омега",
+        "витамин D",
+        "блокноты канцтовары",
+        "ежедневники записные книжки",
+        "товары для кошек",
+        "корм и лакомства для животных",
+        "техника для приготовления блюд",
+        "техника для приготовления напитков"
+      ],
+      "enumTitles": [
+        "Женщинам - Блузки и рубашки",
+        "Женщинам - Брюки",
+        "Женщинам - Верхняя одежда",
+        "Обувь - Детская",
+        "Обувь - Для девочек",
+        "Обувь - Для мальчиков",
+        "Детям - Белье",
+        "Детям - Блузки и рубашки",
+        "Детям - Брюки и шорты",
+        "Мужчинам - Брюки",
+        "Мужчинам - Верхняя одежда",
+        "Мужчинам - Джемперы и кардиганы",
+        "Дом - Аксессуары для туалета",
+        "Дом - Держатели",
+        "Дом - Корзинки",
+        "Красота - Для бритья и удаления волос",
+        "Красота - Для ванны и душа",
+        "Красота - Для макияжа",
+        "Аксессуары - Для волос",
+        "Аксессуары - Для одежды",
+        "Электроника - Ноутбуки",
+        "Спорт - Кроссовки",
+        "Игрушки - Антистресс",
+        "Игрушки - Для малышей",
+        "Игрушки - Бизиборды, игровые центры",
+        "Мебель - Кровати",
+        "Мебель - Шкафы",
+        "Мебель - Диваны",
+        "Женщинам - Платья и сарафаны",
+        "Женщинам - Футболки и топы",
+        "Мужчинам - Джинсы",
+        "Автотовары - Шины",
+        "Транспортные средства - Автомобили",
+        "Книги - Художественная литература",
+        "Книги - Проза",
+        "Ювелирные изделия - Подвески и шармы",
+        "Ювелирные изделия - Колье, цепи",
+        "Сад и дача - Грунты для растений",
+        "Сад и дача - Овощи",
+        "Здоровье - Рыбий жир и омега",
+        "Здоровье - Витамин D",
+        "Канцтовары - Блокноты",
+        "Канцтовары - Ежедневники",
+        "Зоотовары - Для кошек",
+        "Зоотовары - Корм и лакомства",
+        "Бытовая техника - Приготовление блюд",
+        "Бытовая техника - Приготовление напитков"
+      ],
+      "prefill": "женские платья и сарафаны",
+      "title": "Category (mode=byCategory)",
+      "type": "string"
+    },
+    "categoryCustom": {
+      "description": "Any other category name, in Russian, not covered by the dropdown above (e.g. `детские велосипеды`).",
+      "editor": "textfield",
+      "title": "Custom category (mode=byCategory, overrides dropdown)",
+      "type": "string"
+    },
+    "inStockOnly": {
+      "default": false,
+      "description": "Only emit products that currently have stock available.",
+      "prefill": false,
+      "title": "In stock only",
+      "type": "boolean"
+    },
+    "includeImages": {
+      "default": true,
+      "description": "Resolve and attach product image URLs. Adds a small number of extra CDN lookups per product.",
+      "prefill": true,
+      "title": "Include image URLs",
+      "type": "boolean"
+    },
+    "includeReviews": {
+      "default": true,
+      "description": "Attach the real aggregate review data (average rating, per-star distribution, review counts) to each product-details record. Adds one extra lookup per product.",
+      "prefill": true,
+      "title": "Include rating breakdown (mode=productDetails)",
+      "type": "boolean"
+    },
+    "includeSellerInfo": {
+      "default": true,
+      "description": "Attach the seller's registered shop name, legal name, and address to each product-details record. Adds one extra lookup per unique seller.",
+      "prefill": true,
+      "title": "Include seller/shop info (mode=productDetails)",
+      "type": "boolean"
+    },
+    "maxItems": {
+      "default": 50,
+      "description": "Hard cap on emitted records.",
+      "maximum": 2000,
+      "minimum": 1,
+      "prefill": 10,
+      "title": "Max items",
+      "type": "integer"
+    },
+    "maxPrice": {
+      "description": "Drop products more expensive than this (in Russian rubles).",
+      "maximum": 100000000,
+      "minimum": 0,
+      "title": "Max price (RUB)",
+      "type": "integer"
+    },
+    "minPrice": {
+      "description": "Drop products cheaper than this (in Russian rubles).",
+      "maximum": 100000000,
+      "minimum": 0,
+      "title": "Min price (RUB)",
+      "type": "integer"
+    },
+    "minRating": {
+      "description": "Drop products with a customer rating below this (0-5). In mode=reviews, filters individual reviews by their star rating instead.",
+      "maximum": 5,
+      "minimum": 0,
+      "title": "Min rating",
+      "type": "integer"
+    },
+    "mode": {
+      "default": "search",
+      "description": "What to fetch.",
+      "editor": "select",
+      "enum": [
+        "search",
+        "byCategory",
+        "productDetails",
+        "reviews"
+      ],
+      "enumTitles": [
+        "Search by keyword",
+        "Browse by category",
+        "Lookup product details (by article ID or URL)",
+        "Fetch customer reviews (by article ID or URL)"
+      ],
+      "prefill": "search",
+      "title": "Mode",
+      "type": "string"
+    },
+    "productIds": {
+      "default": [],
+      "description": "Wildberries article numbers (nmId, e.g. `863160611`) or full product URLs (e.g. `https://www.wildberries.ru/catalog/863160611/detail.aspx`).",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Article IDs / product URLs (mode=productDetails / reviews)",
+      "type": "array"
+    },
+    "proxyConfiguration": {
+      "default": {
+        "useApifyProxy": true
+      },
+      "description": "search.wb.ru is reachable without a proxy under normal conditions; the free Apify AUTO group (datacenter, zero extra cost) is wired in as an automatic fallback for the rare sustained-429 edge burst so a single blocked run can't return zero results.",
+      "editor": "proxy",
+      "prefill": {
+        "useApifyProxy": true
+      },
+      "title": "Proxy configuration",
+      "type": "object"
+    },
+    "searchQuery": {
+      "description": "Free-text keyword search, e.g. `iphone`, `кроссовки nike`.",
+      "editor": "textfield",
+      "prefill": "iphone",
+      "title": "Search query (mode=search)",
+      "type": "string"
+    },
+    "sortBy": {
+      "default": "",
+      "description": "How Wildberries should order results.",
+      "editor": "select",
+      "enum": [
+        "",
+        "popular",
+        "newly",
+        "rate",
+        "priceup",
+        "pricedown"
+      ],
+      "enumTitles": [
+        "Relevance (default)",
+        "Popularity",
+        "Newest first",
+        "Highest rated",
+        "Price: low to high",
+        "Price: high to low"
+      ],
+      "prefill": "",
+      "title": "Sort order (mode=search / byCategory)",
+      "type": "string"
+    }
+  },
+  "required": [
+    "mode",
+    "proxyConfiguration"
+  ],
+  "schemaVersion": 1,
+  "title": "Wildberries Scraper Input",
+  "type": "object"
+}
