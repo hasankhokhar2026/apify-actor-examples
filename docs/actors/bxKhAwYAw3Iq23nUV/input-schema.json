@@ -152,7 +152,7 @@
       "description": "Hard cap on emitted records.",
       "maximum": 2000,
       "minimum": 1,
-      "prefill": 10,
+      "prefill": 1,
       "title": "Max items",
       "type": "integer"
     },
@@ -193,7 +193,7 @@
         "Lookup product details (by article ID or URL)",
         "Fetch customer reviews (by article ID or URL)"
       ],
-      "prefill": "search",
+      "prefill": "productDetails",
       "title": "Mode",
       "type": "string"
     },
@@ -201,20 +201,16 @@
       "default": [],
       "description": "Wildberries article numbers (nmId, e.g. `863160611`) or full product URLs (e.g. `https://www.wildberries.ru/catalog/863160611/detail.aspx`).",
       "editor": "stringList",
-      "prefill": [],
+      "prefill": [
+        "863160611"
+      ],
       "title": "Article IDs / product URLs (mode=productDetails / reviews)",
       "type": "array"
     },
     "proxyConfiguration": {
-      "default": {
-        "useApifyProxy": true
-      },
-      "description": "search.wb.ru is reachable without a proxy under normal conditions; the free Apify AUTO group (datacenter, zero extra cost) is wired in as an automatic fallback for the rare sustained-429 edge burst so a single blocked run can't return zero results.",
+      "description": "Optional. Leave empty to connect directly first, then fall back automatically to the free Apify AUTO proxy group if the direct egress IP gets rate-limited. No paid/residential proxy is used or required.",
       "editor": "proxy",
-      "prefill": {
-        "useApifyProxy": true
-      },
-      "title": "Proxy configuration",
+      "title": "Proxy configuration (optional)",
       "type": "object"
     },
     "searchQuery": {
@@ -250,8 +246,7 @@
     }
   },
   "required": [
-    "mode",
-    "proxyConfiguration"
+    "mode"
   ],
   "schemaVersion": 1,
   "title": "Wildberries Scraper Input",

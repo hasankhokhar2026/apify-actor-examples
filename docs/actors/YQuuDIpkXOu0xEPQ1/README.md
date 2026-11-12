@@ -4,22 +4,29 @@
 
 # DoorDash Store Menu & FAQ Data Finder
 
-Find restaurant details and complete menus from **DoorDash** store pages — name, address, cuisine breadcrumbs, menu sections with item names, descriptions and prices, and the store's published FAQ. Provide one or more store URLs and get a flat, fully-populated record back for each.
+Find restaurant details and complete menus from **DoorDash** store pages — name, structured address and geo, rating and review count, price range, cuisines, image, cuisine breadcrumbs, menu sections with item names, descriptions and prices, and the store's published FAQ. Provide one or more store URLs and get a flat, fully-populated record back for each.
 
 ## What this actor does
 
-- **Full menu extraction** — every section and item, with name, description, and price
+- **Full menu extraction** — every section and item, including nested sections behind `Restaurant.hasMenu`, with name, description, and price
+- **Restaurant enrichment** — aggregate rating, review count, price range, cuisines, image URL, latitude/longitude, and structured postal address
 - **FAQ extraction** — questions and answers published on the restaurant's store page
 - **Breadcrumb extraction** — cuisine type and neighborhood, as shown on the page
 - **Deduplication** — the same store ID is only emitted once per run, even if its URL is listed twice
-- **Always-populated fields** — every field is present with a typed default (empty string, `0`, or `[]`) rather than `null`, so downstream code never needs to check for missing keys
+- **Empty fields omitted** — missing values are omitted instead of written as empty strings, zeros, or nulls
+- **Failed-URL reporting** — URLs that cannot be loaded are named in the run status instead of being silently skipped
 
 ## Output per restaurant
 
 - `storeId` — DoorDash store ID (from the URL)
 - `storeName`, `storeUrl`
 - `title`, `description` — the page's title and meta description
-- `address`, `city`, `state`
+- `address`, `city`, `state`, `postalCode`, `country` — structured address fields
+- `latitude`, `longitude` — coordinates from structured geo data
+- `ratingValue`, `reviewCount` — aggregate rating and review count
+- `priceRange` — price bucket such as `$$`
+- `servesCuisine` — comma-separated cuisine types
+- `image` — restaurant image URL
 - `breadcrumbs[]` — page breadcrumb trail, e.g. `["Home", "Boston", "Burgers", "UBURGER"]` (last is the restaurant name, second-to-last is typically the cuisine)
 - `menuSections[]` — section names, e.g. `["Salads", "Burgers", "Drinks"]`
 - `menuSectionCount`
@@ -76,5 +83,9 @@ Find restaurant details and complete menus from **DoorDash** store pages — nam
 **Will this work for every DoorDash store?** It works for any restaurant with a published menu. Some stores — closed restaurants, catering/aggregator brands, or convenience-store and grocery listings — don't expose a structured menu; for those, this actor still returns the restaurant's info, FAQ, breadcrumbs, and address, but `menuSections` and `menuItems` come back empty.
 
 **Does this include duplicate stores if I list the same URL twice?** No — each store ID is only emitted once per run even if its URL appears more than once in `storeUrls`.
+
+**Do I need to configure a proxy?** No. The actor handles connections automatically and needs no proxy setup.
+
+**What happens if some store URLs fail?** The run status names every URL that could not be loaded, so a partial success is never reported as a clean run.
 
 **Is this affiliated with DoorDash?** No. This is an independent third-party actor that reads DoorDash's public store pages.

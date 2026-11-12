@@ -71,15 +71,15 @@ Scrape [Wildberries.ru](https://www.wildberries.ru) — Russia's largest online 
 | `categoryCustom` | string | – | Any other category name in Russian, not in the dropdown (overrides `category`) |
 | `productIds` | array | – | Article numbers or full product URLs (mode=productDetails / reviews) |
 | `sortBy` | string | – | `popular` / `newly` / `rate` / `priceup` / `pricedown`; empty default means relevance. `priceup`/`pricedown`/`rate` are guaranteed exact (sorted locally by `priceCurrent`/`rating` after fetching); `popular`/`newly` are a best-effort relevance hint only — see FAQ |
-| `minPrice` / `maxPrice` | integer | – | Price range in RUB |
-| `minRating` | integer | – | Drop products rated below this (0–5); in mode=reviews, filters individual reviews by star rating |
+| `minPrice` / `maxPrice` | integer | – | Price range in RUB; products missing a price are dropped when either bound is set |
+| `minRating` | integer | – | Drop products rated below this (0–5), dropping products with no rating; in mode=reviews, filters individual reviews by star rating |
 | `inStockOnly` | boolean | `false` | Only emit products currently in stock |
-| `brand` | string | – | Only emit products whose brand contains this text |
+| `brand` | string | – | Only emit products whose brand contains this text; products with no brand are dropped when set |
 | `includeImages` | boolean | `true` | Resolve and attach image URLs |
 | `includeReviews` | boolean | `true` | Attach the real aggregate rating breakdown to productDetails records |
 | `includeSellerInfo` | boolean | `true` | Attach real seller/shop info to productDetails records |
 | `maxItems` | integer | `50` | Hard cap on emitted records (1–2000) |
-| `proxyConfiguration` | object | AUTO group | search.wb.ru is reachable directly under normal conditions; the AUTO proxy group is wired in automatically as a fallback for reliability if a run hits a sustained rate-limit burst |
+| `proxyConfiguration` | object | – (optional) | Leave empty to connect directly first and fall back automatically to the free Apify AUTO proxy group if the direct egress IP is rate-limited. A custom/legacy proxy input is honored when supplied. No paid/residential proxy is used or required |
 
 ### Example: search with filters
 
@@ -145,7 +145,7 @@ Scrape [Wildberries.ru](https://www.wildberries.ru) — Russia's largest online 
 No, this is a third-party actor using Wildberries' own public product data — the same information your browser loads when you browse wildberries.ru search, category, product, and review pages.
 
 **Do I need a Wildberries account or proxy?**
-No. The actor works out of the box on the free Apify plan with no login, cookies, or paid proxy required.
+No. The actor works out of the box on the free Apify plan with no login, cookies, or paid proxy required. Requests go direct first; if the direct egress IP is rate-limited, the actor falls back to the free Apify AUTO proxy group (no RESIDENTIAL/paid tier).
 
 **Which Wildberries region does the data reflect?**
 Pricing and stock reflect the Moscow marketplace region, which is Wildberries' default for shoppers without a specified delivery location.

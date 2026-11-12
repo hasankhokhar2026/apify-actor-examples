@@ -1,0 +1,87 @@
+{
+  "description": "Scrape ranked US college programs and school profiles from BestColleges. Fetch ranked schools from program ranking pages, school profiles, or enumerate program pages from subject hubs.",
+  "properties": {
+    "maxItems": {
+      "default": 50,
+      "description": "Hard cap on emitted records.",
+      "maximum": 1000,
+      "minimum": 1,
+      "prefill": 50,
+      "title": "Max items",
+      "type": "integer"
+    },
+    "mode": {
+      "default": "byProgram",
+      "description": "What to fetch.",
+      "editor": "select",
+      "enum": [
+        "byProgram",
+        "bySchool",
+        "bySubject"
+      ],
+      "enumTitles": [
+        "Ranked schools from a program ranking page",
+        "School profile by slug",
+        "Program pages from a subject hub"
+      ],
+      "prefill": "byProgram",
+      "title": "Mode",
+      "type": "string"
+    },
+    "programUri": {
+      "default": "computer-science/bachelors",
+      "description": "Ranking page path, e.g. `computer-science/bachelors`, `nursing/masters`, `business/bachelors/finance`, or a full URL.",
+      "editor": "textfield",
+      "prefill": "computer-science/bachelors",
+      "title": "Program ranking page (mode=byProgram)",
+      "type": "string"
+    },
+    "rankMax": {
+      "description": "Drop schools ranked better than this (e.g. `10` keeps only the top 10).",
+      "maximum": 1000,
+      "minimum": 1,
+      "title": "Rank (max)",
+      "type": "integer"
+    },
+    "rankMin": {
+      "description": "Drop schools ranked worse than this (lower is better).",
+      "maximum": 1000,
+      "minimum": 1,
+      "title": "Rank (min)",
+      "type": "integer"
+    },
+    "schoolUri": {
+      "description": "School profile path, e.g. `university-of-colorado-boulder`, or a full URL.",
+      "editor": "textfield",
+      "title": "School page (mode=bySchool)",
+      "type": "string"
+    },
+    "schoolYear": {
+      "description": "Only emit schools from this ranking year (e.g. `2026`).",
+      "maximum": 2030,
+      "minimum": 2015,
+      "title": "Ranking school year",
+      "type": "integer"
+    },
+    "stateCodes": {
+      "default": [],
+      "description": "Only emit schools in these US states (e.g. `NY`, `CA`).",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "State codes",
+      "type": "array"
+    },
+    "subjectUri": {
+      "description": "Subject hub path, e.g. `business/bachelors`, `healthcare`, `nursing`, or a full URL.",
+      "editor": "textfield",
+      "title": "Subject hub (mode=bySubject)",
+      "type": "string"
+    }
+  },
+  "required": [
+    "mode"
+  ],
+  "schemaVersion": 1,
+  "title": "BestColleges Scraper Input",
+  "type": "object"
+}

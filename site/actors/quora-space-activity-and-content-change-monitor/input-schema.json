@@ -142,10 +142,10 @@
       "type": "boolean"
     },
     "includeUnchanged": {
-      "default": true,
-      "description": "Keep unchanged event rows when onlyNewItems is enabled.",
+      "default": false,
+      "description": "Legacy compatibility: when explicitly true, keeps unchanged rows even while onlyNewItems is enabled. When omitted or false, onlyNewItems suppresses unchanged rows.",
       "editor": "checkbox",
-      "prefill": true,
+      "prefill": false,
       "title": "Include Unchanged",
       "type": "boolean"
     },
@@ -278,7 +278,7 @@
     },
     "onlyNewItems": {
       "default": false,
-      "description": "Suppress unchanged state events when configured with a state store.",
+      "description": "Suppress unchanged rows when configured with a state store. Explicitly set includeUnchanged to true only if you also want unchanged rows.",
       "editor": "checkbox",
       "prefill": false,
       "title": "Only New Items",
@@ -297,17 +297,11 @@
     },
     "proxyConfiguration": {
       "default": {
-        "apifyProxyGroups": [
-          "RESIDENTIAL"
-        ],
         "useApifyProxy": true
       },
-      "description": "Apify proxy configuration. Defaults to the RESIDENTIAL proxy group, which real-world testing showed is required for reliable access to Quora's Cloudflare-protected pages (the un-grouped AUTO/datacenter tier is measurably blocked/redirected on a meaningful share of requests); the actor also forces RESIDENTIAL whenever a group is left unspecified. Choose a different group, or disable the proxy, only if you understand the reliability tradeoff.",
+      "description": "Optional. Apify's free AUTO pool is used automatically; no proxy setup is required. Any group you explicitly choose is preserved, but the actor never forces RESIDENTIAL. Missing proxy credentials fall back to a direct connection.",
       "editor": "proxy",
       "prefill": {
-        "apifyProxyGroups": [
-          "RESIDENTIAL"
-        ],
         "useApifyProxy": true
       },
       "title": "Proxy configuration",

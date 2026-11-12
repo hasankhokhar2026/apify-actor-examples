@@ -14,8 +14,9 @@
       "type": "boolean"
     },
     "expandThreads": {
-      "default": true,
-      "description": "Auto-expand collapsed comment threads and 'load more' sections.",
+      "default": false,
+      "description": "Fetch 'load more comments' partials and 'continue this thread' pages. When disabled, only comments rendered on the initial post page are read.",
+      "prefill": false,
       "title": "Expand collapsed threads",
       "type": "boolean"
     },
@@ -25,11 +26,20 @@
       "title": "Keyword filter (substring in body)",
       "type": "string"
     },
+    "maxAgeDays": {
+      "description": "Drop comments older than this many days. Legacy compatibility field; leave empty for no age limit.",
+      "editor": "number",
+      "maximum": 36500,
+      "minimum": 1,
+      "title": "Max comment age (days)",
+      "type": "integer"
+    },
     "maxComments": {
       "default": 100,
-      "description": "Max comments per post.",
+      "description": "Max comments kept per post, counted after all filters are applied.",
       "maximum": 10000,
       "minimum": 1,
+      "prefill": 5,
       "title": "Max comments per post",
       "type": "integer"
     },
@@ -67,7 +77,7 @@
       "description": "List of Reddit post URLs to scrape comments from.",
       "editor": "stringList",
       "prefill": [
-        "https://www.reddit.com/r/programming/comments/1s9jkzi/announcement_temporary_llm_content_ban/"
+        "https://www.reddit.com/r/programming/comments/1vqukkf/nothing_like_a_monday_morning_github_outage/"
       ],
       "title": "Reddit post URLs",
       "type": "array"

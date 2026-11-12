@@ -120,7 +120,7 @@ Every run emits rows that share a common set of identity/status fields, plus ext
 |-------|-------------|
 | `event_type` | `new`, `unchanged`, or `changed` |
 | `content_hash` / `previous_content_hash` | The row's current and prior content fingerprint |
-| `previous_snapshot_available` | Whether a prior snapshot existed to compare against |
+| `previous_snapshot_available` | Whether a prior snapshot existed to compare against (also mirrored inside `change_evidence`) |
 | `change_evidence` | Details of the comparison that produced `event_type` |
 | `field_change_summary` | Names of fields that changed, when `diffMode` includes a summary |
 | `previous_field_values` / `current_field_values` | Before/after values of changed fields, when `diffMode` is `field_values` |
@@ -150,6 +150,7 @@ Every run emits rows that share a common set of identity/status fields, plus ext
 - **Depth.** `scrapeDepth: "overview"` captures Space metadata and status only, with no feed, contributor, scroll or load-more work; `detail` (default) runs the capped monitoring traversal. `requested_depth`, `observed_depth` and `detail_expansion_state` are on every row, and `bounded` means a scroll or load-more cap was reached, not that the Space's whole history was read.
 - **Author credentials.** `feed_author_credentials` (and the shared `author_credentials`) carry a credential or tagline only when it is printed inside the feed card's own author block; ambiguous text is left out and it never verifies expertise.
 - **Session input.** Use structured `cookies` or the secret `cookieString` header (`name=value; name2=value2`). Structured cookies win on duplicate names, malformed pairs are ignored, and the raw header is never emitted or logged. This is an access input for content your account can already see, not a bypass guarantee.
+- **Proxy.** The free AUTO pool is used automatically and no proxy setup is required. Any group you explicitly choose is preserved, missing proxy credentials fall back to a direct connection, and a blocked AUTO session escalates to RESIDENTIAL only as a last resort.
 - **Exact field names.** Every output field this actor can emit is listed under [Output fields](#output-fields) above.
 
 ## Fixture-backed examples (synthetic)
@@ -190,8 +191,8 @@ Two synthetic, trimmed rows that show the output shape; they are not live Space 
 | `includeSettings` | boolean | `false` | Include explicitly labeled Space settings/content-permission evidence |
 | `maxScrollAttempts` | integer | `5` | Maximum scroll attempts for feed traversal (0–20) |
 | `maxLoadMoreAttempts` | integer | `5` | Maximum "load more" button activations (0–20) |
-| `onlyNewItems` | boolean | `false` | Suppress unchanged rows; requires `stateStoreId` |
-| `includeUnchanged` | boolean | `true` | Keep unchanged rows when `onlyNewItems` is enabled |
+| `onlyNewItems` | boolean | `false` | Suppress unchanged rows; requires `stateStoreId`. Works on its own without also setting `includeUnchanged` |
+| `includeUnchanged` | boolean | `false` | Legacy compatibility: when explicitly `true`, keeps unchanged rows even while `onlyNewItems` is enabled |
 | `stateStoreId` | string | `""` | Key-value store name used to remember previous snapshots; required for `onlyNewItems` or `urls` |
 | `stateRetentionDays` | integer | `0` | Age-based pruning for stored snapshots; `0` disables pruning (0–3650) |
 | `diffMode` | select | `hash_and_summary` | Change-evidence detail level: `hash_only`, `field_summary`, `field_values`, or `hash_and_summary` |
@@ -202,7 +203,7 @@ Two synthetic, trimmed rows that show the output shape; they are not live Space 
 | `language` | select | `auto` | Browser language hint; doesn't translate content |
 | `cookies` | array | `[]` | Optional structured session cookies |
 | `cookieString` | string | – | Optional `name=value; name2=value2` cookie header, parsed locally |
-| `proxyConfiguration` | proxy | RESIDENTIAL | Apify proxy configuration; defaults to the residential group for reliable access |
+| `proxyConfiguration` | proxy | AUTO | Optional. The free AUTO pool is used automatically; explicit groups are preserved, missing credentials fall back to direct, and a blocked AUTO session escalates to RESIDENTIAL only as a last resort |
 | `outputFields` | array | `[]` | Optional allowlist of field names (including dotted nested paths) to keep in each row |
 | `includeFieldEvidence` | boolean | `true` | Keep `field_sources`/`fields_present` on each row |
 | `maxItemsPerSource` | integer | `0` | Maximum rows emitted per individual source URL/query; `0` means no per-source cap (0–5000) |
@@ -266,7 +267,7 @@ Space URLs (`/q/...` or a Space subdomain) get the full metadata/feed/contributo
 Fields are only populated from explicit, visible evidence on the page. If a count or label isn't shown, the field is simply absent rather than guessed.
 
 **What does `onlyNewItems` actually suppress?**
-With a `stateStoreId` set, rows whose content hasn't changed since the last run are dropped when `onlyNewItems` is `true`, unless `includeUnchanged` keeps them.
+With a `stateStoreId` set, rows whose content hasn't changed since the last run are dropped when `onlyNewItems` is `true`. You do not need to set `includeUnchanged` as well; explicitly setting `includeUnchanged: true` is the legacy compatibility switch that keeps unchanged rows.
 
 **Can I get just a few specific fields back?**
 Yes — `outputFields` lets you allowlist field names (including nested paths like `topic_links.topic_name`) for a compact row; identity, access and source-accounting fields always stay.

@@ -14,6 +14,10 @@
         "description": "City",
         "type": "string"
       },
+      "country": {
+        "description": "Country code or name",
+        "type": "string"
+      },
       "description": {
         "description": "Meta description",
         "type": "string"
@@ -25,6 +29,18 @@
       "faqCount": {
         "description": "Number of FAQ Q&A pairs",
         "type": "integer"
+      },
+      "image": {
+        "description": "Restaurant image URL",
+        "type": "string"
+      },
+      "latitude": {
+        "description": "Latitude from structured geo data",
+        "type": "number"
+      },
+      "longitude": {
+        "description": "Longitude from structured geo data",
+        "type": "number"
       },
       "menuItemCount": {
         "description": "Total menu items across all sections",
@@ -42,8 +58,28 @@
         "description": "Section names (e.g., Salads, Burgers, Drinks)",
         "type": "array"
       },
+      "postalCode": {
+        "description": "Postal / ZIP code",
+        "type": "string"
+      },
+      "priceRange": {
+        "description": "Restaurant price range (e.g., $$)",
+        "type": "string"
+      },
+      "ratingValue": {
+        "description": "Aggregate rating value",
+        "type": "number"
+      },
+      "reviewCount": {
+        "description": "Aggregate review count",
+        "type": "integer"
+      },
       "scrapedAt": {
         "description": "ISO 8601 scrape timestamp",
+        "type": "string"
+      },
+      "servesCuisine": {
+        "description": "Cuisine types served, comma-separated",
         "type": "string"
       },
       "state": {
@@ -91,6 +127,22 @@
             "format": "number",
             "label": "Sections"
           },
+          "priceRange": {
+            "format": "text",
+            "label": "Price Range"
+          },
+          "ratingValue": {
+            "format": "number",
+            "label": "Rating"
+          },
+          "reviewCount": {
+            "format": "number",
+            "label": "Reviews"
+          },
+          "servesCuisine": {
+            "format": "text",
+            "label": "Cuisine"
+          },
           "state": {
             "format": "text",
             "label": "State"
@@ -112,6 +164,10 @@
           "address",
           "city",
           "state",
+          "ratingValue",
+          "reviewCount",
+          "priceRange",
+          "servesCuisine",
           "menuItemCount",
           "menuSectionCount",
           "storeUrl"

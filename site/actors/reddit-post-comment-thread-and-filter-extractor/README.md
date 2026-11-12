@@ -4,7 +4,7 @@ Paste in one or more Reddit post links and get every comment on that thread as a
 
 ## What this actor does
 
-- Loads each Reddit post you give it and opens collapsed "load more" and "continue this thread" sections so deep replies are not left out.
+- Loads each Reddit post from the public www.reddit.com new UI and, when `expandThreads` is enabled, opens collapsed "load more" and "continue this thread" sections so deep replies are not left out.
 - Returns every comment with its author, text, score, nesting depth, and the ID of the comment it replies to, so you can rebuild the thread tree.
 - Captures awards, gilding, controversiality, distinguished (mod/admin) status and user flair for each comment, when Reddit shows them.
 - Applies any score, depth, author, keyword or word-count rule you set, dropping non-matching comments before they reach the dataset.
@@ -92,10 +92,11 @@ Each run produces one post-metadata record per URL and one record per comment th
 | Field | Type | Default | Description |
 | --- | --- | --- | --- |
 | `postUrls` | array | – | Reddit post URLs to scrape comments from (required) |
-| `maxComments` | integer | `100` | Maximum number of comments to collect per post, 1-10000 |
-| `expandThreads` | boolean | `true` | Click "load more" and "continue this thread" to reveal collapsed replies |
-| `minScore` | integer | – | Drop comments scoring below this number |
+| `maxComments` | integer | `100` | Maximum number of comments kept per post, counted after filters, 1-10000 |
+| `expandThreads` | boolean | `false` | Fetch "load more comments" partials and "continue this thread" pages to reveal collapsed replies |
+| `minScore` | integer | – | Drop comments scoring below this number; comments with no visible score are also dropped |
 | `maxDepth` | integer | – | Drop comments nested deeper than this (0 keeps only top-level replies) |
+| `maxAgeDays` | integer | – | Drop comments older than this many days |
 | `excludeDeleted` | boolean | `false` | Drop comments where the author is `[deleted]` or the body is `[removed]` |
 | `authorFilter` | string | – | Keep only comments by an author whose name contains this text (case-insensitive) |
 | `keywordFilter` | string | – | Keep only comments whose body contains this text; prefix with `!` to drop matches instead |
