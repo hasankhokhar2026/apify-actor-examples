@@ -1,0 +1,308 @@
+{
+  "actorSpecification": 1,
+  "fields": {
+    "properties": {
+      "applyUrl": {
+        "description": "Apply URL (redirects to original source)",
+        "type": "string"
+      },
+      "bachelorsDegreeRequirement": {
+        "description": "Bachelor's degree requirement level",
+        "type": "string"
+      },
+      "boardToken": {
+        "description": "Job board token",
+        "type": "string"
+      },
+      "category": {
+        "description": "Job category (e.g., Engineering, Data, Marketing)",
+        "type": "string"
+      },
+      "commitment": {
+        "description": "Full Time / Part Time / Contract / etc.",
+        "type": "string"
+      },
+      "companyEmployees": {
+        "description": "Employee count (string since ranges used)",
+        "type": "string"
+      },
+      "companyHqCountry": {
+        "description": "Company HQ country code",
+        "type": "string"
+      },
+      "companyIndustries": {
+        "description": "Company industry tags",
+        "type": "array"
+      },
+      "companyName": {
+        "description": "Hiring company name",
+        "type": "string"
+      },
+      "companyWebsite": {
+        "description": "Company homepage URL",
+        "type": "string"
+      },
+      "coreJobTitle": {
+        "description": "Canonicalized core job title",
+        "type": "string"
+      },
+      "description": {
+        "description": "Job description (HTML stripped, truncated)",
+        "type": "string"
+      },
+      "id": {
+        "description": "Unique job ID",
+        "type": "string"
+      },
+      "isExpired": {
+        "description": "Whether the listing is expired",
+        "type": "boolean"
+      },
+      "latitude": {
+        "description": "Primary geolocation latitude",
+        "type": "number"
+      },
+      "longitude": {
+        "description": "Primary geolocation longitude",
+        "type": "number"
+      },
+      "minYearsExperience": {
+        "description": "Minimum years of experience required (0 if not specified)",
+        "type": "integer"
+      },
+      "objectID": {
+        "description": "Search index object ID",
+        "type": "string"
+      },
+      "roleType": {
+        "description": "Individual Contributor / People Manager",
+        "type": "string"
+      },
+      "salaryCurrency": {
+        "description": "Salary currency code",
+        "type": "string"
+      },
+      "salaryFrequency": {
+        "description": "Salary frequency (Yearly, Hourly, etc.)",
+        "type": "string"
+      },
+      "salaryMax": {
+        "description": "Maximum salary (yearly, if disclosed)",
+        "type": "number"
+      },
+      "salaryMin": {
+        "description": "Minimum salary (yearly, if disclosed)",
+        "type": "number"
+      },
+      "scrapedAt": {
+        "description": "ISO 8601 scrape timestamp",
+        "type": "string"
+      },
+      "seniorityLevel": {
+        "description": "Seniority (Entry, Mid, Senior, Director, Executive)",
+        "type": "string"
+      },
+      "source": {
+        "description": "Source ATS (greenhouse, lever, workable, successfactors, etc.)",
+        "type": "string"
+      },
+      "technicalTools": {
+        "description": "Technologies / tools mentioned",
+        "type": "array"
+      },
+      "title": {
+        "description": "Job title",
+        "type": "string"
+      },
+      "workplaceCities": {
+        "description": "City names",
+        "type": "array"
+      },
+      "workplaceCountries": {
+        "description": "Country codes",
+        "type": "array"
+      },
+      "workplaceStates": {
+        "description": "State / region names",
+        "type": "array"
+      },
+      "workplaceType": {
+        "description": "Remote / Hybrid / Onsite",
+        "type": "string"
+      }
+    },
+    "type": "object"
+  },
+  "title": "Hiring Cafe Jobs",
+  "views": {
+    "detailed": {
+      "display": {
+        "component": "table",
+        "properties": {
+          "applyUrl": {
+            "format": "link",
+            "label": "Apply"
+          },
+          "category": {
+            "format": "text",
+            "label": "Category"
+          },
+          "commitment": {
+            "format": "text",
+            "label": "Commitment"
+          },
+          "companyHqCountry": {
+            "format": "text",
+            "label": "HQ"
+          },
+          "companyIndustries": {
+            "format": "array",
+            "label": "Industries"
+          },
+          "companyName": {
+            "format": "text",
+            "label": "Company"
+          },
+          "id": {
+            "format": "text",
+            "label": "ID"
+          },
+          "latitude": {
+            "format": "number",
+            "label": "Lat"
+          },
+          "longitude": {
+            "format": "number",
+            "label": "Lng"
+          },
+          "minYearsExperience": {
+            "format": "number",
+            "label": "Min YoE"
+          },
+          "roleType": {
+            "format": "text",
+            "label": "Role Type"
+          },
+          "salaryCurrency": {
+            "format": "text",
+            "label": "Currency"
+          },
+          "salaryMax": {
+            "format": "number",
+            "label": "Max Salary"
+          },
+          "salaryMin": {
+            "format": "number",
+            "label": "Min Salary"
+          },
+          "scrapedAt": {
+            "format": "text",
+            "label": "Scraped At"
+          },
+          "seniorityLevel": {
+            "format": "text",
+            "label": "Seniority"
+          },
+          "source": {
+            "format": "text",
+            "label": "ATS"
+          },
+          "technicalTools": {
+            "format": "array",
+            "label": "Tools"
+          },
+          "title": {
+            "format": "text",
+            "label": "Title"
+          },
+          "workplaceCountries": {
+            "format": "array",
+            "label": "Countries"
+          },
+          "workplaceType": {
+            "format": "text",
+            "label": "Workplace"
+          }
+        }
+      },
+      "title": "Detailed Results",
+      "transformation": {
+        "fields": [
+          "id",
+          "title",
+          "companyName",
+          "source",
+          "category",
+          "seniorityLevel",
+          "roleType",
+          "commitment",
+          "workplaceType",
+          "workplaceCountries",
+          "salaryMin",
+          "salaryMax",
+          "salaryCurrency",
+          "technicalTools",
+          "minYearsExperience",
+          "latitude",
+          "longitude",
+          "companyIndustries",
+          "companyHqCountry",
+          "applyUrl",
+          "scrapedAt"
+        ]
+      }
+    },
+    "overview": {
+      "display": {
+        "component": "table",
+        "properties": {
+          "applyUrl": {
+            "format": "link",
+            "label": "Apply"
+          },
+          "commitment": {
+            "format": "text",
+            "label": "Commitment"
+          },
+          "companyName": {
+            "format": "text",
+            "label": "Company"
+          },
+          "salaryMax": {
+            "format": "number",
+            "label": "Max Salary"
+          },
+          "salaryMin": {
+            "format": "number",
+            "label": "Min Salary"
+          },
+          "seniorityLevel": {
+            "format": "text",
+            "label": "Seniority"
+          },
+          "title": {
+            "format": "text",
+            "label": "Title"
+          },
+          "workplaceType": {
+            "format": "text",
+            "label": "Workplace"
+          }
+        }
+      },
+      "title": "Overview",
+      "transformation": {
+        "fields": [
+          "title",
+          "companyName",
+          "workplaceType",
+          "seniorityLevel",
+          "commitment",
+          "salaryMin",
+          "salaryMax",
+          "applyUrl"
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,305 @@
+{
+  "properties": {
+    "commitmentTypes": {
+      "default": [
+        "Full Time",
+        "Part Time",
+        "Contract",
+        "Internship",
+        "Temporary",
+        "Seasonal",
+        "Volunteer"
+      ],
+      "description": "Filter by employment commitment.",
+      "editor": "select",
+      "items": {
+        "enum": [
+          "Full Time",
+          "Part Time",
+          "Contract",
+          "Internship",
+          "Temporary",
+          "Seasonal",
+          "Volunteer"
+        ],
+        "type": "string"
+      },
+      "title": "Commitment Types",
+      "type": "array"
+    },
+    "companyKeywords": {
+      "description": "Substring match on company name.",
+      "editor": "stringList",
+      "nullable": true,
+      "title": "Company name keywords",
+      "type": "array"
+    },
+    "companyNames": {
+      "description": "Only return jobs from these companies. Empty = all companies.",
+      "editor": "stringList",
+      "nullable": true,
+      "title": "Companies (whitelist)",
+      "type": "array"
+    },
+    "dateFetchedPastNDays": {
+      "default": 30,
+      "description": "Only include jobs fetched within the last N days.",
+      "maximum": 365,
+      "minimum": 1,
+      "title": "Posted Within (days)",
+      "type": "integer"
+    },
+    "excludedCompanyKeywords": {
+      "description": "Substring match on company name; exclude these.",
+      "editor": "stringList",
+      "nullable": true,
+      "title": "Excluded company keywords",
+      "type": "array"
+    },
+    "excludedCompanyNames": {
+      "description": "Exclude jobs from these companies.",
+      "editor": "stringList",
+      "nullable": true,
+      "title": "Companies (blacklist)",
+      "type": "array"
+    },
+    "excludedIndustries": {
+      "description": "Exclude companies in these industries.",
+      "editor": "stringList",
+      "nullable": true,
+      "title": "Excluded industries",
+      "type": "array"
+    },
+    "industries": {
+      "description": "Filter to companies in these industries.",
+      "editor": "stringList",
+      "nullable": true,
+      "title": "Industries",
+      "type": "array"
+    },
+    "jobDescriptionQuery": {
+      "description": "Filter to jobs whose DESCRIPTION contains this phrase.",
+      "editor": "textfield",
+      "nullable": true,
+      "title": "Job description contains",
+      "type": "string"
+    },
+    "jobTitleQuery": {
+      "description": "Filter to jobs whose TITLE contains this phrase. More precise than the general search query.",
+      "editor": "textfield",
+      "nullable": true,
+      "title": "Job title contains",
+      "type": "string"
+    },
+    "locations": {
+      "description": "Filter to jobs in these locations. Pass plain strings like [\"San Francisco\", \"London\", \"United States\"] OR objects with {label, value, countryCode, stateCode, city, lat, lng}. Empty list = global (all locations). Hiring.cafe matches both city names and country names.",
+      "editor": "stringList",
+      "nullable": true,
+      "prefill": [],
+      "title": "Locations",
+      "type": "array"
+    },
+    "maxItems": {
+      "default": 50,
+      "description": "Maximum number of jobs to return across all queries.",
+      "maximum": 1000,
+      "minimum": 1,
+      "prefill": 3,
+      "title": "Max Items",
+      "type": "integer"
+    },
+    "maxSalary": {
+      "description": "Upper bound for compensation.",
+      "editor": "number",
+      "minimum": 0,
+      "nullable": true,
+      "title": "Maximum salary",
+      "type": "integer"
+    },
+    "maxYearsExperience": {
+      "default": 20,
+      "description": "Filter to jobs requiring at most this many years experience.",
+      "editor": "number",
+      "maximum": 50,
+      "minimum": 0,
+      "title": "Maximum years of experience",
+      "type": "integer"
+    },
+    "minSalary": {
+      "description": "Lower bound for compensation. Combined with currency + frequency.",
+      "editor": "number",
+      "minimum": 0,
+      "nullable": true,
+      "title": "Minimum salary",
+      "type": "integer"
+    },
+    "minYearsExperience": {
+      "default": 0,
+      "description": "Filter to jobs requiring at least this many years experience.",
+      "editor": "number",
+      "maximum": 50,
+      "minimum": 0,
+      "title": "Minimum years of experience",
+      "type": "integer"
+    },
+    "onlyTransparentSalaries": {
+      "default": false,
+      "description": "Exclude jobs that dont publish a salary range.",
+      "prefill": false,
+      "title": "Only transparent salaries",
+      "type": "boolean"
+    },
+    "requirementsKeywordsQuery": {
+      "description": "Match against parsed requirement bullets.",
+      "editor": "textfield",
+      "nullable": true,
+      "title": "Requirements keywords",
+      "type": "string"
+    },
+    "salaryCurrency": {
+      "default": "",
+      "description": "Filter salary thresholds against this currency. Empty = any.",
+      "editor": "select",
+      "enum": [
+        "",
+        "USD",
+        "EUR",
+        "GBP",
+        "CAD",
+        "AUD",
+        "INR",
+        "JPY",
+        "CNY",
+        "MXN",
+        "BRL"
+      ],
+      "title": "Salary currency",
+      "type": "string"
+    },
+    "salaryFrequency": {
+      "default": "",
+      "description": "Pay period for salary thresholds.",
+      "editor": "select",
+      "enum": [
+        "",
+        "Yearly",
+        "Monthly",
+        "Weekly",
+        "Daily",
+        "Hourly"
+      ],
+      "title": "Salary frequency",
+      "type": "string"
+    },
+    "searchQueries": {
+      "description": "Keywords to search on hiring.cafe (e.g., 'software engineer', 'data scientist'). Empty array or empty string returns unfiltered results.",
+      "editor": "stringList",
+      "prefill": [
+        "software engineer"
+      ],
+      "title": "Search Queries",
+      "type": "array"
+    },
+    "securityClearances": {
+      "description": "Filter by clearance level. Empty = all jobs.",
+      "editor": "select",
+      "items": {
+        "enum": [
+          "None",
+          "Confidential",
+          "Secret",
+          "Top Secret",
+          "Top Secret/SCI",
+          "Public Trust",
+          "Interim Clearances",
+          "Other"
+        ],
+        "type": "string"
+      },
+      "nullable": true,
+      "title": "Security clearances",
+      "type": "array"
+    },
+    "seniorityLevels": {
+      "default": [
+        "No Prior Experience Required",
+        "Entry Level",
+        "Mid Level",
+        "Senior Level",
+        "Director",
+        "Executive"
+      ],
+      "description": "Filter by seniority level.",
+      "editor": "select",
+      "items": {
+        "enum": [
+          "No Prior Experience Required",
+          "Entry Level",
+          "Mid Level",
+          "Senior Level",
+          "Director",
+          "Executive"
+        ],
+        "type": "string"
+      },
+      "title": "Seniority Levels",
+      "type": "array"
+    },
+    "sortBy": {
+      "default": "default",
+      "description": "Result ordering.",
+      "editor": "select",
+      "enum": [
+        "default",
+        "newest",
+        "oldest",
+        "salary_high_to_low",
+        "salary_low_to_high"
+      ],
+      "enumTitles": [
+        "Relevance (default)",
+        "Newest first",
+        "Oldest first",
+        "Salary (high → low)",
+        "Salary (low → high)"
+      ],
+      "title": "Sort order",
+      "type": "string"
+    },
+    "technologyKeywordsQuery": {
+      "description": "Match against the parsed tech-stack tags (e.g. python, react, kubernetes).",
+      "editor": "textfield",
+      "nullable": true,
+      "title": "Technology keywords",
+      "type": "string"
+    },
+    "workplaceTypes": {
+      "default": [
+        "Remote",
+        "Hybrid",
+        "Onsite"
+      ],
+      "description": "Filter by workplace type. Defaults to all three.",
+      "editor": "select",
+      "items": {
+        "enum": [
+          "Remote",
+          "Hybrid",
+          "Onsite"
+        ],
+        "type": "string"
+      },
+      "prefill": [
+        "Remote",
+        "Hybrid",
+        "Onsite"
+      ],
+      "title": "Workplace Types",
+      "type": "array"
+    }
+  },
+  "required": [],
+  "schemaVersion": 1,
+  "title": "Hiring.cafe Jobs Scraper Input",
+  "type": "object"
+}
