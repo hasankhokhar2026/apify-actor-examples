@@ -108,12 +108,14 @@
     },
     "maxPrice": {
       "description": "Optional upper bound for the nightly price in the chosen currency.",
+      "maximum": 1000000,
       "minimum": 0,
       "title": "Maximum price per night",
       "type": "number"
     },
     "minPrice": {
       "description": "Optional lower bound for the nightly price in the chosen currency.",
+      "maximum": 1000000,
       "minimum": 0,
       "title": "Minimum price per night",
       "type": "number"
@@ -176,7 +178,7 @@
       "type": "string"
     },
     "proxyConfiguration": {
-      "description": "Booking.com uses an AWS WAF challenge. Apify's AUTO proxy is prefilled; the actor uses this proxy for browser and HTTP requests.",
+      "description": "Optional proxy override. The actor selects Apify's proxy automatically; no setup is needed.",
       "editor": "proxy",
       "prefill": {
         "useApifyProxy": true

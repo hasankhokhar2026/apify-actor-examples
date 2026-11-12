@@ -66,7 +66,7 @@ Empty values are omitted from a record instead of being written as `null`.
 | `maxItems` | integer | `3` | Maximum hotels to return (1–250) |
 | `includeRooms` | boolean | `true` | Add the room and rate table |
 | `includeFullAmenities` | boolean | `false` | Render each hotel page to collect every facility |
-| `proxyConfiguration` | object | AUTO | Apify proxy used for browser and HTTP requests |
+| `proxyConfiguration` | object | Automatic | Optional proxy override; the actor selects the Apify proxy automatically |
 
 ### Example: search Paris for three nights
 
@@ -74,8 +74,8 @@ Empty values are omitted from a record instead of being written as `null`.
 {
   "mode": "search",
   "destination": "Paris",
-  "checkIn": "2026-11-10",
-  "checkOut": "2026-11-13",
+  "checkIn": "2026-11-13",
+  "checkOut": "2026-11-16",
   "adults": 2,
   "rooms": 1,
   "maxItems": 3,
@@ -89,8 +89,8 @@ Empty values are omitted from a record instead of being written as `null`.
 {
   "mode": "search",
   "destination": "Barcelona",
-  "checkIn": "2026-11-10",
-  "checkOut": "2026-11-13",
+  "checkIn": "2026-11-13",
+  "checkOut": "2026-11-16",
   "stars": 5,
   "pool": true,
   "freeCancellation": true,
@@ -109,8 +109,8 @@ Empty values are omitted from a record instead of being written as `null`.
     { "url": "https://www.booking.com/hotel/fr/sorbonne.html" },
     { "url": "https://www.booking.com/hotel/fr/moxy-paris-la-villette.html" }
   ],
-  "checkIn": "2026-11-10",
-  "checkOut": "2026-11-13",
+  "checkIn": "2026-11-13",
+  "checkOut": "2026-11-16",
   "includeRooms": true,
   "includeFullAmenities": true
 }
@@ -142,13 +142,16 @@ The search card can show a promotional or selected-room price. The detail parser
 It is only collected when `includeFullAmenities` is on. That setting renders a hotel page in a browser, so it is slower and costs more than the default HTTP-only detail fetch.
 
 **What happens when Booking.com blocks the run?**
-The actor fails with a `BLOCKED` status instead of returning an empty dataset. If only some detail pages fail, it finishes with a `PARTIAL` status and keeps the rows it did collect.
+The actor selects its proxy automatically, so you do not need to configure anything. If every proxy path is blocked, it fails with a `BLOCKED` status instead of returning an empty dataset. If only some detail pages fail, it finishes with a `PARTIAL` status and keeps the rows it did collect.
 
 **What happens when a search has no results?**
 A valid search with no matches fails with `NO_RESULTS`, so you can tell it apart from a block. Loosen your filters or check the destination spelling.
 
+**Do the filters work in details mode?**
+Yes. Property type, stars, review score, free cancellation, breakfast, pool and nightly price are applied to the hotel data after each detail page is parsed. Booking.com's own search filters are still used in search mode for the initial result set.
+
 **How many results can I get?**
-Set `maxItems` up to 250. Booking.com loads 25 cards at a time and exposes a "Load more results" button; the actor scrolls and clicks it until your cap or the page stops growing. Booking.com itself caps a single query at about 1,000 results.
+Set `maxItems` up to 250. Booking.com loads 25 cards at a time and exposes a "Load more results" button; the actor scrolls and clicks it until your cap or the page stops growing. Booking.com itself caps a single query at about 1,000 results. If the source or the filters run out before your cap, the run status says how many rows were actually pushed. Large detail runs can take several minutes because Booking.com challenges each hotel page separately.
 
 **Are prices and availability live?**
 Yes. They are captured when the actor runs and can change as availability changes.
