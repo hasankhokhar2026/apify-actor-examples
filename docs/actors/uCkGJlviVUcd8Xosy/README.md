@@ -130,6 +130,6 @@ Scrape **BestColleges** — the US college rankings and school-data site at [bes
 
 - Only pages that carry embedded rankings work with `byProgram` (program ranking pages). State resource pages and blog articles contain no ranking data.
 - `bySubject` enumerates links from the hub page's HTML; deep program pages under other sections may need their own hub paths.
-- The internal school-search API (`api.mobius.highereducation.com`) requires a session token from the site and is not used; school discovery happens through ranking pages and subject hubs instead.
-- `bySchool` currently returns 0 records for most school slugs: bestcolleges.com's `/schools/{slug}/` pages are served as a client-side-rendered shell (a site-side server error — the HTTP 200 page carries no profile data). The actor reports a status message in that case. School data remains fully available through `byProgram` (which carries tuition, admission rate, earnings, and accreditation per school).
-- Some program hubs (e.g. `business/bachelors`) intermittently serve the same empty shell from datacenter IPs; the actor retries those fetches automatically, and pages that stay broken produce a clean 0 with a status message.
+- Ranking data comes from the public organizations API payload; school profiles resolve through the public organizations list.
+- `bySchool` resolves school slugs against the public organizations API and returns public profile fields. Slugs that do not map to an active organization return a clear status message.
+- `bySubject` reads program links from the hub page, including its escaped JSON navigation data. The hub is a moving Next.js target; if no program links are found the actor reports a clear status.

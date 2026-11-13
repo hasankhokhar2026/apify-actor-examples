@@ -1,6 +1,6 @@
 # LinkedIn Post Comment & Reply Thread Extractor
 
-Feed this actor one or more LinkedIn post links and a session cookie, and it returns the top-level comments on each post (up to your per-post limit) — optionally with nested reply threads — as structured rows with author identity, engagement counts, and linked profiles.
+Feed this actor one or more LinkedIn post links. Without a cookie it returns LinkedIn's public comment preview (up to 10 top-level comments); with a valid session cookie it paginates the full comment thread, including nested replies, as structured rows with author identity, engagement counts, and linked profiles.
 
 ## What this actor does
 
@@ -37,14 +37,14 @@ Feed this actor one or more LinkedIn post links and a session cookie, and it ret
 | `attachmentVideoUrl` | URL of an attached video, when the comment includes one. |
 | `scrapedAt` | ISO 8601 UTC timestamp of when the row was scraped. |
 
-If no cookie is supplied, or the supplied cookie is or becomes invalid, the run writes a record with `_status: "no_data"`, `_reason`, `_message`, `_help` and `scrapedAt` fields explaining what to fix, and stops. Comments already saved before the cookie stopped working stay in the dataset.
+If no cookie is supplied, the actor reads LinkedIn's public comment preview (up to 10 top-level comments) and omits authenticated-only fields. If a supplied cookie is invalid, it falls back to the same public preview and explains the partial result in the status message. Comments already saved before a cookie expired stay in the dataset.
 
 ## Input
 
 | Field | Type | Default | Description |
 |---|---|---|---|
 | `postUrls` | List of strings | – | LinkedIn post URLs to scrape comments from. Accepts `/feed/update/urn:li:activity:ID/` or `/posts/username_slug-ID/` formats. Required. |
-| `cookie` | String | – | A LinkedIn session cookie: either the `li_at` value, or the full cookies JSON array exported from a browser extension. Required. |
+| `cookie` | String | – | A LinkedIn session cookie: either the `li_at` value, or the full cookies JSON array exported from a browser extension. Optional; unlocks the full thread. |
 | `maxCommentsPerPost` | Integer | `50` | Maximum top-level comments to scrape per post (1–500). Replies don't count toward it. |
 | `includeReplies` | Boolean | `false` | Also fetch replies to top-level comments, each output as its own row. |
 | `replyDepth` | Integer | `1` | How many reply levels to recurse when `includeReplies` is on: `1` = direct replies, up to `3`. Up to 10 replies are read per comment. |
@@ -97,7 +97,7 @@ If no cookie is supplied, or the supplied cookie is or becomes invalid, the run 
 
 ## FAQ
 
-**Does this need a LinkedIn account?** Yes. A valid session cookie (`li_at` or an exported cookies JSON array) from a logged-in account is required to read comment data.
+**Does this need a LinkedIn account?** No for the public preview (up to 10 top-level comments). Yes for full pagination and reply threads; supply a valid session cookie.
 
 **Why would `authorName` be missing from a comment?** Deleted accounts or heavily restricted profiles can leave author fields empty. If a comment has no extractable ID at all, it's skipped entirely.
 
@@ -109,8 +109,8 @@ If no cookie is supplied, or the supplied cookie is or becomes invalid, the run 
 
 **Can I scrape comments on a post I don't have access to?** No. Only posts visible to the account behind your cookie can be scraped — private or connection-restricted posts outside your network will fail.
 
-**Why is a cookie required for public-looking posts?** LinkedIn's comment data isn't available through any unauthenticated public endpoint, even for posts that appear public in a browser without logging in.
+**Why is a cookie required for the full thread?** LinkedIn only renders about 10 comments to signed-out visitors. A valid session cookie lets the actor paginate the complete comment list and follow reply threads.
 
-**What happens if my cookie expires mid-run?** The run stops and adds a record with `_status: "no_data"` plus a `_reason`/`_message`/`_help` explanation; any comment rows saved before that point remain. Log into LinkedIn, copy a fresh `li_at` value, and start a new run.
+**What happens if my cookie expires mid-run?** The actor falls back to LinkedIn's public comment preview (up to 10 top-level comments) and explains the partial result in the status message; authenticated-only reply fields are omitted. Any rows already saved stay in the dataset.
 
 **Is this affiliated with LinkedIn?** No. This is an independent tool and is not affiliated with, endorsed by, or sponsored by LinkedIn Corporation.

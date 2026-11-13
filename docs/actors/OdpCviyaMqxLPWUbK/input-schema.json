@@ -1,0 +1,136 @@
+{
+  "description": "Search Wish.com products, browse by category, look up specific products, or fetch trending items.",
+  "properties": {
+    "category": {
+      "default": "electronics",
+      "description": "Wish product category to browse.",
+      "editor": "select",
+      "enum": [
+        "fashion",
+        "electronics",
+        "home-garden",
+        "beauty",
+        "toys",
+        "sports",
+        "automotive",
+        "pets",
+        "jewelry",
+        "health",
+        "bags-accessories",
+        "office-school",
+        "tools",
+        "baby",
+        "gaming",
+        "outdoor",
+        "shoes",
+        "phone-accessories",
+        "computers",
+        "kitchen"
+      ],
+      "enumTitles": [
+        "Fashion & Clothing",
+        "Electronics",
+        "Home & Garden",
+        "Beauty & Personal Care",
+        "Toys & Games",
+        "Sports & Fitness",
+        "Automotive",
+        "Pets",
+        "Jewelry & Accessories",
+        "Health",
+        "Bags & Accessories",
+        "Office & School",
+        "Tools & Hardware",
+        "Baby & Toddler",
+        "Gaming",
+        "Outdoor",
+        "Shoes",
+        "Phone Accessories",
+        "Computers",
+        "Kitchen"
+      ],
+      "prefill": "electronics",
+      "title": "Category (mode=byCategory)",
+      "type": "string"
+    },
+    "maxItems": {
+      "default": 5,
+      "description": "Hard cap on emitted records (1–500).",
+      "maximum": 500,
+      "minimum": 1,
+      "prefill": 5,
+      "title": "Max items",
+      "type": "integer"
+    },
+    "maxPrice": {
+      "description": "Filter out products more expensive than this price.",
+      "maximum": 9999,
+      "minimum": 0,
+      "title": "Max price (USD)",
+      "type": "number"
+    },
+    "minPrice": {
+      "description": "Filter out products cheaper than this price.",
+      "maximum": 9999,
+      "minimum": 0,
+      "title": "Min price (USD)",
+      "type": "number"
+    },
+    "minRating": {
+      "description": "Filter out products with average rating below this value (0.0–5.0).",
+      "maximum": 5,
+      "minimum": 0,
+      "title": "Min rating",
+      "type": "number"
+    },
+    "mode": {
+      "default": "search",
+      "description": "What to fetch from Wish.com.",
+      "editor": "select",
+      "enum": [
+        "search",
+        "byProductId",
+        "byCategory",
+        "trending"
+      ],
+      "enumTitles": [
+        "Search by keyword",
+        "Lookup by product ID",
+        "Browse by category",
+        "Trending / featured products"
+      ],
+      "prefill": "search",
+      "title": "Mode",
+      "type": "string"
+    },
+    "onSaleOnly": {
+      "default": false,
+      "description": "Only emit products that have a discounted (sale) price.",
+      "prefill": false,
+      "title": "On sale only",
+      "type": "boolean"
+    },
+    "productIds": {
+      "default": [],
+      "description": "One or more Wish product IDs (24-character hex strings). E.g. '5e955e7d91a1d604c5af24b2'.",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Product IDs (mode=byProductId)",
+      "type": "array"
+    },
+    "query": {
+      "default": "phone case",
+      "description": "Keyword to search for (mode=search). E.g. 'phone case'.",
+      "editor": "textfield",
+      "prefill": "phone case",
+      "title": "Search query",
+      "type": "string"
+    }
+  },
+  "required": [
+    "mode"
+  ],
+  "schemaVersion": 1,
+  "title": "Wish Shopping Scraper Input",
+  "type": "object"
+}

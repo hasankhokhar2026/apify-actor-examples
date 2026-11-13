@@ -57,7 +57,7 @@
       "type": "string"
     },
     "cookie": {
-      "description": "Your LinkedIn session cookie. Accepts either: (1) the li_at value from browser DevTools → Application → Cookies, or (2) full cookies JSON array exported from an extension like EditThisCookie.",
+      "description": "Optional LinkedIn session cookie. Required only for search mode. The cookieless profileUrls mode reads public LinkedIn profile pages. Accepts the li_at value or a full cookies JSON array.",
       "editor": "textarea",
       "isSecret": true,
       "title": "LinkedIn Cookie",
@@ -253,6 +253,15 @@
       "title": "Profile Languages",
       "type": "array"
     },
+    "profileUrls": {
+      "description": "Public LinkedIn profile URLs to read without a cookie. When set, the actor skips people search and returns name, headline, location, company, education, followers and photo from each public profile.",
+      "editor": "stringList",
+      "prefill": [
+        "https://www.linkedin.com/in/satyanadella"
+      ],
+      "title": "Profile URLs (no cookie)",
+      "type": "array"
+    },
     "proxyConfiguration": {
       "description": "Optional Apify proxy configuration.",
       "editor": "proxy",
@@ -266,9 +275,9 @@
       "type": "string"
     },
     "searchQuery": {
-      "description": "Search keywords for finding people on LinkedIn. Examples: 'software engineer', 'John Smith', 'product manager Google'",
+      "description": "Search keywords for finding people on LinkedIn. Required for search mode; ignored when `profileUrls` is supplied. Examples: 'software engineer', 'John Smith', 'product manager Google'.",
       "editor": "textfield",
-      "prefill": "software engineer",
+      "prefill": "",
       "title": "Search Query",
       "type": "string"
     },
@@ -339,10 +348,7 @@
       "type": "string"
     }
   },
-  "required": [
-    "searchQuery",
-    "cookie"
-  ],
+  "required": [],
   "schemaVersion": 1,
   "title": "LinkedIn People Search Scraper Input",
   "type": "object"

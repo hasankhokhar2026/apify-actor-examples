@@ -4,6 +4,7 @@ Search LinkedIn people search with your own session — well beyond a plain keyw
 
 ## What this actor does
 
+- Reads public LinkedIn profile URLs without any cookie, returning name, headline, location, company, education and followers
 - Runs a LinkedIn people search using your own session cookie, combining a free-text query with any number of structured filters
 - Passes structured filters to LinkedIn: company, school and location IDs, industry, job function, seniority level, years of experience, employer headcount, connection degree, profile language and "open to" status
 - Adds free-text values (a location name, company or school names, a topic, first/last name and job title) to the search keywords, so they narrow results the way typing them into LinkedIn's search box would
@@ -33,15 +34,16 @@ Search LinkedIn people search with your own session — well beyond a plain keyw
 
 ### Cookie notice row
 
-If the `cookie` input is empty, or LinkedIn reports the session as expired or invalid, the run doesn't fail. Instead the dataset gets a single notice row with `_status: "no_data"`, `_reason` (`cookie-missing` or `cookie-invalid`), `_message`, `_help` (how to export a fresh cookie) and `scrapedAt`, and no profiles. A cookie value that can't be parsed at all fails the run.
+If `profileUrls` is supplied, no cookie is needed and the actor reads public profiles. In search mode, if `cookie` is empty or invalid, the run returns a single notice row with `_status: "no_data"`, `_reason`, `_message`, `_help` and `scrapedAt`, and no search profiles.
 
 ## Input
 
 | Field | Type | Default | Description |
 |---|---|---|---|
-| `searchQuery` | string | – | Free-text search keywords. Required. |
+| `searchQuery` | string | – | Free-text search keywords. Required for search mode when `profileUrls` is empty. |
 | `keywords` | string | – | Extra keywords combined with `searchQuery` with a space; handy for adding modifiers without editing your main query. |
-| `cookie` | string | – | Your LinkedIn session cookie — either the `li_at` value or a full cookie JSON export. Required. |
+| `profileUrls` | array | - | Public LinkedIn profile URLs to read without a cookie. When set, search is skipped. |
+| `cookie` | string | - | LinkedIn session cookie (`li_at` or full export). Required for search mode; optional for `profileUrls`. |
 | `location` | string | – | Free-text location, e.g. `San Francisco Bay Area`; added to the search keywords. Use `geoUrn` for a strict location filter. |
 | `geoUrn` | string | – | A LinkedIn geo URN or numeric geo ID (e.g. `103644278` for the United States) for a strict location filter. |
 | `currentCompany` | string | – | Current employer, by name or LinkedIn company URN/ID. A URN applies a strict structured filter; a plain name is added to the search keywords. |
@@ -112,7 +114,9 @@ If the `cookie` input is empty, or LinkedIn reports the session as expired or in
 
 ## FAQ
 
-**Why does this actor need a LinkedIn cookie?**
+**Does this actor need a LinkedIn cookie?**
+
+No for profileUrls mode: public /in/ pages expose name, headline, location, company, education, followers and photo as JSON-LD. Yes for people-search mode, which LinkedIn serves only to signed-in sessions.
 People search is only available to logged-in LinkedIn users, so a valid session cookie (`li_at` or a full cookie export) is required. Without one, or with an expired one, the run returns only the cookie notice row described above.
 
 **Will my results match what I'd see searching manually?**

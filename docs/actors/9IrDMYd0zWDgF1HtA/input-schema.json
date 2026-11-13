@@ -1,7 +1,7 @@
 {
   "properties": {
     "cookie": {
-      "description": "Your LinkedIn session cookie. Accepts either: (1) the li_at value from browser DevTools → Application → Cookies, or (2) full cookies JSON array exported from an extension like EditThisCookie.",
+      "description": "Optional LinkedIn session cookie. Without it, the actor returns LinkedIn's public comment preview (up to 10 top-level comments). With a valid session it paginates all comments and replies. Accepts either the li_at value or a full cookies JSON array.",
       "editor": "textarea",
       "isSecret": true,
       "title": "LinkedIn Cookie",
@@ -62,7 +62,7 @@
       "editor": "number",
       "maximum": 500,
       "minimum": 1,
-      "prefill": 50,
+      "prefill": 3,
       "title": "Max Comments Per Post",
       "type": "integer"
     },
@@ -77,10 +77,10 @@
       "type": "integer"
     },
     "postUrls": {
-      "description": "LinkedIn post URLs to scrape comments from. Accepts formats like: https://www.linkedin.com/feed/update/urn:li:activity:7329761432933134337/ or https://www.linkedin.com/posts/username_some-slug-7329761432933134337/. Use a public, high-engagement post URL for best results. The prefill example uses a Bill Gates post from early 2025.",
+      "description": "LinkedIn post URLs to scrape comments from. Accepts formats like https://www.linkedin.com/feed/update/urn:li:activity:7525637561919373312/ or https://www.linkedin.com/posts/username_some-slug-7525637561919373312/. Without a cookie the actor reads LinkedIn's public comment preview (up to 10 comments); with a valid cookie it paginates all comments and replies.",
       "editor": "stringList",
       "prefill": [
-        "https://www.linkedin.com/feed/update/urn:li:activity:7329761432933134337/"
+        "https://www.linkedin.com/feed/update/urn:li:activity:7525637561919373312/"
       ],
       "title": "Post URLs",
       "type": "array"
@@ -119,8 +119,7 @@
     }
   },
   "required": [
-    "postUrls",
-    "cookie"
+    "postUrls"
   ],
   "schemaVersion": 1,
   "title": "LinkedIn Comments Scraper Input",

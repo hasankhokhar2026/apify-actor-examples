@@ -1,6 +1,6 @@
 # LinkedIn Company Pages with Funding & Affiliates
 
-Give this actor a list of LinkedIn company pages and get back the full "About" page for each one — industry, headcount, headquarters, specialties, logo, and (when LinkedIn surfaces it) Crunchbase-sourced funding history — plus the option to also pull every affiliated company and showcase page linked from that company's profile.
+Give this actor a list of LinkedIn company pages and get back the public "About" page for each one: name, description, website, industry, headcount range, headquarters, company type, founding year, specialties, followers and logo. No cookie is needed for this firmographic record. A valid cookie is only needed for funding details, exact office locations, affiliates and showcase pages.
 
 ## What this actor does
 
@@ -32,12 +32,18 @@ Give this actor a list of LinkedIn company pages and get back the full "About" p
 | Field | Type | Default | Description |
 |---|---|---|---|
 | `companyUrls` | array | – | **Required.** LinkedIn company URLs or bare slugs, e.g. `https://www.linkedin.com/company/apple/` or `apple` |
-| `cookie` | string | – | **Required.** LinkedIn session cookie — either the `li_at` value or a full exported cookies JSON array |
+| `cookie` | string | – | Optional. LinkedIn session cookie (`li_at` or full export); needed only for funding, locations, affiliates and showcases. |
 | `includeAffiliates` | boolean | `false` | Also emit one record per affiliated company referenced by each input company |
 | `includeShowcases` | boolean | `false` | Also emit one record per showcase page referenced by each input company |
 | `includeFundingDetails` | boolean | `true` | Add Crunchbase-sourced funding fields when LinkedIn has them for the company |
 | `language` | string | `en` | Language used for the request locale |
 | `proxyConfiguration` | object | – | Optional Apify proxy configuration |
+
+### No-cookie example
+
+```json
+{"companyUrls": ["https://www.linkedin.com/company/hubspot/"]}
+```
 
 ### Example: basic company lookup
 
@@ -79,7 +85,7 @@ Give this actor a list of LinkedIn company pages and get back the full "About" p
 
 ## FAQ
 
-**Why is a LinkedIn cookie required?** Full company-page data, including funding and affiliate links, is only exposed to a signed-in LinkedIn session, so a valid session cookie is mandatory for every run.
+**Do I need a LinkedIn cookie?** Not for name, description, website, industry, size, headquarters, type, founded year, specialties, followers and logo. Funding, exact office locations, affiliates and showcases require a signed-in session.
 
 **Does this work for private as well as public companies?** Yes — any company with a LinkedIn page returns the same data a logged-in user would see when visiting that page.
 
