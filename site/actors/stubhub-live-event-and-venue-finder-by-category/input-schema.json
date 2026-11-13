@@ -1,0 +1,178 @@
+{
+  "description": "Search StubHub events by keyword, or browse by category. No login or proxy required.",
+  "properties": {
+    "activeListingsOnly": {
+      "default": false,
+      "description": "Only include events that currently have active ticket listings (excludes sold-out / no-tickets-available events).",
+      "prefill": false,
+      "title": "Active listings only",
+      "type": "boolean"
+    },
+    "category": {
+      "default": "",
+      "description": "Event category (mode=byCategory, required; mode=search, optional filter).",
+      "editor": "select",
+      "enum": [
+        "",
+        "6453",
+        "6456",
+        "5084",
+        "4871",
+        "5062",
+        "263024",
+        "1012",
+        "1009",
+        "5099",
+        "5213",
+        "26796",
+        "273026",
+        "14163",
+        "4080",
+        "1006",
+        "5133",
+        "260542",
+        "1207",
+        "1059",
+        "1014",
+        "1027",
+        "1023",
+        "1026",
+        "259833",
+        "1022",
+        "1205",
+        "1015",
+        "1017",
+        "259716",
+        "6403",
+        "358959",
+        "4654",
+        "356499",
+        "1013",
+        "2294",
+        "150002820"
+      ],
+      "enumTitles": [
+        "(none)",
+        "NBA",
+        "MLB",
+        "NFL",
+        "NHL",
+        "MLS",
+        "College Sports",
+        "Tennis",
+        "Golf",
+        "Rodeo",
+        "WWE",
+        "United States F1 GP",
+        "Fight",
+        "Rugby",
+        "Horse Racing",
+        "Cricket",
+        "Volleyball",
+        "Pop/Rock",
+        "Rock and Pop",
+        "Alternative Music",
+        "Classical",
+        "R&B",
+        "Festival Tickets",
+        "Rap and Hip-Hop Music",
+        "Vocal Performance Music",
+        "Dance and Electronic Music",
+        "Country and Folk Music",
+        "Comedy",
+        "Musicals",
+        "Classical Music and Opera",
+        "Speaking Tour / Convention",
+        "Plays",
+        "Theater",
+        "Festivals and Fairs",
+        "Dance / Ballet",
+        "Family",
+        "TV Show"
+      ],
+      "prefill": "260542",
+      "title": "Category",
+      "type": "string"
+    },
+    "confirmedDateOnly": {
+      "default": false,
+      "description": "Only include events whose date is confirmed (excludes TBD-date events).",
+      "prefill": false,
+      "title": "Confirmed dates only",
+      "type": "boolean"
+    },
+    "country": {
+      "default": "",
+      "description": "Filter results to a specific country, e.g. `US` or `CA`. Records missing country data are not excluded.",
+      "editor": "select",
+      "enum": [
+        "",
+        "US",
+        "CA"
+      ],
+      "enumTitles": [
+        "(none)",
+        "United States",
+        "Canada"
+      ],
+      "prefill": "",
+      "title": "Country (2-letter code)",
+      "type": "string"
+    },
+    "dateFrom": {
+      "default": "",
+      "description": "Only include events on/after this UTC datetime, e.g. `2026-08-01T00:00:00+00:00`. Records without a resolvable event datetime are not excluded.",
+      "editor": "textfield",
+      "prefill": "",
+      "title": "Event date from (ISO 8601)",
+      "type": "string"
+    },
+    "dateTo": {
+      "default": "",
+      "description": "Only include events on/before this UTC datetime. Records without a resolvable event datetime are not excluded.",
+      "editor": "textfield",
+      "prefill": "",
+      "title": "Event date to (ISO 8601)",
+      "type": "string"
+    },
+    "maxItems": {
+      "default": 20,
+      "description": "Hard cap on emitted records. Note: StubHub's search endpoint returns up to ~20 results per keyword query (an upstream page-level limit).",
+      "maximum": 100,
+      "minimum": 1,
+      "prefill": 20,
+      "title": "Max items",
+      "type": "integer"
+    },
+    "mode": {
+      "default": "search",
+      "description": "What to fetch.",
+      "editor": "select",
+      "enum": [
+        "search",
+        "byCategory"
+      ],
+      "enumTitles": [
+        "Search events by keyword",
+        "Browse by category (sport / concert / theater)"
+      ],
+      "prefill": "search",
+      "title": "Mode",
+      "type": "string"
+    },
+    "searchQuery": {
+      "default": "",
+      "description": "Free-text query — artist, team, venue, or event name (mode=search, required; mode=byCategory, optional refinement).",
+      "editor": "textfield",
+      "prefill": "Taylor Swift",
+      "title": "Search query",
+      "type": "string"
+    }
+  },
+  "required": [
+    "mode"
+  ],
+  "schemaVersion": 1,
+  "title": "StubHub Scraper Input",
+  "type": "object"
+}
