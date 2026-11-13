@@ -1,9 +1,9 @@
 {
   "actorOutputSchemaVersion": 1,
-  "description": "Reddit posts, comments, profiles and community records with engagement metrics, derived activity and per-record source provenance.",
+  "description": "Reddit post, comment, profile and community records with engagement metrics, derived activity and per-record source provenance. Every record has a `recordType` (post, comment, profile or community), a `source` (live, archive or the last-resort rss), and `fetchedAt`; archive and rss records also carry `snapshotFreshness`, `degraded` and a warning, and rss records add `metricsUnavailable` while omitting score, upvote ratio and comment count. Comment records include `depth` and `parent_id`, and the parent post gains a `coverage` object when comments are returned.",
   "properties": {
     "redditRecords": {
-      "description": "Dataset containing post, comment, profile or community records (see `recordType`). Every record carries `source` (live/archive), `fetchedAt` and, for archive data, `snapshotFreshness` plus a warning.",
+      "description": "Dataset containing post, comment, profile or community records (see `recordType`). Fields the source does not provide for a record are omitted rather than emitted as null or empty values.",
       "template": "{{links.apiDefaultDatasetUrl}}/items",
       "title": "Reddit records",
       "type": "string"

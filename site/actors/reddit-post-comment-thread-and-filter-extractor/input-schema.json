@@ -7,9 +7,40 @@
       "title": "Author filter (substring)",
       "type": "string"
     },
+    "commentSort": {
+      "default": "confidence",
+      "description": "Order Reddit uses to load top-level comments. 'Best' is Reddit's confidence ranking.",
+      "editor": "select",
+      "enum": [
+        "confidence",
+        "top",
+        "new",
+        "controversial",
+        "old",
+        "qa"
+      ],
+      "enumTitles": [
+        "Best (confidence)",
+        "Top",
+        "New",
+        "Controversial",
+        "Old",
+        "Q&A"
+      ],
+      "title": "Comment sort order",
+      "type": "string"
+    },
+    "enrichFromArchive": {
+      "default": false,
+      "description": "Fill static fields Reddit no longer renders to logged-out visitors (author fullname, award/gilding detail, distinguished, archived/locked) from the public Arctic Shift Reddit archive. The rendered page always wins; archive failures leave page data untouched.",
+      "prefill": false,
+      "title": "Enrich from Arctic Shift archive",
+      "type": "boolean"
+    },
     "excludeDeleted": {
       "default": false,
       "description": "Drop comments where author is `[deleted]` or text is `[removed]`.",
+      "prefill": false,
       "title": "Exclude deleted/removed",
       "type": "boolean"
     },
@@ -27,7 +58,7 @@
       "type": "string"
     },
     "maxAgeDays": {
-      "description": "Drop comments older than this many days. Legacy compatibility field; leave empty for no age limit.",
+      "description": "Drop comments older than this many days. Leave empty for no age limit.",
       "editor": "number",
       "maximum": 36500,
       "minimum": 1,

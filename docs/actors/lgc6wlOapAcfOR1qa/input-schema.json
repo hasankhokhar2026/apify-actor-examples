@@ -1,0 +1,243 @@
+{
+  "properties": {
+    "dateRange": {
+      "default": "any",
+      "description": "Client-side filter on postedAt. \"any\" keeps all; otherwise only emit jobs posted within the last N days.",
+      "editor": "select",
+      "enum": [
+        "any",
+        "1",
+        "3",
+        "7",
+        "14",
+        "30"
+      ],
+      "enumTitles": [
+        "Any time",
+        "Last 24 hours",
+        "Last 3 days",
+        "Last 7 days",
+        "Last 14 days",
+        "Last 30 days"
+      ],
+      "title": "Date Posted",
+      "type": "string"
+    },
+    "includeOneInTitle": {
+      "description": "Client-side filter. Only emit jobs whose title contains at least one of the given substrings (case-insensitive).",
+      "editor": "stringList",
+      "title": "Title Must Include One Of",
+      "type": "array"
+    },
+    "location": {
+      "description": "Optional location filter, e.g. \"Sydney NSW\" or \"Melbourne VIC\". Combined with searchTerm to build a /jobs?keywords=&where= URL.",
+      "editor": "textfield",
+      "title": "Location",
+      "type": "string"
+    },
+    "maxItems": {
+      "default": 3,
+      "description": "Maximum job listings to return.",
+      "editor": "number",
+      "maximum": 300,
+      "minimum": 1,
+      "prefill": 3,
+      "title": "Max Items",
+      "type": "integer"
+    },
+    "postCode": {
+      "description": "Optional Australian 4-digit postcode. Appended to the location when constructing the search URL.",
+      "editor": "textfield",
+      "title": "Post Code",
+      "type": "string"
+    },
+    "proxyConfiguration": {
+      "default": {
+        "useApifyProxy": true
+      },
+      "description": "Apify proxy. Seek 403s bare datacenter IPs on Apify, so the default enables Apify's free datacenter proxy pool.",
+      "editor": "proxy",
+      "prefill": {
+        "useApifyProxy": true
+      },
+      "title": "Proxy Configuration",
+      "type": "object"
+    },
+    "radius": {
+      "description": "Distance in kilometres around the location. Passed as Seek's distance parameter when building a search URL.",
+      "editor": "number",
+      "maximum": 100,
+      "minimum": 0,
+      "title": "Radius (km)",
+      "type": "integer"
+    },
+    "requireEmail": {
+      "default": false,
+      "description": "Client-side filter. Only emit jobs whose description contains at least one email address.",
+      "editor": "checkbox",
+      "title": "Require Email in Description",
+      "type": "boolean"
+    },
+    "requireEmailPhone": {
+      "default": false,
+      "description": "Client-side filter. Only emit jobs whose description contains BOTH an email address AND a phone number.",
+      "editor": "checkbox",
+      "title": "Require Both Email and Phone",
+      "type": "boolean"
+    },
+    "requirePhone": {
+      "default": false,
+      "description": "Client-side filter. Only emit jobs whose description contains at least one phone number.",
+      "editor": "checkbox",
+      "title": "Require Phone in Description",
+      "type": "boolean"
+    },
+    "salaryMax": {
+      "description": "Client-side filter. Only emit jobs whose parsed salary min is at most this value.",
+      "editor": "number",
+      "minimum": 0,
+      "title": "Salary Max (AUD)",
+      "type": "integer"
+    },
+    "salaryMin": {
+      "description": "Client-side filter. Only emit jobs whose parsed salary max is at least this value.",
+      "editor": "number",
+      "minimum": 0,
+      "title": "Salary Min (AUD)",
+      "type": "integer"
+    },
+    "salaryType": {
+      "default": "any",
+      "description": "Seek salarytype parameter. Controls how the salary range is interpreted on Seek's side.",
+      "editor": "select",
+      "enum": [
+        "any",
+        "AnnualPackage",
+        "HourlyRate",
+        "MonthlyPackage",
+        "YearlyPackage"
+      ],
+      "enumTitles": [
+        "Any",
+        "Annual Package",
+        "Hourly Rate",
+        "Monthly Package",
+        "Yearly Package"
+      ],
+      "title": "Salary Type",
+      "type": "string"
+    },
+    "scrapeJobDetails": {
+      "default": true,
+      "description": "Fetch each job's detail page for the full description + extra metadata. Off = listing-card fields only.",
+      "editor": "checkbox",
+      "title": "Scrape Job Details",
+      "type": "boolean"
+    },
+    "searchTerm": {
+      "description": "Optional keyword filter. Used to build a search URL when no searchUrls are supplied.",
+      "editor": "textfield",
+      "title": "Search Term (Keywords)",
+      "type": "string"
+    },
+    "searchUrls": {
+      "default": [
+        "https://www.seek.com.au/python-jobs"
+      ],
+      "description": "Seek search URLs. Examples: https://www.seek.com.au/python-jobs, https://www.seek.com.au/jobs?keywords=python&where=Sydney, https://www.seek.com.au/job/91572959 (direct job URL also supported).",
+      "editor": "stringList",
+      "prefill": [
+        "https://www.seek.com.au/python-jobs"
+      ],
+      "title": "Search URLs",
+      "type": "array"
+    },
+    "sortBy": {
+      "default": "KeywordRelevance",
+      "description": "Seek sort order applied to the search URL when constructed from keywords/location.",
+      "editor": "select",
+      "enum": [
+        "KeywordRelevance",
+        "ListedDate"
+      ],
+      "enumTitles": [
+        "Keyword relevance",
+        "Date listed"
+      ],
+      "title": "Sort By",
+      "type": "string"
+    },
+    "state": {
+      "default": "",
+      "description": "Optional Australian state filter (e.g. NSW, VIC, QLD). Appended to the location when constructing the search URL.",
+      "editor": "select",
+      "enum": [
+        "",
+        "NSW",
+        "VIC",
+        "QLD",
+        "WA",
+        "SA",
+        "TAS",
+        "ACT",
+        "NT"
+      ],
+      "enumTitles": [
+        "(none)",
+        "New South Wales (NSW)",
+        "Victoria (VIC)",
+        "Queensland (QLD)",
+        "Western Australia (WA)",
+        "South Australia (SA)",
+        "Tasmania (TAS)",
+        "Australian Capital Territory (ACT)",
+        "Northern Territory (NT)"
+      ],
+      "title": "State",
+      "type": "string"
+    },
+    "subclassifications": {
+      "description": "Client-side filter. Only emit jobs whose subClassification name matches one of these values (case-insensitive).",
+      "editor": "stringList",
+      "title": "Subclassifications",
+      "type": "array"
+    },
+    "workArrangements": {
+      "description": "Client-side filter. Only emit jobs whose work arrangement matches one of the selected values.",
+      "editor": "select",
+      "items": {
+        "enum": [
+          "On-site",
+          "Hybrid",
+          "Remote"
+        ],
+        "type": "string"
+      },
+      "title": "Work Arrangements",
+      "type": "array",
+      "uniqueItems": true
+    },
+    "workTypes": {
+      "description": "Client-side filter. Only emit jobs whose workType matches one of the selected values.",
+      "editor": "select",
+      "items": {
+        "enum": [
+          "Full Time",
+          "Part Time",
+          "Contract/Temp",
+          "Casual/Vacation"
+        ],
+        "type": "string"
+      },
+      "title": "Work Types",
+      "type": "array",
+      "uniqueItems": true
+    }
+  },
+  "required": [
+    "searchUrls"
+  ],
+  "schemaVersion": 1,
+  "title": "Seek.com.au Jobs Scraper Input",
+  "type": "object"
+}

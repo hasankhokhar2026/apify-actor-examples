@@ -9,10 +9,10 @@ Extract public Reddit data without an account, cookie, or API key. Choose a subr
 ## What this actor does
 
 - **Four modes:** `subreddit` (post listings), `post` (one or more post URLs plus comments), `profile` (account metadata, posts and comments), and `search` (posts, comments, communities, and users).
-- **Two data sources with provenance:** `live` reads Reddit's public rendered pages, while `archive` reads the Arctic Shift historical snapshot. `auto` uses live data first and archive for depth, bulk history, or fallback.
-- **Full comment trees:** the archive path returns nested replies with `depth` and `parent_id`; live mode starts with the visible tree and expands top-level pages up to your cap.
-- **Rich post fields:** score, upvote ratio, comment count, flair, domain, media URLs, galleries, video metadata, awards, crossposts, NSFW/spoiler/locked flags, and derived engagement metrics.
-- **Filters and incremental runs:** score, comment count, upvote ratio, date range, post type, text matches, author allow/deny lists, flair, domain, awards, and an optional `onlyNew` watermark.
+- **Layered data sources with provenance:** `live` reads Reddit's public rendered pages, `archive` reads the Arctic Shift historical snapshot, and an internal RSS last-resort path covers subreddit listings and post search when both are unavailable. `auto` uses live data first, archive for depth/bulk/fallback, then RSS; records are tagged `source: live`, `archive`, or `rss`.
+- **Full comment trees:** the live path expands Reddit's unloaded comment batches (`/svc/shreddit/more-comments`) with their real per-batch cursors and CSRF token, then follows continue-thread pages for deeper replies; the archive path returns the nested tree with `depth` and `parent_id`.
+- **Rich post fields:** score, upvote ratio, comment count, flair, author flair, domain, media URLs, real post thumbnails, galleries, video metadata, awards, crossposts, NSFW/spoiler/locked flags, and derived engagement metrics.
+- **Filters and incremental runs:** score, comment count, upvote ratio, date range, post type, text matches, author allow/deny lists, flair, domain, awards, removed/locked/deleted-author exclusions on posts and comments, and an optional `onlyNew` watermark.
 - **Empty fields are omitted:** records never contain `null`, empty strings, or empty arrays/objects.
 
 ## Output per post
@@ -20,25 +20,26 @@ Extract public Reddit data without an account, cookie, or API key. Choose a subr
 - `recordType: "post"`, `dataType: "post"`, `source`, `sourceDetail`, `fetchedAt`, `snapshotFreshness`
 - `id`, `post_id`, `post_name`, `title`, `author`, `author_id`, `author_meta`
 - `subreddit`, `subreddit_prefixed`, `subreddit_id`, `subreddit_subscribers`, `subreddit_type`
-- `content` / `body`, `content_html`, `content_url`, `url`, `permalink`, `domain`, `is_self`, `post_type`, `media_type`
-- `score`, `ups`, `downs`, `upvote_ratio`, `num_comments`, `commentCount`, `gilded`, `total_awards_received`, `awards[]`
-- `link_flair`, flair colors/classes/richtext, `thumbnail_url`, `images[]`, `gallery_images[]`, `gallery_count`
+- `content` / `body`, `content_html`, `content_url`, `url`, `permalink`, `url_overridden_by_dest`, `outbound_url`, `domain`, `is_self`, `is_gallery`, `is_video`, `is_poll`, `post_type`, `media_type`
+- `score`, `ups`, `downs`, `upvote_ratio`, `num_comments`, `commentCount`, `gilded`, `gildings`, `total_awards_received`, `awards[]` (`name`, `id`, `description`, `award_type`, `count`, `coin_price`, icon URL/dimensions)
+- `link_flair`, `author_flair`, flair colors/classes/richtext, `author_meta`, `thumbnail_url`, `images[]`, `gallery_images[]`, `gallery_items[]`, `gallery_count`
 - `video_url`, `video_duration_seconds`, `video_width`, `video_height`, `video_has_audio`, `video_bitrate_kbps`
-- `poll_data`, embed metadata, `crosspost_parent_id`
-- `created_utc`, `created_at`, `createdAt`, `edited`, `edited_at`
+- `poll_data`, embed metadata, `crosspost_parent_id`, `crosspost_parent` (id, title, author, subreddit, score, comment count, URL, permalink, timestamp), `collections[]`
+- `created_utc`, `created_at`, `createdAt`, `edited`, `edited_at`, `author_created_utc`, `author_created_at`
 - `is_nsfw`, `nsfw`, `is_spoiler`, `is_stickied`, `is_locked`, `is_archived`, `is_original_content`, `is_crosspost`
 - `derived` (`ageHours`, `scorePerHour`, `commentsPerHour`, `engagementTotal`)
-- `warning` and `degraded` when the record came from the archive snapshot
+- `warning` and `degraded` when the record came from the archive snapshot; `source: rss` records also carry `metricsUnavailable` and omit score, upvote ratio and comment count
 
 ## Output per comment
 
 - `recordType: "comment"`, `dataType: "comment"`, `source`, `sourceDetail`, `fetchedAt`
-- `id`, `comment_id`, `comment_name`, `post_id`, `post_url`, `post_title`, `link_id`
-- `parent_id`, `parentId`, `parent_kind`, `depth`, `body`, `body_html`
-- `author`, `author_id`, `author_meta`
+- `id`, `comment_id`, `comment_name`, `post_id`, `post_url`, `post_permalink`, `post_title`, `post_num_comments`, `link_id`
+- `link_title`, `link_author`, `link_url` when the source supplies the parent post metadata
+- `parent_id`, `parentId`, `parent_kind`, `depth`, `body`, `body_html` (live DOM)
+- `author`, `author_id`, `author_flair`, `author_meta`
 - `subreddit`, `subreddit_prefixed`, `subreddit_id`, `subreddit_type`
-- `score`, `ups`, `downs`, `controversiality`, `gilded`, `total_awards_received`, `awards[]`
-- `is_op`, `is_stickied`, `is_locked`, `collapsed`, `removed_by_category`
+- `score`, `ups`, `downs`, `controversiality`, `gilded`, `gildings`, `total_awards_received`, `awards[]`
+- `is_op`, `is_stickied`, `is_locked`, `archived`, `is_archived`, `collapsed`, `removed_by_category`, `distinguished`
 - `replies_count`, `replies`, `created_utc`, `created_at`, `createdAt`, `edited`, `edited_at`, `permalink`
 - `coverage` on the parent post when comment coverage is known
 - `warning` and `degraded` for archive records
@@ -49,6 +50,7 @@ Extract public Reddit data without an account, cookie, or API key. Choose a subr
 - `id`, `username`, `user_id`, `profile_url`, `icon_img`, `snoovatar_img`
 - `karma` (`total`, `post`, `comment`), plus the flat `post_karma`, `comment_karma`, `total_karma`
 - `post_count`, `comment_count`, `created_utc`, `created_at`, `createdAt`
+- `earliest_post_utc`, `last_post_utc`, `earliest_comment_utc`, `last_comment_utc`, `last_activity_utc` from archive user metadata
 - `description`, `is_gold`, `is_mod`, `is_employee`, `has_verified_email`, `verified`
 - Profile history records are emitted as separate `post` and `comment` records.
 
@@ -60,6 +62,7 @@ Community records appear when `includeSubredditInfo`, `searchCommunities`, or th
 - `id`, `subreddit`, `subreddit_prefixed`, `subreddit_id`, `url`, `title`
 - `subscribers`, `active_user_count`, `created_utc`, `created_at`, `createdAt`
 - `description`, `public_description`, `subreddit_type`, `over18`, `quarantine`
+- `posts_indexed`, `comments_indexed`, `earliest_post_utc`, `earliest_comment_utc` from archive subreddit metadata, plus posting/flair/media settings
 - `rules[]` when rules are requested
 
 ## Input
@@ -67,7 +70,7 @@ Community records appear when `includeSubredditInfo`, `searchCommunities`, or th
 | Field | Type | Default | Description |
 |---|---|---|---|
 | `mode` | string | `subreddit` | `subreddit`, `post`, `profile`, or `search`. Legacy `comments` maps to `post`; `posts`, `profiles`, and `subreddits` are accepted aliases. |
-| `source` | string | `auto` | `auto`, `live`, or `archive`. `auto` prefers live data and uses the archive for depth, history, or fallback. |
+| `source` | string | `auto` | `auto`, `live`, or `archive`. `auto` prefers live data, uses the archive for depth/history/fallback, then Reddit RSS for listing/search when both are unavailable. |
 | `subreddits` | array | `["programming"]` | Subreddits for `mode=subreddit`; names, `r/` names, and URLs are accepted. |
 | `postUrls` | array | - | Post URLs, comment URLs, share links, or bare post IDs for `mode=post`. |
 | `usernames` | array | - | Reddit usernames for `mode=profile`; `u/` names and profile URLs are accepted. |
@@ -78,22 +81,23 @@ Community records appear when `includeSubredditInfo`, `searchCommunities`, or th
 | `maxDepth` | int | `6` | Deepest reply level to emit (0-20). |
 | `includeComments` | bool | `true` | Emit comment records in `mode=post`. |
 | `includePost` | bool | `true` | Emit the parent post record before its comments in `mode=post`. |
-| `sort` | string | `hot` | `hot`, `new`, `top`, `rising`, `controversial`, `best`, or search values `relevance` and `comments`. |
-| `timeFilter` | string | `day` | `hour`, `day`, `week`, `month`, `year`, or `all`. |
-| `commentSort` | string | `confidence` | `confidence`, `top`, `new`, `controversial`, `old`, or `qa`. |
+| `sort` | string | `hot` | Subreddit/profile/search ordering. Search: `relevance`, `hot`, `top`, `new`, `comments`; subreddit: `hot`, `new`, `top`, `rising`, `controversial`, `best`; profile: `hot`, `new`, `top`, `controversial` (`best` maps to `hot`, `rising` maps to `new`). Archive top/hot/best results are ranked by score inside the time window. |
+| `timeFilter` | string | `day` | `hour`, `day`, `week`, `month`, `year`, or `all`. Enforced with `after` on the archive path and Reddit's `t` parameter on the live path. |
+| `commentSort` | string | `confidence` | `confidence`, `top`, `new`, `controversial`, `old`, or `qa`. Sent as the live `sort` URL parameter and applied to archive comments locally. |
 | `includeNSFW` | bool | `false` | Include over-18 posts and communities. |
 | `includeSubredditInfo` | bool | `false` | Emit one community record per subreddit. |
-| `includeSubredditRules` | bool | `false` | Attach rules to community records. |
+| `includeSubredditRules` | bool | `false` | Attach rules to community records. Rules come from the public archive API even when the community metadata is live. |
 | `includeProfileInfo` | bool | `true` | Emit the profile record in `mode=profile`. |
 | `sections` | array | `["overview"]` | Profile history sections: `overview`, `posts`, `comments`. |
-| `searchPosts` / `searchComments` / `searchCommunities` / `searchUsers` | bool | posts on | Select which result types `mode=search` returns. |
+| `searchPosts` | bool | `true` | Include post results in `mode=search`. |
+| `searchComments` / `searchCommunities` / `searchUsers` | bool | `false` | Include comment, community or user results in `mode=search`. |
 | `withinCommunity` | string | - | Restrict search to one subreddit; required for archive keyword search. |
 | `maxCommunities` / `maxUsers` | int | `10` / `25` | Caps for community and user search results. |
 | `onlyNew` | bool | `false` | Emit only records newer than the watermark stored under `stateKey`. |
 | `stateKey` | string | `reddit-mcp-state` | Key-value store key prefix for `onlyNew` watermarks. |
-| `failOnEmpty` | bool | `true` | Fail the run with a clear message when no records are found. |
-| `proxyMode` | string | `none` | `none`, `datacenter`, or `residential`. Residential is an explicit fallback and is capped by `maxProxyBytesMb`. |
-| `maxProxyBytesMb` | int | `50` | Stop the run before paid proxy traffic exceeds this many megabytes. |
+| `failOnEmpty` | bool | `true` | Fail the run with a clear message when no records are found, or when the selected mode has no required target (`postUrls`, `usernames`, or `searchQuery`). |
+| `proxyMode` | string | `none` | `none`, `datacenter`, or `residential`. With `none`, a blocked browser challenge automatically escalates direct → Apify AUTO → RESIDENTIAL; `datacenter`/`residential` force that mode and disable escalation. Paid traffic is capped by `maxProxyBytesMb`. |
+| `maxProxyBytesMb` | int | `50` | Stop the run before paid proxy traffic (including automatic AUTO/RESIDENTIAL escalation) exceeds this many megabytes. |
 | `minScore` / `maxScore` | int | - | Score range for posts and comments. |
 | `minPostComments` / `maxPostComments` | int | - | Comment-count range for posts. |
 | `minUpvoteRatio` | number | - | Minimum post upvote ratio (0-1). |
@@ -183,7 +187,7 @@ The actor runs a native Streamable HTTP MCP server at `/mcp` when started in Sta
 | `get_user_profile` | Profile metadata plus recent posts/comments for one user. |
 | `get_subreddit_info` | Community metadata, optional rules, subscriber count, and description. |
 
-MCP responses include `items`, `count`, `source`, and `degraded`; archive-backed responses also include a freshness warning. Use the Actor's Standby URL followed by `/mcp`:
+MCP responses include `items`, `count`, `source`, and `degraded`; archive-backed responses also include a freshness warning. Tool calls share one browser page and are serialized by an internal scrape lock, so concurrent requests cannot navigate the same page at once. Use the Actor's Standby URL followed by `/mcp`:
 
 ```json
 {
@@ -212,7 +216,20 @@ MCP responses include `items`, `count`, `source`, and `degraded`; archive-backed
 
 Live records come from Reddit's public rendered pages. The archive path uses the Arctic Shift historical snapshot, which typically lags live Reddit by several hours and can have fewer comments or older scores. Archive records are marked `source: "archive"`, `degraded: true`, and include a `warning`; the `snapshotFreshness` field distinguishes them from live data.
 
-The actor defaults to 1 GB of memory; Apify bills the run by allocated memory and any proxy traffic. Browser requests block images, fonts, and media to keep traffic and cost down. No proxy is used by default; `datacenter` is available when Reddit blocks a run, and `residential` is an explicit last resort. `maxProxyBytesMb` stops the run when the configured proxy traffic ceiling is reached.
+In `auto` mode, if the live browser and archive both return no records for a subreddit listing or post search, the actor makes one final attempt through Reddit's public Atom/RSS feed. RSS records are marked `source: "rss"`, `degraded: true`, `metricsUnavailable: true`, and omit score, upvote ratio and comment count. RSS is a text/metadata fallback only: metric, flair and flag filters are never satisfied by RSS, so the actor skips the RSS path instead of silently passing records through an unverifiable filter.
+
+The actor defaults to 1 GB of memory; Apify bills the run by allocated memory and any proxy traffic. Browser requests block images, fonts, and media to keep traffic and cost down. With the default `proxyMode: none`, a blocked direct browser challenge automatically retries on Apify AUTO and then RESIDENTIAL; setting `datacenter` or `residential` forces that mode instead. `maxProxyBytesMb` stops the run when the configured proxy traffic ceiling is reached.
+
+## Limitations and honest bounds
+
+- **Archive freshness:** Arctic Shift is a historical snapshot that lags live Reddit by several hours. Scores, upvote ratios and comment counts can be stale; archive records are marked `degraded`.
+- **Archive sort emulation:** top/hot/best rank posts by score inside the selected window, and profile/search top sorting ranks the fetched candidate set. `rising` falls back to newest-first, and archive keyword search does not implement Reddit's relevance ranking (newest-first). Top/hot/best scans at most 10,000 candidate posts/comments per target to bound runtime; use date windows or `maxItems` to stay inside that scan.
+- **Live comment expansion:** Reddit renders comment batches on demand. The actor posts each batch's real hidden cursor with the session CSRF token and follows continue-thread pages, but it issues a bounded number of expansion requests per thread (at least 10, capped at 120). Very large threads may need `source: "archive"` for full depth, and the parent post's `coverage` fields show what was returned.
+- **Removal and flair markers:** live removal markers depend on what Reddit renders for the viewer. When the DOM does not expose `removed_by_category` or an author flair, the corresponding filter cannot detect it and passes the record (fail-soft). Archive records carry the archive's own removal and flair fields.
+- **Thumbnails:** live thumbnails come from the post's own preview/media image. A link post with no rendered preview has no thumbnail; the author avatar is never used as a thumbnail.
+- **Archive keyword search:** requires `withinCommunity`; without it the archive search path is skipped and the run reports that limit.
+- **RSS last resort:** Reddit's Atom feed exposes titles, links, authors, dates and thumbnails, but no score, upvote ratio, comment count, flair or removal flags. RSS is only used for subreddit listings and post search in `auto` mode, and is skipped whenever a filter needs one of those missing fields. RSS feeds are rate-limited by Reddit; a throttled feed simply returns no records and the run reports empty rather than substituting unverified data.
+- **Proxy escalation:** if direct, AUTO and residential all fail the browser challenge, `auto` falls back to archive/RSS and `live` fails with the tier errors instead of silently returning zero records.
 
 ## FAQ
 
@@ -226,11 +243,11 @@ The archive is a historical crawl. Live pages reflect the current score, upvote 
 
 ### Why are some comments missing from a very large thread?
 
-Live mode starts with the comments Reddit renders and expands top-level pages up to `maxComments`; replies can be limited by Reddit's pagination. Use `source: "auto"` or `"archive"` for deeper trees, and check the parent post's `coverage` fields.
+The live path loads Reddit's initial render (about 25 comments), then expands the unloaded batches through their real cursors up to `maxComments`. Reddit bounds each batch and the actor bounds the number of expansion requests per thread. For complete deep trees use `source: "auto"` or `"archive"`, and check the parent post's `coverage` fields.
 
 ### Why did my search return fewer results than expected?
 
-Reddit limits search result pages and caps many queries. The actor follows the available result pages up to `maxItems`; use a narrower `withinCommunity`, a different sort, or a broader time window.
+Reddit limits search result pages and caps many queries. The live path follows the available result pages up to `maxItems`. The archive path paginates up to `maxItems`, enforces `timeFilter` with `after`, and ranks top/hot/best results by score; it requires `withinCommunity` for keyword search and does not reproduce Reddit's relevance ranking. Use a narrower `withinCommunity`, a different sort, or a broader time window.
 
 ### What does `onlyNew` do?
 
@@ -242,7 +259,7 @@ No. Only public, cookieless content is supported. NSFW posts can be included wit
 
 ### How do I get community rules?
 
-Set `includeSubredditInfo` and `includeSubredditRules` in `mode=subreddit`, or call the `get_subreddit_info` MCP tool with `include_rules: true`.
+Set `includeSubredditInfo` and `includeSubredditRules` in `mode=subreddit`, or call the `get_subreddit_info` MCP tool with `include_rules: true`. Rules are read from the public archive API, so they work even when `source: "live"` supplied the community header.
 
 ### How do I keep runs cheap?
 

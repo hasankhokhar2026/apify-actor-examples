@@ -1,11 +1,11 @@
 {
   "actorOutputSchemaVersion": 1,
-  "description": "Dataset of Reddit comment records (author, body, score, depth, parent/thread links, awards, timestamps) plus one parent-post metadata record per URL, after any score/depth/author/keyword/word-count filters are applied.",
+  "description": "One dataset containing normal comment and post-metadata records in snake_case, plus camelCase error and coverage records. Comment fields include author, body, score, depth, parent/thread links, flair, moderation flags, award count and timestamps; post records include upvote ratio, media/gallery/video/poll metadata and award metadata. When enrichFromArchive is enabled, static archive-only fields carry enrichment_source/enrichment_fields/archive_retrieved_utc provenance. Coverage records appear when fewer comments were kept than Reddit reports, and error records appear when a post could not be fetched.",
   "properties": {
     "comments": {
-      "description": "Dataset containing all scraped comments and post metadata records.",
+      "description": "Dataset containing comment records, one post-metadata record per URL, and any coverage/error records.",
       "template": "{{links.apiDefaultDatasetUrl}}/items",
-      "title": "Comments",
+      "title": "Dataset items",
       "type": "string"
     }
   },

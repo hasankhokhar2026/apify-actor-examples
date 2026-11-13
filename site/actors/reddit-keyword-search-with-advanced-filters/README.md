@@ -7,15 +7,15 @@ Reddit's anonymous old.reddit and public JSON endpoints are blocked, so this act
 ## What this actor does
 
 - Runs a separate search for each keyword and tags every record with the keyword that found it
-- Uses a source cascade: Google Translate `community-more-posts` partial (subreddit-scoped live listing), Reddit RSS `search.rss?type=link` (global/subreddit search), Redlib (search, comment search, opaque cursors), Arctic Shift archive (backfill/hydration), and an optional user-supplied OAuth token
+- Uses a source cascade: a challenge-solved Playwright session on the rendered `www.reddit.com/search/` page (default global path), Redlib (search, comment search, opaque cursors), Google Translate `community-more-posts` partial (subreddit-scoped live listing), Arctic Shift archive (subreddit-scoped backfill/hydration and by-ID enrichment), the optional user-supplied OAuth token, and Reddit RSS only through its 2026-11-13 retirement date
+- Enriches rendered-search records through Arctic `/api/posts/ids` and `/api/comments/ids` (when `includeArchive` is on) so selftext, domain, flair, media, crosspost, edited and comment `body_html`/reply fields are filled when the archive has them; live web metrics always win over the archive snapshot
 - Adds `source`, `sourceUrl`, `retrievedAt`, `dataFreshness`, `scoreAsOf`, `upvoteRatioAsOf` and `archiveLagSeconds` to every record so live metrics are never confused with archive snapshots
-- Searches comment bodies with `searchComments` via Redlib, with RSS `type=comment` parent discovery plus hydration as fallback
-- Supports `onlyNew` + `monitorId` watermarks for scheduled monitoring, including relative windows (`hour` … `all`)
-- Applies subreddit, score, age, date range, NSFW, author and multi-keyword AND filters
-- Does not treat unknown NSFW flags or missing score metrics as safe/passing; it emits a typed status instead
+- Searches comment bodies with `searchComments` via the rendered Reddit search, Redlib, and scoped Arctic, with RSS `type=comment` parent discovery + hydration as a fallback
+- Supports `onlyNew` + `monitorId` watermarks for scheduled monitoring, including relative windows (`hour` … `all`); `onlyNew` forces `sort=new`, and a missing `monitorId` gets a stable keyword-set-derived id
+- Applies subreddit, score, age, date range, NSFW, author and multi-keyword AND filters; when client-side filters can starve results, sources are over-fetched (bounded) and then capped at the requested limit
+- Does not treat unknown NSFW flags or missing score metrics as safe/passing; posts are dropped with a typed status, while comments without their own NSFW flag are kept fail-soft and counted as `nsfwUnknown`
 - De-duplicates posts by `t3_id` and comments by `t1_id` across keywords and sources, merging provenance and preferring live metrics over archive snapshots
 - Fails loudly when every source fails; a working source with zero matches emits `no_results`, not an error
-- **Empty fields are omitted:** never null, empty strings or empty arrays/objects
 
 ## Output records
 
@@ -25,11 +25,15 @@ Legacy fields are preserved: `keyword`, `post_id`, `post_name`, `title`, `author
 
 Added fields include: `keywords`, `upvote_ratio`, `source`, `sourceUrl`, `retrievedAt`, `dataFreshness`, `scoreAsOf`, `upvoteRatioAsOf`, `archiveLagSeconds`, `metricsAvailable`, `isNsfwKnown`, `isGallery`, `galleryItems`, `mediaUrls`, `videoUrl`, `removedByCategory`, `removalType`, `wasDeletedLater`, `subreddit_id`, `postType` and `provenance`.
 
-`subreddit` is the bare name (`Python`); `subreddit_prefixed` is `r/Python`. `domain` is the linked domain for link posts. Every pushed record also carries `scrapedAt` (the run timestamp) in addition to source provenance.
+Content, media and metadata fields are additive and omit-empty: `selftext`, `selftext_html`, `content_html`, `contentPreview`, `domain`, `url_overridden_by_dest`, `link_flair_type`, `link_flair_text_color`, `link_flair_background_color`, `link_flair_template_id`, `author_flair_text`, `author_flair_type`, `author_flair_text_color`, `author_flair_background_color`, `edited`, `edited_utc`, `edited_at`, `is_locked`, `is_archived`, `gildings`, `total_awards_received`, `all_awardings`, `crosspost_parent_id`, `crosspost_parent_title`, `crosspost_parent_subreddit`, `crosspost_parent_author`, `crosspost_parent_permalink`, `poll_data`, `previewUrls`, `video`, `videoDurationSeconds`, `subreddit_subscribers`, `subreddit_type`, `subreddit_nsfw` and `subreddit_quarantined`.
+
+`subreddit` is the bare name (`Python`); `subreddit_prefixed` is `r/Python`.
 
 ### Comment records (`recordType: "comment"`)
 
-`keyword`, `keywords`, `commentId`, `comment_id`, `post_id`, `link_id`, `parentId`, `depth`, `body`, `author`, `author_fullname`, `subreddit`, `subreddit_prefixed`, `score`, `created_utc`, `created_at`, `permalink`, `isSubmitter`, `stickied`, `distinguished`, `scoreHidden`, `edited`, `collapsed`, `source`, `sourceUrl`, `retrievedAt`, `dataFreshness`, `scoreAsOf` and `provenance`.
+`keyword`, `keywords`, `commentId`, `comment_id`, `post_id`, `link_id`, `parentId`, `parent_id`, `depth`, `body`, `author`, `author_fullname`, `subreddit`, `subreddit_prefixed`, `score`, `created_utc`, `created_at`, `permalink`, `isSubmitter`, `stickied`, `distinguished`, `scoreHidden`, `edited`, `collapsed`, `source`, `sourceUrl`, `retrievedAt`, `dataFreshness`, `scoreAsOf` and `provenance`.
+
+Added comment fields include: `body_html`, `replies` (direct child comment ids when the source exposes a tree), `replyCount`, `hasMoreReplies`, `author_flair_text`, `author_flair_type`, `author_flair_text_color`, `author_flair_background_color`, `edited_utc`, `edited_at`, `controversiality`, `gildings`, `total_awards_received`, `all_awardings`, `subreddit_id`, `link_title`, `link_permalink` and `removedByCategory`.
 
 ### Status/error records (`recordType: "status"` or `"error"`)
 
@@ -42,27 +46,27 @@ Typed reasons include: `invalid_input`, `all_sources_failed`, `transport_blocked
 | Field | Type | Default | Description |
 |---|---|---|---|
 | `keywords` | array | – | Keywords to search; each runs as its own search (required) |
-| `resultLimit` | integer | `100` | Max posts per keyword (1-1000). Source caps are real: RSS 100/request, Translate 24/page, Redlib 7/page, Arctic 100/page |
+| `resultLimit` | integer | `100` | Max posts per keyword (1-1000). Source caps are real: rendered search returns one page at a time, Translate 24/page, Redlib 7/page, Arctic 100/page |
 | `sort` | string | `relevance` | `relevance`, `hot`, `top`, `new`, or `comments` |
 | `relativeWindow` | string | `all` | `hour`, `day`, `week`, `month`, `year`, or `all` |
-| `onlyNew` | boolean | `false` | Emit only records newer than the stored watermark |
-| `monitorId` | string | – | Stable key for the onlyNew watermark/seen IDs |
+| `onlyNew` | boolean | `false` | Emit only records newer than the stored watermark; forces `sort=new`; records without timestamps are not re-emitted |
+| `monitorId` | string | – | Stable key for the onlyNew watermark/seen IDs; omit to derive one from the keyword set |
 | `searchComments` | boolean | `false` | Search comment bodies and emit `recordType=comment` records |
 | `commentLimit` | integer | `50` | Max matching comments per keyword |
 | `subredditFilter` | array | `[]` | Only keep posts/comments from these subreddits (with or without `r/`) |
 | `subredditBlocklist` | array | `[]` | Drop posts/comments from these subreddits |
-| `minScore` | integer | – | Drop records below this score; skipped/reported when no reliable score is available |
+| `minScore` | integer | – | Drop records below this score; sources without a score are reported as `metrics_unavailable`. Archive scores are timestamped snapshots |
 | `maxAgeDays` | integer | – | Drop records older than N days |
-| `excludeNsfw` | boolean | `false` | Drop NSFW records; unknown flags are reported, not silently passed |
+| `excludeNsfw` | boolean | `false` | Drop NSFW posts; comments without a flag are kept fail-soft and counted as `nsfwUnknown` |
 | `authorBlocklist` | array | `[]` | Drop these usernames (case-insensitive) |
-| `keywordRequireAll` | boolean | `false` | With multiple keywords, keep only records containing all of them |
+| `keywordRequireAll` | boolean | `false` | With multiple keywords, keep only records whose title, content, or comment body contains all of them |
 | `dateFrom` | string | – | Earliest `created_at` (inclusive, `YYYY-MM-DD` or ISO) |
 | `dateTo` | string | – | Latest `created_at` (inclusive end-of-day) |
-| `includeArchive` | boolean | `true` | Use Arctic Shift for subreddit backfill/comment hydration |
+| `includeArchive` | boolean | `true` | Use Arctic Shift for subreddit backfill, comment hydration, and by-ID enrichment of rendered-search records. Enrichment only fills missing fields and never overwrites live metrics |
 | `redditOAuthToken` | secret | – | Optional user OAuth Bearer token; never required |
-| `redlibInstances` | array | `[]` | Optional Redlib hostnames in priority order |
-| `resolveChallenges` | boolean | `true` | Best-effort Playwright solve for Redlib Anubis challenges |
-| `proxyConfiguration` | object | – | Optional Apify proxy configuration |
+| `redlibInstances` | array | `[]` | Optional Redlib hostnames in priority order. Defaults to `redlib-1.privadency.com`, `red.artemislena.eu` |
+| `resolveChallenges` | boolean | `true` | Allow Playwright to solve Reddit/Redlib challenges and render the search page; disable for HTTP-only mode |
+| `proxyConfiguration` | object | – | Optional Apify proxy configuration, used by HTTP sources and the Playwright browser session |
 
 ### Example: single keyword, top posts
 
@@ -104,41 +108,52 @@ Typed reasons include: `invalid_input`, `all_sources_failed`, `transport_blocked
 
 ## Source behavior and limits
 
+- **Rendered Reddit search** (default global path): a headless Playwright session loads `www.reddit.com` once to resolve the JS challenge, then reads server-rendered post/comment cards. The parser accepts the `sdui-post-unit` / `search-post-unit` / `search-sdui-comment-unit` shapes plus `shreddit-post`/`shreddit-comment` fallbacks and tracking-context-only cards, so markup changes degrade to alternate selectors instead of zero results. Cards carry live score, comment count, author, subreddit, timestamp and NSFW/spoiler flags. A card preview is stored as `contentPreview`; when `includeArchive` is on, Arctic by-ID lookup fills `selftext`/`content`, domain, flair, media, crosspost, poll, edited and subreddit metadata without presenting a snippet as the full post. If the archive has no row yet, those fields stay omitted. The session uses the configured proxy when one is provided.
+- **Redlib**: live third-party front-end; 7 posts / 10 comments per page with opaque cursors; Anubis challenges and upstream rate limits are common. This is the primary HTTP comment-body search. It also supplies `content_html`/`body_html`, author flair, external link/domain, gallery media URLs and detail-level upvote ratio. Default instances are `redlib-1.privadency.com` and `red.artemislena.eu`; override with `redlibInstances`.
 - **Translate partial**: live, subreddit-scoped listing; 24 posts/page with opaque cursors; keyword matching is client-side on title/body. No per-post NSFW/locked/spoiler flags. All gallery images found in the post element are exposed through `mediaUrls`/`galleryItems`.
-- **Reddit RSS**: live global/subreddit search; max 100 entries per request, no pagination, roughly one request per minute per IP, and no score/comment/ratio metrics. Expected to be retired by Reddit.
-- **Redlib**: live third-party front-end; 7 posts / 10 comments per page with opaque cursors; Anubis challenges and upstream rate limits are common. This is the primary cookieless comment-body search. Default instances are `redlib-1.privadency.com` and `red.artemislena.eu`; override with `redlibInstances`.
-- **Arctic Shift**: archive, not a monitor. Scoped keyword searches may return HTTP 422 “Timeout”; score/comment/ratio values are snapshots (`dataFreshness` and `scoreAsOf` say which). Used for subreddit-scoped backfill/hydration and as the third comment-body rung via `comments/search?subreddit=...&body=...`.
+- **Reddit RSS**: global/subreddit search, max 100 entries per request, no pagination, no score/comment/ratio metrics. **Retired on 2026-11-13**; the transport returns `source_retired` without making an HTTP request on or after that date. Self-post RSS content is split into plain `content` plus `content_html` with the `submitted by` boilerplate removed.
+- **Arctic Shift**: archive, not a monitor. Scoped keyword searches may return HTTP 422 “Timeout”; score/comment/ratio values are snapshots (`dataFreshness` and `scoreAsOf` say which). Used for subreddit-scoped backfill/hydration, as the third comment-body rung via `comments/search?subreddit=...&body=...`, and for by-ID enrichment via `posts/ids`/`comments/ids` (with `md2html=true` so comment `body_html` is available). Comment hydration pages forward with `after` (ascending) so multi-page threads are not re-requested. By-ID enrichment is best-effort: a failure is recorded in `attempts` but does not fail a run that already produced live web records.
 - **OAuth**: only when you supply a token; the actor never obtains one. `oauth.reddit.com` without a token returns a login/block page, so there is no fake “cookieless OAuth”.
+- **Retries**: HTTP and browser requests retry transient 429/5xx/timeouts with exponential backoff and honour `Retry-After` / `x-ratelimit-reset` (`retryAfterSecs` in status records), capped so a bad header cannot stall a run.
 
 ### Hard limits (2026-11)
 
 - **old.reddit.com**: anonymous requests redirect to a login wall (`/login/?reason=lor2`). The actor does not use old.reddit.
-- **Reddit RSS retirement**: RSS search is scheduled to stop on **2026-11-13**. Until then it is best-effort; afterwards global live search depends on Redlib and the intermittent Translate path.
+- **Reddit RSS retirement**: RSS search stopped on **2026-11-13**; the code disables it automatically. Global live search uses the rendered Reddit search, then Redlib.
+- **Rendered search availability**: the browser path can still receive a Reddit block/captcha page from some datacenter IPs. When that happens the run retries through Apify AUTO and then RESIDENTIAL automatically; no user proxy setup is required. If all routes fail it reports `transport_blocked` / `challenge_required` and falls back to Redlib.
 - **Global Arctic search**: `posts/search?query=` and `comments/search?body=` without `subreddit`, `author`, `link_id`, or `parent_id` return HTTP 400. Global keyword/comment search cannot use Arctic; only subreddit-scoped archive queries are supported.
 - **Arctic archive staleness**: scores, comment counts, upvote ratios and removal flags are snapshots, not live. Check `dataFreshness`, `scoreAsOf`, `upvoteRatioAsOf` and `archiveLagSeconds` before treating archive engagement as current; removed/deleted flags may lag live Reddit state.
+- **Enrichment lag**: rendered-search cards do not expose full selftext/media. Arctic by-ID enrichment is limited by archive lag (new posts may not be archived yet) and by the 300-record per-run enrichment cap; missing fields stay omitted rather than being inferred from a snippet. Live web score/comment/ratio fields are never replaced by archive values.
+- **Field availability varies by source**: awards, polls, crossposts and full galleries are rare on live cards; `body_html` requires a source that exposes HTML (Arctic `md2html`, OAuth, Redlib) and is omitted otherwise. Redlib NSFW/locked/stickied detection is best-effort from page markers; absence is reported as unknown, not safe.
+- **Client-side filtering**: score/age/NSFW/author/date/AND filters run after the source returns. The actor over-fetches up to 3× + 25 rows (max 1000) when filters are active, then caps the output at `resultLimit`; highly selective filters can still exhaust a source's page cap.
 - **Legal/ToS**: Reddit requires approved API access and prohibits unapproved scraping and commercialization. Arctic Shift, Redlib and the Translate proxy are third-party services and do not create Reddit authorization. Get legal/product sign-off and provide provenance and removal handling; this actor is not affiliated with Reddit.
 
-## Use cases
+## Local development
 
-- **Brand and product monitoring** - track new Reddit discussions about a product, feature or competitor across subreddits.
-- **Community research** - collect posts and comment bodies for a niche to understand recurring questions, pain points and language.
-- **Trend discovery** - compare keyword volumes and engagement across time windows and sort orders.
-- **Support and risk triage** - find comments mentioning outages, billing issues or safety concerns and route them to the right team.
-- **Dataset building** - export provenance-rich posts/comments with live or archive freshness labels for analytics and NLP.
+```bash
+pip install -r requirements.txt
+python -m pytest -q
+python -m src
+```
+
+`python -m src` needs an input; with Apify local storage use `.actor/INPUT.json` or `APIFY_LOCAL_STORAGE_DIR` with a key-value store `INPUT.json`.
 
 ## FAQ
 
 **Do I need a Reddit account or API credentials?**
-No. The cookieless cascade works without credentials. An optional OAuth token improves live metrics if you have one.
+No. The default rendered-search path works without credentials. An optional OAuth token improves live metrics if you have one.
 
 **Why are some posts missing `score` or `num_comments`?**
-RSS does not expose them. Records from RSS carry `metricsAvailable: false`; requesting a score filter causes a typed metrics status instead of silently passing rows.
+Some sources (notably RSS and parts of Translate) do not expose them. Those records carry `metricsAvailable: false`; requesting a score filter causes a typed metrics status instead of silently passing rows.
+
+**Why is `content` or `body_html` missing on a rendered-search record?**
+Search cards only expose a preview, which is stored as `contentPreview`. The actor looks up the post/comment by ID in Arctic when `includeArchive` is on; if the archive has no row yet, `content`/`selftext`/`body_html` stay omitted. The actor never substitutes a preview or invents HTML.
 
 **Why did I get fewer results than `resultLimit`?**
-Source caps are real (RSS 100 with no pagination; Translate 24/page; Redlib 7/page; Arctic 100/page). A partial result is reported in the status record rather than silently hidden.
+Source caps are real (rendered search renders one page at a time; Translate 24/page; Redlib 7/page; Arctic 100/page). When client-side filters are active the actor over-fetches first, but a selective filter can still exhaust a source. Partial results are reported in the status record rather than silently hidden.
 
 **What does `dataFreshness` mean?**
-`live` for RSS/Translate/Redlib/OAuth; `archive_initial` or `archive_second_snapshot` for Arctic. Check `scoreAsOf`, `upvoteRatioAsOf` and `archiveLagSeconds` before treating archive engagement as current.
+`live` for rendered search/Redlib/Translate/RSS/OAuth; `archive_initial` or `archive_second_snapshot` for Arctic. Check `scoreAsOf`, `upvoteRatioAsOf` and `archiveLagSeconds` before treating archive engagement as current.
 
 **Is this affiliated with Reddit?**
 No. This is an independent actor. Reddit's terms, the Responsible Builder Policy, and third-party service terms still apply; get legal/product approval for commercial or automated collection.

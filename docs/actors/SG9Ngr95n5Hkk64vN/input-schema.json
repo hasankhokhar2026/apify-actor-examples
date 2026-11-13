@@ -1,5 +1,5 @@
 {
-  "description": "Search Reddit by keywords with advanced filters, multi-source live/archive fallbacks, comment search, and only-new monitoring. Sources: Google Translate community partial, Reddit RSS, Redlib, Arctic Shift archive, optional user OAuth token.",
+  "description": "Search Reddit by keywords with advanced filters, comment search, and only-new monitoring. Sources: rendered Reddit search (challenge-solved browser), Redlib, Google Translate community partial, Arctic Shift archive, optional user OAuth token, and RSS only through its 2026-11-13 retirement.",
   "properties": {
     "authorBlocklist": {
       "default": [],
@@ -13,6 +13,7 @@
       "description": "Maximum matching comments per keyword when searchComments is enabled (1-1000).",
       "maximum": 1000,
       "minimum": 1,
+      "prefill": 3,
       "title": "Comment limit per keyword",
       "type": "integer"
     },
@@ -30,27 +31,26 @@
     },
     "excludeNsfw": {
       "default": false,
-      "description": "Drop NSFW records. When the available source cannot expose a per-post NSFW flag, unknown rows are not emitted as safe; the run reports nsfw_status_unavailable.",
+      "description": "Drop NSFW records. Posts whose NSFW flag is unknown are not emitted as safe; comments without their own flag are kept fail-soft and counted as nsfwUnknown in the status record.",
       "prefill": false,
       "title": "Exclude NSFW",
       "type": "boolean"
     },
     "includeArchive": {
       "default": true,
-      "description": "Use Arctic Shift for subreddit-scoped backfill and comment hydration when live sources fail. Archive metrics are snapshots, not live.",
+      "description": "Use Arctic Shift for subreddit-scoped backfill, comment hydration, and by-ID enrichment of rendered-search posts/comments. Enrichment fills missing content, domain, flair, media, crosspost, edited and body_html fields; it never overwrites live metrics. Archive metrics are snapshots, not live.",
       "prefill": true,
-      "title": "Include archive fallback",
+      "title": "Include Arctic Shift archive fallback",
       "type": "boolean"
     },
     "keywordRequireAll": {
       "default": false,
-      "description": "When multiple keywords are given, keep only records whose title/content contains ALL of them. Default: each keyword runs independently (OR).",
+      "description": "When multiple keywords are given, keep only records whose title, content, or comment body contains ALL of them. Default: each keyword runs independently (OR).",
       "prefill": false,
       "title": "Require all keywords (AND)",
       "type": "boolean"
     },
     "keywords": {
-      "default": [],
       "description": "List of keywords to search. Each runs as a separate search.",
       "editor": "stringList",
       "minItems": 1,
@@ -68,7 +68,7 @@
       "type": "integer"
     },
     "minScore": {
-      "description": "Drop records below this score. Applied only when the source exposes a live or explicitly timestamped score; otherwise the run reports metrics_unavailable instead of silently passing/dropping.",
+      "description": "Drop records below this score. Applied when the source exposes a score; archive scores are timestamped snapshots and are filtered as snapshots. Sources without any score are reported as metrics_unavailable instead of silently passing/dropping.",
       "maximum": 10000000,
       "minimum": -10000,
       "title": "Min score (filter)",
@@ -82,7 +82,7 @@
     },
     "onlyNew": {
       "default": false,
-      "description": "Emit only records newer than the stored watermark for this monitorId. Requires a stable monitorId for scheduled runs.",
+      "description": "Emit only records newer than the stored watermark for this monitorId. Forces sort=new so sources return recent records first. Requires a stable monitorId for scheduled runs; when omitted, a stable id is derived from the keyword set.",
       "prefill": false,
       "title": "Only new since last run",
       "type": "boolean"
@@ -91,7 +91,7 @@
       "default": {
         "useApifyProxy": false
       },
-      "description": "Optional Apify proxy configuration. Live HTML/Redlib/RSS availability varies by IP; residential proxies improve success on datacenter runs.",
+      "description": "Optional Apify proxy configuration, used by both HTTP sources and the Playwright browser session. Live HTML availability varies by IP; residential proxies improve success on datacenter runs.",
       "editor": "proxy",
       "title": "Proxy configuration",
       "type": "object"
@@ -105,7 +105,7 @@
     },
     "redlibInstances": {
       "default": [],
-      "description": "Optional Redlib hostnames to try in order (without https://). Defaults to safereddit.com, redlib.catsarch.com, redlib.perennialte.ch.",
+      "description": "Optional Redlib hostnames to try in order (without https://). Defaults to redlib-1.privadency.com and red.artemislena.eu (the same defaults as the code and README).",
       "editor": "stringList",
       "title": "Redlib instances",
       "type": "array"
@@ -113,7 +113,6 @@
     "relativeWindow": {
       "default": "all",
       "description": "Restrict results to a relative window. Maps to Reddit's t= and Arctic after= filters. Use all for no window.",
-      "editor": "select",
       "enum": [
         "hour",
         "day",
@@ -130,27 +129,29 @@
         "Past year",
         "All time"
       ],
+      "prefill": "all",
       "title": "Relative time window",
       "type": "string"
     },
     "resolveChallenges": {
       "default": true,
-      "description": "Allow a best-effort Playwright browser solve when a Redlib instance returns an Anubis challenge. Disable to keep runs HTTP-only.",
+      "description": "Allow Playwright to solve Reddit/Redlib challenges and render the search page. Disable to skip the browser path and keep the HTTP-only sources (Translate, Redlib HTTP, Arctic); the rendered global search and the Redlib browser fallback are then unavailable.",
       "prefill": true,
-      "title": "Resolve Redlib challenges",
+      "title": "Resolve browser challenges",
       "type": "boolean"
     },
     "resultLimit": {
       "default": 100,
-      "description": "Max posts per keyword (1-1000). Default 100. Source caps are real: RSS 100/request with no pagination, Translate partial 24/page, Redlib 7/page, Arctic 100/page. Fewer results are reported as partial rather than silently truncated.",
+      "description": "Max posts per keyword (1-1000). Default 100. Source caps are real: rendered search returns one page at a time, Translate partial 24/page, Redlib 7/page, Arctic 100/page, RSS 100/request (retired after 2026-11-13). Fewer results are reported as partial rather than silently truncated.",
       "maximum": 1000,
       "minimum": 1,
+      "prefill": 3,
       "title": "Result limit per keyword",
       "type": "integer"
     },
     "searchComments": {
       "default": false,
-      "description": "Also search comment bodies via Redlib, with RSS parent-post discovery + hydration as fallback. Emits recordType=comment records.",
+      "description": "Also search comment bodies in the rendered Reddit search, Redlib, and Arctic (subreddit-scoped), with RSS parent-post discovery + hydration as a fallback. Emits recordType=comment records.",
       "prefill": false,
       "title": "Search comments by keyword",
       "type": "boolean"
@@ -158,7 +159,6 @@
     "sort": {
       "default": "relevance",
       "description": "How to sort the search results.",
-      "editor": "select",
       "enum": [
         "relevance",
         "hot",
@@ -173,6 +173,7 @@
         "New",
         "Comments"
       ],
+      "prefill": "relevance",
       "title": "Sort by",
       "type": "string"
     },
@@ -185,7 +186,7 @@
     },
     "subredditFilter": {
       "default": [],
-      "description": "Only emit posts/comments from these subreddits (with or without `r/`). Empty = all. When set, the engine prefers the subreddit-scoped Translate listing.",
+      "description": "Only emit posts/comments from these subreddits (with or without `r/`). Empty = all. When set, the engine prefers subreddit-scoped sources (Translate listing, rendered subreddit search, Arctic).",
       "editor": "stringList",
       "title": "Subreddit filter (allowlist)",
       "type": "array"

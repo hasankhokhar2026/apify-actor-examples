@@ -17,7 +17,7 @@
     },
     "commentSort": {
       "default": "confidence",
-      "description": "Comment ordering for mode=post.",
+      "description": "Comment ordering for mode=post. Live requests use Reddit's `sort` URL parameter; archive comments are ordered locally in the same direction.",
       "editor": "select",
       "enum": [
         "confidence",
@@ -136,7 +136,7 @@
     },
     "failOnEmpty": {
       "default": true,
-      "description": "Mark the run FAILED with a clear status message instead of finishing silently with 0 records.",
+      "description": "Mark the run FAILED with a clear status message instead of finishing silently with 0 records. Also fails when the selected mode has no required target (postUrls, usernames or searchQuery).",
       "prefill": false,
       "title": "Fail when no records are found",
       "type": "boolean"
@@ -184,7 +184,7 @@
     },
     "includeSubredditRules": {
       "default": false,
-      "description": "Attach posting rules to the community record. Requires includeSubredditInfo.",
+      "description": "Attach posting rules to the community record. Requires includeSubredditInfo. Rules always come from the public archive API, including when the community metadata itself is live.",
       "prefill": false,
       "title": "Include community rules (mode=subreddit)",
       "type": "boolean"
@@ -197,7 +197,7 @@
     },
     "maxComments": {
       "default": 100,
-      "description": "Comments per post, keyword, or profile comment section. 0 disables comment records.",
+      "description": "Comments per post, keyword, or profile comment section. The live path expands Reddit's unloaded comment batches with their real cursors until this cap; 0 disables comment records.",
       "maximum": 100000,
       "minimum": 0,
       "prefill": 5,
@@ -263,7 +263,7 @@
     },
     "maxProxyBytesMb": {
       "default": 50,
-      "description": "Safety ceiling for paid proxy traffic. The run stops when the ceiling is reached. Images, media and fonts are never downloaded.",
+      "description": "Safety ceiling for paid proxy traffic, including the automatic AUTO/RESIDENTIAL browser escalation. The run stops when the ceiling is reached. Images, media and fonts are never downloaded.",
       "maximum": 10000,
       "minimum": 0,
       "prefill": 50,
@@ -431,7 +431,7 @@
     },
     "proxyMode": {
       "default": "none",
-      "description": "Direct (no proxy) is the default. Choose datacenter if Reddit blocks your runs. Residential is an explicit last resort and is capped by maxProxyBytesMb.",
+      "description": "Leave none (default) to let the actor try direct, then Apify AUTO, then RESIDENTIAL automatically when the browser challenge fails. datacenter or residential forces that one proxy mode and disables the automatic escalation. All paid proxy traffic is capped by maxProxyBytesMb.",
       "editor": "select",
       "enum": [
         "none",
@@ -509,7 +509,7 @@
     },
     "sort": {
       "default": "hot",
-      "description": "Post/listing sort. Search accepts relevance, hot, top, new or comments; other modes use hot, new, top, rising, controversial or best.",
+      "description": "Subreddit, profile and search ordering. Search accepts relevance, hot, top, new or comments; subreddit mode uses hot, new, top, rising, controversial or best; profile mode uses hot, new, top or controversial (best maps to hot, rising maps to new). Archive top/hot/best results are ranked by score inside the selected time window.",
       "editor": "select",
       "enum": [
         "hot",
@@ -537,7 +537,7 @@
     },
     "source": {
       "default": "auto",
-      "description": "auto uses live Reddit first and the Arctic Shift archive for depth/bulk or as a fallback. archive is faster and cheaper but lags live Reddit by several hours; live never uses archive data.",
+      "description": "auto uses live Reddit first and the Arctic Shift archive for depth/bulk or as a fallback, then Reddit RSS as a final listing/search fallback. archive is faster and cheaper but lags live Reddit by several hours; live never uses archive or RSS data.",
       "editor": "select",
       "enum": [
         "auto",
@@ -579,7 +579,7 @@
     },
     "timeFilter": {
       "default": "day",
-      "description": "Time window for top/controversial sorts and search.",
+      "description": "Time window for top/controversial sorts and search. The archive path enforces this window with its `after` parameter; live uses Reddit's own `t` parameter.",
       "editor": "select",
       "enum": [
         "hour",

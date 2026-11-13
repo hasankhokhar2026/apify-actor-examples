@@ -1,5 +1,5 @@
 {
-  "description": "Scrape public subreddit listings and keep only the posts you want. Filter by keywords, score, comments, upvote ratio, age, flair, post type, author, domain, NSFW and stickied status. No login, API key or proxy setup.",
+  "description": "Scrape public subreddit listings and keep only the posts you want. Reads the live browser feed with a full-field archive fallback and uses RSS only as a last resort. Filter by keywords, score, comments, upvote ratio, age, flair, post type, author, domain, NSFW and stickied status. No login, API key or proxy setup.",
   "properties": {
     "authorAllowlist": {
       "default": [],
@@ -238,7 +238,7 @@
     },
     "sort": {
       "default": "hot",
-      "description": "How to order posts in each subreddit. Top and controversial use the time filter.",
+      "description": "How to order posts in each subreddit. Top and controversial use the time filter. If only the archive fallback is available, rows are newest-first.",
       "editor": "select",
       "enum": [
         "hot",
