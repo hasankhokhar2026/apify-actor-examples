@@ -18,7 +18,6 @@ Hiring.cafe aggregates job postings pulled directly from Greenhouse, Lever, Work
 - `boardToken` – job board token used by the source ATS.
 - `applyUrl` – link back to the original listing on the source ATS.
 - `title` – job title as posted.
-- `description` – job description text (HTML tags stripped).
 - `coreJobTitle` – hiring.cafe's canonicalized version of the title.
 - `category` – job category, e.g. Engineering, Data, Marketing.
 - `seniorityLevel` – seniority classification, e.g. Entry Level, Senior Level, Director.
@@ -28,8 +27,8 @@ Hiring.cafe aggregates job postings pulled directly from Greenhouse, Lever, Work
 - `workplaceCountries` – country codes where the role is based.
 - `workplaceStates` – state or region names where the role is based.
 - `workplaceCities` – city names where the role is based.
-- `latitude` / `longitude` – primary geolocation of the listed workplace, when hiring.cafe provides one (both come back as `0.0` when it doesn't).
-- `salaryMin` / `salaryMax` – disclosed compensation range.
+- `latitude` / `longitude` — primary geolocation of the listed workplace, when hiring.cafe provides one.
+- `salaryMin` / `salaryMax` — disclosed compensation range, omitted when the posting does not publish a transparent salary.
 - `salaryCurrency` – currency code for the disclosed range.
 - `salaryFrequency` – pay period for the disclosed range (Yearly, Monthly, Weekly, Daily, Hourly).
 - `technicalTools` – technologies/tools mentioned in the posting.
@@ -112,6 +111,12 @@ Hiring.cafe aggregates job postings pulled directly from Greenhouse, Lever, Work
 }
 ```
 
+## Browser and network behavior
+
+HiringCafe is protected by Cloudflare. The actor uses a direct headful browser first and
+falls back to a residential proxy only when the direct browser is blocked. No proxy is
+required for a successful local run.
+
 ## Use cases
 
 - **Talent intelligence** – track hiring velocity for a role, company, or region over time.
@@ -126,8 +131,8 @@ Hiring.cafe aggregates job postings pulled directly from Greenhouse, Lever, Work
 **Does this cover jobs outside the US?**
 Yes. hiring.cafe aggregates listings globally; use `locations`, `workplaceCountries` in the output, or leave `locations` empty for worldwide results.
 
-**Why do some jobs have `salaryMin`/`salaryMax` of `0`?**
-Many postings don't disclose compensation. When a listing has no published salary, both fields come back as `0`. Set `onlyTransparentSalaries` to `true` to keep only listings that publish a range.
+**Why are salary fields missing on some jobs?**
+Many postings do not disclose compensation. The actor omits salary fields for non-transparent postings instead of emitting `0`. Set `onlyTransparentSalaries` to `true` to keep only listings that publish a range.
 
 **What's the difference between `seniorityLevel` and `minYearsExperience`?**
 `seniorityLevel` is hiring.cafe's categorical tag (e.g. `Mid Level`, `Senior Level`). `minYearsExperience` is the numeric minimum years parsed from the job description text, and may be `0` when the posting doesn't state a number.
