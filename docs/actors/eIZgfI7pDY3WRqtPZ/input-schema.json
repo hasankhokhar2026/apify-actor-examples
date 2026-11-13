@@ -1,0 +1,196 @@
+{
+  "description": "Get the published award redemption rates (miles + taxes) between two regions across major frequent-flyer programs. Pulled from each issuer's public chart page.",
+  "properties": {
+    "cabin": {
+      "default": "business",
+      "description": "Filter the published rates by cabin class.",
+      "editor": "select",
+      "enum": [
+        "economy",
+        "premium",
+        "business",
+        "first"
+      ],
+      "enumTitles": [
+        "Economy",
+        "Premium Economy",
+        "Business",
+        "First"
+      ],
+      "prefill": "business",
+      "title": "Cabin class",
+      "type": "string"
+    },
+    "destinationRegion": {
+      "default": "europe",
+      "description": "Region the trip ends in.",
+      "editor": "select",
+      "enum": [
+        "north_america",
+        "south_america",
+        "europe",
+        "africa",
+        "middle_east",
+        "asia",
+        "oceania"
+      ],
+      "enumTitles": [
+        "North America",
+        "South America / Caribbean",
+        "Europe",
+        "Africa",
+        "Middle East",
+        "Asia",
+        "Oceania (Australia / NZ / Pacific)"
+      ],
+      "prefill": "europe",
+      "title": "Destination region",
+      "type": "string"
+    },
+    "issuers": {
+      "default": [
+        "aeroplan",
+        "alaska",
+        "american",
+        "anaMileage",
+        "britishAirways",
+        "emirates",
+        "flyingBlue",
+        "lifemiles",
+        "lufthansa",
+        "qatar",
+        "singaporeKrisflyer",
+        "united",
+        "virginAtlantic"
+      ],
+      "description": "Which frequent-flyer programs to query. Order matters — earlier issuers run first.",
+      "editor": "select",
+      "items": {
+        "enum": [
+          "aeroplan",
+          "alaska",
+          "american",
+          "anaMileage",
+          "azul",
+          "britishAirways",
+          "copa",
+          "delta",
+          "emirates",
+          "etihad",
+          "finnair",
+          "flyingBlue",
+          "jal",
+          "lifemiles",
+          "lufthansa",
+          "qantas",
+          "qatar",
+          "sas",
+          "singaporeKrisflyer",
+          "turkishMilesAndSmiles",
+          "united",
+          "virginAtlantic",
+          "aeromexico"
+        ],
+        "enumTitles": [
+          "Air Canada Aeroplan",
+          "Alaska Mileage Plan",
+          "American AAdvantage",
+          "ANA Mileage Club",
+          "Azul TudoAzul",
+          "British Airways Avios",
+          "Copa ConnectMiles",
+          "Delta SkyMiles",
+          "Emirates Skywards",
+          "Etihad Guest",
+          "Finnair Plus",
+          "Air France/KLM Flying Blue",
+          "JAL Mileage Bank",
+          "Avianca LifeMiles",
+          "Lufthansa Miles & More",
+          "Qantas Frequent Flyer",
+          "Qatar Privilege Club",
+          "SAS EuroBonus",
+          "Singapore KrisFlyer",
+          "Turkish Miles&Smiles",
+          "United MileagePlus",
+          "Virgin Atlantic Flying Club",
+          "Aeromexico Club Premier"
+        ],
+        "type": "string"
+      },
+      "prefill": [
+        "aeroplan",
+        "alaska",
+        "american",
+        "anaMileage",
+        "britishAirways",
+        "emirates",
+        "flyingBlue",
+        "lifemiles",
+        "lufthansa",
+        "qatar",
+        "singaporeKrisflyer",
+        "united",
+        "virginAtlantic"
+      ],
+      "title": "Loyalty programs (issuers)",
+      "type": "array"
+    },
+    "maxResults": {
+      "default": 100,
+      "description": "Hard cap on emitted chart rows.",
+      "maximum": 1000,
+      "minimum": 1,
+      "prefill": 100,
+      "title": "Max results",
+      "type": "integer"
+    },
+    "oneWay": {
+      "default": false,
+      "description": "Return one-way award rates instead of roundtrip. Roundtrip is the default for charts that publish in both formats.",
+      "prefill": false,
+      "title": "One-way rate",
+      "type": "boolean"
+    },
+    "originRegion": {
+      "default": "north_america",
+      "description": "Region the trip departs from. The chart returns redemption rates between origin and destination regions.",
+      "editor": "select",
+      "enum": [
+        "north_america",
+        "south_america",
+        "europe",
+        "africa",
+        "middle_east",
+        "asia",
+        "oceania"
+      ],
+      "enumTitles": [
+        "North America",
+        "South America / Caribbean",
+        "Europe",
+        "Africa",
+        "Middle East",
+        "Asia",
+        "Oceania (Australia / NZ / Pacific)"
+      ],
+      "prefill": "north_america",
+      "title": "Origin region",
+      "type": "string"
+    },
+    "partnerOnly": {
+      "default": false,
+      "description": "Only return partner-redemption rates (i.e. flying on a partner airline, not the issuer's own metal).",
+      "prefill": false,
+      "title": "Partner redemption only",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "originRegion",
+    "destinationRegion"
+  ],
+  "schemaVersion": 1,
+  "title": "Flight Award Mileage Chart Scraper Input",
+  "type": "object"
+}
