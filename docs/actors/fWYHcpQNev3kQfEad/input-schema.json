@@ -1,0 +1,191 @@
+{
+  "description": "Y Combinator scraper Pro — full directory + advanced filters and derived fields.",
+  "properties": {
+    "batch": {
+      "default": "any",
+      "description": "Filter by YC batch code. 'any' returns every batch. Codes: S=Summer, W=Winter, F=Fall followed by two-digit year (e.g. S24 = Summer 2024).",
+      "editor": "select",
+      "enum": [
+        "any",
+        "S25",
+        "W25",
+        "S24",
+        "W24",
+        "F24",
+        "S23",
+        "W23",
+        "S22",
+        "W22",
+        "S21",
+        "W21"
+      ],
+      "title": "Batch",
+      "type": "string"
+    },
+    "companySlugs": {
+      "default": [],
+      "description": "Direct YC company slugs (e.g. ['airbnb','stripe']). Bypasses search and fetches each profile directly.",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Company Slugs (Pro)",
+      "type": "array"
+    },
+    "companyUrls": {
+      "default": [],
+      "description": "Direct YC company profile URLs (e.g. https://www.ycombinator.com/companies/airbnb). Bypasses search and fetches each profile directly.",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Company URLs (Pro)",
+      "type": "array"
+    },
+    "directoryUrl": {
+      "default": "https://www.ycombinator.com/companies",
+      "description": "Y Combinator company directory URL. Default scrapes the full directory. You can paste a filtered URL (e.g. https://www.ycombinator.com/companies?batch=S24&industry=AI).",
+      "editor": "textfield",
+      "prefill": "https://www.ycombinator.com/companies",
+      "title": "Directory URL",
+      "type": "string"
+    },
+    "foundedAfterYear": {
+      "description": "Drop companies founded before this year (inclusive).",
+      "editor": "number",
+      "maximum": 2100,
+      "minimum": 1900,
+      "title": "Founded after year (Pro)",
+      "type": "integer"
+    },
+    "foundedBeforeYear": {
+      "description": "Drop companies founded after this year (inclusive).",
+      "editor": "number",
+      "maximum": 2100,
+      "minimum": 1900,
+      "title": "Founded before year (Pro)",
+      "type": "integer"
+    },
+    "highlightBlackFounders": {
+      "default": false,
+      "description": "If true, only return companies flagged as having Black founders.",
+      "editor": "checkbox",
+      "title": "Highlight: Black Founders",
+      "type": "boolean"
+    },
+    "highlightHispanicFounders": {
+      "default": false,
+      "description": "If true, only return companies flagged as having Hispanic / Latino founders.",
+      "editor": "checkbox",
+      "title": "Highlight: Hispanic / Latino Founders",
+      "type": "boolean"
+    },
+    "highlightWomenFounders": {
+      "default": false,
+      "description": "If true, only return companies flagged as having women founders.",
+      "editor": "checkbox",
+      "title": "Highlight: Women Founders",
+      "type": "boolean"
+    },
+    "hiringOnly": {
+      "default": false,
+      "description": "Only emit companies with at least 1 open job posting.",
+      "editor": "checkbox",
+      "title": "Hiring only (Pro)",
+      "type": "boolean"
+    },
+    "industry": {
+      "description": "Filter by industry (e.g. 'B2B', 'Consumer', 'Fintech', 'Healthcare', 'Industrials', 'Real Estate and Construction'). Case-sensitive, exact match against YC's industry facets.",
+      "editor": "textfield",
+      "title": "Industry",
+      "type": "string"
+    },
+    "maxItems": {
+      "default": 3,
+      "description": "Maximum number of companies to return.",
+      "editor": "number",
+      "maximum": 5500,
+      "minimum": 1,
+      "prefill": 3,
+      "title": "Max Items",
+      "type": "integer"
+    },
+    "query": {
+      "description": "Optional free-text query. When set, filters the directory using the ?q=<query> Algolia search (matches name, description, tags).",
+      "editor": "textfield",
+      "title": "Search Query",
+      "type": "string"
+    },
+    "regions": {
+      "default": [],
+      "description": "Optional region filter (case-insensitive substring match against the company's location). Example: [\"San Francisco\", \"New York\"].",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Regions",
+      "type": "array"
+    },
+    "requireFounderSocial": {
+      "default": false,
+      "description": "Only emit companies where at least one founder has a LinkedIn, Twitter, or GitHub URL.",
+      "editor": "checkbox",
+      "title": "Require founder social (Pro)",
+      "type": "boolean"
+    },
+    "scrapeFounders": {
+      "default": true,
+      "description": "Include each company's founders (name, title, bio, LinkedIn, Twitter, previousCompanies). Requires an extra detail-page fetch per company.",
+      "editor": "checkbox",
+      "prefill": true,
+      "title": "Scrape Founders",
+      "type": "boolean"
+    },
+    "scrapeOpenJobs": {
+      "default": true,
+      "description": "Include each company's open job postings (title, URL, applyUrl, location, salary, equity, skills, visa, remoteFriendly).",
+      "editor": "checkbox",
+      "prefill": true,
+      "title": "Scrape Open Jobs",
+      "type": "boolean"
+    },
+    "status": {
+      "default": "any",
+      "description": "Filter by company operating status. 'any' returns all statuses.",
+      "editor": "select",
+      "enum": [
+        "any",
+        "Active",
+        "Inactive",
+        "Acquired",
+        "Public"
+      ],
+      "title": "Status",
+      "type": "string"
+    },
+    "tags": {
+      "default": [],
+      "description": "Optional tag filter (case-insensitive). Matched against industry, subIndustry and any tag arrays Algolia returns. Example: [\"B2B\", \"Fintech\"].",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Tags",
+      "type": "array"
+    },
+    "teamSizeMax": {
+      "description": "Drop companies with more than N employees.",
+      "editor": "number",
+      "maximum": 100000,
+      "minimum": 1,
+      "title": "Max team size (Pro)",
+      "type": "integer"
+    },
+    "teamSizeMin": {
+      "description": "Drop companies with fewer than N employees.",
+      "editor": "number",
+      "maximum": 100000,
+      "minimum": 0,
+      "title": "Min team size (Pro)",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "directoryUrl"
+  ],
+  "schemaVersion": 1,
+  "title": "Y Combinator Scraper Pro Input",
+  "type": "object"
+}

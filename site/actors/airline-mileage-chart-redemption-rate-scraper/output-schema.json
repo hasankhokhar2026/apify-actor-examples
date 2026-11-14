@@ -1,11 +1,17 @@
 {
   "actorOutputSchemaVersion": 1,
-  "description": "Dataset of published award-chart rates between two regions, with miles, taxes, cabin, and partner details per loyalty program.",
+  "description": "Dataset of published award-chart rates with provenance, plus a STATUS key-value record for per-issuer status and no-silent-skip reporting.",
   "properties": {
     "rates": {
-      "description": "Dataset containing all scraped mileage chart rows.",
+      "description": "Dataset containing mileage_chart rows and, when enabled, chart_status rows.",
       "template": "{{links.apiDefaultDatasetUrl}}/items",
-      "title": "Mileage Chart Rates",
+      "title": "Mileage Chart Rates and Statuses",
+      "type": "string"
+    },
+    "status": {
+      "description": "Key-value record with every issuer's status, parsed row counts, truncation flag, and the effective input.",
+      "template": "{{links.apiDefaultKeyValueStoreUrl}}/records/STATUS",
+      "title": "Run Status",
       "type": "string"
     }
   },

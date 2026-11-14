@@ -1,9 +1,44 @@
 {
-  "description": "Get the published award redemption rates (miles + taxes) between two regions across major frequent-flyer programs. Pulled from each issuer's public chart page.",
+  "description": "Read published award-chart rates from loyalty programs' own PDF or HTML charts. Only issuers with a reachable public chart are listed; no taxes or dynamic prices are estimated.",
   "properties": {
+    "awardType": {
+      "default": "any",
+      "description": "Optional filter on the published award product. Choose \"any\" to keep every product.",
+      "editor": "select",
+      "enum": [
+        "any",
+        "fixed_chart",
+        "saver",
+        "advantage",
+        "classic",
+        "partner_classic",
+        "oneworld_classic",
+        "emirates_classic",
+        "jetstar_classic",
+        "promotion",
+        "standard",
+        "star_alliance"
+      ],
+      "enumTitles": [
+        "Any award type",
+        "Fixed chart",
+        "Saver",
+        "Advantage",
+        "Qantas Classic",
+        "Partner Classic",
+        "oneworld Classic",
+        "Emirates Classic",
+        "Jetstar Classic",
+        "Promotion award",
+        "Standard award",
+        "Star Alliance award"
+      ],
+      "title": "Award type",
+      "type": "string"
+    },
     "cabin": {
       "default": "business",
-      "description": "Filter the published rates by cabin class.",
+      "description": "Cabin to return. Charts that do not publish a cabin are skipped for that request rather than estimated.",
       "editor": "select",
       "enum": [
         "economy",
@@ -23,7 +58,7 @@
     },
     "destinationRegion": {
       "default": "europe",
-      "description": "Region the trip ends in.",
+      "description": "Macro region the trip ends in.",
       "editor": "select",
       "enum": [
         "north_america",
@@ -47,114 +82,75 @@
       "title": "Destination region",
       "type": "string"
     },
+    "destinationZone": {
+      "description": "Optional case-insensitive text match on the issuer's own destination zone, e.g. \"North America\" or \"Europe\".",
+      "editor": "textfield",
+      "title": "Native destination zone contains",
+      "type": "string"
+    },
+    "distanceMiles": {
+      "description": "Optional distance filter for distance-priced charts (Aeroplan and Qantas Classic). Zone-priced charts ignore it because their price does not depend on distance.",
+      "maximum": 50000,
+      "minimum": 0,
+      "title": "Flight distance (miles)",
+      "type": "integer"
+    },
+    "fallbackMode": {
+      "default": "live_only",
+      "description": "live_only never reuses old data. snapshot replays the most recent successful parse cached in this actor's key-value store, marked verificationStatus=static_snapshot.",
+      "editor": "select",
+      "enum": [
+        "live_only",
+        "snapshot"
+      ],
+      "enumTitles": [
+        "Live only (default)",
+        "Replay cached snapshot"
+      ],
+      "title": "Fallback when a live fetch fails",
+      "type": "string"
+    },
+    "includeStatusRecords": {
+      "default": true,
+      "description": "Push one chart_status row per selected issuer to the dataset. The same statuses are always written to the STATUS key-value record.",
+      "prefill": true,
+      "title": "Include chart_status records",
+      "type": "boolean"
+    },
     "issuers": {
       "default": [
-        "aeroplan",
-        "alaska",
-        "american",
-        "anaMileage",
-        "britishAirways",
-        "emirates",
-        "flyingBlue",
-        "lifemiles",
-        "lufthansa",
-        "qatar",
-        "singaporeKrisflyer",
-        "united",
-        "virginAtlantic"
+        "lufthansa"
       ],
-      "description": "Which frequent-flyer programs to query. Order matters — earlier issuers run first.",
-      "editor": "select",
+      "description": "Live chart adapters: aeroplan, anaMileage, jal, lufthansa, qantas, singaporeKrisflyer, turkishMilesAndSmiles. Legacy issuer keys from saved tasks are still accepted and produce an explicit chart_status record instead of failing input validation.",
+      "editor": "stringList",
       "items": {
-        "enum": [
-          "aeroplan",
-          "alaska",
-          "american",
-          "anaMileage",
-          "azul",
-          "britishAirways",
-          "copa",
-          "delta",
-          "emirates",
-          "etihad",
-          "finnair",
-          "flyingBlue",
-          "jal",
-          "lifemiles",
-          "lufthansa",
-          "qantas",
-          "qatar",
-          "sas",
-          "singaporeKrisflyer",
-          "turkishMilesAndSmiles",
-          "united",
-          "virginAtlantic",
-          "aeromexico"
-        ],
-        "enumTitles": [
-          "Air Canada Aeroplan",
-          "Alaska Mileage Plan",
-          "American AAdvantage",
-          "ANA Mileage Club",
-          "Azul TudoAzul",
-          "British Airways Avios",
-          "Copa ConnectMiles",
-          "Delta SkyMiles",
-          "Emirates Skywards",
-          "Etihad Guest",
-          "Finnair Plus",
-          "Air France/KLM Flying Blue",
-          "JAL Mileage Bank",
-          "Avianca LifeMiles",
-          "Lufthansa Miles & More",
-          "Qantas Frequent Flyer",
-          "Qatar Privilege Club",
-          "SAS EuroBonus",
-          "Singapore KrisFlyer",
-          "Turkish Miles&Smiles",
-          "United MileagePlus",
-          "Virgin Atlantic Flying Club",
-          "Aeromexico Club Premier"
-        ],
         "type": "string"
       },
       "prefill": [
-        "aeroplan",
-        "alaska",
-        "american",
-        "anaMileage",
-        "britishAirways",
-        "emirates",
-        "flyingBlue",
-        "lifemiles",
-        "lufthansa",
-        "qatar",
-        "singaporeKrisflyer",
-        "united",
-        "virginAtlantic"
+        "lufthansa"
       ],
       "title": "Loyalty programs (issuers)",
       "type": "array"
     },
     "maxResults": {
-      "default": 100,
-      "description": "Hard cap on emitted chart rows.",
+      "default": 5,
+      "description": "Cap on pushed mileage_chart rows. Status records do not count toward this cap.",
       "maximum": 1000,
       "minimum": 1,
-      "prefill": 100,
-      "title": "Max results",
+      "prefill": 5,
+      "title": "Max mileage rows",
       "type": "integer"
     },
     "oneWay": {
       "default": false,
-      "description": "Return one-way award rates instead of roundtrip. Roundtrip is the default for charts that publish in both formats.",
+      "description": "Return one-way rates. Charts published as round-trip are halved and the derived field is named in derivedFields.",
       "prefill": false,
       "title": "One-way rate",
       "type": "boolean"
     },
     "originRegion": {
       "default": "north_america",
-      "description": "Region the trip departs from. The chart returns redemption rates between origin and destination regions.",
+      "description": "Macro region the trip departs from. Native chart zones are mapped onto these regions and are also returned in originZone/destinationZone.",
       "editor": "select",
       "enum": [
         "north_america",
@@ -178,9 +174,15 @@
       "title": "Origin region",
       "type": "string"
     },
+    "originZone": {
+      "description": "Optional case-insensitive text match on the issuer's own origin zone, e.g. \"Atlantic\" or \"Zone 11\".",
+      "editor": "textfield",
+      "title": "Native origin zone contains",
+      "type": "string"
+    },
     "partnerOnly": {
       "default": false,
-      "description": "Only return partner-redemption rates (i.e. flying on a partner airline, not the issuer's own metal).",
+      "description": "Keep only rows for partner-operated awards. Programs whose chart is entirely partner-based return all their rows.",
       "prefill": false,
       "title": "Partner redemption only",
       "type": "boolean"

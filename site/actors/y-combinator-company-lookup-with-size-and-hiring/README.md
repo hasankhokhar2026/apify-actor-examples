@@ -1,0 +1,137 @@
+# Y Combinator Company Lookup with Size & Hiring Filters
+
+Browsing Y Combinator's directory one filter at a time doesn't let you ask for "Series A fintechs with 10+ employees that are hiring right now." This actor does: alongside the usual batch/industry/status search, it adds team-size, founding-year, hiring-status and founder-social-presence filters, and can fetch specific companies directly by URL or slug instead of searching at all.
+
+## What this actor does
+
+- Searches the YC directory by free-text query, batch, industry and operating status
+- Looks up specific companies directly by profile URL or slug, bypassing search entirely
+- Filters by team size range, founding-year range, region and tag
+- Keeps only companies that are actively hiring, or whose founders have a linked social profile
+- Can isolate companies YC has flagged for having Black, women, or Hispanic/Latino founders
+- Fetches each company's founders and open job postings when requested
+- Omits a field from a record when YC's own profile doesn't provide a value for it
+
+## Output per company
+
+| Field | Description |
+|---|---|
+| `type` | `"yc_company"` for a normal record, or `"y_combinator_scraper_pro_error"` if a filter/slug combination matched nothing |
+| `id` / `slug` | Company slug |
+| `url` | YC company profile URL |
+| `name` | Company name |
+| `kind` | `startup`, `non-profit`, etc. (from the company's own profile page) |
+| `shortDescription` / `longDescription` / `pitch` | Description text at increasing levels of detail |
+| `batch` | YC batch code, e.g. `S24` |
+| `industry` / `industries` / `subIndustry` | YC's industry classification — `industries` is the full tag list, `industry` its primary value |
+| `status` | `Active`, `Inactive`, `Acquired`, or `Public` |
+| `stage` | Funding stage, e.g. `Seed`, `Series A` |
+| `location` / `allLocations` / `regions` | Company location(s) |
+| `foundingYear` / `launchedAt` | Founding year and launch timestamp |
+| `companyAge` | Years since `foundingYear`, computed at scrape time |
+| `teamSize` | Employee count |
+| `website` / `linkedin` / `twitter` / `facebook` / `crunchbase` / `wellfound` / `github` | Company's own links (social links require the company's own profile page, i.e. `scrapeFounders` or `scrapeOpenJobs` on) |
+| `logo` / `logoThumb` / `demoDayVideo` / `demoDayVideoUrl` / `appVideoUrl` | Media links |
+| `companyPhotos` | Array of `{ url, type }` photos from the company's profile page |
+| `isHiring` / `isCompanyHiring` / `hasOpenJobs` / `jobCount` / `jobLocations` | Hiring status, whether any open job was found, open job count, and the deduped list of job locations |
+| `tags` | Tags YC's search index returns for the company |
+| `formerNames` | Previous company names, when the company has rebranded |
+| `topCompany` / `topCompanyBadge` / `ycdcBadgeName` / `nonprofit` / `ycdcStatus` / `ycInternalId` | Badges and internal identifiers YC assigns, when present |
+| `primaryPartner` | `{ name, title, url, linkedin }` for the YC partner who funded the batch, when the profile lists one |
+| `questionsAndAnswers` | Founder Q&A blocks from the profile |
+| `teamHighlights` | Short blurbs about the team |
+| `highlightBlackFounders` / `highlightWomenFounders` / `highlightHispanicFounders` | Present and `true` only when YC's own directory explicitly flags the company |
+| `founders` | Array of `{ name, title, bio, linkedin, twitter, hackerNews, github, instagram, avatarUrl, ycUserId, isActive, email, latestYcCompany, previousCompanies, education }`, when `scrapeFounders` is on. `email` is `true` when the founder has a contact email on file (the address itself isn't exposed); `previousCompanies` and `education` are best-effort names parsed out of the founder's own bio text, so they can be incomplete; `latestYcCompany` is `{ name, url, slug }` when the founder also runs another YC company |
+| `openJobs` | Array of `{ jobId, title, url, applyUrl, location, remote, remoteFriendly, type, role, roleSpecificType, team, yearsExperience, salaryMin, salaryMax, compensationCurrency, equity, equityRange, skills, experience, minSchoolYear, visa, visaSupported, englishFluent, askUs, hiringManager, postedAtRelative, lastActiveRelative }`, when `scrapeOpenJobs` is on |
+| `scrapedAt` | UTC timestamp of when the record was captured |
+
+## Input
+
+| Field | Type | Default | Description |
+|---|---|---|---|
+| `directoryUrl` | string | `https://www.ycombinator.com/companies` | YC directory URL to search; accepts a pre-filtered URL (required) |
+| `companyUrls` | array | `[]` | Direct YC company profile URLs — bypasses search and fetches each one directly |
+| `companySlugs` | array | `[]` | Direct YC company slugs — bypasses search and fetches each one directly |
+| `query` | string | – | Free-text search matched against name, description and tags |
+| `batch` | string (select) | `any` | YC batch code (e.g. `S24`, `W24`, `F24`) or `any` for every batch |
+| `industry` | string | – | Exact-match industry filter, e.g. `B2B`, `Fintech`, `Healthcare` |
+| `status` | string (select) | `any` | `Active`, `Inactive`, `Acquired`, `Public`, or `any` |
+| `scrapeFounders` | boolean | true | Fetch each company's founder details |
+| `scrapeOpenJobs` | boolean | true | Fetch each company's open job postings |
+| `regions` | array | `[]` | Keep only companies whose location contains one of these strings |
+| `tags` | array | `[]` | Keep only companies whose industry, subIndustry or tags match one of these values |
+| `teamSizeMin` | integer | – | Drop companies with fewer employees than this |
+| `teamSizeMax` | integer | – | Drop companies with more employees than this |
+| `foundedAfterYear` | integer | – | Drop companies founded before this year |
+| `foundedBeforeYear` | integer | – | Drop companies founded after this year |
+| `hiringOnly` | boolean | false | Keep only companies with at least one open job |
+| `requireFounderSocial` | boolean | false | Keep only companies where at least one founder has a LinkedIn, Twitter, or GitHub link |
+| `highlightBlackFounders` | boolean | false | Keep only companies YC flags as having Black founders |
+| `highlightWomenFounders` | boolean | false | Keep only companies YC flags as having women founders |
+| `highlightHispanicFounders` | boolean | false | Keep only companies YC flags as having Hispanic/Latino founders |
+| `maxItems` | integer | 3 | Maximum number of companies to return (1–5500) |
+
+### Example: hiring fintechs above a certain size
+
+```json
+{
+  "directoryUrl": "https://www.ycombinator.com/companies",
+  "industry": "Fintech",
+  "teamSizeMin": 10,
+  "hiringOnly": true,
+  "maxItems": 100
+}
+```
+
+### Example: direct lookup by company slug
+
+```json
+{
+  "directoryUrl": "https://www.ycombinator.com/companies",
+  "companySlugs": ["airbnb", "stripe"],
+  "scrapeFounders": true,
+  "scrapeOpenJobs": false
+}
+```
+
+### Example: recent batch, founders with a social presence
+
+```json
+{
+  "directoryUrl": "https://www.ycombinator.com/companies",
+  "batch": "S24",
+  "requireFounderSocial": true,
+  "maxItems": 200
+}
+```
+
+## Use cases
+
+- **VC and angel sourcing** — shortlist companies in a size and funding-stage window within a batch
+- **Recruiting pipelines** — pull hiring companies and their open roles in a target industry
+- **Direct company research** — fetch a known set of companies by slug without running a search
+- **Founder outreach** — filter to companies whose founders already have a public LinkedIn or Twitter
+- **Diversity-focused sourcing** — isolate companies YC has flagged under its founder-diversity highlights
+
+## FAQ
+
+**Is this affiliated with Y Combinator?**
+No. This is an independent data extraction tool and has no connection to Y Combinator.
+
+**How is this different from running a plain directory search?**
+Beyond batch/industry/status, this actor layers on team-size and founding-year ranges, a hiring-only toggle, a founder-social-presence requirement, and direct lookup by URL or slug — filters YC's own directory page doesn't expose together.
+
+**What happens if my filters match zero companies?**
+The run still emits one record with `type: "y_combinator_scraper_pro_error"` and a `reason` field explaining why, so downstream pipelines never receive a completely empty dataset.
+
+**Do the diversity-highlight filters work for every company?**
+No — they only match companies YC's own directory explicitly flags; a company without that flag set simply won't match, even if the information happens to be true but unflagged.
+
+**Why would `jobCount` differ from what I see on YC's site?**
+It reflects the exact set of open postings YC's own company profile returns at the time of the run, which can shift as listings open and close.
+
+**Does turning off `scrapeFounders` or `scrapeOpenJobs` speed up the run?**
+Yes — each adds an extra fetch per company, so turning off the ones you don't need reduces the number of requests the run makes.
+
+**Can I combine `companySlugs` with directory filters like `industry`?**
+When `companyUrls` or `companySlugs` is set, the actor fetches exactly those companies directly rather than running a directory search, so search-only filters don't apply to that lookup.
