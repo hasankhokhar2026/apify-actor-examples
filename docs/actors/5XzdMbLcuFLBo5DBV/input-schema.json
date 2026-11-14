@@ -1,0 +1,142 @@
+{
+  "description": "Search Carousell — Southeast Asia's leading C2C marketplace — for listings across multiple countries.",
+  "properties": {
+    "category": {
+      "description": "Category slug to browse (e.g. 'electronics', 'fashion', 'furniture').",
+      "editor": "textfield",
+      "title": "Category (mode=searchByCategory)",
+      "type": "string"
+    },
+    "condition": {
+      "default": "all",
+      "description": "Filter by item condition.",
+      "editor": "select",
+      "enum": [
+        "all",
+        "new",
+        "used"
+      ],
+      "enumTitles": [
+        "All conditions",
+        "New only",
+        "Used only"
+      ],
+      "prefill": "all",
+      "title": "Condition filter",
+      "type": "string"
+    },
+    "country": {
+      "default": "singapore",
+      "description": "Carousell country/market to search.",
+      "editor": "select",
+      "enum": [
+        "singapore",
+        "malaysia",
+        "philippines",
+        "indonesia",
+        "taiwan",
+        "hong_kong",
+        "australia",
+        "new_zealand"
+      ],
+      "enumTitles": [
+        "Singapore",
+        "Malaysia",
+        "Philippines",
+        "Indonesia",
+        "Taiwan",
+        "Hong Kong",
+        "Australia",
+        "New Zealand"
+      ],
+      "prefill": "singapore",
+      "title": "Country",
+      "type": "string"
+    },
+    "listingUrls": {
+      "default": [],
+      "description": "List of Carousell listing URLs to fetch details for.",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Listing URLs (mode=listingDetails)",
+      "type": "array"
+    },
+    "maxItems": {
+      "default": 20,
+      "description": "Maximum number of listings to return.",
+      "maximum": 1000,
+      "minimum": 1,
+      "prefill": 20,
+      "title": "Max items",
+      "type": "integer"
+    },
+    "mode": {
+      "default": "search",
+      "description": "What to do.",
+      "editor": "select",
+      "enum": [
+        "search",
+        "searchByCategory",
+        "listingDetails",
+        "nearbyListings"
+      ],
+      "enumTitles": [
+        "Search listings by keyword",
+        "Search listings by category",
+        "Get listing details by URL",
+        "Browse nearby listings"
+      ],
+      "prefill": "search",
+      "title": "Mode",
+      "type": "string"
+    },
+    "priceMax": {
+      "description": "Maximum price in local currency.",
+      "maximum": 10000000,
+      "minimum": 0,
+      "title": "Max price",
+      "type": "integer"
+    },
+    "priceMin": {
+      "description": "Minimum price in local currency.",
+      "maximum": 10000000,
+      "minimum": 0,
+      "title": "Min price",
+      "type": "integer"
+    },
+    "query": {
+      "default": "iPhone",
+      "description": "Keyword to search for (e.g. 'iPhone', 'Nike shoes', 'vintage camera'). Required for mode=search.",
+      "editor": "textfield",
+      "prefill": "iPhone",
+      "title": "Search query",
+      "type": "string"
+    },
+    "sortBy": {
+      "default": "relevance",
+      "description": "How to sort search results.",
+      "editor": "select",
+      "enum": [
+        "relevance",
+        "recent",
+        "price_asc",
+        "price_desc"
+      ],
+      "enumTitles": [
+        "Most relevant",
+        "Most recent",
+        "Price: lowest first",
+        "Price: highest first"
+      ],
+      "prefill": "relevance",
+      "title": "Sort by",
+      "type": "string"
+    }
+  },
+  "required": [
+    "mode"
+  ],
+  "schemaVersion": 1,
+  "title": "Carousell Scraper Input",
+  "type": "object"
+}
