@@ -6,6 +6,7 @@ This catalog is maintained by the publisher. Pricing and execution are managed o
 
 | Actor | Purpose | Category | Reference |
 | --- | --- | --- | --- |
+| [10times Trade Show &amp; Conference Finder by City](https://apify.com/nimbryxo-studio/10times-trade-show-and-conference-finder-by-city) | Find trade shows, conferences, workshops, and festivals listed on 10times.com by city, country, date range, or category, with venue, organizer, and attendance details. | LEAD_GENERATION, OTHER, TRAVEL | [Docs](docs/actors/vdv14gWsIHotcJPdP/README.md) |
 | [Airbnb Listing Price &amp; Location Finder](https://apify.com/nimbryxo-studio/airbnb-listing-price-and-location-finder) | Search Airbnb by location and stay dates for listing price, rating, Superhost and verification status, GPS coordinates, and photos per property. | AUTOMATION, REAL_ESTATE, TRAVEL | [Docs](docs/actors/02gBCbgBRDoLpMoY5/README.md) |
 | [Airline Mileage Chart Redemption Rate Scraper](https://apify.com/nimbryxo-studio/airline-mileage-chart-redemption-rate-scraper) | Compare published award redemption rates in miles and taxes between world regions across 13 frequent-flyer programs, including Aeroplan, British Airways Avios, LifeMiles, United, and Flying Blue. | AUTOMATION, DEVELOPER_TOOLS, TRAVEL | [Docs](docs/actors/eIZgfI7pDY3WRqtPZ/README.md) |
 | [Amazon All Offers &amp; Buy Box Tracker](https://apify.com/nimbryxo-studio/amazon-all-offers-and-buy-box-tracker) | Collect every seller offer for Amazon ASINs you supply - condition, price, seller name and rating, shipping terms, delivery estimate, and which offer currently holds the buy box. | AUTOMATION, DEVELOPER_TOOLS, ECOMMERCE | [Docs](docs/actors/XjOVCjhbnY2TsHduO/README.md) |
@@ -147,7 +148,6 @@ This catalog is maintained by the publisher. Pricing and execution are managed o
 
 These Actors were absent from the latest complete public listing. Unavailable notices are retained at their stable paths, and previously mirrored schemas are cleared.
 
-- [10times Trade Show &amp; Conference Finder by City](docs/actors/vdv14gWsIHotcJPdP/README.md)
 - [Coursera Courses and Specializations Lookup](docs/actors/w1XgyeDmYiWEb9OjB/README.md)
 - [ImportYeti Importer &amp; Supplier Trade Explorer](docs/actors/PFnzbyk7iniGWqyZw/README.md)
 - [LinkedIn Job Listings with Salary &amp; Company Data Scraper](docs/actors/YBSMvzqGpJzFJ99qo/README.md)
