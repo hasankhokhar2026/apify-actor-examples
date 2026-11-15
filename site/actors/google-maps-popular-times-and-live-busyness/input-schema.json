@@ -1,9 +1,9 @@
 {
-  "description": "Scrape Google Maps place data (name, address, category, phone, website, rating, open status, coordinates, local time) and, when Google serves it to an anonymous page, Popular Times (hourly busy hours for every day) with live busyness vs the usual level. Google often serves signed-out sessions a limited view without Popular Times; those places are still returned as basic records (dataStatus=limited_view). No API key or login needed.",
+  "description": "Scrape Google Maps place data (name, address, category, phone, website, rating, open status, coordinates, local time, weekly opening hours, Plus Code, photos and review summary) and, when Google serves it to an anonymous page, Popular Times (hourly busy hours for every day) with live busyness vs the usual level. Google often serves signed-out sessions a limited view without Popular Times; those places are still returned as basic records (dataStatus=limited_view). No API key or login needed.",
   "properties": {
     "includeFailedPlaces": {
       "default": false,
-      "description": "Also output one record per place for which no place data could be resolved, with the reason and number of attempts. A limited view that still resolves to a place is a normal basic record, not a failure. Recommended for monitoring lists so every input appears in the results.",
+      "description": "Also output one record per place (or search query) for which no place data could be resolved, with the reason and number of attempts. A limited view that still resolves to a place is a normal basic record, not a failure. Recommended for monitoring lists so every input appears in the results.",
       "prefill": false,
       "title": "Include unavailable places in the output",
       "type": "boolean"
@@ -15,6 +15,22 @@
       "sectionCaption": "Closure monitoring",
       "sectionDescription": "Extra signals for tracking places that may have closed or are losing customers. Run the actor on a schedule with the same monitoring key to compare every reading with earlier ones.",
       "title": "Include newest reviews and closure mentions",
+      "type": "boolean"
+    },
+    "includeOpeningHours": {
+      "default": true,
+      "description": "Return the week's opening hours as structured day-by-day entries. The actor opens Google's \"See more hours\" panel when needed and reads only the hours Google publishes; closed days and 24-hour entries keep Google's own text.",
+      "prefill": true,
+      "sectionCaption": "Opening hours, photos and reviews",
+      "sectionDescription": "Optional place details that Google renders on the page, including on its limited view.",
+      "title": "Include weekly opening hours",
+      "type": "boolean"
+    },
+    "includePhotos": {
+      "default": false,
+      "description": "Return absolute URLs of the place photos Google shows, including its gallery when available. Photos are omitted by default to keep records compact.",
+      "prefill": false,
+      "title": "Include photo URLs",
       "type": "boolean"
     },
     "language": {
@@ -89,6 +105,15 @@
       "title": "Places scraped in parallel",
       "type": "integer"
     },
+    "maxPhotos": {
+      "default": 10,
+      "description": "How many photo URLs to return per place when photos are included.",
+      "maximum": 50,
+      "minimum": 1,
+      "prefill": 10,
+      "title": "Maximum photos per place",
+      "type": "integer"
+    },
     "minUsualBusyness": {
       "default": 30,
       "description": "Readings count toward the monitoring streaks and medians only when Google's usual level for that hour is at least this value, so quiet hours (where a low reading means little) are ignored.",
@@ -140,12 +165,23 @@
       "type": "array"
     },
     "proxyConfiguration": {
-      "description": "Places are fetched directly first. If omitted, the last two attempts for a hard-to-reach place use Apify residential proxies (United States, then Canada). Set 'No proxy' to never use a proxy, or choose your own proxy to use it for those fallback attempts.",
+      "description": "Optional. Places are fetched directly first. With no proxy configured every attempt is direct and no paid proxy is used. If you supply a proxy, the last two attempts for a hard-to-reach place use it; choose 'No proxy' to keep every attempt direct.",
       "editor": "proxy",
-      "sectionCaption": "Proxy fallback",
-      "sectionDescription": "Proxies are only used as a last resort for places that direct access could not retrieve.",
-      "title": "Proxy configuration",
+      "sectionCaption": "Proxy (optional)",
+      "sectionDescription": "No proxy is selected automatically. A caller-supplied proxy is only used as a last resort for places direct access could not retrieve.",
+      "title": "Proxy configuration (optional)",
       "type": "object"
+    },
+    "searchQueries": {
+      "description": "Google Maps search terms, for example \"McDonald's Times Square New York\" or \"coffee shop Vancouver\". Each query opens Google Maps search and resolves the best organic matching place; a query that cannot be matched to exactly one place is reported as unavailable (or as a failed record with Include unavailable places).",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 100000,
+      "minItems": 1,
+      "title": "Search queries",
+      "type": "array"
     }
   },
   "required": [],

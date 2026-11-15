@@ -1,14 +1,14 @@
 # Google Maps Place Data & Popular Times (When Available)
 
-Get reliable **Google Maps place data** — name, address, category, phone, website, rating, open/closed status, coordinates and local time — and, **when Google serves it to an anonymous page**, the hourly **Popular Times** chart and **live busyness** reading. Google often serves signed-out sessions a **limited view** that omits Popular Times; the actor then returns an honest basic record (`dataStatus: "limited_view"`, `popularTimesAvailable: false`) instead of failing or inventing busyness. Works with Google Maps place URLs, search links or Google Place IDs, in any country, with no API key and no login.
+Get reliable **Google Maps place data** — name, address, category, phone, website, rating, open/closed status, coordinates, local time, weekly opening hours, Plus Code, photos and a visible review summary — and, **when Google serves it to an anonymous page**, the hourly **Popular Times** chart and **live busyness** reading. Google often serves signed-out sessions a **limited view** that omits Popular Times; the actor then returns an honest basic record (`popularTimesAvailable: false`, with `dataStatus: "limited_view"` when the banner is present or `"no_popular_times"` otherwise) instead of failing or inventing busyness. Works with Google Maps place URLs, search links, search queries or Google Place IDs, in any country, with no API key and no login.
 
 ## At a glance
 
 | | |
 |---|---|
-| **What you get** | Basic place data for every resolved place: stable place ID, name, address, coordinates, local time, category, phone, website, rating, review count, open-now line and listing status. When Google serves a full render: hourly busyness (0–100%) for each day, live busyness vs the usual level, and Google's live label. Optional newest reviews with closure mentions and a run-to-run monitoring summary |
-| **Limited view** | Google's signed-out limited view omits Popular Times. Those places are still emitted as normal basic records with `dataStatus: "limited_view"`, `popularTimesAvailable: false`, `limitedViewReason: "google_signin_required"` and `popularTimesHasData: false`; no busyness is estimated |
-| **Input** | Google Maps place URLs, search links (`/maps/search/?api=1&query=…`), short links or Google Place IDs (`ChIJ…`) |
+| **What you get** | Basic place data for every resolved place: stable place ID, name, address, coordinates, local time, category, phone, website, rating, review count, Plus Code, open-now line, listing status, weekly opening hours, photo URLs and a visible review summary. When Google serves a full render: hourly busyness (0–100%) for each day, live busyness vs the usual level, and Google's live label. Optional newest reviews with closure mentions and a run-to-run monitoring summary |
+| **Limited view** | Google's signed-out limited view omits Popular Times. Those places are still emitted as normal basic records with `popularTimesAvailable: false` and `popularTimesHasData: false`; `dataStatus` is `limited_view` when the banner is present, otherwise `no_popular_times`. No busyness is estimated. The limited page still supplies identity, address, coordinates, phone, website, rating, open status, weekly hours, Plus Code, photos and visible reviews |
+| **Input** | Google Maps place URLs, search links (`/maps/search/?api=1&query=…`), free-text search queries or Google Place IDs (`ChIJ…`) |
 | **Output** | JSON, CSV, Excel, XML or HTML via the Apify dataset; ready-made "Place data & Popular Times", "Live monitoring" and "Closure signals" table views |
 | **Coverage** | Any country Google Maps serves; Google Maps UI in 11 languages. Popular Times depends on Google's anonymous rendering and is not guaranteed |
 | **Requirements** | No Google API key, no Google account, no cookies |
@@ -19,23 +19,26 @@ Get reliable **Google Maps place data** — name, address, category, phone, webs
 
 **Popular Times** is the bar chart Google Maps shows on a place's page to indicate how busy it usually is at each hour of each day. Google builds it from aggregated, anonymised location data and expresses each hour as a percentage of that place's typical peak (100 = as busy as it gets). While a place is open, Google often adds a **live** reading that compares how busy it is right now with how busy it usually is at this hour.
 
-Google withholds the chart from the **limited view** it serves to signed-out sessions (the same view that removes reviews, photos, price range, nearby places and Q&A). This actor does not bypass that gate: it returns the place's basic data with an explicit `limited_view` status, and only emits Popular Times when Google actually renders them.
+Google withholds the chart from the **limited view** it serves to signed-out sessions. The limited page still shows the place's core listing data, weekly hours, Plus Code, images and whatever reviews it renders, and this actor returns all of those; it does not bypass the sign-in gate and only emits Popular Times when Google actually renders them. Direct requests, a headful browser, residential proxies, the Android gRPC surface and Google Search were checked. For ordinary business pages none returns the exact weekly chart to an anonymous session, so this is treated as a practical hard limit, not a retry problem. A narrow full-view class (observed on some European cathedrals) can still render the chart, and the actor returns it when Google does.
 
 ## What does this scraper extract?
 
 - **Basic place data for every resolved place** — name, stable identity, address, coordinates, local time, category, phone, website, rating, review count and open/closed status, even when Google serves its limited view
+- **Weekly opening hours** — per-day `{opens, closes}` ranges when Google gives times, or Google's own closed / 24-hour text, read after opening the "See more hours" panel when needed
+- **Plus Code, photos and a visible review summary** — the place's published Open Location Code, absolute photo URLs (optional, up to 50) and the review summary Google exposes, including any star histogram and snippets
+- **Search-query input** — each query resolves the best matching organic Google Maps place through the same name/address resolver; unresolved queries are reported instead of guessed
 - **Per-day hourly busyness** (0–100%) for every day Google charts — a full week in one request, when a full render is available
 - **Live vs usual** (when Google publishes them) — Google's live percentage (`currentBusyness`) next to its usual percentage for the same hour (`usualBusyness`), plus the chart day and hour the reading belongs to
 - **Live label** (when Google publishes it) — Google's wording such as *"Not too busy"*, *"Less busy than usual"* or *"As busy as it gets"*
 - **Open / closed status** — whether the listing is operating, temporarily closed or permanently closed, plus Google's open-now line (e.g. *"Open · Closes 11 PM"*)
 - **Typical time spent** when Google shows it (e.g. *"People typically spend 30 min to 1 hour here"*)
-- **Business name and a stable place identity** — `featureId` / `cid` (and the canonical `ChIJ…` `placeId` when Google shows it) for every place, including places given as search links or short links, so readings from different runs can be joined
+- **Business name and a stable place identity** — `featureId` / `cid` (and the canonical `ChIJ…` `placeId` when Google shows it) for every place, including places given as search links, so readings from different runs can be joined
 - **Listing details** — category, address, latitude/longitude, phone, website, rating and review count
 - **Local time of each reading** — the place's time zone, the local date and hour of the scrape, and Google's usual value for that hour from the chart (also when there is no live reading)
 - **Live vs usual, ready to compare** — `liveToUsualRatio` and `liveMinusUsual`, plus `liveReadingStatus` explaining why a live reading is missing (closed now, open but no live data, permanently closed…)
 - **Newest reviews and closure mentions** (optional) — the newest Google reviews with exact dates, flagged when they say the place is closing or closed ("final weekend", "it was closed", "permanently closed", in 11 languages)
 - **Run-to-run monitoring** (optional) — with a monitoring key, each record compares the reading with the place's earlier readings: low-activity streaks, recent vs earlier live/usual ratio, listing status changes, Popular Times removed or changed, review-count change and new closure mentions. Limited-view readings are stored as basic readings and are not reported as a removed chart
-- **Every input accounted for** — each place is returned, or (when enabled) reported as an unavailable-place record with the reason; inputs that turn out to be the same place as an earlier input are returned once, and every outcome (including such duplicates) is counted in a run summary
+- **Every input accounted for** — each place is returned, or (when enabled) reported as an unavailable-place record with the reason; repeated place URLs or Place IDs for the same place are returned once, while each search query keeps its own record even when it resolves to a place another input already found. Every outcome (including duplicate place URLs) is counted in a run summary
 
 ## Use cases
 
@@ -49,29 +52,34 @@ Google withholds the chart from the **limited view** it serves to signed-out ses
 
 ## How to scrape Google Maps place data and Popular Times
 
-1. **Collect your places** — copy place URLs from Google Maps or use Google Place IDs (`ChIJ…`).
-2. **Paste them** into *Place URLs* or *Google Place IDs* and pick the Google Maps language.
-3. **Set speed and retries** (optional) — places in parallel, attempts per place, time limit per place, and whether to output unavailable places.
-4. **Turn on closure monitoring** (optional) — include the newest reviews and set a monitoring key.
-5. **Run** and download the results as JSON, CSV or Excel, or open the *Live monitoring* or *Closure signals* view. Use a schedule with the same monitoring key to repeat the list and build a time series.
+1. **Collect your places** — copy place URLs from Google Maps, use Google Place IDs (`ChIJ…`), or write search queries.
+2. **Paste them** into *Place URLs*, *Google Place IDs* or *Search queries* and pick the Google Maps language.
+3. **Choose details** (optional) — weekly opening hours are on by default; enable photo URLs and set how many.
+4. **Set speed and retries** (optional) — places in parallel, attempts per place, time limit per place, and whether to output unavailable places.
+5. **Turn on closure monitoring** (optional) — include the newest reviews and set a monitoring key.
+6. **Run** and download the results as JSON, CSV or Excel, or open the *Live monitoring* or *Closure signals* view. Use a schedule with the same monitoring key to repeat the list and build a time series.
 
 ## Input
 
 | Field | Type | Default | Description |
 |---|---|---|---|
-| `placeUrls` | Array of strings | – | Google Maps place URLs; short links, copied punctuation and tracking parameters are normalized. One of `placeUrls`/`placeIds` is required |
-| `placeIds` | Array of strings | – | Canonical Google Place IDs beginning with `ChIJ`. One of `placeUrls`/`placeIds` is required |
+| `placeUrls` | Array of strings | – | Google Maps place URLs; copied punctuation and tracking parameters are normalized. Expand `maps.app.goo.gl` share links to the full place URL first. One of `placeUrls`/`placeIds`/`searchQueries` is required |
+| `placeIds` | Array of strings | – | Canonical Google Place IDs beginning with `ChIJ`. One of `placeUrls`/`placeIds`/`searchQueries` is required |
+| `searchQueries` | Array of strings | – | Free-text Google Maps searches, e.g. `McDonald's Times Square New York`. Each query resolves the best matching organic place; an ambiguous or unmatched query is reported as unavailable rather than guessed |
 | `language` | String | `en` | Google Maps language for labels and parsing: `en`, `es`, `fr`, `de`, `it`, `pt`, `ja`, `ko`, `zh`, `ar`, `ru` |
 | `maxConcurrency` | Integer | 3 | Places scraped at the same time (1–8). Needs about 1 GB of run memory per parallel place; lowered automatically if the run has less memory |
 | `maxAttemptsPerPlace` | Integer | 8 | Maximum attempts for one place before it is reported as unavailable (1–12) |
 | `placeTimeoutSecs` | Integer | 240 | Time limit for one place across all of its attempts, in seconds (30–600) |
-| `includeFailedPlaces` | Boolean | `false` | Also output one record per place that could not be retrieved, with the reason |
-| `includeLatestReviews` | Boolean | `false` | Also return each place's newest reviews and flag closure mentions |
+| `includeFailedPlaces` | Boolean | `false` | Also output one record per place or search query that could not be retrieved, with the reason |
+| `includeOpeningHours` | Boolean | `true` | Return the weekly opening hours as structured day-by-day entries |
+| `includePhotos` | Boolean | `false` | Return absolute photo URLs from the place page and any gallery Google opens |
+| `maxPhotos` | Integer | 10 | Photo URLs per place when photos are included (1–50) |
+| `includeLatestReviews` | Boolean | `false` | Also return each place's newest reviews and flag closure mentions. If Google's newest-review feed is blocked, the visible reviews on the place page are used instead (`latestReviewsSource: "page"`) |
 | `latestReviewsCount` | Integer | 10 | Newest reviews per place (1–60) |
 | `monitoringKey` | String | – | Name of a monitoring list; readings are kept in your account between runs and each record gets a `monitoring` summary. Use the same key on every scheduled run |
 | `lowActivityRatio` | Number | 0.25 | A live reading counts as low when live ÷ usual is at most this value (0.05–1) |
 | `minUsualBusyness` | Integer | 30 | Busy-hour threshold: readings count toward the monitoring streaks and medians only when Google's usual level for that hour is at least this value (5–100) |
-| `proxyConfiguration` | Object | – | Places are fetched directly first. If omitted, the last two attempts for a hard-to-reach place use Apify residential proxies (United States, then Canada). Choose "No proxy" to never use a proxy, or your own proxy for those fallback attempts |
+| `proxyConfiguration` | Object | – | Optional. Places are fetched directly first; with no proxy configured every attempt is direct and no paid proxy is used. If you supply a proxy, the last two attempts for a hard-to-reach place use it. Choose "No proxy" to keep every attempt direct |
 
 ### Input examples
 
@@ -90,6 +98,14 @@ Google withholds the chart from the **limited view** it serves to signed-out ses
 ```json
 {
   "placeIds": ["ChIJaXQRs6lZwokRY6EFpJnhNNE", "ChIJabtoT7hlwokRLECK0SW3_8I"]
+}
+```
+
+**Places by search query**
+
+```json
+{
+  "searchQueries": ["McDonald's Times Square New York", "coffee shop Vancouver"]
 }
 ```
 
@@ -216,7 +232,7 @@ Fields Google does not show for a place are omitted — no `null` values appear 
 
 ### Limited view (Google sign-in required)
 
-When Google serves its anonymous limited view, the place is still returned as a normal basic record. Only fields Google actually rendered are included; Popular Times are absent rather than estimated:
+When Google serves its anonymous limited view, the place is still returned as a normal basic record. Only fields Google actually rendered are included; Popular Times are absent rather than estimated. The limited page still supplies these basic fields when Google shows them: name, rating and review count, category, address, coordinates, phone, website, image(s), open status, the weekly Hours panel (after "See more hours"), Plus Code, any visible review histogram/snippets and visible reviews. Photos are included only with `includePhotos`. The example below is trimmed to the core fields:
 
 ```json
 {
@@ -231,11 +247,29 @@ When Google serves its anonymous limited view, the place is still returned as a 
   "timezone": "America/New_York",
   "phone": "+1 212-555-0100",
   "website": "https://www.mcdonalds.com/us/en-us.html",
+  "plusCode": "Q257+3V",
   "rating": 4.2,
   "reviewCount": 34567,
+  "reviewSummary": {
+    "rating": 4.2,
+    "reviewCount": 34567,
+    "ratingHistogram": {"5": 60, "4": 22, "3": 9, "2": 4, "1": 5},
+    "snippets": [
+      {"rating": 5, "text": "Fast service even at midnight.", "publishedAtText": "2 days ago", "author": "Ana"}
+    ]
+  },
   "businessStatus": "OPERATIONAL",
   "openStatusText": "Open · Closes 11 PM",
   "isOpenNow": true,
+  "openingHours": {
+    "monday": [{"opens": "6 AM", "closes": "11 PM"}],
+    "tuesday": [{"opens": "6 AM", "closes": "11 PM"}],
+    "wednesday": [{"opens": "6 AM", "closes": "11 PM"}],
+    "thursday": [{"opens": "6 AM", "closes": "11 PM"}],
+    "friday": [{"opens": "6 AM", "closes": "11 PM"}],
+    "saturday": [{"opens": "6 AM", "closes": "11 PM"}],
+    "sunday": [{"opens": "6 AM", "closes": "11 PM"}]
+  },
   "observedAtLocal": "2026-10-24T09:15:00-04:00",
   "observedLocalDay": "saturday",
   "observedLocalHour": 9,
@@ -293,6 +327,11 @@ A limited view that still resolves to a place is **not** an unavailable place: i
 | `latitude` / `longitude` | The place's pin (or, where Google shows no pin, as in South Korea, the centre of the place's Plus Code) |
 | `rating` / `reviewCount` | Star rating and number of reviews, when Google shows them |
 | `placeUrl` / `sourceUrl` | The input URL, normalized |
+| `searchQuery` | The free-text search query this record resolved from, when the input was a search query |
+| `plusCode` | The place's published Plus Code (full code, or Google's short form when that is what it shows) |
+| `openingHours` | Weekly hours by English day name: `{day: [{opens, closes}, …]}` or `{day: [{text: "Closed"}]}` / `{day: [{text: "Open 24 hours"}]}` exactly as Google publishes them |
+| `photos` | With `includePhotos`: absolute Google photo URLs, up to `maxPhotos` |
+| `reviewSummary` | Visible rating/review count plus any star histogram and up to three review snippets with rating, text, author and relative date when Google shows them |
 | `popularTimesHasData` | Whether Google rendered a Popular Times chart for this record |
 | `popularTimesAvailable` | Whether an accepted, complete-or-place-appropriate chart is present |
 | `dataStatus` | `full`, `no_popular_times` or `limited_view` |
@@ -311,7 +350,8 @@ A limited view that still resolves to a place is **not** an unavailable place: i
 | `businessStatus` | `OPERATIONAL`, `CLOSED_TEMPORARILY` or `CLOSED_PERMANENTLY`, as shown on the listing |
 | `openStatusText` / `isOpenNow` | Google's open-status line (e.g. "Closed · Opens 8 AM") and whether it says the place is open now |
 | `typicalTimeSpent` | Google's visit-duration text, when shown |
-| `latestReviews` | With `includeLatestReviews`: newest reviews with `publishedAt`, `publishedAtText`, `rating`, `text` (in the chosen language), `originalText` (when translated) and `closurePhrase` (when the review mentions a closure) |
+| `latestReviews` | With `includeLatestReviews`: newest reviews with `publishedAt`, `publishedAtText`, `rating`, `text` (in the chosen language), `originalText` (when translated) and `closurePhrase` (when the review mentions a closure). When Google's feed is blocked, the visible page reviews are used instead and may omit exact dates |
+| `latestReviewsSource` | `feed` (Google's newest-first review feed) or `page` (visible reviews on the place page, used when the feed is blocked or unavailable) |
 | `latestReviewAt` / `daysSinceLatestReview` | Date of the newest review and days since |
 | `closureMentionCount` / `latestClosureMentionAt` | Newest reviews mentioning a closure, and the date of the latest one |
 | `monitoring` | With `monitoringKey`: run-to-run summary (see [Closure monitoring](#closure-monitoring)) |
@@ -330,7 +370,7 @@ A canonical `ChIJ…` token is reported as `placeId` and a legacy `0x…:0x…` 
 
 ### Run summary
 
-Every run stores a `RUN_SUMMARY` record in its key-value store with: places requested, records produced, places without popular times, duplicates, failures by reason, attempts, attempts that used a proxy, places not started because of the time limit, parallelism and run duration (plus places whose newest reviews could not be read, and the monitoring store name, when those options are on).
+Every run stores a `RUN_SUMMARY` record in its key-value store with: places requested (including search queries), records produced, places without popular times, duplicates, failures by reason, attempts, attempts that used a proxy, places not started because of the time limit, parallelism and run duration (plus places whose newest reviews could not be read or were read from the page instead, and the monitoring store name, when those options are on).
 
 ## Closure monitoring
 
@@ -390,7 +430,7 @@ Each place also waits for Google to settle its place link (for a stable ID) and 
 `currentBusyness` is Google's live reading at the moment of the scrape; `usualBusyness` is Google's usual level for the same hour, shown beside it. Both are read verbatim from Google — the actor never estimates or interpolates.
 
 ### Why is Popular Times missing from my record?
-Google serves its **limited view of Maps** to signed-out sessions (a sign-in gate). That view keeps the place heading and basic listing facts but removes Popular Times, reviews, photos, price range, nearby places and Q&A. The actor does not sign in or bypass this gate. A resolved place is returned as a normal basic record with `dataStatus: "limited_view"`, `popularTimesAvailable: false`, `limitedViewReason: "google_signin_required"` and `popularTimesHasData: false`; no busyness is invented. Run again later or from a different network if you need to catch a full render. A limited view is not counted as a failed place.
+This is a practical hard limit for ordinary business pages on the anonymous web. Google serves its **limited view of Maps** to signed-out sessions (a sign-in gate), and that view omits the Popular Times module. Narrow full-view landmarks (observed on some European cathedrals) can still render the chart; the actor returns it when Google does. Exhaustive checks of direct requests, a headful browser, residential proxies, the Android gRPC surface and Google Search did not produce exact business busyness; competitor methods use paid proxy/Google Search or device-captured Android gRPC. The actor does not sign in, fabricate or estimate busyness. A resolved place is returned as a normal basic record with `popularTimesAvailable: false` and `popularTimesHasData: false`; `dataStatus` is `limited_view` when the banner is present, otherwise `no_popular_times`. The limited page still provides name, rating, category, address, coordinates, phone, website, images, open status, weekly opening hours, Plus Code, the visible review summary and visible reviews — those fields are returned. Run again later if you need to catch a full render; a limited view is not counted as a failed place.
 
 ### Why is `currentBusyness` sometimes missing?
 Google only shows live data while the place is open and has enough recent visits, and places without a Popular Times chart never have one. `liveReadingStatus` tells you which case applies; `limitedView` means Google withheld the module from an anonymous session.
@@ -423,7 +463,7 @@ The weekly profile is Google's long-run average, so it normally stays the same b
 Restaurants, cafés, bars, retail stores, gyms, grocery stores and major attractions can have them, but availability now depends on what Google serves to the anonymous session as well as on the place itself. Small businesses, services without foot traffic and very new listings often have no chart. A `limited_view` record is not evidence either way; only `dataStatus: "no_popular_times"` from a full render is.
 
 ### Which input should I use for reliable monitoring?
-Use Place IDs (`placeIds`) or the full place URL copied from Google Maps. Search links (`/maps/search/?api=1&query=…`) work too, and the record then carries the place's stable `featureId` and `cid` for joining runs. A query with the name and street address opens the place directly. When a query matches several places, Google shows a list: the actor opens the listed place whose full name appears in your query (e.g. "ICHIRAN Shibuya" for "Ichiran Shibuya Tokyo"; for duplicate listings at one address, the one with the most reviews), and reports branches of a chain at different addresses as unavailable (`notResolved`) rather than guessing — add the street address to such queries. A short name-plus-map-position URL can be ambiguous when several places share a name, and Google leaves permanently closed places out of its search results, so such places can only be reached by their Place ID or full place URL. An input that cannot be matched to exactly one place is reported as unavailable (`notResolved`) rather than guessed.
+Use Place IDs (`placeIds`) or the full place URL copied from Google Maps. Search links (`/maps/search/?api=1&query=…`) and free-text `searchQueries` work too, and the record then carries the place's stable `featureId` and `cid` for joining runs. A `searchQuery` is resolved to the best organic matching place; if several branches of a chain match, add the street address so the query names exactly one place, otherwise it is reported as unavailable rather than guessed. A query with the name and street address opens the place directly. When a query matches several places, Google shows a list: the actor opens the listed place whose full name appears in your query (e.g. "ICHIRAN Shibuya" for "Ichiran Shibuya Tokyo"; for duplicate listings at one address, the one with the most reviews), and reports branches of a chain at different addresses as unavailable (`notResolved`) rather than guessing — add the street address to such queries. A short name-plus-map-position URL can be ambiguous when several places share a name, and Google leaves permanently closed places out of its search results, so such places can only be reached by their Place ID or full place URL. An input that cannot be matched to exactly one place is reported as unavailable (`notResolved`) rather than guessed.
 
 ### Can it handle thousands of places on a schedule?
 Yes. Raise `maxConcurrency` (6 with 8 GB of memory is recommended for large lists) and set a run timeout long enough for your list; see [Speed at scale](#speed-at-scale). The actor stops starting new places shortly before the run's time limit, counts them in `RUN_SUMMARY` and, with `includeFailedPlaces`, outputs a `notStarted` record for each. Split very large lists into several runs and schedule them at consistent local times.
@@ -432,10 +472,10 @@ Yes. Raise `maxConcurrency` (6 with 8 GB of memory is recommended for large list
 If a run produces no place records and at least one place failed, the run is marked as failed with a status message saying whether the inputs could not be matched to a place or no place data could be retrieved. A limited view that resolves to a place is a normal basic record, so a run made only of limited-view places still succeeds. With `includeFailedPlaces` on, the `failed` records are still in the dataset.
 
 ### Can I limit retries for places that fail?
-Yes. `maxAttemptsPerPlace` and `placeTimeoutSecs` cap the effort per place, "No proxy" avoids all proxy usage, and inputs that do not resolve to a place stop after two tries. Enable `includeFailedPlaces` to get a record for every unavailable place.
+Yes. `maxAttemptsPerPlace` and `placeTimeoutSecs` cap the effort per place, no proxy is used unless you supply one, and inputs that do not resolve to a place stop after two tries. Enable `includeFailedPlaces` to get a record for every unavailable input.
 
 ### Do I need a proxy, cookies or a Google API key?
-No. Places are fetched directly first; by default only the last two attempts for a hard-to-reach place use Apify residential proxies. No cookies, Google account or API key are needed. Because the actor stays signed out, Google may serve the limited view; basic place data is still returned and Popular Times are emitted only when Google actually renders them.
+No. Places are fetched directly. No proxy is selected automatically and no paid proxy is used unless you supply a `proxyConfiguration`; if you do, the last two attempts for a hard-to-reach place use your proxy. No cookies, Google account or API key are needed. Because the actor stays signed out, Google may serve the limited view; basic place data is still returned and Popular Times are emitted only when Google actually renders them.
 
 ### Is a live label without a percentage still captured?
 Yes. When Google states the live level only in words (e.g. "Currently as busy as it gets"), you get the wording in `currentBusynessText` and `currentBusyness` is omitted rather than guessed.
