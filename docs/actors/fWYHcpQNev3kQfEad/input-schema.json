@@ -1,120 +1,189 @@
 {
-  "description": "Y Combinator scraper Pro — full directory + advanced filters and derived fields.",
+  "description": "Search the YC company directory, filter it by batch, industry, size, stage, hiring status or founder diversity, or fetch specific companies directly by URL or slug.",
   "properties": {
-    "batch": {
-      "default": "any",
-      "description": "Filter by YC batch code. 'any' returns every batch. Codes: S=Summer, W=Winter, F=Fall followed by two-digit year (e.g. S24 = Summer 2024).",
-      "editor": "select",
-      "enum": [
-        "any",
-        "S25",
-        "W25",
-        "S24",
-        "W24",
-        "F24",
-        "S23",
-        "W23",
-        "S22",
-        "W22",
-        "S21",
-        "W21"
-      ],
-      "title": "Batch",
-      "type": "string"
+    "batches": {
+      "default": [],
+      "description": "YC batches, either short codes or full names: S24, W24, F24, SP25, or Summer 2024. Leave empty for every batch. All batches are fetched when you need more than 1,000 companies.",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Batches",
+      "type": "array"
     },
     "companySlugs": {
       "default": [],
-      "description": "Direct YC company slugs (e.g. ['airbnb','stripe']). Bypasses search and fetches each profile directly.",
+      "description": "Direct YC company slugs, e.g. airbnb, stripe. Use this instead of URLs when you already have slugs.",
       "editor": "stringList",
       "prefill": [],
-      "title": "Company Slugs (Pro)",
+      "title": "Company slugs",
       "type": "array"
     },
     "companyUrls": {
       "default": [],
-      "description": "Direct YC company profile URLs (e.g. https://www.ycombinator.com/companies/airbnb). Bypasses search and fetches each profile directly.",
+      "description": "Direct YC company profile URLs, e.g. https://www.ycombinator.com/companies/airbnb. Each URL is fetched independently of the directory search.",
       "editor": "stringList",
       "prefill": [],
-      "title": "Company URLs (Pro)",
+      "title": "Company URLs",
       "type": "array"
     },
     "directoryUrl": {
       "default": "https://www.ycombinator.com/companies",
-      "description": "Y Combinator company directory URL. Default scrapes the full directory. You can paste a filtered URL (e.g. https://www.ycombinator.com/companies?batch=S24&industry=AI).",
+      "description": "Y Combinator directory URL. Paste a pre-filtered URL (e.g. https://www.ycombinator.com/companies?batch=S24&industry=AI) to apply its query-string filters. Defaults to the full directory.",
       "editor": "textfield",
       "prefill": "https://www.ycombinator.com/companies",
+      "sectionCaption": "Companies to scrape",
       "title": "Directory URL",
       "type": "string"
     },
+    "emitErrorRecord": {
+      "default": true,
+      "description": "When on, a run that matches zero companies pushes one diagnostic record instead of leaving the dataset empty. Upstream failures always fail the run and never produce a success record.",
+      "editor": "checkbox",
+      "prefill": true,
+      "title": "Emit an error record when nothing matches",
+      "type": "boolean"
+    },
     "foundedAfterYear": {
-      "description": "Drop companies founded before this year (inclusive).",
+      "description": "Keep companies launched in or after this year. YC's launch timestamp is the numeric field the index supports.",
       "editor": "number",
       "maximum": 2100,
       "minimum": 1900,
-      "title": "Founded after year (Pro)",
+      "title": "Founded after year",
       "type": "integer"
     },
     "foundedBeforeYear": {
-      "description": "Drop companies founded after this year (inclusive).",
+      "description": "Keep companies launched in or before this year.",
       "editor": "number",
       "maximum": 2100,
       "minimum": 1900,
-      "title": "Founded before year (Pro)",
+      "title": "Founded before year",
       "type": "integer"
     },
     "highlightBlackFounders": {
       "default": false,
-      "description": "If true, only return companies flagged as having Black founders.",
+      "description": "Keep only companies on YC's official Black-founded companies list. The list is an opt-in page, so absence is not proof of anything.",
       "editor": "checkbox",
-      "title": "Highlight: Black Founders",
+      "prefill": false,
+      "sectionCaption": "Founder diversity",
+      "title": "Black-founded companies",
       "type": "boolean"
     },
     "highlightHispanicFounders": {
       "default": false,
-      "description": "If true, only return companies flagged as having Hispanic / Latino founders.",
+      "description": "Keep only companies on YC's official Hispanic and Latino-founded companies list.",
       "editor": "checkbox",
-      "title": "Highlight: Hispanic / Latino Founders",
+      "prefill": false,
+      "title": "Hispanic / Latino-founded companies",
       "type": "boolean"
     },
     "highlightWomenFounders": {
       "default": false,
-      "description": "If true, only return companies flagged as having women founders.",
+      "description": "Keep only companies on YC's official women-founded companies list.",
       "editor": "checkbox",
-      "title": "Highlight: Women Founders",
+      "prefill": false,
+      "title": "Women-founded companies",
       "type": "boolean"
     },
     "hiringOnly": {
       "default": false,
-      "description": "Only emit companies with at least 1 open job posting.",
+      "description": "Keep only companies carrying YC's 'is hiring' badge.",
       "editor": "checkbox",
-      "title": "Hiring only (Pro)",
+      "prefill": false,
+      "title": "YC hiring badge only",
       "type": "boolean"
     },
-    "industry": {
-      "description": "Filter by industry (e.g. 'B2B', 'Consumer', 'Fintech', 'Healthcare', 'Industrials', 'Real Estate and Construction'). Case-sensitive, exact match against YC's industry facets.",
-      "editor": "textfield",
-      "title": "Industry",
-      "type": "string"
+    "includeJobDetails": {
+      "default": false,
+      "description": "Fetch every job's own page to add its description, interview process and hiring manager. Adds one request per open job.",
+      "editor": "checkbox",
+      "prefill": false,
+      "title": "Include job descriptions",
+      "type": "boolean"
+    },
+    "includeLaunchPosts": {
+      "default": false,
+      "description": "Add each company's Launch YC posts, including the full post body.",
+      "editor": "checkbox",
+      "prefill": false,
+      "title": "Include Launch YC posts",
+      "type": "boolean"
+    },
+    "includeNews": {
+      "default": true,
+      "description": "Add the news links listed on each company profile.",
+      "editor": "checkbox",
+      "prefill": true,
+      "title": "Include news items",
+      "type": "boolean"
+    },
+    "includeQa": {
+      "default": true,
+      "description": "Add the founder Q&A answers published on each company profile.",
+      "editor": "checkbox",
+      "prefill": true,
+      "title": "Include founder Q&A",
+      "type": "boolean"
+    },
+    "includeVideos": {
+      "default": false,
+      "description": "Add YC library / YouTube videos and app or demo-day videos. Expiring signed video URLs are re-hosted in the run's key-value store so they stay playable.",
+      "editor": "checkbox",
+      "prefill": false,
+      "title": "Include videos",
+      "type": "boolean"
+    },
+    "industries": {
+      "default": [],
+      "description": "Exact YC industry values, e.g. B2B, Consumer, Fintech, Healthcare, Industrials. Values are matched against YC's industry facet.",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Industries",
+      "type": "array"
+    },
+    "maxConcurrency": {
+      "default": 8,
+      "description": "How many profile / job / founder pages are fetched in parallel. Higher is faster; 8 is a polite default.",
+      "editor": "number",
+      "maximum": 32,
+      "minimum": 1,
+      "prefill": 8,
+      "title": "Maximum concurrency",
+      "type": "integer"
     },
     "maxItems": {
       "default": 3,
-      "description": "Maximum number of companies to return.",
+      "description": "Maximum number of companies to return. Set 0 to return every match (the directory currently has about 6,400 companies; the actor caps a run at 10,000).",
       "editor": "number",
-      "maximum": 5500,
-      "minimum": 1,
+      "maximum": 10000,
+      "minimum": 0,
       "prefill": 3,
-      "title": "Max Items",
+      "title": "Maximum companies",
       "type": "integer"
     },
+    "nonprofitOnly": {
+      "default": false,
+      "description": "Keep only companies YC marks as nonprofits.",
+      "editor": "checkbox",
+      "prefill": false,
+      "title": "Nonprofits only",
+      "type": "boolean"
+    },
+    "onlyWithOpenJobs": {
+      "default": false,
+      "description": "Keep only companies whose profile actually lists at least one open job. This checks the live job list, not just the badge.",
+      "editor": "checkbox",
+      "prefill": false,
+      "title": "Only companies with open jobs",
+      "type": "boolean"
+    },
     "query": {
-      "description": "Optional free-text query. When set, filters the directory using the ?q=<query> Algolia search (matches name, description, tags).",
+      "description": "Free-text search across company names, descriptions and tags. Leave empty to browse the directory by filters only.",
       "editor": "textfield",
-      "title": "Search Query",
+      "title": "Search query",
       "type": "string"
     },
     "regions": {
       "default": [],
-      "description": "Optional region filter (case-insensitive substring match against the company's location). Example: [\"San Francisco\", \"New York\"].",
+      "description": "Exact YC region values, e.g. Europe, America / Canada, Remote, Fully Remote. Also accepts a free-text location match.",
       "editor": "stringList",
       "prefill": [],
       "title": "Regions",
@@ -122,64 +191,115 @@
     },
     "requireFounderSocial": {
       "default": false,
-      "description": "Only emit companies where at least one founder has a LinkedIn, Twitter, or GitHub URL.",
+      "description": "Keep only companies where at least one founder has a LinkedIn, Twitter/X, GitHub or website link.",
       "editor": "checkbox",
-      "title": "Require founder social (Pro)",
+      "prefill": false,
+      "title": "Require a founder social profile",
+      "type": "boolean"
+    },
+    "scrapeFounderProfiles": {
+      "default": false,
+      "description": "Also fetch each founder's directory page for schools, previous roles, previous YC companies and a profile URL. Adds one request per founder.",
+      "editor": "checkbox",
+      "prefill": false,
+      "title": "Include founder directory profiles",
       "type": "boolean"
     },
     "scrapeFounders": {
       "default": true,
-      "description": "Include each company's founders (name, title, bio, LinkedIn, Twitter, previousCompanies). Requires an extra detail-page fetch per company.",
+      "description": "Add each company's founders (name, title, bio, social links) from its profile page.",
       "editor": "checkbox",
       "prefill": true,
-      "title": "Scrape Founders",
+      "sectionCaption": "Profile detail",
+      "title": "Include founders",
       "type": "boolean"
     },
     "scrapeOpenJobs": {
       "default": true,
-      "description": "Include each company's open job postings (title, URL, applyUrl, location, salary, equity, skills, visa, remoteFriendly).",
+      "description": "Add each company's complete open-job list from its profile page.",
       "editor": "checkbox",
       "prefill": true,
-      "title": "Scrape Open Jobs",
+      "title": "Include open jobs",
       "type": "boolean"
     },
-    "status": {
-      "default": "any",
-      "description": "Filter by company operating status. 'any' returns all statuses.",
+    "sortBy": {
+      "default": "launchDateDesc",
+      "description": "Order in which companies are returned. launchDateDesc, the default, returns the newest launches first.",
       "editor": "select",
       "enum": [
-        "any",
-        "Active",
-        "Inactive",
-        "Acquired",
-        "Public"
+        "launchDateDesc",
+        "launchDateAsc",
+        "nameAsc",
+        "teamSizeDesc",
+        "teamSizeAsc"
       ],
-      "title": "Status",
+      "enumTitles": [
+        "Newest launches first",
+        "Oldest launches first",
+        "Company name A–Z",
+        "Largest team first",
+        "Smallest team first"
+      ],
+      "prefill": "launchDateDesc",
+      "sectionCaption": "Output",
+      "title": "Sort order",
       "type": "string"
+    },
+    "stages": {
+      "default": [],
+      "description": "Funding stage: Early or Growth. YC's index does not expose stage as a facet, so this filter is applied to each fetched record.",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Stages",
+      "type": "array"
+    },
+    "statuses": {
+      "default": [],
+      "description": "Company operating status: Active, Inactive, Acquired, Public. Leave empty for all statuses.",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Statuses",
+      "type": "array"
+    },
+    "subIndustries": {
+      "default": [],
+      "description": "Exact or leaf sub-industry values, e.g. Infrastructure, Productivity, or 'Consumer -> Travel, Leisure and Tourism'.",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Sub-industries",
+      "type": "array"
     },
     "tags": {
       "default": [],
-      "description": "Optional tag filter (case-insensitive). Matched against industry, subIndustry and any tag arrays Algolia returns. Example: [\"B2B\", \"Fintech\"].",
+      "description": "Exact YC tags, e.g. AI, B2B, SaaS, Fintech, Developer Tools. Any one match is enough.",
       "editor": "stringList",
       "prefill": [],
       "title": "Tags",
       "type": "array"
     },
     "teamSizeMax": {
-      "description": "Drop companies with more than N employees.",
-      "editor": "number",
-      "maximum": 100000,
-      "minimum": 1,
-      "title": "Max team size (Pro)",
-      "type": "integer"
-    },
-    "teamSizeMin": {
-      "description": "Drop companies with fewer than N employees.",
+      "description": "Drop companies with more employees than this. Uses YC's numeric team-size field.",
       "editor": "number",
       "maximum": 100000,
       "minimum": 0,
-      "title": "Min team size (Pro)",
+      "title": "Maximum team size",
       "type": "integer"
+    },
+    "teamSizeMin": {
+      "description": "Drop companies with fewer employees than this. Uses YC's numeric team-size field.",
+      "editor": "number",
+      "maximum": 100000,
+      "minimum": 0,
+      "title": "Minimum team size",
+      "type": "integer"
+    },
+    "topCompaniesOnly": {
+      "default": false,
+      "description": "Keep only companies YC marks as top companies.",
+      "editor": "checkbox",
+      "prefill": false,
+      "title": "YC top companies only",
+      "type": "boolean"
     }
   },
   "required": [

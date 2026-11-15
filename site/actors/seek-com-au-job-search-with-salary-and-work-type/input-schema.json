@@ -1,8 +1,101 @@
 {
   "properties": {
+    "classification": {
+      "default": "",
+      "description": "SEEK's top-level job family. Leave empty for all families.",
+      "editor": "select",
+      "enum": [
+        "",
+        "1200",
+        "6251",
+        "6304",
+        "1203",
+        "7019",
+        "1204",
+        "6163",
+        "1206",
+        "6076",
+        "6263",
+        "6123",
+        "1209",
+        "6205",
+        "1210",
+        "1211",
+        "1212",
+        "6317",
+        "6281",
+        "1214",
+        "1216",
+        "6092",
+        "6008",
+        "6058",
+        "1220",
+        "6043",
+        "6362",
+        "1223",
+        "6246",
+        "1225"
+      ],
+      "enumTitles": [
+        "Any classification",
+        "Accounting",
+        "Administration & Office Support",
+        "Advertising, Arts & Media",
+        "Banking & Financial Services",
+        "CEO & General Management",
+        "Call Centre & Customer Service",
+        "Community Services & Development",
+        "Construction",
+        "Consulting & Strategy",
+        "Design & Architecture",
+        "Education & Training",
+        "Engineering",
+        "Farming, Animals & Conservation",
+        "Government & Defence",
+        "Healthcare & Medical",
+        "Hospitality & Tourism",
+        "Human Resources & Recruitment",
+        "Information & Communication Technology",
+        "Insurance & Superannuation",
+        "Legal",
+        "Manufacturing, Transport & Logistics",
+        "Marketing & Communications",
+        "Mining, Resources & Energy",
+        "Real Estate & Property",
+        "Retail & Consumer Products",
+        "Sales",
+        "Science & Technology",
+        "Sport & Recreation",
+        "Trades & Services"
+      ],
+      "title": "Classification",
+      "type": "string"
+    },
+    "companyName": {
+      "description": "Only jobs from this employer or recruiter, e.g. \"Dental Boutique\".",
+      "editor": "textfield",
+      "title": "Company name",
+      "type": "string"
+    },
+    "country": {
+      "default": "AU",
+      "description": "Australia (seek.com.au) or New Zealand (seek.co.nz). NZ keyword searches use SEEK's New Zealand market automatically.",
+      "editor": "select",
+      "enum": [
+        "AU",
+        "NZ"
+      ],
+      "enumTitles": [
+        "Australia",
+        "New Zealand"
+      ],
+      "prefill": "AU",
+      "title": "Market",
+      "type": "string"
+    },
     "dateRange": {
       "default": "any",
-      "description": "Client-side filter on postedAt. \"any\" keeps all; otherwise only emit jobs posted within the last N days.",
+      "description": "Only jobs posted within this window. SEEK's own date filter, re-checked per record.",
       "editor": "select",
       "enum": [
         "any",
@@ -10,7 +103,8 @@
         "3",
         "7",
         "14",
-        "30"
+        "30",
+        "31"
       ],
       "enumTitles": [
         "Any time",
@@ -18,53 +112,74 @@
         "Last 3 days",
         "Last 7 days",
         "Last 14 days",
-        "Last 30 days"
+        "Last 30 days",
+        "Last 31 days"
       ],
-      "title": "Date Posted",
+      "title": "Date posted",
       "type": "string"
     },
-    "includeOneInTitle": {
-      "description": "Client-side filter. Only emit jobs whose title contains at least one of the given substrings (case-insensitive).",
+    "excludeKeywords": {
+      "default": [],
+      "description": "Local filter: drop jobs whose text contains any of these phrases.",
       "editor": "stringList",
-      "title": "Title Must Include One Of",
+      "prefill": [],
+      "title": "Exclude keywords",
+      "type": "array"
+    },
+    "includeKeywords": {
+      "default": [],
+      "description": "Local filter: keep jobs whose title, company, teaser, bullets, description, classification, work type or salary contains at least one phrase.",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Include keywords",
+      "type": "array"
+    },
+    "includeOneInTitle": {
+      "default": [],
+      "description": "Local filter: keep jobs whose title contains at least one of these phrases (case-insensitive).",
+      "editor": "stringList",
+      "prefill": [],
+      "sectionCaption": "Post-filters",
+      "sectionDescription": "These run after records are collected. Contact filters switch on job-detail fetching automatically.",
+      "title": "Title must include one of",
       "type": "array"
     },
     "location": {
-      "description": "Optional location filter, e.g. \"Sydney NSW\" or \"Melbourne VIC\". Combined with searchTerm to build a /jobs?keywords=&where= URL.",
+      "description": "City, suburb or region, e.g. \"Sydney\", \"Geelong\", \"Auckland\". Use with the state and radius below to narrow a keyword search.",
       "editor": "textfield",
       "title": "Location",
       "type": "string"
     },
-    "maxItems": {
-      "default": 3,
-      "description": "Maximum job listings to return.",
+    "maxConcurrency": {
+      "default": 4,
+      "description": "How many job-detail requests run at once. Higher is faster; lower is gentler on SEEK.",
       "editor": "number",
-      "maximum": 300,
+      "maximum": 10,
+      "minimum": 1,
+      "prefill": 2,
+      "title": "Parallel detail requests",
+      "type": "integer"
+    },
+    "maxItems": {
+      "default": 50,
+      "description": "Total rows across all search terms and URLs. SEEK caps each individual query at 550 results; add more search terms to collect beyond that.",
+      "editor": "number",
+      "maximum": 10000,
       "minimum": 1,
       "prefill": 3,
-      "title": "Max Items",
+      "sectionCaption": "Output",
+      "sectionDescription": "Each row is one job. Fields SEEK does not provide are omitted rather than sent as empty values.",
+      "title": "Maximum jobs",
       "type": "integer"
     },
     "postCode": {
-      "description": "Optional Australian 4-digit postcode. Appended to the location when constructing the search URL.",
+      "description": "Australian 4-digit postcode. Used as the search location when no city is supplied.",
       "editor": "textfield",
-      "title": "Post Code",
+      "title": "Postcode",
       "type": "string"
     },
-    "proxyConfiguration": {
-      "default": {
-        "useApifyProxy": true
-      },
-      "description": "Apify proxy. Seek 403s bare datacenter IPs on Apify, so the default enables Apify's free datacenter proxy pool.",
-      "editor": "proxy",
-      "prefill": {
-        "useApifyProxy": true
-      },
-      "title": "Proxy Configuration",
-      "type": "object"
-    },
     "radius": {
-      "description": "Distance in kilometres around the location. Passed as Seek's distance parameter when building a search URL.",
+      "description": "Radius around the location or postcode. Requires Location or Postcode to have an effect.",
       "editor": "number",
       "maximum": 100,
       "minimum": 0,
@@ -73,88 +188,100 @@
     },
     "requireEmail": {
       "default": false,
-      "description": "Client-side filter. Only emit jobs whose description contains at least one email address.",
+      "description": "Keep only jobs with an email in SEEK's structured contact data or the description. Turns on detail fetching.",
       "editor": "checkbox",
-      "title": "Require Email in Description",
+      "prefill": false,
+      "title": "Require an email address",
       "type": "boolean"
     },
     "requireEmailPhone": {
       "default": false,
-      "description": "Client-side filter. Only emit jobs whose description contains BOTH an email address AND a phone number.",
+      "description": "Keep only jobs that expose both an email address and a phone number. Turns on detail fetching.",
       "editor": "checkbox",
-      "title": "Require Both Email and Phone",
+      "prefill": false,
+      "title": "Require both email and phone",
       "type": "boolean"
     },
     "requirePhone": {
       "default": false,
-      "description": "Client-side filter. Only emit jobs whose description contains at least one phone number.",
+      "description": "Keep only jobs with a phone number in SEEK's structured contact data or the description. Turns on detail fetching.",
       "editor": "checkbox",
-      "title": "Require Phone in Description",
+      "prefill": false,
+      "title": "Require a phone number",
       "type": "boolean"
     },
     "salaryMax": {
-      "description": "Client-side filter. Only emit jobs whose parsed salary min is at most this value.",
+      "description": "Maximum salary in the market's currency. SEEK's salary filter plus a local check on the parsed salary label.",
       "editor": "number",
+      "maximum": 1000000,
       "minimum": 0,
-      "title": "Salary Max (AUD)",
+      "title": "Salary maximum",
       "type": "integer"
     },
     "salaryMin": {
-      "description": "Client-side filter. Only emit jobs whose parsed salary max is at least this value.",
+      "description": "Minimum salary in the market's currency. SEEK's salary filter plus a local check on the parsed salary label. Jobs with no disclosed salary are kept unless a Salary basis is selected.",
       "editor": "number",
+      "maximum": 1000000,
       "minimum": 0,
-      "title": "Salary Min (AUD)",
+      "title": "Salary minimum",
       "type": "integer"
     },
     "salaryType": {
       "default": "any",
-      "description": "Seek salarytype parameter. Controls how the salary range is interpreted on Seek's side.",
+      "description": "Annual or hourly. Old values (AnnualPackage, YearlyPackage, HourlyRate, MonthlyPackage) are mapped automatically. When set, jobs without a parsed salary of that basis are skipped.",
       "editor": "select",
       "enum": [
         "any",
+        "annual",
+        "hourly",
         "AnnualPackage",
-        "HourlyRate",
+        "YearlyPackage",
         "MonthlyPackage",
-        "YearlyPackage"
+        "HourlyRate"
       ],
       "enumTitles": [
-        "Any",
-        "Annual Package",
-        "Hourly Rate",
-        "Monthly Package",
-        "Yearly Package"
+        "Any / no salary filter",
+        "Annual salary",
+        "Hourly rate",
+        "AnnualPackage (legacy value)",
+        "YearlyPackage (legacy value)",
+        "MonthlyPackage (legacy, treated as annual)",
+        "HourlyRate (legacy value)"
       ],
-      "title": "Salary Type",
+      "title": "Salary basis",
       "type": "string"
     },
     "scrapeJobDetails": {
       "default": true,
-      "description": "Fetch each job's detail page for the full description + extra metadata. Off = listing-card fields only.",
+      "description": "Fetch each job's full description, contact data, company profile, applicant count and expiry via SEEK's detail API. Off = listing-card fields only (title, company, salary label, location, work type).",
       "editor": "checkbox",
-      "title": "Scrape Job Details",
+      "prefill": false,
+      "title": "Fetch full job details",
       "type": "boolean"
     },
-    "searchTerm": {
-      "description": "Optional keyword filter. Used to build a search URL when no searchUrls are supplied.",
-      "editor": "textfield",
-      "title": "Search Term (Keywords)",
-      "type": "string"
+    "searchTerms": {
+      "default": [],
+      "description": "One search per keyword phrase, e.g. \"python developer\", \"registered nurse\". Results from all phrases are merged and de-duplicated.",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Search terms",
+      "type": "array"
     },
     "searchUrls": {
-      "default": [
-        "https://www.seek.com.au/python-jobs"
-      ],
-      "description": "Seek search URLs. Examples: https://www.seek.com.au/python-jobs, https://www.seek.com.au/jobs?keywords=python&where=Sydney, https://www.seek.com.au/job/91572959 (direct job URL also supported).",
+      "default": [],
+      "description": "Paste SEEK search URLs, category pages, company pages or direct job links. AU and NZ links can be mixed. Leave empty to search by keywords/filters below.",
       "editor": "stringList",
       "prefill": [
-        "https://www.seek.com.au/python-jobs"
+        "https://au.seek.com/software-engineer-jobs/in-All-Melbourne-VIC"
       ],
-      "title": "Search URLs",
+      "sectionCaption": "Search",
+      "sectionDescription": "Search by URL, by keyword, or browse with the filters below. A keyword search runs when searchTerms is filled; a URL search runs for every URL listed here.",
+      "title": "Search or job URLs",
       "type": "array"
     },
     "sortBy": {
       "default": "KeywordRelevance",
-      "description": "Seek sort order applied to the search URL when constructed from keywords/location.",
+      "description": "SEEK's result order.",
       "editor": "select",
       "enum": [
         "KeywordRelevance",
@@ -162,17 +289,25 @@
       ],
       "enumTitles": [
         "Keyword relevance",
-        "Date listed"
+        "Newest first"
       ],
-      "title": "Sort By",
+      "title": "Sort by",
       "type": "string"
     },
     "state": {
       "default": "",
-      "description": "Optional Australian state filter (e.g. NSW, VIC, QLD). Appended to the location when constructing the search URL.",
+      "description": "Australian state or territory. State abbreviations from old tasks are mapped automatically. For VIC and WA, SEEK resolves a state-only search to Melbourne/Perth; add a regional city under Location for regional jobs.",
       "editor": "select",
       "enum": [
         "",
+        "New South Wales",
+        "Victoria",
+        "Queensland",
+        "Western Australia",
+        "South Australia",
+        "Tasmania",
+        "Australian Capital Territory",
+        "Northern Territory",
         "NSW",
         "VIC",
         "QLD",
@@ -183,7 +318,7 @@
         "NT"
       ],
       "enumTitles": [
-        "(none)",
+        "Any state",
         "New South Wales (NSW)",
         "Victoria (VIC)",
         "Queensland (QLD)",
@@ -191,19 +326,30 @@
         "South Australia (SA)",
         "Tasmania (TAS)",
         "Australian Capital Territory (ACT)",
-        "Northern Territory (NT)"
+        "Northern Territory (NT)",
+        "NSW (legacy short form)",
+        "VIC (legacy short form)",
+        "QLD (legacy short form)",
+        "WA (legacy short form)",
+        "SA (legacy short form)",
+        "TAS (legacy short form)",
+        "ACT (legacy short form)",
+        "NT (legacy short form)"
       ],
-      "title": "State",
+      "title": "State / territory",
       "type": "string"
     },
     "subclassifications": {
-      "description": "Client-side filter. Only emit jobs whose subClassification name matches one of these values (case-insensitive).",
+      "default": [],
+      "description": "One or more SEEK subclassification IDs or exact names, e.g. \"6290\" or \"Engineering - Software\". Each selection runs its own SEEK search so multiple values are all covered.",
       "editor": "stringList",
+      "prefill": [],
       "title": "Subclassifications",
       "type": "array"
     },
     "workArrangements": {
-      "description": "Client-side filter. Only emit jobs whose work arrangement matches one of the selected values.",
+      "default": [],
+      "description": "Keep only on-site, hybrid or remote jobs.",
       "editor": "select",
       "items": {
         "enum": [
@@ -213,31 +359,36 @@
         ],
         "type": "string"
       },
-      "title": "Work Arrangements",
+      "prefill": [],
+      "title": "Work arrangements",
       "type": "array",
       "uniqueItems": true
     },
     "workTypes": {
-      "description": "Client-side filter. Only emit jobs whose workType matches one of the selected values.",
+      "default": [],
+      "description": "Keep only these employment types. Applied on SEEK's side, so pages fill with matching jobs.",
       "editor": "select",
       "items": {
         "enum": [
-          "Full Time",
-          "Part Time",
+          "Full time",
+          "Part time",
           "Contract/Temp",
-          "Casual/Vacation"
+          "Casual/Vacation",
+          "Full Time",
+          "Part Time"
         ],
         "type": "string"
       },
-      "title": "Work Types",
+      "prefill": [],
+      "sectionCaption": "Filters",
+      "sectionDescription": "All filters are applied on SEEK's side where the search API supports them, and re-checked on every record so results stay honest.",
+      "title": "Work types",
       "type": "array",
       "uniqueItems": true
     }
   },
-  "required": [
-    "searchUrls"
-  ],
+  "required": [],
   "schemaVersion": 1,
-  "title": "Seek.com.au Jobs Scraper Input",
+  "title": "Seek.com.au & Seek.co.nz Jobs Scraper Input",
   "type": "object"
 }

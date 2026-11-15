@@ -1,99 +1,104 @@
 # Seek.com.au Job Search with Salary & Work-Type Filters
 
-Seek.com.au job pages embed their full listing data right inside the page, which this actor reads directly — no login, no cookies. Give it search URLs, or a keyword and location to build one, and it returns each matching job with company, salary, classification and the complete description, narrowed by work type, work arrangement, salary band and posting date.
+Search SEEK Australia and New Zealand by keyword, location, work type, work arrangement, salary, posting date and classification — or paste search, company and job URLs. Every row carries the listing card plus, when enabled, the full ad text, parsed salary, published contacts, company profile and applicant counts.
+
+SEEK's public HTML pages are behind Cloudflare, but the JSON endpoints the site itself uses are not. This actor talks to those endpoints directly: no login, no cookies, no proxy and no browser.
 
 ## What this actor does
 
-- Scrapes job listings from one or more Seek search URLs, or builds a search URL from a keyword, location, state and postcode
-- Accepts a direct job URL as well as a search URL
-- Fetches each job's own detail page for the full description and apply link, when enabled
-- Filters results client-side by work type, work arrangement, posting date, salary range, subclassification and title keywords
-- Can require that the job description contain an email address, a phone number, or both
-- Omits a field from the record when Seek's own listing doesn't provide it
+- Searches `seek.com.au` (AU) and `seek.co.nz` (NZ) through SEEK's own search API
+- Accepts search URLs, category pages, company pages and direct job links, including expired job links
+- Builds searches from keywords, city/suburb, state, postcode, radius, work type, work arrangement, date range, salary range and classification
+- Paginates up to SEEK's 550-result ceiling per query; multiple search terms merge into one de-duplicated dataset
+- Fetches each job's detail through SEEK's GraphQL endpoint for the full description, exact dates, contacts, company profile, screening questions, video and applicant insights
+- Auto-enables detail fetching when you ask for jobs with an email or phone number
+- Applies every filter again on the finished record, so a result never silently ignores your input
+- Omits a field when SEEK does not provide it; never sends `null`, empty strings, empty arrays or placeholder records
 
 ## Output per job
 
 | Field | Description |
 |---|---|
-| `type` | `"job_seek"` for a normal record, or `"job_seek_blocked"` if a search matched zero jobs |
-| `id` | Seek job ID |
-| `url` / `jobLink` | Job page URL |
+| `type` | Always `"job_seek"` (the old `job_seek_blocked` placeholder is gone) |
+| `id` | SEEK job ID |
+| `url` / `jobLink` | Canonical job URL (`au.seek.com` or `nz.seek.com`) |
+| `applyUrl` / `applyLink` | Apply URL, always `https://…/job/<id>/apply` |
+| `shareLink` | SEEK's tracked share URL |
 | `title` | Job title |
-| `company` | Advertiser or company name |
-| `companyLogo` | Company logo image URL |
-| `location` | `{ city, state, postCode, country }` |
-| `locationDescription` | Human-readable location label |
-| `locationArea` | Seek's named area for the listing |
-| `broaderLocationName` | Parent region name |
-| `workType` | e.g. `Full Time`, `Contract/Temp` |
-| `workTypeLabels` | Raw work-type enum values |
-| `workArrangement` | e.g. `On-site`, `Hybrid`, `Remote` |
-| `workArrangementTypes` | Raw work-arrangement enum values |
-| `salary` | Salary as displayed on the listing |
-| `salaryDetails` | `{ min, max, currency, type }` when Seek provides a parsed range |
-| `postedAt` / `postedAtLabel` | Posting date, machine and display form |
-| `expiresAt` | Listing expiry date |
-| `classification` / `subClassification` | Seek's job category and subcategory |
-| `normalisedRoleTitle` / `normalisedOrganisationName` | Seek's normalized title/company fields |
-| `descriptionHtml` / `descriptionText` | Full job description, HTML and plain text |
-| `teaser` | Short one-line summary |
-| `bulletPoints` | Highlight bullet points from the listing |
-| `questionnaire` | Screening questions, when the listing has any |
-| `recruiterName` / `recruiterAgency` / `recruiterProfile` | Recruiter details, when posted by an agency |
-| `advertiserId` / `advertiserName` / `advertiserVerified` | Advertiser identity and verification flag |
-| `isPrivateAdvertiser` | True when the advertiser posts without a company identity |
-| `isLinkOut` | True when applying sends the candidate to an external site |
-| `isVerified` / `isExpired` | Listing status flags |
-| `status` / `sourceZone` | Seek's internal listing status and zone |
-| `isFeatured` / `isPremium` / `isStandout` / `isBranded` | Listing promotion flags |
-| `displayType` | Seek's display-tier label for the listing |
-| `applyUrl` / `applyLink` | Apply link |
-| `directApplyUrl` | External apply target, when applying leaves Seek |
-| `phoneNumber` | Recruiter phone number, when listed |
-| `videoUrl` / `videoPosition` | Advertiser video, when the listing includes one |
-| `branding` | `{ logoUrl, coverImageUrl, thumbnailCoverImageUrl, id }` |
-| `companyId` / `companySlug` | Company profile identifiers |
-| `companyIndustry` / `companySize` / `companyWebsite` | Company profile details |
-| `companyDescription` / `companyRating` / `companyReviewCount` / `companyPerks` | Company profile content, when Seek has one |
-| `companyProfile` | Raw nested company profile object, when returned |
-| `numApplicants` | Number of applicants shown on the listing |
-| `emails` / `phoneNumbers` | Contact details extracted from the job description text |
-| `scrapedAt` | UTC timestamp of when the record was captured |
+| `company` / `companyId` / `companySlug` / `companyUrl` | Employer identity |
+| `companyLogo` | Listing-card logo |
+| `location` | `{ suburb, city, state, stateName, postCode, country, region }` |
+| `locationDescription` / `locationArea` / `broaderLocationName` | SEEK's display location, area and parent region |
+| `workType` / `workTypes` | Employment type, first value and full array |
+| `workTypeLabels` | SEEK's raw work-type codes |
+| `workArrangement` / `workArrangements` / `workArrangementTypes` | On-site/Hybrid/Remote labels and raw IDs |
+| `salary` | Salary label exactly as advertised |
+| `salaryDetails` | `{ min, max, currency, type }` from the robust parser |
+| `salaryMin` / `salaryMax` / `salaryCurrency` / `salaryPeriod` | Flat parsed salary fields (`year`, `hour`, `day`, `week`, `month`) |
+| `postedAt` / `postedAtLabel` / `expiresAt` | ISO posting/expiry dates and the “3d ago” label |
+| `classification` / `subClassification` | SEEK's taxonomy names |
+| `classificationId` / `subClassificationId` | SEEK's taxonomy IDs |
+| `classifications` | Array of all classification/subclassification pairs on the ad |
+| `teaser` / `bulletPoints` / `questionnaire` | Short summary, ad highlights, screening questions |
+| `descriptionHtml` / `descriptionText` | Full ad body (detail fetch only) |
+| `recruiterName` / `recruiterAgency` / `recruiterProfile` | Advertiser/recruiter identity |
+| `advertiserName` / `advertiserId` / `advertiserVerified` | Advertiser details and verification |
+| `isPrivateAdvertiser` / `isVerified` / `isLinkOut` / `isExpired` | Listing flags |
+| `status` / `sourceZone` | SEEK's listing status and zone |
+| `isFeatured` / `isPremium` / `isStandout` / `isBranded` / `displayType` | Promotion signals |
+| `contactMatches` | SEEK's structured contacts, e.g. `{ "type": "Email", "value": "jobs@acme.com" }` |
+| `emails` / `phoneNumbers` | Email addresses and phone numbers from structured contacts plus the ad text |
+| `branding` | `{ logoUrl, coverImageUrl, id }` |
+| `videoUrl` / `videoPosition` | Advertiser video, when present |
+| `companyProfile` | Company profile object: ID, name, slug, industry, size, website, description, rating, review count, perks |
+| `companyIndustry` / `companySize` / `companyWebsite` / `companyDescription` / `companyRating` / `companyReviewCount` / `companyPerks` | Flat company-profile fields |
+| `applicantCount` / `numApplicants` | Applicant count from SEEK's insights (same value, kept for compatibility) |
+| `applicantsWithResumePercentage` / `applicantsWithCoverLetterPercentage` | Applicant-quality signals when SEEK exposes them |
+| `normalisedRoleTitle` / `normalisedOrganisationName` | SEEK's normalized role/company names |
+| `tags` | Quick attribute tags derived from the listing's work types, arrangements and classification |
+| `market` | `AU` or `NZ` |
+| `searchQuery` / `searchUrl` / `sourceUrl` / `searchParams` | Provenance: what found this job and with which filters |
+| `detailFetched` | `true` when the detail payload was merged |
+| `scrapedAt` | UTC capture timestamp |
+
+Compatibility notes: the old `phoneNumber` field is still recognized in code but SEEK's API returns `null` for every ad, so it is omitted. The old `directApplyUrl` field is emitted only if SEEK ever exposes an external apply target; today it does not, so `applyUrl` points at SEEK's `/job/<id>/apply` page. All other pre-revamp field names remain available.
 
 ## Input
 
 | Field | Type | Default | Description |
 |---|---|---|---|
-| `searchUrls` | array | `["https://www.seek.com.au/python-jobs"]` | Seek search or direct job URLs (required) |
-| `searchTerm` | string | – | Keywords used to build a search URL when `searchUrls` isn't enough on its own |
-| `location` | string | – | Location text, e.g. `Sydney NSW`, combined with `searchTerm` |
-| `state` | string (select) | – (none) | Australian state: `NSW`, `VIC`, `QLD`, `WA`, `SA`, `TAS`, `ACT`, `NT` |
-| `postCode` | string | – | Australian 4-digit postcode, appended to the location |
-| `radius` | integer | – | Search radius in kilometres around the location (0–100) |
-| `salaryType` | string (select) | `any` | `any`, `AnnualPackage`, `HourlyRate`, `MonthlyPackage`, `YearlyPackage` |
-| `workTypes` | array | – | Keep only `Full Time`, `Part Time`, `Contract/Temp`, and/or `Casual/Vacation` jobs |
-| `workArrangements` | array | – | Keep only `On-site`, `Hybrid`, and/or `Remote` jobs |
-| `dateRange` | string (select) | `any` | Keep only jobs posted within `1`, `3`, `7`, `14`, or `30` days, or `any` time |
-| `salaryMin` | integer | – | Keep only jobs whose parsed salary range reaches at least this value (AUD) |
-| `salaryMax` | integer | – | Keep only jobs whose parsed salary range stays at or below this value (AUD) |
-| `subclassifications` | array | – | Keep only jobs whose subclassification name matches one of these values |
-| `includeOneInTitle` | array | – | Keep only jobs whose title contains at least one of these substrings |
-| `requireEmail` | boolean | false | Keep only jobs whose description contains an email address |
-| `requirePhone` | boolean | false | Keep only jobs whose description contains a phone number |
-| `requireEmailPhone` | boolean | false | Keep only jobs whose description contains both an email address and a phone number |
-| `sortBy` | string (select) | `KeywordRelevance` | `KeywordRelevance` or `ListedDate`, applied when a search URL is built from keywords |
-| `maxItems` | integer | 3 | Maximum job listings to return (1–300) |
-| `scrapeJobDetails` | boolean | true | Fetch each job's own page for the full description and metadata; off returns only listing-card fields |
-| `proxyConfiguration` | object (proxy) | `{ "useApifyProxy": true }` | Apify proxy configuration |
+| `searchUrls` | array | `[]` (prefill: one Melbourne software-engineer URL) | Search, category, company or direct job URLs. AU and NZ can be mixed. |
+| `searchTerms` | array | `[]` | One search per keyword phrase; results merge and de-duplicate. |
+| `location` | string | – | City, suburb or region, e.g. `Sydney`, `Geelong`, `Auckland`. |
+| `state` | select | Any | Australian state/territory. Full names are preferred; legacy abbreviations still work. |
+| `postCode` | string | – | Australian postcode; used as the search location when no city is given. |
+| `radius` | integer | – | Radius in km around the location/postcode (0–100). |
+| `country` | select | `AU` | `AU` (seek.com.au) or `NZ` (seek.co.nz). |
+| `workTypes` | multiselect | – | Full time, Part time, Contract/Temp, Casual/Vacation. |
+| `workArrangements` | multiselect | – | On-site, Hybrid, Remote. |
+| `dateRange` | select | `any` | `1`, `3`, `7`, `14`, `30`, `31` days or any time. |
+| `salaryType` | select | `any` | `annual` or `hourly`. Legacy `AnnualPackage`, `YearlyPackage`, `MonthlyPackage` and `HourlyRate` are mapped automatically. |
+| `salaryMin` / `salaryMax` | integer | – | Salary range in the market's currency. |
+| `classification` | select | Any | All 29 SEEK top-level job families. |
+| `subclassifications` | array | – | SEEK subclassification IDs or exact names; one search runs per value. |
+| `companyName` | string | – | Employer/recruiter name filter. |
+| `includeOneInTitle` | array | – | Keep jobs whose title contains at least one phrase. |
+| `includeKeywords` | array | – | Keep jobs whose title, company, teaser, bullets, description, classification, work type or salary contains at least one phrase. |
+| `excludeKeywords` | array | – | Drop jobs whose text contains any phrase. |
+| `requireEmail` / `requirePhone` / `requireEmailPhone` | boolean | false | Keep jobs that publish an email, a phone, or both. Automatically enables detail fetching. |
+| `sortBy` | select | KeywordRelevance | Keyword relevance or newest first. |
+| `maxItems` | integer | 50 (prefill 3) | Total rows across all queries (1–10,000). |
+| `scrapeJobDetails` | boolean | true (prefill false) | Fetch full ad text, contacts, company profile, insights and expiry. |
+| `maxConcurrency` | integer | 4 (prefill 2) | Parallel detail requests (1–10). |
 
 ### Example: keyword and location search
 
 ```json
 {
-  "searchUrls": [],
-  "searchTerm": "python developer",
-  "location": "Sydney NSW",
-  "workTypes": ["Full Time"],
+  "searchTerms": ["data engineer"],
+  "location": "Sydney",
+  "state": "New South Wales",
+  "workTypes": ["Full time"],
   "dateRange": "7",
   "maxItems": 50
 }
@@ -103,53 +108,84 @@ Seek.com.au job pages embed their full listing data right inside the page, which
 
 ```json
 {
-  "searchUrls": ["https://www.seek.com.au/jobs?keywords=data%20analyst"],
+  "searchTerms": ["software engineer"],
   "workArrangements": ["Remote"],
-  "salaryMin": 90000,
+  "salaryType": "annual",
+  "salaryMin": 120000,
   "sortBy": "ListedDate",
-  "maxItems": 40
+  "maxItems": 100
 }
 ```
 
-### Example: a specific job URL
+### Example: a company page and a direct job
 
 ```json
 {
-  "searchUrls": ["https://www.seek.com.au/job/91572959"],
-  "scrapeJobDetails": true
+  "searchUrls": [
+    "https://au.seek.com/companies/murdoch-childrens-research-institute-436169",
+    "https://au.seek.com/job/95797430"
+  ],
+  "maxItems": 20
+}
+```
+
+### Example: contactable ads only
+
+```json
+{
+  "searchTerms": ["developer"],
+  "requireEmail": true,
+  "maxItems": 20
+}
+```
+
+### Example: New Zealand
+
+```json
+{
+  "searchTerms": ["developer"],
+  "country": "NZ",
+  "maxItems": 50
 }
 ```
 
 ## Use cases
 
-- **Recruitment sourcing** — pull fresh listings for a role and location before shortlisting candidates
-- **Salary benchmarking** — collect disclosed salary ranges across a classification to gauge market rates
-- **Competitive hiring intelligence** — track which companies are actively hiring in a region or field
-- **Job-alert pipelines** — run on a schedule with `dateRange` set to surface only newly posted roles
-- **Lead generation for recruiters** — use `requireEmail`/`requirePhone` to find listings with direct contact details
+- **Recruitment sourcing** — pull fresh listings for a role and location before shortlisting
+- **Salary benchmarking** — collect disclosed salary ranges across a classification
+- **Competitive hiring intelligence** — track which companies are hiring in a region or field
+- **Job-alert pipelines** — schedule runs with `dateRange` to surface only new roles
+- **Recruiter lead generation** — use `requireEmail`/`requirePhone` to find ads with direct contact details
+- **Market expansion research** — compare Australian and New Zealand demand in one run
 
 ## FAQ
 
-**Is this affiliated with Seek?**
-No. This is an independent data extraction tool and has no connection to Seek Limited.
+**Is this affiliated with SEEK?**
+No. This is an independent data extraction tool and has no connection to SEEK Limited.
 
 **Do I need to log in or use cookies?**
-No — job listings are publicly accessible without an account.
+No. The search and detail APIs are public and cookieless.
 
-**Does this need a proxy?**
-A proxy input is included and enabled by default, since direct requests from some networks get blocked; leave the default `proxyConfiguration` in place rather than removing it.
+**Do I need a proxy?**
+No. The actor never asks for one; SEEK's JSON endpoints work directly. Old tasks that still send `proxyConfiguration` keep running and the key is ignored.
 
-**What happens if my search matches no jobs?**
-The run still emits one record with `type: "job_seek_blocked"` so downstream pipelines never receive a completely empty dataset.
+**What happens when a search matches zero jobs?**
+The run succeeds with an empty dataset and a status message explaining that the result was legitimately empty. There is no placeholder record. Upstream failures still fail the run after retries.
 
-**Why is `salary` or `salaryDetails` missing from some jobs?**
-Many advertisers don't disclose a salary on Seek at all; when that's the case the actor leaves those fields out rather than guessing a value.
+**Why is salary missing from some jobs?**
+Many advertisers do not disclose a salary. When a label exists, the parser handles ranges, `k`/`m` suffixes, annual/hourly/daily/weekly/monthly rates, superannuation text, AUD/NZD and bare numeric ranges. Jobs without a disclosed salary are kept unless you choose a salary basis.
 
-**What's the difference between `workTypes` and `workArrangements`?**
-`workTypes` filters on employment basis (full time, part time, contract, casual); `workArrangements` filters on where the work happens (on-site, hybrid, remote). They can be combined.
+**How many results can one search return?**
+SEEK returns at most 550 jobs per query (50 per page, 11 pages). Add more `searchTerms` or URLs to collect more; the actor de-duplicates across all of them and honours `maxItems` up to 10,000.
 
-**What does turning off `scrapeJobDetails` change?**
-With it off, you get only the fields already present on the search-results page (title, company, location, salary label, posting date); turning it on adds a second fetch per job for the full description, apply link and extra metadata.
+**Does `state` cover regional towns?**
+Full state names work for NSW, QLD, SA, TAS, ACT and NT. SEEK resolves state-only VIC and WA searches to Melbourne and Perth, so add a regional city under `location` to collect regional jobs there.
 
-**Does this cover New Zealand listings on seek.co.nz?**
-No — this actor reads seek.com.au only.
+**Why is `applyUrl` sometimes different from the ad's external apply link?**
+SEEK does not expose the external LinkOut destination through its public API. `applyUrl` is therefore the canonical SEEK apply page (`/job/<id>/apply`), which routes the candidate to the employer's flow. `isLinkOut` tells you when that will leave SEEK.
+
+**Why do contacts and company profiles appear on only some rows?**
+Only some advertisers publish an email/phone or maintain a SEEK company profile. The actor ships the field when SEEK has it and omits it otherwise.
+
+**Does detail fetching change the data?**
+Yes: `scrapeJobDetails` adds the full description, exact expiry, structured contacts, company profile, screening questions, video and applicant counts. Turning it off returns the listing-card fields only.
