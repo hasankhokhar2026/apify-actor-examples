@@ -1,154 +1,181 @@
-# Tiqets Attraction & Ticket Price Finder by City
+# Tiqets Attraction & Ticket Price Finder
 
-Tiqets lists museum, tour and attraction tickets across dozens of major cities worldwide. This actor searches that catalog by keyword, browses every "thing to do" in a city or one of its categories, or fetches specific venue and product pages, and returns each attraction's name, rating, review count, from-price, images and coordinates. No account or API key required.
+Tiqets lists museum, tour and attraction tickets across major cities worldwide. This actor searches that catalog by keyword, browses every venue in a city or category, or fetches specific venue/product URLs and IDs. It returns ratings, review counts, prices in 21 currencies, discount percentages, images, coordinates, categories, inclusions, opening hours and optional availability dates/timeslots. No account, user cookies or API key required.
 
 ## What this actor does
 
-- **Four modes:** `search`, `browseByCity`, `browseByCategory`, `byUrl`
-- **43 destination cities** worldwide — Paris, London, New York, Tokyo, Rome, Dubai, Barcelona and more
-- **16 categories** — museums, city tours, cruises & boat tours, shows & theatres, food & drinks, nature & wildlife and more
-- **Rich venue records** — rating, review count, from-price, currency, offer count, latitude/longitude, category
-- **14 site languages and 31 currencies** to match your market
-- **Filters:** rating range, price range, top-rated only
-- **Empty fields are omitted**
+- **Five modes:** `search`, `browseByCity`, `browseByCategory`, `byUrl`, `byId`
+- **Paged collection** — gathers up to `maxItems` across all result pages
+- **81 destination cities** and **66 category tags**, verified against Tiqets' public catalog
+- **17 site locales** and **21 supported currencies**
+- **Venue, product and package records** with nested venue/city/country metadata
+- **Optional availability** — dates and timeslots for products and packages
+- **Server-side filters where verified** — `cityIds` and `experienceTagIds` in search; `sortType=popularity|rating` in city/category browse
+- **Client-side filters** — min/max rating, min/max price, top-rated only and discount-only in browse modes
+- **Empty fields are omitted at every depth** — no `null`, `""`, `[]` or `{}` in output
 
-## Output per attraction (mode = `search` / `byUrl`)
+## Modes
 
-These two modes visit each venue's own detail page, so records carry the fullest field set:
+| Mode | What it does |
+|---|---|
+| `search` | Keyword search; supports one query or several queries |
+| `browseByCity` | All venues in a city; supports `city`, `cities[]` and `cityIds[]` |
+| `browseByCategory` | Products in a city category; supports `category` and `experienceTagIds[]` |
+| `byUrl` | Venue, product, city or category URLs; the URL locale is preserved |
+| `byId` | Venue IDs and product/package IDs, resolved to their current Tiqets page |
 
-- `venueId` — Tiqets venue ID (e.g. `144586`)
-- `name`, `description`
-- `rating` — aggregate rating (0–5)
-- `reviewCount` — number of reviews
-- `price` — from-price (from-price of the cheapest ticket option)
-- `priceCurrency` — 3-letter ISO currency code
-- `offerCount` — number of ticket options available
-- `imageUrl` — first photo of the attraction
-- `latitude`, `longitude` — venue coordinates
-- `city`, `cityId`, `countryId`
-- `category` — Tiqets category name (e.g. "Historical & Archaeological Sites")
-- `topPrice`, `topPriceEur` — highest-priced ticket option (in local + EUR)
-- `productUrl` / `sourceUrl` — canonical Tiqets page
-- `recordType: "attraction"`, `scrapedAt`
+City and category browse also accept multi-city inputs. Search accepts multiple queries; results are de-duplicated by product/venue ID.
 
-## Output per ticket product (mode = `search` / `byUrl`)
+## Output per venue, product or package
 
-When a record resolves to a specific Tiqets ticket product (e.g. "Eiffel Tower: Reserved Access + Audioguide"), the following fields are emitted instead:
+One dataset record per venue, ticket product or package. Fields that exist for the record are emitted; empty fields are omitted.
 
-- `productId`, `productTitle`, `price`, `venueId`, `venueName`, `category`, `city`, `cityId`, `countryId`
-- `productUrl` / `sourceUrl`
-- `recordType: "product"`, `scrapedAt`
+- `recordType` — `venue`, `product` or `package`
+- `venueId` / `productId`, `name` / `productTitle`
+- `description`, `shortDescription`, `summary`
+- `images[]`, `imageUrl`
+- `rating`, `reviewCount`, `reviews[]` (up to 3 samples with author, date, rating and text)
+- `price`, `priceCurrency`, `priceEur`, `displayPrice`, `discountPercentage`
+- `venue` `{id,name,url}`, `city`, `cityId`, `cityInfo` `{id,name,slug}`, `country` `{id,name}`, `countryId`
+- `categories[]`, `tags[]`, `category`
+- `duration`, `keyDetails`, `whatsIncluded`, `whatsExcluded`, `openingHours`
+- `checkoutDisabled`, `offerCount`, `topPrice`, `topPriceEur`
+- `latitude`, `longitude`
+- `availabilityDates[]`, `availabilityTimeslots` `{date: [times]}` (optional; omitted when none)
+- `productUrl`, `sourceUrl`, `slug`, `startDate`, `language`, `recordType`, `scrapedAt`
 
-## Output per listing item (mode = `browseByCity` / `browseByCategory`)
-
-These two modes read the city/category listing page itself rather than visiting each venue's own page, so records are built from a shorter, listing-level field set:
-
-- `venueId` or `productId` (ticket-product listing items carry `productTitle` instead of `name`)
-- `name` / `productTitle`, `description`
-- `imageUrl`
-- `rating`, `reviewCount`, `price`, `priceCurrency` — only when the listing page's own data includes them
-- `location` — the raw location object as published on the listing page (varies by venue)
-- `startDate` — only on ticket-product listing items that have a fixed date/showtime
-- `productUrl` / `sourceUrl`
-- `recordType: "attraction"` or `"product"`, `scrapedAt`
-
-When `includeExtraVenues` is on, additional venue links found on the same page (beyond the main listing) are emitted too, with only `venueId`, `name` and `productUrl` populated.
+Detail modes (`byUrl`, `byId`) parse the page's JSON-LD and dataLayer. A product page does not contain coordinates, so the actor fetches its venue page once (cached per run) to add coordinates, country and extra images.
 
 ## Input
 
 | Field | Type | Default | Description |
 |---|---|---|---|
-| `mode` | string | `search` | `search` / `browseByCity` / `browseByCategory` / `byUrl` |
+| `mode` | select | `search` | `search` / `browseByCity` / `browseByCategory` / `byUrl` / `byId` |
 | `searchQuery` | string | `eiffel tower` | Free-text query (mode=search) |
-| `city` | select | – | Destination city (modes=browseByCity, browseByCategory) |
-| `category` | select | – | Attraction category (mode=browseByCategory) |
-| `startUrls` | array | – | Tiqets venue/product URLs (mode=byUrl) |
-| `language` | select | `en` | Site language (14 locales) |
-| `currency` | select | `EUR` | Price currency (31 currencies) |
-| `minRating` | int | – | Drop attractions rated below this (1–5) |
-| `maxRating` | int | – | Drop attractions rated above this (1–5) |
-| `minPrice` | int | – | Drop attractions cheaper than this |
-| `maxPrice` | int | – | Drop attractions more expensive than this |
-| `topRatedOnly` | boolean | `false` | Only attractions rated 4.5+ |
-| `includeExtraVenues` | boolean | `true` | Also emit venue links found outside the main list |
-| `maxItems` | int | `50` | Hard cap (1–1000) |
-| `proxyConfiguration` | proxy | – | Optional; only used if Tiqets rate-limits direct requests |
+| `searchQueries` | array | – | Multiple queries (mode=search); combined and de-duplicated |
+| `city` | select | – | One destination city (browse modes) |
+| `cities` | array | – | Multiple city slugs (browse modes) |
+| `cityIds` | array | – | Numeric city IDs; server-side filter in search, browse targets in browse modes |
+| `category` | select | – | One of 66 verified category tags (mode=browseByCategory) |
+| `experienceTagIds` | array | – | Numeric category tag IDs; server-side filter in search, category paths in browse |
+| `startUrls` | array | – | Venue/product/city/category URLs (mode=byUrl); locale preserved |
+| `venueIds` | array | – | Numeric venue IDs (mode=byId) |
+| `productIds` | array | – | Numeric product IDs (mode=byId) |
+| `language` | select | `en` | 17 locales: `ca,cs,da,de,el,en,es,fr,it,ja,ko,nl,pl,pt,ru,sv,zh` |
+| `currency` | select | `EUR` | 21 supported currencies: `EUR,USD,GBP,CHF,CAD,AUD,AED,BRL,CZK,DKK,HKD,HUF,INR,JPY,MXN,NOK,NZD,PLN,SEK,SGD,THB` |
+| `minRating` | integer | – | Client-side lower rating bound (1–5); missing ratings pass |
+| `maxRating` | integer | – | Client-side upper rating bound (1–5); missing ratings pass |
+| `minPrice` | integer | – | Client-side lower price bound in the selected currency; missing prices pass |
+| `maxPrice` | integer | – | Client-side upper price bound in the selected currency; missing prices pass |
+| `topRatedOnly` | boolean | `false` | Only ratings 4.5+ |
+| `hasDiscount` | boolean | `false` | Keeps only records with `discountPercentage > 0` |
+| `sortType` | select | `popularity` | `popularity` or `rating` (city/category browse only; search ignores sort) |
+| `includeExtraVenues` | boolean | `true` | SSR fallback only: also emit venue links outside the main listing |
+| `includeAvailability` | boolean | `false` | Fetch dates and timeslots for product/package records |
+| `availabilityDays` | integer | `14` | Days ahead to request (1–30) |
+| `maxItems` | integer | `50` | Hard cap on emitted records (1–10,000) |
+| `proxyConfiguration` | proxy | – | Optional user-supplied proxy; direct requests are tried first and free Apify Proxy is used only if they are blocked |
 
-### Example: search by keyword
+### Example: search
 
 ```json
 {
   "mode": "search",
-  "searchQuery": "eiffel tower",
+  "searchQuery": "louvre",
+  "language": "en",
   "currency": "EUR",
-  "maxItems": 10
+  "maxItems": 50
 }
 ```
 
-### Example: browse a whole city
+### Example: browse all venues in Paris
 
 ```json
 {
   "mode": "browseByCity",
   "city": "paris",
-  "maxItems": 50
+  "maxItems": 200
 }
 ```
 
-### Example: browse a category in a city
+### Example: museums in Paris (96 products)
 
 ```json
 {
   "mode": "browseByCategory",
-  "city": "london",
+  "city": "paris",
   "category": "museums",
-  "minRating": 4,
-  "maxItems": 30
+  "maxItems": 100
 }
 ```
 
-### Example: fetch specific pages
+### Example: fetch specific pages (locale preserved)
 
 ```json
 {
   "mode": "byUrl",
   "startUrls": [
-    "https://www.tiqets.com/en/eiffel-tower-tickets-l144586/",
-    "https://www.tiqets.com/en/things-to-do-in-paris-c66746/tickets-for-louvre-museum-p973980/"
+    { "url": "https://www.tiqets.com/fr/billets-tour-eiffel-l144586/" },
+    { "url": "https://www.tiqets.com/en/things-to-do-in-paris-c66746/tickets-for-musee-d-orsay-dedicated-entrance-p973980/" },
+    { "url": "https://www.tiqets.com/en/things-to-do-in-paris-c66746/museums-t2968/" }
   ]
+}
+```
+
+### Example: venue and product IDs
+
+```json
+{
+  "mode": "byId",
+  "venueIds": ["144586"],
+  "productIds": ["973980"],
+  "includeAvailability": true,
+  "availabilityDays": 7
 }
 ```
 
 ## Use cases
 
-- **Travel marketplaces** — build or enrich your attraction/ticket catalog with real venue metadata
-- **Tour operators** — competitive price and rating tracking for top attractions in a city
-- **Travel content sites** — auto-generate "things to do in Paris" pages with ratings and images
-- **Analytics & research** — study ticket pricing, review volumes and popularity across 40+ cities
-- **Itinerary apps** — map attractions with coordinates, ratings and from-prices
+- **Travel product research** — compare attraction and museum ticket prices across cities
+- **Itinerary planning** — enrich trip catalogues with live ticket, rating and opening-hours data
+- **Price monitoring** — track discount percentages and availability for key attractions
+- **Marketplace analytics** — analyse category coverage and venue counts by destination
+- **Availability checks** — collect dates and timeslots for ticketed products and packages
 
 ## FAQ
 
-**What is the data source?**
-Tiqets (tiqets.com), one of the leading online ticketing platforms for attractions, museums and tours worldwide.
-
 **Do I need an API key or account?**
-No. This actor scrapes Tiqets' public pages and requires no authentication of any kind.
+No. It requires no account or user cookies.
 
-**Which currencies and languages are supported?**
-31 currencies (EUR, USD, GBP, JPY and more) and 14 languages. Prices on listing pages are shown in EUR in the source data; detail pages reflect the selected currency.
+**Are prices in my selected currency?**
+Yes for search, city and category results. Some detail pages are served in EUR by Tiqets; when availability is enabled, the selected-currency availability price is used for detail records. Price filters on detail modes compare the returned page price, which may be EUR.
 
-**Why do some listing records only have name + URL?**
-On city/category pages Tiqets embeds full structured data for the ~10 top attractions and exposes many more venue links. Records from those extra links contain name and URL only — empty fields are always omitted.
+**Why does a product record have coordinates when the product page has none?**
+The actor fetches the product's venue page once per run and merges coordinates, country and extra images.
 
 **How fresh is the data?**
-Every run scrapes live pages, so data reflects Tiqets at the moment of the run.
-
-**What are `topPrice` and `topPriceEur`?**
-The highest-priced ticket option sold at the venue, in the local currency and in euros respectively — useful for pricing spread analysis.
+Every run reads live public pages/endpoints, so values reflect Tiqets at run time.
 
 **Is this actor affiliated with Tiqets?**
 No. This is an independent third-party actor using Tiqets' public website.
 
-**Is there a limit on how many records I can get in one run?**
-Yes — `maxItems` is capped at 1,000 records per run.
+**How many records can I get in one run?**
+Up to 10,000 (`maxItems`). The actor paginates until the cap or the last page.
+## Verified counts and limits
+
+- **Paris city browse:** 134 venues; **Rome:** 110; **Paris museums:** 96 products (verified 2026-11).
+- **Page size is 20.** The actor paginates automatically until the cap or last page.
+- **`maxItems` up to 10,000.** Pagination stops at the cap or the last page. Filtering happens after fetch; if filters drop many rows, the actor continues through all pages.
+- **Search sorting is not available.** Price sorting is not offered by the source.
+- **City/category sort** supports popularity and rating.
+- **Beijing has no current Tiqets city destination.** The old city ID resolves elsewhere, so Beijing is not offered.
+- **Discount filtering is applied to emitted records.** This avoids unrelated global discount results.
+- **Availability is optional and applies to products and packages.** City browse returns venues, which have no single product ID, so availability is omitted for those records. Timeslots are requested once per available date.
+- **Product/package IDs resolve to their current page**, including IDs missing from a locale index.
+- **Missing rating/price pass filters** by design; this keeps package cards and sparse listing rows that do not publish those fields.
+
+## Data source and robots
+
+Tiqets (tiqets.com) is an online ticketing platform for attractions, museums and tours. This actor reads Tiqets' public pages and endpoints. No account, user cookies or API key is required. The actor chooses a working connection automatically; no proxy setup is needed.
+
+The actor uses public endpoints also used by Tiqets' own front end. It is not a strict robots-only crawler; use detail-only modes if that constraint is required.

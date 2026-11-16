@@ -1,115 +1,136 @@
-# Carousell Marketplace Listing Search Across 8 Markets
+# Carousell Marketplace Listing Search (Hong Kong)
 
-Carousell runs a separate marketplace for each country it operates in, each with its own listings, currency and sellers. This actor searches one of those eight markets by keyword or category, or fetches specific listing URLs directly, and returns each item's price, condition, seller and image.
+Scrape public Carousell Hong Kong marketplace listings by keyword or category, or fetch individual listing and seller pages. Each record includes the listing title, price, condition, photos, seller, location, category breadcrumbs and deal options. Hong Kong is the only market offered. No account, user cookies, API key or proxy setup is required.
 
 ## What this actor does
 
-- Searches listings by keyword in a chosen country market
-- Browses listings within a specific category
-- Fetches full details for one or more direct listing URLs
-- Browses a market's listings with no keyword (`nearbyListings` — see FAQ for how this differs from `search`)
-- Filters by item condition and price range, and sorts by relevance, recency or price
-- Omits a field from a record when Carousell's own listing didn't provide it
+- Searches Carousell Hong Kong by one or more keywords
+- Browses a category; parent-only categories expand to their child pages
+- Fetches detail pages for `/p/<id>/` listing URLs or bare listing IDs
+- Fetches a seller profile (`/u/<username>/`) and the seller's current listings
+- Applies Carousell's server-side sort, condition, price and deal-option filters
+- Optionally merges full detail data into search, category or seller results
+- Deduplicates records across queries and pages
+- Omits fields a listing did not provide
 
 ## Output per listing
 
-| Field | Description |
-|---|---|
-| `listingId` | Carousell listing ID |
-| `title` | Item title |
-| `price` | Price as a number, when Carousell provides a parsed amount |
-| `priceText` | Price as displayed, when no numeric value could be parsed |
-| `currency` | Currency code for the market (e.g. `SGD`, `MYR`) |
-| `condition` | Item condition, e.g. `New` or `Used` |
-| `category` | Item category |
-| `seller` | Seller username |
-| `sellerRating` | Seller's rating score, when available |
-| `location` | Meetup or listing location |
-| `country` | Country market searched |
-| `imageUrl` | First listing image URL |
-| `listingUrl` | Direct link to the listing |
-| `listedAt` | When the listing was posted |
-| `scrapedAt` | UTC timestamp of when the record was captured |
-| `mode` | Which mode produced this record |
+- `listingId` - Carousell listing ID
+- `title` - item title
+- `price` - numeric price when Carousell provides one
+- `priceText` / `priceFormatted` - displayed price text
+- `currency` / `currencySymbol` - `HKD` and `HK$`
+- `condition` / `conditionCode` - Carousell's layered condition
+- `category`, `categoryId`, `breadcrumbs` - category data when present
+- `seller`, `sellerId`, `sellerUrl`, `sellerFeedbackCount`, `sellerRating`, `sellerFollowers`, `sellerJoined`, `sellerVerified` - seller signals (feedback/rating/followers are present when Carousell publishes them)
+- `location`, `latitude`, `longitude`, `meetups` - location data when published
+- `photos`, `imageUrl`, `imageCount` - public image URLs and count
+- `listedAt`, `lastModified`, `bumpedAt` - listing timestamps
+- `status`, `statusLabel` - raw Carousell status and a readable label
+- `dealOptions`, `shipping`, `meetup` - deal methods
+- `likes`, `comments`, `offers` - engagement counters when present
+- `sourceUrl`, `sourceQuery`, `mode`, `scrapedAt` - provenance and metadata
+
+When detail enrichment is enabled, description, seller profile fields, richer images, coordinates and deal data are merged into the listing record. A seller with no visible listings can still produce a seller-only record.
 
 ## Input
 
 | Field | Type | Default | Description |
 |---|---|---|---|
-| `mode` | string (select) | `search` | `search`, `searchByCategory`, `listingDetails`, or `nearbyListings` |
-| `query` | string | `iPhone` | Keyword to search for (mode `search`) |
-| `country` | string (select) | `singapore` | `singapore`, `malaysia`, `philippines`, `indonesia`, `taiwan`, `hong_kong`, `australia`, or `new_zealand` |
-| `category` | string | – | Category slug to browse (mode `searchByCategory`) |
-| `listingUrls` | array | `[]` | Carousell listing URLs to fetch directly (mode `listingDetails`) |
-| `sortBy` | string (select) | `relevance` | `relevance`, `recent`, `price_asc`, or `price_desc` |
-| `condition` | string (select) | `all` | `all`, `new`, or `used` |
-| `priceMin` | integer | – | Minimum price in the market's local currency |
-| `priceMax` | integer | – | Maximum price in the market's local currency |
-| `maxItems` | integer | 20 | Maximum number of listings to return (1–1000) |
+| `mode` | select | `search` | `search`, `category`, `listingDetails` or `seller` |
+| `queries` | string list | `["iPhone"]` | Keywords for `search` mode |
+| `country` | select | `hong_kong` | Verified market: Hong Kong only |
+| `category` | select | - | Top-level category for `category` mode; Hong Kong `mobile-phones` collection ID is `462` |
+| `sellerUsernames` | string list | `[]` | Usernames for `seller` mode |
+| `listingUrls` | URL list | `[]` | `/p/` URLs or listing IDs for `listingDetails` mode |
+| `sortBy` | select | `best_match` | `best_match`, `recent`, `price_low`, `price_high` |
+| `condition` | select | `any` | `any`, `brand_new`, `like_new`, `lightly_used`, `well_used`, `heavily_used` |
+| `priceMin` | integer | - | Minimum price in HKD |
+| `priceMax` | integer | - | Maximum price in HKD |
+| `dealOption` | select | `any` | `any`, `mailing`, `meetup` |
+| `postedWithinDays` | integer | - | Client-side first-page age filter (1-365) |
+| `maxItems` | integer | `20` | Overall record cap (1-500) |
+| `includeDetails` | boolean | `false` | Merge detail pages into results |
+| `maxDetailItems` | integer | `10` | Detail-request cap in `listingDetails` and enrichment modes (1-50) |
 
-### Example: search used phones in Singapore
+Legacy saved inputs are accepted only for Hong Kong: `query` maps to `queries`, `country`/`countries` must resolve to `hong_kong`, old sort values `relevance`/`price_asc`/`price_desc` map to the new keys, old `condition` values `all`/`new`/`used` map to `any`/`brand_new`/`lightly_used`, and modes `searchByCategory`/`nearbyListings` map to `category`/`search`. Non-Hong Kong market values are rejected with a warning. Legacy `maxPages` is ignored because the rendered page has no reliable server pagination.
+
+### Example: search Hong Kong listings
 
 ```json
 {
   "mode": "search",
-  "query": "iPhone",
-  "country": "singapore",
-  "condition": "used",
+  "queries": ["iPhone 15", "Nintendo Switch"],
+  "country": "hong_kong",
+  "sortBy": "recent",
+  "condition": "like_new",
+  "priceMin": 100,
+  "priceMax": 5000,
+  "maxItems": 30
+}
+```
+
+### Example: browse a category
+
+```json
+{
+  "mode": "category",
+  "category": "mobile-phones",
+  "country": "hong_kong",
   "maxItems": 20
 }
 ```
 
-### Example: browse a category sorted by price
-
-```json
-{
-  "mode": "searchByCategory",
-  "category": "electronics",
-  "country": "malaysia",
-  "sortBy": "price_asc",
-  "maxItems": 50
-}
-```
-
-### Example: fetch specific listings
+### Example: fetch listing details
 
 ```json
 {
   "mode": "listingDetails",
-  "listingUrls": ["https://www.carousell.sg/p/iphone-14-pro-max-256gb-98765432"]
+  "listingUrls": [{"url": "https://www.carousell.com.hk/p/1451961900/"}]
+}
+```
+
+### Example: seller profile
+
+```json
+{
+  "mode": "seller",
+  "sellerUsernames": ["bdsphone"],
+  "country": "hong_kong",
+  "maxItems": 20
 }
 ```
 
 ## Use cases
 
-- **Price comparison** — compare asking prices for the same item across different Carousell markets
-- **Resale market research** — track condition and pricing trends in a category over time
-- **Sourcing and arbitrage** — find underpriced listings in a category or price band
-- **Seller monitoring** — pull a seller's listings via direct URLs to track their current inventory
-- **Classifieds aggregation** — feed structured Carousell listings into a broader marketplace search tool
+- **Marketplace price monitoring** - track asking prices and conditions for a saved list of Hong Kong listings
+- **Resale research** - compare phone, electronics, fashion or furniture pricing across sellers
+- **Seller intelligence** - collect public seller feedback, follower, join-date and verification signals
+- **Listing enrichment** - add current Carousell listing metadata to an existing catalogue
+- **Deal research** - discover recent listings, mailing/meet-up options and category trends
 
 ## FAQ
 
+**Do I need an account, cookies or an API key?**
+No. The actor reads public rendered pages and requires no authentication.
+
+**Why is only Hong Kong supported?**
+Indonesia, Taiwan, Singapore, Malaysia, the Philippines, Australia and New Zealand are not offered: they do not return reliable public data from cloud infrastructure. Returning wrong-city data would be worse than clearly limiting the scope.
+
+**Why do image links use a different host?**
+The actor returns a publicly reachable copy of each image so links load outside Carousell. Sampled URLs return HTTP 200 image content.
+
+**How many results can I get?**
+Carousell renders up to 48 cards for a search or category query and ignores page parameters, so each target page is fetched once. Banner/ad cards with listing ID `0` are discarded. Parent-only categories are expanded to their child pages, and `maxItems` caps the records the actor emits. Seller profiles expose up to 20 listings.
+
+**Does it return sold listings?**
+No. Carousell's public search surface does not expose a sold-items filter, and the actor never invents a sold status.
+
+**Are prices always numeric?**
+No. Free, Swap, Contact for price and other non-numeric labels are preserved as `priceText`; the actor does not fabricate a numeric price. Conditions include Brand new, Like new, Lightly used, Well used and Heavily used.
+
+**Do I need a proxy?**
+No. The actor chooses a working connection automatically. No proxy setup is required.
+
 **Is this affiliated with Carousell?**
-No. This is an independent data extraction tool and has no connection to Carousell Pte. Ltd.
-
-**Do I need a Carousell account to run this?**
-No — listings are publicly accessible without login.
-
-**Which markets are supported?**
-Eight: Singapore, Malaysia, the Philippines, Indonesia, Taiwan, Hong Kong, Australia, and New Zealand, each with its own domain and currency.
-
-**Why is `price` sometimes missing but `priceText` present instead?**
-Some listings show a price in a form the actor can't parse into a clean number (e.g. "Swap" or "Contact for price"); in that case the raw displayed text is kept in `priceText` instead of a fabricated number.
-
-**What's the difference between `search` and `searchByCategory`?**
-`search` matches a free-text keyword against listings; `searchByCategory` browses a specific category slug without requiring a keyword.
-
-**Can I scrape a specific seller's listings?**
-Not directly by username — but if you have the listing URLs, `listingDetails` mode will fetch each one's full details.
-
-**Why might `sellerRating` be absent from a listing?**
-Not every seller has accumulated a rating yet; the field is left out rather than shown as zero.
-
-**What does `nearbyListings` do differently from `search`?**
-It runs the same country-wide browse with no keyword. There's no location/coordinates input, so it doesn't filter by physical distance — use `country` (and `category`, if relevant) to scope the results.
+No. This is an independent third-party actor using Carousell's public website.

@@ -1,134 +1,244 @@
 {
-  "description": "Search Carousell — Southeast Asia's leading C2C marketplace — for listings across multiple countries.",
+  "description": "Search live Carousell Hong Kong listings by keyword or category, fetch detail pages, or pull a seller profile and inventory. Hong Kong only; no account or API key required.",
   "properties": {
     "category": {
-      "description": "Category slug to browse (e.g. 'electronics', 'fashion', 'furniture').",
-      "editor": "textfield",
-      "title": "Category (mode=searchByCategory)",
+      "description": "Top-level category. The actor resolves the correct market-specific collection ID and URL.",
+      "editor": "select",
+      "enum": [
+        "mobile-phones",
+        "electronics",
+        "cars",
+        "property",
+        "motorbikes",
+        "womens-fashion",
+        "mens-fashion",
+        "luxury",
+        "photography",
+        "video-gaming",
+        "toys-collectibles",
+        "babies-kids",
+        "pets",
+        "tickets-vouchers",
+        "everything-else",
+        "food-drinks",
+        "jobs",
+        "services",
+        "furniture-home",
+        "sports",
+        "health-beauty"
+      ],
+      "enumTitles": [
+        "Mobile Phones & Gadgets",
+        "Electronics & Computers",
+        "Cars",
+        "Property",
+        "Motorbikes",
+        "Women's Fashion",
+        "Men's Fashion",
+        "Luxury",
+        "Photography",
+        "Video Gaming",
+        "Toys & Collectibles",
+        "Babies & Kids",
+        "Pet Supplies",
+        "Tickets & Vouchers",
+        "Everything Else",
+        "Food & Drinks",
+        "Jobs",
+        "Services",
+        "Furniture & Home Living",
+        "Sports Equipment",
+        "Health & Beauty"
+      ],
+      "title": "Category (mode=category)",
       "type": "string"
     },
     "condition": {
-      "default": "all",
-      "description": "Filter by item condition.",
+      "default": "any",
+      "description": "Server-side layered condition filter. Carousell uses codes 3, 4, 7, 5 and 6 for these labels.",
       "editor": "select",
       "enum": [
-        "all",
-        "new",
-        "used"
+        "any",
+        "brand_new",
+        "like_new",
+        "lightly_used",
+        "well_used",
+        "heavily_used"
       ],
       "enumTitles": [
-        "All conditions",
-        "New only",
-        "Used only"
+        "Any condition",
+        "Brand new",
+        "Like new",
+        "Lightly used",
+        "Well used",
+        "Heavily used"
       ],
-      "prefill": "all",
-      "title": "Condition filter",
+      "prefill": "any",
+      "title": "Condition",
       "type": "string"
     },
     "country": {
-      "default": "singapore",
-      "description": "Carousell country/market to search.",
+      "default": "hong_kong",
+      "description": "Verified market: hong_kong only. Other Carousell markets are blocked or unreliable from Apify cloud and are not offered.",
       "editor": "select",
       "enum": [
-        "singapore",
-        "malaysia",
-        "philippines",
-        "indonesia",
-        "taiwan",
-        "hong_kong",
-        "australia",
-        "new_zealand"
+        "hong_kong"
       ],
       "enumTitles": [
-        "Singapore",
-        "Malaysia",
-        "Philippines",
-        "Indonesia",
-        "Taiwan",
-        "Hong Kong",
-        "Australia",
-        "New Zealand"
+        "Hong Kong"
       ],
-      "prefill": "singapore",
-      "title": "Country",
+      "prefill": "hong_kong",
+      "title": "Market",
       "type": "string"
+    },
+    "dealOption": {
+      "default": "any",
+      "description": "Server-side mailing/delivery or meet-up filter.",
+      "editor": "select",
+      "enum": [
+        "any",
+        "mailing",
+        "meetup"
+      ],
+      "enumTitles": [
+        "Any deal option",
+        "Mailing & delivery",
+        "Meet-up"
+      ],
+      "prefill": "any",
+      "title": "Deal option",
+      "type": "string"
+    },
+    "includeDetails": {
+      "default": false,
+      "description": "Fetch and merge full detail pages for search, category or seller results. Adds one request per listing.",
+      "prefill": false,
+      "title": "Fetch detail pages",
+      "type": "boolean"
     },
     "listingUrls": {
       "default": [],
-      "description": "List of Carousell listing URLs to fetch details for.",
-      "editor": "stringList",
+      "description": "Carousell /p/ listing URLs or bare listing IDs. Bare IDs use Hong Kong. URLs from unsupported markets are skipped.",
+      "editor": "requestListSources",
+      "items": {
+        "properties": {
+          "url": {
+            "description": "Carousell /p/ listing URL or bare listing ID.",
+            "title": "Listing URL",
+            "type": "string"
+          }
+        },
+        "required": [
+          "url"
+        ],
+        "type": "object"
+      },
       "prefill": [],
-      "title": "Listing URLs (mode=listingDetails)",
+      "title": "Listing URLs or IDs (mode=listingDetails)",
       "type": "array"
+    },
+    "maxDetailItems": {
+      "default": 10,
+      "description": "Cap on detail-page requests when includeDetails is enabled (or in listingDetails mode).",
+      "maximum": 50,
+      "minimum": 1,
+      "prefill": 1,
+      "title": "Maximum detail pages",
+      "type": "integer"
     },
     "maxItems": {
       "default": 20,
-      "description": "Maximum number of listings to return.",
-      "maximum": 1000,
+      "description": "Overall record cap. Carousell returns at most 48 listings per query, so larger values cannot exceed that first-page limit.",
+      "maximum": 500,
       "minimum": 1,
-      "prefill": 20,
-      "title": "Max items",
+      "prefill": 3,
+      "title": "Maximum records",
       "type": "integer"
     },
     "mode": {
       "default": "search",
-      "description": "What to do.",
+      "description": "Search listings, browse one category, fetch listing detail URLs, or pull a seller profile with its listings.",
       "editor": "select",
       "enum": [
         "search",
-        "searchByCategory",
+        "category",
         "listingDetails",
-        "nearbyListings"
+        "seller"
       ],
       "enumTitles": [
-        "Search listings by keyword",
-        "Search listings by category",
-        "Get listing details by URL",
-        "Browse nearby listings"
+        "Search by keyword",
+        "Browse a category",
+        "Fetch listing details",
+        "Seller profile + listings"
       ],
       "prefill": "search",
       "title": "Mode",
       "type": "string"
     },
+    "postedWithinDays": {
+      "description": "Client-side filter over the first page. Listings without a visible creation timestamp are excluded when this is set.",
+      "maximum": 365,
+      "minimum": 1,
+      "title": "Posted within (days)",
+      "type": "integer"
+    },
     "priceMax": {
-      "description": "Maximum price in local currency.",
-      "maximum": 10000000,
+      "description": "Maximum price in the market's local currency (server-side).",
+      "maximum": 1000000000,
       "minimum": 0,
-      "title": "Max price",
+      "title": "Maximum price",
       "type": "integer"
     },
     "priceMin": {
-      "description": "Minimum price in local currency.",
-      "maximum": 10000000,
+      "description": "Minimum price in the market's local currency (server-side).",
+      "maximum": 1000000000,
       "minimum": 0,
-      "title": "Min price",
+      "title": "Minimum price",
       "type": "integer"
     },
-    "query": {
-      "default": "iPhone",
-      "description": "Keyword to search for (e.g. 'iPhone', 'Nike shoes', 'vintage camera'). Required for mode=search.",
-      "editor": "textfield",
-      "prefill": "iPhone",
-      "title": "Search query",
-      "type": "string"
+    "queries": {
+      "default": [
+        "iPhone"
+      ],
+      "description": "One or more keywords (mode=search). Each query returns Carousell's first page of up to 48 listings per market.",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "prefill": [
+        "iPhone"
+      ],
+      "title": "Search queries",
+      "type": "array"
+    },
+    "sellerUsernames": {
+      "default": [],
+      "description": "Carousell usernames to fetch. Each seller returns profile fields plus the first page of their listings.",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "prefill": [],
+      "title": "Seller usernames (mode=seller)",
+      "type": "array"
     },
     "sortBy": {
-      "default": "relevance",
-      "description": "How to sort search results.",
+      "default": "best_match",
+      "description": "Server-side sort. Best match is Carousell's default and sends no sort parameter.",
       "editor": "select",
       "enum": [
-        "relevance",
+        "best_match",
         "recent",
-        "price_asc",
-        "price_desc"
+        "price_low",
+        "price_high"
       ],
       "enumTitles": [
-        "Most relevant",
-        "Most recent",
-        "Price: lowest first",
-        "Price: highest first"
+        "Best match",
+        "Newest first",
+        "Price: low to high",
+        "Price: high to low"
       ],
-      "prefill": "relevance",
+      "prefill": "best_match",
       "title": "Sort by",
       "type": "string"
     }
@@ -137,6 +247,6 @@
     "mode"
   ],
   "schemaVersion": 1,
-  "title": "Carousell Scraper Input",
+  "title": "Carousell Marketplace Listing Search (Hong Kong) Input",
   "type": "object"
 }
