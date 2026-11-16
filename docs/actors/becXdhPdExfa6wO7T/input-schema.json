@@ -1,0 +1,83 @@
+{
+  "properties": {
+    "location": {
+      "description": "City or neighborhood slug as it appears in ZonaProp URLs. Examples: capital-federal, palermo, cordoba, rosario. Ignored if Search URL is provided.",
+      "editor": "textfield",
+      "title": "Location",
+      "type": "string"
+    },
+    "maxResults": {
+      "default": 100,
+      "description": "Maximum number of listings to scrape.",
+      "maximum": 1000,
+      "minimum": 1,
+      "prefill": 5,
+      "title": "Max Results",
+      "type": "integer"
+    },
+    "operationType": {
+      "default": "sale",
+      "description": "Whether to search for sale, rent, or temporary rental listings. Ignored if Search URL is provided.",
+      "editor": "select",
+      "enum": [
+        "sale",
+        "rent",
+        "temporary"
+      ],
+      "enumTitles": [
+        "For Sale (Venta)",
+        "For Rent (Alquiler)",
+        "Temporary Rental (Alquiler Temporal)"
+      ],
+      "title": "Operation Type",
+      "type": "string"
+    },
+    "propertyType": {
+      "default": "all",
+      "description": "Type of property to search for. Ignored if Search URL is provided.",
+      "editor": "select",
+      "enum": [
+        "all",
+        "apartment",
+        "house",
+        "land",
+        "ph",
+        "commercial"
+      ],
+      "enumTitles": [
+        "All Properties",
+        "Apartment (Departamento)",
+        "House (Casa)",
+        "Land (Terreno)",
+        "PH (Floor-through)",
+        "Commercial (Local Comercial)"
+      ],
+      "title": "Property Type",
+      "type": "string"
+    },
+    "proxyConfiguration": {
+      "description": "Proxy settings for bypassing geo-restrictions. Residential Argentina proxies recommended.",
+      "editor": "proxy",
+      "prefill": {
+        "apifyProxyCountry": "AR",
+        "apifyProxyGroups": [
+          "RESIDENTIAL"
+        ],
+        "useApifyProxy": true
+      },
+      "title": "Proxy Configuration",
+      "type": "object"
+    },
+    "searchUrl": {
+      "description": "ZonaProp search URL. Example: https://www.zonaprop.com.ar/departamentos-venta-capital-federal.html — Takes priority over other filters if provided.",
+      "editor": "textfield",
+      "prefill": "https://www.zonaprop.com.ar/departamentos-venta-capital-federal.html",
+      "title": "Search URL",
+      "type": "string"
+    }
+  },
+  "required": [],
+  "schemaVersion": 1,
+  "title": "ZonaProp Scraper Input",
+  "type": "object"
+}

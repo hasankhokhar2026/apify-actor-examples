@@ -1,0 +1,96 @@
+# The Conversation Academic Article Finder
+
+The Conversation publishes news analysis written by academics and researchers rather than staff reporters. This actor browses its public article feed or a single topic section, applies an optional keyword filter, and returns each matching article's metadata — no login or key needed.
+
+## What this actor does
+
+- **Two modes** — `articles` (search the general feed by keyword) and `byTopic` (read one topic's dedicated feed, with or without a keyword)
+- **Keyword search** — matches your `searchQuery` against each article's title and excerpt
+- **Topic filter** — narrow results to a subject such as science, health, or politics
+- **Regional editions** — point the feed at the US, UK, Australian, African, or Canadian edition
+- **Clean records** — fields The Conversation doesn't supply for a given article (e.g. no image, no tags) are left out of that record rather than sent as empty values
+
+## Output per article
+
+- `title` — article headline
+- `articleUrl` — canonical link to the article
+- `excerpt` — short summary/dek, truncated to 400 characters
+- `byline` — the raw author credit line as published (may include institutional affiliation)
+- `author` — author name, taken directly from the article's own author field when published, or parsed out of the byline otherwise
+- `publishedAt` — publish date/time
+- `imageUrl` — lead image URL
+- `topic` — section/topic the article was filed under
+- `tags` — list of topic tags attached to the article
+- `recordType` — always `article`
+- `scrapedAt` — ISO timestamp when the record was collected
+
+## Input
+
+| Field | Type | Default | Description |
+|---|---|---|---|
+| `mode` | string (select) | `articles` | `articles` to search/browse the general feed, `byTopic` to read one topic's feed |
+| `searchQuery` | string | – | Keyword to match against article title/excerpt. Leave blank when browsing by topic; in `articles` mode with no `topic` set, a blank value falls back to `climate` rather than returning the unfiltered feed |
+| `topic` | string (select) | – | Subject filter, e.g. `science`, `health`, `politics` |
+| `edition` | string (select) | – | Regional edition: US, UK, Australia, Africa, or Canada filter the feed to that edition; other selections return the global feed |
+| `maxItems` | integer | `10` | Maximum number of articles to return (1–500) |
+
+### Example: keyword search on the global feed
+
+```json
+{
+  "mode": "articles",
+  "searchQuery": "climate",
+  "maxItems": 20
+}
+```
+
+### Example: browse one topic
+
+```json
+{
+  "mode": "byTopic",
+  "topic": "health",
+  "maxItems": 15
+}
+```
+
+### Example: keyword search within the UK edition
+
+```json
+{
+  "mode": "articles",
+  "searchQuery": "elections",
+  "edition": "uk",
+  "maxItems": 10
+}
+```
+
+## Use cases
+
+- **Media monitoring** — track what academics are publishing on a subject like climate or public health
+- **Content curation** — pull recent expert-written articles on a topic for a newsletter or digest
+- **Academic research tracking** — follow a researcher's name or institution via keyword search
+- **Regional news comparison** — compare how the US, UK, or Australian edition covers the same topic
+
+## FAQ
+
+**Who writes for The Conversation?**
+Academics and researchers write the articles themselves, edited by journalists — this actor just reads the public feed, it doesn't change that editorial model.
+
+**What's the difference between the two modes?**
+`articles` searches or browses the general feed (optionally filtered by `searchQuery` and/or `topic`), while `byTopic` reads that topic's own dedicated feed directly.
+
+**Why did some articles come back without an `imageUrl` or `tags` field?**
+Those fields are only included when The Conversation publishes them for that article; if a value is missing, the field is left out of the record instead of being sent as empty.
+
+**Does `edition` give me every regional edition The Conversation publishes?**
+It covers the editions that expose their own feed (US, UK, Australia, Africa, Canada). Selecting any other edition option returns the global feed instead.
+
+**Can I combine a keyword search with a topic filter?**
+Yes, in `articles` mode — set both `searchQuery` and `topic` to require an article to match the keyword and belong to that topic.
+
+**Is this affiliated with The Conversation?**
+No. This is an independent actor that reads The Conversation's publicly available article feeds.
+
+**How do I get the unfiltered general feed instead of a keyword search?**
+Set `mode` to `byTopic` with a `topic` and no `searchQuery`. In `articles` mode, leaving `searchQuery` blank (with no `topic` set either) falls back to a `climate` keyword search rather than the full unfiltered feed.

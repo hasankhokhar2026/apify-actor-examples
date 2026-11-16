@@ -1,0 +1,109 @@
+{
+  "description": "Browse The Conversation articles.",
+  "properties": {
+    "edition": {
+      "default": "",
+      "description": "Edition.",
+      "editor": "select",
+      "enum": [
+        "",
+        "us",
+        "uk",
+        "au",
+        "africa",
+        "canada",
+        "france",
+        "indonesia",
+        "newzealand",
+        "espanol"
+      ],
+      "enumTitles": [
+        "Global",
+        "US",
+        "UK",
+        "Australia",
+        "Africa",
+        "Canada",
+        "France",
+        "Indonesia",
+        "New Zealand",
+        "Espanol"
+      ],
+      "prefill": "",
+      "title": "Edition",
+      "type": "string"
+    },
+    "maxItems": {
+      "default": 10,
+      "description": "Maximum number of records to return.",
+      "maximum": 500,
+      "minimum": 1,
+      "prefill": 10,
+      "title": "Max items",
+      "type": "integer"
+    },
+    "mode": {
+      "default": "articles",
+      "description": "Select what data to fetch.",
+      "editor": "select",
+      "enum": [
+        "articles",
+        "byTopic"
+      ],
+      "enumTitles": [
+        "Search/browse articles",
+        "Browse by topic"
+      ],
+      "prefill": "articles",
+      "title": "Mode",
+      "type": "string"
+    },
+    "searchQuery": {
+      "description": "Search keywords to filter results. Leave blank when browsing by topic.",
+      "editor": "textfield",
+      "prefill": "climate",
+      "title": "Search query",
+      "type": "string"
+    },
+    "topic": {
+      "description": "Topic or subject filter.",
+      "editor": "select",
+      "enum": [
+        "",
+        "science",
+        "technology",
+        "health",
+        "environment",
+        "education",
+        "politics",
+        "economy",
+        "society",
+        "arts",
+        "sport",
+        "business"
+      ],
+      "enumTitles": [
+        "Any",
+        "Science",
+        "Technology",
+        "Health",
+        "Environment",
+        "Education",
+        "Politics",
+        "Economy",
+        "Society",
+        "Arts",
+        "Sport",
+        "Business"
+      ],
+      "title": "Topic",
+      "type": "string"
+    }
+  },
+  "required": [
+    "mode"
+  ],
+  "schemaVersion": 1,
+  "title": "The Conversation Scraper Input",
+  "type": "object"
+}

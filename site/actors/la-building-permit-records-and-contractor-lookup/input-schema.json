@@ -1,0 +1,552 @@
+{
+  "description": "Search/filter Los Angeles building permits, or look up permits by permit number, property address, or contractor.",
+  "properties": {
+    "appToken": {
+      "description": "Optional free Socrata app token to raise API rate limits. Get one at https://data.lacity.org/profile/app_tokens. Not required — the actor works without it.",
+      "editor": "textfield",
+      "title": "Socrata app token (optional)",
+      "type": "string"
+    },
+    "assessorBook": {
+      "description": "LA County Assessor's Identification Number (AIN) \"Book\" component. Example: `2405`.",
+      "editor": "textfield",
+      "title": "Assessor book (mode=byAssessorParcel)",
+      "type": "string"
+    },
+    "assessorPage": {
+      "description": "LA County Assessor's Identification Number (AIN) \"Page\" component. Example: `003`.",
+      "editor": "textfield",
+      "title": "Assessor page (mode=byAssessorParcel)",
+      "type": "string"
+    },
+    "assessorParcel": {
+      "description": "LA County Assessor's Identification Number (AIN) \"Parcel\" component. Example: `032`.",
+      "editor": "textfield",
+      "title": "Assessor parcel (mode=byAssessorParcel)",
+      "type": "string"
+    },
+    "contractorName": {
+      "description": "Exact contractor business name in mode=byContractor (e.g. `OWNER-BUILDER`); substring filter in mode=search.",
+      "editor": "textfield",
+      "title": "Contractor business name",
+      "type": "string"
+    },
+    "initiatingOffice": {
+      "default": "",
+      "description": "Filter to a single LADBS district office that issued the permit.",
+      "editor": "select",
+      "enum": [
+        "",
+        "METRO",
+        "VAN NUYS",
+        "INTERNET",
+        "WEST LA",
+        "SOUTH LA",
+        "SANPEDRO"
+      ],
+      "enumTitles": [
+        "Any office",
+        "Metro",
+        "Van Nuys",
+        "Internet (e-Permit)",
+        "West LA",
+        "South LA",
+        "San Pedro"
+      ],
+      "prefill": "",
+      "title": "Initiating office",
+      "type": "string"
+    },
+    "issueDateFrom": {
+      "description": "Drop permits issued before this date.",
+      "editor": "textfield",
+      "title": "Issue date from (YYYY-MM-DD)",
+      "type": "string"
+    },
+    "issueDateTo": {
+      "description": "Drop permits issued after this date.",
+      "editor": "textfield",
+      "title": "Issue date to (YYYY-MM-DD)",
+      "type": "string"
+    },
+    "maxItems": {
+      "default": 50,
+      "description": "Hard cap on emitted records.",
+      "maximum": 10000,
+      "minimum": 1,
+      "prefill": 50,
+      "title": "Max items",
+      "type": "integer"
+    },
+    "maxStories": {
+      "description": "Drop permits with more stories than this.",
+      "editor": "number",
+      "maximum": 200,
+      "minimum": 0,
+      "title": "Max number of stories",
+      "type": "integer"
+    },
+    "maxValuation": {
+      "description": "Drop permits with a higher declared construction valuation than this.",
+      "editor": "number",
+      "maximum": 1000000000,
+      "minimum": 0,
+      "title": "Max valuation (USD)",
+      "type": "number"
+    },
+    "minResidentialUnits": {
+      "description": "Drop permits with fewer residential dwelling units than this.",
+      "editor": "number",
+      "maximum": 10000,
+      "minimum": 0,
+      "title": "Min residential dwelling units",
+      "type": "integer"
+    },
+    "minStories": {
+      "description": "Drop permits with fewer stories than this.",
+      "editor": "number",
+      "maximum": 200,
+      "minimum": 0,
+      "title": "Min number of stories",
+      "type": "integer"
+    },
+    "minValuation": {
+      "description": "Drop permits with a lower declared construction valuation than this.",
+      "editor": "number",
+      "maximum": 1000000000,
+      "minimum": 0,
+      "title": "Min valuation (USD)",
+      "type": "number"
+    },
+    "mode": {
+      "default": "search",
+      "description": "What to fetch.",
+      "editor": "select",
+      "enum": [
+        "search",
+        "byPermitNumbers",
+        "byAddress",
+        "byContractor",
+        "byAssessorParcel"
+      ],
+      "enumTitles": [
+        "Search / filter permits",
+        "Lookup by permit number(s)",
+        "Lookup by property address",
+        "Lookup by contractor name",
+        "Lookup by assessor parcel (Book-Page-Parcel)"
+      ],
+      "prefill": "search",
+      "title": "Mode",
+      "type": "string"
+    },
+    "nearLatitude": {
+      "description": "Latitude of a center point. Combine with `nearLongitude` (and optionally `radiusMeters`) to return only permits within a radius of this point. Example: `34.0522` (downtown LA). Both nearLatitude and nearLongitude must be set for this filter to apply.",
+      "editor": "number",
+      "maximum": 90,
+      "minimum": -90,
+      "title": "Near latitude (geo-radius search)",
+      "type": "number"
+    },
+    "nearLongitude": {
+      "description": "Longitude of a center point. Combine with `nearLatitude` (and optionally `radiusMeters`) to return only permits within a radius of this point. Example: `-118.2437` (downtown LA).",
+      "editor": "number",
+      "maximum": 180,
+      "minimum": -180,
+      "title": "Near longitude (geo-radius search)",
+      "type": "number"
+    },
+    "occupancy": {
+      "default": "",
+      "description": "Filter to a single building-code occupancy classification. Only populated on a minority of permits (mostly new construction / major alterations) -- most permits omit this field entirely.",
+      "editor": "select",
+      "enum": [
+        "",
+        "A1 Occ. Group",
+        "A2 Occ. Group",
+        "A3 Occ. Group",
+        "A5 Occ. Group",
+        "B Occ. Group",
+        "E Occ. Group",
+        "E1 Occ. Group",
+        "E3 Occ. Group",
+        "F1 Occ. Group",
+        "F2 Occ. Group",
+        "H4 Occ. Group",
+        "I2 Occ. Group",
+        "M Occ. Group",
+        "Misc. Occ. Group",
+        "R1 Occ. Group",
+        "R2 Occ. Group",
+        "R2.1 Occ. Group",
+        "R3 Occ. Group",
+        "R4 Occ. Group",
+        "S1 Occ. Group",
+        "S2 Occ. Group",
+        "S3 Occ. Group",
+        "U Occ. Group",
+        "U1 Occ. Group",
+        "U2 Occ. Group"
+      ],
+      "enumTitles": [
+        "Any occupancy",
+        "A1 - Assembly (fixed seats)",
+        "A2 - Assembly (food/drink)",
+        "A3 - Assembly (worship/amusement)",
+        "A5 - Assembly (outdoor)",
+        "B - Business",
+        "E - Educational",
+        "E1 - Educational",
+        "E3 - Educational",
+        "F1 - Factory (moderate hazard)",
+        "F2 - Factory (low hazard)",
+        "H4 - High hazard",
+        "I2 - Institutional (medical)",
+        "M - Mercantile",
+        "Miscellaneous",
+        "R1 - Residential (hotel/motel)",
+        "R2 - Residential (apartments)",
+        "R2.1 - Residential (assisted living)",
+        "R3 - Residential (1-2 family)",
+        "R4 - Residential (assisted living, small)",
+        "S1 - Storage (moderate hazard)",
+        "S2 - Storage (low hazard)",
+        "S3 - Storage (vehicles/repair)",
+        "U - Utility/Misc.",
+        "U1 - Utility/Misc.",
+        "U2 - Utility/Misc."
+      ],
+      "prefill": "",
+      "title": "Occupancy group",
+      "type": "string"
+    },
+    "permitCategory": {
+      "default": "",
+      "description": "Filter to a single review category.",
+      "editor": "select",
+      "enum": [
+        "",
+        "Plan Check",
+        "No Plan Check"
+      ],
+      "enumTitles": [
+        "Any category",
+        "Plan Check",
+        "No Plan Check (Express/e-Permit)"
+      ],
+      "prefill": "",
+      "title": "Permit category",
+      "type": "string"
+    },
+    "permitNumbers": {
+      "default": [],
+      "description": "Exact PCIS permit numbers to fetch. Example: `20010-30000-00390`.",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Permit numbers (mode=byPermitNumbers)",
+      "type": "array"
+    },
+    "permitSubType": {
+      "default": "",
+      "description": "Filter to a single building-use sub-type.",
+      "editor": "select",
+      "enum": [
+        "",
+        "1 or 2 Family Dwelling",
+        "Apartment",
+        "Commercial"
+      ],
+      "enumTitles": [
+        "Any sub-type",
+        "1 or 2 Family Dwelling",
+        "Apartment",
+        "Commercial"
+      ],
+      "prefill": "",
+      "title": "Permit sub-type",
+      "type": "string"
+    },
+    "permitType": {
+      "default": "",
+      "description": "Filter to a single top-level permit type.",
+      "editor": "select",
+      "enum": [
+        "",
+        "Bldg-New",
+        "Bldg-Addition",
+        "Bldg-Alter/Repair"
+      ],
+      "enumTitles": [
+        "Any permit type",
+        "New building",
+        "Addition",
+        "Alteration / repair"
+      ],
+      "prefill": "",
+      "title": "Permit type",
+      "type": "string"
+    },
+    "radiusMeters": {
+      "default": 500,
+      "description": "Search radius around `nearLatitude`/`nearLongitude`, in meters. Only used when both are set. Defaults to 500m.",
+      "editor": "number",
+      "maximum": 50000,
+      "minimum": 1,
+      "prefill": 500,
+      "title": "Radius (meters)",
+      "type": "number"
+    },
+    "sortBy": {
+      "default": "issueDateDesc",
+      "description": "Sort order for results.",
+      "editor": "select",
+      "enum": [
+        "issueDateDesc",
+        "issueDateAsc",
+        "statusDateDesc",
+        "statusDateAsc",
+        "valuationDesc",
+        "valuationAsc",
+        "storiesDesc",
+        "storiesAsc",
+        "residentialUnitsDesc",
+        "residentialUnitsAsc"
+      ],
+      "enumTitles": [
+        "Issue date (newest first)",
+        "Issue date (oldest first)",
+        "Status date (newest first)",
+        "Status date (oldest first)",
+        "Valuation (highest first)",
+        "Valuation (lowest first)",
+        "Number of stories (highest first)",
+        "Number of stories (lowest first)",
+        "Residential dwelling units (highest first)",
+        "Residential dwelling units (lowest first)"
+      ],
+      "prefill": "issueDateDesc",
+      "title": "Sort by",
+      "type": "string"
+    },
+    "status": {
+      "default": "",
+      "description": "Filter to a single current permit status.",
+      "editor": "select",
+      "enum": [
+        "",
+        "CofC Corrected",
+        "CofC Issued",
+        "CofO Corrected",
+        "CofO in Progress",
+        "CofO Issued",
+        "CofO Reactivated",
+        "CofO Revoked",
+        "CofO Superseded",
+        "Conditional Approval",
+        "Intent to Correct CofC",
+        "Intent to Revoke",
+        "Intent to Revoke CofC",
+        "Issued",
+        "No Progress",
+        "Not Required",
+        "OK for CofC",
+        "OK to Issue CofC",
+        "Permit Closed",
+        "Permit Expired",
+        "Permit Extended",
+        "Permit Finaled",
+        "Permit Revoked",
+        "Permit Withdrawn",
+        "Re-Activate Permit",
+        "Ready to Issue",
+        "Refund Completed",
+        "Refund in Progress"
+      ],
+      "enumTitles": [
+        "Any status",
+        "CofC Corrected",
+        "CofC Issued",
+        "CofO Corrected",
+        "CofO in Progress",
+        "CofO Issued",
+        "CofO Reactivated",
+        "CofO Revoked",
+        "CofO Superseded",
+        "Conditional Approval",
+        "Intent to Correct CofC",
+        "Intent to Revoke",
+        "Intent to Revoke CofC",
+        "Issued",
+        "No Progress",
+        "Not Required",
+        "OK for CofC",
+        "OK to Issue CofC",
+        "Permit Closed",
+        "Permit Expired",
+        "Permit Extended",
+        "Permit Finaled",
+        "Permit Revoked",
+        "Permit Withdrawn",
+        "Re-Activate Permit",
+        "Ready to Issue",
+        "Refund Completed",
+        "Refund in Progress"
+      ],
+      "prefill": "",
+      "title": "Status",
+      "type": "string"
+    },
+    "statusDateFrom": {
+      "description": "Drop permits whose latest status change is before this date.",
+      "editor": "textfield",
+      "title": "Status date from (YYYY-MM-DD)",
+      "type": "string"
+    },
+    "statusDateTo": {
+      "description": "Drop permits whose latest status change is after this date.",
+      "editor": "textfield",
+      "title": "Status date to (YYYY-MM-DD)",
+      "type": "string"
+    },
+    "streetDirection": {
+      "default": "",
+      "description": "Filter to a single street direction prefix.",
+      "editor": "select",
+      "enum": [
+        "",
+        "N",
+        "S",
+        "E",
+        "W"
+      ],
+      "enumTitles": [
+        "Any direction",
+        "North",
+        "South",
+        "East",
+        "West"
+      ],
+      "prefill": "",
+      "title": "Street direction",
+      "type": "string"
+    },
+    "streetName": {
+      "description": "Street name, without direction/suffix. Example: `HARVARD`. Exact match in mode=byAddress; substring match as a filter in mode=search.",
+      "editor": "textfield",
+      "title": "Street name",
+      "type": "string"
+    },
+    "streetNumber": {
+      "description": "Building street number. Example: `6500`.",
+      "editor": "textfield",
+      "title": "Street number (mode=byAddress)",
+      "type": "string"
+    },
+    "streetSuffix": {
+      "default": "",
+      "description": "Filter to a single street-suffix abbreviation.",
+      "editor": "select",
+      "enum": [
+        "",
+        "AVE",
+        "ST",
+        "BLVD",
+        "DR",
+        "PL",
+        "ROAD",
+        "WAY",
+        "LANE",
+        "CT",
+        "TER",
+        "CIR",
+        "PARK",
+        "WALK",
+        "HWY",
+        "HILL",
+        "TR",
+        "RD",
+        "CL",
+        "MALL",
+        "PKWY",
+        "LN",
+        "GRN",
+        "TERR",
+        "CK",
+        "PASS",
+        "PZ",
+        "COVE",
+        "VIEW",
+        "CYN",
+        "ROW",
+        "SQ",
+        "RDG",
+        "VIS",
+        "AL",
+        "PT",
+        "GLEN"
+      ],
+      "enumTitles": [
+        "Any suffix",
+        "Avenue",
+        "Street",
+        "Boulevard",
+        "Drive",
+        "Place",
+        "Road (spelled out)",
+        "Way",
+        "Lane (spelled out)",
+        "Court",
+        "Terrace (TER)",
+        "Circle",
+        "Park",
+        "Walk",
+        "Highway",
+        "Hill",
+        "Trail",
+        "Road",
+        "Circle (CL)",
+        "Mall",
+        "Parkway",
+        "Lane",
+        "Green",
+        "Terrace (TERR)",
+        "Creek",
+        "Pass",
+        "Plaza",
+        "Cove",
+        "View",
+        "Canyon",
+        "Row",
+        "Square",
+        "Ridge",
+        "Vista",
+        "Alley",
+        "Point",
+        "Glen"
+      ],
+      "prefill": "",
+      "title": "Street suffix",
+      "type": "string"
+    },
+    "workDescriptionKeyword": {
+      "description": "Case-insensitive substring match on the permit's work description. Example: `swimming pool`.",
+      "editor": "textfield",
+      "title": "Work description contains",
+      "type": "string"
+    },
+    "zipCodes": {
+      "default": [],
+      "description": "Restrict results to one or more 5-digit LA zip codes. Example: `90047`.",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Zip codes",
+      "type": "array"
+    }
+  },
+  "required": [
+    "mode"
+  ],
+  "schemaVersion": 1,
+  "title": "Los Angeles Building Permits Scraper Input",
+  "type": "object"
+}

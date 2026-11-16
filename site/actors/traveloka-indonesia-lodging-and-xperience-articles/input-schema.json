@@ -1,0 +1,171 @@
+{
+  "description": "Scrape Traveloka hotel listings by city or travel-guide articles.",
+  "properties": {
+    "citySlug": {
+      "description": "Traveloka accommodation page to scrape.",
+      "editor": "select",
+      "enum": [
+        "guest-house-yogyakarta",
+        "guest-house-bali",
+        "guest-house-bandung",
+        "guest-house-surabaya",
+        "guest-house-malang",
+        "guest-house-semarang",
+        "guest-house-labuan-bajo",
+        "guest-house-bogor",
+        "guest-house-tangerang",
+        "guest-house-bekasi",
+        "guest-house-medan",
+        "guest-house-makassar",
+        "guest-house-palembang",
+        "guest-house-kuta",
+        "guest-house-canggu",
+        "guest-house-legian",
+        "guest-house-nusa-dua",
+        "hostel-yogyakarta",
+        "hostel-bali",
+        "hostel-bogor",
+        "hostel-bandung"
+      ],
+      "enumTitles": [
+        "Guest houses in Yogyakarta",
+        "Guest houses in Bali",
+        "Guest houses in Bandung",
+        "Guest houses in Surabaya",
+        "Guest houses in Malang",
+        "Guest houses in Semarang",
+        "Guest houses in Labuan Bajo",
+        "Guest houses in Bogor",
+        "Guest houses in Tangerang",
+        "Guest houses in Bekasi",
+        "Guest houses in Medan",
+        "Guest houses in Makassar",
+        "Guest houses in Palembang",
+        "Guest houses in Kuta (Bali)",
+        "Guest houses in Canggu (Bali)",
+        "Guest houses in Legian (Bali)",
+        "Guest houses in Nusa Dua (Bali)",
+        "Hostels in Yogyakarta",
+        "Hostels in Bali",
+        "Hostels in Bogor",
+        "Hostels in Bandung"
+      ],
+      "title": "City / area (mode=browseByCity)",
+      "type": "string"
+    },
+    "containsKeyword": {
+      "description": "Only emit hotels whose name contains this text (case-insensitive).",
+      "editor": "textfield",
+      "title": "Contains keyword",
+      "type": "string"
+    },
+    "includeArticles": {
+      "default": false,
+      "description": "In search mode, also emit every explore article (not just keyword-matching ones).",
+      "prefill": false,
+      "title": "Include all explore articles",
+      "type": "boolean"
+    },
+    "maxItems": {
+      "default": 50,
+      "description": "Hard cap on emitted records.",
+      "maximum": 1000,
+      "minimum": 1,
+      "prefill": 50,
+      "title": "Max items",
+      "type": "integer"
+    },
+    "minRating": {
+      "description": "Only hotels with a user rating of at least this (0-10).",
+      "maximum": 10,
+      "minimum": 1,
+      "title": "Min user rating",
+      "type": "integer"
+    },
+    "minReviewCount": {
+      "description": "Only hotels with at least this many reviews.",
+      "maximum": 1000000,
+      "minimum": 1,
+      "title": "Min review count",
+      "type": "integer"
+    },
+    "minStarRating": {
+      "description": "Only hotels with at least this many stars.",
+      "maximum": 7,
+      "minimum": 1,
+      "title": "Min star rating",
+      "type": "integer"
+    },
+    "mode": {
+      "default": "search",
+      "description": "What to fetch.",
+      "editor": "select",
+      "enum": [
+        "search",
+        "browseByCity",
+        "browseExplore",
+        "byUrl"
+      ],
+      "enumTitles": [
+        "Search hotels / articles",
+        "Browse hotels by city",
+        "Browse explore articles",
+        "Fetch pages from URLs"
+      ],
+      "prefill": "search",
+      "title": "Mode",
+      "type": "string"
+    },
+    "proxyConfiguration": {
+      "description": "Optional Apify proxy. Only used lazily if Traveloka blocks the direct request (403/429). Leave empty for the zero-cost default.",
+      "editor": "proxy",
+      "prefill": {
+        "useApifyProxy": false
+      },
+      "title": "Proxy configuration",
+      "type": "object"
+    },
+    "searchQuery": {
+      "default": "yogyakarta",
+      "description": "City or travel keyword (mode=search), e.g. `yogyakarta`, `bali`, `bandung`, `travel`. City queries return hotels; other keywords match explore-article titles.",
+      "editor": "textfield",
+      "prefill": "yogyakarta",
+      "title": "Search query",
+      "type": "string"
+    },
+    "sortBy": {
+      "default": "relevance",
+      "description": "Applied to the fetched page in the output order.",
+      "editor": "select",
+      "enum": [
+        "relevance",
+        "ratingDesc",
+        "mostReviewed",
+        "starDesc"
+      ],
+      "enumTitles": [
+        "Relevance (site order)",
+        "Best rated first",
+        "Most reviewed first",
+        "Highest star rating first"
+      ],
+      "prefill": "relevance",
+      "title": "Sort results",
+      "type": "string"
+    },
+    "startUrls": {
+      "default": [],
+      "description": "traveloka.com URLs to scrape (mode=byUrl) — accommodation/find pages, /explore pages, or explore article pages.",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Page URLs (mode=byUrl)",
+      "type": "array"
+    }
+  },
+  "required": [
+    "mode"
+  ],
+  "schemaVersion": 1,
+  "title": "Traveloka Hotel & Explore Scraper Input",
+  "type": "object"
+}

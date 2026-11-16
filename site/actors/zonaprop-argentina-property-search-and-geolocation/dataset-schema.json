@@ -1,0 +1,384 @@
+{
+  "actorSpecification": 1,
+  "fields": {
+    "properties": {
+      "address": {
+        "description": "Full street address of the property",
+        "nullable": true,
+        "type": "string"
+      },
+      "bathrooms": {
+        "description": "Number of bathrooms in the property",
+        "nullable": true,
+        "type": "integer"
+      },
+      "bedrooms": {
+        "description": "Number of bedrooms (dormitorios) in the property",
+        "nullable": true,
+        "type": "integer"
+      },
+      "city": {
+        "description": "City where the property is located",
+        "nullable": true,
+        "type": "string"
+      },
+      "coveredArea": {
+        "description": "Covered surface area in square meters (superficie cubierta)",
+        "nullable": true,
+        "type": "number"
+      },
+      "currency": {
+        "description": "Currency of the price (e.g., USD, ARS)",
+        "nullable": true,
+        "type": "string"
+      },
+      "daysOnMarket": {
+        "description": "Number of days the listing has been active on ZonaProp",
+        "nullable": true,
+        "type": "integer"
+      },
+      "description": {
+        "description": "Full property description text",
+        "nullable": true,
+        "type": "string"
+      },
+      "garages": {
+        "description": "Number of garage spaces (cocheras)",
+        "nullable": true,
+        "type": "integer"
+      },
+      "images": {
+        "description": "Array of all image URLs for the listing",
+        "nullable": true,
+        "type": "array"
+      },
+      "latitude": {
+        "description": "Geographic latitude coordinate of the property",
+        "nullable": true,
+        "type": "number"
+      },
+      "listingId": {
+        "description": "Unique listing identifier from ZonaProp",
+        "nullable": true,
+        "type": "string"
+      },
+      "listingType": {
+        "description": "Type of listing: sale, rent, or temporary",
+        "nullable": true,
+        "type": "string"
+      },
+      "longitude": {
+        "description": "Geographic longitude coordinate of the property",
+        "nullable": true,
+        "type": "number"
+      },
+      "mainImage": {
+        "description": "URL of the primary/cover image for the listing",
+        "nullable": true,
+        "type": "string"
+      },
+      "neighborhood": {
+        "description": "Neighborhood or barrio where the property is located",
+        "nullable": true,
+        "type": "string"
+      },
+      "price": {
+        "description": "Listing price as a numeric value",
+        "nullable": true,
+        "type": "number"
+      },
+      "pricePerSqm": {
+        "description": "Price per square meter calculated from total price and covered area",
+        "nullable": true,
+        "type": "number"
+      },
+      "propertyType": {
+        "description": "Type of property: apartment, house, land, ph, commercial, etc.",
+        "nullable": true,
+        "type": "string"
+      },
+      "province": {
+        "description": "Province or region where the property is located",
+        "nullable": true,
+        "type": "string"
+      },
+      "publishDate": {
+        "description": "Date the listing was published on ZonaProp (ISO 8601)",
+        "nullable": true,
+        "type": "string"
+      },
+      "publisherName": {
+        "description": "Name of the publisher or real estate agency",
+        "nullable": true,
+        "type": "string"
+      },
+      "publisherPhone": {
+        "description": "Contact phone number for the publisher or agent",
+        "nullable": true,
+        "type": "string"
+      },
+      "publisherType": {
+        "description": "Type of publisher: owner, agency, or developer",
+        "nullable": true,
+        "type": "string"
+      },
+      "rooms": {
+        "description": "Total number of rooms (ambientes) in the property",
+        "nullable": true,
+        "type": "integer"
+      },
+      "scrapedAt": {
+        "description": "ISO 8601 timestamp when scraped",
+        "type": "string"
+      },
+      "title": {
+        "description": "Listing title as shown on ZonaProp",
+        "nullable": true,
+        "type": "string"
+      },
+      "totalArea": {
+        "description": "Total surface area in square meters (superficie total)",
+        "nullable": true,
+        "type": "number"
+      },
+      "url": {
+        "description": "Direct URL to the listing on ZonaProp",
+        "nullable": true,
+        "type": "string"
+      },
+      "yearBuilt": {
+        "description": "Year the property was constructed",
+        "nullable": true,
+        "type": "integer"
+      }
+    },
+    "type": "object"
+  },
+  "title": "ZonaProp Listings",
+  "views": {
+    "detailed": {
+      "display": {
+        "component": "table",
+        "properties": {
+          "address": {
+            "format": "text",
+            "label": "Address"
+          },
+          "bathrooms": {
+            "format": "number",
+            "label": "Bathrooms"
+          },
+          "bedrooms": {
+            "format": "number",
+            "label": "Bedrooms"
+          },
+          "city": {
+            "format": "text",
+            "label": "City"
+          },
+          "coveredArea": {
+            "format": "number",
+            "label": "Covered Area (m²)"
+          },
+          "currency": {
+            "format": "text",
+            "label": "Currency"
+          },
+          "daysOnMarket": {
+            "format": "number",
+            "label": "Days on Market"
+          },
+          "description": {
+            "format": "text",
+            "label": "Description"
+          },
+          "garages": {
+            "format": "number",
+            "label": "Garages"
+          },
+          "images": {
+            "format": "text",
+            "label": "Images"
+          },
+          "latitude": {
+            "format": "number",
+            "label": "Latitude"
+          },
+          "listingId": {
+            "format": "text",
+            "label": "Listing ID"
+          },
+          "listingType": {
+            "format": "text",
+            "label": "Listing Type"
+          },
+          "longitude": {
+            "format": "number",
+            "label": "Longitude"
+          },
+          "mainImage": {
+            "format": "link",
+            "label": "Main Image"
+          },
+          "neighborhood": {
+            "format": "text",
+            "label": "Neighborhood"
+          },
+          "price": {
+            "format": "number",
+            "label": "Price"
+          },
+          "pricePerSqm": {
+            "format": "number",
+            "label": "Price per m²"
+          },
+          "propertyType": {
+            "format": "text",
+            "label": "Property Type"
+          },
+          "province": {
+            "format": "text",
+            "label": "Province"
+          },
+          "publishDate": {
+            "format": "text",
+            "label": "Publish Date"
+          },
+          "publisherName": {
+            "format": "text",
+            "label": "Publisher Name"
+          },
+          "publisherPhone": {
+            "format": "text",
+            "label": "Publisher Phone"
+          },
+          "publisherType": {
+            "format": "text",
+            "label": "Publisher Type"
+          },
+          "rooms": {
+            "format": "number",
+            "label": "Rooms"
+          },
+          "scrapedAt": {
+            "format": "text",
+            "label": "Scraped At"
+          },
+          "title": {
+            "format": "text",
+            "label": "Title"
+          },
+          "totalArea": {
+            "format": "number",
+            "label": "Total Area (m²)"
+          },
+          "url": {
+            "format": "link",
+            "label": "URL"
+          },
+          "yearBuilt": {
+            "format": "number",
+            "label": "Year Built"
+          }
+        }
+      },
+      "title": "Detailed Results",
+      "transformation": {
+        "fields": [
+          "title",
+          "description",
+          "url",
+          "listingId",
+          "listingType",
+          "propertyType",
+          "publishDate",
+          "daysOnMarket",
+          "price",
+          "currency",
+          "pricePerSqm",
+          "address",
+          "neighborhood",
+          "city",
+          "province",
+          "latitude",
+          "longitude",
+          "rooms",
+          "bedrooms",
+          "bathrooms",
+          "totalArea",
+          "coveredArea",
+          "garages",
+          "yearBuilt",
+          "images",
+          "mainImage",
+          "publisherName",
+          "publisherType",
+          "publisherPhone",
+          "scrapedAt"
+        ]
+      }
+    },
+    "overview": {
+      "display": {
+        "component": "table",
+        "properties": {
+          "city": {
+            "format": "text",
+            "label": "City"
+          },
+          "currency": {
+            "format": "text",
+            "label": "Currency"
+          },
+          "listingType": {
+            "format": "text",
+            "label": "Listing Type"
+          },
+          "neighborhood": {
+            "format": "text",
+            "label": "Neighborhood"
+          },
+          "price": {
+            "format": "number",
+            "label": "Price"
+          },
+          "propertyType": {
+            "format": "text",
+            "label": "Property Type"
+          },
+          "rooms": {
+            "format": "number",
+            "label": "Rooms"
+          },
+          "title": {
+            "format": "text",
+            "label": "Title"
+          },
+          "totalArea": {
+            "format": "number",
+            "label": "Total Area (m²)"
+          },
+          "url": {
+            "format": "link",
+            "label": "URL"
+          }
+        }
+      },
+      "title": "Overview",
+      "transformation": {
+        "fields": [
+          "title",
+          "listingType",
+          "propertyType",
+          "price",
+          "currency",
+          "neighborhood",
+          "city",
+          "rooms",
+          "totalArea",
+          "url"
+        ]
+      }
+    }
+  }
+}
