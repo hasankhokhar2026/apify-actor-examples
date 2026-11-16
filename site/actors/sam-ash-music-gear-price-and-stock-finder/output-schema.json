@@ -1,11 +1,17 @@
 {
   "actorOutputSchemaVersion": 1,
-  "description": "One record per Sam Ash Music product, with price, stock status, sale and new-arrival badges, brand, category and image.",
+  "description": "One record per Sam Ash Music product, with price, currency, discounts, item class, condition, low-stock badge, sale/new-arrival/price-drop flags, category breadcrumb and image. Optional similar products and ratings/reviews when enabled.",
   "properties": {
     "products": {
       "description": "Dataset containing all scraped Sam Ash Music products.",
       "template": "{{links.apiDefaultDatasetUrl}}/items",
       "title": "Sam Ash products",
+      "type": "string"
+    },
+    "runSummary": {
+      "description": "Key-value store record with per-run counters (mode, emitted, pages fetched, source total, related products, ignored legacy input).",
+      "template": "{{links.apiDefaultKeyValueStoreUrl}}/records/RUN_SUMMARY",
+      "title": "Run summary",
       "type": "string"
     }
   },

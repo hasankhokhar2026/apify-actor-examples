@@ -1,57 +1,79 @@
 # Sam Ash Music Gear Price & Stock Finder
 
-Sam Ash Music's catalog spans thousands of instruments and gear items across hundreds of brands. This actor runs a keyword or department search against it — with brand, price, condition and sale filters — or looks up exact SKUs, and returns each product's current price, stock status and badges. No login or cookies required.
+Sam Ash Music's catalog spans thousands of instruments, microphones, recording gear and accessories across hundreds of brands. This actor searches that catalog by keyword, browses any of its 580 category paths, or looks up exact products by SKU or product URL — and returns structured price, discount, availability, badge, category and image data. No login, cookies or proxy setup required.
 
 ## What this actor does
 
-- **Two modes:** `search` (keyword and/or category/brand browse) and `bySkus` (exact SKU/model-number lookup)
-- **Full department coverage:** Guitars, Bass Guitars, Drums & Percussion, Live Sound & Lighting, Microphones & Wireless, Recording, Band & Orchestra, Pianos & Keyboards, Cables, DJ & Production, Music Education & Gifts, Used Instruments, Sale, and more
-- **300+ brand filter:** exact-match dropdown covering every brand carried by Sam Ash, from Yamaha and Gibson down to boutique pedal and accessory makers
-- **6 sort orders:** best match, most popular, price (both directions), newest, best sellers
-- **Price, stock, sale, new-arrival, and condition filters** — including `condition` (New / Used / Open Box / B-Stock / Demo) for gear-marketplace and secondhand-inventory use cases
-- **Empty fields are omitted** — every record only contains data that was actually found
+- **Keyword search** across everything Sam Ash lists for sale, including products that have no category assigned (roughly 5% of the catalog).
+- **Exact category browse** using the site's own 580-path category tree — from `Guitars` down to `Guitars > Electric Guitars > Semi-Hollow Body Electric Guitars`.
+- **Exact product lookup** by Sam Ash SKU or by pasting a full `samash.com` product URL. URLs with open-box (`-D`) and used (`-U`, `-U2`) SKU suffixes are understood.
+- **Server-side filters** for brand, condition, item class, price range, sale, new arrivals, price drops, promotions and 39 product facets (channels, microphone preamps, key counts, pickup configuration, drum-head size, and more).
+- **Six sort orders:** best match, most popular, price low-to-high, price high-to-low, newest and best sellers.
+- **Optional related products:** one extra request per record adds up to 10 similar products.
+- **Optional ratings/reviews:** one extra request per record fetches public PowerReviews data when the product has reviews.
+- **Empty fields are omitted** at every depth — records only contain values that were actually found.
 
 ## Output per product
 
-- `sku` — Sam Ash SKU
+- `sku` — Sam Ash SKU (includes `-D` / `-U` inventory suffixes where applicable)
 - `productId` — internal product ID
-- `title` — product name
+- `title` — product name, HTML entities decoded
 - `brand`
-- `price` — current selling price (USD)
-- `msrp` — list price, only included when it reflects a genuine discount
-- `inStock` — boolean
-- `onSale` — boolean
-- `isNewArrival` — boolean
-- `isPriceDrop` — boolean, true when the product carries a recent price-drop flag (distinct from `onSale`)
-- `hasPromotion` — boolean, true when the product is eligible for an additional merchandising promotion
-- `badges[]` — merchandising badges (e.g. financing offers)
-- `description` — cleaned plain-text description (only when the catalog carries real copy)
-- `imageUrl` — product photo (800×800)
-- `productType`
-- `condition` — `New` / `Used` / `Open Box` / `B-Stock` / `Demo`, only included when the catalog listing declares one (most regular new-stock items don't carry this facet)
+- `price` — current selling price
+- `priceCurrency` — `USD`
+- `msrp` — list price, emitted only when it is genuinely above `price`
+- `isDiscounted` — true when the source reports a discount percentage or a genuine list-price markdown
+- `discountPercent` — source discount percentage, otherwise computed from `msrp` vs `price`
+- `inStock` — see "What stock means" below
+- `lowStock` — true when the badge text says `Low Stock`, `N Left` or `Only N left`
+- `onSale` — source sale flag
+- `isNewArrival` — source new-arrival flag
+- `isPriceDrop` — source price-drop flag (separate from `onSale`)
+- `hasPromotion` — source merchandising-promotion flag
+- `badges[]` — merchandising badge labels (e.g. financing offers, low-stock warnings)
+- `description` — cleaned plain-text description, only when the catalog carries real copy
+- `imageUrl` — product photo, upscaled to 800×800
+- `productType` — source product-type label
+- `condition` — per-product condition facet (`New`, `Used`, `Open Box`, `B-Stock`, `Demo`, `Restock`) when the listing declares one
+- `itemClass` — source item class (`Restock`, `New`, `Used`, `Blemished`, `Demo/Clearance`, `Closeout`) when present
 - `department` — top-level category
 - `categoryPath[]` — full category breadcrumb
+- `relatedProducts[]` — optional; each entry has `sku`, `title`, `brand`, `price`, `url`, `imageUrl` and `badges` when available
+- `ratingAverage` — optional; average star rating from PowerReviews when available
+- `reviewCount` — optional; total number of ratings/reviews reported by PowerReviews
+- `reviews[]` — optional; up to `reviewCount` reviews, each with `rating`, `title`, `text`, `author` and `date` when available
 - `sourceUrl` — canonical Sam Ash product page
-- `recordType: "product"`, `scrapedAt`
+- `recordType: "product"` and `scrapedAt` (UTC ISO timestamp)
+
+### What stock means
+
+Sam Ash's product feed marks every catalog-visible product as in stock and exposes no out-of-stock signal. `inStock` therefore means "listed for sale and buyable at the time of the run" — it does not mean a specific store has the item on a shelf. `lowStock` is derived from the source's own badge text (`Low Stock!`, `1 Left!`, `Only N left`); it does not expose a quantity. The old `inStockOnly` input was removed because filtering on it could never change the result; if an existing task still sends it, the actor logs that it was ignored.
 
 ## Input
 
 | Field | Type | Default | Description |
 |---|---|---|---|
-| `mode` | string | `search` | `search` / `bySkus` |
-| `searchQuery` | string | – | Free-text keyword search (mode=search) |
-| `category` | string (select) | – | Top-level department filter |
-| `brand` | string (select) | – | Exact brand/manufacturer filter (300+ options) |
-| `condition` | string (select) | – | Exact condition filter: `New` / `Used` / `Open Box` / `B-Stock` / `Demo` (mode=search) |
-| `sortBy` | string (select) | `relevance` | `relevance` / `popularity` / `priceLowToHigh` / `priceHighToLow` / `newest` / `bestSelling` |
-| `minPrice` | integer | – | Drop products priced below this (USD) |
-| `maxPrice` | integer | – | Drop products priced above this (USD) |
-| `inStockOnly` | boolean | `false` | Only in-stock products |
-| `onSaleOnly` | boolean | `false` | Only on-sale products |
+| `mode` | select | `search` | `search` (keyword/category) or `bySkus` (exact lookup) |
+| `searchQuery` | string | – | Keyword search. Empty = browse the catalog or the selected category |
+| `category` | select | – | Exact category path (580 options, top-level and subcategories) |
+| `brand` | select | – | Exact brand (319 live values; legacy values kept for saved tasks) |
+| `condition` | select | – | `New` / `Used` / `Open Box` / `B-Stock` / `Demo` / `Restock` |
+| `itemClass` | select | – | `Restock` / `New` / `Used` / `Blemished` / `Demo/Clearance` / `Closeout` |
+| `facetFilters` | stringList | – | `field:value` pairs, e.g. `number_of_channels:2`, `number_of_keys:88 Keys`, `pickup_configuration:H-S-S` |
+| `sortBy` | select | `relevance` | `relevance` / `popularity` / `priceLowToHigh` / `priceHighToLow` / `newest` / `bestSelling` |
+| `minPrice` | integer | – | Minimum price in USD, applied by the source |
+| `maxPrice` | integer | – | Maximum price in USD, applied by the source |
 | `newArrivalsOnly` | boolean | `false` | Only new-arrival products |
-| `priceDropOnly` | boolean | `false` | Only products with a recent price-drop flag (distinct from `onSaleOnly`) |
-| `skus` | array | – | Exact SKUs / model numbers (mode=bySkus) |
-| `maxItems` | integer | `50` | Hard cap on emitted records (1–500) |
+| `onSaleOnly` | boolean | `false` | Only on-sale products |
+| `priceDropOnly` | boolean | `false` | Only products flagged with a recent price drop |
+| `promotionsOnly` | boolean | `false` | Only products eligible for a merchandising promotion |
+| `discountedOnly` | boolean | `false` | Only products with a genuine discount |
+| `skus` | stringList | – | SKUs or full product URLs (`mode=bySkus`) |
+| `maxItems` | integer | `50` | Hard cap on records (1–10,000) |
+| `includeRelatedProducts` | boolean | `false` | Fetch similar products for each record |
+| `relatedProductsCount` | integer | `10` | Similar products per record (1–10) |
+| `includeReviews` | boolean | `false` | Fetch public PowerReviews ratings/reviews for each record |
+| `reviewCount` | integer | `10` | Individual reviews to include per record (1–25); total rating count is separate |
 
 ### Example: keyword search with filters
 
@@ -62,55 +84,79 @@ Sam Ash Music's catalog spans thousands of instruments and gear items across hun
   "brand": "Fender",
   "minPrice": 200,
   "maxPrice": 1500,
-  "inStockOnly": true,
   "sortBy": "priceLowToHigh",
   "maxItems": 100
 }
 ```
 
-### Example: browse a category without a keyword
+### Example: browse a subcategory
 
 ```json
 {
   "mode": "search",
-  "category": "Drums & Percussion",
-  "onSaleOnly": true,
-  "sortBy": "bestSelling",
+  "category": "Departments>Recording>Audio Interfaces",
+  "facetFilters": ["number_of_channels:2"],
   "maxItems": 50
 }
 ```
 
-### Example: exact SKU lookup
+### Example: exact lookup by SKU and URL
 
 ```json
 {
   "mode": "bySkus",
-  "skus": ["GES35500N", "TM80VTGXX"]
+  "skus": [
+    "GES35500N",
+    "https://www.samash.com/takamine-gn71ce-nat-acoustic-electric-guitar-open-box-tgn71cena-d"
+  ],
+  "includeRelatedProducts": true,
+  "relatedProductsCount": 5
 }
 ```
 
 ## Use cases
 
-- **Price monitoring** — track prices and sale status for specific gear over time
-- **Inventory intelligence** — check stock availability across brands/categories
-- **Competitive research** — benchmark musical-instrument retail pricing
-- **Catalog enrichment** — pull structured product data (brand, category, images) for a list of SKUs
-- **Deal discovery** — surface on-sale or new-arrival products in a category
+- **Price monitoring** — track current prices, discounts and sale flags for specific gear over time
+- **Catalog enrichment** — pull structured brand, category, image and description data for a SKU list or product-URL list
+- **Deal discovery** — surface on-sale, price-drop, promotion or discounted products in a category
+- **Used / open-box inventory** — filter by `itemClass` or `condition` to find restock, blemished and clearance listings
+- **Competitive research** — benchmark musical-instrument retail pricing across brands and categories
+- **Similar-product graphs** — enable `includeRelatedProducts` to expand from seed products into the catalog
+
+## Data source and reliability
+
+The actor reads Sam Ash's public SearchSpring search, category and recommendation APIs. Optional review enrichment uses the storefront's public PowerReviews endpoint. These endpoints are unauthenticated and are not behind the DataDome WAF that protects the storefront's HTML pages. Requests retry on HTTP 429/5xx with exponential backoff; no proxy, cookie or account is used.
+
+Sam Ash's own product pages (`sourceUrl`) are canonical, but DataDome is a best-effort/browser-only path: HTTP clients and link checkers often get 403, while a real browser normally renders the page. The actor does not fetch product pages for specs, UPC/MPN or galleries because that path is rate-limited and not reliably cookieless. Image URLs are served directly by the Sam Ash CDN and return 200 to anonymous requests.
+
+## Limits
+
+- **No lookup by arbitrary manufacturer model number.** The exact lookup uses Sam Ash's SKU index. Many SKUs resemble model numbers, but a model number that is not the Sam Ash SKU will not match; use a search query instead. Product URLs are resolved by exact SKU candidates plus a slug-based search fallback; a URL that cannot be verified is skipped rather than emitted against a wrong SKU.
+- **`bySkus` ignores search-only inputs by design.** Brand, category, facet filters and sort order do not apply to exact SKU/URL lookup; price, condition, itemClass and sale/promotion filters still apply to the returned records.
+- **Ratings/reviews are optional enrichment, not a feed field.** `includeReviews` fetches the public PowerReviews endpoint; products without reviews omit `ratingAverage`, `reviewCount` and `reviews`. A 300-SKU audit found reviews on about a quarter of products; coverage is product-dependent.
+- **No specs table in the feed.** Product pages may render specs in a browser, but that is a best-effort, rate-limited path and not part of this actor.
+- **No UPC/MPN in the feed.** Product-page JSON-LD may repeat the SKU as `mpn`; it is not a reliable separate identifier.
+- **No per-store inventory, shipping cost or delivery ETA.**
+- **No sale start/end dates.** Sale and price-drop flags are current-state only.
+- **No image gallery.** The feed returns one product image per record; product pages may show a gallery in a browser, but that path is best-effort/rate-limited.
+- **No out-of-stock signal.** Every catalog-visible product reports in stock; see "What stock means". `lowStock` is a badge-derived warning, not a quantity or store inventory.
+- **`msrp` is usually identical to `price`.** It is emitted only when it represents a genuine markdown, so most records omit it. Do not infer a discount from the absence of `msrp`.
+- **10,000 products per query; 175 more are only reachable by partitioning.** The live catalog is 10,175 products. The source serves 100 per page and rejects page 101 with HTTP 400. The actor fetches up to 10,000, sets `cappedAtPageLimit` and says so in the run summary; split broad queries by category, brand, price range or facet to reach the remaining 175.
+- **`condition` is sparse.** Most regular new stock has no condition facet; `itemClass` covers used/open-box/restock inventory more completely.
+- **Facet values must match the site exactly.** Field names are validated against the 39 supported facets, but the source rejects unknown values (HTTP 400), e.g. `number_of_keys` uses `88 Keys`, not `88`.
 
 ## FAQ
 
-**Is a login or cookie required?** No. The actor uses Sam Ash's public product-search API and requires no account, cookies, or paid proxy.
+**Is a login, cookie or proxy required?** No. The actor uses public JSON endpoints and returns data without any credentials or proxy configuration.
 
-**Why is `msrp` sometimes missing?** It's only included when it's genuinely higher than the current `price` (i.e., a real discount). When `msrp` equals `price`, it's omitted to avoid a redundant field.
+**Why is `department` missing on some keyword-search records?** Sam Ash has a few hundred uncategorized products. Keyword search intentionally does not force a category filter (that would hide them), and the feed only returns a breadcrumb when one exists. Browse a category or use `bySkus` for records that always carry a breadcrumb.
 
-**Why is `description` missing on some products?** Some catalog entries only reference an internal content block rather than carrying real descriptive text; those are omitted rather than emitting placeholder markup.
+**Why does `relatedProducts` sometimes have fewer than `relatedProductsCount` items?** The recommendation index may return fewer than requested for obscure products. Empty results are omitted rather than padded.
 
-**Can I combine category and brand and keyword search together?** Yes — `searchQuery`, `category`, `brand`, and `condition` all combine (AND) in `search` mode, along with any of the price/stock/sale/new-arrival filters.
+**Can I combine keyword, category, brand, condition, facet and price filters?** Yes — all filters combine (AND), and every one except `discountedOnly` is applied by the source. `discountedOnly` is evaluated on the returned records because the source has no single "any discount" filter.
 
-**How is `condition` different from the "Used Musical Instruments" `category`?** `category: "Used Musical Instruments"` is a merchandising department that groups a curated set of secondhand listings. `condition` is a per-product attribute (`New` / `Used` / `Open Box` / `B-Stock` / `Demo`) that appears across many departments — e.g. an open-box guitar amp still lives under "Live Sound & Lighting", not "Used Musical Instruments". Use `condition` when you want every non-new listing regardless of department; only a minority of catalog items carry this attribute at all (most standard new-stock products omit it, and the field is omitted from their output records).
+**What happens when a SKU or URL does not exist?** It is skipped; other requested SKUs still return. URL inputs are accepted only when a catalog match verifies the canonical product URL, so a wrong SKU is never emitted. The run summary reports SKUs/URLs requested, how they were resolved and how many remained unresolved.
 
-**What if a SKU in `bySkus` doesn't exist?** It's skipped silently; the actor still returns any SKUs that do match.
+**Why do some records lack ratings or reviews?** Review enrichment is optional and only runs when `includeReviews` is true. PowerReviews has data for some products and no reviews for others; empty review fields are omitted.
 
-**Are product page URLs (`sourceUrl`) safe to open?** Yes — they're the real, canonical Sam Ash product pages and resolve with a normal 200 response for any visitor or link-checker.
-
-**How fresh is the data?** Prices and stock status reflect Sam Ash's live product-search index at the time the actor runs.
+**How fresh is the data?** Prices, flags and categories reflect Sam Ash's live search index at the time of the run.

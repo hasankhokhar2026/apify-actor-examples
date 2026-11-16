@@ -1177,7 +1177,7 @@ class Site:
                   'and the run totals are arithmetic on the published prices, not measured runs. Results depend on the source site and on your input. Check the Store page for the price '
                   'in force before a large run.</p>'
                   f'<h2>Machine-readable files</h2><ul><li><a href="{self.link("actors.json")}">Actor index (JSON)</a></li><li><a href="{self.link("source-manifest.json")}">Source content hashes</a></li>'
-                  f'<li><a href="{self.link("llms.txt")}">Documentation index for language models (llms.txt)</a></li><li><a href="{self.link("sitemap.xml")}">Sitemap</a></li></ul>'
+                  f'<li><a href="{self.link("llms.txt")}">Documentation index for language models (llms.txt)</a></li><li><a href="{self.link("sitemap.xml")}">Sitemap</a> (also <a href="{self.link("sitemap.txt")}">as plain text</a>)</li></ul>'
                   f'<p><a href="{self.apify}">{esc(self.brand)} on Apify</a> and the <a href="{self.repo}">project repository</a>.</p></article>', "AboutPage", crumbs=[("How these pages are made", "sources/")])
         self.page("404.html", "Page not found", "The requested documentation page was not found.", '<article class="prose"><h1>Page not found</h1><p>The address may have changed. '
                   f'Search above, or <a href="{self.link("actors/")}">browse all Actors</a>.</p></article>', noindex=True)
@@ -1193,8 +1193,11 @@ class Site:
         self.files["sitemap.xml"] = ('<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
                                      + "".join("<url><loc>" + xml_escape(u) + "</loc>" + (f"<lastmod>{modified[u]}</lastmod>" if u in modified else "") + "</url>" for u in sorted(self.indexed))
                                      + "</urlset>\n")
+        # The same URL set as a plain-text sitemap (one absolute URL per line, UTF-8), submitted alongside the
+        # XML: Search Console left the XML "pending, never read" on these github.io prefixes for days (2026-11-16).
+        self.files["sitemap.txt"] = "".join(u + "\n" for u in sorted(self.indexed))
         # A project site's /robots.txt is not authoritative for the github.io host.
-        self.files["robots.txt"] = "User-agent: *\nAllow: /\nSitemap: " + self.base + "sitemap.xml\n"
+        self.files["robots.txt"] = "User-agent: *\nAllow: /\nSitemap: " + self.base + "sitemap.xml\nSitemap: " + self.base + "sitemap.txt\n"
         self.files["llms.txt"] = self.llms()
         # RSS permits omitted dates: never stamp polling time as publication time.
         self.files["feed.xml"] = ('<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"><channel><title>' + xml_escape(self.brand + " export tutorials") + '</title><link>'
