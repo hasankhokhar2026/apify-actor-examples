@@ -1,0 +1,128 @@
+{
+  "properties": {
+    "includeSellerRecord": {
+      "default": true,
+      "description": "When enabled, also emits a seller profile record for each unique seller encountered.",
+      "prefill": true,
+      "title": "Include Seller Record",
+      "type": "boolean"
+    },
+    "maxItems": {
+      "default": 5,
+      "description": "Maximum number of records to extract.",
+      "editor": "number",
+      "maximum": 5000,
+      "minimum": 1,
+      "prefill": 5,
+      "title": "Max Items",
+      "type": "integer"
+    },
+    "maxPrice": {
+      "description": "Only include products priced at or below this value (in USD).",
+      "editor": "number",
+      "maximum": 1000000,
+      "minimum": 0,
+      "title": "Maximum Price",
+      "type": "number"
+    },
+    "minPrice": {
+      "description": "Only include products priced at or above this value (in USD).",
+      "editor": "number",
+      "maximum": 1000000,
+      "minimum": 0,
+      "title": "Minimum Price",
+      "type": "number"
+    },
+    "minRating": {
+      "description": "Only include products with an average rating at or above this value (0–5).",
+      "editor": "number",
+      "maximum": 5,
+      "minimum": 0,
+      "title": "Minimum Rating",
+      "type": "number"
+    },
+    "mode": {
+      "default": "searchProducts",
+      "description": "How to find Gumroad products. Use searchProducts to search by keyword, byProductUrls to enrich specific product URLs, or bySellerUrls to scrape a seller's storefront.",
+      "editor": "select",
+      "enum": [
+        "searchProducts",
+        "byProductUrls",
+        "bySellerUrls"
+      ],
+      "enumTitles": [
+        "Search products",
+        "By product URLs",
+        "By seller URLs"
+      ],
+      "prefill": "searchProducts",
+      "title": "Mode",
+      "type": "string"
+    },
+    "nativeTypes": {
+      "default": [],
+      "description": "Filter by product type. Leave empty to include all types. Allowed values: digital, course, membership, bundle, podcast, audiobook, newsletter, ticket.",
+      "editor": "stringList",
+      "title": "Native Types",
+      "type": "array"
+    },
+    "payWhatYouWantOnly": {
+      "default": false,
+      "description": "When enabled, only include products that allow the buyer to set their own price.",
+      "prefill": false,
+      "title": "Pay What You Want Only",
+      "type": "boolean"
+    },
+    "productUrls": {
+      "description": "List of Gumroad product URLs to enrich (mode=byProductUrls).",
+      "editor": "stringList",
+      "title": "Product URLs",
+      "type": "array"
+    },
+    "searchQuery": {
+      "description": "Keyword to search for products (mode=searchProducts). Example: notion, python course, ebook.",
+      "editor": "textfield",
+      "prefill": "notion",
+      "title": "Search Query",
+      "type": "string"
+    },
+    "sellerUrls": {
+      "description": "List of Gumroad seller/storefront URLs to scrape all products from (mode=bySellerUrls).",
+      "editor": "stringList",
+      "title": "Seller URLs",
+      "type": "array"
+    },
+    "sellerVerifiedOnly": {
+      "default": false,
+      "description": "When enabled, only include products from verified Gumroad sellers.",
+      "prefill": false,
+      "title": "Seller Verified Only",
+      "type": "boolean"
+    },
+    "sortBy": {
+      "default": "relevance",
+      "description": "Sort order for search results.",
+      "editor": "select",
+      "enum": [
+        "relevance",
+        "priceAsc",
+        "priceDesc",
+        "ratingDesc",
+        "newest"
+      ],
+      "enumTitles": [
+        "Relevance",
+        "Price low to high",
+        "Price high to low",
+        "Highest rating",
+        "Newest-ish"
+      ],
+      "prefill": "relevance",
+      "title": "Sort By",
+      "type": "string"
+    }
+  },
+  "schemaVersion": 1,
+  "title": "Gumroad Scraper Input",
+  "type": "object"
+}

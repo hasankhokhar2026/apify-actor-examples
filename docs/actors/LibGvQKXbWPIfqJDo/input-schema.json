@@ -1,0 +1,109 @@
+{
+  "description": "Search wines by type, name, winery, country, or region. All data sourced from a public wine database — no API key required.",
+  "properties": {
+    "filterCountry": {
+      "description": "Only return wines from this country (e.g. 'France', 'Italy', 'United States'). Case-insensitive partial match.",
+      "editor": "textfield",
+      "title": "Filter by country",
+      "type": "string"
+    },
+    "filterRegion": {
+      "description": "Only return wines from this region (e.g. 'Bordeaux', 'Napa Valley', 'Tuscany'). Case-insensitive partial match.",
+      "editor": "textfield",
+      "title": "Filter by region",
+      "type": "string"
+    },
+    "filterWinery": {
+      "description": "Only return wines from this winery. Case-insensitive partial match.",
+      "editor": "textfield",
+      "title": "Filter by winery",
+      "type": "string"
+    },
+    "maxItems": {
+      "default": 100,
+      "description": "Hard cap on emitted records.",
+      "maximum": 5000,
+      "minimum": 1,
+      "prefill": 100,
+      "title": "Max items",
+      "type": "integer"
+    },
+    "minRating": {
+      "description": "Only return wines with a community rating at or above this value (1.0–5.0).",
+      "maximum": 5,
+      "minimum": 1,
+      "title": "Minimum rating",
+      "type": "number"
+    },
+    "mode": {
+      "default": "search",
+      "description": "What to fetch.",
+      "editor": "select",
+      "enum": [
+        "search",
+        "byType",
+        "all"
+      ],
+      "enumTitles": [
+        "Search wines (filter by name/winery/country/region)",
+        "Browse by wine type (reds, whites, sparkling, rosé, dessert, port)",
+        "Get all wines across all types"
+      ],
+      "prefill": "search",
+      "title": "Mode",
+      "type": "string"
+    },
+    "searchQuery": {
+      "default": "cabernet",
+      "description": "Free-text query matched against wine name and winery (mode=search). Example: 'cabernet' or 'bordeaux'.",
+      "editor": "textfield",
+      "prefill": "cabernet",
+      "title": "Search query",
+      "type": "string"
+    },
+    "vintageMax": {
+      "description": "Only return wines with vintage year at or before this value.",
+      "maximum": 2030,
+      "minimum": 1800,
+      "title": "Vintage year (max)",
+      "type": "integer"
+    },
+    "vintageMin": {
+      "description": "Only return wines with vintage year at or after this value.",
+      "maximum": 2030,
+      "minimum": 1800,
+      "title": "Vintage year (min)",
+      "type": "integer"
+    },
+    "wineType": {
+      "default": "reds",
+      "description": "Wine category to fetch (used in mode=byType and as an optional filter in mode=search/all).",
+      "editor": "select",
+      "enum": [
+        "reds",
+        "whites",
+        "sparkling",
+        "rose",
+        "dessert",
+        "port"
+      ],
+      "enumTitles": [
+        "Red wines",
+        "White wines",
+        "Sparkling wines",
+        "Rosé wines",
+        "Dessert wines",
+        "Port wines"
+      ],
+      "prefill": "reds",
+      "title": "Wine type",
+      "type": "string"
+    }
+  },
+  "required": [
+    "mode"
+  ],
+  "schemaVersion": 1,
+  "title": "Wine API Scraper Input",
+  "type": "object"
+}

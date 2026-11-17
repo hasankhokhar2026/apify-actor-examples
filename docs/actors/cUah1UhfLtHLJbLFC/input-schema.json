@@ -1,0 +1,247 @@
+{
+  "properties": {
+    "categories": {
+      "description": "Filter listings by Acquire category. Matches the listing's `Category` field (case-insensitive). Leave empty for all categories.",
+      "editor": "select",
+      "items": {
+        "enum": [
+          "SaaS",
+          "Ecommerce",
+          "Content",
+          "Services",
+          "Mobile Apps",
+          "Marketplace",
+          "Newsletter",
+          "Digital Marketing Agency",
+          "Shopify App",
+          "AI",
+          "Other"
+        ],
+        "type": "string"
+      },
+      "prefill": [],
+      "title": "Categories",
+      "type": "array",
+      "uniqueItems": true
+    },
+    "connectedMetrics": {
+      "default": false,
+      "description": "When checked, only return listings whose SSR summary shows connected analytics (e.g. Google Analytics, Stripe).",
+      "editor": "checkbox",
+      "title": "Connected Metrics Only",
+      "type": "boolean"
+    },
+    "customers": {
+      "description": "Only return listings whose `Customers` count is >= this value. Parsed from the SSR summary (e.g. '1.2K' -> 1200).",
+      "editor": "number",
+      "minimum": 0,
+      "title": "Min Customers",
+      "type": "integer"
+    },
+    "hideUnderOffer": {
+      "default": false,
+      "description": "When checked, skip listings whose status is `Under Offer`.",
+      "editor": "checkbox",
+      "title": "Hide Under-Offer Listings",
+      "type": "boolean"
+    },
+    "locations": {
+      "description": "Optional country / region substrings to match against the listing's location field (case-insensitive).",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Locations",
+      "type": "array"
+    },
+    "maxAge": {
+      "description": "Only return listings where the business is at most this many years old.",
+      "editor": "number",
+      "minimum": 0,
+      "title": "Max Business Age (years)",
+      "type": "integer"
+    },
+    "maxAnnualGrowthRate": {
+      "description": "Only return listings whose annual growth rate percentage is <= this value.",
+      "editor": "number",
+      "title": "Max Annual Growth Rate (%)",
+      "type": "integer"
+    },
+    "maxAnnualRecurringRevenue": {
+      "description": "Only return listings with annual revenue <= this value.",
+      "editor": "number",
+      "minimum": 0,
+      "title": "Max Annual Revenue (USD)",
+      "type": "integer"
+    },
+    "maxItems": {
+      "default": 3,
+      "description": "Maximum number of listings to return.",
+      "editor": "number",
+      "maximum": 500,
+      "minimum": 1,
+      "prefill": 3,
+      "title": "Max Items",
+      "type": "integer"
+    },
+    "maxPrice": {
+      "description": "Only return listings with asking price <= this value.",
+      "editor": "number",
+      "minimum": 0,
+      "title": "Max Asking Price (USD)",
+      "type": "integer"
+    },
+    "maxProfitMultiple": {
+      "description": "Only return listings where askingPrice / annualProfit <= this value.",
+      "editor": "number",
+      "minimum": 0,
+      "title": "Max Profit Multiple",
+      "type": "integer"
+    },
+    "maxRevenueMultiple": {
+      "description": "Only return listings where askingPrice / annualRevenue <= this value.",
+      "editor": "number",
+      "minimum": 0,
+      "title": "Max Revenue Multiple",
+      "type": "integer"
+    },
+    "maxTTMGrossRevenue": {
+      "description": "Trailing-twelve-month gross revenue maximum.",
+      "editor": "number",
+      "minimum": 0,
+      "title": "Max TTM Gross Revenue (USD)",
+      "type": "integer"
+    },
+    "maxTTMNetProfit": {
+      "description": "Trailing-twelve-month net profit maximum.",
+      "editor": "number",
+      "minimum": 0,
+      "title": "Max TTM Net Profit (USD)",
+      "type": "integer"
+    },
+    "minAge": {
+      "description": "Only return listings where the business is at least this many years old (derived from the Founded / Date Founded field).",
+      "editor": "number",
+      "minimum": 0,
+      "title": "Min Business Age (years)",
+      "type": "integer"
+    },
+    "minAnnualGrowthRate": {
+      "description": "Only return listings whose annual growth rate percentage is >= this value. Parsed from the SSR `Growth Rate` / `Annual Growth` field when present.",
+      "editor": "number",
+      "title": "Min Annual Growth Rate (%)",
+      "type": "integer"
+    },
+    "minAnnualRecurringRevenue": {
+      "description": "Only return listings with annual revenue >= this value.",
+      "editor": "number",
+      "minimum": 0,
+      "title": "Min Annual Revenue (USD)",
+      "type": "integer"
+    },
+    "minPrice": {
+      "description": "Only return listings with asking price >= this value.",
+      "editor": "number",
+      "minimum": 0,
+      "title": "Min Asking Price (USD)",
+      "type": "integer"
+    },
+    "minProfitMultiple": {
+      "description": "Only return listings where askingPrice / annualProfit >= this value.",
+      "editor": "number",
+      "minimum": 0,
+      "title": "Min Profit Multiple",
+      "type": "integer"
+    },
+    "minRevenueMultiple": {
+      "description": "Only return listings where askingPrice / annualRevenue >= this value.",
+      "editor": "number",
+      "minimum": 0,
+      "title": "Min Revenue Multiple",
+      "type": "integer"
+    },
+    "minTTMGrossRevenue": {
+      "description": "Trailing-twelve-month gross revenue minimum. Applied against the listing's annual revenue when TTM-specific data isn't exposed on the public SSR page.",
+      "editor": "number",
+      "minimum": 0,
+      "title": "Min TTM Gross Revenue (USD)",
+      "type": "integer"
+    },
+    "minTTMNetProfit": {
+      "description": "Trailing-twelve-month net profit minimum. Applied against the listing's annual profit when TTM-specific data isn't exposed on the public SSR page.",
+      "editor": "number",
+      "minimum": 0,
+      "title": "Min TTM Net Profit (USD)",
+      "type": "integer"
+    },
+    "proxyConfiguration": {
+      "default": {
+        "apifyProxyCountry": "US",
+        "apifyProxyGroups": [
+          "RESIDENTIAL"
+        ],
+        "useApifyProxy": true
+      },
+      "description": "Apify proxy. Residential US recommended for reliable SSR fetches; datacenter often works too.",
+      "editor": "proxy",
+      "prefill": {
+        "apifyProxyCountry": "US",
+        "apifyProxyGroups": [
+          "RESIDENTIAL"
+        ],
+        "useApifyProxy": true
+      },
+      "title": "Proxy Configuration",
+      "type": "object"
+    },
+    "recastFinancials": {
+      "default": false,
+      "description": "When checked, only return listings whose SSR `Financials` section indicates seller-recast financials.",
+      "editor": "checkbox",
+      "title": "Recast Financials Only",
+      "type": "boolean"
+    },
+    "sortBy": {
+      "default": "newest",
+      "description": "How listings from the public sitemap are traversed. `newest`/`oldest` use the sitemap `lastmod`; `price-low`/`price-high` sort after filtering.",
+      "editor": "select",
+      "enum": [
+        "newest",
+        "oldest",
+        "price-low",
+        "price-high"
+      ],
+      "enumTitles": [
+        "Newest first",
+        "Oldest first",
+        "Price: low to high",
+        "Price: high to low"
+      ],
+      "title": "Sort Order",
+      "type": "string"
+    },
+    "underAdvisory": {
+      "default": false,
+      "description": "When checked, only return listings the SSR flags as being under Acquire advisory support.",
+      "editor": "checkbox",
+      "title": "Under Advisory Only",
+      "type": "boolean"
+    },
+    "urls": {
+      "description": "Direct Acquire.com listing URLs. Accepts canonical /startup/<slug> (preferred, public SSR pages) or app /startups/<id> URLs. When provided, overrides category / filter search.",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Direct Listing URLs (optional)",
+      "type": "array"
+    },
+    "verifiedBusiness": {
+      "default": false,
+      "description": "When checked, only return listings Acquire flags as verified.",
+      "editor": "checkbox",
+      "title": "Verified Only",
+      "type": "boolean"
+    }
+  },
+  "required": [],
+  "schemaVersion": 1,
+  "title": "Acquire.com Startup Marketplace Scraper Input",
+  "type": "object"
+}

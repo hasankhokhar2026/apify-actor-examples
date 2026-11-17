@@ -1,0 +1,84 @@
+{
+  "description": "Search Farfetch luxury fashion products by keyword, brand, gender, or sale items.",
+  "properties": {
+    "brand": {
+      "description": "Brand name to filter by (e.g. 'gucci', 'prada', 'balenciaga').",
+      "editor": "textfield",
+      "title": "Brand (mode=searchByBrand)",
+      "type": "string"
+    },
+    "gender": {
+      "default": "",
+      "description": "Filter by gender.",
+      "editor": "select",
+      "enum": [
+        "",
+        "women",
+        "men",
+        "kids"
+      ],
+      "enumTitles": [
+        "All genders",
+        "Women",
+        "Men",
+        "Kids"
+      ],
+      "prefill": "",
+      "title": "Gender",
+      "type": "string"
+    },
+    "keyword": {
+      "default": "Gucci bag",
+      "description": "Product keyword to search for (e.g. 'Gucci bag', 'Prada shoes').",
+      "editor": "textfield",
+      "prefill": "Gucci bag",
+      "title": "Search keyword",
+      "type": "string"
+    },
+    "maxItems": {
+      "default": 20,
+      "description": "Maximum number of products to return.",
+      "maximum": 1000,
+      "minimum": 1,
+      "prefill": 20,
+      "title": "Max items",
+      "type": "integer"
+    },
+    "mode": {
+      "default": "search",
+      "description": "What to browse on Farfetch.",
+      "editor": "select",
+      "enum": [
+        "search",
+        "searchByBrand",
+        "newIn",
+        "saleItems",
+        "productDetails"
+      ],
+      "enumTitles": [
+        "Search by keyword",
+        "Browse by brand",
+        "New arrivals",
+        "Sale items",
+        "Get product details by URLs"
+      ],
+      "prefill": "search",
+      "title": "Mode",
+      "type": "string"
+    },
+    "productUrls": {
+      "default": [],
+      "description": "Farfetch product page URLs to scrape.",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Product URLs (mode=productDetails)",
+      "type": "array"
+    }
+  },
+  "required": [
+    "mode"
+  ],
+  "schemaVersion": 1,
+  "title": "Farfetch Scraper Input",
+  "type": "object"
+}

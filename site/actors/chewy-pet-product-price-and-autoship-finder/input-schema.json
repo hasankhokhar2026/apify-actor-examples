@@ -1,0 +1,155 @@
+{
+  "description": "Search Chewy.com for pet products, browse by category or brand, or enrich specific product URLs.",
+  "properties": {
+    "autoshipOnly": {
+      "default": false,
+      "description": "Only return products eligible for Chewy Autoship subscription.",
+      "prefill": false,
+      "title": "Autoship eligible only",
+      "type": "boolean"
+    },
+    "brandName": {
+      "description": "Brand name to scrape all products for (mode=byBrand). Example: `Royal Canin`, `Blue Buffalo`.",
+      "editor": "textfield",
+      "title": "Brand name (mode=byBrand)",
+      "type": "string"
+    },
+    "categoryUrl": {
+      "description": "Full Chewy category URL to browse (mode=byCategory). Example: `https://www.chewy.com/b/dry-food-294`.",
+      "editor": "textfield",
+      "title": "Category URL (mode=byCategory)",
+      "type": "string"
+    },
+    "inStockOnly": {
+      "default": false,
+      "description": "Only return products currently in stock.",
+      "prefill": false,
+      "title": "In stock only",
+      "type": "boolean"
+    },
+    "maxItems": {
+      "default": 50,
+      "description": "Maximum number of products to return.",
+      "maximum": 5000,
+      "minimum": 1,
+      "prefill": 50,
+      "title": "Max items",
+      "type": "integer"
+    },
+    "maxPrice": {
+      "description": "Only return products priced at or below this value.",
+      "maximum": 10000,
+      "minimum": 0,
+      "title": "Maximum price ($)",
+      "type": "integer"
+    },
+    "minPrice": {
+      "description": "Only return products priced at or above this value.",
+      "maximum": 10000,
+      "minimum": 0,
+      "title": "Minimum price ($)",
+      "type": "integer"
+    },
+    "minRating": {
+      "description": "Only return products with an average rating at or above this value (0.0–5.0).",
+      "maximum": 5,
+      "minimum": 0,
+      "title": "Minimum rating",
+      "type": "number"
+    },
+    "mode": {
+      "default": "search",
+      "description": "How to find products. `search` for keyword search, `byCategory` to browse a category URL, `byBrand` for all products of a brand, `byProductUrls` to enrich specific product pages.",
+      "editor": "select",
+      "enum": [
+        "search",
+        "byCategory",
+        "byBrand",
+        "byProductUrls"
+      ],
+      "enumTitles": [
+        "Search products",
+        "Browse by category URL",
+        "All products by brand name",
+        "Enrich specific product URLs"
+      ],
+      "prefill": "search",
+      "title": "Mode",
+      "type": "string"
+    },
+    "petType": {
+      "default": "all",
+      "description": "Filter search results by pet type (mode=search).",
+      "editor": "select",
+      "enum": [
+        "all",
+        "dog",
+        "cat",
+        "fish",
+        "bird",
+        "reptile",
+        "small-pet",
+        "farm-animal"
+      ],
+      "enumTitles": [
+        "All pets",
+        "Dog",
+        "Cat",
+        "Fish",
+        "Bird",
+        "Reptile",
+        "Small pet",
+        "Farm animal"
+      ],
+      "prefill": "all",
+      "title": "Pet type filter",
+      "type": "string"
+    },
+    "searchQuery": {
+      "default": "dog food",
+      "description": "Keyword search query (mode=search). Example: `dog food`, `cat toys`.",
+      "editor": "textfield",
+      "prefill": "dog food",
+      "title": "Search query",
+      "type": "string"
+    },
+    "sortBy": {
+      "default": "best-match",
+      "description": "Sort order for search and category results.",
+      "editor": "select",
+      "enum": [
+        "best-match",
+        "top-rated",
+        "bestselling",
+        "price-asc",
+        "price-desc",
+        "new-arrivals"
+      ],
+      "enumTitles": [
+        "Best match",
+        "Top rated",
+        "Best selling",
+        "Price: Low to High",
+        "Price: High to Low",
+        "New arrivals"
+      ],
+      "prefill": "best-match",
+      "title": "Sort by",
+      "type": "string"
+    },
+    "startUrls": {
+      "default": [],
+      "description": "List of Chewy product page URLs to enrich (mode=byProductUrls). Example: `https://www.chewy.com/royal-canin-adult-dry-dog-food/dp/123456`.",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Product URLs (mode=byProductUrls)",
+      "type": "array"
+    }
+  },
+  "required": [
+    "mode"
+  ],
+  "schemaVersion": 1,
+  "title": "Chewy Product Scraper Input",
+  "type": "object"
+}
