@@ -9,6 +9,7 @@ local.ch is where the Swiss market looks up local businesses by trade and place.
 ## What this actor does
 
 - **Two modes:** `search` (category + city/canton) and `detail` (direct business profile URLs)
+- **Automatic public challenge handling** — solves local.ch's browser-integrity check without a browser session
 - **75 curated categories** to pick from, or type any custom category (local.ch matches free text like a keyword search)
 - **All 26 Swiss cantons** available as a one-click filter, in addition to free-text city search
 - **4 languages** — English, German, French, Italian (same underlying data, localized labels)
@@ -32,6 +33,7 @@ local.ch is where the Swiss market looks up local businesses by trade and place.
 - `openingHours[]` — structured opening hours (`{day, opens, closes}` per slot; when profile fetched and the business publishes schema.org hours)
 - `phone`, `email`, `website`
 - `facebookUrl`, `instagramUrl`, `linkedinUrl`, `twitterUrl`, `youtubeUrl` — social links the business has published (when profile fetched)
+- `searchTotal` - total matching businesses reported by local.ch for the search
 - `thumbnailUrl` — small logo/photo thumbnail shown on the search-results card (mode=search, no `fetchDetails` needed)
 - `images[]` (up to 15), `logoUrl` — business photos and logo (when profile fetched)
 - `searchCategory`, `searchLocation`, `language` — the search parameters used (mode=search)
@@ -128,7 +130,7 @@ local.ch is where the Swiss market looks up local businesses by trade and place.
 
 - **Deep pagination on very broad searches.** local.ch enforces a per-IP rate limit on its search-results pages of roughly 9 page requests before returning 403s (confirmed via testing: this triggers at a fixed request count, not a request-rate/time window). In practice this caps a single run at roughly 150-180 records for very broad, single-category-nationwide searches (e.g. `category: "restaurant"`, `location: "Switzerland"`). The actor automatically rotates through Apify's free AUTO proxy to recover from this where possible and always returns every record it collected before the limit hit (never an empty/failed run). For larger volumes, run multiple smaller searches (e.g. one per city or canton) instead of one very broad nationwide pull — city- and canton-scoped searches rarely reach this limit.
 - **`sortBy` is applied client-side.** local.ch's search-results pages don't honor a server-side sort parameter (verified: `?sort=rating` returns results in the same order as no sort parameter), so `rating`/`name` sorting is applied across the batch of records this run actually fetched, not the entire category.
-- **`openNowOnly` and `minRating` are applied client-side.** A business with no open/closed badge or no rating on local.ch is only excluded by `minRating` (which requires a rating to compare against); it is *not* excluded by `openNowOnly`, since an unknown status is treated as "don't filter this one out" rather than "closed".
+- **`openNowOnly` and `minRating` are applied client-side.** `openNowOnly` keeps only records with a confirmed open badge; `minRating` requires a published rating. Businesses without those values are excluded.
 
 ## FAQ
 
@@ -145,10 +147,10 @@ local.ch only shows a rating once a business has received at least one review, a
 `ratingCount` is the total number of star ratings a business has received. `reviewCount` is the (usually smaller) number of ratings that include a written review. Both come directly from local.ch's own aggregate rating data.
 
 **Can I search a whole canton instead of a single city?**
-Yes — set `canton` to any of the 26 Swiss cantons; it takes priority over `location`. You can also just type a canton name (e.g. `"Vaud"`) directly into `location`.
+Yes - choose `canton` to search an entire canton; it takes priority over `location`. `location` is for a city or town.
 
 **Can I search all of Switzerland at once?**
-Yes — set `location` to `"Switzerland"` (or leave both `location`/`canton` and just rely on the default) for a nationwide search.
+Yes - set `location` to `"Switzerland"` for a nationwide search.
 
 **How accurate are the GPS coordinates?**
 `latitude`/`longitude` come directly from the business's own local.ch profile page (only available with `fetchDetails: true` in search mode, or always in `detail` mode).
@@ -157,7 +159,7 @@ Yes — set `location` to `"Switzerland"` (or leave both `location`/`canton` and
 Fetching each business's full profile page requires one extra request per result, which is slower. Turn it on when you need email, website, social links, coordinates, structured opening hours, or photos.
 
 **Does this actor need a proxy or login?**
-No — local.ch's search and profile pages are served without any anti-bot challenge, so this actor runs entirely on Apify's free plan with no proxy and no credentials.
+No login or credentials are needed. local.ch may present a public browser-integrity challenge; the actor handles it automatically. If the site rate-limits the runner, the actor retries with free Apify Proxy where available.
 
 **What does `subtitle` mean?**
 local.ch lets businesses show a short line under their name. For registered companies this is often their legal entity name (e.g. `"Selnau Gastro AG"`); for others it can be a marketing tagline or keyword list. It's included as-is since we can't reliably tell the two apart.

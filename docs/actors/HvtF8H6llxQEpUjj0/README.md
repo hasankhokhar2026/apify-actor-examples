@@ -18,6 +18,7 @@ Yello.ae is a large UAE business directory covering every emirate. This actor ru
 
 ## Output per business
 
+- `businessId` - yello.ae business id (search and detail)
 - `name` — business name
 - `category` — primary listed category, `categories[]` — all registered categories (when profile fetched)
 - `tags[]` — free-text keyword tags the business added (when profile fetched)
@@ -39,6 +40,7 @@ Yello.ae is a large UAE business directory covering every emirate. This actor ru
 - `products[]` — products/services listed on the profile (`{name, description, price, imageUrl}`; when profile fetched and the business has any)
 - `reviews[]` — individual written reviews (`{author, rating, title, text, date}`; when profile fetched and the business has any)
 - `lastUpdated`, `registeredOn` — profile last-updated and yello.ae registration timestamps (when profile fetched and the "Verified Business" panel is present)
+- `searchTotal` - total matching listings reported by Yello (mode=search)
 - `searchCategory`, `searchLocation` — the search parameters used (mode=search)
 - `sourceUrl` — canonical yello.ae profile URL for the business
 - `recordType: "business"`, `scrapedAt`
@@ -157,4 +159,4 @@ In `search` mode, `latitude`/`longitude` come from the same map-pin coordinates 
 Fetching each business's full profile page requires one extra request per result, which is slower. Turn it on when you need website, working hours, manager, establishment year, employee count, registration code, categories/tags, description, photos, products/services, or individual reviews.
 
 **Does this actor need a proxy or login?**
-No — yello.ae's search and profile pages are served without any anti-bot challenge, so this actor runs entirely on Apify's free plan with no proxy and no credentials.
+No login or credentials are needed. The actor retries short-lived rate-limit windows and may use free Apify Proxy automatically; no proxy setup is required.
