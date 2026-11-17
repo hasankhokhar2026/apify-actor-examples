@@ -1,49 +1,141 @@
 {
+  "description": "Search Gumroad's marketplace by keyword, tag or category, pull a creator's public catalog, or enrich exact product URLs. No login, cookies or API key required.",
   "properties": {
+    "category": {
+      "default": "all",
+      "description": "Top-level Gumroad category to browse. Leave 'All categories' to search the whole marketplace.",
+      "editor": "select",
+      "enum": [
+        "all",
+        "drawing-and-painting",
+        "3d",
+        "design",
+        "music-and-sound-design",
+        "gaming",
+        "self-improvement",
+        "films",
+        "education",
+        "software-development",
+        "business-and-money",
+        "photography",
+        "comics-and-graphic-novels",
+        "writing-and-publishing",
+        "fitness-and-health",
+        "fiction-books",
+        "recorded-music",
+        "audio"
+      ],
+      "enumTitles": [
+        "All categories",
+        "Drawing & Painting",
+        "3D",
+        "Design",
+        "Music & Sound Design",
+        "Gaming",
+        "Self Improvement",
+        "Films",
+        "Education",
+        "Software Development",
+        "Business & Money",
+        "Photography",
+        "Comics & Graphic Novels",
+        "Writing & Publishing",
+        "Fitness & Health",
+        "Fiction Books",
+        "Recorded Music",
+        "Audio"
+      ],
+      "prefill": "all",
+      "title": "Category",
+      "type": "string"
+    },
+    "fileTypes": {
+      "default": [],
+      "description": "Only include products that ship at least one of these formats, e.g. pdf, zip, mp4, psd, epub, blend. In creator mode this reads product pages to verify formats.",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Included file types",
+      "type": "array"
+    },
+    "freeOnly": {
+      "default": false,
+      "description": "Only include products listed at price 0.",
+      "prefill": false,
+      "title": "Free products only",
+      "type": "boolean"
+    },
+    "includeDetails": {
+      "default": false,
+      "description": "Add full descriptions, file formats and sizes, variants, billing recurrences, refund policy, sales count, rating breakdown, creation/update dates and the USD price Gumroad displays.",
+      "prefill": false,
+      "sectionCaption": "Details, reviews & sellers",
+      "sectionDescription": "Optional enrichment reads extra public data. Detail mode adds one product-page request per product; reviews add one request per 10 reviews.",
+      "title": "Read full product pages",
+      "type": "boolean"
+    },
+    "includeReviews": {
+      "default": false,
+      "description": "Add public written reviews (rating, message, public rater display name, date, creator reply). Written reviews only; star-only ratings are counted in ratingCount.",
+      "prefill": false,
+      "title": "Collect written reviews",
+      "type": "boolean"
+    },
     "includeSellerRecord": {
       "default": true,
-      "description": "When enabled, also emits a seller profile record for each unique seller encountered.",
-      "prefill": true,
-      "title": "Include Seller Record",
+      "description": "Also emit one seller record per unique creator. Seller records do not count toward Max items and are capped at 1,000 per run.",
+      "prefill": false,
+      "title": "Emit creator records",
       "type": "boolean"
     },
     "maxItems": {
-      "default": 5,
-      "description": "Maximum number of records to extract.",
+      "default": 50,
+      "description": "Maximum product records to emit. Seller records are emitted on top of this cap.",
       "editor": "number",
       "maximum": 5000,
       "minimum": 1,
-      "prefill": 5,
-      "title": "Max Items",
+      "prefill": 3,
+      "sectionCaption": "Output",
+      "sectionDescription": "Control how many product records a run can emit. Seller records are additional and do not count toward this cap.",
+      "title": "Max products",
       "type": "integer"
     },
     "maxPrice": {
-      "description": "Only include products priced at or below this value (in USD).",
+      "description": "Maximum price in the product's own listed currency. Use 0 for free products only.",
       "editor": "number",
       "maximum": 1000000,
       "minimum": 0,
-      "title": "Maximum Price",
+      "title": "Maximum listed price",
       "type": "number"
     },
+    "maxReviewsPerProduct": {
+      "default": 20,
+      "description": "Upper limit for written reviews collected per product.",
+      "editor": "number",
+      "maximum": 1000,
+      "minimum": 1,
+      "prefill": 20,
+      "title": "Max reviews per product",
+      "type": "integer"
+    },
     "minPrice": {
-      "description": "Only include products priced at or above this value (in USD).",
+      "description": "Minimum price in the product's own listed currency. Free products are 0. Use USD prices from details mode for cross-currency comparisons.",
       "editor": "number",
       "maximum": 1000000,
       "minimum": 0,
-      "title": "Minimum Price",
+      "title": "Minimum listed price",
       "type": "number"
     },
     "minRating": {
-      "description": "Only include products with an average rating at or above this value (0–5).",
+      "description": "Drop products rated below this value (0–5). Products without ratings are skipped when this is set.",
       "editor": "number",
       "maximum": 5,
       "minimum": 0,
-      "title": "Minimum Rating",
+      "title": "Minimum average rating",
       "type": "number"
     },
     "mode": {
       "default": "searchProducts",
-      "description": "How to find Gumroad products. Use searchProducts to search by keyword, byProductUrls to enrich specific product URLs, or bySellerUrls to scrape a seller's storefront.",
+      "description": "searchProducts searches Gumroad Discover. byProductUrls reads exact product pages in full. bySellerUrls reads every public product of a creator.",
       "editor": "select",
       "enum": [
         "searchProducts",
@@ -53,76 +145,136 @@
       "enumTitles": [
         "Search products",
         "By product URLs",
-        "By seller URLs"
+        "By creator storefronts"
       ],
       "prefill": "searchProducts",
+      "sectionCaption": "Where to look",
+      "sectionDescription": "Choose how to find products. Search one or more keywords, browse tags or a category, enrich exact product URLs, or pull whole creator catalogs.",
       "title": "Mode",
       "type": "string"
     },
+    "monitorKey": {
+      "default": "default",
+      "description": "Name of the saved snapshot. Use one key per search, storefront or product list you schedule.",
+      "editor": "textfield",
+      "prefill": "default",
+      "title": "Monitor key",
+      "type": "string"
+    },
+    "monitorMode": {
+      "default": false,
+      "description": "When enabled, products unchanged since the last run with this key are skipped. First run emits everything.",
+      "prefill": false,
+      "sectionCaption": "Monitoring",
+      "sectionDescription": "Schedule the same input and emit only products that are new or changed since the previous run under the same monitor key.",
+      "title": "Monitor for new or changed products",
+      "type": "boolean"
+    },
     "nativeTypes": {
       "default": [],
-      "description": "Filter by product type. Leave empty to include all types. Allowed values: digital, course, membership, bundle, podcast, audiobook, newsletter, ticket.",
+      "description": "Only include these Gumroad product types: digital, course, ebook, membership, bundle, podcast, audiobook, newsletter, physical, commission, call, coffee, ticket. Leave empty for all types.",
       "editor": "stringList",
-      "title": "Native Types",
+      "prefill": [],
+      "sectionCaption": "Filters",
+      "sectionDescription": "Narrow products by type, price, rating, pricing model, seller verification or included file format. Leave a filter empty to include everything.",
+      "title": "Product types",
       "type": "array"
     },
     "payWhatYouWantOnly": {
       "default": false,
-      "description": "When enabled, only include products that allow the buyer to set their own price.",
+      "description": "Only include products where the buyer can set the price.",
       "prefill": false,
-      "title": "Pay What You Want Only",
+      "title": "Pay-what-you-want only",
       "type": "boolean"
     },
     "productUrls": {
-      "description": "List of Gumroad product URLs to enrich (mode=byProductUrls).",
+      "default": [],
+      "description": "Gumroad product links to read in full (mode=byProductUrls), e.g. https://creator.gumroad.com/l/product. Filters still apply.",
       "editor": "stringList",
+      "prefill": [],
       "title": "Product URLs",
       "type": "array"
     },
-    "searchQuery": {
-      "description": "Keyword to search for products (mode=searchProducts). Example: notion, python course, ebook.",
+    "searchQueries": {
+      "default": [],
+      "description": "Keywords to search on Gumroad Discover (mode=searchProducts). One query per line, e.g. notion template, lightroom presets, vrchat avatar.",
+      "editor": "stringList",
+      "prefill": [
+        "notion"
+      ],
+      "title": "Search queries",
+      "type": "array"
+    },
+    "sellerQuery": {
+      "description": "Optional text filter for mode=bySellerUrls. Keeps creator products whose name or permalink contains this text.",
       "editor": "textfield",
-      "prefill": "notion",
-      "title": "Search Query",
+      "title": "Filter storefront products",
       "type": "string"
     },
     "sellerUrls": {
-      "description": "List of Gumroad seller/storefront URLs to scrape all products from (mode=bySellerUrls).",
+      "default": [],
+      "description": "Gumroad creator stores to read in full (mode=bySellerUrls), e.g. https://creator.gumroad.com or https://gumroad.com/creator. Every public product in the store is collected once.",
       "editor": "stringList",
-      "title": "Seller URLs",
+      "prefill": [],
+      "title": "Creator storefront URLs",
       "type": "array"
     },
     "sellerVerifiedOnly": {
       "default": false,
-      "description": "When enabled, only include products from verified Gumroad sellers.",
+      "description": "Only include products from creators Gumroad marks as verified.",
       "prefill": false,
-      "title": "Seller Verified Only",
+      "title": "Verified creators only",
       "type": "boolean"
     },
-    "sortBy": {
-      "default": "relevance",
-      "description": "Sort order for search results.",
+    "sort": {
+      "default": "featured",
+      "description": "Gumroad's own result order for keyword, tag and category searches.",
       "editor": "select",
       "enum": [
-        "relevance",
-        "priceAsc",
-        "priceDesc",
-        "ratingDesc",
-        "newest"
+        "featured",
+        "best_sellers",
+        "most_reviewed",
+        "highest_rated",
+        "newest",
+        "hot_and_new",
+        "curated",
+        "price_asc",
+        "price_desc"
       ],
       "enumTitles": [
-        "Relevance",
+        "Featured",
+        "Best sellers",
+        "Most reviewed",
+        "Highest rated",
+        "Newest",
+        "Hot & new",
+        "Curated",
         "Price low to high",
-        "Price high to low",
-        "Highest rating",
-        "Newest-ish"
+        "Price high to low"
       ],
-      "prefill": "relevance",
-      "title": "Sort By",
+      "prefill": "featured",
+      "title": "Sort results",
       "type": "string"
+    },
+    "subcategory": {
+      "description": "Nested Gumroad category path that overrides Category, e.g. 3d/vrchat, design/icons, software-development/web-development.",
+      "editor": "textfield",
+      "title": "Subcategory path (optional)",
+      "type": "string"
+    },
+    "tags": {
+      "default": [],
+      "description": "Gumroad Discover tags (mode=searchProducts). Multiple tags are combined with AND, e.g. notion and template.",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Tags",
+      "type": "array"
     }
   },
+  "required": [
+    "mode"
+  ],
   "schemaVersion": 1,
-  "title": "Gumroad Scraper Input",
+  "title": "Gumroad Marketplace Search & Creator Catalog Input",
   "type": "object"
 }

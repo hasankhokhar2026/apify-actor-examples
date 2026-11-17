@@ -1,96 +1,168 @@
 # The Conversation Academic Article Finder
 
-The Conversation publishes news analysis written by academics and researchers rather than staff reporters. This actor browses its public article feed or a single topic section, applies an optional keyword filter, and returns each matching article's metadata — no login or key needed.
+The Conversation publishes analysis and commentary written by academics and researchers, not staff reporters. This actor finds those articles across every regional edition. With the default Full detail level it returns the metadata a research or media-monitoring workflow needs: authors and their institutions, DOI, topic tags, section, publication and update times, lead image, word count, and optionally the cleaned full text.
 
-## What this actor does
+It reads public pages only. No account, cookies, API key or proxy setup is required.
 
-- **Two modes** — `articles` (search the general feed by keyword) and `byTopic` (read one topic's dedicated feed, with or without a keyword)
-- **Keyword search** — matches your `searchQuery` against each article's title and excerpt
-- **Topic filter** — narrow results to a subject such as science, health, or politics
-- **Regional editions** — point the feed at the US, UK, Australian, African, or Canadian edition
-- **Clean records** — fields The Conversation doesn't supply for a given article (e.g. no image, no tags) are left out of that record rather than sent as empty values
+## Ways to find articles
 
-## Output per article
+| Mode | What it does | Source reach |
+|---|---|---|
+| **Latest** | Newest articles in one edition, optionally narrowed to a section such as `health` or `politics`. | Up to 50 per feed (section feeds are often 25) |
+| **Search** | Keyword or phrase search on the edition's own search page. | Up to 200 results (20 pages × 10) |
+| **Topic** | Browse one topic by slug or full topic link, newest first. | Up to 400 results (20 pages × 20) |
+| **Article URLs** | Scrape exact article links, including articles you already collected elsewhere. | Any list of article URLs |
+| **Archive** | Walk the yearly archive for an edition and date range, then fetch each matching article. | Every archived article in the range |
 
-- `title` — article headline
-- `articleUrl` — canonical link to the article
-- `excerpt` — short summary/dek, truncated to 400 characters
-- `byline` — the raw author credit line as published (may include institutional affiliation)
-- `author` — author name, taken directly from the article's own author field when published, or parsed out of the byline otherwise
-- `publishedAt` — publish date/time
-- `imageUrl` — lead image URL
-- `topic` — section/topic the article was filed under
-- `tags` — list of topic tags attached to the article
+`Archive` is the way to reach older or deeper coverage than the site's search and topic pages expose. It reads the publisher's yearly sitemaps, unions the newest feed so the current day is included, and filters exactly on each article's publication date.
+
+## What each record contains
+
+Core fields:
+
+- `articleId` — article identifier
+- `title`, `articleUrl`, `canonicalUrl`, `excerpt`
+- `byline` — the credit line as published
+- `author` — first author, for simple integrations
+- `authors` — all author names
+- `authorDetails` — name, profile URL, role, avatar URL, per-author institutions
+- `institutions` — listed affiliations
+- `publishedAt`, `updatedAt` — ISO 8601 timestamps
+- `section`, `sectionSlug` — e.g. `Environment + Energy`, `us/environment`
+- `topic`, `topics` — primary topic and all topic names with links
+- `tags` — keyword tags
+- `imageUrl`, `imageCaption`, `imageCredit` — lead image; caption and credit appear when the page exposes them
+- `doi` — article DOI when the publisher registered one
+- `contentType` — analysis, news item, podcast, etc.
+- `articleType` — free or paid
+- `language`, `edition`, `commissioningRegion`
+- `wordCount`, `readingTimeMinutes`
+- `disclosure` — the author's conflict-of-interest statement
+- `articleText` — cleaned body text, only when "Include article text" is on
 - `recordType` — always `article`
-- `scrapedAt` — ISO timestamp when the record was collected
+- `scrapedAt` — collection timestamp
+
+Empty values are omitted from a record rather than emitted as `null` or blank. Listing detail level returns only fields available on the listing page; detail-only fields such as `doi`, `section`, `wordCount`, `disclosure` and `articleText` require Full.
 
 ## Input
 
-| Field | Type | Default | Description |
+| Field | Default | Applies to | Notes |
 |---|---|---|---|
-| `mode` | string (select) | `articles` | `articles` to search/browse the general feed, `byTopic` to read one topic's feed |
-| `searchQuery` | string | – | Keyword to match against article title/excerpt. Leave blank when browsing by topic; in `articles` mode with no `topic` set, a blank value falls back to `climate` rather than returning the unfiltered feed |
-| `topic` | string (select) | – | Subject filter, e.g. `science`, `health`, `politics` |
-| `edition` | string (select) | – | Regional edition: US, UK, Australia, Africa, or Canada filter the feed to that edition; other selections return the global feed |
-| `maxItems` | integer | `10` | Maximum number of articles to return (1–500) |
+| `mode` | `latest` | all | Latest, Search, Topic, Article URLs or Archive |
+| `searchQuery` | – | Search, Topic | Required in Search; also filters title/excerpt in Topic |
+| `topic` | – | Topic, Search | Slug or full topic URL, e.g. `climate-change-27`; also narrows Search |
+| `urls` | `[]` | Article URLs | Exact article links |
+| `edition` | `global` | Latest, Search, Archive | 13 regional editions plus Global |
+| `section` | – | Latest | e.g. `health`, `politics`, `technology` |
+| `dateFrom`, `dateTo` | – | Archive; filters other modes | Inclusive publication dates. With only `dateTo` set, Archive starts on January 1 of that year. |
+| `detailLevel` | `full` | Latest, Search, Topic | `full` fetches each article page; `listing` is faster but lighter |
+| `includeArticleText` | `false` | with full detail | Adds cleaned `articleText` |
+| `maxItems` | `10` | all | 1–5000 |
 
-### Example: keyword search on the global feed
+### Examples
+
+Newest global articles with full details:
 
 ```json
 {
-  "mode": "articles",
-  "searchQuery": "climate",
+  "mode": "latest",
+  "edition": "global",
   "maxItems": 20
 }
 ```
 
-### Example: browse one topic
+Keyword search in the UK edition:
 
 ```json
 {
-  "mode": "byTopic",
-  "topic": "health",
-  "maxItems": 15
-}
-```
-
-### Example: keyword search within the UK edition
-
-```json
-{
-  "mode": "articles",
-  "searchQuery": "elections",
+  "mode": "search",
+  "searchQuery": "public health",
   "edition": "uk",
-  "maxItems": 10
+  "maxItems": 40
 }
 ```
 
-## Use cases
+Browse a topic:
 
-- **Media monitoring** — track what academics are publishing on a subject like climate or public health
-- **Content curation** — pull recent expert-written articles on a topic for a newsletter or digest
-- **Academic research tracking** — follow a researcher's name or institution via keyword search
-- **Regional news comparison** — compare how the US, UK, or Australian edition covers the same topic
+```json
+{
+  "mode": "topic",
+  "topic": "climate-change-27",
+  "maxItems": 60
+}
+```
+
+Scrape exact links, including the body text:
+
+```json
+{
+  "mode": "urls",
+  "urls": [
+    "https://theconversation.com/example-article-296812"
+  ],
+  "includeArticleText": true
+}
+```
+
+Reconstruct a month of Australian articles:
+
+```json
+{
+  "mode": "archive",
+  "edition": "au",
+  "dateFrom": "2026-10-01",
+  "dateTo": "2026-10-31",
+  "maxItems": 500
+}
+```
+
+## Detail levels
+
+- **Full** requests each article's page. It fills authors and roles, topics, section, DOI, image caption and credit, word count, update time and disclosure, and adds the body text when "Include article text" is on. For `urls` and `archive`, full detail is always used because the article page is the source.
+- **Listing** uses the search, topic or latest page only. It is faster and cheaper, but returns only list-page fields: title, URL, excerpt, byline/authors when present, published time when present, and image fields when present. It omits detail-only fields such as DOI, roles, section, word count, disclosure and article text; `imageCaption` is only available when the listing markup includes it.
+
+The default is Full. The daily test prefill uses Listing to stay cheap.
+
+## Coverage and source limits
+
+- The latest JSON feed returns up to 50 articles per edition; section feeds often expose 25.
+- Search returns at most 200 results per query because the site itself stops at page 20.
+- A topic page shows at most 400 of its articles, newest first, because the site stops at page 20.
+- Archive coverage follows the publisher's yearly sitemaps. Global and Europe have little or no sitemap of their own, so their Archive mode combines all regional and global sitemaps.
+- Sitemaps are refreshed daily, so the newest one to two days can lag; Archive unions the current latest feed to cover that gap.
+- Some editions and years have no archived articles: Europe has no archive sitemap of its own, New Zealand's sitemap has only scattered entries, Català starts in 2026 and Brasil in 2023.
+- Author profile article lists are blocked by the publisher's robots policy, so there is no author-feed mode. Search for an author's name instead.
+- Topic pages are global; the `edition` setting is used by Latest, Search and Archive.
 
 ## FAQ
 
-**Who writes for The Conversation?**
-Academics and researchers write the articles themselves, edited by journalists — this actor just reads the public feed, it doesn't change that editorial model.
-
-**What's the difference between the two modes?**
-`articles` searches or browses the general feed (optionally filtered by `searchQuery` and/or `topic`), while `byTopic` reads that topic's own dedicated feed directly.
-
-**Why did some articles come back without an `imageUrl` or `tags` field?**
-Those fields are only included when The Conversation publishes them for that article; if a value is missing, the field is left out of the record instead of being sent as empty.
-
-**Does `edition` give me every regional edition The Conversation publishes?**
-It covers the editions that expose their own feed (US, UK, Australia, Africa, Canada). Selecting any other edition option returns the global feed instead.
+**Does this need cookies or a proxy?**
+No. Every request is a normal public page request. No login, cookie, API key or proxy configuration is used.
 
 **Can I combine a keyword search with a topic filter?**
-Yes, in `articles` mode — set both `searchQuery` and `topic` to require an article to match the keyword and belong to that topic.
+Yes. In Search mode set `searchQuery` and `topic`; the actor fetches matching search results and keeps only those filed under the topic. In Topic mode set `searchQuery` to filter that topic's newest articles by title and excerpt.
+
+**Why did a search stop at 200 articles?**
+That is the publisher's own search depth. For older material, use Archive mode with a date range, optionally filtered after collection by topic or author.
+
+**Can I get the article body?**
+Yes. Turn on "Include article text". The actor removes navigation, image captions, inline promos and "Read more" boxes, and returns plain text plus a word count and reading-time estimate.
+
+**What is the DOI for?**
+The publisher registers DOIs for many articles. Use `doi` to cite the article or join it to citation records.
+
+**Why are some fields missing on a record?**
+Fields are omitted when the article does not have them, for example an article with no disclosure statement. Listing mode also omits detail-only fields.
+
+**Are all regional editions available?**
+All 14 editions the publisher currently exposes are available (13 regional editions plus Global): Global, Africa, Australia, Brasil, Canada, Canada (français), Català, España, Europe, France, Indonesia, New Zealand, United Kingdom and United States.
+
+**Will my saved tasks from the previous version keep working?**
+Yes. Old `articles` and `byTopic` modes, legacy edition names such as `canada` or `espanol`, and combined keyword+topic filters are mapped to the new modes automatically.
 
 **Is this affiliated with The Conversation?**
-No. This is an independent actor that reads The Conversation's publicly available article feeds.
+No. This is an independent actor that reads publicly available pages. Article text and images remain the publisher's copyrighted material; check the republishing guidelines before storing or republishing content.
 
-**How do I get the unfiltered general feed instead of a keyword search?**
-Set `mode` to `byTopic` with a `topic` and no `searchQuery`. In `articles` mode, leaving `searchQuery` blank (with no `topic` set either) falls back to a `climate` keyword search rather than the full unfiltered feed.
+## Data source
+
+The actor reads the public article listings, topic pages, search pages, yearly sitemaps and article pages published at `theconversation.com`. It does not bypass paywalls, logins or robots restrictions on author profile article lists.

@@ -1,16 +1,56 @@
 {
-  "description": "Browse The Conversation articles.",
+  "description": "Find The Conversation articles by keyword, topic, edition, article URL or publication date, and collect academic-written news metadata down to the full article text.",
   "properties": {
-    "edition": {
-      "default": "",
-      "description": "Edition.",
+    "dateFrom": {
+      "description": "Earliest publication date (inclusive), YYYY-MM-DD. Archive mode uses it to choose yearly sitemaps; other modes filter returned records.",
+      "editor": "datepicker",
+      "sectionCaption": "Dates and detail",
+      "sectionDescription": "Archive defaults to the current year when no dates are set. Detail level controls whether each article page is fetched.",
+      "title": "Published from",
+      "type": "string"
+    },
+    "dateTo": {
+      "description": "Latest publication date (inclusive), YYYY-MM-DD.",
+      "editor": "datepicker",
+      "title": "Published to",
+      "type": "string"
+    },
+    "detailLevel": {
+      "default": "full",
+      "description": "Full fetches each article page and adds authors, roles, topics, section, DOI, word count, image caption and credit, update time and disclosure. Listing uses only the list page and returns title, URL, excerpt, byline/authors when present, published time when present and image fields when present; detail-only fields are omitted.",
       "editor": "select",
       "enum": [
-        "",
-        "us",
-        "uk",
-        "au",
+        "full",
+        "listing"
+      ],
+      "enumTitles": [
+        "Full article details (slower, richer)",
+        "Listing only (fast, fewer fields)"
+      ],
+      "prefill": "listing",
+      "title": "Detail level",
+      "type": "string"
+    },
+    "edition": {
+      "default": "global",
+      "description": "Regional edition for Latest, Search and Archive. Topic pages are global.",
+      "editor": "select",
+      "enum": [
+        "global",
         "africa",
+        "au",
+        "br",
+        "ca",
+        "ca-fr",
+        "catalan",
+        "es",
+        "europe",
+        "fr",
+        "id",
+        "nz",
+        "uk",
+        "us",
+        "",
         "canada",
         "france",
         "indonesia",
@@ -19,85 +59,104 @@
       ],
       "enumTitles": [
         "Global",
-        "US",
-        "UK",
-        "Australia",
         "Africa",
+        "Australia",
+        "Brasil",
         "Canada",
+        "Canada (français)",
+        "Català",
+        "España",
+        "Europe",
         "France",
         "Indonesia",
         "New Zealand",
-        "Espanol"
+        "United Kingdom",
+        "United States",
+        "Global (legacy blank)",
+        "Canada (legacy)",
+        "France (legacy)",
+        "Indonesia (legacy)",
+        "New Zealand (legacy)",
+        "España (legacy)"
       ],
-      "prefill": "",
+      "prefill": "global",
+      "sectionCaption": "Edition and section",
+      "sectionDescription": "Regional editions are commissioned separately. Global combines the latest articles from all of them.",
       "title": "Edition",
       "type": "string"
     },
+    "includeArticleText": {
+      "default": false,
+      "description": "Add the cleaned article body as articleText. Requires full detail and increases dataset size.",
+      "prefill": false,
+      "title": "Include article text",
+      "type": "boolean"
+    },
     "maxItems": {
       "default": 10,
-      "description": "Maximum number of records to return.",
-      "maximum": 500,
+      "description": "Hard cap on emitted articles. Archive and URL modes can return larger sets.",
+      "maximum": 5000,
       "minimum": 1,
-      "prefill": 10,
-      "title": "Max items",
+      "prefill": 3,
+      "title": "Max articles",
       "type": "integer"
     },
     "mode": {
-      "default": "articles",
-      "description": "Select what data to fetch.",
+      "default": "latest",
+      "description": "Latest reads the newest articles in an edition. Search queries the site. Topic browses one topic. Article URLs scrapes exact links. Archive walks the yearly archive for a date range.",
       "editor": "select",
       "enum": [
+        "latest",
+        "search",
+        "topic",
+        "urls",
+        "archive",
         "articles",
         "byTopic"
       ],
       "enumTitles": [
-        "Search/browse articles",
-        "Browse by topic"
+        "Latest articles",
+        "Search by keyword",
+        "Browse a topic",
+        "Scrape article URLs",
+        "Archive by date",
+        "Legacy: search articles (mapped automatically)",
+        "Legacy: browse a topic (mapped automatically)"
       ],
-      "prefill": "articles",
-      "title": "Mode",
+      "prefill": "latest",
+      "sectionCaption": "What to scrape",
+      "title": "What to scrape",
       "type": "string"
     },
     "searchQuery": {
-      "description": "Search keywords to filter results. Leave blank when browsing by topic.",
+      "description": "Keyword or phrase for Search by keyword mode, for example climate or public health. Required in that mode; also filters the title and excerpt in Topic mode.",
       "editor": "textfield",
-      "prefill": "climate",
-      "title": "Search query",
+      "sectionCaption": "Search and topic filters",
+      "sectionDescription": "Used by Search and Topic modes. Leave a field blank when its mode is not selected.",
+      "title": "Search keywords",
+      "type": "string"
+    },
+    "section": {
+      "description": "Optional section for Latest mode, for example health, politics, environment or technology. Leave blank for the edition's main feed.",
+      "editor": "textfield",
+      "example": "health",
+      "title": "Section",
       "type": "string"
     },
     "topic": {
-      "description": "Topic or subject filter.",
-      "editor": "select",
-      "enum": [
-        "",
-        "science",
-        "technology",
-        "health",
-        "environment",
-        "education",
-        "politics",
-        "economy",
-        "society",
-        "arts",
-        "sport",
-        "business"
-      ],
-      "enumTitles": [
-        "Any",
-        "Science",
-        "Technology",
-        "Health",
-        "Environment",
-        "Education",
-        "Politics",
-        "Economy",
-        "Society",
-        "Arts",
-        "Sport",
-        "Business"
-      ],
+      "description": "Topic slug or full topic URL, for example climate-change-27, health, or https://theconversation.com/topics/politics-245. Generic words such as science and health are resolved by the site. Also narrows Search by keyword results to one topic.",
+      "editor": "textfield",
+      "example": "climate-change-27",
       "title": "Topic",
       "type": "string"
+    },
+    "urls": {
+      "default": [],
+      "description": "Exact The Conversation article links to scrape, for example https://theconversation.com/example-article-296812. Used by Scrape article URLs mode.",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Article URLs",
+      "type": "array"
     }
   },
   "required": [

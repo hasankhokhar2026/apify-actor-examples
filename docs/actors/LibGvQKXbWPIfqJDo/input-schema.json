@@ -1,14 +1,70 @@
 {
-  "description": "Search wines by type, name, winery, country, or region. All data sourced from a public wine database — no API key required.",
+  "description": "Search, browse and filter a public catalog of red, white, sparkling, rosé, dessert and port wines. No API key, login or proxy setup required.",
   "properties": {
     "filterCountry": {
-      "description": "Only return wines from this country (e.g. 'France', 'Italy', 'United States'). Case-insensitive partial match.",
-      "editor": "textfield",
+      "description": "Only return wines from one of the catalog's countries. Leave 'All countries' for no filter.",
+      "editor": "select",
+      "enum": [
+        "",
+        "Argentina",
+        "Australia",
+        "Austria",
+        "Brazil",
+        "Canada",
+        "Chile",
+        "France",
+        "Georgia",
+        "Germany",
+        "Greece",
+        "Hungary",
+        "Israel",
+        "Italy",
+        "Macedonia",
+        "Moldova",
+        "New Zealand",
+        "Portugal",
+        "Romania",
+        "Slovenia",
+        "South Africa",
+        "Spain",
+        "Switzerland",
+        "Turkey",
+        "United States",
+        "Uruguay"
+      ],
+      "enumTitles": [
+        "All countries",
+        "Argentina",
+        "Australia",
+        "Austria",
+        "Brazil",
+        "Canada",
+        "Chile",
+        "France",
+        "Georgia",
+        "Germany",
+        "Greece",
+        "Hungary",
+        "Israel",
+        "Italy",
+        "Macedonia",
+        "Moldova",
+        "New Zealand",
+        "Portugal",
+        "Romania",
+        "Slovenia",
+        "South Africa",
+        "Spain",
+        "Switzerland",
+        "Turkey",
+        "United States",
+        "Uruguay"
+      ],
       "title": "Filter by country",
       "type": "string"
     },
     "filterRegion": {
-      "description": "Only return wines from this region (e.g. 'Bordeaux', 'Napa Valley', 'Tuscany'). Case-insensitive partial match.",
+      "description": "Only return wines from this region (e.g. 'Bordeaux', 'Napa Valley', 'Champagne'). Case-insensitive partial match.",
       "editor": "textfield",
       "title": "Filter by region",
       "type": "string"
@@ -21,10 +77,10 @@
     },
     "maxItems": {
       "default": 100,
-      "description": "Hard cap on emitted records.",
+      "description": "Hard cap on emitted records (1–5000).",
       "maximum": 5000,
       "minimum": 1,
-      "prefill": 100,
+      "prefill": 10,
       "title": "Max items",
       "type": "integer"
     },
@@ -35,6 +91,13 @@
       "title": "Minimum rating",
       "type": "number"
     },
+    "minReviews": {
+      "description": "Only return wines backed by at least this many community ratings. Useful for filtering out obscure bottles.",
+      "maximum": 1000000,
+      "minimum": 0,
+      "title": "Minimum ratings count",
+      "type": "integer"
+    },
     "mode": {
       "default": "search",
       "description": "What to fetch.",
@@ -42,44 +105,91 @@
       "enum": [
         "search",
         "byType",
-        "all"
+        "all",
+        "byIds"
       ],
       "enumTitles": [
-        "Search wines (filter by name/winery/country/region)",
-        "Browse by wine type (reds, whites, sparkling, rosé, dessert, port)",
-        "Get all wines across all types"
+        "Search wines by keyword or filters",
+        "Browse one wine type",
+        "Browse the whole catalog",
+        "Look up specific wines by ID or URL"
       ],
       "prefill": "search",
       "title": "Mode",
       "type": "string"
     },
     "searchQuery": {
-      "default": "cabernet",
-      "description": "Free-text query matched against wine name and winery (mode=search). Example: 'cabernet' or 'bordeaux'.",
+      "default": "",
+      "description": "Words matched against the wine name, winery, country and region. Every word must match. Leave empty to keep every wine. Example: 'cabernet' or 'champagne brut'.",
       "editor": "textfield",
       "prefill": "cabernet",
       "title": "Search query",
       "type": "string"
     },
+    "sortBy": {
+      "default": "default",
+      "description": "Order of the emitted records. 'Catalog order' keeps the source order.",
+      "editor": "select",
+      "enum": [
+        "default",
+        "ratingDesc",
+        "ratingAsc",
+        "reviewsDesc",
+        "reviewsAsc",
+        "vintageDesc",
+        "vintageAsc",
+        "nameAsc",
+        "nameDesc",
+        "wineryAsc",
+        "wineryDesc"
+      ],
+      "enumTitles": [
+        "Catalog order",
+        "Highest rating first",
+        "Lowest rating first",
+        "Most ratings first",
+        "Fewest ratings first",
+        "Newest vintage first",
+        "Oldest vintage first",
+        "Wine name A–Z",
+        "Wine name Z–A",
+        "Winery A–Z",
+        "Winery Z–A"
+      ],
+      "prefill": "default",
+      "title": "Sort results by",
+      "type": "string"
+    },
     "vintageMax": {
-      "description": "Only return wines with vintage year at or before this value.",
+      "description": "Only return wines with a vintage year at or before this value. Non-vintage wines are excluded when a vintage filter is set.",
       "maximum": 2030,
       "minimum": 1800,
       "title": "Vintage year (max)",
       "type": "integer"
     },
     "vintageMin": {
-      "description": "Only return wines with vintage year at or after this value.",
+      "description": "Only return wines with a vintage year at or after this value. Non-vintage wines are excluded when a vintage filter is set.",
       "maximum": 2030,
       "minimum": 1800,
       "title": "Vintage year (min)",
       "type": "integer"
     },
+    "wineIds": {
+      "default": [],
+      "description": "Wines to look up when mode=byIds. Use 'type/id' (e.g. 'reds/4') or a full source URL. Each entry needs a type because IDs repeat across categories.",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "title": "Wine IDs or URLs",
+      "type": "array"
+    },
     "wineType": {
-      "default": "reds",
-      "description": "Wine category to fetch (used in mode=byType and as an optional filter in mode=search/all).",
+      "default": "all",
+      "description": "Wine category to browse or filter. In byIds mode, references from other categories are skipped. 'All' covers every category.",
       "editor": "select",
       "enum": [
+        "all",
         "reds",
         "whites",
         "sparkling",
@@ -88,6 +198,7 @@
         "port"
       ],
       "enumTitles": [
+        "All wine types",
         "Red wines",
         "White wines",
         "Sparkling wines",
@@ -95,7 +206,7 @@
         "Dessert wines",
         "Port wines"
       ],
-      "prefill": "reds",
+      "prefill": "all",
       "title": "Wine type",
       "type": "string"
     }
@@ -104,6 +215,6 @@
     "mode"
   ],
   "schemaVersion": 1,
-  "title": "Wine API Scraper Input",
+  "title": "Wine Catalog Search Input",
   "type": "object"
 }

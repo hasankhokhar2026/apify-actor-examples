@@ -1,120 +1,261 @@
-# Gumroad Product Search & Storefront Extractor
+# Gumroad Marketplace Product & Creator Catalog
 
-Gumroad hosts independent creators selling ebooks, courses, templates, memberships and other digital products. This actor searches Gumroad's discover results by keyword, resolves specific product URLs, or pulls every product from a seller's storefront — returning price, rating, product type and creator details for each item, with no login required.
+Gumroad is where independent creators sell ebooks, courses, templates, memberships, 3D assets,
+presets, music packs and software. This actor turns Gumroad's public marketplace into structured
+product and creator data — keyword, tag and category search, whole creator catalogs, exact
+product URLs, written reviews, sales signals, variants, file formats and seller profiles — with
+no login, cookies or API key.
 
-## What this actor does
+It reads Gumroad's own public JSON endpoints over plain HTTP. No browser, no CAPTCHA service and
+no user-supplied proxy are required.
 
-- Searches Gumroad's public discover results by keyword
-- Resolves a list of exact Gumroad product URLs directly
-- Scrapes a seller's storefront to collect every product they sell
-- Filters by product type, price range, minimum rating, pay-what-you-want pricing and seller verification
-- Optionally emits a separate seller profile record for each unique creator encountered
-- Empty fields are omitted from records — a field only appears when Gumroad actually publishes that data for the item
+## What it does
 
-## Output per product
+- Searches Gumroad Discover by one or more keywords, tags or categories, with Gumroad's own sort
+  order and pagination.
+- Pulls a creator's complete public catalog from one storefront URL, deduplicated across all
+  profile sections.
+- Reads exact product URLs in full, including description, covers, variants, billing recurrences,
+  file formats/sizes, refund policy, sales count and the USD price Gumroad displays.
+- Applies price, type, rating, pricing-model, seller-verification and file-format filters.
+- Optionally collects public written reviews with creator replies.
+- Optionally emits one seller row per unique creator, with bio, links, socials and rating stats
+  (the first 50 unique creators in a search/product run are profile-enriched; seller mode is
+  always complete).
+- Can run as a monitor: schedule the same input and receive only new or changed products.
+- Omits empty fields at every depth. A field appears only when Gumroad publishes it for that item.
 
-- `productId`, `permalink` — Gumroad's internal product ID and permalink
-- `title` — product name
-- `url` — direct product URL
-- `thumbnailUrl` — product thumbnail image
-- `nativeType` — product type (e.g. `digital`, `course`, `membership`, `bundle`, `podcast`, `audiobook`, `newsletter`, `ticket`)
-- `priceCents` — price in the smallest currency unit (cents)
-- `price` — price as a decimal amount
-- `currencyCode` — currency code the price is denominated in
-- `isPayWhatYouWant` — `true` when the buyer can set their own price
-- `isSalesLimited`, `quantityRemaining` — whether the product has a sales cap, and units left when shown
-- `ratingCount`, `ratingAverage` — number of ratings and the average score
-- `sellerId`, `sellerName`, `sellerProfileUrl`, `sellerAvatarUrl`, `sellerVerified` — the selling creator's identity and verification state
-- `sellerSubdomain` — the creator's Gumroad subdomain
-- `creatorTwitterHandle` — creator's linked Twitter/X handle, when shown
-- `summary` — short product summary
-- `recurrence` — billing recurrence, for subscription-style products
-- `durationInMonths` — membership duration, when applicable
-- `attributes` — product attribute list (e.g. format, length), when shown
-- `descriptionHtml`, `descriptionText` — full product description
-- `coverUrls` — product cover image URLs
-- `recordType` — `product`
-- `scrapedAt` — ISO timestamp when the record was collected
+## Quick start
 
-## Output per seller (when `includeSellerRecord` is enabled)
+Search Notion templates and read three products:
 
-- `sellerId`, `sellerName`, `sellerAvatarUrl`, `sellerProfileUrl`, `sellerSubdomain`, `sellerVerified`, `sellerTwitterHandle`
-- `productCount` — number of products observed for this seller during the run
-- `productTypes` — distinct product types observed for this seller
-- `recordType` — `seller`
-- `scrapedAt` — ISO timestamp when the record was collected
+```json
+{
+  "mode": "searchProducts",
+  "searchQueries": ["notion template"],
+  "maxItems": 3
+}
+```
 
-Invalid lookups (e.g. a malformed product or seller URL) return a typed `error` record rather than failing the run silently.
+The default saved prefill uses this shape (three products, one search request, no enrichment).
+
+## Modes
+
+| Mode | What it reads |
+|---|---|
+| `searchProducts` | Keyword search, tag browse, category/subcategory browse, or the whole Discover catalog when no query/tag/category is set. |
+| `byProductUrls` | Each product URL in full. Filters still apply to explicit URLs. |
+| `bySellerUrls` | Every public product in a creator's catalog, plus an optional seller row. |
 
 ## Input
 
 | Field | Type | Default | Description |
 |---|---|---|---|
-| `mode` | string | `searchProducts` | `searchProducts`, `byProductUrls`, or `bySellerUrls` |
-| `searchQuery` | string | – | Discover keyword, used in `searchProducts` mode |
-| `productUrls` | array | – | Gumroad product URLs to enrich, used in `byProductUrls` mode |
-| `sellerUrls` | array | – | Gumroad seller/storefront URLs to scrape, used in `bySellerUrls` mode |
-| `nativeTypes` | array | `[]` | Restrict to one or more product types: `digital`, `course`, `membership`, `bundle`, `podcast`, `audiobook`, `newsletter`, `ticket`. Leave empty for all types |
-| `minPrice` / `maxPrice` | number | – | Price range in USD |
-| `minRating` | number | – | Minimum average rating (0–5) |
-| `payWhatYouWantOnly` | boolean | `false` | Only include products that let the buyer set their own price |
-| `sellerVerifiedOnly` | boolean | `false` | Only include products from verified Gumroad sellers |
-| `includeSellerRecord` | boolean | `true` | Also emit a seller profile record for each unique seller encountered |
-| `sortBy` | string | `relevance` | `relevance`, `priceAsc`, `priceDesc`, `ratingDesc`, or `newest` |
-| `maxItems` | integer | `5` | Maximum number of records to extract (1–5000) |
+| `mode` | select | `searchProducts` | `searchProducts`, `byProductUrls` or `bySellerUrls`. |
+| `searchQueries` | string[] | `[]` | Discover keywords, one per query. Multiple queries are deduplicated by product ID. |
+| `productUrls` | string[] | `[]` | Gumroad product links (`https://creator.gumroad.com/l/product`). |
+| `sellerUrls` | string[] | `[]` | Creator storefronts (`https://creator.gumroad.com`, `https://gumroad.com/creator`, or a Gumroad-powered custom domain). |
+| `tags` | string[] | `[]` | Discover tags. Multiple tags use AND semantics. |
+| `category` | select | `all` | One of Gumroad's 17 top-level categories. |
+| `subcategory` | string | – | Nested path such as `3d/vrchat` or `design/icons`; overrides `category`. |
+| `sort` | select | `featured` | `featured`, `best_sellers`, `most_reviewed`, `highest_rated`, `newest`, `hot_and_new`, `curated`, `price_asc`, `price_desc`. |
+| `nativeTypes` | string[] | `[]` | `digital`, `course`, `ebook`, `membership`, `bundle`, `podcast`, `audiobook`, `newsletter`, `physical`, `commission`, `call`, `coffee`, `ticket`. Empty = all. |
+| `fileTypes` | string[] | `[]` | Keep products that ship at least one of these formats, e.g. `pdf`, `zip`, `mp4`, `psd`. |
+| `minPrice` / `maxPrice` | number | – | Price window in the product's own listed currency. `maxPrice: 0` = free only. |
+| `minRating` | number | – | Minimum average rating (0–5). Products with no ratings are skipped when set. |
+| `freeOnly` | boolean | `false` | Only products listed at 0. |
+| `payWhatYouWantOnly` | boolean | `false` | Only products where the buyer sets the price. |
+| `sellerVerifiedOnly` | boolean | `false` | Only products from verified creators. |
+| `includeDetails` | boolean | `false` | Read each product page for full descriptions, files, variants, recurrences, refund policy, sales count, rating breakdown, dates and USD price. |
+| `includeReviews` | boolean | `false` | Collect public written reviews. |
+| `maxReviewsPerProduct` | integer | `20` | Written-review cap per product (1–1000). |
+| `includeSellerRecord` | boolean | `true` | Emit one seller row per unique creator. Seller rows do not count toward `maxItems` and are capped at 1,000 per run. |
+| `sellerQuery` | string | – | Keep creator products whose name or permalink contains this text (`bySellerUrls` only). |
+| `monitorMode` | boolean | `false` | Emit only new or changed products since the previous run with the same key. |
+| `monitorKey` | string | `default` | Snapshot name for monitor mode. Use one key per scheduled search/storefront. |
+| `maxItems` | integer | `50` | Maximum product records (1–5000). Seller rows are additional. |
 
-### Example: search for Notion templates under $20
+No credentials or proxy configuration are needed or accepted as required inputs.
+
+## Example: filtered market research
 
 ```json
 {
   "mode": "searchProducts",
-  "searchQuery": "notion",
-  "maxPrice": 20,
-  "sortBy": "ratingDesc",
-  "maxItems": 30
-}
-```
-
-### Example: enrich specific product URLs
-
-```json
-{
-  "mode": "byProductUrls",
-  "productUrls": ["https://gumroad.com/l/exampleproduct"]
-}
-```
-
-### Example: snapshot a seller's full storefront
-
-```json
-{
-  "mode": "bySellerUrls",
-  "sellerUrls": ["https://exampleseller.gumroad.com"],
-  "includeSellerRecord": true,
+  "searchQueries": ["lightroom presets"],
+  "sort": "most_reviewed",
+  "nativeTypes": ["digital", "bundle"],
+  "minPrice": 10,
+  "maxPrice": 80,
+  "minRating": 4,
+  "fileTypes": ["pdf", "xmp"],
+  "includeDetails": true,
+  "includeReviews": true,
   "maxItems": 100
 }
 ```
 
-## Use cases
+## Example: whole creator catalog + seller row
 
-- **Pricing research** — compare prices and ratings across competing digital products in a niche
-- **Affiliate offer hunting** — search a topic to find highly-rated products worth promoting
-- **Creator lead generation** — build a list of sellers in a category along with their storefront size
-- **Storefront monitoring** — re-scrape a seller URL over time to track new products or price changes
-- **Market mapping** — filter by `nativeType` to see how courses, memberships and bundles compare in a category
+```json
+{
+  "mode": "bySellerUrls",
+  "sellerUrls": ["https://productivesetups.gumroad.com"],
+  "sellerQuery": "notion",
+  "includeSellerRecord": true,
+  "maxItems": 200
+}
+```
+
+## Example: monitor a niche
+
+```json
+{
+  "mode": "searchProducts",
+  "searchQueries": ["vrchat avatar"],
+  "sort": "newest",
+  "monitorMode": true,
+  "monitorKey": "vrchat-newest",
+  "maxItems": 300
+}
+```
+
+The first run emits every product as `monitorStatus: "new"`. Later runs emit only new or changed
+products, with a `changes` array (field, previous, current) covering name, price, currency, rating
+count/average, sales count, quantity and sales-limit state.
+
+## Output: products
+
+Every product row has `recordType: "product"` and `scrapedAt` (ISO timestamp).
+
+**Identity and pricing**
+
+`productId`, `permalink`, `title`, `url`, `thumbnailUrl`, `nativeType`, `priceCents`, `price`,
+`currencyCode`, `priceFormatted`, `priceUsd` (details mode), `suggestedPriceCents`,
+`isPayWhatYouWant`, `isRecurringBilling`, `isTieredMembership`, `isPhysical`, `isLicensed`,
+`isMultiseatLicense`, `isQuantityEnabled`, `isPublished`, `isSalesLimited`,
+`quantityRemaining`, `createdAt`, `updatedAt`, `recurrence`, `durationInMonths`.
+
+**Ratings and traction**
+
+`ratingCount`, `ratingAverage`, `ratingPercentages` (1★→5★), `salesCount` (only when the creator
+publishes it).
+
+**Content**
+
+`descriptionPreview`, `summary`, `descriptionHtml`, `descriptionText`, `attributes`, `covers`,
+`coverUrls`, `fileFormats`, `fileCount`, `fileSizeBytes`, `bundleProducts`, `publicFiles`,
+`refundPolicy`, `freeTrial`, `recurrences`.
+
+**Variants**
+
+`options` — one entry per variant/tier with `optionId`, `name`, `description`,
+`priceDifferenceCents`, `quantityLeft`, `isPayWhatYouWant`, `durationInMinutes`,
+`recurrencePrices`, and per-option file formats/sizes.
+
+**Creator**
+
+`sellerId`, `sellerName`, `sellerUsername`, `sellerProfileUrl`, `sellerSubdomain`,
+`sellerAvatarUrl`, `sellerVerified`, `sellerYoutubeChannelId`, `sellerReputation`,
+`creatorTwitterHandle`.
+
+**Reviews** (when `includeReviews` is true)
+
+`reviews` — `reviewId`, `rating`, `message`, `raterName`, `raterAvatarUrl`, `createdAt`,
+`sellerResponse`, `sellerResponseAt`, `videoUrl` when present — plus `reviewPages`, the number of
+review pages Gumroad reports.
+
+**Monitor** (when `monitorMode` is true)
+
+`monitorStatus` (`new` or `changed`) and `changes`.
+
+## Output: sellers
+
+Any run with `includeSellerRecord` can emit `recordType: "seller"` rows:
+
+`sellerId`, `sellerUsername`, `sellerName`, `sellerAvatarUrl`, `sellerProfileUrl`,
+`sellerSubdomain`, `sellerBio`, `sellerBioLinks`, `sellerTwitterHandle`,
+`sellerYoutubeChannelId`, `sellerVerified`, `sellerRatingAverage`, `sellerRatingCount`,
+`sellerProductsWithRatings`, `sellerProductCount`, `productCount`, `productTypes`,
+`sellerReputation`, `scrapedAt`.
+
+- `productCount` — products observed for this seller in this run.
+- `sellerProductCount` — total products in the creator's public catalog, when the profile
+  endpoint is available.
+
+Search and product-URL runs enrich up to 50 unique creators with their public profile (bio,
+links, socials, catalog size). Seller rows beyond that cap use the observed product data only.
+`bySellerUrls` always reads the full creator profile and catalog.
+
+## Output: errors
+
+Malformed or unresolvable explicit URLs produce a typed error row instead of failing the run:
+
+`recordType: "error"`, `errorType: "invalid_input"`, `message`, `mode`, `field`, `scrapedAt`.
+
+## Data source and coverage
+
+- Marketplace search: Gumroad's public `products/search.json` endpoint (9 products per page,
+  offset pagination).
+- Creator catalog: Gumroad's public `/<username>.json` profile endpoint.
+- Product detail: the public `/l/<permalink>.json` product endpoint plus the rendered product
+  page for file summaries, bundle contents, creator profile and the USD price in the page's
+  JSON-LD block.
+- Reviews: Gumroad's public `product_reviews` endpoint (10 written reviews per page).
+
+Gumroad caps a single search at roughly 10,000 products; this actor caps `maxItems` at 5,000 and
+stops at the source total. Custom-domain stores are supported through the rendered-page fallback
+when their `.json` endpoint is unavailable.
+
+### Honest limits
+
+- `salesCount` appears only when the creator enables Gumroad's public sales counter.
+- Price filters use the listed currency; exact USD prices come from `includeDetails`.
+- Written reviews only: star-only ratings are counted but not individually fetchable.
+- One search can return at most ~10,000 products; `maxItems` stops at 5,000.
+- Seller profile enrichment is capped at 50 unique creators per search/product run.
+- Creator emails are not exposed by Gumroad's public JSON; the actor collects public bio links,
+  not email addresses.
+- Per-product tags/categories are not in the public product payload; category filtering happens
+  at the search level.
 
 ## FAQ
 
-**Do I need a Gumroad account?** No — only publicly available product and storefront data is read; no login, cookies or API key are required.
+**Do I need a Gumroad account or API key?** No. Only public marketplace, product and review data is
+read. The actor never accesses purchases, downloads or anything behind a login.
 
-**What's the difference between the three modes?** `searchProducts` runs a discover keyword search, `byProductUrls` resolves specific product links you already have, and `bySellerUrls` walks an entire seller's storefront to list every product they sell.
+**Why is `salesCount` missing on many products?** Gumroad only publishes a sales counter when the
+creator enables it. An absent field means the creator hides it, not that the product sold zero.
 
-**Why do some products have no `ratingCount`?** Not every Gumroad product has received reviews yet; in that case the rating fields are left out rather than shown as zero.
+**Why don't price filters use USD?** Gumroad's search filters the listed price in each product's
+own currency; cookie and header currency overrides are ignored by the public endpoints. Enable
+`includeDetails` to receive `priceUsd`, the exact USD price Gumroad displays on the product page,
+for cross-currency comparison. For memberships, `priceUsd` is the displayed starting recurrence
+price.
 
-**What does `includeSellerRecord` add?** When enabled, the actor also pushes one extra record per unique seller it encounters, summarizing their profile and how many products were seen for them in this run.
+**How many reviews can I get?** Written reviews only, 10 per page. Star-only ratings are counted in
+`ratingCount` but cannot be fetched individually. `maxReviewsPerProduct` controls the cap.
 
-**Can I combine multiple product-type filters?** Yes — `nativeTypes` accepts a list, so you can include, for example, both `course` and `membership` in the same run.
+**What counts toward `maxItems`?** Product rows only. Seller rows are additional, capped at
+1,000 unique creators per run, and profile-enriched for the first 50 in search/product runs.
 
-**Why did a URL come back as an `error` record instead of a product?** The URL didn't resolve to a valid Gumroad product or seller page — the actor reports this explicitly rather than failing the whole run.
+**Why does a seller row have no bio?** Search and product runs enrich the first 50 unique
+creators. Beyond that, or when Gumroad does not expose a public creator profile, the seller row
+contains the product-card data observed in that run. Use `bySellerUrls` for the complete profile
+of a specific creator.
 
-**Is this affiliated with Gumroad?** No. This is an independent, third-party actor that reads Gumroad's publicly available pages; it is not operated by or affiliated with Gumroad, Inc.
+**Do custom-domain stores work?** Gumroad subdomains, `gumroad.com/<username>` and custom domains
+that still serve Gumroad's public product/profile data work. Older custom landing pages that no
+longer expose Gumroad's public data produce a typed error row and a no-results status message
+rather than fabricated rows.
+
+**Why did a product URL return an error row?** The URL did not resolve to a public product — a
+deleted product, a misspelled permalink or a non-Gumroad link. The run continues with the remaining
+URLs.
+
+**Does it work without a proxy?** Yes. Direct HTTP is the default. If Gumroad ever blocks the
+platform's IPs, the actor reports the failure instead of fabricating data.
+
+**Is this affiliated with Gumroad?** No. This is an independent third-party actor that reads
+publicly available pages and JSON endpoints. Gumroad and other names are trademarks of their
+owners.

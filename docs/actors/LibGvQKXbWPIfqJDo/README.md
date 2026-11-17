@@ -4,59 +4,72 @@
 
 # Wine Catalog Search by Type, Region & Vintage
 
-Looking for structured wine data without building your own tasting database from scratch? This actor searches a public wine catalog spanning red, white, sparkling, rosé, dessert and port wines, and returns each matching bottle as a record with winery, vintage, community rating, country and region — filterable by name, producer, origin, rating and vintage year.
+Need a structured wine list without hand-building a database? This actor searches and browses a public catalog of red, white, sparkling, rosé, dessert and port wines, then returns one clean record per bottle: winery, vintage, country, region, community rating, ratings count, wine type and image. Filter by keyword, category, origin, rating, ratings count or vintage year, sort the result set, or look up specific wines by ID or URL.
 
 ## What this actor does
 
-- Searches wines by free-text keyword matched against the wine name and winery
-- Browses an entire wine category at once (reds, whites, sparkling, rosé, dessert or port)
-- Fetches every wine across all six categories in one run
-- Filters results by country, region, winery, minimum rating, and a vintage year range
-- Empty fields are omitted from records — a field only appears when the catalog actually has that data for the wine
-
-## Output per wine
-
-- `wineName` — full wine name as listed, which may include vintage year and varietal
-- `winery` — producer/winery name
-- `vintage` — vintage year, extracted from the wine name when present (omitted for non-vintage wines)
-- `country` — country of origin
-- `region` — wine region or appellation
-- `ratingAverage` — community average rating (1.0–5.0 scale)
-- `reviewsCount` — number of community ratings behind the average
-- `wineType` — category: Red, White, Sparkling, Rosé, Dessert, or Port
-- `imageUrl` — wine bottle image URL
-- `sourceUrl` — direct link to the catalog record
-- `recordType` — always `wine`
-- `scrapedAt` — ISO timestamp when the record was collected
+- **Search by keyword** — every word you enter must appear in the wine name, winery, country or region.
+- **Browse one category** — reds, whites, sparkling, rosé, dessert or port.
+- **Browse the whole catalog** — all six categories in one run.
+- **Look up specific wines** — pass `type/id` references or full source URLs.
+- **Filter precisely** — country, region, winery, minimum rating, minimum ratings count and a vintage year range.
+- **Sort the output** — rating, popularity, vintage, wine name or winery, ascending or descending.
+- **Omit empty fields** — a field appears only when the catalog actually has that value for the wine.
 
 ## Input
 
 | Field | Type | Default | Description |
 |---|---|---|---|
-| `mode` | string | `search` | `search` (filter by name/winery/country/region), `byType` (browse one category), or `all` (every category) |
-| `searchQuery` | string | `cabernet` | Free-text query matched against wine name and winery, used in `search` mode |
-| `wineType` | string | `reds` | `reds`, `whites`, `sparkling`, `rose`, `dessert`, or `port` — the category to fetch, used only in `byType` mode (ignored in `search`/`all`, which cover every category) |
-| `filterCountry` | string | – | Only return wines from this country, e.g. `France` (case-insensitive partial match) |
-| `filterRegion` | string | – | Only return wines from this region, e.g. `Napa Valley` (case-insensitive partial match) |
-| `filterWinery` | string | – | Only return wines from this winery (case-insensitive partial match) |
-| `minRating` | number | – | Minimum community rating (1.0–5.0) |
-| `vintageMin` | integer | – | Only return wines with a vintage year at or after this value |
-| `vintageMax` | integer | – | Only return wines with a vintage year at or before this value |
-| `maxItems` | integer | `100` | Maximum number of records to return (1–5000) |
+| `mode` | select | `search` | `search` (keyword + filters), `byType` (one category), `all` (every category) or `byIds` (specific wines). |
+| `searchQuery` | string | – | Words matched against wine name, winery, country and region. All words must match; leave empty to keep everything. |
+| `wineType` | select | `all` | `all`, `reds`, `whites`, `sparkling`, `rose`, `dessert` or `port`. Applies to every mode; in `byIds`, references from other categories are skipped and reported. |
+| `wineIds` | string list | `[]` | Wines to fetch in `byIds` mode, e.g. `reds/4` or `https://api.sampleapis.com/wines/reds/4`. Combine with `wineType` to keep only one category. |
+| `filterCountry` | select | – | One of the catalog's 25 countries, or “All countries”. |
+| `filterRegion` | string | – | Region name, case-insensitive partial match, e.g. `Champagne` or `Napa Valley`. |
+| `filterWinery` | string | – | Winery name, case-insensitive partial match. |
+| `minRating` | number | – | Minimum community rating, 1.0–5.0. |
+| `minReviews` | integer | – | Minimum number of community ratings behind the score. |
+| `vintageMin` | integer | – | Earliest vintage year. Non-vintage wines are excluded when either vintage bound is set. |
+| `vintageMax` | integer | – | Latest vintage year. |
+| `sortBy` | select | `default` | `default` (catalog order), `ratingDesc`, `ratingAsc`, `reviewsDesc`, `reviewsAsc`, `vintageDesc`, `vintageAsc`, `nameAsc`, `nameDesc`, `wineryAsc`, `wineryDesc`. |
+| `maxItems` | integer | `100` | Maximum records to emit, 1–5000. |
 
-### Example: highly-rated French Bordeaux reds
+## Output per wine
+
+| Field | Description |
+|---|---|
+| `wineName` | Wine name as listed; often includes the vintage and varietal. |
+| `winery` | Producer or winery name. |
+| `vintage` | Four-digit vintage year parsed from the wine name. Omitted for non-vintage bottles. |
+| `country` | Country of origin. |
+| `region` | Region or appellation. |
+| `ratingAverage` | Community average rating on a 1.0–5.0 scale. |
+| `reviewsCount` | Number of community ratings behind the average. |
+| `wineType` | Human-readable category: Red, White, Sparkling, Rosé, Dessert or Port. |
+| `wineTypeKey` | Category key used by the source API: `reds`, `whites`, `sparkling`, `rose`, `dessert` or `port`. |
+| `wineId` | Numeric wine ID, unique within its category. Pair it with `wineTypeKey` for lookups. |
+| `imageUrl` | Bottle image URL. |
+| `sourceUrl` | Direct link to the wine's source record. |
+| `recordType` | Always `wine`. |
+| `scrapedAt` | ISO timestamp when the record was collected. |
+
+## Examples
+
+### Highly rated French sparkling wines
 
 ```json
 {
   "mode": "search",
-  "searchQuery": "bordeaux",
+  "searchQuery": "champagne",
   "filterCountry": "France",
   "minRating": 4.5,
+  "minReviews": 100,
+  "sortBy": "ratingDesc",
   "maxItems": 50
 }
 ```
 
-### Example: every port wine in the catalog
+### Every port wine in the catalog
 
 ```json
 {
@@ -66,38 +79,62 @@ Looking for structured wine data without building your own tasting database from
 }
 ```
 
-### Example: Italian Barolo wines from the 1990s
+### Italian wines from the 1990s
 
 ```json
 {
   "mode": "search",
   "filterCountry": "Italy",
-  "filterRegion": "Barolo",
   "vintageMin": 1990,
-  "vintageMax": 1999
+  "vintageMax": 1999,
+  "sortBy": "vintageAsc",
+  "maxItems": 100
 }
 ```
 
+### Look up saved wines by ID
+
+```json
+{
+  "mode": "byIds",
+  "wineIds": ["reds/4", "sparkling/12", "https://api.sampleapis.com/wines/port/7"]
+}
+```
+
+## Data source
+
+Records come from the public wine catalog at `api.sampleapis.com/wines`, which serves red, white, sparkling, rosé, dessert and port wine data as JSON. The endpoint is open: no account, API key, cookie or proxy configuration is needed, and the actor reads it directly over HTTPS.
+
+## Limitations
+
+- **Catalog size is fixed by the source.** It currently holds about 3,455 wines (718 reds, 504 whites, 736 sparkling, 508 rosé, 586 dessert, 403 port). `maxItems` above that simply returns the whole catalog.
+- **No prices, merchant offers, tasting notes or critic scores.** The source does not publish them, so none are invented.
+- **Vintage is parsed from the wine name.** Bottles labelled `N.V.` or without a year have no `vintage` field and are excluded by vintage filters.
+- **A handful of records lack a winery or location.** Those fields are omitted rather than filled with placeholders.
+- **Ratings are a community snapshot.** They reflect the source's current values, not a live Vivino lookup.
+
 ## Use cases
 
-- **Wine list curation** — pull a category or region to build a restaurant or shop wine list
-- **Cellar research** — filter by winery and vintage range to find bottles worth tracking down
-- **Tasting app content** — seed an app's wine database with structured records by type and region
-- **Comparative tasting notes** — gather a region's top-rated wines before planning a tasting flight
-- **Market mapping** — see how wine counts and ratings are distributed across countries and regions
+- Build or refresh a restaurant, bar or shop wine list.
+- Seed a cellar or tasting app with rated wines by category and region.
+- Compare producers in a region before a tasting flight.
+- Filter for well-reviewed, widely rated bottles for a shortlist.
+- Map catalog coverage by country, region and vintage.
 
 ## FAQ
 
-**Do I need an API key or login?** No. The catalog this actor reads is fully public with no registration or key required.
+**Do I need an API key or login?** No. The catalog is public and the actor needs no credentials or proxy setup.
 
-**Are prices included?** No — the underlying catalog does not publish pricing data, so no price field is returned.
+**Can I search a specific wine name?** Yes — put one or more words in `searchQuery`. Matching is case-insensitive and checks wine name, winery, country and region.
 
-**Can I search for an exact wine name?** Set `mode` to `search` and put part of the name in `searchQuery`; the match is case-insensitive and checks both the wine name and winery fields.
+**Why is a wine missing `vintage`?** The year is read from the wine name. Non-vintage wines have no year to extract, so the field is omitted.
 
-**Why do some wines have no `vintage`?** The vintage year is parsed out of the wine name text. Non-vintage ("N.V.") wines have no year to extract, so the field is left out.
+**Why are some wines missing `winery`, `country` or `region`?** The source record itself lacks that value. Empty fields are omitted instead of emitted as null.
 
-**How are ratings scored?** Ratings are community scores on a 1.0–5.0 scale, aggregated from wine enthusiast reviews in the source catalog.
+**How do I get more than 100 records?** Raise `maxItems` (up to 5,000). If you also set filters, the actor reports how many wines matched before the cap.
 
-**What's the difference between `mode: byType` and `mode: all`?** `byType` fetches one category you choose via `wineType`; `all` fetches every category (reds, whites, sparkling, rosé, dessert, port) in a single run.
+**Does `byIds` accept a bare number?** No. IDs repeat across categories, so include the category: `reds/4`, not `4`.
 
-**How fresh is the data?** The actor queries the catalog live on every run, so results reflect whatever the source currently has published.
+**Does `wineType` filter `byIds` lookups?** Yes. When a category is selected, references from other categories are skipped and listed in the run summary. Use `all` to look up mixed categories in one run.
+
+**How fresh is the data?** The actor reads the catalog on every run. The catalog itself is a curated snapshot maintained by the source.
