@@ -888,9 +888,11 @@ class Site:
         summary = self.pricing.get(actor["id"])
         per = facts.event_price(summary["primary"], "FREE") if summary and summary["primary"] else None
         if per is not None:
-            node["offers"] = {"@type": "Offer", "url": actor["url"], "priceCurrency": "USD", "price": "0",
-                              "priceSpecification": {"@type": "UnitPriceSpecification", "price": per, "priceCurrency": "USD",
-                                                     "unitText": facts.result_noun(summary), "referenceQuantity": {"@type": "QuantitativeValue", "value": 1, "unitText": facts.result_noun(summary)}},
+            # Google's SoftwareApplication parser rejects a UnitPriceSpecification under offers.priceSpecification
+            # ("Invalid object type", Rich Results Test 2026-11-17): the unit rides on the Offer as eligibleQuantity
+            # (one result), and the price is the real per-result price (it was "0").
+            node["offers"] = {"@type": "Offer", "url": actor["url"], "priceCurrency": "USD", "price": per,
+                              "eligibleQuantity": {"@type": "QuantitativeValue", "value": 1, "unitText": facts.result_noun(summary)},
                               "description": "Pay per event: the price per result on Apify's Free plan; a start fee and platform usage are billed separately."}
         return node
 
@@ -1286,6 +1288,43 @@ def visible_text(page):
     return re.sub(r"<[^>]+>", " ", page)
 
 
+ARTICLE_TYPES = {"Article", "TechArticle", "BlogPosting", "NewsArticle", "Report", "ScholarlyArticle", "HowTo"}
+DATETIME_TZ = re.compile(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2}(\.\d+)?)?(Z|[+-]\d{2}:?\d{2})$")
+
+
+def google_ld_problems(node, where="ld"):
+    """Structured data Google's parsers flag although schema.org allows it (Search Console audit 2026-11-17):
+    Article-family dates without a time and timezone, a SoftwareApplication offer with a UnitPriceSpecification,
+    a VideoObject uploadDate without a timezone."""
+    problems = []
+    if isinstance(node, list):
+        for i, n in enumerate(node):
+            problems.extend(google_ld_problems(n, f"{where}[{i}]"))
+        return problems
+    if not isinstance(node, dict):
+        return problems
+    t = node.get("@type")
+    types = set(t if isinstance(t, list) else [t])
+    if types & ARTICLE_TYPES:
+        for key in ("datePublished", "dateModified"):
+            if key in node and not DATETIME_TZ.match(str(node[key])):
+                problems.append(f"structured data: {key} {node[key]!r} needs a time and timezone ({where})")
+    if "VideoObject" in types and "uploadDate" in node and not DATETIME_TZ.match(str(node["uploadDate"])):
+        problems.append(f"structured data: uploadDate {node['uploadDate']!r} needs a time and timezone ({where})")
+    if "SoftwareApplication" in types:
+        offers = node.get("offers")
+        for offer in offers if isinstance(offers, list) else [offers] if offers else []:
+            spec = offer.get("priceSpecification") if isinstance(offer, dict) else None
+            for sp in spec if isinstance(spec, list) else [spec] if spec else []:
+                st = sp.get("@type") if isinstance(sp, dict) else None
+                if st == "UnitPriceSpecification" or (isinstance(st, list) and "UnitPriceSpecification" in st):
+                    problems.append(f"structured data: SoftwareApplication offer uses a UnitPriceSpecification ({where})")
+    for key, value in node.items():
+        if isinstance(value, (dict, list)):
+            problems.extend(google_ld_problems(value, f"{where}.{key}"))
+    return problems
+
+
 def validate_page(name, page, audit):
     """Critical checks for one rendered page; a failure blocks that brand's publication."""
     problems = []
@@ -1305,7 +1344,7 @@ def validate_page(name, page, audit):
         problems.append("%d empty headings" % audit.empty_headings)
     for block in audit.ld:
         try:
-            json.loads(block)
+            problems.extend(google_ld_problems(json.loads(block)))
         except ValueError:
             problems.append("structured data is not valid JSON")
     if 'http-equiv="refresh"' not in page:
