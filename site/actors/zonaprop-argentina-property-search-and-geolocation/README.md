@@ -5,9 +5,10 @@ Zonaprop is Argentina's leading property portal, listing apartments, houses, lan
 ## What this actor does
 
 - Scrapes any Zonaprop search results URL you paste in directly, respecting all filters already embedded in it (price range, rooms, neighborhood, etc.)
+- **HTTP-only:** no browser or account required
 - Builds a search from structured filters instead — operation type (sale, rent, temporary), property type, and location slug
 - Extracts full address-level location data, including neighborhood, city, province and GPS coordinates
-- Captures publisher details (agent, owner or agency name, type and phone) and the complete photo gallery for each listing
+- Captures publisher details when ZonaProp publishes them, plus the gallery exposed on the search page
 - Empty fields are omitted from records — a field only appears when Zonaprop actually published that data for the listing
 
 ## Output per listing
@@ -35,7 +36,7 @@ Zonaprop is Argentina's leading property portal, listing apartments, houses, lan
 - `mainImage` — primary photo URL
 - `publisherName` — agent or agency name
 - `publisherType` — `agent`, `owner`, or `agency`
-- `publisherPhone`
+- `publisherPhone` - when published or exposed by ZonaProp
 - `scrapedAt` — UTC timestamp when the record was collected
 
 ## Input
@@ -47,7 +48,7 @@ Zonaprop is Argentina's leading property portal, listing apartments, houses, lan
 | `operationType` | string | `sale` | `sale`, `rent`, or `temporary`; ignored when `searchUrl` is set |
 | `location` | string | – | City or neighborhood slug as it appears in Zonaprop URLs, e.g. `capital-federal`, `palermo`, `cordoba`; ignored when `searchUrl` is set |
 | `maxResults` | integer | `100` | Maximum number of listings to return (1–1000) |
-| `proxyConfiguration` | object | – | Proxy settings; Argentina residential proxy is recommended for reliable access |
+| `proxyConfiguration` | object | - | Optional proxy; direct browser-fingerprinted requests are the default and free Apify Proxy is tried only if blocked |
 
 ### Example: paste a search URL directly
 
@@ -100,6 +101,6 @@ Zonaprop is Argentina's leading property portal, listing apartments, houses, lan
 
 **How many listings can one run return?** Up to `maxResults`, capped at 1000. For broader coverage, run multiple searches with different locations or filters.
 
-**Do I need a proxy to run this?** An Argentina residential proxy is recommended for reliable access to Zonaprop's pages; set it via the `proxyConfiguration` input.
+**Do I need a proxy to run this?** No. The actor uses browser-fingerprinted HTTP requests by default; if the site blocks the runner, it tries free Apify Proxy. No proxy setup is required.
 
 **Is this affiliated with Zonaprop?** No. This is an independent, third-party actor that reads Zonaprop's publicly available listing pages; it is not operated by or affiliated with Zonaprop/Navent.

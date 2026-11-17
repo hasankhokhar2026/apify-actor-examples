@@ -1,4 +1,5 @@
 {
+  "description": "Search Zonaprop Argentina by search URL, location, property type and operation type using public server-rendered pages. No browser or account required.",
   "properties": {
     "location": {
       "description": "City or neighborhood slug as it appears in ZonaProp URLs. Examples: capital-federal, palermo, cordoba, rosario. Ignored if Search URL is provided.",
@@ -56,20 +57,14 @@
       "type": "string"
     },
     "proxyConfiguration": {
-      "description": "Proxy settings for bypassing geo-restrictions. Residential Argentina proxies recommended.",
+      "description": "Optional proxy. Direct browser-fingerprinted requests are the default; free Apify Proxy is tried if the site blocks the runner.",
       "editor": "proxy",
-      "prefill": {
-        "apifyProxyCountry": "AR",
-        "apifyProxyGroups": [
-          "RESIDENTIAL"
-        ],
-        "useApifyProxy": true
-      },
+      "prefill": {},
       "title": "Proxy Configuration",
       "type": "object"
     },
     "searchUrl": {
-      "description": "ZonaProp search URL. Example: https://www.zonaprop.com.ar/departamentos-venta-capital-federal.html — Takes priority over other filters if provided.",
+      "description": "ZonaProp search URL. Example: https://www.zonaprop.com.ar/departamentos-venta-capital-federal.html. Takes priority over the filters below if provided.",
       "editor": "textfield",
       "prefill": "https://www.zonaprop.com.ar/departamentos-venta-capital-federal.html",
       "title": "Search URL",
@@ -78,6 +73,6 @@
   },
   "required": [],
   "schemaVersion": 1,
-  "title": "ZonaProp Scraper Input",
+  "title": "Zonaprop Argentina Property Search & Geolocation Scraper Input",
   "type": "object"
 }
