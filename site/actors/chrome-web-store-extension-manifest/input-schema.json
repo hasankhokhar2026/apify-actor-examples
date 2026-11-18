@@ -1,144 +1,453 @@
 {
-  "description": "Scrape Chrome Web Store extensions by URL, category, search query, or top-charts.",
+  "description": "Find Chrome Web Store extensions and themes by URL, keyword, category, top chart or curated collection, and export listings or public reviews.",
   "properties": {
+    "categories": {
+      "default": [],
+      "description": "Store categories to browse (mode=`category`). Pick one or more; theme categories return themes.",
+      "editor": "select",
+      "items": {
+        "enum": [
+          "productivity/communication",
+          "productivity/workflow",
+          "productivity/tools",
+          "productivity/education",
+          "productivity/developer",
+          "lifestyle/shopping",
+          "lifestyle/news",
+          "lifestyle/entertainment",
+          "lifestyle/games",
+          "lifestyle/social",
+          "lifestyle/art",
+          "lifestyle/well_being",
+          "lifestyle/travel",
+          "lifestyle/household",
+          "lifestyle/fun",
+          "make_chrome_yours/accessibility",
+          "make_chrome_yours/functionality",
+          "make_chrome_yours/privacy",
+          "themes/dark",
+          "themes/colors",
+          "themes/minimalist",
+          "themes/space",
+          "themes/games",
+          "themes/nature",
+          "themes/animals",
+          "themes/entertainment",
+          "themes/art",
+          "themes/cars",
+          "themes/other"
+        ],
+        "enumTitles": [
+          "Productivity / Communication",
+          "Productivity / Workflow",
+          "Productivity / Tools",
+          "Productivity / Education",
+          "Productivity / Developer",
+          "Lifestyle / Shopping",
+          "Lifestyle / News",
+          "Lifestyle / Entertainment",
+          "Lifestyle / Games",
+          "Lifestyle / Social",
+          "Lifestyle / Art",
+          "Lifestyle / Well-being",
+          "Lifestyle / Travel",
+          "Lifestyle / Household",
+          "Lifestyle / Just for Fun",
+          "Make Chrome Yours / Accessibility",
+          "Make Chrome Yours / Functionality",
+          "Make Chrome Yours / Privacy",
+          "Themes / Dark & Black",
+          "Themes / Colors",
+          "Themes / Minimalist",
+          "Themes / Space",
+          "Themes / Games & Anime",
+          "Themes / Nature",
+          "Themes / Animals",
+          "Themes / Entertainment",
+          "Themes / Art & Design",
+          "Themes / Cars",
+          "Themes / Other"
+        ],
+        "type": "string"
+      },
+      "prefill": [],
+      "title": "Categories",
+      "type": "array",
+      "uniqueItems": true
+    },
     "categoryUrls": {
       "default": [],
-      "description": "Chrome Web Store category page URLs. Used when mode=`category`.",
+      "description": "Optional category page URLs for mode=`category`, e.g. https://chromewebstore.google.com/category/extensions/productivity/tools. Combine with `categories` or use alone.",
       "editor": "stringList",
-      "prefill": [
-        "https://chromewebstore.google.com/category/extensions/productivity/tools"
-      ],
-      "title": "Category URLs",
+      "items": {
+        "type": "string"
+      },
+      "prefill": [],
+      "title": "Category page URLs",
+      "type": "array"
+    },
+    "collectionUrls": {
+      "default": [],
+      "description": "Curated store collection URLs (https://chromewebstore.google.com/collection/<id>) or bare collection IDs. Used when mode=`collection`.",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "prefill": [],
+      "title": "Collection URLs or IDs",
       "type": "array"
     },
     "developerNameContains": {
-      "description": "Only emit extensions whose developer name contains this substring (case-insensitive).",
+      "description": "Keep items whose developer name contains this text (case-insensitive). Requires full details.",
       "editor": "textfield",
       "title": "Developer name contains",
       "type": "string"
+    },
+    "establishedPublishersOnly": {
+      "default": false,
+      "description": "Keep items from established publishers when the store marks them.",
+      "prefill": false,
+      "title": "Established publishers only",
+      "type": "boolean"
     },
     "extensionUrls": {
       "default": [
         "https://chromewebstore.google.com/detail/ublock-origin-lite/ddkjiahejlhfcafbddmgiahcphecmpfh"
       ],
-      "description": "Direct Chrome Web Store extension URLs (or just IDs). Used when mode=`urls`.",
+      "description": "Chrome Web Store detail or reviews URLs, or bare 32-character IDs. Used when mode=`urls` or mode=`reviews`.",
       "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
       "prefill": [
         "https://chromewebstore.google.com/detail/ublock-origin-lite/ddkjiahejlhfcafbddmgiahcphecmpfh"
       ],
-      "title": "Extension URLs",
+      "title": "Extension URLs or IDs",
       "type": "array"
+    },
+    "featuredOnly": {
+      "default": false,
+      "description": "Keep items carrying the Chrome Web Store Featured badge.",
+      "prefill": false,
+      "title": "Featured only",
+      "type": "boolean"
+    },
+    "includeDetails": {
+      "default": true,
+      "description": "Fetch the full detail page for each listing. Adds descriptions, publisher data, privacy disclosures and related extensions, but costs one extra request per item.",
+      "prefill": true,
+      "title": "Include full details",
+      "type": "boolean"
+    },
+    "itemType": {
+      "default": "all",
+      "description": "Keep extensions, themes or both.",
+      "editor": "select",
+      "enum": [
+        "all",
+        "extension",
+        "theme"
+      ],
+      "enumTitles": [
+        "Extensions and themes",
+        "Extensions only",
+        "Themes only"
+      ],
+      "prefill": "all",
+      "title": "Item type",
+      "type": "string"
+    },
+    "language": {
+      "default": "en",
+      "description": "Language of names, descriptions and store UI returned by the Chrome Web Store.",
+      "editor": "select",
+      "enum": [
+        "en",
+        "en-GB",
+        "de",
+        "fr",
+        "es",
+        "pt-BR",
+        "pt-PT",
+        "it",
+        "nl",
+        "pl",
+        "tr",
+        "ru",
+        "uk",
+        "ja",
+        "ko",
+        "zh-CN",
+        "zh-TW",
+        "ar",
+        "hi",
+        "id",
+        "vi",
+        "th",
+        "sv",
+        "da",
+        "fi",
+        "no",
+        "cs",
+        "el",
+        "he",
+        "hu",
+        "ro"
+      ],
+      "enumTitles": [
+        "English",
+        "English (United Kingdom)",
+        "German",
+        "French",
+        "Spanish",
+        "Portuguese (Brazil)",
+        "Portuguese (Portugal)",
+        "Italian",
+        "Dutch",
+        "Polish",
+        "Turkish",
+        "Russian",
+        "Ukrainian",
+        "Japanese",
+        "Korean",
+        "Chinese (Simplified)",
+        "Chinese (Traditional)",
+        "Arabic",
+        "Hindi",
+        "Indonesian",
+        "Vietnamese",
+        "Thai",
+        "Swedish",
+        "Danish",
+        "Finnish",
+        "Norwegian",
+        "Czech",
+        "Greek",
+        "Hebrew",
+        "Hungarian",
+        "Romanian"
+      ],
+      "prefill": "en",
+      "title": "Store language",
+      "type": "string"
+    },
+    "maxInstalls": {
+      "description": "Drop items with more installs than this.",
+      "maximum": 1000000000,
+      "minimum": 0,
+      "title": "Maximum installs",
+      "type": "integer"
     },
     "maxItems": {
       "default": 50,
-      "description": "Maximum number of extensions to emit.",
-      "maximum": 5000,
+      "description": "Maximum number of extension records (or review records in reviews mode) to save.",
+      "maximum": 10000,
       "minimum": 1,
-      "prefill": 50,
+      "prefill": 1,
       "title": "Max items",
       "type": "integer"
     },
+    "maxRating": {
+      "description": "Drop items whose average rating is above this value (0–5).",
+      "maximum": 5,
+      "minimum": 0,
+      "title": "Maximum rating",
+      "type": "number"
+    },
+    "maxReviewsPerExtension": {
+      "default": 50,
+      "description": "Cap the number of reviews saved for each extension (mode=`reviews`).",
+      "maximum": 10000,
+      "minimum": 1,
+      "prefill": 3,
+      "sectionCaption": "Reviews",
+      "sectionDescription": "Used only when mode=`reviews`.",
+      "title": "Max reviews per extension",
+      "type": "integer"
+    },
     "minInstalls": {
-      "description": "Drop extensions with fewer than this many installs.",
+      "description": "Drop items with fewer installs than this. The store publishes rounded install bands.",
       "maximum": 1000000000,
       "minimum": 0,
-      "title": "Min installs (filter)",
+      "title": "Minimum installs",
       "type": "integer"
     },
     "minRating": {
-      "description": "Drop extensions with average rating below this (0.0–5.0). E.g. 4.5",
+      "description": "Drop items whose average rating is below this value (0–5).",
       "maximum": 5,
       "minimum": 0,
-      "title": "Min rating (filter)",
+      "sectionCaption": "Filters",
+      "sectionDescription": "Optional filters applied to extension and theme records. Leave them empty to keep everything.",
+      "title": "Minimum rating",
       "type": "number"
     },
     "mode": {
       "default": "urls",
-      "description": "How to discover extensions. `urls` = direct lookup, `category` = walk a category page, `search` = search query, `topCharts` = popular extensions.",
+      "description": "What to collect. `urls` = look up specific items; `search` = keyword search; `category` = browse a category; `topCharts` = editorial charts; `collection` = a curated store collection; `reviews` = public user reviews.",
       "editor": "select",
       "enum": [
         "urls",
-        "category",
         "search",
-        "topCharts"
+        "category",
+        "topCharts",
+        "collection",
+        "reviews"
       ],
       "enumTitles": [
-        "Direct extension URLs",
-        "By category page",
-        "By search query",
-        "Top charts (popular)"
+        "Specific extension URLs or IDs",
+        "Search by keyword",
+        "Browse a category",
+        "Top charts (Trending, Popular, Notable)",
+        "Curated collection",
+        "Reviews of specific extensions"
       ],
       "prefill": "urls",
       "title": "Mode",
       "type": "string"
     },
-    "searchQuery": {
-      "default": "ad blocker",
-      "description": "Free-text search term. Used when mode=`search`.",
-      "editor": "textfield",
-      "prefill": "ad blocker",
-      "title": "Search query",
-      "type": "string"
+    "onlyRequestsAllUrls": {
+      "default": false,
+      "description": "Keep items whose manifest requests <all_urls> or *://*/* host access.",
+      "prefill": false,
+      "title": "Only broad host access",
+      "type": "boolean"
     },
-    "topChartsCategory": {
-      "default": "productivity/tools",
-      "description": "Chrome Web Store category slug (`<parent>/<child>` form). Used when mode=`topCharts`. Leave empty for the global top extensions list.",
+    "reviewsLanguage": {
+      "default": "all",
+      "description": "Language of the review feed. Reviews are fetched in this language independently of the store `language`; `all` uses the store language.",
       "editor": "select",
       "enum": [
-        "",
-        "productivity/tools",
-        "productivity/communication",
-        "productivity/education",
-        "productivity/news_weather",
-        "productivity/photos",
-        "productivity/search_tools",
-        "productivity/social_communication",
-        "productivity/workflow_planning",
-        "productivity/developer_tools",
-        "lifestyle/art_design",
-        "lifestyle/entertainment",
-        "lifestyle/fun",
-        "lifestyle/household",
-        "lifestyle/news_weather",
-        "lifestyle/shopping",
-        "lifestyle/sports",
-        "lifestyle/travel_outdoors",
-        "lifestyle/well_being",
-        "make_chrome_yours/accessibility",
-        "make_chrome_yours/themes"
+        "all",
+        "en",
+        "de",
+        "fr",
+        "es",
+        "pt",
+        "it",
+        "nl",
+        "pl",
+        "tr",
+        "ru",
+        "ja",
+        "ko",
+        "zh",
+        "ar",
+        "hi",
+        "id"
       ],
       "enumTitles": [
-        "(default — global top extensions)",
-        "Productivity / Tools",
-        "Productivity / Communication",
-        "Productivity / Education",
-        "Productivity / News & Weather",
-        "Productivity / Photos",
-        "Productivity / Search Tools",
-        "Productivity / Social & Communication",
-        "Productivity / Workflow & Planning",
-        "Productivity / Developer Tools",
-        "Lifestyle / Art & Design",
-        "Lifestyle / Entertainment",
-        "Lifestyle / Fun",
-        "Lifestyle / Household",
-        "Lifestyle / News & Weather",
-        "Lifestyle / Shopping",
-        "Lifestyle / Sports",
-        "Lifestyle / Travel & Outdoors",
-        "Lifestyle / Well-being",
-        "Make Chrome Yours / Accessibility",
-        "Make Chrome Yours / Themes"
+        "All languages",
+        "English",
+        "German",
+        "French",
+        "Spanish",
+        "Portuguese",
+        "Italian",
+        "Dutch",
+        "Polish",
+        "Turkish",
+        "Russian",
+        "Japanese",
+        "Korean",
+        "Chinese",
+        "Arabic",
+        "Hindi",
+        "Indonesian"
       ],
-      "prefill": "productivity/tools",
-      "title": "Top charts category",
+      "prefill": "all",
+      "title": "Review language",
+      "type": "string"
+    },
+    "reviewsMaxRating": {
+      "description": "Keep only reviews with at most this many stars.",
+      "maximum": 5,
+      "minimum": 1,
+      "title": "Maximum review rating",
+      "type": "integer"
+    },
+    "reviewsMinRating": {
+      "description": "Keep only reviews with at least this many stars.",
+      "maximum": 5,
+      "minimum": 1,
+      "title": "Minimum review rating",
+      "type": "integer"
+    },
+    "reviewsSince": {
+      "description": "Keep reviews created on or after this date (YYYY-MM-DD). Reviews are paged in the selected sort order and filtered one by one; paging does not stop at the first older review. Invalid dates are ignored with a warning.",
+      "editor": "textfield",
+      "title": "Reviews since date",
+      "type": "string"
+    },
+    "reviewsSort": {
+      "default": "recent",
+      "description": "Order in which reviews are read.",
+      "editor": "select",
+      "enum": [
+        "recent",
+        "helpful",
+        "highestRating",
+        "lowestRating"
+      ],
+      "enumTitles": [
+        "Most recent",
+        "Most helpful",
+        "Highest rating",
+        "Lowest rating"
+      ],
+      "prefill": "recent",
+      "title": "Review sort order",
+      "type": "string"
+    },
+    "searchQueries": {
+      "default": [],
+      "description": "One or more keywords to search for (mode=`search`). Each keyword is paginated until `maxItems` is reached.",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "prefill": [],
+      "title": "Search keywords",
+      "type": "array"
+    },
+    "sortBy": {
+      "default": "relevance",
+      "description": "How mode=`category` orders extension categories. Theme categories and search results keep the store's own order.",
+      "editor": "select",
+      "enum": [
+        "relevance",
+        "highestRated"
+      ],
+      "enumTitles": [
+        "Most relevant",
+        "Highest rated"
+      ],
+      "prefill": "relevance",
+      "title": "Category sort order",
+      "type": "string"
+    },
+    "topChart": {
+      "default": "trending",
+      "description": "Which editorial chart to read (mode=`topCharts`). Each chart has 25 items.",
+      "editor": "select",
+      "enum": [
+        "trending",
+        "popular",
+        "notable"
+      ],
+      "enumTitles": [
+        "Trending",
+        "Popular",
+        "Notable"
+      ],
+      "prefill": "trending",
+      "title": "Top chart",
       "type": "string"
     },
     "verifiedOnly": {
       "default": false,
-      "description": "Only emit extensions whose developer has the verified badge.",
+      "description": "Keep items whose developer has a verified business/trader profile (EU DSA trader disclosure).",
       "prefill": false,
-      "title": "Verified developers only",
+      "title": "Verified business publishers only",
       "type": "boolean"
     }
   },
@@ -146,6 +455,6 @@
     "mode"
   ],
   "schemaVersion": 1,
-  "title": "Chrome Extensions Scraper Pro Input",
+  "title": "Chrome Web Store Extensions & Reviews Input",
   "type": "object"
 }

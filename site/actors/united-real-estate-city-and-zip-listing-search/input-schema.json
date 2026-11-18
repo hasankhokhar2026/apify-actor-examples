@@ -1,22 +1,40 @@
 {
-  "description": "Search United Real Estate for homes for sale by city, state, ZIP code, or keyword, with property type, status, price, size, and beds/baths filters.",
+  "description": "Search United Real Estate homes for sale by city and state, ZIP code, keyword or map radius, look up listings by URL or MLS number, and optionally add full property details such as photos, description, year built, lot size, coordinates and listing-agent contact.",
   "properties": {
     "city": {
-      "description": "City to search, e.g. `Austin`. Leave blank to search by ZIP code or keyword instead.",
+      "description": "City to search, e.g. `Austin`. For mode=search; combine with `state`.",
       "editor": "textfield",
       "prefill": "Austin",
       "title": "City",
       "type": "string"
     },
+    "includeDetails": {
+      "default": false,
+      "description": "Open each listing page and add photos, description, year built, lot size, MLS number, county, coordinates, tax amount, amenities, feature lists and listing-agent contact. Slower because it makes one extra request per listing. In search/nearby mode it also post-filters by the requested property type when the detail type is recognized. For mode=search and mode=nearby.",
+      "prefill": false,
+      "sectionCaption": "Property details",
+      "sectionDescription": "Optional enrichment from each listing's detail page.",
+      "title": "Include full property details",
+      "type": "boolean"
+    },
     "keyword": {
-      "description": "Free-text keyword search (searched nationwide if no city/state/ZIP is set).",
+      "description": "Free-text search across listing addresses, descriptions and MLS numbers, e.g. `waterfront`, `pool` or `1191266`. For mode=search.",
       "editor": "textfield",
       "title": "Keyword",
       "type": "string"
     },
+    "latitude": {
+      "description": "Center latitude for mode=nearby, e.g. `30.2672`.",
+      "maximum": 90,
+      "minimum": -90,
+      "sectionCaption": "Nearby search",
+      "sectionDescription": "Coordinate-radius search. Used only by mode=nearby.",
+      "title": "Latitude",
+      "type": "number"
+    },
     "listingStatuses": {
       "default": [],
-      "description": "Restrict to one or more listing statuses. Empty = active listings only (site default).",
+      "description": "Restrict to one or more listing statuses. Empty = the site default (active listings). For mode=search.",
       "editor": "select",
       "items": {
         "enum": [
@@ -36,6 +54,32 @@
       "type": "array",
       "uniqueItems": true
     },
+    "listingUrls": {
+      "default": [],
+      "description": "United Real Estate listing page URLs or paths, e.g. `https://www.unitedrealestate.com/home/for-sale/austin-tx/3808-balcones-dr/60134949`. For mode=byUrls.",
+      "editor": "requestListSources",
+      "items": {
+        "properties": {
+          "url": {
+            "description": "A full United Real Estate listing URL or listing path.",
+            "title": "Listing URL",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "sectionCaption": "URL and MLS modes",
+      "sectionDescription": "Use these instead of a location search to fetch specific listings.",
+      "title": "Listing URLs",
+      "type": "array"
+    },
+    "longitude": {
+      "description": "Center longitude for mode=nearby, e.g. `-97.7431`.",
+      "maximum": 180,
+      "minimum": -180,
+      "title": "Longitude",
+      "type": "number"
+    },
     "maxBathrooms": {
       "description": "Maximum number of bathrooms.",
       "maximum": 20,
@@ -52,10 +96,12 @@
     },
     "maxItems": {
       "default": 50,
-      "description": "Hard cap on emitted listings. Results are fetched 250 at a time (one page); set higher than 250 to page through more of a broad search's matches.",
-      "maximum": 2000,
+      "description": "Hard cap on emitted listings. Search results are fetched 250 at a time.",
+      "maximum": 10000,
       "minimum": 1,
-      "prefill": 50,
+      "prefill": 3,
+      "sectionCaption": "Output",
+      "sectionDescription": "Controls how many records are saved and how the dataset is displayed.",
       "title": "Max items",
       "type": "integer"
     },
@@ -101,9 +147,40 @@
       "title": "Min square feet",
       "type": "integer"
     },
+    "mlsNumbers": {
+      "default": [],
+      "description": "MLS listing numbers to look up, e.g. `1191266`. Each is searched nationwide and a record is emitted only when the listing detail page shows the exact MLS number. For mode=byMlsNumbers.",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "title": "MLS numbers",
+      "type": "array",
+      "uniqueItems": true
+    },
+    "mode": {
+      "default": "search",
+      "description": "What to fetch. `search` finds listings by location, ZIP, keyword or map radius. `byUrls` scrapes specific listing pages. `byMlsNumbers` looks listings up by MLS number. `nearby` searches around a latitude/longitude point.",
+      "editor": "select",
+      "enum": [
+        "search",
+        "byUrls",
+        "byMlsNumbers",
+        "nearby"
+      ],
+      "enumTitles": [
+        "Search listings",
+        "Scrape listing URLs",
+        "Look up MLS numbers",
+        "Search near coordinates"
+      ],
+      "prefill": "search",
+      "title": "Mode",
+      "type": "string"
+    },
     "propertyTypes": {
       "default": [],
-      "description": "Restrict to one or more property types. Empty = all types.",
+      "description": "Restrict to one or more property types. Empty = all types. With includeDetails, results are post-filtered by the detail property type when the source label is recognized. For mode=search.",
       "editor": "select",
       "items": {
         "enum": [
@@ -135,9 +212,20 @@
         "type": "string"
       },
       "prefill": [],
+      "sectionCaption": "Filters",
+      "sectionDescription": "Optional filters applied to search results. They are ignored by the URL and MLS modes.",
       "title": "Property types",
       "type": "array",
       "uniqueItems": true
+    },
+    "radiusMiles": {
+      "default": 10,
+      "description": "Approximate search radius around the coordinate point. The source uses a map bounding box, so corner results can be farther than this value. For mode=nearby.",
+      "maximum": 500,
+      "minimum": 0.1,
+      "prefill": 10,
+      "title": "Radius (miles)",
+      "type": "number"
     },
     "sortBy": {
       "default": "recommended",
@@ -166,7 +254,7 @@
       "type": "string"
     },
     "state": {
-      "description": "US state to restrict the search to. Leave blank to search by ZIP code or keyword instead.",
+      "description": "US state for the city search. For mode=search.",
       "editor": "select",
       "enum": [
         "",
@@ -223,7 +311,7 @@
         "WY"
       ],
       "enumTitles": [
-        "Any state (no filter)",
+        "No state selected",
         "Alabama",
         "Alaska",
         "Arizona",
@@ -281,7 +369,7 @@
       "type": "string"
     },
     "zipCode": {
-      "description": "Search by ZIP code instead of city/state.",
+      "description": "Search a US ZIP code instead of city/state. Five digits, e.g. `78701`. For mode=search.",
       "editor": "textfield",
       "title": "ZIP code",
       "type": "string"

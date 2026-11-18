@@ -1,17 +1,37 @@
 {
-  "description": "Search Booksy for beauty businesses, browse by category, or fetch specific business details.",
+  "description": "Search Booksy businesses by keyword, browse a category, look up business IDs or profile URLs, or export reviews across 17 Booksy markets.",
   "properties": {
+    "acceptsBooksyPay": {
+      "default": false,
+      "description": "Keep only businesses that accept Booksy Pay.",
+      "prefill": false,
+      "title": "Accepts Booksy Pay",
+      "type": "boolean"
+    },
+    "acceptsGiftCards": {
+      "default": false,
+      "description": "Keep only businesses that accept Booksy gift cards.",
+      "prefill": false,
+      "title": "Accepts Booksy gift cards",
+      "type": "boolean"
+    },
+    "availableOn": {
+      "description": "Optional date in YYYY-MM-DD format. Keeps only businesses with availability on that date. Leave empty for no date filter.",
+      "editor": "textfield",
+      "title": "Available on date",
+      "type": "string"
+    },
     "businessIds": {
       "default": [],
-      "description": "Booksy business IDs to fetch details for (mode=byBusinessId). Find them in the Booksy URL, e.g. 688238 from https://booksy.com/en-us/688238_name",
+      "description": "Booksy business IDs or full profile URLs (modes byBusinessId and reviews). Examples: '688238' or 'https://booksy.com/en-us/688238_name'. URLs also select their own country.",
       "editor": "stringList",
       "prefill": [],
-      "title": "Business IDs (mode=byBusinessId)",
+      "title": "Business IDs or profile URLs",
       "type": "array"
     },
     "category": {
       "default": "hair",
-      "description": "Service category to browse (mode=byCategory).",
+      "description": "Service category to browse (mode=byCategory). Categories that are not offered in the selected country return an honest 0-result message.",
       "editor": "select",
       "enum": [
         "hair",
@@ -56,39 +76,172 @@
         "Other"
       ],
       "prefill": "hair",
+      "sectionCaption": "Category and sort",
+      "sectionDescription": "Category browsing, result ordering, and an optional availability date.",
       "title": "Category (mode=byCategory)",
       "type": "string"
     },
-    "filterCategory": {
-      "description": "Filter results to a specific category slug (e.g. 'hair', 'nails'). Useful in search mode to narrow results.",
-      "editor": "textfield",
-      "title": "Filter by category",
+    "country": {
+      "default": "us",
+      "description": "Which Booksy marketplace to use. Set the location to a city in the same country.",
+      "editor": "select",
+      "enum": [
+        "us",
+        "gb",
+        "ie",
+        "au",
+        "ca",
+        "za",
+        "pl",
+        "es",
+        "mx",
+        "ar",
+        "cl",
+        "co",
+        "fr",
+        "br",
+        "pt",
+        "nl",
+        "de"
+      ],
+      "enumTitles": [
+        "United States",
+        "United Kingdom",
+        "Ireland",
+        "Australia",
+        "Canada",
+        "South Africa",
+        "Poland",
+        "Spain",
+        "Mexico",
+        "Argentina",
+        "Chile",
+        "Colombia",
+        "France",
+        "Brazil",
+        "Portugal",
+        "Netherlands",
+        "Germany"
+      ],
+      "prefill": "us",
+      "title": "Country / Booksy market",
       "type": "string"
+    },
+    "filterCategory": {
+      "default": "",
+      "description": "Keep only business records whose primary category matches this value. Applies to business modes.",
+      "editor": "select",
+      "enum": [
+        "",
+        "hair",
+        "barber",
+        "nails",
+        "skin-care",
+        "brows-and-lashes",
+        "massage",
+        "makeup",
+        "wellness-and-spa",
+        "braids-and-locs",
+        "tattoos",
+        "medical-aesthetics",
+        "hair-removal",
+        "home-services",
+        "piercing",
+        "pet-services",
+        "dental",
+        "health-and-fitness",
+        "professional-services",
+        "other"
+      ],
+      "enumTitles": [
+        "Any category",
+        "Hair",
+        "Barber",
+        "Nails",
+        "Skin Care",
+        "Brows and Lashes",
+        "Massage",
+        "Makeup",
+        "Wellness and Spa",
+        "Braids and Locs",
+        "Tattoos",
+        "Medical Aesthetics",
+        "Hair Removal",
+        "Home Services",
+        "Piercing",
+        "Pet Services",
+        "Dental and Orthodontics",
+        "Health and Fitness",
+        "Professional Services",
+        "Other"
+      ],
+      "prefill": "",
+      "title": "Only these categories",
+      "type": "string"
+    },
+    "hasOnlineServices": {
+      "default": false,
+      "description": "Keep only businesses offering virtual/online services.",
+      "prefill": false,
+      "title": "Online services only",
+      "type": "boolean"
+    },
+    "hasSpecialOffers": {
+      "default": false,
+      "description": "Keep only businesses with an active special offer or discount.",
+      "prefill": false,
+      "title": "Special offers only",
+      "type": "boolean"
+    },
+    "hasTravelingServices": {
+      "default": false,
+      "description": "Keep only mobile/traveling service businesses.",
+      "prefill": false,
+      "title": "Traveling services only",
+      "type": "boolean"
+    },
+    "includeDetails": {
+      "default": true,
+      "description": "Fetch the full profile for each result (services with prices and durations, staff, hours, amenities, contacts, booking policy, review sample). Adds one request per business (modes search, byCategory, byUrl). Profile lookups always fetch details.",
+      "prefill": false,
+      "sectionCaption": "Detail enrichment",
+      "sectionDescription": "Optional extra requests per business. The daily test keeps these off.",
+      "title": "Fetch full business details",
+      "type": "boolean"
+    },
+    "includeReviews": {
+      "default": false,
+      "description": "Fetch more written reviews per business and add them to topReviews (business modes). Adds review requests per business.",
+      "prefill": false,
+      "title": "Fetch additional reviews",
+      "type": "boolean"
     },
     "isRecommended": {
       "default": false,
-      "description": "If enabled, only return businesses marked as recommended by Booksy.",
+      "description": "Keep only businesses marked as recommended by Booksy. Applies to business modes.",
       "prefill": false,
       "title": "Recommended businesses only",
       "type": "boolean"
     },
     "latitude": {
-      "description": "GPS latitude for location-based search. Overrides the Location field if provided.",
+      "description": "GPS latitude for location-based search (modes search, byCategory). Overrides the Location field when both latitude and longitude are set.",
       "maximum": 90,
       "minimum": -90,
+      "sectionCaption": "Location and radius",
+      "sectionDescription": "Optional override for the city name and how far around it to search.",
       "title": "Latitude",
       "type": "number"
     },
     "location": {
       "default": "New York",
-      "description": "City name to search near (e.g. 'New York', 'Los Angeles', 'Chicago'). Used when latitude/longitude are not provided.",
+      "description": "City or area to search near (modes search, byCategory). Local-language city names work (e.g. 'Warszawa', 'Kraków'). Leave empty to search the whole country. Latitude/longitude override this field.",
       "editor": "textfield",
       "prefill": "New York",
-      "title": "Location (city name)",
+      "title": "Location (city or area)",
       "type": "string"
     },
     "longitude": {
-      "description": "GPS longitude for location-based search. Overrides the Location field if provided.",
+      "description": "GPS longitude for location-based search (modes search, byCategory). Overrides the Location field when both latitude and longitude are set.",
       "maximum": 180,
       "minimum": -180,
       "title": "Longitude",
@@ -96,29 +249,42 @@
     },
     "maxItems": {
       "default": 50,
-      "description": "Maximum number of businesses to return.",
-      "maximum": 1000,
+      "description": "Maximum business records to return (or review records in reviews mode). Booksy caps a single query at 10,000 results; narrow the category, location, radius, or filters to reach more.",
+      "maximum": 10000,
       "minimum": 1,
-      "prefill": 20,
+      "prefill": 3,
+      "sectionCaption": "Output limits",
+      "sectionDescription": "The daily test keeps this small.",
       "title": "Max items",
       "type": "integer"
     },
     "maxRating": {
-      "description": "Only include businesses with a rating at or below this value (0–5 scale).",
+      "description": "Only include businesses rated at or below this value (0-5). Applies to business modes.",
       "maximum": 5,
       "minimum": 0,
       "title": "Maximum rating",
       "type": "number"
     },
+    "maxReviewsPerBusiness": {
+      "default": 20,
+      "description": "Maximum written reviews to keep per business when includeReviews is on, or in reviews mode.",
+      "maximum": 1000,
+      "minimum": 1,
+      "prefill": 10,
+      "title": "Max reviews per business",
+      "type": "integer"
+    },
     "minRating": {
-      "description": "Only include businesses with a rating at or above this value (0–5 scale).",
+      "description": "Only include businesses rated at or above this value (0-5). Applies to business modes; reviews mode exports reviews unfiltered.",
       "maximum": 5,
       "minimum": 0,
+      "sectionCaption": "Client-side filters",
+      "sectionDescription": "Filters applied to returned records. They do not reduce the number of pages fetched.",
       "title": "Minimum rating",
       "type": "number"
     },
     "minReviewCount": {
-      "description": "Only include businesses with at least this many reviews.",
+      "description": "Only include businesses with at least this many reviews. Applies to business modes.",
       "maximum": 1000000,
       "minimum": 0,
       "title": "Minimum review count",
@@ -131,20 +297,33 @@
       "enum": [
         "search",
         "byCategory",
-        "byBusinessId"
+        "byBusinessId",
+        "reviews",
+        "byUrl"
       ],
       "enumTitles": [
-        "Search — find businesses by keyword and location",
-        "By Category — browse all businesses in a service category",
-        "By Business ID — fetch details for specific Booksy business IDs"
+        "Search — keyword and location",
+        "By Category — browse one service category",
+        "By Business ID — full profiles for IDs or profile URLs",
+        "Reviews — export written reviews for IDs or profile URLs",
+        "By URL — paste Booksy search and/or profile links"
       ],
       "prefill": "search",
       "title": "Mode",
       "type": "string"
     },
+    "openNow": {
+      "default": false,
+      "description": "Keep only businesses that are open at the moment of the run.",
+      "prefill": false,
+      "sectionCaption": "Marketplace filters",
+      "sectionDescription": "Server-side filters applied by Booksy's own search.",
+      "title": "Open now only",
+      "type": "boolean"
+    },
     "radiusKm": {
       "default": 10,
-      "description": "Radius in kilometres around the location to search (default: 10 km). This is a hint to Booksy's search, not a hard filter — Booksy may still include businesses outside this radius when local matches are limited (the same happens on booksy.com). Use the returned distanceKm field to filter strictly by distance if needed.",
+      "description": "Radius in kilometres around the location (modes search, byCategory). This is a hint to Booksy's search; Booksy may widen it when nearby matches are thin. Use distanceKm on each record to filter strictly.",
       "maximum": 100,
       "minimum": 1,
       "prefill": 10,
@@ -153,17 +332,57 @@
     },
     "searchQuery": {
       "default": "hair salon",
-      "description": "Keyword to search (mode=search). Examples: 'hair salon', 'barber', 'nail salon', 'massage', 'eyebrows'.",
+      "description": "Keyword to search for (mode=search). Required for search mode; an empty or missing value is rejected instead of falling back to a default. Examples: 'hair salon', 'barber', 'nail salon', 'massage', 'eyebrows'. Use the market's language for non-English countries (e.g. 'fryzjer' in Poland, 'peluqueria' in Spain).",
       "editor": "textfield",
       "prefill": "hair salon",
       "title": "Search query",
       "type": "string"
+    },
+    "sortBy": {
+      "default": "score",
+      "description": "Result ordering for search, category, and URL search runs.",
+      "editor": "select",
+      "enum": [
+        "score",
+        "distance",
+        "rating",
+        "price",
+        "name"
+      ],
+      "enumTitles": [
+        "Booksy score (default)",
+        "Distance",
+        "Rating",
+        "Price",
+        "Name"
+      ],
+      "prefill": "score",
+      "title": "Sort results by",
+      "type": "string"
+    },
+    "startUrls": {
+      "default": [],
+      "description": "Booksy search-result pages and/or business profile pages (mode=byUrl). Search pages are paginated automatically; profile pages return full details.",
+      "editor": "requestListSources",
+      "items": {
+        "properties": {
+          "url": {
+            "description": "A Booksy search-result page or business profile URL.",
+            "title": "Booksy URL",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "prefill": [],
+      "title": "Booksy URLs",
+      "type": "array"
     }
   },
   "required": [
     "mode"
   ],
   "schemaVersion": 1,
-  "title": "Booksy Scraper Input",
+  "title": "Booksy Beauty & Wellness Business Profile Scraper Input",
   "type": "object"
 }

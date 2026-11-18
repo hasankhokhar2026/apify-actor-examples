@@ -1,11 +1,11 @@
 {
   "actorOutputSchemaVersion": 1,
-  "description": "Skiplagged flight itinerary records with airline, flight numbers, times, duration, stops, price and booking-provider data.",
+  "description": "Skiplagged flight itineraries (price, airlines, segments, layovers, hidden-city flag, self-transfer/virtual-interline flag, booking providers) and, in calendar mode, daily fare-calendar rows. State/province is emitted only for single-airport source responses. Empty fields are omitted.",
   "properties": {
     "flights": {
-      "description": "Dataset containing all scraped Skiplagged flight itineraries.",
+      "description": "Dataset containing scraped Skiplagged flight itineraries (recordType=skiplaggedFlight) and flexible-date fare-calendar rows (recordType=skiplaggedFareCalendar).",
       "template": "{{links.apiDefaultDatasetUrl}}/items",
-      "title": "Skiplagged flights",
+      "title": "Skiplagged flights and fare calendars",
       "type": "string"
     }
   },

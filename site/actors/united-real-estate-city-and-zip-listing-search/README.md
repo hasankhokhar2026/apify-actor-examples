@@ -1,117 +1,235 @@
-# United Real Estate City & ZIP Listing Search
+# United Real Estate Listings & Property Details Scraper
 
-United Real Estate is a national brokerage network with listings across the US. This actor searches its homes-for-sale inventory by city, state, ZIP code, or keyword, with property type, listing status, price, bedroom/bathroom and square-footage filters, and returns address, price, size, status and listing brokerage for every matching home. No login, cookies or proxy required.
+United Real Estate is a national brokerage network whose public site carries homes for sale from hundreds of local MLSs across the United States. This actor turns those listing pages into structured JSON: search by city and state, ZIP code, keyword, map radius or MLS number, or paste listing URLs directly. Start with the fast search-card fields, then switch on detail enrichment to add the full photo gallery, description, year built, lot size, MLS number, coordinates, tax amount, feature lists and listing-agent contact. No login, cookies or proxy required.
 
 ## What this actor does
 
-- **Nationwide search:** any US city + state, ZIP code, or free-text keyword
-- **11 property types:** single family, multi-family, condo/townhome, farm/ranch, land, commercial, mobile, waterfront, and more
-- **3 listing statuses:** active, pending, coming soon
-- **8 numeric filters:** price range, bedroom range, bathroom range, square footage range
-- **7 sort orders:** recommended, property size, year built, and price (each ascending/descending where applicable)
-- **Empty fields are omitted** — a field only appears on a record when United Real Estate actually published a value for it (e.g. land listings without bedroom/bathroom counts simply omit those fields)
+- **Four ways in:** city + state search, ZIP-code search, direct listing URLs, and MLS-number lookup (plus a coordinate-radius mode)
+- **Filters that work:** 11 property types, active/pending/coming-soon status, price, bedroom, bathroom and square-footage ranges, and seven sort orders
+- **Full-detail enrichment:** every gallery photo, description, property type, year built, lot size, MLS number, source MLS, county, tax amount, coordinates and listing-agent contact
+- **Feature-level data:** amenities, interior/exterior features, parking and garage, cooling/heating, construction, appliances, flooring, pool and waterfront flags
+- **Pagination handled:** pulls up to 10,000 listings from a search that exposes 250 per page
+- **Empty fields are omitted** - a field only appears on a record when United Real Estate published a value for it
+
+## Source limits and behavior
+
+- **100,000-row source ceiling.** The site serves search pages up to page 400 (250 cards each). Page 401 and above return HTTP 500. `maxItems` is capped at 10,000, so a normal run stops before the ceiling; national keyword searches can report more than 100,000 matches.
+- **The source sometimes reports more matches than it serves.** It can return a short page followed by an empty page before the displayed total. The actor keeps paging when the total says more, then retries by price range and recursively splits a range that is still short. This recovers many, but not always every, missing row; the run status says when the source stopped serving pages. A source total can also undercount (for example, 413 reported while 420 unique listings are retrievable).
+- **Property-type results can disagree with the source detail type.** The source's own `spgIds` filter occasionally returns listings whose detail page says a different type (for example, a Condo filter returning Lot and Land). With `includeDetails: true` the actor post-filters against the detail `propertyType` when it recognizes the label. Without details it cannot, because cards do not carry a type. Property types 5-12 currently return zero from the source; they remain exposed because the source accepts them.
+- **Some photos are not publicly fetchable.** Photo hosts that return 403 or a placeholder are omitted rather than shipped as broken links. `api.cotality.com` is the main blocked host; this affects many Florida and Southern California galleries. With `includeDetails: true`, search results keep the accessible card photo when the detail gallery is blocked. `byUrls` records have no card, so a fully blocked gallery means no photo for that URL.
+- **Nearby search is a map rectangle, not a strict circle.** The source accepts a bounding box around the coordinate point. Results near a corner of that box can be farther than `radiusMiles`; the actor does not post-filter by haversine distance.
+- **Some listings are stale or duplicated in the source.** Search cards can point to soft-404 listing pages, and the same property can appear under different MLS numbers/listing IDs. The actor keeps a card record when detail enrichment soft-404s; keep `includeDetails` on if you need to detect stale pages. Duplicate rows from different MLSs are not merged.
+- **MLS lookup verifies the detail page.** A record is emitted by `byMlsNumbers` only when the detail page's MLS number matches the requested number; missing detail, soft-404 cards, and mismatches are reported in the run status instead of being emitted unverified.
 
 ## Output per listing
 
-- `listingId` — United Real Estate's internal listing ID
-- `url` — the listing's page on unitedrealestate.com
-- `imageUrl` — primary listing photo
-- `fullAddress`, `streetAddress`, `city`, `state`, `zipCode`
-- `price`, `pricePerSqft`
-- `listingStatus` (`Active`, `Pending`, `Coming Soon`)
+Search results without detail enrichment return the core listing fields. `includeDetails: true` (or either of the URL / MLS modes) adds the detail fields.
+
+### Identity and address
+
+- `listingId` - United Real Estate's listing ID
+- `url` - listing page on unitedrealestate.com
+- `fullAddress`, `streetAddress`, `city`, `state`, `zipCode`, `county`
+- `latitude`, `longitude` - detail mode
+
+### Price, status and size
+
+- `price`, `priceCurrency`, `pricePerSqft` - `pricePerSqft` is present whenever price and size are available, including `byUrls`
+- `listingStatus` - `Active`, `Pending Sale`, `Coming Soon`
 - `bedrooms`, `bathrooms`, `squareFeet`
-- `listedByBroker` — listing brokerage name
-- `searchLocation` — the location/keyword you searched
+- `lotSizeAcres`, `lotSizeSqft` - detail mode, whichever unit the source publishes; most listings publish acres
+- `yearBuilt`, `propertyType` - detail mode
+- `taxAmount` - annual tax shown on the listing page, detail mode; a source value of 0 is treated as missing and omitted
+
+### Media and text
+
+- `imageUrl` - primary listing photo
+- `photos[]` - every publicly accessible photo in the listing gallery
+- `photoCount`
+- `description` - full listing remarks, detail mode
+
+### Listing records and attribution
+
+- `mlsNumber`, `sourceMls`, `lastModified` - detail mode
+- `listedByBroker` - listing brokerage name
+- `listedByUnited` - true when the card carries United Real Estate's own badge
+- `agentName`, `agentEmail`, `agentPhone`, `agentMlsId`, `brokerageName` - detail mode; `agentPhone` appears only when the source publishes one (most current pages show only the brokerage support line)
+- `searchLocation` - the location, keyword, radius, URL or MLS you searched
 - `recordType: "listing"`, `scrapedAt`
+
+### Property features (detail mode)
+
+- `amenities[]`
+- `interiorFeatures[]`, `exteriorFeatures[]`, `lotFeatures[]`, `communityFeatures[]`
+- `parkingFeatures[]`, `parkingTotal`, `garageSpaces`
+- `cooling[]`, `heating[]`, `constructionMaterials[]`, `roof[]`, `foundationDetails[]`
+- `appliances[]`, `flooring[]`, `fireplaceFeatures[]`, `levels[]`
+- `poolFeatures[]`, `hasPool`, `waterfrontFeatures[]`, `hasWaterfront`, `view[]`
+- `utilities[]`, `waterSource[]`, `sewer[]`
+- `fencing[]`, `patioAndPorchFeatures[]`, `securityFeatures[]`, `accessibilityFeatures[]`
+- `propertyCondition[]`, `specialListingConditions[]`, `otherStructures[]`, `generalInformation[]`
 
 ## Input
 
 | Field | Type | Default | Description |
 |---|---|---|---|
-| `city` | string | – | City to search |
-| `state` | select | – | US state (dropdown of all 50 states + DC) |
-| `zipCode` | string | – | Search by ZIP code instead of city/state |
-| `keyword` | string | – | Free-text keyword search (nationwide if no location given) |
-| `propertyTypes` | array | – | One or more property types (see below) |
-| `listingStatuses` | array | – | One or more of `Active`, `Pending`, `Coming Soon` |
-| `minPrice` / `maxPrice` | int | – | Price range in USD |
-| `minBedrooms` / `maxBedrooms` | int | – | Bedroom count range |
-| `minBathrooms` / `maxBathrooms` | int | – | Bathroom count range |
-| `minSqft` / `maxSqft` | int | – | Interior square footage range |
-| `sortBy` | string | `recommended` | Result ordering |
-| `maxItems` | int | `50` | Hard cap on emitted listings (results are paged 250 at a time) |
+| `mode` | string | `search` | `search` / `byUrls` / `byMlsNumbers` / `nearby` |
+| `city` | string | - | City to search (mode=search) |
+| `state` | select | - | US state for the city (mode=search) |
+| `zipCode` | string | - | Five-digit US ZIP code (mode=search) |
+| `keyword` | string | - | Free-text search across addresses, descriptions and MLS numbers (mode=search) |
+| `propertyTypes` | array | `[]` | One or more property types; empty = all. With `includeDetails`, results are post-filtered when the detail type is known (mode=search) |
+| `listingStatuses` | array | `[]` | Active, Pending or Coming Soon; empty = site default (mode=search) |
+| `minPrice` / `maxPrice` | int | - | Price range in USD |
+| `minBedrooms` / `maxBedrooms` | int | - | Bedroom count range |
+| `minBathrooms` / `maxBathrooms` | int | - | Bathroom count range |
+| `minSqft` / `maxSqft` | int | - | Interior square-footage range |
+| `sortBy` | string | `recommended` | `recommended`, property size, year built or list price, ascending/descending |
+| `includeDetails` | boolean | `false` | Open each listing page for photos, description, MLS, agent, property facts and property-type post-filtering |
+| `listingUrls` | array | `[]` | Listing page URLs or paths (mode=byUrls) |
+| `mlsNumbers` | array | `[]` | MLS numbers to verify exactly on the detail page and fetch (mode=byMlsNumbers) |
+| `latitude` | number | - | Center latitude (mode=nearby) |
+| `longitude` | number | - | Center longitude (mode=nearby) |
+| `radiusMiles` | number | `10` | Approximate radius; the source uses a bounding box, not a circle (mode=nearby) |
+| `maxItems` | int | `50` | Hard cap on emitted listings (1-10,000) |
 
-Property types: Single Family / Detached, Multi-family, Condo / Townhome / Apartment, Farm / Ranch, Lot and Land, Commercial, Mobile, Waterfront, Other, Industrial, Recreational.
+Property types: Single Family / Detached, Multi-family, Condo / Townhome / Apartment, Farm / Ranch, Lot and Land, Commercial, Mobile, Waterfront, Other, Industrial, Recreational. Types 5-12 currently return zero listings from the source; they are still accepted for compatibility. With `includeDetails: true`, search results are post-filtered by the detail `propertyType` when the label is recognized.
 
-## Example: single-family homes in Austin, TX under $700K
+## Backward compatibility
+
+Existing saved tasks keep working. Legacy keys are mapped in code: `zipcode` â†’ `zipCode`, `query` â†’ `keyword`, `minBed`/`maxBed` â†’ `minBedrooms`/`maxBedrooms`, `minBath`/`maxBath` â†’ `minBathrooms`/`maxBathrooms`, `minBeds`/`maxBeds` and `minBaths`/`maxBaths` â†’ the bedroom/bathroom fields, `minsqft`/`maxsqft` â†’ `minSqft`/`maxSqft`, `fetchDetails` â†’ `includeDetails`, `maxResults` â†’ `maxItems`, `startUrls`/`urls`/`propertyUrls` â†’ `listingUrls`, and `mls`/`mlsNumber`/`mlsIds` â†’ `mlsNumbers`. When `mode` is absent, URL inputs select `byUrls`, MLS inputs select `byMlsNumbers`, and otherwise `search` is used. Empty new-style values do not hide a populated legacy key.
+
+## Example: single-family homes in Austin with full details
 
 ```json
 {
+  "mode": "search",
   "city": "Austin",
   "state": "TX",
   "propertyTypes": ["1"],
-  "maxPrice": 700000,
+  "maxPrice": 900000,
   "minBedrooms": 3,
   "sortBy": "ListPrice",
+  "includeDetails": true,
   "maxItems": 100
 }
 ```
 
-### Example: search by ZIP code
+## Example: condos in one ZIP code
 
 ```json
 {
+  "mode": "search",
   "zipCode": "78701",
+  "propertyTypes": ["3"],
   "maxItems": 50
 }
 ```
 
-### Example: nationwide keyword search
+## Example: pending listings in Naples, Florida
 
 ```json
 {
-  "keyword": "waterfront",
-  "minPrice": 200000,
-  "maxItems": 100
+  "mode": "search",
+  "city": "Naples",
+  "state": "FL",
+  "listingStatuses": ["10005"],
+  "minPrice": 500000,
+  "includeDetails": true,
+  "maxItems": 50
 }
 ```
 
-### Example: pending condos in Naples, FL
+## Example: scrape specific listing URLs
 
 ```json
 {
-  "city": "Naples",
-  "state": "FL",
-  "propertyTypes": ["3"],
-  "listingStatuses": ["10005"],
+  "mode": "byUrls",
+  "listingUrls": [
+    { "url": "https://www.unitedrealestate.com/home/for-sale/austin-tx/3808-balcones-dr/60134949" },
+    { "url": "https://www.unitedrealestate.com/home/for-sale/naples-fl/2875-coco-lakes-dr/54956212" }
+  ]
+}
+```
+
+## Example: look up MLS numbers
+
+```json
+{
+  "mode": "byMlsNumbers",
+  "mlsNumbers": ["1191266", "4148495", "6358215"]
+}
+```
+
+## Example: search around downtown Austin
+
+```json
+{
+  "mode": "nearby",
+  "latitude": 30.2672,
+  "longitude": -97.7431,
+  "radiusMiles": 5,
+  "propertyTypes": ["1"],
+  "includeDetails": true,
   "maxItems": 50
 }
 ```
 
 ## Use cases
 
-- **Homebuyers & relocation services** — build a filtered listing feed for a target city or ZIP code
-- **Real estate investors** — screen listings by price, size, and property type across markets
-- **PropTech & market research** — track inventory counts and pricing by city over time
-- **Land & farm buyers** — search the Farm/Ranch and Lot-and-Land categories specifically
-- **Agents & brokers** — monitor competing listings in a target area
+- **Homebuyers and relocation services** - build a filtered shortlist for a target city or ZIP, with photos and agent contacts
+- **Real estate investors** - screen by price, size and property type, then compare lot size and year built across markets
+- **PropTech and market research** - track inventory counts, price per square foot and listing turnover by city
+- **Agents and brokers** - monitor competing listings and the listing agents behind them
+- **Land and farm buyers** - search the Farm/Ranch and Lot-and-Land categories and read acreage and feature data
+- **CRM and lead workflows** - export listing-agent name, email, phone and brokerage for a market
 
 ## FAQ
 
-**What is the data source?**
-United Real Estate's public search results (unitedrealestate.com) — the same data shown to any visitor searching the site, no account required.
+### What is the data source?
 
-**Is this affiliated with United Real Estate?**
-No. This is an independent, third-party actor that reads United Real Estate's public search results.
+United Real Estate's public listing search and listing pages (unitedrealestate.com) - the same data any visitor sees, with no account required.
 
-**Why do some listings lack `bedrooms`, `bathrooms`, or `squareFeet`?**
-Land, farm/ranch, and commercial listings often don't have these attributes in the source data. The actor never fabricates a value — the field is simply omitted.
+### Is this affiliated with United Real Estate?
 
-**Can I search any US location?**
-Yes — `city` + `state`, a `zipCode`, or a nationwide `keyword` search all work. If nothing matches, the run finishes with 0 records and a status message explaining why.
+No. This is an independent, third-party actor that reads United Real Estate's public listing pages.
 
-**How many listings can I get in one run?**
-Each search page returns up to 250 matching listings; the actor automatically pages through further results (up to `maxItems`, capped at 2000) for broad searches with more matches.
+### Do I need a proxy, login or API key?
 
-**How fresh is the data?**
-Each run reflects United Real Estate's live search results at request time — there is no caching layer in this actor.
+No. The actor reads public pages directly and works without cookies, logins, API keys or proxy setup. Just fill in the input and run it.
+
+### What is detail enrichment, and why is it optional?
+
+Search cards are fast and already carry the address, price, beds/baths/sqft, status, photo and brokerage. Detail enrichment opens each listing page to add the full gallery, description, MLS data, year built, lot size, coordinates, tax amount, features and agent contact. It costs one extra request per listing, so it is off by default and can be switched on with `includeDetails`.
+
+### Which fields are missing on some records?
+
+The source MLS decides what each listing carries. Land and commercial listings often omit bedrooms, bathrooms and interior square footage. Some listings omit county, tax amount, lot size or coordinates. The actor never fabricates a value - the field is simply left out.
+
+### Why do some property types return no results?
+
+United Real Estate exposes eleven property-type filters, but its underlying MLS feeds publish listings mainly in the single-family, multi-family, condo/townhome and farm/ranch categories. Types 5-12 currently return zero listings from the source everywhere we tested, so those options are effectively placeholders; they remain in the schema because the source accepts them. The source's own filter can also return a detail type that does not match the selected category (for example, Condo returning Lot and Land). With `includeDetails: true`, the actor post-filters records when the detail type is recognized; without details, cards do not carry a property type, so the actor cannot post-filter.
+
+### How many listings can I get in one run?
+
+A search page returns up to 250 listings and the actor pages through the rest up to `maxItems` (maximum 10,000). The source itself stops serving pages beyond 100,000 results (page 401 returns HTTP 500). Some searched pages are short or empty even though the source reports more matches; the actor continues through short pages, then retries by price range and recursively splits a range that is still short. This recovers many missing rows, but a source hole can still leave a few rows unavailable; the run status reports the displayed source total when that happens.
+
+### Can I search by address or MLS number?
+
+Yes. Put a street address or an MLS number in `keyword` for a quick search, or use `mode=byMlsNumbers` to verify a list of MLS numbers and return the matching full listing records. MLS mode checks every search card's detail page and emits only an exact MLS match; missing detail, soft-404 cards and mismatches are reported in the run status instead of being emitted unverified.
+
+### Why is nearby search not an exact radius?
+
+The source exposes a map bounding box, not a distance filter. The actor builds a rectangle around the latitude/longitude point; listings near a corner of the rectangle can be farther than `radiusMiles`. The actor does not post-filter by haversine distance, so use a slightly smaller radius if you need a strict cutoff.
+
+### How fresh is the data?
+
+Every run reads the live search results and listing pages at request time. `scrapedAt` is the read time; `lastModified` is the update time published by the source MLS.
+
+### Why do some listings have fewer photos than the website?
+
+The actor emits only photo URLs that are publicly accessible without a referer or login. Some MLS photo hosts block direct access, so those photos are omitted rather than shipping broken links. `api.cotality.com` is the main blocked host and is common in Florida and Southern California galleries; in those markets a listing can have no photos even though the website shows a gallery. With `includeDetails: true`, search results keep the accessible card photo when the detail gallery is blocked; `byUrls` has no card fallback.
+
+### Why do some records show 0 bedrooms or 0 bathrooms?
+
+Those are source values, typically for land, commercial or some new-construction records. The actor does not invent a value; if the source publishes 0, it is emitted. A `taxAmount` of 0 is treated differently: that is a source sentinel, so it is omitted.

@@ -1,143 +1,207 @@
 # Booksy Beauty & Wellness Business Profile Scraper
 
-Booksy hosts the booking pages for salons, barbers, spas, and other beauty and wellness businesses, but its site only lets you browse one search or category at a time with no export option. This actor pulls those listings into structured records — ratings, services, staff, amenities, and contact details — by keyword search, by service category, or by a list of specific business IDs.
+Booksy lists hundreds of thousands of salons, barbershops, nail studios, spas, and independent beauty professionals, but the site gives you one page at a time and no export button. This actor turns that public marketplace into structured business and review records: full service menus with prices and durations, staff, opening hours, amenities, photos, ratings, written reviews, and contact links. It works by keyword, category, business ID, or a pasted Booksy URL, across 17 Booksy markets.
 
 ## What this actor does
 
-- Searches Booksy by keyword and location (city name or GPS coordinates) and returns matching businesses with distance from the search point.
-- Browses an entire Booksy service category — hair, barber, nails, massage, tattoos, and 14 others — near a location without needing a keyword.
-- Looks up specific businesses by their Booksy ID to pull the richest profile available: staff list, top services, amenities, booking policy, state/ZIP, and written reviews.
-- Filters results post-search by minimum/maximum rating, minimum review count, category, and recommended-badge status.
-- Only includes fields Booksy actually published for that business; fields with no data (no Instagram link, no listed staff, etc.) are left out of the record rather than sent as empty values.
+- **Five modes:** search by keyword, browse a service category, look up business IDs or profile URLs, export written reviews, or paste Booksy search/profile URLs.
+- **Real pagination:** reads every result page Booksy exposes for a query, up to the marketplace's 10,000-result ceiling, with duplicate removal across promoted listings.
+- **Rich profiles:** service menus with prices, durations, variants, deposits, and discounts; staff with positions and bios; weekly hours; amenities; photo galleries; booking and cancellation policy.
+- **17 markets:** United States, United Kingdom, Ireland, Australia, Canada, South Africa, Poland, Spain, Mexico, Argentina, Chile, Colombia, France, Brazil, Portugal, Netherlands, and Germany, with the market's local currency.
+- **Filters that match how buyers search:** rating range, minimum review count, primary category, recommended badge, open now, online/traveling services, special offers, gift cards, Booksy Pay, availability date, and sort order.
+- **Clean records:** fields the source did not publish for a business are left out instead of being sent as null, empty text, or a sentinel.
+- **Honest run status:** distinguishes a genuine zero-result query from HTTP or transport failures after retries, including partial results.
+- **Local-language URLs:** `byUrl` recognizes translated category URLs such as `/pl-pl/s/fryzjer` and `/pt-br/s/spa-massagem`.
 
 ## Output per business
 
-| Field | Description |
-|---|---|
-| `businessId` | Booksy's business identifier |
-| `name` | Business name |
-| `slug` | URL slug used in the profile link |
-| `profileUrl` | Full Booksy profile URL |
-| `address` | Street address |
-| `city` | City |
-| `latitude` / `longitude` | GPS coordinates |
-| `rating` | Average rating, 0–5 scale |
-| `reviewCount` | Total number of reviews |
-| `starRating` | Rounded star rating |
-| `category` / `categoryId` | Primary service category name and Booksy's category ID |
-| `serviceCategories` | All service categories this business offers |
-| `staff` | Staff member names (business-ID lookups) |
-| `description` | Business bio text (business-ID lookups) |
-| `website` | Business's own website URL |
-| `facebookUrl` / `instagramUrl` | Social profile links |
-| `ecommerceUrl` | Business's online shop link, when it has one |
-| `bookingEnabled` | Whether online booking is turned on |
-| `isRecommended` | Booksy "recommended" badge |
-| `bestOfBooksyBadge` | "Best of Booksy" award badge |
-| `isMobileService` | True for traveling/mobile-only services |
-| `pricingLevel` | Price tier, 1 (budget) to 4 (luxury) |
-| `distanceKm` | Distance from the search point, for keyword and category searches |
-| `amenities` | Listed amenities, e.g. parking, Wi-Fi |
-| `topServices` | Names of the business's most booked services |
-| `imageUrl` | Cover photo URL |
-| `logoUrl` | Logo image URL |
-| `openHours` | Opening hours by day |
-| `isPromoted` | Whether the listing is a paid "Promoted" placement |
-| `maxDiscountRate` | Largest active discount percentage across its services |
-| `hasLowAvailability` | Booksy's own "low availability" flag |
-| `offersVirtualServices` | Whether virtual/online services are offered |
-| `offersOnlineVouchers` | Whether online vouchers are sold |
-| `acceptsBooksyGiftCards` / `acceptsBooksyPay` | Accepted payment/gift options |
-| `state` / `zipCode` | State and postal code (business-ID lookups only) |
-| `bookingPolicy` | Cancellation/change policy text (business-ID lookups only) |
-| `bookingLeadTimeDays` | How far in advance bookings can be made (business-ID lookups only) |
-| `topReviews` | Up to a few written reviews with text, rating, reviewer name, date, and service (business-ID lookups only) |
-| `sourceUrl` | The Booksy URL the record came from |
-| `scrapedAt` | UTC timestamp of the scrape |
-| `recordType` | Always `"business"` |
+- `businessId` — Booksy's business identifier
+- `name`, `slug`, `profileUrl`, `country`, `currency` (market currency, even without service details)
+- `address`, `city`, `state`, `zipCode`, `latitude`, `longitude`, `distanceKm`
+- `rating` — exact average, 0–5
+- `reviewCount`, `starRating`
+- `category` — primary category slug; `categoryId` — Booksy's local category ID
+- `serviceCategories` — every category the business is listed under
+- `services[]` — category, name, description, serviceId, treatmentId, treatmentName, price, priceText, durationMinutes, variantCount, bookable, onlineService, travelingService, stafferIds, photoUrls, variants[]
+- `serviceCount`, `priceFrom`, `priceTo`, `topServices`
+- `staff` — staff names; `staffMembers[]` — staffId, name, position, description, photoUrl, reviewsRankScore, active, visible; `staffCount`
+- `description`, `website`, `facebookUrl`, `instagramUrl`, `ecommerceUrl`, `contactName`
+- `bookingEnabled`, `bookingMode`, `bookingConfirmation`, `bookingPolicy`, `bookingLeadTimeDays`, `bookingChangeWindowHours`
+- `depositPolicy`, `depositCancelTimeHours`, `serviceFee`
+- `openHours[]` — day_of_week, dayName, open_from, open_till; `openHoursNote`
+- `amenities` — human-readable labels; `amenityDetails[]` — key and label
+- `hasParking`, `hasWheelchairAccess`, `acceptsCreditCards`
+- `imageUrl`, `imageUrls[]`, `logoUrl`
+- `isRecommended`, `bestOfBooksyBadge`, `isMobileService`, `isPromoted`, `maxDiscountRate`, `hasLowAvailability`
+- `offersVirtualServices`, `offersOnlineVouchers`, `acceptsBooksyGiftCards`, `acceptsBooksyPay`, `pricingLevel` (when Booksy returns it)
+- `profileType`, `newOnMarketplace`, `isBListListing`, `isRentingVenue`, `umbrellaVenueName`, `salonNetwork`, `hasSafetyRules`, `donationsEnabled`, `waitlistDisabled`
+- `topReviews[]` — text, rating, reviewerName, date, appointmentDate, verified, replyText, serviceNames, staffNames, photoUrls
+- `sourceUrl`, `scrapedAt`, `recordType` (`"business"`)
+
+## Output per review (mode = `reviews`)
+
+- `reviewId`, `rating`, `title`, `text`
+- `authorName`, `authorId`, `authorAvatarUrl`
+- `createdAt`, `updatedAt`, `appointmentDate`, `verified`, `anonymized`
+- `replyText`, `replyUpdatedAt`
+- `serviceNames[]`, `serviceIds[]`, `staffNames[]`, `staffIds[]`, `photoUrls[]`
+- `businessId`, `businessName`, `businessProfileUrl`, `businessRating`, `businessReviewCount`
+- `country`, `sourceUrl`, `scrapedAt`, `recordType` (`"review"`)
+
+Review records are written without invented text: if a customer left only a star rating, `text` is omitted.
 
 ## Input
 
 | Field | Type | Default | Description |
 |---|---|---|---|
-| `mode` | string | `search` | `search` (keyword + location), `byCategory` (browse a category), or `byBusinessId` (specific IDs). Required. |
-| `searchQuery` | string | `hair salon` | Keyword to search for in `search` mode. |
-| `location` | string | `New York` | City name to search near, used when latitude/longitude aren't set. |
-| `latitude` | number | – | GPS latitude; overrides `location` when set. |
-| `longitude` | number | – | GPS longitude; overrides `location` when set. |
-| `radiusKm` | integer | `10` | Search radius hint sent to Booksy. Booksy may still return businesses outside this radius when nearby matches are thin — use `distanceKm` on each record to filter strictly. |
-| `category` | string | `hair` | Service category slug to browse in `byCategory` mode. |
-| `businessIds` | array | `[]` | Booksy business IDs to fetch in `byBusinessId` mode, e.g. `688238` from `https://booksy.com/en-us/688238_name`. |
-| `minRating` | number | – | Keep only businesses rated at or above this value (0–5). |
-| `maxRating` | number | – | Keep only businesses rated at or below this value (0–5). |
-| `minReviewCount` | integer | – | Keep only businesses with at least this many reviews. |
-| `filterCategory` | string | – | Narrow results to one category slug, e.g. `nails`. |
-| `isRecommended` | boolean | `false` | When true, keep only businesses with Booksy's "recommended" badge. |
-| `maxItems` | integer | `50` | Maximum number of businesses to return. |
+| `mode` | string | `search` | `search`, `byCategory`, `byBusinessId`, `reviews`, or `byUrl`. |
+| `searchQuery` | string | `hair salon` | Keyword for `search` mode. Required in search mode; an empty or missing value is rejected. Use the market's language outside English markets. |
+| `location` | string | `New York` | City or area for `search` / `byCategory`; local-language names work (e.g. `Warszawa`, `Kraków`). Leave empty to search the whole country. |
+| `country` | string | `us` | Booksy market code: `us`, `gb`, `ie`, `au`, `ca`, `za`, `pl`, `es`, `mx`, `ar`, `cl`, `co`, `fr`, `br`, `pt`, `nl`, `de`. |
+| `businessIds` | array | `[]` | Business IDs or profile URLs for `byBusinessId` / `reviews`. URLs select their own country. |
+| `startUrls` | array | `[]` | Booksy search and/or profile URLs for `byUrl` mode. Local-language category URLs are recognized as category searches. |
+| `latitude` | number | - | GPS latitude; overrides `location` when longitude is also set. |
+| `longitude` | number | - | GPS longitude; overrides `location` when latitude is also set. |
+| `radiusKm` | integer | `10` | Search radius hint in kilometres, 1–100. |
+| `category` | string | `hair` | Category for `byCategory`: `hair`, `barber`, `nails`, `skin-care`, `brows-and-lashes`, `massage`, `makeup`, `wellness-and-spa`, `braids-and-locs`, `tattoos`, `medical-aesthetics`, `hair-removal`, `home-services`, `piercing`, `pet-services`, `dental`, `health-and-fitness`, `professional-services`, `other`. |
+| `sortBy` | string | `score` | `score`, `distance`, `rating`, `price`, or `name`. |
+| `availableOn` | string | - | Optional availability date in `YYYY-MM-DD` format. |
+| `openNow` | boolean | `false` | Keep only businesses open at the time of the run. |
+| `hasOnlineServices` | boolean | `false` | Keep only businesses offering virtual/online services. |
+| `hasTravelingServices` | boolean | `false` | Keep only mobile/traveling service businesses. |
+| `hasSpecialOffers` | boolean | `false` | Keep only businesses with an active special offer. |
+| `acceptsGiftCards` | boolean | `false` | Keep only businesses accepting Booksy gift cards. |
+| `acceptsBooksyPay` | boolean | `false` | Keep only businesses accepting Booksy Pay. |
+| `minRating` | number | - | Minimum average rating, 0–5 (business modes). |
+| `maxRating` | number | - | Maximum average rating, 0–5 (business modes). |
+| `minReviewCount` | integer | - | Minimum number of reviews (business modes). |
+| `filterCategory` | string | `Any` | Keep only business records in one primary category, or `Any`. |
+| `isRecommended` | boolean | `false` | Keep only businesses with the Booksy Recommended badge (business modes). |
+| `includeDetails` | boolean | `true` | Fetch the full profile (services, staff, hours, amenities, contacts, booking policy) for each result. |
+| `includeReviews` | boolean | `false` | Fetch additional written reviews per business into `topReviews` (business modes). |
+| `maxReviewsPerBusiness` | integer | `20` | Maximum reviews per business for `includeReviews` or `reviews` mode, 1–1000. |
+| `maxItems` | integer | `50` | Maximum records to return, 1–10000. |
 
-### Example: keyword search near a city
+### Example: hair salons in New York with full details
 
 ```json
 {
   "mode": "search",
-  "searchQuery": "barber",
-  "location": "Chicago",
-  "maxItems": 40
-}
-```
-
-### Example: browse a category with rating filters
-
-```json
-{
-  "mode": "byCategory",
-  "category": "nails",
-  "location": "Los Angeles",
+  "searchQuery": "hair salon",
+  "location": "New York",
+  "country": "us",
   "minRating": 4.5,
-  "minReviewCount": 20,
+  "minReviewCount": 25,
+  "sortBy": "rating",
+  "includeDetails": true,
   "maxItems": 100
 }
 ```
 
-### Example: specific business profiles
+### Example: browse barbers in Chicago, several pages
 
 ```json
 {
-  "mode": "byBusinessId",
-  "businessIds": ["688238", "1439833"]
+  "mode": "byCategory",
+  "category": "barber",
+  "location": "Chicago",
+  "country": "us",
+  "radiusKm": 15,
+  "maxItems": 300
+}
+```
+
+### Example: full profiles and reviews for specific businesses
+
+```json
+{
+  "mode": "reviews",
+  "businessIds": ["688238", "https://booksy.com/pl-pl/694_hullhair_fryzjer_3_warszawa"],
+  "maxReviewsPerBusiness": 100,
+  "maxItems": 500
+}
+```
+
+### Example: paste Booksy URLs
+
+```json
+{
+  "mode": "byUrl",
+  "startUrls": [
+    { "url": "https://booksy.com/en-us/s/hair-salon/18229_chicago" },
+    { "url": "https://booksy.com/en-gb/s/barber/1033813_bristol" }
+  ],
+  "maxItems": 200
+}
+```
+
+### Example: local-language search in Spain
+
+```json
+{
+  "mode": "search",
+  "searchQuery": "peluqueria",
+  "location": "Madrid",
+  "country": "es",
+  "maxItems": 50
 }
 ```
 
 ## Use cases
 
-- **Lead generation for beauty-industry vendors** — build contact lists of salons and spas by city, category, and rating threshold.
-- **Competitive benchmarking** — compare ratings, pricing tiers, and amenities across businesses in the same category and area.
-- **Franchise or site-selection research** — see how many businesses in a category already serve a location before entering a market.
-- **Reputation tracking** — pull review counts, star ratings, and recent written reviews for specific businesses over time.
-- **Directory and city-guide building** — gather structured profiles (hours, services, contact links) for a curated listing site.
+- **Beauty-supply and distributor sales** — build city-level lead lists of salons, barbers, and spas with contact links, service mix, and size signals.
+- **Price benchmarking** — compare haircut, manicure, massage, and spa menus across competitors, including durations, deposits, and discounts.
+- **Franchise and site selection** — measure category density and ratings by neighbourhood before opening or expanding.
+- **Reputation monitoring** — export new reviews with rating, service, staff, and owner replies on a schedule.
+- **Directory and marketplace builders** — seed a local beauty directory with structured profiles, photos, and hours.
+- **Market research across countries** — compare service menus and price points between Booksy markets in local currency.
 
 ## FAQ
 
-**Do I need a Booksy account to run this?**
-No. All three modes read Booksy's public search and profile pages, which don't require logging in.
+### Do I need a Booksy account or an API key?
 
-**What's the difference between the three modes?**
-`search` matches a keyword near a location; `byCategory` browses everything Booksy lists under one service category near a location; `byBusinessId` skips search entirely and fetches named businesses directly, which also unlocks extra fields like staff, amenities, booking policy, and written reviews that search results don't carry.
+No. The actor reads the public Booksy marketplace that any visitor can see. There is no login, cookie, token, or proxy setup.
 
-**Why do some records have more fields than others?**
-Search and category results only carry what Booksy's listing view exposes. Looking the same business up by ID pulls its full profile, which adds fields such as `staff`, `topServices`, `amenities`, `bookingPolicy`, `state`, `zipCode`, and `topReviews`.
+### What is the difference between search and byCategory?
 
-**Will I always get results within `radiusKm`?**
-Not strictly — `radiusKm` is a hint Booksy's own search uses, and it can widen the radius when there aren't enough nearby matches, the same way booksy.com behaves for a visitor. Use the `distanceKm` field on each record to filter to an exact radius afterward.
+`search` matches a keyword near a location (for example "balayage" in London). `byCategory` browses Booksy's own category taxonomy (hair, barber, nails, massage, and so on) and is usually the better way to enumerate every business in a category and city.
 
-**Why is a field like `ecommerceUrl` or `staff` missing from a record?**
-That business hasn't published that information on Booksy, or you're in a mode that doesn't fetch it. Fields with no value are left out of the record instead of being sent empty.
+### Why are some fields or whole records missing?
 
-**Can I combine a keyword search with a category filter?**
-Yes — set `mode` to `search` and also set `filterCategory` to a category slug to keep only matching results from the search.
+Booksy lets each business publish only what it wants. A business without a website, staff list, services, or written reviews simply has no value for those fields, so the field is omitted. The record itself is still returned.
 
-**Are written reviews included for every business?**
-Only in `byBusinessId` mode, and only up to the handful of recent reviews Booksy exposes on the profile page itself — `search` and `byCategory` modes return rating and review count but no review text.
+### Are phone numbers and emails included?
 
-**Is this affiliated with Booksy?**
-No. This actor reads Booksy's public pages and is not affiliated with, endorsed by, or connected to Booksy in any way.
+No. Booksy does not publish business phone numbers or emails on the public profile; the contact channels are the website, Instagram/Facebook links, address, and Booksy profile URL.
+
+### How many businesses can I get from one query?
+
+Booksy caps a single search at 10,000 results. The actor reads every page up to that ceiling and removes promoted duplicates. To go beyond 10,000, split the run by category, location, or a smaller radius.
+
+### Why did I get fewer results than `maxItems`?
+
+The source ran out of unique businesses for that query, or the selected category is not offered in that country. The run status message reports the source count and the reason. Try a broader keyword, a larger radius, a different city, or another category.
+
+### What happens if Booksy returns an error?
+
+The actor retries transient HTTP and network failures with backoff. If a request still fails, the final status message reports the failed request count instead of pretending the source returned zero results. A partial run also says that results may be incomplete.
+
+### Does `maxReviewsPerBusiness` return the full requested count?
+
+Yes, when the business has enough reviews. Review pagination uses a fixed page size and reads the next offset, including values such as 101, 130, 199, and 250.
+
+### Does search work in local languages?
+
+Yes, and it usually must. Booksy search is language-sensitive: "hair" works in the US and UK, but "fryzjer" works in Poland, "peluqueria" in Spain, and "cabelo" in Brazil. Category browsing avoids the keyword entirely where the category exists.
+
+### Are reviews always included?
+
+`byBusinessId` profiles include a small sample of recent reviews. Use `includeReviews` for more per business, or `reviews` mode to export review records with text, rating, author, date, service, staff, and owner reply.
+
+### Do I need to configure a proxy?
+
+No. The actor chooses a working connection to Booksy automatically. Just fill in the input and run it.
+
+### Is this affiliated with Booksy?
+
+No. This is a third-party actor that reads public Booksy marketplace pages and is not affiliated with, endorsed by, or connected to Booksy.

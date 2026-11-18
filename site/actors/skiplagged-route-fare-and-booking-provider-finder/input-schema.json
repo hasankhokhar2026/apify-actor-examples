@@ -1,9 +1,9 @@
 {
-  "description": "Search Skiplagged for flight fares by route, or batch multiple routes / paste Skiplagged search URLs.",
+  "description": "Search Skiplagged for flight fares by route, batch of routes, pasted search URLs, or a flexible-date price calendar. Returns prices, airlines, flight numbers, layovers, hidden-city flags and booking providers.",
   "properties": {
     "adults": {
       "default": 1,
-      "description": "Number of adult passengers (12+).",
+      "description": "Number of adult passengers (12+). Prices on each record are the total for the requested passenger mix.",
       "maximum": 9,
       "minimum": 1,
       "prefill": 1,
@@ -15,12 +15,24 @@
       "description": "Only emit itineraries that include at least one of these 2-letter IATA airline codes, e.g. `AA`, `BA`, `DL`.",
       "editor": "stringList",
       "prefill": [],
-      "title": "Filter by airline IATA codes",
+      "title": "Include airlines",
       "type": "array"
+    },
+    "arriveAfter": {
+      "description": "Keep itineraries whose deplaning arrival is at or after this local time.",
+      "editor": "textfield",
+      "title": "Arrive after (HH:MM)",
+      "type": "string"
+    },
+    "arriveBefore": {
+      "description": "Keep itineraries whose deplaning arrival is at or before this local time.",
+      "editor": "textfield",
+      "title": "Arrive before (HH:MM)",
+      "type": "string"
     },
     "cabinClass": {
       "default": "economy",
-      "description": "Requested cabin class. Skiplagged's public search does not always honor this — the real `fareClass` returned by the upstream is always included on every record.",
+      "description": "Requested cabin. `premium-economy` is sent as Skiplagged's `premium` fare class. The real fare class returned by Skiplagged is always included on each record as `fareClass`.",
       "editor": "select",
       "enum": [
         "economy",
@@ -30,12 +42,29 @@
       ],
       "enumTitles": [
         "Economy",
-        "Premium Economy",
+        "Premium economy",
         "Business",
         "First"
       ],
       "prefill": "economy",
       "title": "Cabin class",
+      "type": "string"
+    },
+    "calendarDays": {
+      "default": 30,
+      "description": "How many days of the calendar to return, counting from the start date. For round-trip calendars this applies per calendar type (departure and return), so up to twice as many rows can be returned.",
+      "maximum": 61,
+      "minimum": 1,
+      "prefill": 7,
+      "title": "Calendar days (mode=calendar)",
+      "type": "integer"
+    },
+    "calendarStartDate": {
+      "description": "First date to include in the flexible-date calendar as `YYYY-MM-DD`. Leave blank to start from the earliest returned day.",
+      "editor": "textfield",
+      "sectionCaption": "Calendar",
+      "sectionDescription": "Options for mode=calendar. The calendar always covers the next 61 days returned by Skiplagged.",
+      "title": "Calendar start date (mode=calendar)",
       "type": "string"
     },
     "children": {
@@ -47,25 +76,87 @@
       "title": "Children",
       "type": "integer"
     },
-    "departDate": {
-      "description": "Departure date as `YYYY-MM-DD`. Leave blank to default to 6 weeks from today (keeps the daily test run always valid).",
+    "departAfter": {
+      "description": "Keep itineraries whose first departure is at or after this local time, e.g. `08:00`.",
       "editor": "textfield",
-      "title": "Departure date (mode=search)",
+      "title": "Depart after (HH:MM)",
+      "type": "string"
+    },
+    "departBefore": {
+      "description": "Keep itineraries whose first departure is at or before this local time, e.g. `22:00`.",
+      "editor": "textfield",
+      "title": "Depart before (HH:MM)",
+      "type": "string"
+    },
+    "departDate": {
+      "description": "Departure date as `YYYY-MM-DD`. Leave blank to use six weeks from today. Past dates advance to a future month, and a past round-trip gap is preserved.",
+      "editor": "textfield",
+      "title": "Departure date",
       "type": "string"
     },
     "destination": {
       "default": "LON",
-      "description": "Destination IATA airport code (e.g. `LHR`) or metro/city code (e.g. `LON` covers LHR, LGW, STN, LTN, LCY).",
+      "description": "Destination airport/metro code (`LHR`, `LON`), Skiplagged city slug (`tokyo`, `dubai-emirate`) or city name (`London`).",
       "editor": "textfield",
       "prefill": "LON",
-      "title": "Destination (mode=search)",
+      "title": "Destination",
       "type": "string"
+    },
+    "destinationAirports": {
+      "default": [],
+      "description": "Optional exact airports to search instead of `destination`, e.g. `[\"LHR\", \"LGW\"]`. When set, these override the single destination value (mode=search, byRoutes).",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Destination airports",
+      "type": "array"
     },
     "directOnly": {
       "default": false,
-      "description": "Only emit nonstop itineraries.",
+      "description": "Only emit nonstop itineraries to the deplaning airport.",
       "prefill": false,
+      "sectionCaption": "Filters",
+      "sectionDescription": "Optional filters applied after the search response. Leave them unset or false to keep every itinerary.",
       "title": "Direct flights only",
+      "type": "boolean"
+    },
+    "excludeAirlines": {
+      "default": [],
+      "description": "Drop itineraries that include any of these 2-letter IATA airline codes.",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Exclude airlines",
+      "type": "array"
+    },
+    "expandAirports": {
+      "default": false,
+      "description": "Skiplagged returns at most about 300 itineraries per leg. When on, the actor also searches each airport of the smaller side of a metro route (e.g. JFK, EWR and LGA for NYC) and merges the unique results. Costs a few extra requests (mode=search, byRoutes, byUrls).",
+      "prefill": false,
+      "title": "Expand metro routes for more rows",
+      "type": "boolean"
+    },
+    "hiddenCity": {
+      "default": "include",
+      "description": "Include all itineraries, keep only hidden-city fares, or drop hidden-city fares. Hidden-city itineraries end at a different ticketed airport than your destination; check airline baggage and missed-leg rules before booking.",
+      "editor": "select",
+      "enum": [
+        "include",
+        "only",
+        "exclude"
+      ],
+      "enumTitles": [
+        "Include all itineraries",
+        "Only hidden-city itineraries",
+        "Exclude hidden-city itineraries"
+      ],
+      "prefill": "include",
+      "title": "Hidden-city itineraries",
+      "type": "string"
+    },
+    "includeNearbyAirports": {
+      "default": false,
+      "description": "Also search airports near the origin and destination (e.g. HPN and ISP around New York). Ignored when an airport list is set (mode=search, byRoutes, byUrls).",
+      "prefill": false,
+      "title": "Include nearby airports",
       "type": "boolean"
     },
     "infantsLap": {
@@ -86,17 +177,31 @@
       "title": "Infants (own seat)",
       "type": "integer"
     },
+    "maxDurationMinutes": {
+      "description": "Drop itineraries longer than this many minutes to the deplaning airport, e.g. `600` for 10 hours.",
+      "maximum": 10080,
+      "minimum": 0,
+      "title": "Max duration (minutes)",
+      "type": "integer"
+    },
     "maxItems": {
       "default": 50,
-      "description": "Hard cap on emitted records (per run, across all routes).",
+      "description": "Hard cap on emitted records for the whole run, across all routes.",
       "maximum": 1000,
       "minimum": 1,
-      "prefill": 50,
+      "prefill": 3,
       "title": "Max items",
       "type": "integer"
     },
+    "maxLayoverMinutes": {
+      "description": "Drop itineraries with any layover longer than this many minutes.",
+      "maximum": 10080,
+      "minimum": 0,
+      "title": "Max layover (minutes)",
+      "type": "integer"
+    },
     "maxPrice": {
-      "description": "Drop itineraries pricier than this (whole USD).",
+      "description": "Drop itineraries pricier than this total price in whole USD.",
       "maximum": 50000,
       "minimum": 0,
       "title": "Max price (USD)",
@@ -104,7 +209,7 @@
     },
     "maxStops": {
       "default": 3,
-      "description": "Drop itineraries with more stops than this.",
+      "description": "Drop itineraries with more stops than this before the deplaning airport. 0 means nonstop.",
       "maximum": 3,
       "minimum": 0,
       "prefill": 3,
@@ -112,7 +217,7 @@
       "type": "integer"
     },
     "minPrice": {
-      "description": "Drop itineraries cheaper than this (whole USD).",
+      "description": "Drop itineraries cheaper than this total price in whole USD.",
       "maximum": 50000,
       "minimum": 0,
       "title": "Min price (USD)",
@@ -120,17 +225,19 @@
     },
     "mode": {
       "default": "search",
-      "description": "What to fetch.",
+      "description": "What to fetch. `search` uses one origin/destination, `byRoutes` reads the routes array, `byUrls` parses pasted Skiplagged URLs, and `calendar` returns a flexible-date price calendar for one route.",
       "editor": "select",
       "enum": [
         "search",
         "byRoutes",
-        "byUrls"
+        "byUrls",
+        "calendar"
       ],
       "enumTitles": [
-        "Search a single route",
-        "Search multiple routes in one run",
-        "Search from pasted Skiplagged URLs"
+        "Search one route",
+        "Search multiple routes",
+        "Search from pasted Skiplagged URLs",
+        "Flexible-date price calendar"
       ],
       "prefill": "search",
       "title": "Mode",
@@ -138,29 +245,43 @@
     },
     "origin": {
       "default": "NYC",
-      "description": "Origin IATA airport code (e.g. `JFK`) or metro/city code (e.g. `NYC` covers JFK, LGA, EWR).",
+      "description": "Origin airport/metro code (`JFK`, `NYC`), Skiplagged city slug (`new-york`, `tokyo`, `dubai-emirate`) or city name (`New York`). Mode=search and mode=calendar.",
       "editor": "textfield",
       "prefill": "NYC",
-      "title": "Origin (mode=search)",
+      "sectionCaption": "Route",
+      "sectionDescription": "The route searched in mode=search and mode=calendar. Airport codes, metro codes, city names and Skiplagged slugs are accepted.",
+      "title": "Origin",
       "type": "string"
     },
+    "originAirports": {
+      "default": [],
+      "description": "Optional exact airports to search instead of `origin`, e.g. `[\"JFK\", \"EWR\"]`. When set, these override the single origin value (mode=search, byRoutes).",
+      "editor": "stringList",
+      "prefill": [],
+      "sectionCaption": "Airport coverage",
+      "sectionDescription": "Optional multi-airport and nearby-airport options. Metro codes already cover every airport in the city; these options let you choose specific airports or extend the search area.",
+      "title": "Origin airports",
+      "type": "array"
+    },
     "returnDate": {
-      "description": "Return date as `YYYY-MM-DD` for a round-trip search. Leave blank for a one-way search.",
+      "description": "Return date as `YYYY-MM-DD` for a round-trip search. Leave blank for one-way.",
       "editor": "textfield",
-      "title": "Return date (mode=search)",
+      "title": "Return date",
       "type": "string"
     },
     "routes": {
       "default": [],
-      "description": "Batch of routes to search in one run. Each item: `{\"origin\":\"NYC\",\"destination\":\"LON\",\"departDate\":\"2026-09-01\",\"returnDate\":\"2026-09-08\"}` (`returnDate` optional for one-way).",
+      "description": "Batch of routes, one object per route: `{\"origin\":\"NYC\",\"destination\":\"LON\",\"departDate\":\"2026-09-01\",\"returnDate\":\"2026-09-08\"}`. `returnDate`, `originAirports` and `destinationAirports` are optional.",
       "editor": "json",
       "prefill": [],
+      "sectionCaption": "Batch inputs",
+      "sectionDescription": "Inputs used by mode=byRoutes and mode=byUrls.",
       "title": "Routes (mode=byRoutes)",
       "type": "array"
     },
     "sortBy": {
       "default": "price",
-      "description": "Order of emitted records.",
+      "description": "Order of emitted records within each route.",
       "editor": "select",
       "enum": [
         "price",
@@ -169,18 +290,36 @@
         "stops"
       ],
       "enumTitles": [
-        "Price (cheapest first)",
-        "Duration (shortest first)",
-        "Departure time (earliest first)",
-        "Stops (fewest first)"
+        "Price",
+        "Duration",
+        "Departure time",
+        "Stops"
       ],
       "prefill": "price",
+      "sectionCaption": "Output",
+      "sectionDescription": "Record ordering and the run-wide result cap.",
       "title": "Sort by",
+      "type": "string"
+    },
+    "sortOrder": {
+      "default": "asc",
+      "description": "Ascending (cheapest/shortest/earliest/fewest first) or descending.",
+      "editor": "select",
+      "enum": [
+        "asc",
+        "desc"
+      ],
+      "enumTitles": [
+        "Ascending",
+        "Descending"
+      ],
+      "prefill": "asc",
+      "title": "Sort order",
       "type": "string"
     },
     "startUrls": {
       "default": [],
-      "description": "Skiplagged flight-search page URLs, e.g. `https://skiplagged.com/flights/NYC/LON/2026-09-01/2026-09-08`.",
+      "description": "Skiplagged flight-search URLs, e.g. `https://skiplagged.com/flights/NYC/LON/2026-09-01/2026-09-08`, `https://skiplagged.com/flights/LON/dubai-emirate/2026-09-17` or `https://skiplagged.com/flights/NYC/tokyo/2026-09-17`. Airport codes and multi-word or single-word city slugs are accepted.",
       "editor": "stringList",
       "prefill": [],
       "title": "Skiplagged URLs (mode=byUrls)",
@@ -188,7 +327,7 @@
     },
     "tripType": {
       "default": "auto",
-      "description": "One-way or round-trip. Auto-detected from whether a return date is present; this only matters when `returnDate` is ambiguous.",
+      "description": "One-way, round-trip, or auto-detect from whether a return date is present.",
       "editor": "select",
       "enum": [
         "auto",
@@ -201,6 +340,8 @@
         "Round-trip only"
       ],
       "prefill": "auto",
+      "sectionCaption": "Trip and passengers",
+      "sectionDescription": "Cabin and passenger mix are sent to Skiplagged, and the returned itinerary reports the passenger counts and fare class it actually priced.",
       "title": "Trip type",
       "type": "string"
     }
@@ -209,6 +350,6 @@
     "mode"
   ],
   "schemaVersion": 1,
-  "title": "Skiplagged Flight Search Scraper Input",
+  "title": "Skiplagged Route Fare & Booking Provider Finder Input",
   "type": "object"
 }

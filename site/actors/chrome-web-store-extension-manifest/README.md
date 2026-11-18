@@ -1,106 +1,184 @@
 # Chrome Web Store Extension Manifest & Permissions Scraper
 
-The Chrome Web Store doesn't offer a bulk export of its listings, so comparing extensions at scale usually means opening each page by hand. This actor looks up Chrome Web Store extensions by direct URL, category page, search query, or top-charts ranking, and returns every listing as a structured record — ratings, install count, manifest permissions, supported locales and related extensions included.
+The Chrome Web Store has no public search API, so auditing extensions at scale usually means opening listing after listing by hand. This actor turns the store's own public pages into structured records: search by keyword, walk a category or theme shelf, pull Trending / Popular / Notable charts, read a curated collection, look up specific URLs, or collect public user reviews. Every extension record includes the published manifest, so permissions, host access, optional permissions, content-script matches and Manifest V2/V3 can be compared without installing anything.
 
 ## What this actor does
 
-- Fetches specific extensions directly from their Chrome Web Store URLs or IDs
-- Walks a category page to collect every extension listed under it
-- Searches the Chrome Web Store by free-text keyword
-- Pulls the top-charts ranking for a category, or the global top list when no category is set
-- Filters results by minimum rating, minimum install count, verified-developer status, and a developer-name substring
-- Empty fields are omitted from records — a field only appears when the Chrome Web Store actually publishes that data for the extension
+- **Six ways to discover items:** specific URLs or IDs, keyword search, category browsing, editorial top charts, curated collections, and public reviews
+- **Full manifest extraction:** `permissions`, `optional_permissions`, `host_permissions`, `optional_host_permissions`, content-script matches, service-worker usage and the complete parsed `manifest`
+- **Publisher intelligence:** developer name, email and ID, plus the trader / business disclosures the store publishes (legal name, trade name, address, phone, D-U-N-S number)
+- **Privacy signals:** the developer's declared `data_collected` categories and privacy-policy URL
+- **Pagination and filters:** search and categories are read page by page; filter by rating, install count, featured badge, established publisher, broad host access, item type or developer name
+- **Themes too:** theme categories and theme search results are labelled with `item_type: "theme"` and still expose their manifest
+- **Reviews mode:** public reviews with stars, text, language, app version, helpful votes and developer replies
+- **Empty fields are omitted** — a key only appears when the store actually publishes a value for that item
 
 ## Output per extension
 
-- `extension_id`, `name`, `url` — identifier, name, and detail page link
-- `version`, `manifest_version` — current version string and manifest schema version
-- `rating`, `rating_count`, `install_count`
-- `category`, `category_group`
+- `extension_id`, `name`, `url`, `sourceUrl` — identity and canonical listing link
+- `version`, `manifest_version`, `default_locale` — current release and manifest generation
+- `rating`, `rating_count`, `install_count` — reception and adopted-user band as published by the store
+- `category`, `category_group` — store taxonomy
 - `short_description`, `long_description`
-- `developer`, `developer_email`, `verified_developer` — developer identity and whether they hold Chrome's D-U-N-S-verified business badge
-- `featured` — `true` when the Chrome Web Store "Featured" badge is shown
-- `website_url` — developer's homepage, when listed
-- `permissions`, `host_permissions` — manifest permission arrays
-- `supported_languages`, `supported_locales` — display names and locale codes the extension supports
-- `icon_url`, `cover_url`, `screenshots` — listing images
-- `bug_tracker_url`, `privacy_policy_url`
-- `package_size`, `min_chrome_version`
-- `last_updated_at` — ISO-8601 UTC timestamp of the extension's last update
-- `related_extensions` — array of `{id, name, icon}` for similar extensions shown on the listing
-- `relatedExtensionIds` — flat list of related extension IDs, capped at 10
-- `recordType` — always `extension`
-- `scrapedAt` — ISO-8601 UTC timestamp when the record was collected
+- `developer`, `developer_email`, `developer_id`
+- `verified_developer`, `publisher_is_trader`, `established_publisher` — store publisher flags
+- `publisher_legal_name`, `publisher_trade_name`, `publisher_address`, `publisher_phone`, `publisher_duns` — EU trader disclosures when published
+- `website_url`, `bug_tracker_url`, `privacy_policy_url`
+- `permissions`, `optional_permissions`, `host_permissions`, `optional_host_permissions`, `content_script_matches`
+- `uses_service_worker`, `manifest` — the full manifest object
+- `data_collected` — the developer's declared privacy categories
+- `offers_in_app_purchases: true` — when the store displays that feature
+- `supported_languages`, `supported_locales`, `package_size`, `min_chrome_version`
+- `icon_url`, `cover_url`, `screenshots`
+- `first_published_at`, `last_updated_at` — publication and current-release dates
+- `featured`, `item_type` (`extension` or `theme`)
+- `related_extensions`, `relatedExtensionIds`
+- `search_query`, `search_rank` — present in search mode
+- `top_chart`, `collection_id` — present in the matching discovery mode
+- `recordType: "extension"`, `scrapedAt`
+
+## Output per review
+
+- `review_id`, `extension_id`, `extension_name`
+- `author_name`, `author_avatar_url`
+- `rating`, `text`, `language`, `app_version`
+- `created_at`, `updated_at`
+- `helpful_count`, `not_helpful_count`
+- `developer_reply`, `developer_reply_author`, `developer_reply_at`
+- `url`, `sourceUrl`, `recordType: "review"`, `scrapedAt`
 
 ## Input
 
 | Field | Type | Default | Description |
 |---|---|---|---|
-| `mode` | string | `urls` | `urls` (direct lookup), `category` (walk a category page), `search` (search query), or `topCharts` (popular extensions) |
-| `extensionUrls` | array | `["https://chromewebstore.google.com/detail/ublock-origin-lite/ddkjiahejlhfcafbddmgiahcphecmpfh"]` | Direct extension URLs or IDs, used in `urls` mode |
-| `categoryUrls` | array | `[]` | Chrome Web Store category page URLs, used in `category` mode |
-| `searchQuery` | string | `ad blocker` | Free-text search term, used in `search` mode |
-| `topChartsCategory` | string | `productivity/tools` | Category slug for `topCharts` mode (e.g. `productivity/developer_tools`, `make_chrome_yours/themes`); leave empty for the global top list |
-| `maxItems` | integer | `50` | Maximum number of extensions to return (1–5000) |
-| `minRating` | number | – | Drop extensions with an average rating below this value (0.0–5.0) |
-| `minInstalls` | integer | – | Drop extensions with fewer installs than this |
-| `verifiedOnly` | boolean | `false` | Only return extensions whose developer has the verified badge |
-| `developerNameContains` | string | – | Only return extensions whose developer name contains this substring (case-insensitive) |
+| `mode` | string | `urls` | `urls` / `search` / `category` / `topCharts` / `collection` / `reviews` |
+| `extensionUrls` | array | `["https://chromewebstore.google.com/detail/ublock-origin-lite/ddkjiahejlhfcafbddmgiahcphecmpfh"]` | Detail or reviews URLs, or bare 32-character IDs (mode=`urls` or `reviews`) |
+| `searchQueries` | array | `[]` | One or more keywords (mode=`search`) |
+| `categories` | array | `[]` | One or more category slugs, including theme categories (mode=`category`) |
+| `categoryUrls` | array | `[]` | Category page URLs, combined with `categories` (mode=`category`) |
+| `collectionUrls` | array | `[]` | Collection URLs or bare collection IDs (mode=`collection`) |
+| `topChart` | string | `trending` | `trending` / `popular` / `notable` (mode=`topCharts`) |
+| `maxItems` | integer | `50` | Maximum records to save (1–10000) |
+| `includeDetails` | boolean | `true` | Fetch each detail page; adds descriptions, publisher data, privacy disclosures, related extensions and the last-updated date |
+| `language` | string | `en` | Store language for names, descriptions and UI |
+| `sortBy` | string | `relevance` | `relevance` or `highestRated` (mode=`category`; themes keep store order) |
+| `itemType` | string | `all` | `all` / `extension` / `theme` |
+| `minRating` | number | – | Drop items rated below this value |
+| `maxRating` | number | – | Drop items rated above this value |
+| `minInstalls` | integer | – | Drop items with fewer installs |
+| `maxInstalls` | integer | – | Drop items with more installs |
+| `verifiedOnly` | boolean | `false` | Keep verified business/trader publishers only |
+| `featuredOnly` | boolean | `false` | Keep items with the Featured badge |
+| `establishedPublishersOnly` | boolean | `false` | Keep established publishers only |
+| `onlyRequestsAllUrls` | boolean | `false` | Keep items requesting `<all_urls>` or `*://*/*` |
+| `developerNameContains` | string | – | Keep developers whose name contains this text |
+| `maxReviewsPerExtension` | integer | `50` | Review cap per extension (mode=`reviews`) |
+| `reviewsSort` | string | `recent` | `recent` / `helpful` / `highestRating` / `lowestRating` |
+| `reviewsMinRating` | integer | – | Keep reviews with at least this many stars |
+| `reviewsMaxRating` | integer | – | Keep reviews with at most this many stars |
+| `reviewsLanguage` | string | `all` | Review feed language, independent of `language`; `all` uses the store language |
+| `reviewsSince` | string | – | Keep reviews created on or after this date (`YYYY-MM-DD`); reviews are paged and filtered, and invalid dates are ignored with a warning |
 
-### Example: look up a specific extension
+### Example: look up specific extensions
 
 ```json
 {
   "mode": "urls",
   "extensionUrls": [
-    "https://chromewebstore.google.com/detail/ublock-origin-lite/ddkjiahejlhfcafbddmgiahcphecmpfh"
+    "https://chromewebstore.google.com/detail/ublock-origin-lite/ddkjiahejlhfcafbddmgiahcphecmpfh",
+    "kbfnbcaeplbcioakkpcpgfkobkghlhen"
   ],
-  "maxItems": 1
+  "maxItems": 2
 }
 ```
 
-### Example: top developer-tools extensions with 1M+ installs
-
-```json
-{
-  "mode": "topCharts",
-  "topChartsCategory": "productivity/developer_tools",
-  "minInstalls": 1000000,
-  "maxItems": 50
-}
-```
-
-### Example: search with a rating floor
+### Example: keyword search with a quality floor
 
 ```json
 {
   "mode": "search",
-  "searchQuery": "password manager",
-  "minRating": 4.5,
+  "searchQueries": ["password manager", "ad blocker"],
+  "minRating": 4,
+  "minInstalls": 100000,
+  "maxItems": 100
+}
+```
+
+### Example: audit broad host access in a category
+
+```json
+{
+  "mode": "category",
+  "categories": ["make_chrome_yours/privacy"],
+  "onlyRequestsAllUrls": true,
+  "includeDetails": true,
+  "maxItems": 50
+}
+```
+
+### Example: browse themes with their names localized
+
+```json
+{
+  "mode": "category",
+  "categories": ["themes/dark", "themes/nature"],
+  "language": "de",
+  "itemType": "theme",
   "maxItems": 40
+}
+```
+
+### Example: the Trending chart
+
+```json
+{
+  "mode": "topCharts",
+  "topChart": "trending",
+  "maxItems": 25
+}
+```
+
+### Example: reviews of one extension
+
+```json
+{
+  "mode": "reviews",
+  "extensionUrls": ["ddkjiahejlhfcafbddmgiahcphecmpfh"],
+  "reviewsSort": "helpful",
+  "reviewsMinRating": 3,
+  "maxReviewsPerExtension": 200
 }
 ```
 
 ## Use cases
 
-- **Competitive analysis** — pull every extension in a category to study install and rating distribution
-- **Version tracking** — monitor a competitor's `version` and `manifest_version` for changes over time
-- **Permissions auditing** — scan extensions whose `host_permissions` include `<all_urls>` for a security review
-- **Developer outreach** — filter by `developerNameContains` to build a contact list of extension makers
-- **Install-leader research** — set a high `minInstalls` to surface only the most widely adopted extensions in a niche
+- **Permission audits** — export every extension in a category and find the ones requesting `<all_urls>`, `cookies`, `webRequest` or broad host access
+- **Manifest V2 → V3 tracking** — filter by `manifest_version` to see who has migrated and who has not
+- **Competitor monitoring** — schedule a category or search run and compare `install_count`, `rating`, `version` and `last_updated_at` over time
+- **Publisher research** — build a list of extension makers with the public trader disclosures, website and support links
+- **ASO and market mapping** — compare category rankings, titles, descriptions and ratings in a niche
+- **Security and privacy review** — pair `permissions` with `data_collected` and `privacy_policy_url` to see what an extension claims to collect
 
 ## FAQ
 
-**Does this need a login or cookies?** No — the Chrome Web Store is public, and no login or API key is required.
+**Does this need a login, cookie or API key?** No. The actor reads the store's public listing pages and public review pages. No account is required.
 
-**What happens if an extension ID isn't found?** It's skipped and the run finishes cleanly; if nothing at all was found, the run's status message explains why.
+**Where does the data come from?** The public Chrome Web Store listing pages, category pages, top-chart pages, collection pages and the public reviews page. There is no official public search API for store listings.
 
-**What if my filters reject every result?** The run finishes without fabricating rows and sets a status message so you know to loosen the filters.
+**Are install counts exact?** No. The Chrome Web Store publishes rounded bands for larger extensions (for example, 10,000,000 users). Smaller extensions can show exact figures. The actor returns the number exactly as published.
 
-**How do I search by exact description text?** Use `mode: "search"` with that text as `searchQuery` — the Chrome Web Store's own search ranks results by relevance.
+**Are permissions and data collection self-declared?** Yes. `permissions`, `host_permissions` and `data_collected` come from the manifest and privacy disclosure the developer publishes. They are review signals, not proof that an extension is safe or unsafe.
 
-**What value does `topChartsCategory` expect?** The exact schema slug, not a human label — for example `productivity/tools`, `productivity/communication`, or `make_chrome_yours/themes`.
+**Why does an extension lack a long description, publisher address or privacy disclosure?** Those fields only exist when the store publishes them. Individual developers often have no trader disclosure, and some listings have no privacy-policy URL. Empty fields are omitted rather than filled with placeholders.
 
-**Why is `related_extensions` sometimes empty?** Not every listing shows a "similar extensions" carousel; when the Chrome Web Store doesn't show one, the field is omitted.
+**Why are only some related extensions returned?** The store shows a fixed "similar extensions" shelf. `related_extensions` keeps the full shelf and `relatedExtensionIds` is capped at 10 for convenience.
 
-**Is this affiliated with Google or the Chrome Web Store?** No. This is an independent, third-party actor that reads the Chrome Web Store's publicly available listing pages; it is not operated by or affiliated with Google.
+**Can I get every extension in the store in one run?** No. The store has no public "list everything" endpoint. Search and categories are the paginated surfaces; top charts and collections are fixed curated shelves. Combine categories and search terms for broad coverage.
+
+**Is a category rank available?** No. The public listing payload exposes the store category and an internal category code, not the item's position inside that category, so the actor omits a fabricated rank.
+
+**Can I get older reviews?** Yes. Reviews mode pages through the public review feed until `maxReviewsPerExtension` or `maxItems` is reached. `reviewsSince` filters reviews as they are read; paging does not stop at the first older review. The review count shown by the store is the total the store has at that moment.
+
+**Does a high install count mean an extension is trustworthy?** No. Install counts are rounded and popularity is not a security check. Use the manifest permissions, privacy disclosure and recent reviews together.
+
+**Is this affiliated with Google or the Chrome Web Store?** No. This is an independent third-party actor that reads publicly available store pages; it is not operated by or affiliated with Google.
