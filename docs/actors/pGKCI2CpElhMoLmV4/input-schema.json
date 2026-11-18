@@ -1,0 +1,169 @@
+{
+  "description": "Search Booksy for beauty businesses, browse by category, or fetch specific business details.",
+  "properties": {
+    "businessIds": {
+      "default": [],
+      "description": "Booksy business IDs to fetch details for (mode=byBusinessId). Find them in the Booksy URL, e.g. 688238 from https://booksy.com/en-us/688238_name",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Business IDs (mode=byBusinessId)",
+      "type": "array"
+    },
+    "category": {
+      "default": "hair",
+      "description": "Service category to browse (mode=byCategory).",
+      "editor": "select",
+      "enum": [
+        "hair",
+        "barber",
+        "nails",
+        "skin-care",
+        "brows-and-lashes",
+        "massage",
+        "makeup",
+        "wellness-and-spa",
+        "braids-and-locs",
+        "tattoos",
+        "medical-aesthetics",
+        "hair-removal",
+        "home-services",
+        "piercing",
+        "pet-services",
+        "dental",
+        "health-and-fitness",
+        "professional-services",
+        "other"
+      ],
+      "enumTitles": [
+        "Hair",
+        "Barber",
+        "Nails",
+        "Skin Care",
+        "Brows and Lashes",
+        "Massage",
+        "Makeup",
+        "Wellness and Spa",
+        "Braids and Locs",
+        "Tattoos",
+        "Medical Aesthetics",
+        "Hair Removal",
+        "Home Services",
+        "Piercing",
+        "Pet Services",
+        "Dental and Orthodontics",
+        "Health and Fitness",
+        "Professional Services",
+        "Other"
+      ],
+      "prefill": "hair",
+      "title": "Category (mode=byCategory)",
+      "type": "string"
+    },
+    "filterCategory": {
+      "description": "Filter results to a specific category slug (e.g. 'hair', 'nails'). Useful in search mode to narrow results.",
+      "editor": "textfield",
+      "title": "Filter by category",
+      "type": "string"
+    },
+    "isRecommended": {
+      "default": false,
+      "description": "If enabled, only return businesses marked as recommended by Booksy.",
+      "prefill": false,
+      "title": "Recommended businesses only",
+      "type": "boolean"
+    },
+    "latitude": {
+      "description": "GPS latitude for location-based search. Overrides the Location field if provided.",
+      "maximum": 90,
+      "minimum": -90,
+      "title": "Latitude",
+      "type": "number"
+    },
+    "location": {
+      "default": "New York",
+      "description": "City name to search near (e.g. 'New York', 'Los Angeles', 'Chicago'). Used when latitude/longitude are not provided.",
+      "editor": "textfield",
+      "prefill": "New York",
+      "title": "Location (city name)",
+      "type": "string"
+    },
+    "longitude": {
+      "description": "GPS longitude for location-based search. Overrides the Location field if provided.",
+      "maximum": 180,
+      "minimum": -180,
+      "title": "Longitude",
+      "type": "number"
+    },
+    "maxItems": {
+      "default": 50,
+      "description": "Maximum number of businesses to return.",
+      "maximum": 1000,
+      "minimum": 1,
+      "prefill": 20,
+      "title": "Max items",
+      "type": "integer"
+    },
+    "maxRating": {
+      "description": "Only include businesses with a rating at or below this value (0–5 scale).",
+      "maximum": 5,
+      "minimum": 0,
+      "title": "Maximum rating",
+      "type": "number"
+    },
+    "minRating": {
+      "description": "Only include businesses with a rating at or above this value (0–5 scale).",
+      "maximum": 5,
+      "minimum": 0,
+      "title": "Minimum rating",
+      "type": "number"
+    },
+    "minReviewCount": {
+      "description": "Only include businesses with at least this many reviews.",
+      "maximum": 1000000,
+      "minimum": 0,
+      "title": "Minimum review count",
+      "type": "integer"
+    },
+    "mode": {
+      "default": "search",
+      "description": "What to scrape.",
+      "editor": "select",
+      "enum": [
+        "search",
+        "byCategory",
+        "byBusinessId"
+      ],
+      "enumTitles": [
+        "Search — find businesses by keyword and location",
+        "By Category — browse all businesses in a service category",
+        "By Business ID — fetch details for specific Booksy business IDs"
+      ],
+      "prefill": "search",
+      "title": "Mode",
+      "type": "string"
+    },
+    "radiusKm": {
+      "default": 10,
+      "description": "Radius in kilometres around the location to search (default: 10 km). This is a hint to Booksy's search, not a hard filter — Booksy may still include businesses outside this radius when local matches are limited (the same happens on booksy.com). Use the returned distanceKm field to filter strictly by distance if needed.",
+      "maximum": 100,
+      "minimum": 1,
+      "prefill": 10,
+      "title": "Search radius (km)",
+      "type": "integer"
+    },
+    "searchQuery": {
+      "default": "hair salon",
+      "description": "Keyword to search (mode=search). Examples: 'hair salon', 'barber', 'nail salon', 'massage', 'eyebrows'.",
+      "editor": "textfield",
+      "prefill": "hair salon",
+      "title": "Search query",
+      "type": "string"
+    }
+  },
+  "required": [
+    "mode"
+  ],
+  "schemaVersion": 1,
+  "title": "Booksy Scraper Input",
+  "type": "object"
+}

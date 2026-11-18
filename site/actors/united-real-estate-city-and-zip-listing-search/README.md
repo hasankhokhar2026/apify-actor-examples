@@ -1,0 +1,117 @@
+# United Real Estate City & ZIP Listing Search
+
+United Real Estate is a national brokerage network with listings across the US. This actor searches its homes-for-sale inventory by city, state, ZIP code, or keyword, with property type, listing status, price, bedroom/bathroom and square-footage filters, and returns address, price, size, status and listing brokerage for every matching home. No login, cookies or proxy required.
+
+## What this actor does
+
+- **Nationwide search:** any US city + state, ZIP code, or free-text keyword
+- **11 property types:** single family, multi-family, condo/townhome, farm/ranch, land, commercial, mobile, waterfront, and more
+- **3 listing statuses:** active, pending, coming soon
+- **8 numeric filters:** price range, bedroom range, bathroom range, square footage range
+- **7 sort orders:** recommended, property size, year built, and price (each ascending/descending where applicable)
+- **Empty fields are omitted** — a field only appears on a record when United Real Estate actually published a value for it (e.g. land listings without bedroom/bathroom counts simply omit those fields)
+
+## Output per listing
+
+- `listingId` — United Real Estate's internal listing ID
+- `url` — the listing's page on unitedrealestate.com
+- `imageUrl` — primary listing photo
+- `fullAddress`, `streetAddress`, `city`, `state`, `zipCode`
+- `price`, `pricePerSqft`
+- `listingStatus` (`Active`, `Pending`, `Coming Soon`)
+- `bedrooms`, `bathrooms`, `squareFeet`
+- `listedByBroker` — listing brokerage name
+- `searchLocation` — the location/keyword you searched
+- `recordType: "listing"`, `scrapedAt`
+
+## Input
+
+| Field | Type | Default | Description |
+|---|---|---|---|
+| `city` | string | – | City to search |
+| `state` | select | – | US state (dropdown of all 50 states + DC) |
+| `zipCode` | string | – | Search by ZIP code instead of city/state |
+| `keyword` | string | – | Free-text keyword search (nationwide if no location given) |
+| `propertyTypes` | array | – | One or more property types (see below) |
+| `listingStatuses` | array | – | One or more of `Active`, `Pending`, `Coming Soon` |
+| `minPrice` / `maxPrice` | int | – | Price range in USD |
+| `minBedrooms` / `maxBedrooms` | int | – | Bedroom count range |
+| `minBathrooms` / `maxBathrooms` | int | – | Bathroom count range |
+| `minSqft` / `maxSqft` | int | – | Interior square footage range |
+| `sortBy` | string | `recommended` | Result ordering |
+| `maxItems` | int | `50` | Hard cap on emitted listings (results are paged 250 at a time) |
+
+Property types: Single Family / Detached, Multi-family, Condo / Townhome / Apartment, Farm / Ranch, Lot and Land, Commercial, Mobile, Waterfront, Other, Industrial, Recreational.
+
+## Example: single-family homes in Austin, TX under $700K
+
+```json
+{
+  "city": "Austin",
+  "state": "TX",
+  "propertyTypes": ["1"],
+  "maxPrice": 700000,
+  "minBedrooms": 3,
+  "sortBy": "ListPrice",
+  "maxItems": 100
+}
+```
+
+### Example: search by ZIP code
+
+```json
+{
+  "zipCode": "78701",
+  "maxItems": 50
+}
+```
+
+### Example: nationwide keyword search
+
+```json
+{
+  "keyword": "waterfront",
+  "minPrice": 200000,
+  "maxItems": 100
+}
+```
+
+### Example: pending condos in Naples, FL
+
+```json
+{
+  "city": "Naples",
+  "state": "FL",
+  "propertyTypes": ["3"],
+  "listingStatuses": ["10005"],
+  "maxItems": 50
+}
+```
+
+## Use cases
+
+- **Homebuyers & relocation services** — build a filtered listing feed for a target city or ZIP code
+- **Real estate investors** — screen listings by price, size, and property type across markets
+- **PropTech & market research** — track inventory counts and pricing by city over time
+- **Land & farm buyers** — search the Farm/Ranch and Lot-and-Land categories specifically
+- **Agents & brokers** — monitor competing listings in a target area
+
+## FAQ
+
+**What is the data source?**
+United Real Estate's public search results (unitedrealestate.com) — the same data shown to any visitor searching the site, no account required.
+
+**Is this affiliated with United Real Estate?**
+No. This is an independent, third-party actor that reads United Real Estate's public search results.
+
+**Why do some listings lack `bedrooms`, `bathrooms`, or `squareFeet`?**
+Land, farm/ranch, and commercial listings often don't have these attributes in the source data. The actor never fabricates a value — the field is simply omitted.
+
+**Can I search any US location?**
+Yes — `city` + `state`, a `zipCode`, or a nationwide `keyword` search all work. If nothing matches, the run finishes with 0 records and a status message explaining why.
+
+**How many listings can I get in one run?**
+Each search page returns up to 250 matching listings; the actor automatically pages through further results (up to `maxItems`, capped at 2000) for broad searches with more matches.
+
+**How fresh is the data?**
+Each run reflects United Real Estate's live search results at request time — there is no caching layer in this actor.

@@ -1,0 +1,192 @@
+{
+  "description": "Scrape restaurant data from Zomato for major Indian and UAE cities. Provide direct URLs or use the city + cuisine/category/rating filter builder.",
+  "properties": {
+    "category": {
+      "description": "Category ID filter (e.g. 2=Fine Dining, 6=Cafes, 11=Pubs and Bars).",
+      "editor": "textfield",
+      "title": "Category",
+      "type": "string"
+    },
+    "city": {
+      "description": "Pick a supported city to build a search URL from filters below. Supported: major Indian cities + UAE.",
+      "editor": "select",
+      "enum": [
+        "mumbai",
+        "ncr",
+        "bangalore",
+        "pune",
+        "hyderabad",
+        "chennai",
+        "kolkata",
+        "ahmedabad",
+        "jaipur",
+        "lucknow",
+        "dubai",
+        "abudhabi",
+        "sharjah"
+      ],
+      "enumTitles": [
+        "Mumbai",
+        "NCR (Delhi)",
+        "Bangalore",
+        "Pune",
+        "Hyderabad",
+        "Chennai",
+        "Kolkata",
+        "Ahmedabad",
+        "Jaipur",
+        "Lucknow",
+        "Dubai",
+        "Abu Dhabi",
+        "Sharjah"
+      ],
+      "prefill": "mumbai",
+      "sectionCaption": "Scrape by City + Filters",
+      "sectionDescription": "Alternative to URL mode. Pick a city and (optionally) filters below.",
+      "title": "City",
+      "type": "string"
+    },
+    "cuisine": {
+      "description": "Cuisine ID filter (e.g. 55=Italian, 25=Chinese, 50=North Indian). See README for full list.",
+      "editor": "textfield",
+      "title": "Cuisine",
+      "type": "string"
+    },
+    "enrich_details": {
+      "default": true,
+      "description": "Fetch the detail page for each restaurant (menu highlights, hours, contact, features). Disable for speed.",
+      "prefill": true,
+      "title": "Fetch Full Details",
+      "type": "boolean"
+    },
+    "expand_cuisines": {
+      "default": false,
+      "description": "When set, fan out across 15 top cuisines for the chosen city — 9 × 15 ≈ 135 restaurants per city.",
+      "sectionCaption": "Expansion",
+      "title": "Expand Cuisines",
+      "type": "boolean"
+    },
+    "expand_localities": {
+      "default": false,
+      "description": "When set, also scrape each locality page Zomato exposes for the chosen city.",
+      "title": "Expand Localities",
+      "type": "boolean"
+    },
+    "ignore_url_failures": {
+      "default": true,
+      "description": "Continue the run if some URLs fail after retries.",
+      "prefill": true,
+      "title": "Ignore URL Failures",
+      "type": "boolean"
+    },
+    "max_cost": {
+      "description": "Upper bound of cost-for-two.",
+      "minimum": 0,
+      "title": "Max Cost (for two)",
+      "type": "integer"
+    },
+    "max_items_per_url": {
+      "default": 9,
+      "description": "Up to 9 (Zomato server-side cap). Pagination beyond 9 is not available.",
+      "maximum": 9,
+      "minimum": 1,
+      "prefill": 9,
+      "sectionCaption": "Limits & Reliability",
+      "title": "Max Items Per URL",
+      "type": "integer"
+    },
+    "max_retries_per_url": {
+      "default": 2,
+      "description": "Retries on 5xx / 429 / connection errors.",
+      "minimum": 0,
+      "prefill": 2,
+      "title": "Max Retries Per URL",
+      "type": "integer"
+    },
+    "min_cost": {
+      "description": "Lower bound of cost-for-two.",
+      "minimum": 0,
+      "title": "Min Cost (for two)",
+      "type": "integer"
+    },
+    "min_rating": {
+      "default": "",
+      "description": "Filter to restaurants at or above this rating.",
+      "editor": "select",
+      "enum": [
+        "",
+        "3.5",
+        "4",
+        "4.5",
+        "5"
+      ],
+      "enumTitles": [
+        "Any",
+        "3.5+",
+        "4.0+",
+        "4.5+",
+        "5.0"
+      ],
+      "title": "Minimum Rating",
+      "type": "string"
+    },
+    "search_mode": {
+      "default": "dining",
+      "description": "Which Zomato surface to scrape.",
+      "editor": "select",
+      "enum": [
+        "dining",
+        "delivery",
+        "cafes",
+        "nightlife"
+      ],
+      "enumTitles": [
+        "Dining Out",
+        "Delivery",
+        "Cafes",
+        "Drinks & Nightlife"
+      ],
+      "title": "Search Mode",
+      "type": "string"
+    },
+    "sort": {
+      "default": "",
+      "description": "Result ordering.",
+      "editor": "select",
+      "enum": [
+        "",
+        "popularity",
+        "rating",
+        "cost"
+      ],
+      "enumTitles": [
+        "Default",
+        "Popularity",
+        "Rating",
+        "Cost: low to high"
+      ],
+      "title": "Sort By",
+      "type": "string"
+    },
+    "start_urls": {
+      "default": [
+        "https://www.zomato.com/mumbai/restaurants"
+      ],
+      "description": "Zomato restaurant/search/locality URLs. Examples:\n- https://www.zomato.com/mumbai/restaurants\n- https://www.zomato.com/ncr/restaurants/biryani\n- https://www.zomato.com/mumbai/bandra-west-restaurants\n- https://www.zomato.com/dubai/delivery\n\nEach URL returns up to 9 restaurants (Zomato server-side cap).",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "prefill": [
+        "https://www.zomato.com/mumbai/restaurants"
+      ],
+      "sectionCaption": "Scrape by URL",
+      "sectionDescription": "Enter one or more Zomato URLs. Each URL returns up to 9 restaurants with full details.",
+      "title": "Zomato URLs",
+      "type": "array"
+    }
+  },
+  "schemaVersion": 1,
+  "title": "Zomato Scraper",
+  "type": "object"
+}

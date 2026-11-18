@@ -1,0 +1,151 @@
+{
+  "description": "Scrape Chrome Web Store extensions by URL, category, search query, or top-charts.",
+  "properties": {
+    "categoryUrls": {
+      "default": [],
+      "description": "Chrome Web Store category page URLs. Used when mode=`category`.",
+      "editor": "stringList",
+      "prefill": [
+        "https://chromewebstore.google.com/category/extensions/productivity/tools"
+      ],
+      "title": "Category URLs",
+      "type": "array"
+    },
+    "developerNameContains": {
+      "description": "Only emit extensions whose developer name contains this substring (case-insensitive).",
+      "editor": "textfield",
+      "title": "Developer name contains",
+      "type": "string"
+    },
+    "extensionUrls": {
+      "default": [
+        "https://chromewebstore.google.com/detail/ublock-origin-lite/ddkjiahejlhfcafbddmgiahcphecmpfh"
+      ],
+      "description": "Direct Chrome Web Store extension URLs (or just IDs). Used when mode=`urls`.",
+      "editor": "stringList",
+      "prefill": [
+        "https://chromewebstore.google.com/detail/ublock-origin-lite/ddkjiahejlhfcafbddmgiahcphecmpfh"
+      ],
+      "title": "Extension URLs",
+      "type": "array"
+    },
+    "maxItems": {
+      "default": 50,
+      "description": "Maximum number of extensions to emit.",
+      "maximum": 5000,
+      "minimum": 1,
+      "prefill": 50,
+      "title": "Max items",
+      "type": "integer"
+    },
+    "minInstalls": {
+      "description": "Drop extensions with fewer than this many installs.",
+      "maximum": 1000000000,
+      "minimum": 0,
+      "title": "Min installs (filter)",
+      "type": "integer"
+    },
+    "minRating": {
+      "description": "Drop extensions with average rating below this (0.0–5.0). E.g. 4.5",
+      "maximum": 5,
+      "minimum": 0,
+      "title": "Min rating (filter)",
+      "type": "number"
+    },
+    "mode": {
+      "default": "urls",
+      "description": "How to discover extensions. `urls` = direct lookup, `category` = walk a category page, `search` = search query, `topCharts` = popular extensions.",
+      "editor": "select",
+      "enum": [
+        "urls",
+        "category",
+        "search",
+        "topCharts"
+      ],
+      "enumTitles": [
+        "Direct extension URLs",
+        "By category page",
+        "By search query",
+        "Top charts (popular)"
+      ],
+      "prefill": "urls",
+      "title": "Mode",
+      "type": "string"
+    },
+    "searchQuery": {
+      "default": "ad blocker",
+      "description": "Free-text search term. Used when mode=`search`.",
+      "editor": "textfield",
+      "prefill": "ad blocker",
+      "title": "Search query",
+      "type": "string"
+    },
+    "topChartsCategory": {
+      "default": "productivity/tools",
+      "description": "Chrome Web Store category slug (`<parent>/<child>` form). Used when mode=`topCharts`. Leave empty for the global top extensions list.",
+      "editor": "select",
+      "enum": [
+        "",
+        "productivity/tools",
+        "productivity/communication",
+        "productivity/education",
+        "productivity/news_weather",
+        "productivity/photos",
+        "productivity/search_tools",
+        "productivity/social_communication",
+        "productivity/workflow_planning",
+        "productivity/developer_tools",
+        "lifestyle/art_design",
+        "lifestyle/entertainment",
+        "lifestyle/fun",
+        "lifestyle/household",
+        "lifestyle/news_weather",
+        "lifestyle/shopping",
+        "lifestyle/sports",
+        "lifestyle/travel_outdoors",
+        "lifestyle/well_being",
+        "make_chrome_yours/accessibility",
+        "make_chrome_yours/themes"
+      ],
+      "enumTitles": [
+        "(default — global top extensions)",
+        "Productivity / Tools",
+        "Productivity / Communication",
+        "Productivity / Education",
+        "Productivity / News & Weather",
+        "Productivity / Photos",
+        "Productivity / Search Tools",
+        "Productivity / Social & Communication",
+        "Productivity / Workflow & Planning",
+        "Productivity / Developer Tools",
+        "Lifestyle / Art & Design",
+        "Lifestyle / Entertainment",
+        "Lifestyle / Fun",
+        "Lifestyle / Household",
+        "Lifestyle / News & Weather",
+        "Lifestyle / Shopping",
+        "Lifestyle / Sports",
+        "Lifestyle / Travel & Outdoors",
+        "Lifestyle / Well-being",
+        "Make Chrome Yours / Accessibility",
+        "Make Chrome Yours / Themes"
+      ],
+      "prefill": "productivity/tools",
+      "title": "Top charts category",
+      "type": "string"
+    },
+    "verifiedOnly": {
+      "default": false,
+      "description": "Only emit extensions whose developer has the verified badge.",
+      "prefill": false,
+      "title": "Verified developers only",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "mode"
+  ],
+  "schemaVersion": 1,
+  "title": "Chrome Extensions Scraper Pro Input",
+  "type": "object"
+}

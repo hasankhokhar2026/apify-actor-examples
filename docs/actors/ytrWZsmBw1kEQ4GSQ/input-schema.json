@@ -1,0 +1,214 @@
+{
+  "description": "Search Skiplagged for flight fares by route, or batch multiple routes / paste Skiplagged search URLs.",
+  "properties": {
+    "adults": {
+      "default": 1,
+      "description": "Number of adult passengers (12+).",
+      "maximum": 9,
+      "minimum": 1,
+      "prefill": 1,
+      "title": "Adults",
+      "type": "integer"
+    },
+    "airlines": {
+      "default": [],
+      "description": "Only emit itineraries that include at least one of these 2-letter IATA airline codes, e.g. `AA`, `BA`, `DL`.",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Filter by airline IATA codes",
+      "type": "array"
+    },
+    "cabinClass": {
+      "default": "economy",
+      "description": "Requested cabin class. Skiplagged's public search does not always honor this — the real `fareClass` returned by the upstream is always included on every record.",
+      "editor": "select",
+      "enum": [
+        "economy",
+        "premium-economy",
+        "business",
+        "first"
+      ],
+      "enumTitles": [
+        "Economy",
+        "Premium Economy",
+        "Business",
+        "First"
+      ],
+      "prefill": "economy",
+      "title": "Cabin class",
+      "type": "string"
+    },
+    "children": {
+      "default": 0,
+      "description": "Number of child passengers (2-11).",
+      "maximum": 8,
+      "minimum": 0,
+      "prefill": 0,
+      "title": "Children",
+      "type": "integer"
+    },
+    "departDate": {
+      "description": "Departure date as `YYYY-MM-DD`. Leave blank to default to 6 weeks from today (keeps the daily test run always valid).",
+      "editor": "textfield",
+      "title": "Departure date (mode=search)",
+      "type": "string"
+    },
+    "destination": {
+      "default": "LON",
+      "description": "Destination IATA airport code (e.g. `LHR`) or metro/city code (e.g. `LON` covers LHR, LGW, STN, LTN, LCY).",
+      "editor": "textfield",
+      "prefill": "LON",
+      "title": "Destination (mode=search)",
+      "type": "string"
+    },
+    "directOnly": {
+      "default": false,
+      "description": "Only emit nonstop itineraries.",
+      "prefill": false,
+      "title": "Direct flights only",
+      "type": "boolean"
+    },
+    "infantsLap": {
+      "default": 0,
+      "description": "Number of lap infants (under 2, no seat).",
+      "maximum": 8,
+      "minimum": 0,
+      "prefill": 0,
+      "title": "Infants (on lap)",
+      "type": "integer"
+    },
+    "infantsSeat": {
+      "default": 0,
+      "description": "Number of infants (under 2) with their own seat.",
+      "maximum": 8,
+      "minimum": 0,
+      "prefill": 0,
+      "title": "Infants (own seat)",
+      "type": "integer"
+    },
+    "maxItems": {
+      "default": 50,
+      "description": "Hard cap on emitted records (per run, across all routes).",
+      "maximum": 1000,
+      "minimum": 1,
+      "prefill": 50,
+      "title": "Max items",
+      "type": "integer"
+    },
+    "maxPrice": {
+      "description": "Drop itineraries pricier than this (whole USD).",
+      "maximum": 50000,
+      "minimum": 0,
+      "title": "Max price (USD)",
+      "type": "integer"
+    },
+    "maxStops": {
+      "default": 3,
+      "description": "Drop itineraries with more stops than this.",
+      "maximum": 3,
+      "minimum": 0,
+      "prefill": 3,
+      "title": "Max stops",
+      "type": "integer"
+    },
+    "minPrice": {
+      "description": "Drop itineraries cheaper than this (whole USD).",
+      "maximum": 50000,
+      "minimum": 0,
+      "title": "Min price (USD)",
+      "type": "integer"
+    },
+    "mode": {
+      "default": "search",
+      "description": "What to fetch.",
+      "editor": "select",
+      "enum": [
+        "search",
+        "byRoutes",
+        "byUrls"
+      ],
+      "enumTitles": [
+        "Search a single route",
+        "Search multiple routes in one run",
+        "Search from pasted Skiplagged URLs"
+      ],
+      "prefill": "search",
+      "title": "Mode",
+      "type": "string"
+    },
+    "origin": {
+      "default": "NYC",
+      "description": "Origin IATA airport code (e.g. `JFK`) or metro/city code (e.g. `NYC` covers JFK, LGA, EWR).",
+      "editor": "textfield",
+      "prefill": "NYC",
+      "title": "Origin (mode=search)",
+      "type": "string"
+    },
+    "returnDate": {
+      "description": "Return date as `YYYY-MM-DD` for a round-trip search. Leave blank for a one-way search.",
+      "editor": "textfield",
+      "title": "Return date (mode=search)",
+      "type": "string"
+    },
+    "routes": {
+      "default": [],
+      "description": "Batch of routes to search in one run. Each item: `{\"origin\":\"NYC\",\"destination\":\"LON\",\"departDate\":\"2026-09-01\",\"returnDate\":\"2026-09-08\"}` (`returnDate` optional for one-way).",
+      "editor": "json",
+      "prefill": [],
+      "title": "Routes (mode=byRoutes)",
+      "type": "array"
+    },
+    "sortBy": {
+      "default": "price",
+      "description": "Order of emitted records.",
+      "editor": "select",
+      "enum": [
+        "price",
+        "duration",
+        "departureTime",
+        "stops"
+      ],
+      "enumTitles": [
+        "Price (cheapest first)",
+        "Duration (shortest first)",
+        "Departure time (earliest first)",
+        "Stops (fewest first)"
+      ],
+      "prefill": "price",
+      "title": "Sort by",
+      "type": "string"
+    },
+    "startUrls": {
+      "default": [],
+      "description": "Skiplagged flight-search page URLs, e.g. `https://skiplagged.com/flights/NYC/LON/2026-09-01/2026-09-08`.",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Skiplagged URLs (mode=byUrls)",
+      "type": "array"
+    },
+    "tripType": {
+      "default": "auto",
+      "description": "One-way or round-trip. Auto-detected from whether a return date is present; this only matters when `returnDate` is ambiguous.",
+      "editor": "select",
+      "enum": [
+        "auto",
+        "one-way",
+        "round-trip"
+      ],
+      "enumTitles": [
+        "Auto-detect from dates",
+        "One-way only",
+        "Round-trip only"
+      ],
+      "prefill": "auto",
+      "title": "Trip type",
+      "type": "string"
+    }
+  },
+  "required": [
+    "mode"
+  ],
+  "schemaVersion": 1,
+  "title": "Skiplagged Flight Search Scraper Input",
+  "type": "object"
+}
