@@ -2,6 +2,14 @@
   "actorSpecification": 1,
   "fields": {
     "properties": {
+      "atThisPlace": {
+        "description": "Place summary: on-site entities Google lists under 'At this place' (name, featureId, kgmid, rating, totalReviews, categories, openingHours, priceRange where present).",
+        "items": {
+          "type": "object"
+        },
+        "nullable": true,
+        "type": "array"
+      },
       "businessAddress": {
         "description": "The place's address.",
         "nullable": true,
@@ -20,6 +28,11 @@
         "nullable": true,
         "type": "string"
       },
+      "businessCity": {
+        "description": "The place's city, when Google names one.",
+        "nullable": true,
+        "type": "string"
+      },
       "businessLatitude": {
         "description": "The place's latitude.",
         "nullable": true,
@@ -35,10 +48,20 @@
         "nullable": true,
         "type": "string"
       },
+      "businessNeighborhood": {
+        "description": "The place's neighborhood or district, when Google names one.",
+        "nullable": true,
+        "type": "string"
+      },
       "businessRating": {
         "description": "The place's average rating.",
         "nullable": true,
         "type": "number"
+      },
+      "businessStatus": {
+        "description": "operational, closed or permanentlyClosed, from Google's own operational flag.",
+        "nullable": true,
+        "type": "string"
       },
       "businessTotalReviews": {
         "description": "How many reviews Google shows for the place.",
@@ -94,7 +117,7 @@
         "type": "integer"
       },
       "countryCode": {
-        "description": "Place summary: the place's country code.",
+        "description": "The place's country code, on review rows and place summaries.",
         "nullable": true,
         "type": "string"
       },
@@ -107,6 +130,22 @@
         "description": "Google Maps feature ID (0x...:0x...).",
         "nullable": true,
         "type": "string"
+      },
+      "galleryPhotos": {
+        "description": "Place summary: gallery/Street View media with photoId, mediaType, url, width, height, photoLocation {latitude, longitude}, heading and pitch where present. User-review photoDetails keep their existing pin-only behavior.",
+        "items": {
+          "type": "object"
+        },
+        "nullable": true,
+        "type": "array"
+      },
+      "hotelAmenities": {
+        "description": "Place summary: hotel amenity labels Google prints in its hotel search module (for example Pool, Free parking, Free Wi-Fi, Air-conditioned).",
+        "items": {
+          "type": "string"
+        },
+        "nullable": true,
+        "type": "array"
       },
       "isEdited": {
         "description": "True when the review was edited after publishing, filled only with enrichReviewerProfiles on.",
@@ -129,7 +168,7 @@
         "type": "string"
       },
       "likesCount": {
-        "description": "Review likes, filled only with enrichReviewerProfiles on.",
+        "description": "Review likes. Place mode fills it for Google featured reviews from the same place preview request; otherwise it is filled only with enrichReviewerProfiles on.",
         "nullable": true,
         "type": "integer"
       },
@@ -157,7 +196,7 @@
         "type": "string"
       },
       "ownerResponseDate": {
-        "description": "ISO 8601 owner-reply date; place mode needs enrichReviewerProfiles, reviewer mode always has it.",
+        "description": "ISO 8601 owner-reply date. Place mode fills it for Google featured reviews from the same place preview request; other place reviews need enrichReviewerProfiles. Reviewer mode always has it.",
         "nullable": true,
         "type": "string"
       },
@@ -200,12 +239,12 @@
         "type": "string"
       },
       "phone": {
-        "description": "Place summary: the place's phone number.",
+        "description": "The place's phone number, on review rows and place summaries.",
         "nullable": true,
         "type": "string"
       },
       "photoDetails": {
-        "description": "With includePhotoDetails on: one entry per photo or video with url, width, height, uploadDate and, for videos, durationSeconds.",
+        "description": "One entry per photo with url, width, height, caption and uploadDate; reviewer-mode rows include it from the same request, place-review rows with includePhotoDetails on (videos add durationSeconds there).",
         "items": {
           "type": "object"
         },
@@ -225,8 +264,26 @@
         "nullable": true,
         "type": "string"
       },
+      "placeAttributes": {
+        "description": "Place summary: Google's place attribute groups, for example Accessibility with the values Google prints.",
+        "nullable": true,
+        "type": "object"
+      },
+      "placeCategories": {
+        "description": "Reviewed place's categories (reviewer mode).",
+        "items": {
+          "type": "string"
+        },
+        "nullable": true,
+        "type": "array"
+      },
       "placeCategory": {
         "description": "Category of the reviewed place (reviewer mode).",
+        "nullable": true,
+        "type": "string"
+      },
+      "placeCountryCode": {
+        "description": "Reviewed place's country code (reviewer mode).",
         "nullable": true,
         "type": "string"
       },
@@ -250,6 +307,11 @@
         "nullable": true,
         "type": "string"
       },
+      "placeNeighborhood": {
+        "description": "Reviewed place's neighborhood or district (reviewer mode).",
+        "nullable": true,
+        "type": "string"
+      },
       "placePriceRange": {
         "description": "Price range of the reviewed place (reviewer mode).",
         "nullable": true,
@@ -259,6 +321,11 @@
         "description": "Rating of the reviewed place (reviewer mode).",
         "nullable": true,
         "type": "number"
+      },
+      "placeTimezone": {
+        "description": "Reviewed place's time zone (reviewer mode).",
+        "nullable": true,
+        "type": "string"
       },
       "placeTotalReviews": {
         "description": "Review count of the reviewed place (reviewer mode).",
@@ -301,7 +368,7 @@
         "type": "object"
       },
       "reviewCreatedAt": {
-        "description": "ISO 8601 first-published date, filled only with enrichReviewerProfiles on.",
+        "description": "ISO 8601 first-published date. Place mode fills it for Google featured reviews from the same place preview request; otherwise it is filled only with enrichReviewerProfiles on.",
         "nullable": true,
         "type": "string"
       },
@@ -361,6 +428,11 @@
         "nullable": true,
         "type": "array"
       },
+      "reviewUpdatedAt": {
+        "description": "ISO 8601 exact last-update date from Google's featured-review block in place mode. reviewDate remains the date Google's review feed shows.",
+        "nullable": true,
+        "type": "string"
+      },
       "reviewUrl": {
         "description": "Google Maps URL of the review.",
         "nullable": true,
@@ -375,7 +447,7 @@
         "type": "array"
       },
       "reviewViewCount": {
-        "description": "Review view count, filled only with enrichReviewerProfiles on.",
+        "description": "Review view count. Place mode fills it for Google featured reviews from the same place preview request; otherwise it is filled only with enrichReviewerProfiles on.",
         "nullable": true,
         "type": "integer"
       },
@@ -459,6 +531,22 @@
         "nullable": true,
         "type": "integer"
       },
+      "serviceOptions": {
+        "description": "Place summary: service options Google prints for the place (for example Delivery and Takeout), each with the hours Google shows when present.",
+        "items": {
+          "type": "object"
+        },
+        "nullable": true,
+        "type": "array"
+      },
+      "similarHotels": {
+        "description": "Place summary: similar hotels Google lists with featureId, name, latitude, longitude, rating, totalReviews, tagline, distance and price where present.",
+        "items": {
+          "type": "object"
+        },
+        "nullable": true,
+        "type": "array"
+      },
       "sortBy": {
         "description": "The sort order that was requested.",
         "nullable": true,
@@ -520,7 +608,7 @@
         "type": "string"
       },
       "website": {
-        "description": "Place summary: the place's website.",
+        "description": "The place's website, on review rows and place summaries.",
         "nullable": true,
         "type": "string"
       }
@@ -642,6 +730,10 @@
             "format": "text",
             "label": "Category"
           },
+          "businessCity": {
+            "format": "text",
+            "label": "City"
+          },
           "businessLatitude": {
             "format": "number",
             "label": "Latitude"
@@ -654,9 +746,17 @@
             "format": "text",
             "label": "Business"
           },
+          "businessNeighborhood": {
+            "format": "text",
+            "label": "Neighborhood"
+          },
           "businessRating": {
             "format": "number",
             "label": "Business Rating"
+          },
+          "businessStatus": {
+            "format": "text",
+            "label": "Business status"
           },
           "businessTotalReviews": {
             "format": "number",
@@ -689,6 +789,10 @@
           "contributorProfileUrl": {
             "format": "link",
             "label": "Contributor Profile URL"
+          },
+          "countryCode": {
+            "format": "text",
+            "label": "Country"
           },
           "featureId": {
             "format": "text",
@@ -746,6 +850,10 @@
             "format": "text",
             "label": "Partner site"
           },
+          "phone": {
+            "format": "text",
+            "label": "Phone"
+          },
           "photoDetails": {
             "format": "array",
             "label": "Photo details"
@@ -758,9 +866,17 @@
             "format": "text",
             "label": "Reviewed Place Address"
           },
+          "placeCategories": {
+            "format": "array",
+            "label": "Reviewed place categories"
+          },
           "placeCategory": {
             "format": "text",
             "label": "Place category"
+          },
+          "placeCountryCode": {
+            "format": "text",
+            "label": "Reviewed place country"
           },
           "placeId": {
             "format": "text",
@@ -778,6 +894,10 @@
             "format": "text",
             "label": "Reviewed Place"
           },
+          "placeNeighborhood": {
+            "format": "text",
+            "label": "Reviewed place neighborhood"
+          },
           "placePriceRange": {
             "format": "text",
             "label": "Price range"
@@ -785,6 +905,10 @@
           "placeRating": {
             "format": "number",
             "label": "Place rating"
+          },
+          "placeTimezone": {
+            "format": "text",
+            "label": "Reviewed place time zone"
           },
           "placeTotalReviews": {
             "format": "number",
@@ -853,6 +977,10 @@
           "reviewTextTranslated": {
             "format": "text",
             "label": "Translated review"
+          },
+          "reviewUpdatedAt": {
+            "format": "text",
+            "label": "Last updated"
           },
           "reviewUrl": {
             "format": "link",
@@ -949,6 +1077,10 @@
           "visitDate": {
             "format": "text",
             "label": "Visit Date"
+          },
+          "website": {
+            "format": "link",
+            "label": "Website"
           }
         }
       },
@@ -995,6 +1127,16 @@
           "businessTotalReviews",
           "businessCategory",
           "businessAddress",
+          "businessNeighborhood",
+          "businessCity",
+          "businessStatus",
+          "phone",
+          "website",
+          "countryCode",
+          "placeCategories",
+          "placeCountryCode",
+          "placeTimezone",
+          "placeNeighborhood",
           "placeName",
           "placeAddress",
           "placeId",
@@ -1018,6 +1160,7 @@
           "subRatings",
           "reviewContext",
           "reviewCreatedAt",
+          "reviewUpdatedAt",
           "reviewViewCount",
           "isRatingOnly",
           "businessCategories",
@@ -1097,6 +1240,10 @@
       "display": {
         "component": "table",
         "properties": {
+          "atThisPlace": {
+            "format": "array",
+            "label": "At this place"
+          },
           "businessAddress": {
             "format": "text",
             "label": "Address"
@@ -1108,6 +1255,10 @@
           "businessCategory": {
             "format": "text",
             "label": "Category"
+          },
+          "businessCity": {
+            "format": "text",
+            "label": "City"
           },
           "businessLatitude": {
             "format": "number",
@@ -1121,9 +1272,17 @@
             "format": "text",
             "label": "Business"
           },
+          "businessNeighborhood": {
+            "format": "text",
+            "label": "Neighborhood"
+          },
           "businessRating": {
             "format": "number",
             "label": "Business Rating"
+          },
+          "businessStatus": {
+            "format": "text",
+            "label": "Business status"
           },
           "businessTotalReviews": {
             "format": "number",
@@ -1145,6 +1304,14 @@
             "format": "text",
             "label": "Feature ID"
           },
+          "galleryPhotos": {
+            "format": "array",
+            "label": "Gallery / Street View"
+          },
+          "hotelAmenities": {
+            "format": "array",
+            "label": "Hotel amenities"
+          },
           "kgmid": {
             "format": "text",
             "label": "Knowledge Graph ID"
@@ -1164,6 +1331,10 @@
           "phone": {
             "format": "text",
             "label": "Phone"
+          },
+          "placeAttributes": {
+            "format": "object",
+            "label": "Place attributes"
           },
           "placeId": {
             "format": "text",
@@ -1209,6 +1380,14 @@
             "format": "number",
             "label": "Search rank"
           },
+          "serviceOptions": {
+            "format": "array",
+            "label": "Service options"
+          },
+          "similarHotels": {
+            "format": "array",
+            "label": "Similar hotels"
+          },
           "sourceUrl": {
             "format": "text",
             "label": "sourceUrl"
@@ -1247,6 +1426,15 @@
           "businessCategory",
           "businessCategories",
           "businessAddress",
+          "businessNeighborhood",
+          "businessCity",
+          "businessStatus",
+          "placeAttributes",
+          "serviceOptions",
+          "atThisPlace",
+          "hotelAmenities",
+          "similarHotels",
+          "galleryPhotos",
           "businessLatitude",
           "businessLongitude",
           "phone",

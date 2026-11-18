@@ -1,35 +1,47 @@
 # Traveloka Indonesia Lodging & Xperience Articles
 
-Traveloka is one of Southeast Asia's largest travel booking platforms. This actor reads its public guest-house and hostel listing pages across Indonesia's major cities and resort areas, and its Traveloka Xperience content hub, returning structured records for lodging and travel-guide articles alike. No login or cookies required.
+Traveloka is Southeast Asia's largest travel booking platform, and its Indonesian accommodation pages expose a rich, server-rendered catalogue: guest houses, hostels, hotels, nightly starting prices, guest scores, review counts, amenities and photo galleries. This actor collects that catalogue city by city, follows every listing page to the end, and can switch between Traveloka's regional storefronts and currencies. It can optionally enrich each hotel with address, coordinates, facilities, check-in policies and up to 20 recent reviews. It also pages through the Traveloka Xperience content hub, returning travel-guide articles with authors, publish dates, reading times, full body text, images and related reads. No login, cookies or proxy setup required.
 
 ## What this actor does
 
-- **Four modes:** `search`, `browseByCity`, `browseExplore`, `byUrl`
-- **Hotel listings:** 21 verified city/area pages (Yogyakarta, Bali, Bandung, Surabaya, Malang, Semarang, Labuan Bajo, Bogor, Tangerang, Bekasi, Medan, Makassar, Palembang, Kuta, Canggu, Legian, Nusa Dua — guest houses and hostels)
-- **Search by city:** type `yogyakarta`, `bali`, `bandung`… and get hotels; type any travel keyword and get matching explore articles
-- **Explore articles:** 12+ Traveloka Xperience travel guides with titles, descriptions, authors, publication dates, word counts
-- **Full article details:** word count, reading time, header images, tags, categories
-- **Filters:** min user rating, min star rating, min review count, keyword-in-name
-- **Empty fields are omitted**
+- **Four ways in:** `search`, `browseByCity`, `browseExplore`, `byUrl`
+- **Paginated listings:** walks `/accommodation/find/<slug>`, `/2`, `/3`… until Traveloka's own result count, so a city query can return hundreds of properties instead of the first 21
+- **Six storefronts:** `en-id`, `id-id`, `en-sg`, `en-my`, `th-th`, `en-ph`, with the matching currency on every price
+- **Article hub:** category pages (`activities`, `tips`), Activities sub-categories, and optional article-detail enrichment
+- **Optional hotel details:** address, coordinates, facilities, check-in/out, policies and up to 20 recent reviews
+- **Filters:** guest score, star rating, review count, price range, keyword in name, and six sort orders
+- **Clean records:** empty values are omitted at every depth, never written as `null`
 
 ## Output per hotel
 
-- `hotelId` — Traveloka property id
-- `name`, `displayName`, `location` (area, city)
-- `starRating`, `userRating` (0-10), `numReviews`, `userRatingInfo` (Very Good / Excellent…)
+- `hotelId` — Traveloka property ID
+- `name`, `displayName`, `location` — name and area/city
+- `starRating`, `userRating` (0–10), `numReviews`, `userRatingInfo`
 - `accommodationType`, `travelTheme`, `hotelFeatures[]`
-- `price`, `baseFare`, `taxes`, `fees` (site currency)
-- `highlightedReview`, `reviewerName`
-- `seoPath`, `seoPathType`
-- `images[]`, `imageUrl`
-- `sourceUrl` — the accommodation listing page
+- `price`, `baseFare`, `taxes`, `fees` — listed starting rate for the locale's default stay window
+- `priceCurrency` — ISO currency of the listing page (`IDR`, `SGD`, `MYR`, `THB`, `PHP`)
+- `highlightedReview`, `reviewerName`, `highlightedReviewTranslated` — translation marker only when Traveloka supplies it
+- `urgencyMessage` — Traveloka's demand label when shown (e.g. "Often fully booked!")
+- `seoPath`, `seoPathType`, `hotelUrl`
+- `images[]`, `imageUrl`, `thumbnailUrl`, `imageCount`
+- `mainImageUrl`, `mainImageCaption` — the asset Traveloka marks as the main photo, and its caption
+- `imageCategories[]` — distinct asset categories shown for the property
+- `ribbonLabel`, `preferredPartner` — Traveloka merchandising labels when shown
+- `locale` — storefront used for this record
+- `sourceUrl` — the listing page the record came from
+- With `includeHotelDetails`: `address`, `postalCode`, `city`, `province`, `country`, `latitude`, `longitude`
+- With `includeHotelDetails`: `facilityCategories[]` (`category`, `items[]`), `facilities[]`, `checkInTime`, `checkOutTime`
+- With `includeHotelDetails`: `policies[]` (`title`, `description`, `type`), `checkInInstructions`, `importantNotice`
+- With `includeHotelDetails`: `hotelReviews[]` — up to 20 rows with `reviewId`, `score`, `maxScore`, `text`, `originalText`, `reviewerId`, `reviewerName`, `reviewerPhotoUrl`, `reviewerStatus`, `timestamp`, `ownerReply`, `media[]`, `subRatings[]`, `reviewOrigin`, `reviewProvider`, `translationStatus`
 - `recordType: "hotel"`, `scrapedAt`
 
 ## Output per article
 
 - `articleId`, `title`, `subtitle`, `description`, `articleUrl`
-- `authorName`, `publishedDate`, `imageUrl`, `tags[]`
-- On article detail pages additionally: `authorPicture`, `publishedTime`, `wordCount`, `readingTimeSec`, `readDuration`, `headerImage` (first header image), `headerImages[]`, `subCategories[]`, `shareLink`
+- `authorName`, `authorPicture`, `publishedDate`, `readingTimeSec`
+- `imageUrl`, `tags[]`, `shareLink`, `locale`
+- With `includeArticleDetails`: `modifiedAt`, `shareCount`, `articleType`, `contentType`, `authorGroup`, `imageCount`, `wordCount`, `readDuration`, `headerImage`, `headerImages[]`, `subCategories[]`, `tocSections[]`, and `relatedArticles[]` (`articleId`, `title`, `articleUrl`, `publishedDate`, `readDuration`, `imageUrl`)
+- With `includeArticleDetails`: `articleBody` (plain text), `articleSections[]` (each section has optional `title` plus `paragraphs[]`), and `articleImages[]` (deduplicated absolute URLs); promo cards, carousels and deep-link buttons are skipped
 - `recordType: "article"`, `scrapedAt`
 
 ## Input
@@ -37,99 +49,130 @@ Traveloka is one of Southeast Asia's largest travel booking platforms. This acto
 | Field | Type | Default | Description |
 |---|---|---|---|
 | `mode` | string | `search` | `search` / `browseByCity` / `browseExplore` / `byUrl` |
-| `searchQuery` | string | `yogyakarta` | City name or travel keyword (mode=search) |
-| `citySlug` | string | – | 21-city dropdown of accommodation pages (mode=browseByCity) |
-| `startUrls` | array | – | traveloka.com URLs (mode=byUrl) |
-| `minRating` | int | – | Min user rating (1-10) |
-| `minStarRating` | int | – | Min star rating (1-7) |
-| `minReviewCount` | int | – | Min review count |
+| `searchQuery` | string | `yogyakarta` | City, area or guide keyword (mode=search) |
+| `citySlug` | string | – | 21 verified city/area listing pages (mode=browseByCity) |
+| `startUrls` | array | `[]` | Traveloka listing, category or article URLs (mode=byUrl) |
+| `locale` | string | `en-id` | Storefront and price currency |
+| `exploreCategory` | string | `activities` | `activities` / `tips` (mode=browseExplore) |
+| `exploreSubcategory` | string | – | Activities sub-category, blank for all (mode=browseExplore) |
+| `minRating` | int | – | Minimum guest score (1–10) |
+| `minStarRating` | int | – | Minimum star rating (1–7) |
+| `minReviewCount` | int | – | Minimum number of reviews |
+| `minPrice` | int | – | Minimum listed price in the locale currency |
+| `maxPrice` | int | – | Maximum listed price in the locale currency |
 | `containsKeyword` | string | – | Only hotels whose name contains this text |
-| `sortBy` | string | `relevance` | `relevance` / `ratingDesc` / `mostReviewed` / `starDesc` |
-| `includeArticles` | boolean | `false` | In search mode, also emit every explore article |
-| `maxItems` | int | `50` | Hard cap (1–1000) |
-| `proxyConfiguration` | object | – | Optional; only used lazily if Traveloka blocks a request |
+| `sortBy` | string | `relevance` | `relevance` / `ratingDesc` / `mostReviewed` / `starDesc` / `priceAsc` / `priceDesc` |
+| `includeArticles` | boolean | `false` | In search mode, emit all fetched articles, not just keyword matches |
+| `includeArticleDetails` | boolean | `false` | Open each article page for full body text, description, TOC and related reads |
+| `includeHotelDetails` | boolean | `false` | Fetch each hotel's cookieless detail data: address, coordinates, facilities, check-in/out, policies and up to 20 reviews |
+| `maxPages` | int | `0` | Pages per source; `0` = all until `maxItems` or exhaustion (0–500) |
+| `maxItems` | int | `50` | Hard record cap (1–1000) |
+| `proxyConfiguration` | object | – | Optional; only used after a direct request is blocked |
+
+Legacy saved-task aliases are accepted but hidden from the form: `query`, `keyword`, `q`, `location`, `city`, `maxResults`, `limit`, `sort`, and `url`.
 
 ## Examples
 
-### Example: search hotels in Yogyakarta
-
-```json
-{
-  "mode": "search",
-  "searchQuery": "yogyakarta",
-  "maxItems": 50
-}
-```
-
-### Example: highly-rated guest houses in Bali
+### Example: paginated guest houses in Bali
 
 ```json
 {
   "mode": "browseByCity",
   "citySlug": "guest-house-bali",
+  "locale": "en-id",
   "minRating": 8,
   "sortBy": "ratingDesc",
-  "maxItems": 50
+  "maxPages": 5,
+  "maxItems": 100
 }
 ```
 
-### Example: travel guides about trains
+### Example: Singapore-dollar prices for a budget shortlist
 
 ```json
 {
-  "mode": "search",
-  "searchQuery": "train",
-  "includeArticles": true,
-  "maxItems": 20
+  "mode": "browseByCity",
+  "citySlug": "guest-house-yogyakarta",
+  "locale": "en-sg",
+  "maxPrice": 60,
+  "sortBy": "priceAsc",
+  "maxItems": 40
 }
 ```
 
-### Example: fetch pages from URLs
+### Example: page through Activities guides
+
+```json
+{
+  "mode": "browseExplore",
+  "exploreCategory": "activities",
+  "exploreSubcategory": "nature-wildlife",
+  "includeArticleDetails": true,
+  "maxPages": 3,
+  "maxItems": 25
+}
+```
+
+### Example: scrape specific pages
 
 ```json
 {
   "mode": "byUrl",
   "startUrls": [
-    "https://www.traveloka.com/en-id/accommodation/find/hostel-bali",
-    "https://www.traveloka.com/en-id/explore/activities/luxury-train-journeys-for-senior-couple/1009917"
+    {"url": "https://www.traveloka.com/en-id/accommodation/find/hostel-bali"},
+    {"url": "https://www.traveloka.com/en-id/explore/activities/luxury-train-journeys-for-senior-couple/1009917"}
   ]
 }
 ```
 
-## Data source
+## Data source and limits
 
-This actor reads Traveloka's public accommodation listing pages (`/accommodation/find/<slug>`) and its Explore content hub (`/explore`) — the same pages Traveloka serves to search engines and visitors without logging in. The listing page's own indicative starting rate (`price`, `baseFare`, `taxes`, `fees`) is included when Traveloka shows one; checking real-time room availability for specific dates still requires Traveloka's own booking/checkout flow, which is out of scope. All 21 city/area slugs offered in the `citySlug` dropdown were verified to return hotel listings.
+The actor reads the same server-rendered accommodation-listing and Explore pages that Traveloka serves to search engines and visitors without an account. Listing prices are the indicative starting rates shown for each property's default stay window, not a quote for dates you choose; checking live room availability happens in Traveloka's own checkout flow. With `includeHotelDetails`, the actor uses the cookieless Next data route for each hotel page (the listing page supplies the current `buildId`) to add address, coordinates, facilities, check-in/out, policies and up to 20 recent reviews. This enrichment is best-effort: if a detail request fails, the hotel record is still emitted from listing data. Date-specific room rates and availability are WAF-gated and are not requested or returned; without `includeHotelDetails`, only the highlighted review shown on the listing card is returned. Article pages embed their full body in the server-rendered `viewDescription` layout, so with `includeArticleDetails` the actor returns `articleBody`, structured `articleSections` and `articleImages` alongside the existing metadata, TOC and related reads.
+
+Traveloka paginates its listing and Explore category pages. The actor follows those pages until Traveloka's reported total is reached, `maxPages` stops it, or `maxItems` is full. Sorting and the rating/price/keyword filters are applied to the records the actor has fetched (up to `maxItems`), not to Traveloka's entire result set; raise `maxItems` or `maxPages` for a wider pool. A listing that reports a smaller total than you expected is showing what Traveloka itself reports for that city and accommodation type.
 
 ## Use cases
 
-- **Hotel market research** — track guest-house and hostel supply in Indonesian cities
-- **Rating analytics** — user ratings and review counts across budget accommodations
-- **Travel content mining** — Traveloka Xperience articles for itineraries and destination research
-- **Competitor monitoring** — follow how Traveloka presents its hotel inventory
-- **Property databases** — hotel names, areas, ratings, and images for enrichment
+- **Budget-accommodation mapping** — enumerate guest houses and hostels across Indonesian cities, with scores and review volumes
+- **Price benchmarking** — compare listed starting rates across Traveloka's regional storefronts in local currencies
+- **Travel-content research** — collect Xperience guides by category, sub-category and author for itinerary or trend analysis
+- **Listing monitoring** — rerun a city on a schedule to track new properties, rating changes and merchandising labels
+- **Data enrichment** — join hotel photos, amenities, SEO paths and guest-score labels into an existing property database
 
 ## FAQ
 
-**Is this affiliated with Traveloka?**
-No — this is an independent actor that reads Traveloka's public listing and Explore pages.
+**Is this actor affiliated with Traveloka?**
+No. It is an independent tool that reads Traveloka's public listing and Explore pages.
 
-**Does a hotel record include a room price?**
-When Traveloka shows an indicative starting rate on the listing page (`price`, with `baseFare`/`taxes`/`fees` when broken out), the actor includes it. Checking live availability and a final price for specific dates requires Traveloka's own booking flow, which is out of scope — so a hotel without a listed rate simply has no price fields rather than a guessed value.
+**Why do prices differ between locales?**
+Each storefront shows its own currency: `en-id`/`id-id` use IDR, `en-sg` uses SGD, `en-my` uses MYR, `th-th` uses THB and `en-ph` uses PHP. `priceCurrency` records the currency, so compare like with like.
 
-**Why are the city options limited to Indonesia?**
-The public accommodation-listing pages this actor can reliably read currently exist for Indonesian destinations; each of the 21 `citySlug` options was verified to return hotel listings before shipping.
+**Are the prices live quotes for my travel dates?**
+No. They are the starting rates Traveloka advertises on the listing page for its default stay window. Live availability and a final price depend on dates and room selection in Traveloka's booking flow.
 
-**How current is the data?**
-Every run reads the live page at the time it runs, so results reflect whatever Traveloka is currently showing.
+**Why is a hotel missing a price or a rating?**
+Traveloka does not show a starting rate or guest score for every property in every city. Those fields are left out of the record rather than filled with a guess.
 
-**What does `userRating` mean?**
-Traveloka's own guest-satisfaction score on a 0–10 scale; `userRatingInfo` is the matching human-readable label, e.g. "Very Good" or "Excellent".
+**How many records can one run return?**
+`maxItems` caps a run at 1000 records. Within that cap, `maxPages` controls how many listing or category pages are read; `0` means read until the source is exhausted.
 
-**Can I get both hotels and travel articles in one run?**
-Yes — in `search` mode, set `includeArticles` to `true` to emit every Explore article alongside any city's hotel matches.
+**Can I get both hotels and articles in one search run?**
+Yes. `search` tries a matching city/area listing first, then article titles and summaries. Set `includeArticles` to `true` to keep every fetched article, not just matching ones.
+
+**Does the actor return the full article text?**
+Yes, when `includeArticleDetails` is enabled. Each article detail record carries `articleBody` as plain text, `articleSections[]` with optional headings and paragraph blocks, and `articleImages[]` with deduplicated absolute image URLs. Promotional cards, carousels and booking buttons are excluded.
+
+**Does `includeHotelDetails` return room rates?**
+No. It adds static detail data (address, coordinates, facilities, check-in/out, policies) and up to 20 recent reviews. Date-specific room rates and availability are protected by Traveloka's WAF and are not requested or returned.
+
+**What is `userRating`?**
+Traveloka's own guest-satisfaction score on a 0–10 scale. `userRatingInfo` is the matching label, such as "Very Good" or "Exceptional".
 
 **Do I need to configure a proxy?**
-No. The actor runs without one by default; the optional `proxyConfiguration` input only kicks in if Traveloka temporarily blocks a direct request.
+No. The actor requests Traveloka pages directly by default, then retries through Apify's AUTO datacenter proxy automatically if direct requests are blocked. The optional `proxyConfiguration` is only needed for a custom proxy.
 
-**Is there a limit on how many records I can get per run?**
-Yes, `maxItems` caps a single run at up to 1000 records.
+**Why are only some cities in the `citySlug` dropdown?**
+Those are the listing pages verified to return properties without a login. For any other Traveloka listing URL, use `mode=byUrl` and paste the URL — pagination is handled for you.
+
+**How fresh is the data?**
+Every run reads the live page at run time, so the records reflect what Traveloka is showing at that moment.

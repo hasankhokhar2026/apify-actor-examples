@@ -1,8 +1,15 @@
 {
-  "description": "Scrape Traveloka hotel listings by city or travel-guide articles.",
+  "additionalProperties": true,
+  "description": "Scrape Traveloka accommodation listings by city, paginated listing pages, and Traveloka Xperience travel-guide articles.",
   "properties": {
+    "city": {
+      "description": "Deprecated alias for `citySlug`.",
+      "editor": "hidden",
+      "title": "Legacy city",
+      "type": "string"
+    },
     "citySlug": {
-      "description": "Traveloka accommodation page to scrape.",
+      "description": "Traveloka accommodation listing page to scrape (mode=browseByCity). All pages are paginated automatically up to `maxPages`.",
       "editor": "select",
       "enum": [
         "guest-house-yogyakarta",
@@ -59,31 +66,168 @@
       "title": "Contains keyword",
       "type": "string"
     },
+    "exploreCategory": {
+      "default": "activities",
+      "description": "Traveloka Explore category to page through (mode=browseExplore).",
+      "editor": "select",
+      "enum": [
+        "activities",
+        "tips"
+      ],
+      "enumTitles": [
+        "Activities & experiences",
+        "Travel tips & guides"
+      ],
+      "prefill": "activities",
+      "title": "Article category (mode=browseExplore)",
+      "type": "string"
+    },
+    "exploreSubcategory": {
+      "default": "",
+      "description": "Optional Activities sub-category filter (mode=browseExplore with `exploreCategory=activities`).",
+      "editor": "select",
+      "enum": [
+        "",
+        "art-design",
+        "culture-history",
+        "events-festivals",
+        "family-friendly",
+        "nature-wildlife",
+        "shopping",
+        "xp-new-normal",
+        "xp-news-events",
+        "xp-online-experience",
+        "xp-promo",
+        "xp-travel"
+      ],
+      "enumTitles": [
+        "All sub-categories",
+        "Art & Design",
+        "History & Culture",
+        "Events & Festivals",
+        "Family-friendly",
+        "Nature",
+        "Shopping",
+        "New Normal Activity",
+        "Xperience Events & News",
+        "Online Xperience",
+        "Xperience Promo",
+        "Attractions"
+      ],
+      "prefill": "",
+      "title": "Article sub-category (mode=browseExplore)",
+      "type": "string"
+    },
+    "includeArticleDetails": {
+      "default": false,
+      "description": "Also open each article page to add the full body text, section headings and images, plus description, table of contents and related articles. Adds one request per article.",
+      "prefill": false,
+      "title": "Fetch article details",
+      "type": "boolean"
+    },
     "includeArticles": {
       "default": false,
-      "description": "In search mode, also emit every explore article (not just keyword-matching ones).",
+      "description": "In search mode, also emit every article from the fetched Explore pages, not only keyword matches.",
       "prefill": false,
-      "title": "Include all explore articles",
+      "title": "Include all explored articles",
       "type": "boolean"
+    },
+    "includeHotelDetails": {
+      "default": false,
+      "description": "Also fetch each hotel's cookieless detail data to add address, coordinates, facilities, check-in/out, policies and up to 20 reviews. Adds one request per hotel.",
+      "prefill": false,
+      "title": "Fetch hotel details",
+      "type": "boolean"
+    },
+    "keyword": {
+      "description": "Deprecated alias for `searchQuery`.",
+      "editor": "hidden",
+      "title": "Legacy keyword",
+      "type": "string"
+    },
+    "limit": {
+      "description": "Deprecated alias for `maxItems`.",
+      "editor": "hidden",
+      "title": "Legacy limit",
+      "type": "integer"
+    },
+    "locale": {
+      "default": "en-id",
+      "description": "Traveloka store locale. The locale also sets the price currency shown on listing pages (e.g. `en-sg` → SGD).",
+      "editor": "select",
+      "enum": [
+        "en-id",
+        "id-id",
+        "en-sg",
+        "en-my",
+        "th-th",
+        "en-ph"
+      ],
+      "enumTitles": [
+        "English (Indonesia) — IDR",
+        "Bahasa Indonesia — IDR",
+        "English (Singapore) — SGD",
+        "English (Malaysia) — MYR",
+        "Thai (Thailand) — THB",
+        "English (Philippines) — PHP"
+      ],
+      "prefill": "en-id",
+      "title": "Locale / currency",
+      "type": "string"
+    },
+    "location": {
+      "description": "Deprecated alias for `searchQuery`.",
+      "editor": "hidden",
+      "title": "Legacy location",
+      "type": "string"
     },
     "maxItems": {
       "default": 50,
       "description": "Hard cap on emitted records.",
       "maximum": 1000,
       "minimum": 1,
-      "prefill": 50,
+      "prefill": 3,
       "title": "Max items",
       "type": "integer"
     },
+    "maxPages": {
+      "default": 0,
+      "description": "Maximum listing/category pages to fetch per source. `0` means all pages until `maxItems` or the source is exhausted.",
+      "maximum": 500,
+      "minimum": 0,
+      "prefill": 1,
+      "title": "Max listing pages",
+      "type": "integer"
+    },
+    "maxPrice": {
+      "description": "Only hotels whose listed starting price is at most this amount, in the locale's currency (see `locale`).",
+      "maximum": 1000000000,
+      "minimum": 0,
+      "title": "Max price",
+      "type": "integer"
+    },
+    "maxResults": {
+      "description": "Deprecated alias for `maxItems`.",
+      "editor": "hidden",
+      "title": "Legacy max results",
+      "type": "integer"
+    },
+    "minPrice": {
+      "description": "Only hotels whose listed starting price is at least this amount, in the locale's currency (see `locale`).",
+      "maximum": 1000000000,
+      "minimum": 0,
+      "title": "Min price",
+      "type": "integer"
+    },
     "minRating": {
-      "description": "Only hotels with a user rating of at least this (0-10).",
+      "description": "Only hotels with a guest score of at least this (Traveloka uses a 0–10 scale).",
       "maximum": 10,
       "minimum": 1,
       "title": "Min user rating",
       "type": "integer"
     },
     "minReviewCount": {
-      "description": "Only hotels with at least this many reviews.",
+      "description": "Only hotels with at least this many guest reviews.",
       "maximum": 1000000,
       "minimum": 1,
       "title": "Min review count",
@@ -107,17 +251,17 @@
         "byUrl"
       ],
       "enumTitles": [
-        "Search hotels / articles",
-        "Browse hotels by city",
-        "Browse explore articles",
+        "Search hotels and articles",
+        "Browse hotels in a city",
+        "Browse travel articles",
         "Fetch pages from URLs"
       ],
-      "prefill": "search",
+      "prefill": "browseExplore",
       "title": "Mode",
       "type": "string"
     },
     "proxyConfiguration": {
-      "description": "Optional Apify proxy. Only used lazily if Traveloka blocks the direct request (403/429). Leave empty for the zero-cost default.",
+      "description": "Optional Apify proxy. Only used after a direct request is blocked (403/429). Leave empty for the zero-cost default.",
       "editor": "proxy",
       "prefill": {
         "useApifyProxy": false
@@ -125,29 +269,51 @@
       "title": "Proxy configuration",
       "type": "object"
     },
+    "q": {
+      "description": "Deprecated alias for `searchQuery`.",
+      "editor": "hidden",
+      "title": "Legacy q",
+      "type": "string"
+    },
+    "query": {
+      "description": "Deprecated alias for `searchQuery`.",
+      "editor": "hidden",
+      "title": "Legacy query",
+      "type": "string"
+    },
     "searchQuery": {
       "default": "yogyakarta",
-      "description": "City or travel keyword (mode=search), e.g. `yogyakarta`, `bali`, `bandung`, `travel`. City queries return hotels; other keywords match explore-article titles.",
+      "description": "City, area, or travel keyword (mode=search), e.g. `yogyakarta`, `bali`, `hotel bali`, `train`. City/area queries return accommodation listings; other keywords match Traveloka Xperience article titles and summaries.",
       "editor": "textfield",
       "prefill": "yogyakarta",
-      "title": "Search query",
+      "title": "Search query (mode=search)",
+      "type": "string"
+    },
+    "sort": {
+      "description": "Deprecated alias for `sortBy`.",
+      "editor": "hidden",
+      "title": "Legacy sort",
       "type": "string"
     },
     "sortBy": {
       "default": "relevance",
-      "description": "Applied to the fetched page in the output order.",
+      "description": "Applied to the fetched hotel records before the output cap. `relevance` keeps Traveloka's own popularity order.",
       "editor": "select",
       "enum": [
         "relevance",
         "ratingDesc",
         "mostReviewed",
-        "starDesc"
+        "starDesc",
+        "priceAsc",
+        "priceDesc"
       ],
       "enumTitles": [
-        "Relevance (site order)",
-        "Best rated first",
+        "Relevance (Traveloka order)",
+        "Best guest score first",
         "Most reviewed first",
-        "Highest star rating first"
+        "Highest star rating first",
+        "Lowest price first",
+        "Highest price first"
       ],
       "prefill": "relevance",
       "title": "Sort results",
@@ -155,11 +321,27 @@
     },
     "startUrls": {
       "default": [],
-      "description": "traveloka.com URLs to scrape (mode=byUrl) — accommodation/find pages, /explore pages, or explore article pages.",
-      "editor": "stringList",
+      "description": "Traveloka URLs to scrape (mode=byUrl): accommodation listing pages, explore category pages, or explore article pages. Listing pages are paginated automatically.",
+      "editor": "requestListSources",
+      "items": {
+        "properties": {
+          "url": {
+            "description": "A full Traveloka accommodation, explore category or article URL.",
+            "title": "Page URL",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
       "prefill": [],
       "title": "Page URLs (mode=byUrl)",
       "type": "array"
+    },
+    "url": {
+      "description": "Deprecated single-URL alias for `startUrls`.",
+      "editor": "hidden",
+      "title": "Legacy URL",
+      "type": "string"
     }
   },
   "required": [

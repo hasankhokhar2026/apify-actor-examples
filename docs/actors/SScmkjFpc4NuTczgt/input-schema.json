@@ -9,36 +9,48 @@
     "enrichReviewerProfiles": {
       "default": false,
       "description": "For place reviews, also open each reviewer's public profile to add likes, first-published and edited dates, view counts, owner-reply dates and the reviewer's Local Guide level. Adds one request per reviewer. Reviews by private profiles, or older than a reviewer's 200 most recent contributions, keep the standard fields.",
+      "prefill": false,
       "title": "Add likes, edit dates and Local Guide levels (slower)",
       "type": "boolean"
+    },
+    "excludeReviewIds": {
+      "description": "Google review IDs to skip, for example reviews you saved in an earlier run. Partner-site review IDs are matched too. Leave empty to keep every review.",
+      "editor": "stringList",
+      "title": "Skip review IDs you already have",
+      "type": "array"
     },
     "includeContributorSummary": {
       "default": false,
       "description": "Adds one record per reviewer with their Local Guide level, points and lifetime contribution counts. These records have recordType \"contributor\".",
+      "prefill": false,
       "title": "Add a reviewer summary record",
       "type": "boolean"
     },
     "includePartnerReviews": {
       "default": false,
       "description": "Hotels on Google Maps also show reviews from partner sites such as Tripadvisor, Trip.com or Priceline. Turn on to add those reviews as separate records (recordType partnerReview), up to Max reviews per partner site, newest first. Places without partner reviews are not affected.",
+      "prefill": false,
       "title": "Add hotel reviews from partner sites (Tripadvisor, Trip.com, …)",
       "type": "boolean"
     },
     "includePhotoDetails": {
       "default": false,
       "description": "For place reviews with photos or videos, add the width, height and upload date of each one. Adds one request per photo.",
+      "prefill": false,
       "title": "Add photo details (size and upload date, slower)",
       "type": "boolean"
     },
     "includePlaceSummary": {
       "default": false,
       "description": "Adds one record per place with its rating breakdown by stars, review topics, location, contact details and how many reviews were collected. These records have recordType \"place\".",
+      "prefill": false,
       "title": "Add a place summary record",
       "type": "boolean"
     },
     "includeReviewerDetails": {
       "default": true,
       "description": "Turn off to leave out reviewer names, profile pictures, profile links and reviewer IDs from place reviews.",
+      "prefill": true,
       "title": "Include reviewer names and profiles",
       "type": "boolean"
     },
@@ -150,12 +162,14 @@
     "onlyWithPhotos": {
       "default": false,
       "description": "Keep only reviews that include photos or videos.",
+      "prefill": false,
       "title": "Only reviews with photos or videos",
       "type": "boolean"
     },
     "onlyWithText": {
       "default": false,
       "description": "Skip star-only reviews that have no written text.",
+      "prefill": false,
       "title": "Only reviews with written text",
       "type": "boolean"
     },

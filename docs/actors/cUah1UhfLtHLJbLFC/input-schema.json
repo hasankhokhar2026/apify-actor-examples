@@ -1,20 +1,32 @@
 {
+  "description": "Choose how to discover public Acquire.com startup-for-sale listings, then narrow them by financials, location and company details.",
   "properties": {
+    "businessModels": {
+      "default": [],
+      "description": "Case-insensitive words to find in the seller's business-model tags, e.g. Subscription, B2B, B2C, DTC, Ecommerce, Services, Marketplace, Freemium, Licensing.",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Business model keywords",
+      "type": "array"
+    },
     "categories": {
-      "description": "Filter listings by Acquire category. Matches the listing's `Category` field (case-insensitive). Leave empty for all categories.",
+      "default": [],
+      "description": "Only return these Acquire categories. Legacy names such as Mobile Apps, Services and Digital Marketing Agency are matched to their current category.",
       "editor": "select",
       "items": {
         "enum": [
           "SaaS",
           "Ecommerce",
-          "Content",
-          "Services",
           "Mobile Apps",
+          "Agency",
+          "Services",
+          "Digital",
           "Marketplace",
-          "Newsletter",
-          "Digital Marketing Agency",
-          "Shopify App",
           "AI",
+          "Content",
+          "Newsletter",
+          "Shopify App",
+          "Crypto",
           "Other"
         ],
         "type": "string"
@@ -26,222 +38,410 @@
     },
     "connectedMetrics": {
       "default": false,
-      "description": "When checked, only return listings whose SSR summary shows connected analytics (e.g. Google Analytics, Stripe).",
-      "editor": "checkbox",
-      "title": "Connected Metrics Only",
+      "description": "Keep listings that show a Google Analytics traffic section.",
+      "prefill": false,
+      "sectionCaption": "Extra signals",
+      "sectionDescription": "Optional badges and document signals published on the listing.",
+      "title": "Only listings with Google Analytics",
       "type": "boolean"
     },
     "customers": {
-      "description": "Only return listings whose `Customers` count is >= this value. Parsed from the SSR summary (e.g. '1.2K' -> 1200).",
+      "description": "Minimum customer count. When Acquire shows a range such as 1,000-5,000, the lower bound is compared.",
       "editor": "number",
+      "maximum": 1000000000,
       "minimum": 0,
-      "title": "Min Customers",
+      "title": "Min customers",
       "type": "integer"
     },
-    "hideUnderOffer": {
+    "financingTypes": {
+      "default": [],
+      "description": "Only return listings funded in one of these ways.",
+      "editor": "select",
+      "items": {
+        "enum": [
+          "Bootstrapped",
+          "Loans",
+          "Crowdfunding",
+          "Angel investment",
+          "Grants",
+          "Other"
+        ],
+        "type": "string"
+      },
+      "prefill": [],
+      "title": "Financing",
+      "type": "array",
+      "uniqueItems": true
+    },
+    "includePublicDetails": {
       "default": false,
-      "description": "When checked, skip listings whose status is `Under Offer`.",
-      "editor": "checkbox",
-      "title": "Hide Under-Offer Listings",
+      "description": "Fetch public startup details from Acquire's Firebase documents for returned listings: marketplace status and status history, first-listed date, financial snapshot, recast SDE, Google Analytics traffic, views/favorites/conversations, file-count breakdown and seller flags. Adds up to two extra requests per returned listing.",
+      "prefill": false,
+      "sectionCaption": "Public details enrichment",
+      "sectionDescription": "Optional additive fields from Acquire's public Firebase documents. The public listing page remains the primary source.",
+      "title": "Include public Firebase details",
       "type": "boolean"
     },
     "locations": {
-      "description": "Optional country / region substrings to match against the listing's location field (case-insensitive).",
+      "default": [],
+      "description": "Country or region names to match against the listing's location, case-insensitive. Leave empty for every location.",
       "editor": "stringList",
       "prefill": [],
-      "title": "Locations",
+      "title": "Seller locations",
       "type": "array"
     },
     "maxAge": {
-      "description": "Only return listings where the business is at most this many years old.",
+      "description": "Maximum age derived from the listing's Date Founded year.",
       "editor": "number",
+      "maximum": 100,
       "minimum": 0,
-      "title": "Max Business Age (years)",
+      "title": "Max business age (years)",
       "type": "integer"
     },
     "maxAnnualGrowthRate": {
-      "description": "Only return listings whose annual growth rate percentage is <= this value.",
+      "description": "Upper bound for the year-over-year revenue growth percentage.",
       "editor": "number",
-      "title": "Max Annual Growth Rate (%)",
-      "type": "integer"
+      "maximum": 100000,
+      "minimum": -100,
+      "title": "Max annual growth rate (%)",
+      "type": "number"
     },
     "maxAnnualRecurringRevenue": {
-      "description": "Only return listings with annual revenue <= this value.",
+      "description": "Backward-compatible name for a maximum annual / TTM revenue.",
       "editor": "number",
+      "maximum": 1000000000,
       "minimum": 0,
-      "title": "Max Annual Revenue (USD)",
+      "title": "Max annual revenue (USD)",
+      "type": "integer"
+    },
+    "maxArr": {
+      "description": "Skip listings whose disclosed annual recurring revenue is above this amount.",
+      "editor": "number",
+      "maximum": 1000000000,
+      "minimum": 0,
+      "title": "Max ARR (USD)",
+      "type": "integer"
+    },
+    "maxConcurrency": {
+      "default": 3,
+      "description": "How many public listing pages to request at once. Higher values finish large runs faster; lower values are gentler on the source.",
+      "editor": "number",
+      "maximum": 8,
+      "minimum": 1,
+      "prefill": 2,
+      "title": "Concurrent page fetches",
+      "type": "integer"
+    },
+    "maxCustomers": {
+      "description": "Maximum customer count, using the lower bound of a displayed range.",
+      "editor": "number",
+      "maximum": 1000000000,
+      "minimum": 0,
+      "title": "Max customers",
       "type": "integer"
     },
     "maxItems": {
-      "default": 3,
-      "description": "Maximum number of listings to return.",
+      "default": 50,
+      "description": "Maximum number of listing records to save. The public marketplace currently has about 1,250 listings.",
       "editor": "number",
-      "maximum": 500,
+      "maximum": 1250,
       "minimum": 1,
       "prefill": 3,
-      "title": "Max Items",
+      "title": "Max listings",
       "type": "integer"
     },
     "maxPrice": {
-      "description": "Only return listings with asking price <= this value.",
+      "description": "Skip listings whose asking price is above this amount.",
       "editor": "number",
+      "maximum": 1000000000,
       "minimum": 0,
-      "title": "Max Asking Price (USD)",
+      "title": "Max asking price (USD)",
       "type": "integer"
     },
     "maxProfitMultiple": {
-      "description": "Only return listings where askingPrice / annualProfit <= this value.",
+      "description": "Upper bound for asking price divided by trailing-twelve-month net profit.",
       "editor": "number",
+      "maximum": 10000,
       "minimum": 0,
-      "title": "Max Profit Multiple",
-      "type": "integer"
+      "title": "Max profit multiple",
+      "type": "number"
     },
     "maxRevenueMultiple": {
-      "description": "Only return listings where askingPrice / annualRevenue <= this value.",
+      "description": "Upper bound for asking price divided by trailing-twelve-month revenue.",
       "editor": "number",
+      "maximum": 10000,
       "minimum": 0,
-      "title": "Max Revenue Multiple",
+      "title": "Max revenue multiple",
+      "type": "number"
+    },
+    "maxScan": {
+      "default": 0,
+      "description": "Optional safety cap on how many public pages to inspect before stopping. 0 means no extra cap beyond maxItems and the sitemap.",
+      "editor": "number",
+      "maximum": 1250,
+      "minimum": 0,
+      "prefill": 0,
+      "title": "Max listings to inspect",
       "type": "integer"
     },
     "maxTTMGrossRevenue": {
-      "description": "Trailing-twelve-month gross revenue maximum.",
+      "description": "Skip listings whose trailing-twelve-month gross revenue is above this amount.",
       "editor": "number",
+      "maximum": 1000000000,
       "minimum": 0,
-      "title": "Max TTM Gross Revenue (USD)",
+      "title": "Max TTM revenue (USD)",
       "type": "integer"
     },
     "maxTTMNetProfit": {
-      "description": "Trailing-twelve-month net profit maximum.",
+      "description": "Skip listings whose trailing-twelve-month net profit is above this amount.",
       "editor": "number",
-      "minimum": 0,
-      "title": "Max TTM Net Profit (USD)",
+      "maximum": 1000000000,
+      "minimum": -1000000000,
+      "title": "Max TTM profit (USD)",
       "type": "integer"
     },
     "minAge": {
-      "description": "Only return listings where the business is at least this many years old (derived from the Founded / Date Founded field).",
+      "description": "Minimum age derived from the listing's Date Founded year.",
       "editor": "number",
+      "maximum": 100,
       "minimum": 0,
-      "title": "Min Business Age (years)",
+      "title": "Min business age (years)",
       "type": "integer"
     },
     "minAnnualGrowthRate": {
-      "description": "Only return listings whose annual growth rate percentage is >= this value. Parsed from the SSR `Growth Rate` / `Annual Growth` field when present.",
+      "description": "Year-over-year revenue growth percentage. Use a negative value to include declining listings.",
       "editor": "number",
-      "title": "Min Annual Growth Rate (%)",
-      "type": "integer"
+      "maximum": 100000,
+      "minimum": -100,
+      "title": "Min annual growth rate (%)",
+      "type": "number"
     },
     "minAnnualRecurringRevenue": {
-      "description": "Only return listings with annual revenue >= this value.",
+      "description": "Backward-compatible name for a minimum annual / TTM revenue. Prefer Min TTM revenue for new tasks.",
       "editor": "number",
+      "maximum": 1000000000,
       "minimum": 0,
-      "title": "Min Annual Revenue (USD)",
+      "title": "Min annual revenue (USD)",
+      "type": "integer"
+    },
+    "minArr": {
+      "description": "Skip listings whose disclosed annual recurring revenue (ARR) is below this amount. Listings without ARR are skipped.",
+      "editor": "number",
+      "maximum": 1000000000,
+      "minimum": 0,
+      "title": "Min ARR (USD)",
+      "type": "integer"
+    },
+    "minPnlDocuments": {
+      "description": "Minimum number of P&L documents the listing says are available.",
+      "editor": "number",
+      "maximum": 100,
+      "minimum": 0,
+      "title": "Min P&L documents",
       "type": "integer"
     },
     "minPrice": {
-      "description": "Only return listings with asking price >= this value.",
+      "description": "Skip listings whose asking price is below this amount. Listings shown as Open to offers have no numeric price and are skipped by a price filter.",
       "editor": "number",
+      "maximum": 1000000000,
       "minimum": 0,
-      "title": "Min Asking Price (USD)",
+      "sectionCaption": "Listing filters",
+      "sectionDescription": "Optional deal filters. Leave a field empty to skip it.",
+      "title": "Min asking price (USD)",
       "type": "integer"
     },
     "minProfitMultiple": {
-      "description": "Only return listings where askingPrice / annualProfit >= this value.",
+      "description": "Asking price divided by trailing-twelve-month net profit.",
       "editor": "number",
+      "maximum": 10000,
       "minimum": 0,
-      "title": "Min Profit Multiple",
-      "type": "integer"
+      "title": "Min profit multiple",
+      "type": "number"
     },
     "minRevenueMultiple": {
-      "description": "Only return listings where askingPrice / annualRevenue >= this value.",
+      "description": "Asking price divided by trailing-twelve-month revenue.",
       "editor": "number",
+      "maximum": 10000,
       "minimum": 0,
-      "title": "Min Revenue Multiple",
+      "title": "Min revenue multiple",
+      "type": "number"
+    },
+    "minSupportingFiles": {
+      "description": "Minimum number of supporting files the listing says are available.",
+      "editor": "number",
+      "maximum": 1000,
+      "minimum": 0,
+      "title": "Min supporting files",
       "type": "integer"
     },
     "minTTMGrossRevenue": {
-      "description": "Trailing-twelve-month gross revenue minimum. Applied against the listing's annual revenue when TTM-specific data isn't exposed on the public SSR page.",
+      "description": "Skip listings whose trailing-twelve-month gross revenue is below this amount. Listings without a disclosed figure are skipped.",
       "editor": "number",
+      "maximum": 1000000000,
       "minimum": 0,
-      "title": "Min TTM Gross Revenue (USD)",
+      "title": "Min TTM revenue (USD)",
       "type": "integer"
     },
     "minTTMNetProfit": {
-      "description": "Trailing-twelve-month net profit minimum. Applied against the listing's annual profit when TTM-specific data isn't exposed on the public SSR page.",
+      "description": "Skip listings whose trailing-twelve-month net profit is below this amount. Negative values are accepted.",
       "editor": "number",
-      "minimum": 0,
-      "title": "Min TTM Net Profit (USD)",
+      "maximum": 1000000000,
+      "minimum": -1000000000,
+      "title": "Min TTM profit (USD)",
       "type": "integer"
     },
+    "mode": {
+      "default": "auto",
+      "description": "How to find listings. `auto` uses your URLs when present, a text search when `searchQuery` is set, and otherwise walks the public sitemap.",
+      "editor": "select",
+      "enum": [
+        "auto",
+        "browse",
+        "search",
+        "byUrls"
+      ],
+      "enumTitles": [
+        "Auto (recommended)",
+        "Browse the public marketplace",
+        "Search by keyword",
+        "Scrape specific listing URLs"
+      ],
+      "prefill": "auto",
+      "title": "Mode",
+      "type": "string"
+    },
+    "openToOffersOnly": {
+      "default": false,
+      "description": "Keep listings whose asking price is shown as Open to offers.",
+      "prefill": false,
+      "title": "Only open-to-offers listings",
+      "type": "boolean"
+    },
+    "priceReducedOnly": {
+      "default": false,
+      "description": "Keep listings showing a Price Reduced badge. No live instance was observed in the full public inventory at the last check.",
+      "prefill": false,
+      "title": "Only price-reduced listings",
+      "type": "boolean"
+    },
     "proxyConfiguration": {
-      "default": {
-        "apifyProxyCountry": "US",
-        "apifyProxyGroups": [
-          "RESIDENTIAL"
-        ],
-        "useApifyProxy": true
-      },
-      "description": "Apify proxy. Residential US recommended for reliable SSR fetches; datacenter often works too.",
+      "description": "Leave empty to connect directly. The actor automatically tries a free platform datacenter proxy if the source starts blocking the run.",
       "editor": "proxy",
-      "prefill": {
-        "apifyProxyCountry": "US",
-        "apifyProxyGroups": [
-          "RESIDENTIAL"
-        ],
-        "useApifyProxy": true
-      },
-      "title": "Proxy Configuration",
+      "sectionCaption": "Connection",
+      "sectionDescription": "Optional connection override. No proxy is required.",
+      "title": "Proxy configuration (optional)",
       "type": "object"
     },
     "recastFinancials": {
       "default": false,
-      "description": "When checked, only return listings whose SSR `Financials` section indicates seller-recast financials.",
-      "editor": "checkbox",
-      "title": "Recast Financials Only",
+      "description": "Keep listings whose public page shows the Recast financials badge or highlight card.",
+      "prefill": false,
+      "title": "Only recast-financials listings",
       "type": "boolean"
+    },
+    "searchQuery": {
+      "description": "Words to look for in the listing title, description, highlights, category, location, business model, tech stack, competitors and assets (mode=search). All words must appear.",
+      "editor": "textfield",
+      "prefill": "",
+      "title": "Keyword search",
+      "type": "string"
     },
     "sortBy": {
       "default": "newest",
-      "description": "How listings from the public sitemap are traversed. `newest`/`oldest` use the sitemap `lastmod`; `price-low`/`price-high` sort after filtering.",
+      "description": "How to order matches. Newest and oldest use the sitemap's last-updated time. Financial sorts scan the candidate set and put listings without that figure last.",
       "editor": "select",
       "enum": [
         "newest",
         "oldest",
+        "sitemap",
         "price-low",
-        "price-high"
+        "price-high",
+        "revenue-low",
+        "revenue-high",
+        "profit-low",
+        "profit-high",
+        "growth-low",
+        "growth-high",
+        "revenue-multiple-low",
+        "revenue-multiple-high",
+        "profit-multiple-low",
+        "profit-multiple-high"
       ],
       "enumTitles": [
-        "Newest first",
-        "Oldest first",
-        "Price: low to high",
-        "Price: high to low"
+        "Newest updated first",
+        "Oldest updated first",
+        "Sitemap order",
+        "Asking price: low to high",
+        "Asking price: high to low",
+        "TTM revenue: low to high",
+        "TTM revenue: high to low",
+        "TTM profit: low to high",
+        "TTM profit: high to low",
+        "Growth: low to high",
+        "Growth: high to low",
+        "Revenue multiple: low to high",
+        "Revenue multiple: high to low",
+        "Profit multiple: low to high",
+        "Profit multiple: high to low"
       ],
-      "title": "Sort Order",
+      "prefill": "newest",
+      "sectionCaption": "Output",
+      "sectionDescription": "How many listings to return and how to order them.",
+      "title": "Sort order",
       "type": "string"
+    },
+    "teamSizes": {
+      "default": [],
+      "description": "Only return these team-size bands.",
+      "editor": "select",
+      "items": {
+        "enum": [
+          "Just me (1)",
+          "Small (2-20)",
+          "Medium (21-100)"
+        ],
+        "type": "string"
+      },
+      "prefill": [],
+      "sectionCaption": "Company and content filters",
+      "sectionDescription": "Optional filters over the company overview and acquisition details.",
+      "title": "Team size",
+      "type": "array",
+      "uniqueItems": true
+    },
+    "techStack": {
+      "default": [],
+      "description": "Case-insensitive technologies to find in the seller's tech-stack list, e.g. WordPress, Shopify, Laravel, React, AWS.",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Tech stack keywords",
+      "type": "array"
     },
     "underAdvisory": {
       "default": false,
-      "description": "When checked, only return listings the SSR flags as being under Acquire advisory support.",
-      "editor": "checkbox",
-      "title": "Under Advisory Only",
+      "description": "Keep listings carrying Acquire's Guided by Acquire advisory badge.",
+      "prefill": false,
+      "title": "Only Guided by Acquire listings",
       "type": "boolean"
     },
     "urls": {
-      "description": "Direct Acquire.com listing URLs. Accepts canonical /startup/<slug> (preferred, public SSR pages) or app /startups/<id> URLs. When provided, overrides category / filter search.",
+      "default": [],
+      "description": "Specific Acquire.com listing links (mode=byUrls). Accepts /public/<slug> and /startup/<slug> links, with or without https://app.acquire.com. Sign-in URLs (/startups/<id>) cannot be read anonymously.",
       "editor": "stringList",
       "prefill": [],
-      "title": "Direct Listing URLs (optional)",
+      "title": "Listing URLs",
       "type": "array"
     },
     "verifiedBusiness": {
       "default": false,
-      "description": "When checked, only return listings Acquire flags as verified.",
-      "editor": "checkbox",
-      "title": "Verified Only",
+      "description": "Keep listings carrying Acquire's public Verified business highlight (US entities with a verified address and incorporation certificate).",
+      "prefill": false,
+      "title": "Only verified businesses",
       "type": "boolean"
     }
   },
   "required": [],
   "schemaVersion": 1,
-  "title": "Acquire.com Startup Marketplace Scraper Input",
+  "title": "Acquire.com Public Startup Listings Input",
   "type": "object"
 }
