@@ -1,0 +1,200 @@
+{
+  "description": "Search Eniro.se (Sweden's business & phone directory) listings by keyword/category and city, or fetch full business profiles by direct URL/ID.",
+  "properties": {
+    "businessUrls": {
+      "default": [],
+      "description": "Direct Eniro business URLs (e.g. https://www.eniro.se/<name>/<id>/firma) or bare numeric business IDs to fetch, one per line. Use the 'sourceUrl' or 'businessId' field from search results.",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "prefill": [
+        "14839034"
+      ],
+      "title": "Business profile URLs or IDs (mode=detail)",
+      "type": "array"
+    },
+    "city": {
+      "default": "Stockholm",
+      "description": "Swedish city or town to search in, e.g. 'Stockholm', 'Göteborg', 'Malmö' (mode=search). Leave empty to search all of Sweden nationwide.",
+      "editor": "textfield",
+      "prefill": "Stockholm",
+      "title": "City",
+      "type": "string"
+    },
+    "customQuery": {
+      "description": "Free-text category or keyword not in the curated list above, e.g. 'skorstensfejare' or 'IT-konsult' (mode=search). Takes priority over 'Category / keyword' when set. Use correct Swedish spelling with å/ä/ö -- Eniro's own search does not fuzzy-match ASCII-folded keywords.",
+      "editor": "textfield",
+      "title": "Custom category/keyword (overrides selection above)",
+      "type": "string"
+    },
+    "fetchDetails": {
+      "default": false,
+      "description": "For each search result, also visit its business profile page to collect rating, opening hours, website, description, coordinates, images, and full category chain. Slower, but far richer output (mode=search).",
+      "prefill": false,
+      "title": "Fetch full business profiles",
+      "type": "boolean"
+    },
+    "hasWebsiteOnly": {
+      "default": false,
+      "description": "Only return businesses that list a website (mode=search). Requires 'Fetch full business profiles' to be enabled, since websites only appear on detail pages.",
+      "prefill": false,
+      "title": "Only businesses with a website",
+      "type": "boolean"
+    },
+    "maxItems": {
+      "default": 50,
+      "description": "Hard cap on the number of business records to return.",
+      "maximum": 1000,
+      "minimum": 1,
+      "prefill": 50,
+      "title": "Max items",
+      "type": "integer"
+    },
+    "minRating": {
+      "default": "",
+      "description": "Only return businesses rated at least this many stars, e.g. '4' for 4.0+ (mode=search). Requires 'Fetch full business profiles' to be enabled, since ratings only appear on detail pages.",
+      "editor": "select",
+      "enum": [
+        "",
+        "1",
+        "2",
+        "3",
+        "4",
+        "5"
+      ],
+      "enumTitles": [
+        "No minimum (all ratings)",
+        "1+ stars",
+        "2+ stars",
+        "3+ stars",
+        "4+ stars",
+        "5 stars only"
+      ],
+      "prefill": "",
+      "title": "Minimum rating",
+      "type": "string"
+    },
+    "mode": {
+      "default": "search",
+      "description": "What to fetch: search by keyword/category & city, or fetch full business profiles from direct URLs/IDs.",
+      "editor": "select",
+      "enum": [
+        "search",
+        "detail"
+      ],
+      "enumTitles": [
+        "Search by keyword/category & city",
+        "Fetch business profiles by URL/ID"
+      ],
+      "prefill": "search",
+      "title": "Mode",
+      "type": "string"
+    },
+    "query": {
+      "default": "pizzeria",
+      "description": "Business category or keyword to search for. Pick a common category from the list, or choose 'Custom' and type your own in the field below (mode=search).",
+      "editor": "select",
+      "enum": [
+        "custom",
+        "pizzeria",
+        "restaurang",
+        "frisör",
+        "tandläkare",
+        "advokat",
+        "elektriker",
+        "rörmokare",
+        "målare",
+        "snickare",
+        "bilverkstad",
+        "hotell",
+        "blomsterhandlare",
+        "revisor",
+        "fastighetsmäklare",
+        "veterinär",
+        "optiker",
+        "apotek",
+        "gym",
+        "massage",
+        "byggföretag",
+        "taxi",
+        "flyttfirma",
+        "trädgårdsanläggning",
+        "försäkringsmäklare",
+        "hundfrisör",
+        "glasmästare",
+        "låssmed",
+        "redovisningsbyrå",
+        "kafé",
+        "bageri"
+      ],
+      "enumTitles": [
+        "Custom category/keyword (type below)",
+        "Pizzeria",
+        "Restaurang (Restaurant)",
+        "Frisör (Hairdresser)",
+        "Tandläkare (Dentist)",
+        "Advokat (Lawyer)",
+        "Elektriker (Electrician)",
+        "Rörmokare (Plumber)",
+        "Målare (Painter)",
+        "Snickare (Carpenter)",
+        "Bilverkstad (Car repair)",
+        "Hotell (Hotel)",
+        "Blomsterhandlare (Florist)",
+        "Revisor (Accountant)",
+        "Fastighetsmäklare (Real estate agent)",
+        "Veterinär (Veterinarian)",
+        "Optiker (Optician)",
+        "Apotek (Pharmacy)",
+        "Gym (Gym)",
+        "Massage",
+        "Byggföretag (Construction company)",
+        "Taxi",
+        "Flyttfirma (Moving company)",
+        "Trädgårdsanläggning (Landscaping)",
+        "Försäkringsmäklare (Insurance broker)",
+        "Hundfrisör (Dog groomer)",
+        "Glasmästare (Glazier)",
+        "Låssmed (Locksmith)",
+        "Redovisningsbyrå (Accounting firm)",
+        "Kafé (Cafe)",
+        "Bageri (Bakery)"
+      ],
+      "prefill": "pizzeria",
+      "title": "Category / keyword",
+      "type": "string"
+    },
+    "ratedOnly": {
+      "default": false,
+      "description": "Only return businesses that have at least one customer rating (mode=search). Requires 'Fetch full business profiles' to be enabled, since ratings only appear on detail pages.",
+      "prefill": false,
+      "title": "Only businesses with ratings",
+      "type": "boolean"
+    },
+    "sortBy": {
+      "default": "relevance",
+      "description": "How to order the returned results (mode=search). Applied after fetching, since Eniro's own listing order is relevance-based.",
+      "editor": "select",
+      "enum": [
+        "relevance",
+        "rating",
+        "name"
+      ],
+      "enumTitles": [
+        "Relevance (Eniro's default order)",
+        "Rating (highest rated first)",
+        "Name (A-Z)"
+      ],
+      "prefill": "relevance",
+      "title": "Sort order",
+      "type": "string"
+    }
+  },
+  "required": [
+    "mode"
+  ],
+  "schemaVersion": 1,
+  "title": "Eniro Scraper Input",
+  "type": "object"
+}

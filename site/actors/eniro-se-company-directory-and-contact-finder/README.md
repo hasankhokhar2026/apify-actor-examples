@@ -1,0 +1,125 @@
+# Eniro.se Company Directory & Contact Finder
+
+Eniro.se is Sweden's largest business and phone directory, covering everything from neighbourhood pizzerias to law firms, but its site only lets you browse results page by page. This actor searches Eniro by category or keyword and city — or across all of Sweden at once — and can enrich each hit with the fuller profile data (hours, website, rating, organization number) that only lives on the business's own page.
+
+## What this actor does
+
+- Searches by category/keyword plus a Swedish city, or leaves the city blank to search the whole country at once.
+- Optionally visits each result's own profile page to add rating, review count, opening hours, website, email, social links, organization number, description, and coordinates.
+- Filters search results to businesses with a minimum rating, at least one rating, or a listed website — each of which needs the profile-page fetch turned on, since those values live there.
+- Sorts output by Eniro's own relevance order, by rating, or alphabetically by name.
+- Only includes a field when Eniro actually published that value for the business; nothing is sent as `null`, `""`, or an empty list.
+
+## Output per business
+
+| Field | Description |
+|---|---|
+| `businessId` | Eniro's internal business ID |
+| `name` | Business name |
+| `businessType` | schema.org business type, e.g. `Restaurant`, `HairSalon`, `Dentist` |
+| `category` / `categories` | Eniro's category and its full category chain (profile lookups only) |
+| `street`, `postalCode`, `city`, `region`, `country` | Postal address fields |
+| `phone` | Phone number |
+| `email` | Business email, when Eniro has one on file (profile lookups only) |
+| `website` | Business website (profile lookups only) |
+| `organizationNumber` | Swedish organization number, formatted `NNNNNN-NNNN` (profile lookups only) |
+| `facebookUrl`, `instagramUrl`, `linkedinUrl`, `twitterUrl`, `youtubeUrl`, `tiktokUrl` | Social profile links Eniro has on file (profile lookups only) |
+| `description` | Short business description (profile lookups only) |
+| `keywords` | Services, brands, or tags associated with the business (profile lookups only) |
+| `rating`, `reviewCount` | Average rating (1–5) and number of reviews (profile lookups only) |
+| `openingHours` | Weekly schedule as `{day, opens, closes}` entries, with Swedish day names |
+| `openingHoursText` | One-line summary of the weekly schedule |
+| `latitude`, `longitude` | Coordinates (profile lookups only) |
+| `mapUrl` | Eniro map/directions link |
+| `logoUrl` / `logoUrlOriginal` | Logo image, re-hosted for a stable link, with the original Eniro URL kept alongside it |
+| `images` / `imagesOriginal` | Photo gallery, re-hosted the same way (profile lookups only) |
+| `searchQuery`, `searchCity` | The query and city that produced this result (search mode only) |
+| `sourceUrl` | Canonical Eniro business page URL |
+| `recordType` | Always `"business"` |
+| `scrapedAt` | UTC timestamp of the scrape |
+
+## Input
+
+| Field | Type | Default | Description |
+|---|---|---|---|
+| `mode` | string | `search` | `search` (keyword/category + city) or `detail` (direct URL/ID lookup). |
+| `query` | string | `pizzeria` | Category or keyword to search, chosen from a curated list, or `custom` to use `customQuery`. |
+| `customQuery` | string | – | Free-text category or keyword, overriding `query` when set. Use correct å/ä/ö spelling. |
+| `city` | string | `Stockholm` | Swedish city to search in; leave empty to search all of Sweden. |
+| `sortBy` | string | `relevance` | Result order: `relevance`, `rating`, or `name`. |
+| `minRating` | string | – (no minimum) | Keep only businesses rated at least this many stars (`1`–`5`); needs `fetchDetails`. |
+| `ratedOnly` | boolean | `false` | Keep only businesses with at least one rating; needs `fetchDetails`. |
+| `hasWebsiteOnly` | boolean | `false` | Keep only businesses with a listed website; needs `fetchDetails`. |
+| `fetchDetails` | boolean | `false` | Visit each result's own profile page for rating, hours, website, coordinates, and images. |
+| `businessUrls` | array | `[]` | Eniro business URLs or numeric IDs to fetch directly, in `detail` mode. |
+| `maxItems` | integer | `50` | Maximum number of records to return. |
+
+### Example: category search in one city
+
+```json
+{
+  "mode": "search",
+  "query": "frisör",
+  "city": "Göteborg",
+  "maxItems": 50
+}
+```
+
+### Example: nationwide search with full profiles
+
+```json
+{
+  "mode": "search",
+  "customQuery": "veterinär",
+  "city": "",
+  "fetchDetails": true,
+  "minRating": "4",
+  "maxItems": 30
+}
+```
+
+### Example: direct profile lookup
+
+```json
+{
+  "mode": "detail",
+  "businessUrls": [
+    "https://www.eniro.se/pizzeria+florida+viskafors/14839034/firma",
+    "14839034"
+  ]
+}
+```
+
+## Use cases
+
+- **B2B lead generation** — build contact lists for a trade or service category in a specific Swedish city.
+- **Local SEO auditing** — check how a client's or competitor's listing appears, including hours, rating, and category chain.
+- **Market mapping** — compare how many businesses of a given category exist across different cities or nationwide.
+- **CRM enrichment** — look up phone, address, and website for businesses you already have names for, via `detail` mode.
+- **Franchise site selection** — survey existing competitors in a category before choosing where to open a new location.
+
+## FAQ
+
+**Where does the data come from?**
+The public Eniro.se directory — Sweden's business and phone listing site.
+
+**Why are `rating`, `website`, and `openingHours` sometimes missing from search results?**
+Those fields only exist on a business's own profile page. Turn on `fetchDetails` to fetch them; without it, you only get what's visible on the search-results list (name, address, phone, business type).
+
+**Can I search the whole country instead of one city?**
+Yes — leave `city` blank and the search isn't scoped to any particular city.
+
+**What day names appear in `openingHours`?**
+Swedish weekday names: `Måndag`, `Tisdag`, `Onsdag`, `Torsdag`, `Fredag`, `Lördag`, `Söndag`.
+
+**Are individual written reviews included?**
+No. Eniro's pages expose an aggregate `rating` and `reviewCount` but not per-review text, so that's all this actor can return.
+
+**Why don't all businesses have an email, website, or social links?**
+Those fields are only included when the business itself has listed that information with Eniro — plenty of listings simply don't have one or more of them on file.
+
+**Why would an unusual keyword still return results?**
+Eniro's own search doesn't require an exact category match; an unrecognized keyword can still return a broader set of businesses for the city instead of zero results. That's Eniro's search behavior, not something this actor controls — a curated category or a real Swedish business term gives the most precise match.
+
+**Is this affiliated with Eniro?**
+No. This actor reads Eniro's public pages and is not affiliated with, endorsed by, or connected to Eniro Sverige AB in any way.

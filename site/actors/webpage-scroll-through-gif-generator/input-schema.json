@@ -1,0 +1,83 @@
+{
+  "description": "Render a webpage in a headless browser, scroll it from top to bottom while capturing frames, and assemble the frames into an animated GIF.",
+  "properties": {
+    "cookieWindowSelector": {
+      "description": "CSS selector of a cookie-consent dismiss button to click after page load (e.g. button[aria-label=\"Accept all\"]). Skipped if not found.",
+      "editor": "textfield",
+      "nullable": true,
+      "title": "Cookie consent selector",
+      "type": "string"
+    },
+    "downscaleFactor": {
+      "default": 2,
+      "description": "Resize each frame down by this integer factor before encoding (1 = no resize, 2 = half, 3 = third). Lower factors → larger but sharper GIF.",
+      "maximum": 8,
+      "minimum": 1,
+      "title": "Downscale factor",
+      "type": "integer"
+    },
+    "frameDelayMs": {
+      "default": 200,
+      "description": "Per-frame delay encoded into the GIF.",
+      "maximum": 5000,
+      "minimum": 50,
+      "title": "Frame delay (ms)",
+      "type": "integer"
+    },
+    "maxFrames": {
+      "default": 60,
+      "description": "Hard cap on frames captured (protects very-long pages from runaway runs).",
+      "maximum": 300,
+      "minimum": 2,
+      "title": "Max frames",
+      "type": "integer"
+    },
+    "scrollStepPx": {
+      "default": 250,
+      "description": "How many pixels to scroll between each captured frame.",
+      "maximum": 2000,
+      "minimum": 50,
+      "title": "Scroll step (px)",
+      "type": "integer"
+    },
+    "url": {
+      "description": "The URL of the webpage to capture.",
+      "editor": "textfield",
+      "pattern": "^https?://",
+      "prefill": "https://apify.com",
+      "title": "Page URL",
+      "type": "string"
+    },
+    "viewportHeight": {
+      "default": 720,
+      "description": "Browser viewport height.",
+      "maximum": 1440,
+      "minimum": 240,
+      "title": "Viewport height (px)",
+      "type": "integer"
+    },
+    "viewportWidth": {
+      "default": 1280,
+      "description": "Browser viewport width.",
+      "maximum": 2560,
+      "minimum": 320,
+      "title": "Viewport width (px)",
+      "type": "integer"
+    },
+    "waitToLoadPageMs": {
+      "default": 0,
+      "description": "Additional milliseconds to wait after networkidle before capturing the first frame. Use for sites with async/sliding content.",
+      "editor": "number",
+      "maximum": 30000,
+      "minimum": 0,
+      "title": "Extra wait after load (ms)",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "url"
+  ],
+  "schemaVersion": 1,
+  "title": "GIF Scroll Animation Input",
+  "type": "object"
+}

@@ -1,0 +1,90 @@
+{
+  "description": "Search Cdiscount products, get product details, or find top sellers on France's largest e-commerce platform.",
+  "properties": {
+    "keyword": {
+      "default": "smartphone",
+      "description": "Keyword to search for (mode=search or topSellers).",
+      "editor": "textfield",
+      "prefill": "smartphone",
+      "title": "Search keyword",
+      "type": "string"
+    },
+    "maxItems": {
+      "default": 20,
+      "description": "Maximum number of products to return.",
+      "maximum": 500,
+      "minimum": 1,
+      "prefill": 20,
+      "title": "Max items",
+      "type": "integer"
+    },
+    "maxPrice": {
+      "description": "Filter products with price at or below this value.",
+      "maximum": 100000,
+      "minimum": 0,
+      "title": "Max price (EUR)",
+      "type": "integer"
+    },
+    "minPrice": {
+      "description": "Filter products with price at or above this value.",
+      "maximum": 100000,
+      "minimum": 0,
+      "title": "Min price (EUR)",
+      "type": "integer"
+    },
+    "mode": {
+      "default": "search",
+      "description": "What to scrape.",
+      "editor": "select",
+      "enum": [
+        "search",
+        "productDetails",
+        "topSellers"
+      ],
+      "enumTitles": [
+        "Search products by keyword",
+        "Get product details by URL",
+        "Browse top sellers / best sellers"
+      ],
+      "prefill": "search",
+      "title": "Mode",
+      "type": "string"
+    },
+    "productUrls": {
+      "default": [],
+      "description": "List of Cdiscount product page URLs to scrape.",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Product URLs (mode=productDetails)",
+      "type": "array"
+    },
+    "sortBy": {
+      "default": "relevance",
+      "description": "Sort order for search results.",
+      "editor": "select",
+      "enum": [
+        "relevance",
+        "price_asc",
+        "price_desc",
+        "rating",
+        "new"
+      ],
+      "enumTitles": [
+        "Most relevant",
+        "Price: low to high",
+        "Price: high to low",
+        "Best rated",
+        "Newest first"
+      ],
+      "prefill": "relevance",
+      "title": "Sort by",
+      "type": "string"
+    }
+  },
+  "required": [
+    "mode"
+  ],
+  "schemaVersion": 1,
+  "title": "Cdiscount Scraper Input",
+  "type": "object"
+}
