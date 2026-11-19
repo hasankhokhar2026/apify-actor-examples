@@ -1,5 +1,5 @@
 {
-  "description": "Search Farfetch luxury fashion products by keyword, brand, gender, or sale items.",
+  "description": "Search Farfetch luxury fashion products by keyword, brand, gender, or sale items across regional storefronts.",
   "properties": {
     "brand": {
       "description": "Brand name to filter by (e.g. 'gucci', 'prada', 'balenciaga').",
@@ -9,7 +9,7 @@
     },
     "gender": {
       "default": "",
-      "description": "Filter by gender.",
+      "description": "Filter by gender. When omitted, listing modes use the women's storefront.",
       "editor": "select",
       "enum": [
         "",
@@ -35,12 +35,58 @@
       "title": "Search keyword",
       "type": "string"
     },
+    "locale": {
+      "default": "nz",
+      "description": "Regional Farfetch storefront. Prices and availability are local to the selected market.",
+      "editor": "select",
+      "enum": [
+        "nz",
+        "uk",
+        "fr",
+        "de",
+        "it",
+        "es",
+        "ie",
+        "hk",
+        "mo",
+        "cn",
+        "sg",
+        "jp",
+        "kr",
+        "au",
+        "ca",
+        "ae",
+        "tw"
+      ],
+      "enumTitles": [
+        "New Zealand (USD)",
+        "United Kingdom (GBP)",
+        "France (EUR)",
+        "Germany (EUR)",
+        "Italy (EUR)",
+        "Spain (EUR)",
+        "Ireland (EUR)",
+        "Hong Kong (HKD)",
+        "Macau (HKD)",
+        "Mainland China (CNY)",
+        "Singapore (SGD)",
+        "Japan (JPY)",
+        "South Korea (KRW)",
+        "Australia (AUD)",
+        "Canada (CAD)",
+        "United Arab Emirates (AED)",
+        "Taiwan (TWD)"
+      ],
+      "prefill": "nz",
+      "title": "Storefront / currency",
+      "type": "string"
+    },
     "maxItems": {
       "default": 20,
       "description": "Maximum number of products to return.",
       "maximum": 1000,
       "minimum": 1,
-      "prefill": 20,
+      "prefill": 3,
       "title": "Max items",
       "type": "integer"
     },
@@ -68,7 +114,7 @@
     },
     "productUrls": {
       "default": [],
-      "description": "Farfetch product page URLs to scrape.",
+      "description": "Farfetch product page URLs to scrape. Both farfetch.com and farfetch.cn URLs are accepted and converted to the selected storefront.",
       "editor": "stringList",
       "prefill": [],
       "title": "Product URLs (mode=productDetails)",

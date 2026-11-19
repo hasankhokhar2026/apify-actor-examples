@@ -1,29 +1,43 @@
 # Farfetch Luxury Fashion Price & Discount Extractor
 
-Farfetch aggregates luxury fashion from boutiques and designer brands worldwide into one marketplace. This actor searches Farfetch by keyword, brand, gender, new arrivals or sale items — or looks up specific product URLs directly — and returns each item as a structured record with pricing, discount, color and designer details.
+Farfetch brings together luxury fashion from boutiques and designer brands around the world. This actor searches Farfetch by keyword, brand, gender, new arrivals or sale items across regional storefronts — or looks up specific product URLs directly — and returns each product as a structured record with local pricing, discount, sizes, color, images and product details.
 
 ## What this actor does
 
 - Searches Farfetch products by free-text keyword
-- Browses all products from a specific luxury brand
+- Browses a luxury brand's catalogue
 - Lists new arrivals and currently discounted sale items, optionally filtered by gender
-- Fetches full product details for a list of specific Farfetch product URLs
-- Empty fields are omitted from records — a field only appears when Farfetch actually published that data for the product
+- Fetches full product details for a list of Farfetch product URLs
+- Supports 17 regional storefronts with local currencies, including USD, GBP, EUR, HKD, CNY, SGD, JPY and more
+- Empty fields are omitted — a field only appears when Farfetch published that data for the product
+
+## Data source
+
+Farfetch's global `farfetch.com` host blocks automated HTTP access. This actor uses Farfetch's publicly accessible regional storefronts on `farfetch.cn`, which expose the same global product IDs through server-rendered product pages — no login, account or cookies required.
+
+Prices, discounts and availability are local to the selected storefront. Use the `locale` input to choose the market and currency. For USD, use `nz`; for GBP, `uk`; for EUR, choose `fr`, `de`, `it`, `es` or `ie`.
 
 ## Output per product
 
 - `productId` — Farfetch's internal product ID
 - `brand` — brand/designer label on the product
 - `title` — product name
-- `price` — current (final/discounted) price
+- `price` — current (final/discounted) price in the selected storefront's currency
 - `originalPrice` — pre-discount price, when the item is on sale
 - `discountPercent` — discount percentage, when on sale
-- `currency` — currency code (e.g. USD, EUR, GBP), matching the locale of the request
+- `discountAmount` — absolute amount saved, when on sale
+- `currency` — currency code (USD, GBP, EUR, HKD, CNY, …)
+- `locale` — storefront used for the record
 - `color` — product color
-- `gender` — target gender category
-- `category` — product category (e.g. bags, shoes)
+- `gender` — women, men or kids, when known
+- `category` — product category, when present
 - `imageUrl` — primary product image URL
-- `productUrl` — direct link to the Farfetch product page
+- `images` — additional product image URLs
+- `productUrl` — direct link to the product on the selected storefront
+- `sizes` — available size labels, when listed
+- `variants` — per-size records with `sku`, `size`, `price`, `originalPrice`, `discountPercent`, `discountAmount`, `currency` and `availability` (product-details mode)
+- `description` — product description (product-details mode)
+- `availability` — stock status such as `InStock`
 - `designer` — designer name, when distinct from `brand`
 - `material` — product material, when listed
 - `mode` — which scraping mode produced this record
@@ -34,39 +48,43 @@ Farfetch aggregates luxury fashion from boutiques and designer brands worldwide 
 | Field | Type | Default | Description |
 |---|---|---|---|
 | `mode` | string | `search` | `search`, `searchByBrand`, `newIn`, `saleItems`, or `productDetails` |
+| `locale` | string | `nz` | Storefront and currency: `nz` (USD), `uk` (GBP), `fr`/`de`/`it`/`es`/`ie` (EUR), `hk`/`mo` (HKD), `cn` (CNY), `sg` (SGD), `jp` (JPY), `kr` (KRW), `au` (AUD), `ca` (CAD), `ae` (AED), `tw` (TWD) |
 | `keyword` | string | `Gucci bag` | Search keyword, used in `search` mode |
 | `brand` | string | – | Brand name/slug to filter by (e.g. `gucci`, `prada`), used in `searchByBrand` mode |
-| `gender` | string | – (all genders) | `women`, `men`, or `kids` |
-| `productUrls` | array | `[]` | Farfetch product page URLs to scrape directly, used in `productDetails` mode |
+| `gender` | string | – (women for listings) | `women`, `men`, or `kids` |
+| `productUrls` | array | `[]` | Farfetch product page URLs to scrape directly, used in `productDetails` mode. Both `.com` and `.cn` URLs are accepted. |
 | `maxItems` | integer | `20` | Maximum number of products to return (1–1000) |
 
-### Example: keyword search
+### Example: keyword search in USD
 
 ```json
 {
   "mode": "search",
   "keyword": "Prada shoes",
+  "locale": "nz",
   "maxItems": 30
 }
 ```
 
-### Example: everything from one designer, women's only
+### Example: everything from one designer, women's only, GBP
 
 ```json
 {
   "mode": "searchByBrand",
   "brand": "balenciaga",
   "gender": "women",
+  "locale": "uk",
   "maxItems": 50
 }
 ```
 
-### Example: current sale items for men
+### Example: current sale items for men in EUR
 
 ```json
 {
   "mode": "saleItems",
   "gender": "men",
+  "locale": "fr",
   "maxItems": 40
 }
 ```
@@ -76,6 +94,7 @@ Farfetch aggregates luxury fashion from boutiques and designer brands worldwide 
 ```json
 {
   "mode": "productDetails",
+  "locale": "nz",
   "productUrls": [
     "https://www.farfetch.com/shopping/women/gucci-gg-marmont-shoulder-bag-item-12345678.aspx"
   ]
@@ -84,17 +103,17 @@ Farfetch aggregates luxury fashion from boutiques and designer brands worldwide 
 
 ## Use cases
 
-- **Price monitoring** — track a designer's catalog for price changes and new discounts
+- **Price monitoring** — track a designer's catalog for price changes and new discounts in a chosen market
 - **Trend forecasting** — scan new arrivals by gender to see what's launching across brands
 - **Sale tracking** — pull `saleItems` regularly to catch deep discounts as they appear
-- **Competitive benchmarking** — compare the same designer's pricing against other luxury retailers
-- **Catalog enrichment** — feed a list of product URLs through `productDetails` to backfill price, color and material data
+- **Competitive benchmarking** — compare the same designer's pricing across Farfetch storefronts
+- **Catalog enrichment** — feed product URLs through `productDetails` to backfill price, sizes, color and material data
 
 ## FAQ
 
-**Do I need a Farfetch account?** No — only publicly available product listings are read; no login or cookies are required.
+**Do I need a Farfetch account or cookies?** No. Only publicly available product listings are read; no login, account or cookies are required.
 
-**What currency are prices shown in?** Whatever currency Farfetch returns for the request, reflected in the `currency` field — check it rather than assuming USD.
+**Which market and currency should I use?** Use the `locale` that matches your target market. `nz` returns USD, `uk` returns GBP, `fr`/`de`/`it`/`es`/`ie` return EUR, and the other options return their local currencies. Farfetch prices are market-local, so the same product can cost different amounts in different storefronts.
 
 **Why does a product have no `originalPrice` or `discountPercent`?** Those fields only appear when the item is actually marked down; full-price items simply don't carry a discount.
 
@@ -104,4 +123,8 @@ Farfetch aggregates luxury fashion from boutiques and designer brands worldwide 
 
 **How many products can one run return?** Up to `maxItems`, capped at 1000.
 
-**Is this affiliated with Farfetch?** No. This is an independent, third-party actor that reads Farfetch's publicly available product pages; it is not operated by or affiliated with Farfetch.com.
+**Why do some category URLs return no products?** Farfetch uses different category paths in different markets (for example, men's shoes is `shoes-2`, not `shoes-1`). Keyword search, brand pages, new arrivals and sale pages are the most consistent ways to browse.
+
+**Are prices the same as farfetch.com US?** No. The global `farfetch.com` host blocks automated access, so this actor uses Farfetch's regional storefronts. Prices and availability are local to the selected storefront and should be treated as market-specific.
+
+**Is this affiliated with Farfetch?** No. This is an independent, third-party actor that reads Farfetch's publicly available product pages; it is not operated by or affiliated with Farfetch.

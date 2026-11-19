@@ -1,11 +1,13 @@
 # B2B Lead Discovery by Job Title & Location
 
-Find public LinkedIn profiles by job title, location, and company using cookieless Yahoo search. No login, cookies, or API keys are required.
+Find public LinkedIn profiles by job title, location, and company using cookieless search. Yahoo Search is tried first; if it returns a block, 5xx, empty result page, or no results, the same query page is retried through DuckDuckGo Lite. No login, cookies, or API keys are required.
 
 ## What this actor does
 
 - Builds `site:linkedin.com/in` queries from one or more job titles, optionally combined with locations and company names.
 - Parses public search-result snippets into lead records and deduplicates by canonical LinkedIn profile URL.
+- Falls back to DuckDuckGo Lite when Yahoo is blocked, returns 5xx, or returns an empty page. The fallback unwraps DuckDuckGo redirect links and uses the same lead schema.
+- Stops calling Yahoo for the rest of the run after repeated hard failures, while keeping the fallback active.
 - Adds honest data-quality flags instead of presenting inferred values as verified facts.
 - Optionally adds an explicitly unverified email-pattern guess. It never claims a mailbox was verified.
 
@@ -18,8 +20,9 @@ Find public LinkedIn profiles by job title, location, and company using cookiele
 | `company` | Company when exposed by the card, snippet, or title. |
 | `location` | Location when exposed by the card, snippet, or title. |
 | `linkedinUrl` | Canonical `https://www.linkedin.com/in/<slug>` URL. |
-| `snippet` | Public Yahoo search snippet (truncated). |
+| `snippet` | Public search snippet (truncated). |
 | `sourceQuery` | Query that produced the lead. |
+| `sourceProvider` | `yahoo` or `duckduckgo_lite`: the provider that supplied the row. |
 | `position` | Position on the results page (stable ordering). |
 | `scrapedAt` | ISO 8601 UTC timestamp. |
 | `dataQuality` | `title`, `company`, and `location` are `verified`, `inferred`, `missing`, or `mismatch`; `partial` is added when the query plan was capped or a query failed. |
@@ -31,12 +34,12 @@ Fields that cannot be resolved are omitted rather than filled with placeholders.
 
 | Field | Type | Default | Description |
 |---|---|---|---|
-| `jobTitles` | array | required | Titles to search, e.g. `["CEO", "VP of Marketing"]` (max 10). |
+| `jobTitles` | array | – (required) | Titles to search, e.g. `["CEO", "VP of Marketing"]` (max 10). |
 | `locations` | array | `[]` | Locations such as `"Austin, Texas"` (max 10). |
 | `companyNames` | array | `[]` | Companies to target (max 5). |
 | `maxLeads` | integer | `25` | Maximum leads to return (1-100). |
 | `includeEmailGuess` | boolean | `false` | Add unverified name/domain email guesses. |
-| `proxyConfiguration` | object | none | Optional Apify proxy. Yahoo may block datacenter IPs. |
+| `proxyConfiguration` | object | none | Optional Apify proxy. Yahoo and DuckDuckGo Lite may block datacenter IPs. |
 
 Hard limits: 24 queries per run, 3 pages per query, 5 leads per company.
 
@@ -52,9 +55,11 @@ Hard limits: 24 queries per run, 3 pages per query, 5 leads per company.
 
 ## Data quality and limits
 
-- Yahoo Search is an unofficial, cookieless source and may block or throttle requests. The actor retries and can use Apify proxy, but runs can return partial results.
+- Yahoo Search and DuckDuckGo Lite are unofficial, cookieless sources and may block or throttle requests. The actor retries, can use an Apify proxy, and reports which provider supplied each lead.
+- If Yahoo fails and DuckDuckGo Lite also fails, the run fails with a diagnostic status listing both provider errors (for example `upstream_5xx` and `ddg_blocked_202`) instead of an unexplained "no leads" result.
+- DuckDuckGo Lite is used for the same query page. Its pagination offsets differ from Yahoo's; if a later page is blocked, the fallback attempts the equivalent lite page and may return fewer rows.
 - Location fill is roughly 50% and location precision among filled rows is about 75%; some snippets omit location entirely.
-- Titles/companies can be inferred from headlines. Check `dataQuality` before using a row for outreach.
+- Titles/companies can be inferred from headlines. Check `dataQuality` and `sourceProvider` before using a row for outreach.
 - Verified email and phone are not available from public search alone; email guesses are unverified pattern guesses, not mailbox checks.
 
 ## Use cases
