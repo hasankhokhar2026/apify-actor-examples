@@ -4,61 +4,91 @@
 
 # Dallas TX Building Permit Records & Contractor Lookup
 
-The City of Dallas publishes its historical building permit filings on its open data portal, but filtering across tens of thousands of rows by hand isn't practical. This actor turns the Dallas building-permit dataset into filtered, structured records — by permit type, land use, ZIP code, contractor, date range, declared value, or an exact permit number.
+Dallas publishes two different building-permit archives: a live permit feed that is updated daily, and a large historical GIS extract that reaches back to 1971. This actor reads both, so you can work with current contractor leads and decades of permit history in one place.
+
+## Two complementary permit sources
+
+| Source | Coverage | Best for |
+|---|---|---|
+| City of Dallas Open Data (live) | Permits issued from January 2018 to today; updated daily | Contractor names and phone numbers, current filings, ZIP-level lead lists |
+| City of Dallas GIS archive | Permits created 1971-02-01 through 2024-11-12 | Long-run research, permit status, council districts, units, zoning, map coordinates |
+
+Live records and historical records share the same core fields. Historical records add status, activity, category, council district, units, land-use code, zoning, and latitude/longitude. Live records add contractor details and Mapsco grid references. Permit-number lookups check both sources and merge the two records when the same permit exists in each.
 
 ## What this actor does
 
-- Browses and filters Dallas permits by type, land use, ZIP code, keyword matches on work description/address/contractor/Mapsco grid, issued-date range, and declared value or area range.
-- Looks up specific permits directly when you already know their permit numbers.
-- Sorts results by declared value, area, or issued date, in either direction.
-- Offers curated dropdowns for the most common permit types, land uses, and ZIP codes, with free-text "contains" fields to reach values outside those lists.
-- Leaves a field out of a record whenever the source filing never recorded it, rather than filling it with a placeholder.
+- Searches live permits by permit type, land use, ZIP code, contractor text, Mapsco grid, work-description text, street-address text, issue-date range, declared value, and area.
+- Searches historical permits by coarse permit type, activity, status, category, council district, ZIP code, land-use text, work-description text, street-address text, issue-date range, value, and area.
+- Sorts live results by value, area, or issue date, and historical results by issue date, application date, value, area, or units.
+- Looks up exact permit numbers across both sources and merges their fields, so a historical permit can gain status and coordinates while a live permit keeps its contractor information.
+- Offers complete dropdowns for every finite value published by each source, plus contains-match overrides where a field has too many values for a practical dropdown.
+- Omits any field the original filing never recorded instead of emitting a placeholder.
+- Requires no login, cookie, API key, or proxy setup.
 
 ## Output per permit
 
-| Field | Description |
-|---|---|
-| `permitNumber` | Dallas permit number |
-| `permitType` | Permit type as filed, e.g. `Building (BU) Single Family New Construction` |
-| `issuedDate` | Issue date in `YYYY-MM-DD` format |
-| `workDescription` | Free-text description of the work |
-| `landUse` | Zoning / land-use classification |
-| `streetAddress` | Address the permit was filed for |
-| `zipCode` | ZIP code of the address |
-| `value` | Declared project value in USD, when recorded |
-| `area` | Declared project area in square feet, when recorded |
-| `contractor` | Contractor name, address, and phone as filed |
-| `contractorPhone` | Phone number pulled out of the `contractor` field, when present |
-| `mapsco` | Dallas Mapsco grid reference |
-| `sourceUrl` | Link to this permit's record in the Dallas Open Data API |
-| `recordType` | Always `"buildingPermit"` |
-| `scrapedAt` | UTC timestamp of the scrape |
+| Field | Availability | Description |
+|---|---|---|
+| `permitNumber` | Both | Dallas permit number |
+| `permitType` | Both | Permit type as published by the source |
+| `activity` | Historical | Work activity, e.g. `(A) New Construction` or `(B) Alteration` |
+| `status` | Historical | Status when the City extracted the GIS layer in November 2024 |
+| `issuedDate` | Both | Issue date in `YYYY-MM-DD` format |
+| `createdDate` | Historical | Application/creation date in `YYYY-MM-DD` format |
+| `workDescription` | Both | Free-text description of the permitted work |
+| `landUse` | Both | Land-use classification |
+| `streetAddress` | Both | Address the permit was filed for |
+| `zipCode` | Both | Dallas-area ZIP code |
+| `value` | Both | Declared project value in USD, when recorded |
+| `area` | Both | Declared project area in square feet, when recorded |
+| `units` | Historical | Number of dwelling units, when recorded |
+| `contractor` | Live | Contractor name, address, and phone exactly as filed |
+| `contractorPhone` | Live | Phone number extracted from the contractor text |
+| `mapsco` | Live | Dallas Mapsco grid reference |
+| `permitCategory` | Historical | `Single Family`, `Multi Family`, or `Commercial` |
+| `councilDistrict` | Historical | Dallas City Council district (1-14) |
+| `landUseCode` | Historical | City land-use code |
+| `zoning` | Historical | Zoning classification from the GIS layer |
+| `latitude` | Historical | Permit point latitude (WGS84) |
+| `longitude` | Historical | Permit point longitude (WGS84) |
+| `sourceUrl` | Both | Link to the record in the source API |
+| `dataSource` | Both | Which source (or merged pair) produced the record |
+| `recordType` | Both | Always `buildingPermit` |
+| `scrapedAt` | Both | UTC timestamp of the scrape |
 
 ## Input
 
 | Field | Type | Default | Description |
 |---|---|---|---|
-| `mode` | string | `search` | `search` to browse and filter, or `byPermitNumbers` to look up exact permits. |
-| `permitType` | string | – (Any) | One exact permit type from a curated list of the 45 most common of 137 total types. |
-| `permitTypeCustom` | string | – | Free-text contains-match for a permit type outside the dropdown; takes precedence over `permitType`. |
-| `landUse` | string | – (Any) | One exact land-use classification from a curated list of the 45 most common of 189 total uses. |
-| `landUseCustom` | string | – | Free-text contains-match for a land use outside the dropdown; takes precedence over `landUse`. |
-| `zipCode` | string | – (Any) | One Dallas-area ZIP code to restrict results to. |
-| `workDescriptionKeyword` | string | – | Keep only permits whose work description contains this text. |
-| `streetAddressKeyword` | string | – | Keep only permits whose street address contains this text. |
-| `contractorKeyword` | string | – | Keep only permits whose contractor field contains this text. |
-| `mapscoKeyword` | string | – | Keep only permits whose Mapsco grid reference contains this text. |
-| `issuedDateFrom` | string | – | Earliest issue date to include, `YYYY-MM-DD`. |
-| `issuedDateTo` | string | – | Latest issue date to include, `YYYY-MM-DD`. |
-| `minValue` | integer | – | Lowest declared permit value (USD) to include. |
-| `maxValue` | integer | – | Highest declared permit value (USD) to include. |
-| `minArea` | integer | – | Smallest declared area (sq ft) to include. |
-| `maxArea` | integer | – | Largest declared area (sq ft) to include. |
-| `sortBy` | string | `default` | `default`, `valueHighToLow`, `valueLowToHigh`, `areaHighToLow`, `areaLowToHigh`, `issuedDateNewestFirst`, or `issuedDateOldestFirst`. |
-| `permitNumbers` | array | `[]` | Exact permit numbers to look up in `byPermitNumbers` mode. |
-| `maxItems` | integer | `50` | Maximum number of records to return. |
+| `mode` | string | `search` | `search` for live permits, `historicalPermits` for the 1971-2024 archive, or `byPermitNumbers` for exact lookups across both. |
+| `permitType` | string | `— (any)` | One exact live permit type from the complete 167-value list. |
+| `permitTypeCustom` | string | `—` | Contains-match on the live permit type; takes precedence over `permitType`. |
+| `landUse` | string | `— (any)` | One exact live land use from the complete 194-value list. |
+| `landUseCustom` | string | `—` | Contains-match on the live land use; takes precedence over `landUse`. |
+| `zipCode` | string | `— (any)` | One Dallas-area ZIP code; applies to live and historical modes. |
+| `workDescriptionKeyword` | string | `—` | Keep permits whose work description contains this text. |
+| `streetAddressKeyword` | string | `—` | Keep permits whose street address contains this text. |
+| `contractorKeyword` | string | `—` | Keep live permits whose contractor text contains this text. |
+| `mapscoKeyword` | string | `—` | Keep live permits whose Mapsco grid contains this text. |
+| `hasContractor` | boolean | `false` | Keep only live permits that name a contractor. |
+| `issuedDateFrom` | string | `—` | Earliest issue date to include, `YYYY-MM-DD`. |
+| `issuedDateTo` | string | `—` | Latest issue date to include, `YYYY-MM-DD`. |
+| `minValue` | integer | `—` | Lowest declared permit value (USD) to include. |
+| `maxValue` | integer | `—` | Highest declared permit value (USD) to include. |
+| `minArea` | integer | `—` | Smallest declared area (sq ft) to include. |
+| `maxArea` | integer | `—` | Largest declared area (sq ft) to include. |
+| `sortBy` | string | `default` | Live-mode ordering: `default`, `valueHighToLow`, `valueLowToHigh`, `areaHighToLow`, `areaLowToHigh`, `issuedDateNewestFirst`, or `issuedDateOldestFirst`. |
+| `historicalPermitType` | string | `— (any)` | One coarse historical permit type, e.g. `Building (BU)`. |
+| `historicalActivity` | string | `— (any)` | One historical activity value. |
+| `historicalStatus` | string | `— (any)` | One historical permit status. |
+| `historicalCategory` | string | `— (any)` | `Single Family`, `Multi Family`, or `Commercial`. |
+| `councilDistrict` | string | `— (any)` | One Dallas council district, 1-14. |
+| `historicalLandUseKeyword` | string | `—` | Contains-match on the historical land-use description. |
+| `historicalSortBy` | string | `issuedDateNewestFirst` | Historical ordering: issue date, application date, value, area, or units, in either direction. |
+| `permitNumbers` | array | `[]` | Exact permit numbers to fetch. Live records are checked first; historical records fill missing numbers and merge extra fields. |
+| `maxItems` | integer | `50` | Maximum number of records to return per run; up to 10,000. To collect more, split by smaller date ranges, permit types, or council districts and combine the datasets. |
 
-### Example: new single-family construction
+### Example: live new single-family construction
 
 ```json
 {
@@ -68,57 +98,87 @@ The City of Dallas publishes its historical building permit filings on its open 
 }
 ```
 
-### Example: high-value permits in one ZIP code
+### Example: live contractor leads in one ZIP code
 
 ```json
 {
   "mode": "search",
   "zipCode": "75201",
+  "hasContractor": true,
   "minValue": 500000,
   "sortBy": "valueHighToLow",
   "maxItems": 100
 }
 ```
 
-### Example: lookup by permit number
+### Example: historical issued commercial alterations
+
+```json
+{
+  "mode": "historicalPermits",
+  "historicalPermitType": "Building (BU)",
+  "historicalActivity": "(B) Alteration",
+  "historicalCategory": "Commercial",
+  "historicalStatus": "Issued",
+  "councilDistrict": "11",
+  "issuedDateFrom": "2024-01-01",
+  "issuedDateTo": "2024-11-12",
+  "historicalSortBy": "valueHighToLow",
+  "maxItems": 100
+}
+```
+
+### Example: lookup by permit number across both sources
 
 ```json
 {
   "mode": "byPermitNumbers",
-  "permitNumbers": ["2003133024", "1904171125"]
+  "permitNumbers": ["2003133024", "2411126010", "7100163037"]
 }
 ```
 
 ## Use cases
 
-- **Contractor lead generation** — find which contractors filed recent permits for a project type you serve.
-- **Neighborhood development research** — track new construction, additions, and renovations by ZIP code or land use.
-- **Property due diligence** — check whether permitted work was ever filed for a specific address.
-- **Market sizing** — total declared permit value or area across a permit type or ZIP code to gauge building activity.
-- **Civic and academic research** — study Dallas development patterns across permit types and time.
+- **Contractor lead generation** - find live permits with a named contractor for the trades and neighborhoods you serve.
+- **Neighborhood development research** - compare recent filings with historical construction patterns by ZIP, council district, or land use.
+- **Property due diligence** - check whether a specific address or permit number appears in either Dallas archive.
+- **Market sizing** - total declared permit value, area, or dwelling units across a type, category, or district.
+- **Civic and academic research** - study five decades of Dallas permitting, including final status and geographic distribution.
 
-## FAQ
+## Data notes
 
-**Where does this data come from?**
-The City of Dallas's own open data portal, specifically its Building Permits dataset.
+**How current is the live data?**
+The City of Dallas Open Data feed is updated daily and currently holds permits issued from January 2018 onward. The record count changes as new permits are added.
 
-**How recent is the data?**
-The dataset covers permits issued between January 2018 and August 2020. Dallas migrated active permit tracking to a different system after that and hasn't updated this historical dataset since — the permit records themselves are complete and accurate for that window, but there's no newer data to pull.
+**How current is the historical data?**
+The GIS archive was extracted from the City's permitting system on 2024-11-12 and is not updated. It covers permits created from 1971-02-01 through that date. The archive also contains unissued applications that never received an issue date: they are returned when your status or permit-type filter selects them, sort after issued permits on issue-date sorts, and are omitted when you filter by an issue-date range.
+
+**Why do some historical records have no `issuedDate`?**
+The GIS archive includes applications that were still in review, rejected, withdrawn, or otherwise never issued when the City extracted the layer. These rows carry their real status but no issue date, so the field is omitted instead of being shown as a placeholder.
+
+**Why do some fields appear on only some records?**
+The two archives publish different field sets. Contractor names, contractor phones, and Mapsco grids exist only in the live feed. Status, activity, category, council district, units, land-use code, zoning, and coordinates exist only in the historical layer. Fields are omitted when the source has no value.
 
 **Why do some records have no `value` or `area`?**
-Plenty of permit types — many electrical or plumbing alteration permits, for example — never had a declared dollar value or square footage filed in the first place. Rather than show a misleading `0`, the field is left off the record.
+Many alteration and trade permits never had a declared dollar value or square footage. A recorded zero is treated as "not recorded", so the field is left off rather than shown as a misleading `0`.
 
-**Why isn't ascending value/area sort just the mirror of descending sort?**
-A large share of permits have no recorded value or area at all. Sorting ascending without excluding those would put every "not recorded" permit first, so `valueLowToHigh` and `areaLowToHigh` only return permits with a real positive number, keeping the sort meaningful. Descending sort doesn't need this adjustment since those rows already fall to the bottom.
+**Why does ascending value/area sorting skip zero-valued rows?**
+A large share of permits have no recorded value or area. Sorting ascending without a floor would put every not-recorded permit first. The ascending sort therefore starts at 1, while descending sorts naturally leave those records at the bottom.
 
-**Why do some permits have no `contractor`?**
-Owner-filed or self-built projects often went through without naming a contractor in the original filing, so there's nothing to report for that field.
+**What happens when a permit exists in both archives?**
+Permit-number lookups use the live record as the primary record and fill any missing fields from the historical record. Shared fields keep the live value; historical-only fields such as `status`, `councilDistrict`, and `latitude` are added.
 
-**What's the difference between a dropdown field and its `Custom` counterpart?**
-The dropdowns cover the most common ~45 permit types and ~45 land uses out of 137 and 189 total values. If what you need isn't listed, the matching `Custom` field matches any value containing the text you type, covering the rest.
+**Are the coordinates available for live permits?**
+No. The live open-data feed publishes only a street address, ZIP code, and Mapsco grid. Coordinates come from the historical GIS layer.
 
-**Is there a location/map field?**
-No — the source data has no coordinates, only a street address, ZIP code, and Mapsco grid reference, so there's nothing accurate to populate a map field with.
+**How many records can one run return?**
+One run returns at most `maxItems` records (maximum 10,000). The live feed currently holds about 397,000 permits and the historical archive about 1.8 million, so a broad query can match far more than one run can emit. To collect a larger set, split the query into smaller date ranges, permit types, council districts, or ZIP codes and combine the datasets. Capped runs of 1,000 or more set a status message so a full run is never mistaken for an exhausted source.
+
+**Why do seven ZIP codes return no historical permits?**
+The live feed contains seven ZIP codes that have no clean rows in the 1971-2024 GIS archive: 75024, 75039, 75052, 75104, 75141, 75180, and 75270. They are missing from that snapshot (four appear only inside malformed combined ZIP values), so a historical search on one of them returns 0 records by design. The same ZIPs work in live mode.
+
+**Does the historical archive include applications that were never issued?**
+Yes. About 154,000 of the 1.8 million historical rows have no issue date because they were cancelled, rejected, still in review, or otherwise not issued when the City extracted the archive. They are returned when a status, activity, or permit-type filter selects them, sort last on issue-date sorts, and are omitted when an issue-date range is set. A small number of rows whose status is `Issued` also lack an issue date in the City's extract; the actor keeps the source status and omits the missing date rather than inventing one.
 
 **Is this affiliated with the City of Dallas?**
-No. This actor reads the City of Dallas's public open data and is not affiliated with, endorsed by, or connected to the City of Dallas in any way.
+No. This actor reads public City of Dallas data and is not affiliated with, endorsed by, or connected to the City of Dallas.

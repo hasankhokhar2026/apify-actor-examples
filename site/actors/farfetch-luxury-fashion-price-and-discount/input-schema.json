@@ -1,15 +1,160 @@
 {
-  "description": "Search Farfetch luxury fashion products by keyword, brand, gender, or sale items across regional storefronts.",
+  "description": "Search Farfetch luxury fashion by keyword, brand, category, gender, or sale items across regional storefronts.",
   "properties": {
     "brand": {
-      "description": "Brand name to filter by (e.g. 'gucci', 'prada', 'balenciaga').",
+      "description": "Brand name or slug to browse (e.g. 'gucci', 'prada', 'balenciaga').",
       "editor": "textfield",
       "title": "Brand (mode=searchByBrand)",
       "type": "string"
     },
+    "category": {
+      "default": "women/bags-purses-1",
+      "description": "Farfetch department and category to browse. Each option is a live catalog path, e.g. 'Women - Bags' or 'Men - Shoes'.",
+      "editor": "select",
+      "enum": [
+        "women/clothing-1",
+        "women/shoes-1",
+        "women/bags-purses-1",
+        "women/accessories-all-1",
+        "women/jewellery-1",
+        "women/watches-1",
+        "women/pre-owned-1",
+        "women/activewear-1",
+        "women/lingerie-hosiery-1",
+        "women/lifestyle-1",
+        "women/fine-jewellery-6",
+        "women/demi-fine-jewellery-1",
+        "men/clothing-2",
+        "men/shoes-2",
+        "men/bags-purses-2",
+        "men/accessories-all-2",
+        "men/jewellery-2",
+        "men/watches-4",
+        "men/pre-owned-2",
+        "men/activewear-2",
+        "men/underwear-socks-2",
+        "men/lifestyle-2",
+        "kids/boys-clothing-3",
+        "kids/boys-shoes-3",
+        "kids/boys-accessories-3",
+        "kids/girls-clothing-4",
+        "kids/girls-shoes-4",
+        "kids/girls-accessories-1",
+        "kids/baby-boy-clothing-5",
+        "kids/baby-boy-shoes-5",
+        "kids/baby-boy-accessories-5",
+        "kids/baby-girl-clothing-6",
+        "kids/baby-girl-shoes-6",
+        "kids/baby-girl-accessories-6",
+        "kids/teen-boy-clothing-8",
+        "kids/teen-boy-accessories-8",
+        "kids/teen-boy-shoes-1",
+        "kids/teen-girl-clothing-7",
+        "kids/teen-girl-accessories-7",
+        "kids/teen-girl-shoes-1",
+        "kids/baby-nursery-5"
+      ],
+      "enumTitles": [
+        "Women - Clothing",
+        "Women - Shoes",
+        "Women - Bags",
+        "Women - Accessories",
+        "Women - Jewellery",
+        "Women - Watches",
+        "Women - Pre-Owned",
+        "Women - Activewear",
+        "Women - Lingerie & Nightwear",
+        "Women - Homeware",
+        "Women - Fine Jewellery",
+        "Women - Demi-Fine Jewellery",
+        "Men - Clothing",
+        "Men - Shoes",
+        "Men - Bags",
+        "Men - Accessories",
+        "Men - Jewellery",
+        "Men - Watches",
+        "Men - Pre-Owned",
+        "Men - Activewear",
+        "Men - Underwear & Socks",
+        "Men - Homeware",
+        "Kids - Boys Clothing",
+        "Kids - Boys Shoes",
+        "Kids - Boys Accessories",
+        "Kids - Girls Clothing",
+        "Kids - Girls Shoes",
+        "Kids - Girls Accessories",
+        "Kids - Baby Boy Clothing",
+        "Kids - Baby Boy Shoes",
+        "Kids - Baby Boy Accessories",
+        "Kids - Baby Girl Clothing",
+        "Kids - Baby Girl Shoes",
+        "Kids - Baby Girl Accessories",
+        "Kids - Teen Boy Clothing",
+        "Kids - Teen Boy Accessories",
+        "Kids - Teen Boy Shoes",
+        "Kids - Teen Girl Clothing",
+        "Kids - Teen Girl Accessories",
+        "Kids - Teen Girl Shoes",
+        "Kids - Baby Nursery"
+      ],
+      "title": "Category (mode=category)",
+      "type": "string"
+    },
+    "colors": {
+      "default": [],
+      "description": "Only include products in these colors. Leave empty for every color.",
+      "editor": "select",
+      "items": {
+        "enum": [
+          "Black",
+          "White",
+          "Grey",
+          "Neutrals",
+          "Brown",
+          "Green",
+          "Blue",
+          "Red",
+          "Pink",
+          "Yellow",
+          "Metallic",
+          "Multicolour",
+          "Gold",
+          "Silver",
+          "Purple",
+          "Orange"
+        ],
+        "type": "string"
+      },
+      "title": "Colors",
+      "type": "array",
+      "uniqueItems": true
+    },
+    "discountRange": {
+      "default": "",
+      "description": "Only include products in this Farfetch sale-discount band. The matching value per product is saleDiscountPercent. Applies to search, brand, category, new-arrivals and sale modes.",
+      "editor": "select",
+      "enum": [
+        "",
+        "none",
+        "upTo30",
+        "30to50",
+        "50to60",
+        "60plus"
+      ],
+      "enumTitles": [
+        "Any discount",
+        "No discount",
+        "Up to 30% off",
+        "30% - 50% off",
+        "50% - 60% off",
+        "60%+ off"
+      ],
+      "title": "Discount",
+      "type": "string"
+    },
     "gender": {
       "default": "",
-      "description": "Filter by gender. When omitted, listing modes use the women's storefront.",
+      "description": "Filter by gender for search, brand, new-arrivals and sale modes. Category mode follows the department in the selected category. When omitted, listings use the women's storefront.",
       "editor": "select",
       "enum": [
         "",
@@ -29,11 +174,18 @@
     },
     "keyword": {
       "default": "Gucci bag",
-      "description": "Product keyword to search for (e.g. 'Gucci bag', 'Prada shoes').",
+      "description": "Product keyword to search for (mode=search), e.g. 'Gucci bag', 'Prada shoes'.",
       "editor": "textfield",
       "prefill": "Gucci bag",
       "title": "Search keyword",
       "type": "string"
+    },
+    "listingUrls": {
+      "default": [],
+      "description": "Farfetch category, brand, sale, set or search listing URLs. Both farfetch.com and farfetch.cn URLs are accepted; every listing starts at page 1 with 180 products per page.",
+      "editor": "stringList",
+      "title": "Listing URLs (mode=listingUrls)",
+      "type": "array"
     },
     "locale": {
       "default": "nz",
@@ -83,8 +235,8 @@
     },
     "maxItems": {
       "default": 20,
-      "description": "Maximum number of products to return.",
-      "maximum": 1000,
+      "description": "Maximum number of products to return (1-2500).",
+      "maximum": 2500,
       "minimum": 1,
       "prefill": 3,
       "title": "Max items",
@@ -97,20 +249,38 @@
       "enum": [
         "search",
         "searchByBrand",
+        "category",
         "newIn",
         "saleItems",
+        "listingUrls",
         "productDetails"
       ],
       "enumTitles": [
         "Search by keyword",
         "Browse by brand",
+        "Browse a category",
         "New arrivals",
         "Sale items",
+        "Scrape listing URLs",
         "Get product details by URLs"
       ],
       "prefill": "search",
       "title": "Mode",
       "type": "string"
+    },
+    "priceMax": {
+      "description": "Highest price to include, in the selected storefront's currency. Leave empty for no maximum.",
+      "maximum": 1000000,
+      "minimum": 0,
+      "title": "Maximum price",
+      "type": "integer"
+    },
+    "priceMin": {
+      "description": "Lowest price to include, in the selected storefront's currency. Leave empty for no minimum.",
+      "maximum": 1000000,
+      "minimum": 0,
+      "title": "Minimum price",
+      "type": "integer"
     },
     "productUrls": {
       "default": [],
@@ -119,6 +289,27 @@
       "prefill": [],
       "title": "Product URLs (mode=productDetails)",
       "type": "array"
+    },
+    "sortBy": {
+      "default": "recommended",
+      "description": "Order of listing results. Applies to search, brand, category, new-arrivals and sale modes.",
+      "editor": "select",
+      "enum": [
+        "recommended",
+        "newest",
+        "priceHighToLow",
+        "priceLowToHigh",
+        "saleHighToLow"
+      ],
+      "enumTitles": [
+        "Recommended",
+        "Newest first",
+        "Price: high to low",
+        "Price: low to high",
+        "Biggest discount first"
+      ],
+      "title": "Sort order",
+      "type": "string"
     }
   },
   "required": [

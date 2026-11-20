@@ -1,9 +1,9 @@
 {
-  "description": "Search Eniro.se (Sweden's business & phone directory) listings by keyword/category and city, or fetch full business profiles by direct URL/ID.",
+  "description": "Search Eniro.se (Sweden's business & phone directory) by keyword/category and city (or nationwide), fetch full company profiles from URLs/IDs, or scrape a list of Eniro search/profile URLs.",
   "properties": {
     "businessUrls": {
       "default": [],
-      "description": "Direct Eniro business URLs (e.g. https://www.eniro.se/<name>/<id>/firma) or bare numeric business IDs to fetch, one per line. Use the 'sourceUrl' or 'businessId' field from search results.",
+      "description": "Direct Eniro company URLs (e.g. https://www.eniro.se/<name>/<id>/firma) or bare numeric company IDs to fetch, one per line. Use the 'sourceUrl' or 'businessId' field from search results.",
       "editor": "stringList",
       "items": {
         "type": "string"
@@ -11,49 +11,89 @@
       "prefill": [
         "14839034"
       ],
-      "title": "Business profile URLs or IDs (mode=detail)",
+      "title": "Company profile URLs or IDs (mode=detail)",
       "type": "array"
     },
     "city": {
       "default": "Stockholm",
-      "description": "Swedish city or town to search in, e.g. 'Stockholm', 'Göteborg', 'Malmö' (mode=search). Leave empty to search all of Sweden nationwide.",
+      "description": "Swedish city or town to search in, e.g. 'Stockholm', 'Göteborg', 'Malmö' (mode=search). Leave empty to search all of Sweden. Ignored when 'Cities' is filled.",
       "editor": "textfield",
       "prefill": "Stockholm",
       "title": "City",
       "type": "string"
     },
     "customQuery": {
-      "description": "Free-text category or keyword not in the curated list above, e.g. 'skorstensfejare' or 'IT-konsult' (mode=search). Takes priority over 'Category / keyword' when set. Use correct Swedish spelling with å/ä/ö -- Eniro's own search does not fuzzy-match ASCII-folded keywords.",
+      "description": "Free-text category or keyword not in the curated list above, e.g. 'skorstensfejare' or 'IT-konsult' (mode=search). Takes priority over 'Category / keyword' when set. Use correct Swedish spelling with å/ä/ö -- Eniro's search does not fuzzy-match ASCII-folded keywords.",
       "editor": "textfield",
       "title": "Custom category/keyword (overrides selection above)",
       "type": "string"
     },
     "fetchDetails": {
       "default": false,
-      "description": "For each search result, also visit its business profile page to collect rating, opening hours, website, description, coordinates, images, and full category chain. Slower, but far richer output (mode=search).",
+      "description": "For each search result, also visit its company profile page to collect multiple phone numbers, email, rating counts, all opening-hours groups, category codes, promotional links, cover photo, coordinates, description, images and organization number. Slower, but far richer output (search modes).",
       "prefill": false,
-      "title": "Fetch full business profiles",
+      "title": "Fetch full company profiles",
+      "type": "boolean"
+    },
+    "hasEmailOnly": {
+      "default": false,
+      "description": "Only return companies that publish an email address (search modes). Emails appear on profile pages, so enable 'Fetch full company profiles' for this filter to find any matches.",
+      "prefill": false,
+      "title": "Only companies with an email",
+      "type": "boolean"
+    },
+    "hasPhoneOnly": {
+      "default": false,
+      "description": "Only return companies that publish at least one phone number (search modes).",
+      "prefill": false,
+      "title": "Only companies with a phone number",
       "type": "boolean"
     },
     "hasWebsiteOnly": {
       "default": false,
-      "description": "Only return businesses that list a website (mode=search). Requires 'Fetch full business profiles' to be enabled, since websites only appear on detail pages.",
+      "description": "Only return companies that list a website (search modes). Websites appear on profile pages, so enable 'Fetch full company profiles' for this filter to find any matches.",
       "prefill": false,
-      "title": "Only businesses with a website",
+      "title": "Only companies with a website",
       "type": "boolean"
+    },
+    "includeSoleTraders": {
+      "default": true,
+      "description": "Keep one-person firms that Eniro lists under the owner's personal name (e.g. 'Anders Svensson'). Turn this off for company-only lead lists; names carrying a company suffix (AB, HB, KB, förening) are always kept.",
+      "prefill": true,
+      "title": "Include sole traders",
+      "type": "boolean"
+    },
+    "locations": {
+      "default": [],
+      "description": "One or more Swedish cities/towns (mode=search), used with every search term. Leave empty to use the single 'City' field above, or to search nationwide when both are empty.",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "title": "Cities (one or more)",
+      "type": "array"
     },
     "maxItems": {
       "default": 50,
-      "description": "Hard cap on the number of business records to return.",
+      "description": "Hard cap on the number of company records to return across all terms, cities and URLs.",
       "maximum": 1000,
       "minimum": 1,
       "prefill": 50,
       "title": "Max items",
       "type": "integer"
     },
+    "maxPagesPerSearch": {
+      "default": 20,
+      "description": "Stop each search term/city after this many result pages (25 companies per page). Keeps large categories bounded.",
+      "maximum": 100,
+      "minimum": 1,
+      "prefill": 1,
+      "title": "Max pages per search",
+      "type": "integer"
+    },
     "minRating": {
       "default": "",
-      "description": "Only return businesses rated at least this many stars, e.g. '4' for 4.0+ (mode=search). Requires 'Fetch full business profiles' to be enabled, since ratings only appear on detail pages.",
+      "description": "Only return companies rated at least this many stars, e.g. '4' for 4.0+ (search modes). Unrated companies are excluded when a minimum is set.",
       "editor": "select",
       "enum": [
         "",
@@ -77,15 +117,17 @@
     },
     "mode": {
       "default": "search",
-      "description": "What to fetch: search by keyword/category & city, or fetch full business profiles from direct URLs/IDs.",
+      "description": "What to scrape: keyword/category searches, direct company profiles, or a list of Eniro search/profile URLs.",
       "editor": "select",
       "enum": [
         "search",
-        "detail"
+        "detail",
+        "urls"
       ],
       "enumTitles": [
         "Search by keyword/category & city",
-        "Fetch business profiles by URL/ID"
+        "Fetch company profiles by URL/ID",
+        "Scrape Eniro search/profile URLs"
       ],
       "prefill": "search",
       "title": "Mode",
@@ -93,7 +135,7 @@
     },
     "query": {
       "default": "pizzeria",
-      "description": "Business category or keyword to search for. Pick a common category from the list, or choose 'Custom' and type your own in the field below (mode=search).",
+      "description": "Business category or keyword to search for (mode=search). Pick a common category from the list, or choose 'Custom' and type your own in the field below. Ignored when 'Search terms' is filled.",
       "editor": "select",
       "enum": [
         "custom",
@@ -167,14 +209,30 @@
     },
     "ratedOnly": {
       "default": false,
-      "description": "Only return businesses that have at least one customer rating (mode=search). Requires 'Fetch full business profiles' to be enabled, since ratings only appear on detail pages.",
+      "description": "Only return companies that have at least one customer rating. Ratings are read from Eniro search cards when present and from the profile page when 'Fetch full company profiles' is enabled.",
       "prefill": false,
-      "title": "Only businesses with ratings",
+      "title": "Only companies with ratings",
       "type": "boolean"
+    },
+    "searchCoordinates": {
+      "description": "Optional 'latitude,longitude' point for a nearby search, e.g. '57.6346,12.8574' (mode=search). Uses Eniro's own coordinates filter; leave empty for a normal city/nationwide search.",
+      "editor": "textfield",
+      "title": "Search around coordinates (optional)",
+      "type": "string"
+    },
+    "searchTerms": {
+      "default": [],
+      "description": "One or more categories/keywords (mode=search). Every term is combined with every city below, so ['rörmokare', 'elektriker'] x ['Stockholm', 'Göteborg'] covers four searches. Leave empty to use the single 'Category / keyword' selection above.",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "title": "Search terms (one or more)",
+      "type": "array"
     },
     "sortBy": {
       "default": "relevance",
-      "description": "How to order the returned results (mode=search). Applied after fetching, since Eniro's own listing order is relevance-based.",
+      "description": "How to order the returned results (search modes). Applied after fetching, since Eniro's own listing order is relevance-based.",
       "editor": "select",
       "enum": [
         "relevance",
@@ -189,6 +247,16 @@
       "prefill": "relevance",
       "title": "Sort order",
       "type": "string"
+    },
+    "startUrls": {
+      "default": [],
+      "description": "Eniro search URLs (e.g. https://www.eniro.se/rörmokare+stockholm/företag) and/or company profile URLs (e.g. https://www.eniro.se/<name>/<id>/firma). Search URLs paginate automatically; profile URLs are fetched directly.",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "title": "Eniro search or profile URLs (mode=urls)",
+      "type": "array"
     }
   },
   "required": [

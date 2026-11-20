@@ -1,19 +1,22 @@
 # Farfetch Luxury Fashion Price & Discount Extractor
 
-Farfetch brings together luxury fashion from boutiques and designer brands around the world. This actor searches Farfetch by keyword, brand, gender, new arrivals or sale items across regional storefronts — or looks up specific product URLs directly — and returns each product as a structured record with local pricing, discount, sizes, color, images and product details.
+Farfetch brings together luxury fashion from boutiques and designer brands around the world. This actor searches Farfetch by keyword, browses a brand or a full category, lists new arrivals and sale items, or looks up specific product URLs. Every product comes back as a structured record with local pricing, discount, sizes, color, stock, category, images and product details.
 
 ## What this actor does
 
 - Searches Farfetch products by free-text keyword
-- Browses a luxury brand's catalogue
+- Browses a designer's catalogue
+- Browses live women's, men's and kids' categories — clothing, shoes, bags, accessories, jewellery, watches, pre-owned, activewear, lingerie and homeware
 - Lists new arrivals and currently discounted sale items, optionally filtered by gender
-- Fetches full product details for a list of Farfetch product URLs
+- Filters listings by color, price band, discount band and sort order
+- Scrapes any Farfetch listing URL, including sale-category and combined-filter pages
+- Fetches full product details for a list of Farfetch product URLs, including the seller/boutique and brand style code
 - Supports 17 regional storefronts with local currencies, including USD, GBP, EUR, HKD, CNY, SGD, JPY and more
 - Empty fields are omitted — a field only appears when Farfetch published that data for the product
 
 ## Data source
 
-Farfetch's global `farfetch.com` host blocks automated HTTP access. This actor uses Farfetch's publicly accessible regional storefronts on `farfetch.cn`, which expose the same global product IDs through server-rendered product pages — no login, account or cookies required.
+Farfetch's global `farfetch.com` host blocks automated HTTP access. This actor uses Farfetch's publicly accessible regional storefronts on `farfetch.cn`, which expose the same global product IDs through server-rendered product pages — no login, account or cookies required. Product pages also embed the seller (boutique) and brand style code in their hydration state, so those fields are read without extra requests.
 
 Prices, discounts and availability are local to the selected storefront. Use the `locale` input to choose the market and currency. For USD, use `nz`; for GBP, `uk`; for EUR, choose `fr`, `de`, `it`, `es` or `ie`.
 
@@ -24,22 +27,31 @@ Prices, discounts and availability are local to the selected storefront. Use the
 - `title` — product name
 - `price` — current (final/discounted) price in the selected storefront's currency
 - `originalPrice` — pre-discount price, when the item is on sale
-- `discountPercent` — discount percentage, when on sale
+- `discountPercent` — total discount percentage against `originalPrice`, when on sale
 - `discountAmount` — absolute amount saved, when on sale
+- `saleDiscountPercent` — Farfetch's sale-stage discount percentage shown on sale listings; the `discountRange` filter follows this value
 - `currency` — currency code (USD, GBP, EUR, HKD, CNY, …)
 - `locale` — storefront used for the record
-- `color` — product color
+- `color` — product color (product-details mode)
+- `condition` — `new` or `used`, from Farfetch's product condition (product-details mode)
+- `category` — deepest category in the product breadcrumb, e.g. `Shoulder Bags` (product-details mode)
+- `categories` — full category breadcrumb below the brand, e.g. `["Bags", "Shoulder Bags"]` (product-details mode)
 - `gender` — women, men or kids, when known
-- `category` — product category, when present
 - `imageUrl` — primary product image URL
-- `images` — additional product image URLs
+- `images` — all product image URLs
 - `productUrl` — direct link to the product on the selected storefront
 - `sizes` — available size labels, when listed
-- `variants` — per-size records with `sku`, `size`, `price`, `originalPrice`, `discountPercent`, `discountAmount`, `currency` and `availability` (product-details mode)
+- `variants` — per-size records with `sku`, `size`, `price`, `originalPrice`, `discountPercent`, `discountAmount`, `currency`, `availability`, `returnDays` and `returnFees` (product-details mode)
 - `description` — product description (product-details mode)
+- `boutique` — seller/boutique name published on the product page (product-details mode)
+- `styleCode` — brand style ID published on the product page (product-details mode)
 - `availability` — stock status such as `InStock`
+- `stockQuantity` — units Farfetch reports in stock for the listing item (listing modes)
+- `position` — rank of the product in the returned result order (listing modes)
+- `returnDays` — return window in days, when Farfetch publishes it
+- `returnFees` — return-fee policy, such as `FreeReturn`, when published
 - `designer` — designer name, when distinct from `brand`
-- `material` — product material, when listed
+- `material` — product material/composition, when listed
 - `mode` — which scraping mode produced this record
 - `scrapedAt` — ISO timestamp when the record was collected
 
@@ -47,13 +59,22 @@ Prices, discounts and availability are local to the selected storefront. Use the
 
 | Field | Type | Default | Description |
 |---|---|---|---|
-| `mode` | string | `search` | `search`, `searchByBrand`, `newIn`, `saleItems`, or `productDetails` |
+| `mode` | string | `search` | `search`, `searchByBrand`, `category`, `newIn`, `saleItems`, `listingUrls`, or `productDetails` |
 | `locale` | string | `nz` | Storefront and currency: `nz` (USD), `uk` (GBP), `fr`/`de`/`it`/`es`/`ie` (EUR), `hk`/`mo` (HKD), `cn` (CNY), `sg` (SGD), `jp` (JPY), `kr` (KRW), `au` (AUD), `ca` (CAD), `ae` (AED), `tw` (TWD) |
 | `keyword` | string | `Gucci bag` | Search keyword, used in `search` mode |
-| `brand` | string | – | Brand name/slug to filter by (e.g. `gucci`, `prada`), used in `searchByBrand` mode |
-| `gender` | string | – (women for listings) | `women`, `men`, or `kids` |
+| `brand` | string | – | Brand name or slug (e.g. `gucci`, `prada`), used in `searchByBrand` mode |
+| `gender` | string | – (women for listings) | `women`, `men`, or `kids` for search, brand, new-arrivals and sale modes |
+| `category` | string | `women/bags-purses-1` | Live category path for `category` mode, e.g. `women/bags-purses-1`, `men/shoes-2`, `kids/girls-clothing-4` |
+| `sortBy` | string | `recommended` | `recommended`, `newest`, `priceHighToLow`, `priceLowToHigh`, or `saleHighToLow` |
+| `colors` | array | – (all colors) | Color filter: `Black`, `White`, `Grey`, `Neutrals`, `Brown`, `Green`, `Blue`, `Red`, `Pink`, `Yellow`, `Metallic`, `Multicolour`, `Gold`, `Silver`, `Purple`, `Orange` |
+| `priceMin` | integer | – | Lowest price to include, in the storefront currency |
+| `priceMax` | integer | – | Highest price to include, in the storefront currency |
+| `discountRange` | string | – (any) | Farfetch sale-discount band: `none`, `upTo30`, `30to50`, `50to60`, or `60plus`. The matching value per product is `saleDiscountPercent`. |
+| `listingUrls` | array | `[]` | Farfetch category, brand, sale, set or search listing URLs, used in `listingUrls` mode. Both `.com` and `.cn` URLs are accepted. |
 | `productUrls` | array | `[]` | Farfetch product page URLs to scrape directly, used in `productDetails` mode. Both `.com` and `.cn` URLs are accepted. |
-| `maxItems` | integer | `20` | Maximum number of products to return (1–1000) |
+| `maxItems` | integer | `20` | Maximum number of products to return (1–2500) |
+
+`category` mode follows the department in the selected category path, so `gender` is not combined with it. The other listing modes use `gender`; when it is empty they use the women's storefront.
 
 ### Example: keyword search in USD
 
@@ -63,6 +84,33 @@ Prices, discounts and availability are local to the selected storefront. Use the
   "keyword": "Prada shoes",
   "locale": "nz",
   "maxItems": 30
+}
+```
+
+### Example: women's bags under 1,500 USD, cheapest first
+
+```json
+{
+  "mode": "category",
+  "category": "women/bags-purses-1",
+  "locale": "nz",
+  "priceMax": 1500,
+  "sortBy": "priceLowToHigh",
+  "maxItems": 50
+}
+```
+
+### Example: black or brown men's shoes on sale
+
+```json
+{
+  "mode": "category",
+  "category": "men/shoes-2",
+  "locale": "uk",
+  "colors": ["Black", "Brown"],
+  "discountRange": "30to50",
+  "sortBy": "saleHighToLow",
+  "maxItems": 40
 }
 ```
 
@@ -78,14 +126,28 @@ Prices, discounts and availability are local to the selected storefront. Use the
 }
 ```
 
-### Example: current sale items for men in EUR
+### Example: new arrivals in EUR
 
 ```json
 {
-  "mode": "saleItems",
-  "gender": "men",
+  "mode": "newIn",
+  "gender": "women",
   "locale": "fr",
+  "sortBy": "newest",
   "maxItems": 40
+}
+```
+
+### Example: scrape a filtered listing URL
+
+```json
+{
+  "mode": "listingUrls",
+  "listingUrls": [
+    "https://www.farfetch.com/uk/shopping/women/sale/bags-purses-1/items.aspx?sort=5&colour=1&price=100-2000"
+  ],
+  "locale": "uk",
+  "maxItems": 60
 }
 ```
 
@@ -103,11 +165,11 @@ Prices, discounts and availability are local to the selected storefront. Use the
 
 ## Use cases
 
-- **Price monitoring** — track a designer's catalog for price changes and new discounts in a chosen market
+- **Price monitoring** — track a designer's catalog or a whole category for price changes and new discounts in a chosen market
+- **Sale tracking** — pull sale items or discount bands regularly to catch markdowns as they appear
+- **Category research** — compare pricing and stock across women's, men's and kids' categories in different markets
 - **Trend forecasting** — scan new arrivals by gender to see what's launching across brands
-- **Sale tracking** — pull `saleItems` regularly to catch deep discounts as they appear
-- **Competitive benchmarking** — compare the same designer's pricing across Farfetch storefronts
-- **Catalog enrichment** — feed product URLs through `productDetails` to backfill price, sizes, color and material data
+- **Catalog enrichment** — feed product URLs through `productDetails` to backfill price, sizes, color, condition, category and material data
 
 ## FAQ
 
@@ -117,13 +179,21 @@ Prices, discounts and availability are local to the selected storefront. Use the
 
 **Why does a product have no `originalPrice` or `discountPercent`?** Those fields only appear when the item is actually marked down; full-price items simply don't carry a discount.
 
-**What's the difference between `brand` and `designer`?** `brand` is the label Farfetch shows on the product card; `designer` is populated separately when Farfetch's product data distinguishes a specific designer from the brand line.
+**What do `category` and `categories` mean?** Farfetch groups products in a breadcrumb below the brand. `categories` keeps the full trail and `category` is the deepest one, so a bag can come back as `["Bags", "Shoulder Bags"]` and `Shoulder Bags`.
 
-**Can I combine brand and gender filters?** Yes — set `mode` to `searchByBrand`, fill in `brand`, and set `gender` to narrow that brand's catalog to women's, men's, or kids' items.
+**What is `condition`?** Farfetch marks new products as `new` and pre-owned products as `used`. Pre-owned listings often also have a Pre-Owned category in the breadcrumb.
 
-**How many products can one run return?** Up to `maxItems`, capped at 1000.
+**Can I filter by size?** Size filtering is not exposed as an input. Farfetch's listing URL accepts only opaque internal numeric size IDs; letter sizes return a server error and the same ID means different labels on different size scales. Sizes are reported per product in `sizes` and per variant in `variants`, so filter the dataset on those fields after the run.
 
-**Why do some category URLs return no products?** Farfetch uses different category paths in different markets (for example, men's shoes is `shoes-2`, not `shoes-1`). Keyword search, brand pages, new arrivals and sale pages are the most consistent ways to browse.
+**Can I combine filters?** Yes — category, brand or search mode can be combined with `gender`, `sortBy`, `colors`, `priceMin`, `priceMax` and `discountRange` in one run.
+
+**How many products can one run return?** Up to `maxItems`, capped at 2500. Listings return up to 180 products per page and paginate until the items run out; the source has no fixed page ceiling. For more than 2500, run separate categories, brands, price bands or discount bands and combine the datasets — deduplicate on `productId`.
+
+**Do I get the boutique and brand style code?** Yes, in `productDetails` mode: `boutique` is the seller name and `styleCode` is the brand style ID. Farfetch-owned products do not publish a boutique name, so that field is omitted for those records.
+
+**Why do some category URLs return no products?** Farfetch uses different category paths in different markets. Use the `category` dropdown, which contains only verified live paths, or search by keyword or brand.
+
+**Does Farfetch publish product ratings or reviews?** No. The regional product pages carry no per-product rating, review count or review text; the "4.7/5 stars" copy is Farfetch's site-wide marketing, not a product rating. Those fields are therefore not emitted.
 
 **Are prices the same as farfetch.com US?** No. The global `farfetch.com` host blocks automated access, so this actor uses Farfetch's regional storefronts. Prices and availability are local to the selected storefront and should be treated as market-specific.
 

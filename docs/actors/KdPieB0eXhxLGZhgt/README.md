@@ -4,50 +4,135 @@
 
 # Cdiscount Product Search & Price Tracker
 
-Cdiscount is one of France's largest online marketplaces, but comparing prices or ratings across more than a handful of listings means clicking through page after page by hand. This actor turns a Cdiscount keyword search, a list of product URLs, or a top-rated-products lookup into structured product records with pricing, discount, and rating data already extracted.
+Cdiscount is France's largest home-grown marketplace, and its catalogue is spread across keyword results, category pages, seller shops and individual product pages. This actor turns any of those entry points into structured product records with price, discount, condition, seller identity and ratings, plus full specifications and customer reviews when you ask for them.
 
-## What this actor does
+The actor reads Cdiscount's own public search endpoint and product pages without a Cdiscount login, API key or proxy configuration.
 
-- Searches Cdiscount by keyword, with sort order (relevance, price, rating, newest) and a price range filter applied to the results.
-- Fetches full product pages by URL to pull brand, seller, and description alongside the pricing and rating fields.
-- Surfaces top-rated products for a keyword by reading the same search results sorted by customer rating — this mode doesn't add new fields, it just orders the results differently.
-- Computes the discount percentage itself from the current and pre-discount price whenever both are published.
-- Leaves a field out of the record entirely when Cdiscount doesn't publish it for that product, instead of sending an empty placeholder.
+## What it can scrape
 
-## Output per product
+- **Keyword search:** products for one keyword, with Cdiscount's sort orders and sidebar filters for brand, condition, delivery, seller and rating.
+- **Category and listing URLs:** browse a category, department, brand or search listing page and walk forward through its pages.
+- **Seller shops:** every product listed by a marketplace seller, by seller ID or seller page URL.
+- **Product details:** open product pages by URL or product ID for brand, description, specifications, EAN, variants, seller stats, offer counts and recent reviews.
+- **Customer reviews:** one record per review, with rating, title, text, author, date and per-criterion scores.
+- **Top sellers:** a keyword search ordered by Cdiscount's best-seller signal from the last 14 days.
+
+Search, category, seller and top-seller modes return product records with `recordType` set to `product`. Reviews mode returns `recordType` set to `review`.
+
+## Output
+
+Product records include the fields below. A field is omitted when Cdiscount does not publish it for that product, rather than being written as an empty value.
 
 | Field | Description |
 |---|---|
-| `productId` | Cdiscount's internal product identifier |
+| `recordType` | `product` or `review` |
+| `productId` | Cdiscount product reference (the part after `f-<number>-` in a product URL) |
+| `offerId` | The specific offer shown in the listing |
 | `title` | Product name |
-| `brand` | Manufacturer or brand name |
+| `brand` | Brand name, resolved once per unique brand from a lightweight product-sheet lookup |
+| `brandId` | Cdiscount numeric brand identifier |
+| `category` | Category name from the product breadcrumb |
+| `categoryPath` | Cdiscount category code path |
+| `categoryId` | Cdiscount category identifier |
+| `departmentId` | Cdiscount department identifier |
 | `price` | Current price in euros |
-| `originalPrice` | Pre-discount price in euros, when Cdiscount shows one |
-| `discountPercent` | Discount percentage, computed from `price` and `originalPrice` |
-| `rating` | Customer rating, 0–5 scale |
-| `reviewCount` | Number of customer reviews |
-| `imageUrl` | Main product image URL |
-| `productUrl` | Direct link to the Cdiscount product page |
-| `category` | Product category or department, from search results |
-| `seller` | Marketplace seller name (from `productDetails` mode) |
-| `description` | Product description text (from `productDetails` mode) |
-| `searchKeyword` | The keyword that returned this product (`search` and `topSellers` modes) |
-| `recordType` | Always `product` |
+| `priceWithoutVat` | Current price excluding VAT |
+| `currency` | `EUR` |
+| `originalPrice` | Crossed-out reference price, when shown |
+| `originalPriceType` | Cdiscount's label for the reference price, such as `comparison_price` |
+| `discountPercent` | Discount percentage calculated from `price` and `originalPrice` |
+| `discountAmount` | Saving in euros against the reference price |
+| `vatAmount` | VAT amount, when the source publishes it |
+| `condition` | Human-readable condition, such as `New` or `Refurbished - Like new` |
+| `conditionCode` | Raw condition code, such as `NEW` or `REFURBISHED_LIKE_NEW` |
+| `isNew` | Whether the offer is new |
+| `rating` | Average customer rating, 0-5 |
+| `reviewCount` | Total number of customer reviews |
+| `imageUrl` | Main product image |
+| `imageUrls` | Product image URLs, one per image view |
+| `productUrl` | Direct product page URL, including the offer ID when available |
+| `seller` | Seller name |
+| `sellerId` | Marketplace seller ID |
+| `sellerRating` | Seller rating, 0-5 |
+| `sellerRatingsCount` | Number of seller ratings |
+| `sellerSalesCount` | Seller sales count, when shown |
+| `sellerCountry` | Country the seller ships from |
+| `sellerComments` | Public seller shop description |
+| `isFreeShipping` | Whether the offer shows free delivery |
+| `shippingLabel` | Delivery label shown by Cdiscount |
+| `shippingOrigin` | Dispatch note from the product page |
+| `guaranteedDeliveryLabel` | Guaranteed-delivery label from the product page |
+| `deliveryMinDate` | Earliest estimated delivery date when `includeDelivery` is on |
+| `deliveryMaxDate` | Latest estimated delivery date when `includeDelivery` is on |
+| `deliveryModes` | Delivery and pickup options with name, price and date window |
+| `isSponsored` | Whether the placement is sponsored |
+| `isFulfilledByCdiscount` | Whether Cdiscount fulfils the order |
+| `isCdav` | Whether the offer is eligible for Cdiscount à volonté |
+| `isDownloadable` | Whether the product is a download |
+| `isAvailable` | Availability flag from the product page |
+| `isPreorder` | Whether the product is a pre-order |
+| `isTradeInEligible` | Whether trade-in is offered |
+| `maxOrderQuantity` | Maximum units accepted in one order (not the stock level) |
+| `minOrderQuantity` | Minimum order quantity |
+| `bulletPoints` | Key specification bullets as `{name, value}` objects |
+| `promotions` | Promotion names shown on the offer |
+| `promotionLabels` | Short promotion labels such as `Bon plan` |
+| `advertiser` | Sponsored advertiser name, when present |
+| `description` | Plain-text product description from the product page |
+| `marketingDescription` | Plain-text marketing block, when present |
+| `specifications` | Full characteristics table as `{group, name, value}` objects |
+| `ean` | Product EAN |
+| `manufacturerModelNumber` | Manufacturer model reference |
+| `productSheetId` | Cdiscount product sheet identifier |
+| `energyClass` | Energy label grade |
+| `repairabilityIndex` | French repairability index, out of 10 |
+| `offersCount` | Number of offers on the product page |
+| `newOffersCount` | Number of new offers |
+| `usedOffersCount` | Number of used offers |
+| `lowestNewOfferPrice` | Lowest new-offer price |
+| `lowestUsedOfferPrice` | Lowest used-offer price |
+| `variants` | Colour, size or capacity combinations with their own product ID, price and URL |
+| `breadcrumb` | Category breadcrumb as `{name, url}` objects |
+| `ratingDistribution` | Number of ratings per star value |
+| `criteriaAverages` | Average score per review criterion |
+| `recommendedCount` | Number of customers who recommend the product |
+| `reviews` | Up to five recent reviews from the product page |
+| `installments` | Eligible instalment plans |
+| `videoUrls` | Product video URLs, when published |
+| `searchKeyword` | The keyword that returned the product |
+| `page` | Result page where the product was found |
+| `rankOnPage` | Position on that page |
+| `sourceMode` | Mode that produced the record |
 | `scrapedAt` | ISO 8601 UTC timestamp of the scrape |
+
+Review records contain `reviewId`, `productId`, `productUrl`, `rating`, `title`, `text`, `author`, `date`, `publishedDate`, `productUseDate`, `lastModifiedAt`, `verifiedPurchase`, `sponsored`, `influencer`, `tester`, `communityMember`, `helpfulReview`, `positiveVotes`, `negativeVotes`, `criteriaScores`, `reviewedProduct`, `reviewSource`, `reviewSourceUrl`, `recordType` and `scrapedAt`.
 
 ## Input
 
-| Field | Type | Default | Description |
+| Parameter | Type | Default | Description |
 |---|---|---|---|
-| `mode` | string | `search` | `search` (keyword search), `productDetails` (fetch specific URLs), or `topSellers` (keyword search sorted by rating). Required. |
-| `keyword` | string | `smartphone` | Search keyword, used in `search` and `topSellers` modes. |
-| `productUrls` | array | `[]` | Cdiscount product page URLs to scrape, used in `productDetails` mode. |
-| `sortBy` | string | `relevance` | Result order for `search` mode: `relevance`, `price_asc`, `price_desc`, `rating`, or `new`. |
-| `minPrice` | integer | – | Keep only products priced at or above this value, in euros. |
-| `maxPrice` | integer | – | Keep only products priced at or below this value, in euros. |
-| `maxItems` | integer | `20` | Maximum number of products to return. |
+| `mode` | string | `search` | `search`, `category`, `seller`, `productDetails`, `reviews` or `topSellers`. Required. |
+| `keyword` | string | – | Keyword for `search` and `topSellers` (prefill: `smartphone`). Leave it empty in `category` to browse the whole listing; a value narrows that listing. |
+| `categoryUrls` | array | `[]` | Category, department, brand or search listing URLs for `category` mode. |
+| `sellerIds` | array | `[]` | Seller IDs or seller page URLs for `seller` mode. |
+| `productUrls` | array | `[]` | Product page URLs or product IDs for `productDetails` and `reviews` modes. |
+| `sortBy` | string | `relevance` | `relevance`, `price_asc`, `price_desc`, `rating`, `bestsellers_7d` or `bestsellers_14d`. The legacy `new` value is accepted and mapped to `relevance` (or `bestsellers_14d` in `topSellers` mode). |
+| `minPrice` | number | – | Keep products at or above this price in euros. |
+| `maxPrice` | number | – | Keep products at or below this price in euros. |
+| `brands` | array | `[]` | Brand filters, for example `["Samsung", "Apple"]`. |
+| `condition` | string | `any` | `any`, `new` or `used_refurbished`. |
+| `freeShippingOnly` | boolean | `false` | Keep only free-delivery offers. |
+| `soldByCdiscountOnly` | boolean | `false` | Keep only offers sold directly by Cdiscount. |
+| `minRating` | string | `0` | `0`, `3`, `4` or `5`. The 3+ and 4+ filters run on Cdiscount; 5 is checked on returned records. In `reviews` mode it keeps only reviews at that rating or higher. |
+| `includeSponsored` | boolean | `true` | Include sponsored placements. |
+| `includeDetails` | boolean | `false` | Open each product page to add description, specifications, EAN, seller stats, variants and recent reviews. |
+| `includeDelivery` | boolean | `false` | Add Cdiscount's delivery window and shipping options to each product record. One extra request per product. |
+| `maxItems` | integer | `20` | Maximum product records to return. A single listing is capped at 101 pages; use multiple listing URLs or filters for larger runs. |
+| `maxReviews` | integer | `50` | Maximum reviews per product in `reviews` mode. |
 
-### Example: keyword search with a price range
+## Examples
+
+Search with a price range and a sort order:
 
 ```json
 {
@@ -60,58 +145,101 @@ Cdiscount is one of France's largest online marketplaces, but comparing prices o
 }
 ```
 
-### Example: specific product pages
+Browse a category with brand and condition filters:
+
+```json
+{
+  "mode": "category",
+  "categoryUrls": [
+    "https://www.cdiscount.com/telephonie/telephone-mobile/l-14404.html"
+  ],
+  "brands": ["Samsung"],
+  "condition": "new",
+  "maxItems": 100
+}
+```
+
+Read a seller's shop:
+
+```json
+{
+  "mode": "seller",
+  "sellerIds": ["421705"],
+  "maxItems": 50
+}
+```
+
+Read product pages by URL or product ID:
 
 ```json
 {
   "mode": "productDetails",
   "productUrls": [
-    "https://www.cdiscount.com/telephonie/telephone-mobile/exemple-produit.html"
+    "https://www.cdiscount.com/telephonie/telephone-mobile/poco/f-14404-aadde58828.html",
+    "aadde58828"
   ],
   "maxItems": 10
 }
 ```
 
-### Example: top-rated products for a category
+Collect customer reviews:
+
+```json
+{
+  "mode": "reviews",
+  "productUrls": ["aadde58828"],
+  "maxReviews": 100,
+  "minRating": "4"
+}
+```
+
+Top sellers for a keyword:
 
 ```json
 {
   "mode": "topSellers",
-  "keyword": "ordinateur portable",
+  "keyword": "smartphone",
   "maxItems": 30
 }
 ```
 
-## Use cases
+## How it works
 
-- **Price tracking** — watch how a product's price and discount move over time by rerunning `productDetails` on the same URLs.
-- **Market research** — pull a category's full price and rating spread with a single `search` run.
-- **Competitive benchmarking** — compare brand, seller, and rating data for similar products side by side.
-- **Catalog enrichment** — add Cdiscount pricing and availability signals to a product database by matching on `productId`.
-- **Deal discovery** — sort by `price_asc` or filter by `minPrice`/`maxPrice` to surface the cheapest options in a category.
+The actor calls the same product-list service that Cdiscount's own search and category pages use. Brand names come from Cdiscount's product-sheet service, one lookup per unique brand, and delivery estimates come from its shipping service when requested. Full product pages are read in `productDetails` mode or when `includeDetails` is on. The first request to a product page may receive Cdiscount's JavaScript challenge; the actor solves that challenge with its cookie handshake, so no browser or login is needed.
+
+Pagination stops at `maxItems`, at the last page Cdiscount reports, or when a page returns no more products. There is no wall-clock cutoff.
+
+## Limits and notes
+
+- **101-page ceiling.** Cdiscount serves at most 101 result pages per search or listing, roughly 4,700 to 6,400 products. Split a large category into sub-categories or add filters to reach more.
+- **Brand lookup.** Search rows expose `brandId`; the actor resolves `brand` with one lightweight product-sheet request per unique brand, not one per product. If that lookup is blocked, `brandId` is still returned.
+- **Sponsored placements.** Sponsored results are interleaved with organic results even when a sort order is selected, and the same product can appear as two different offers. Turn off `includeSponsored` for a strict organic list; sponsored placement cannot be excluded server-side.
+- **Rating sort.** `rating` follows Cdiscount's own "best rated" ranking, which weighs rating volume; it is not a strict sort by the displayed average rating. `price_asc` and `price_desc` are strict price orders. Unrated offers sort first when the direction is ascending.
+- **Reviews.** Review pages are paginated by the actor up to `maxReviews`; `reviewCount` always reports the product's total number of reviews.
+- **Stock and delivery dates.** Cdiscount does not publish stock quantities. `isAvailable` and `maxOrderQuantity` are the only availability signals; the latter is the maximum units per order, not the stock level. Turn on `includeDelivery` for Cdiscount's estimated delivery window and shipping options.
+- **Condition.** New and refurbished offers are labelled from Cdiscount's own condition field. Used-offer grades use the same vocabulary as the site.
+- **Currency and market.** Prices are in euros and the actor reads the French Cdiscount site.
+- **No change tracking in this version.** The actor returns a fresh snapshot on every run; it does not compare runs or resume an interrupted crawl.
 
 ## FAQ
 
-**Does this need a Cdiscount account or login?**
-No. All three modes read Cdiscount's public search and product pages.
+**Do I need a Cdiscount account, API key or proxy?**
+No. The actor reads public pages and the public product-list service. No login, key or proxy setup is required.
 
-**What currency are the prices in?**
-Euros. Cdiscount is a French marketplace and doesn't publish prices in other currencies.
+**What is the difference between `category` and `search` modes?**
+`search` starts from a keyword. `category` starts from a Cdiscount listing URL and can optionally take a keyword to narrow that listing.
 
-**What's actually different about `topSellers` mode?**
-It runs the same keyword search as `search` mode, just sorted by customer rating instead of relevance. It doesn't add seller or description fields — for those, use `productDetails` with the product's URL.
+**Can I use a product URL in `category` mode?**
+Use `productDetails` for product URLs. `category` expects category, department, brand or search listing URLs.
 
-**Why don't search results include `seller` or `description`?**
-Those two fields only appear on the full product page, which `productDetails` mode fetches. Search results only carry what's visible on the search results grid.
+**Why is a field missing on some records?**
+Cdiscount does not publish every field for every product. For example, `originalPrice` only exists when the site shows a crossed-out price, and seller ratings are absent for Cdiscount's own offers. The actor omits the field instead of writing a placeholder.
 
-**Why is `originalPrice` or `discountPercent` sometimes missing?**
-Those fields are only included when Cdiscount itself publishes a pre-discount "crossed out" price for that product. If a product isn't discounted, there's nothing to compute a percentage from.
+**What happens when `keyword` is empty?**
+`search` needs a keyword, so an empty search keyword finishes with a status message and no records. `topSellers` falls back to `smartphone`. In `category` mode an empty keyword browses the whole listing.
 
-**Can I combine a price range with a sort order?**
-Yes — `minPrice`/`maxPrice` and `sortBy` both apply to `search` mode and can be set together.
-
-**How many products can one run return?**
-Up to the `maxItems` value you set, capped at 500 per run.
+**Are reviews personal data?**
+Reviews include a public nickname. Treat review data according to the privacy rules that apply to you.
 
 **Is this affiliated with Cdiscount?**
-No. This actor reads Cdiscount's public pages and is not affiliated with, endorsed by, or connected to Cdiscount in any way.
+No. This actor reads public Cdiscount pages and is not affiliated with, endorsed by, or connected to Cdiscount.

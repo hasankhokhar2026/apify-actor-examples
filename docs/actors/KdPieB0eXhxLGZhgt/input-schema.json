@@ -1,9 +1,70 @@
 {
-  "description": "Search Cdiscount products, get product details, or find top sellers on France's largest e-commerce platform.",
+  "description": "Search Cdiscount by keyword, browse category and seller listings, read product pages or customer reviews.",
   "properties": {
+    "brands": {
+      "default": [],
+      "description": "Filter by one or more brand names in search, category and seller modes, for example Samsung or Apple. Cdiscount brand filters are case-insensitive here.",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Brands",
+      "type": "array"
+    },
+    "categoryUrls": {
+      "default": [],
+      "description": "Cdiscount category, department, brand or search listing URLs to browse in category mode. Example: https://www.cdiscount.com/telephonie/telephone-mobile/l-14404.html",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Category or listing URLs",
+      "type": "array"
+    },
+    "condition": {
+      "default": "any",
+      "description": "Keep new products only, or refurbished and used products only, in search, category and seller modes.",
+      "editor": "select",
+      "enum": [
+        "any",
+        "new",
+        "used_refurbished"
+      ],
+      "enumTitles": [
+        "Any condition",
+        "New only",
+        "Refurbished and used only"
+      ],
+      "prefill": "any",
+      "title": "Condition",
+      "type": "string"
+    },
+    "freeShippingOnly": {
+      "default": false,
+      "description": "Keep only offers that display free shipping in search, category and seller modes.",
+      "prefill": false,
+      "title": "Free shipping only",
+      "type": "boolean"
+    },
+    "includeDelivery": {
+      "default": false,
+      "description": "Add Cdiscount's delivery window and shipping options to each product record. This adds one request per product and uses Cdiscount's default signed-out address context.",
+      "prefill": false,
+      "title": "Include delivery estimates",
+      "type": "boolean"
+    },
+    "includeDetails": {
+      "default": false,
+      "description": "For search, category, seller and topSellers modes, open each product page to add brand, description, specifications, EAN, seller stats, variants and recent reviews. This adds one request per product.",
+      "prefill": false,
+      "title": "Include full product details",
+      "type": "boolean"
+    },
+    "includeSponsored": {
+      "default": true,
+      "description": "Keep sponsored placements in search, category, seller and topSellers results. Turn off to skip them.",
+      "prefill": true,
+      "title": "Include sponsored products",
+      "type": "boolean"
+    },
     "keyword": {
-      "default": "smartphone",
-      "description": "Keyword to search for (mode=search or topSellers).",
+      "description": "Keyword to search for in search and topSellers modes. In category mode, an optional keyword narrows the listing to that keyword.",
       "editor": "textfield",
       "prefill": "smartphone",
       "title": "Search keyword",
@@ -11,40 +72,75 @@
     },
     "maxItems": {
       "default": 20,
-      "description": "Maximum number of products to return.",
-      "maximum": 500,
+      "description": "Maximum number of product records to return across all queries and URLs. Reviews mode uses maxReviews instead.",
+      "maximum": 10000,
       "minimum": 1,
-      "prefill": 20,
+      "prefill": 3,
       "title": "Max items",
       "type": "integer"
     },
     "maxPrice": {
-      "description": "Filter products with price at or below this value.",
+      "description": "Keep only products priced at or below this value, in euros, in search, category, seller and topSellers modes.",
       "maximum": 100000,
       "minimum": 0,
       "title": "Max price (EUR)",
+      "type": "number"
+    },
+    "maxReviews": {
+      "default": 50,
+      "description": "Maximum number of customer reviews to return per product in reviews mode.",
+      "maximum": 10000,
+      "minimum": 1,
+      "prefill": 3,
+      "title": "Max reviews per product",
       "type": "integer"
     },
     "minPrice": {
-      "description": "Filter products with price at or above this value.",
+      "description": "Keep only products priced at or above this value, in euros, in search, category, seller and topSellers modes.",
       "maximum": 100000,
       "minimum": 0,
       "title": "Min price (EUR)",
-      "type": "integer"
+      "type": "number"
+    },
+    "minRating": {
+      "default": "0",
+      "description": "Keep products with at least this customer rating in search, category and seller modes. In reviews mode, only fetch reviews at or above this rating. Cdiscount applies the 3+ and 4+ filters server-side; 5 stars is checked on the returned records.",
+      "editor": "select",
+      "enum": [
+        "0",
+        "3",
+        "4",
+        "5"
+      ],
+      "enumTitles": [
+        "Any rating",
+        "3 stars and up",
+        "4 stars and up",
+        "5 stars only"
+      ],
+      "prefill": "0",
+      "title": "Minimum rating",
+      "type": "string"
     },
     "mode": {
       "default": "search",
-      "description": "What to scrape.",
+      "description": "What to scrape. Search uses a keyword, category browses listing URLs, seller reads seller shops, productDetails reads product pages, reviews collects customer reviews, and topSellers searches by best sellers.",
       "editor": "select",
       "enum": [
         "search",
+        "category",
+        "seller",
         "productDetails",
+        "reviews",
         "topSellers"
       ],
       "enumTitles": [
         "Search products by keyword",
-        "Get product details by URL",
-        "Browse top sellers / best sellers"
+        "Browse category or listing URLs",
+        "Browse marketplace seller shops",
+        "Get product details by URL or product ID",
+        "Get customer reviews by product URL or ID",
+        "Top sellers by keyword"
       ],
       "prefill": "search",
       "title": "Mode",
@@ -52,21 +148,38 @@
     },
     "productUrls": {
       "default": [],
-      "description": "List of Cdiscount product page URLs to scrape.",
+      "description": "Cdiscount product page URLs or product IDs used by productDetails and reviews modes. Example: https://www.cdiscount.com/telephonie/telephone-mobile/poco/f-14404-aadde58828.html or aadde58828",
       "editor": "stringList",
       "prefill": [],
-      "title": "Product URLs (mode=productDetails)",
+      "title": "Product URLs or IDs",
       "type": "array"
+    },
+    "sellerIds": {
+      "default": [],
+      "description": "Marketplace seller IDs or seller page URLs in seller mode. Example: 421705 or https://www.cdiscount.com/mpv-421705-vanterra-solutions.html",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Seller IDs or URLs",
+      "type": "array"
+    },
+    "soldByCdiscountOnly": {
+      "default": false,
+      "description": "Keep only offers sold directly by Cdiscount in search, category and seller modes.",
+      "prefill": false,
+      "title": "Sold by Cdiscount only",
+      "type": "boolean"
     },
     "sortBy": {
       "default": "relevance",
-      "description": "Sort order for search results.",
+      "description": "Result order used in search, category, seller and topSellers modes. 'rating' is Cdiscount's composite best-rated ranking, not a strict average-rating sort.",
       "editor": "select",
       "enum": [
         "relevance",
         "price_asc",
         "price_desc",
         "rating",
+        "bestsellers_7d",
+        "bestsellers_14d",
         "new"
       ],
       "enumTitles": [
@@ -74,7 +187,9 @@
         "Price: low to high",
         "Price: high to low",
         "Best rated",
-        "Newest first"
+        "Best sellers: last 7 days",
+        "Best sellers: last 14 days",
+        "Newest first (legacy; mapped to relevance, or best sellers in topSellers mode)"
       ],
       "prefill": "relevance",
       "title": "Sort by",
