@@ -1,0 +1,121 @@
+{
+  "description": "Search video game prices on PriceCharting.com by title or browse by console.",
+  "properties": {
+    "console": {
+      "default": "",
+      "description": "Filter results to a specific console.",
+      "editor": "select",
+      "enum": [
+        "",
+        "nintendo-64",
+        "super-nintendo",
+        "nintendo-entertainment-system",
+        "gameboy",
+        "gameboy-color",
+        "gameboy-advance",
+        "nintendo-ds",
+        "nintendo-3ds",
+        "nintendo-switch",
+        "gamecube",
+        "wii",
+        "wii-u",
+        "playstation",
+        "playstation-2",
+        "playstation-3",
+        "playstation-4",
+        "playstation-5",
+        "psp",
+        "playstation-vita",
+        "sega-genesis",
+        "sega-saturn",
+        "dreamcast",
+        "sega-cd",
+        "xbox",
+        "xbox-360",
+        "xbox-one",
+        "atari-2600",
+        "pc-games"
+      ],
+      "enumTitles": [
+        "All Consoles",
+        "Nintendo 64",
+        "Super Nintendo",
+        "Nintendo Entertainment System",
+        "Game Boy",
+        "Game Boy Color",
+        "Game Boy Advance",
+        "Nintendo DS",
+        "Nintendo 3DS",
+        "Nintendo Switch",
+        "GameCube",
+        "Wii",
+        "Wii U",
+        "PlayStation",
+        "PlayStation 2",
+        "PlayStation 3",
+        "PlayStation 4",
+        "PlayStation 5",
+        "PSP",
+        "PlayStation Vita",
+        "Sega Genesis",
+        "Sega Saturn",
+        "Dreamcast",
+        "Sega CD",
+        "Xbox",
+        "Xbox 360",
+        "Xbox One",
+        "Atari 2600",
+        "PC Games"
+      ],
+      "title": "Console Filter",
+      "type": "string"
+    },
+    "gameUrl": {
+      "description": "Direct PriceCharting game URL for detailed price lookup (mode=gameDetails). E.g. https://www.pricecharting.com/game/nintendo-64/super-mario-64",
+      "editor": "textfield",
+      "title": "Game URL",
+      "type": "string"
+    },
+    "maxItems": {
+      "default": 20,
+      "description": "Maximum number of game price records to return.",
+      "maximum": 500,
+      "minimum": 1,
+      "prefill": 20,
+      "title": "Max Items",
+      "type": "integer"
+    },
+    "mode": {
+      "default": "searchGames",
+      "description": "What to scrape from PriceCharting.",
+      "editor": "select",
+      "enum": [
+        "searchGames",
+        "gameDetails",
+        "consolePrices"
+      ],
+      "enumTitles": [
+        "Search games by title",
+        "Get details for a specific game URL",
+        "Browse all prices for a console"
+      ],
+      "prefill": "searchGames",
+      "title": "Mode",
+      "type": "string"
+    },
+    "query": {
+      "default": "Super Mario",
+      "description": "Game title to search for (mode=searchGames).",
+      "editor": "textfield",
+      "prefill": "Super Mario",
+      "title": "Search Query",
+      "type": "string"
+    }
+  },
+  "required": [
+    "mode"
+  ],
+  "schemaVersion": 1,
+  "title": "PriceCharting Video Game Price Scraper Input",
+  "type": "object"
+}

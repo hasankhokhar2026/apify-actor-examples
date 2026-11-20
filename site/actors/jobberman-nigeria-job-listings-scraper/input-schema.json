@@ -1,0 +1,306 @@
+{
+  "description": "Search live job listings on Jobberman.com (Nigeria's largest job board), or fetch full job details from listing URLs.",
+  "properties": {
+    "containsKeyword": {
+      "description": "Case-insensitive substring filter applied to title, company name, and description.",
+      "editor": "textfield",
+      "title": "Must contain keyword",
+      "type": "string"
+    },
+    "employmentType": {
+      "default": "",
+      "description": "Filter results to a single employment type (applied client-side against the listing's displayed job type).",
+      "editor": "select",
+      "enum": [
+        "",
+        "fullTime",
+        "partTime",
+        "contract",
+        "internship",
+        "temporary",
+        "volunteer"
+      ],
+      "enumTitles": [
+        "Any type",
+        "Full Time",
+        "Part Time",
+        "Contract",
+        "Internship",
+        "Temporary",
+        "Volunteer"
+      ],
+      "title": "Employment type",
+      "type": "string"
+    },
+    "experienceLevel": {
+      "default": "",
+      "description": "Filter to a Jobberman experience level.",
+      "editor": "select",
+      "enum": [
+        "",
+        "no-experience",
+        "graduate-trainee",
+        "entry-level",
+        "mid-level",
+        "senior-level",
+        "executive-level"
+      ],
+      "enumTitles": [
+        "Any experience level",
+        "No Experience",
+        "Internship & Graduate",
+        "Entry level",
+        "Mid level",
+        "Senior level",
+        "Executive level"
+      ],
+      "title": "Experience level",
+      "type": "string"
+    },
+    "includeFullDescription": {
+      "default": true,
+      "description": "Fetch each listing's detail page for full description, requirements, deadline, and company info. Slower but richer. mode=byUrls always fetches the detail page.",
+      "prefill": true,
+      "title": "Include full description (mode=search)",
+      "type": "boolean"
+    },
+    "industry": {
+      "default": "",
+      "description": "Filter to a Jobberman industry.",
+      "editor": "select",
+      "enum": [
+        "",
+        "agriculture-fishing-forestry",
+        "automotive-aviation",
+        "advertising-media-communications",
+        "banking-finance-insurance",
+        "construction",
+        "education",
+        "energy-utilities",
+        "enforcement-security",
+        "entertainment-events-sport",
+        "government",
+        "healthcare",
+        "hospitality-hotel",
+        "it-telecoms",
+        "law-compliance",
+        "manufacturing-warehousing",
+        "mining-energy-metals",
+        "ngo-npo-charity",
+        "real-estate",
+        "recruitment",
+        "retail-fashion-fmcg",
+        "shipping-logistics",
+        "tourism-travel"
+      ],
+      "enumTitles": [
+        "Any industry",
+        "Agriculture, Fishing & Forestry",
+        "Automotive & Aviation",
+        "Advertising, Media & Communications",
+        "Banking, Finance & Insurance",
+        "Construction",
+        "Education",
+        "Energy & Utilities",
+        "Enforcement & Security",
+        "Entertainment, Events & Sport",
+        "Government",
+        "Healthcare",
+        "Hospitality & Hotel",
+        "IT & Telecoms",
+        "Law & Compliance",
+        "Manufacturing & Warehousing",
+        "Mining, Energy & Metals",
+        "NGO, NPO & Charity",
+        "Real Estate",
+        "Recruitment",
+        "Retail, Fashion & FMCG",
+        "Shipping & Logistics",
+        "Tourism & Travel"
+      ],
+      "title": "Industry",
+      "type": "string"
+    },
+    "jobFunction": {
+      "default": "",
+      "description": "Filter to a Jobberman job function.",
+      "editor": "select",
+      "enum": [
+        "",
+        "accounting-auditing-finance",
+        "admin-office",
+        "creative-design",
+        "building-architecture",
+        "consulting-strategy",
+        "customer-service-support",
+        "engineering-technology",
+        "farming-agriculture",
+        "food-services-catering",
+        "hospitality-leisure",
+        "software-data",
+        "legal-services",
+        "marketing-communications",
+        "medical-pharmaceutical",
+        "product-project-management",
+        "estate-agent-property-management",
+        "quality-control-assurance",
+        "human-resources",
+        "management-business-development",
+        "community-social-services",
+        "sales",
+        "supply-chain-procurement",
+        "research-teaching-training",
+        "trades-services",
+        "driver-transport-services",
+        "health-safety"
+      ],
+      "enumTitles": [
+        "Any job function",
+        "Accounting, Auditing & Finance",
+        "Admin & Office",
+        "Creative & Design",
+        "Building & Architecture",
+        "Consulting & Strategy",
+        "Customer Service & Support",
+        "Engineering & Technology",
+        "Farming & Agriculture",
+        "Food Services & Catering",
+        "Hospitality & Leisure",
+        "Software & Data",
+        "Legal Services",
+        "Marketing & Communications",
+        "Medical & Pharmaceutical",
+        "Product & Project Management",
+        "Estate Agents & Property Management",
+        "Quality Control & Assurance",
+        "Human Resources",
+        "Management & Business Development",
+        "Community & Social Services",
+        "Sales",
+        "Supply Chain & Procurement",
+        "Research, Teaching & Training",
+        "Trades & Services",
+        "Driver & Transport Services",
+        "Health & Safety"
+      ],
+      "title": "Job function",
+      "type": "string"
+    },
+    "listingUrls": {
+      "default": [],
+      "description": "Direct Jobberman listing URLs, e.g. https://www.jobberman.com/listings/accountstax-senior-2k886k",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Listing URLs (mode=byUrls)",
+      "type": "array"
+    },
+    "location": {
+      "default": "",
+      "description": "Filter to a Jobberman location region.",
+      "editor": "select",
+      "enum": [
+        "",
+        "nigeria",
+        "abeokuta-ogun",
+        "abuja",
+        "enugu",
+        "ibadan-oyo",
+        "imo",
+        "lagos",
+        "maiduguri-borno",
+        "port-harcourt-rivers",
+        "rest-nigeria",
+        "outside-nigeria",
+        "remote"
+      ],
+      "enumTitles": [
+        "Any location",
+        "Nigeria (all)",
+        "Abeokuta & Ogun State",
+        "Abuja",
+        "Enugu",
+        "Ibadan & Oyo State",
+        "Imo",
+        "Lagos",
+        "Maiduguri & Borno State",
+        "Port Harcourt & Rivers State",
+        "Rest of Nigeria",
+        "Outside Nigeria",
+        "Remote (Work From Home)"
+      ],
+      "title": "Location",
+      "type": "string"
+    },
+    "maxItems": {
+      "default": 30,
+      "description": "Hard cap on emitted records.",
+      "maximum": 1000,
+      "minimum": 1,
+      "prefill": 30,
+      "title": "Max items",
+      "type": "integer"
+    },
+    "maxSalary": {
+      "description": "Drop jobs whose disclosed salary band is entirely above this value. Jobs with no disclosed salary always pass through.",
+      "maximum": 100000000,
+      "minimum": 0,
+      "title": "Max salary (NGN/month)",
+      "type": "integer"
+    },
+    "minSalary": {
+      "description": "Drop jobs whose disclosed salary band is entirely below this value. Jobs with no disclosed salary always pass through.",
+      "maximum": 100000000,
+      "minimum": 0,
+      "title": "Min salary (NGN/month)",
+      "type": "integer"
+    },
+    "mode": {
+      "default": "search",
+      "description": "What to fetch.",
+      "editor": "select",
+      "enum": [
+        "search",
+        "byUrls"
+      ],
+      "enumTitles": [
+        "Search jobs (keyword + filters)",
+        "Fetch by listing URLs"
+      ],
+      "prefill": "search",
+      "title": "Mode",
+      "type": "string"
+    },
+    "searchQuery": {
+      "default": "sales",
+      "description": "Free-text keyword — job title, skill, or company name. Leave empty to browse all listings.",
+      "editor": "textfield",
+      "prefill": "sales",
+      "title": "Search query (mode=search)",
+      "type": "string"
+    },
+    "sortBy": {
+      "default": "latest",
+      "description": "Sort order for search results (mode=search). Jobberman's own \"Latest\" / \"Featured\" / \"Popular\" toggle.",
+      "editor": "select",
+      "enum": [
+        "latest",
+        "featured",
+        "popular"
+      ],
+      "enumTitles": [
+        "Latest (default order)",
+        "Featured",
+        "Popular"
+      ],
+      "prefill": "latest",
+      "title": "Sort by",
+      "type": "string"
+    }
+  },
+  "required": [
+    "mode"
+  ],
+  "schemaVersion": 1,
+  "title": "Jobberman Scraper Input",
+  "type": "object"
+}
