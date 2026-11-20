@@ -1,0 +1,129 @@
+{
+  "description": "Search Jumia products, browse categories, grab flash deals, or fetch product details across 10 African markets.",
+  "properties": {
+    "categorySlug": {
+      "description": "Jumia category URL path segment, e.g. 'phones-tablets', 'electronics', 'fashion-men'. Find it in the URL after the domain: jumia.com.ng/phones-tablets/",
+      "editor": "textfield",
+      "title": "Category slug (mode=categoryBrowse)",
+      "type": "string"
+    },
+    "country": {
+      "default": "nigeria",
+      "description": "Jumia market / country to scrape.",
+      "editor": "select",
+      "enum": [
+        "nigeria",
+        "kenya",
+        "ghana",
+        "egypt",
+        "south_africa",
+        "morocco",
+        "senegal",
+        "cameroon",
+        "tanzania",
+        "uganda"
+      ],
+      "enumTitles": [
+        "Nigeria (jumia.com.ng)",
+        "Kenya (jumia.com.ke)",
+        "Ghana (jumia.com.gh)",
+        "Egypt (jumia.com.eg)",
+        "South Africa (jumia.com.za)",
+        "Morocco (jumia.com.ma)",
+        "Senegal (jumia.com.sn)",
+        "Cameroon (jumia.com.cm)",
+        "Tanzania (jumia.com.tz)",
+        "Uganda (jumia.com.ug)"
+      ],
+      "prefill": "nigeria",
+      "title": "Country",
+      "type": "string"
+    },
+    "keyword": {
+      "default": "smartphone",
+      "description": "Product search term (mode=search).",
+      "editor": "textfield",
+      "prefill": "smartphone",
+      "title": "Search keyword",
+      "type": "string"
+    },
+    "maxItems": {
+      "default": 40,
+      "description": "Maximum number of products to return.",
+      "maximum": 500,
+      "minimum": 1,
+      "prefill": 40,
+      "title": "Max items",
+      "type": "integer"
+    },
+    "maxPages": {
+      "default": 5,
+      "description": "Maximum listing pages to crawl (40 products per page).",
+      "maximum": 25,
+      "minimum": 1,
+      "prefill": 5,
+      "title": "Max pages",
+      "type": "integer"
+    },
+    "maxPrice": {
+      "description": "Only include products with price ≤ this value (in local currency).",
+      "minimum": 0,
+      "title": "Maximum price filter",
+      "type": "number"
+    },
+    "minPrice": {
+      "description": "Only include products with price ≥ this value (in local currency).",
+      "minimum": 0,
+      "title": "Minimum price filter",
+      "type": "number"
+    },
+    "minRating": {
+      "description": "Only include products with rating ≥ this value (0–5).",
+      "maximum": 5,
+      "minimum": 0,
+      "title": "Minimum rating filter",
+      "type": "number"
+    },
+    "mode": {
+      "default": "search",
+      "description": "What to scrape.",
+      "editor": "select",
+      "enum": [
+        "search",
+        "productDetails",
+        "categoryBrowse",
+        "flashSales"
+      ],
+      "enumTitles": [
+        "Search products by keyword",
+        "Fetch details for specific product URLs",
+        "Browse a category by slug",
+        "Today's flash/daily deals"
+      ],
+      "prefill": "search",
+      "title": "Mode",
+      "type": "string"
+    },
+    "productUrls": {
+      "default": [],
+      "description": "List of Jumia product page URLs to fetch in detail.",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Product URLs (mode=productDetails)",
+      "type": "array"
+    },
+    "useProxy": {
+      "default": true,
+      "description": "Route requests through Apify's AUTO datacenter proxy pool to avoid IP blocks.",
+      "prefill": true,
+      "title": "Use Apify proxy",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "mode"
+  ],
+  "schemaVersion": 1,
+  "title": "Jumia Scraper Input",
+  "type": "object"
+}

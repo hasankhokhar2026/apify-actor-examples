@@ -1,0 +1,145 @@
+{
+  "description": "Browse articles, fetch chart data, or explore country profiles from ourworldindata.org.",
+  "properties": {
+    "chartSlug": {
+      "description": "The URL slug of an OWID Grapher chart, e.g. `life-expectancy` or `co2-emissions-vs-gdp`. Found in the chart URL: ourworldindata.org/grapher/{slug}.",
+      "editor": "textfield",
+      "prefill": "life-expectancy",
+      "title": "Chart slug (mode=chartData)",
+      "type": "string"
+    },
+    "chartSlugs": {
+      "default": [],
+      "description": "List of OWID Grapher chart slugs to download data for (mode=chartDataBulk).",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Chart slugs (mode=chartDataBulk)",
+      "type": "array"
+    },
+    "entities": {
+      "default": [],
+      "description": "For chart data modes: only include rows for these entities (e.g. ['United States', 'Germany', 'World']). Leave empty for all.",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Filter by entities (countries/regions)",
+      "type": "array"
+    },
+    "includeChartConfig": {
+      "default": true,
+      "description": "For chart data modes: include the chart's config (title, subtitle, citation) as a metadata record before the data rows.",
+      "prefill": true,
+      "title": "Include chart config metadata",
+      "type": "boolean"
+    },
+    "maxItems": {
+      "default": 100,
+      "description": "Maximum number of records to emit.",
+      "maximum": 10000,
+      "minimum": 1,
+      "prefill": 100,
+      "title": "Max items",
+      "type": "integer"
+    },
+    "mode": {
+      "default": "articles",
+      "description": "What to scrape from Our World in Data.",
+      "editor": "select",
+      "enum": [
+        "articles",
+        "chartData",
+        "chartDataBulk",
+        "countries"
+      ],
+      "enumTitles": [
+        "Articles — browse/search recent articles (default)",
+        "Chart Data — download CSV data for a specific chart by slug",
+        "Chart Data Bulk — download data for multiple chart slugs",
+        "Countries — browse country profiles from OWID"
+      ],
+      "prefill": "articles",
+      "title": "Mode",
+      "type": "string"
+    },
+    "searchQuery": {
+      "description": "Filter articles whose title or excerpt contains this keyword (case-insensitive). Leave empty to return all recent articles.",
+      "editor": "textfield",
+      "prefill": "climate change",
+      "title": "Search query (mode=articles)",
+      "type": "string"
+    },
+    "topic": {
+      "default": "",
+      "description": "Filter articles by OWID topic area. Leave empty for all topics.",
+      "editor": "select",
+      "enum": [
+        "",
+        "poverty",
+        "health",
+        "population-growth",
+        "education",
+        "food-agriculture",
+        "climate-change",
+        "energy",
+        "violence-war",
+        "political-systems",
+        "economy",
+        "environment",
+        "urbanization",
+        "water-sanitation",
+        "technology",
+        "human-rights",
+        "co2-greenhouse-gas-emissions",
+        "life-expectancy",
+        "child-mortality",
+        "global-health",
+        "global-inequalities"
+      ],
+      "enumTitles": [
+        "All topics",
+        "Poverty",
+        "Health",
+        "Population Growth",
+        "Education",
+        "Food & Agriculture",
+        "Climate Change",
+        "Energy",
+        "Violence & War",
+        "Political Systems",
+        "Economy",
+        "Environment",
+        "Urbanization",
+        "Water & Sanitation",
+        "Technology",
+        "Human Rights",
+        "CO2 & Greenhouse Gas Emissions",
+        "Life Expectancy",
+        "Child Mortality",
+        "Global Health",
+        "Global Inequalities"
+      ],
+      "prefill": "",
+      "title": "Topic filter (mode=articles)",
+      "type": "string"
+    },
+    "yearFrom": {
+      "description": "Only include chart data rows from this year onwards.",
+      "maximum": 2100,
+      "minimum": 1700,
+      "title": "Year from (chart data modes)",
+      "type": "integer"
+    },
+    "yearTo": {
+      "description": "Only include chart data rows up to this year (inclusive).",
+      "maximum": 2100,
+      "minimum": 1700,
+      "title": "Year to (chart data modes)",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "mode"
+  ],
+  "schemaVersion": 1,
+  "title": "Our World in Data Scraper Input",
+  "type": "object"
+}

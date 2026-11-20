@@ -1,0 +1,280 @@
+{
+  "description": "Search pai.pt (Paginas Amarelas, Portugal's business directory) listings by category and location, or fetch full business profiles by direct URL.",
+  "properties": {
+    "businessUrls": {
+      "default": [],
+      "description": "Direct pai.pt business profile URLs to fetch, e.g. https://www.pai.pt/paginas/161409-restaurantes-pezarroz. Use the 'sourceUrl' field from search results.",
+      "editor": "requestListSources",
+      "items": {
+        "properties": {
+          "url": {
+            "description": "pai.pt business profile URL.",
+            "title": "URL",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "prefill": [],
+      "title": "Business profile URLs (mode=detail)",
+      "type": "array"
+    },
+    "category": {
+      "default": "restaurantes",
+      "description": "Business category to search for. Pick a common category from the list, or choose 'Custom category' and type your own slug below (mode=search).",
+      "editor": "select",
+      "enum": [
+        "custom",
+        "restaurantes",
+        "advogados",
+        "dentistas",
+        "cabeleireiros",
+        "hoteis",
+        "eletricistas",
+        "pintores",
+        "imobiliarias",
+        "funerarias",
+        "fisioterapeutas",
+        "veterinarios",
+        "farmacias",
+        "limpezas",
+        "mudancas",
+        "padarias",
+        "talhos",
+        "ginasios",
+        "clinicas-veterinarias",
+        "arquitetos",
+        "notarios",
+        "seguros",
+        "psicologos",
+        "pastelarias",
+        "cafes",
+        "bares",
+        "pizzarias",
+        "escolas",
+        "creches",
+        "serralharias",
+        "construcao-civil",
+        "engenheiros"
+      ],
+      "enumTitles": [
+        "Custom category (type slug below)",
+        "Restaurantes (Restaurants)",
+        "Advogados (Lawyers)",
+        "Dentistas (Dentists)",
+        "Cabeleireiros (Hairdressers)",
+        "Hoteis (Hotels)",
+        "Eletricistas (Electricians)",
+        "Pintores (Painters)",
+        "Imobiliarias (Real estate agencies)",
+        "Funerarias (Funeral homes)",
+        "Fisioterapeutas (Physiotherapists)",
+        "Veterinarios (Veterinarians)",
+        "Farmacias (Pharmacies)",
+        "Limpezas (Cleaning services)",
+        "Mudancas (Moving companies)",
+        "Padarias (Bakeries)",
+        "Talhos (Butchers)",
+        "Ginasios (Gyms)",
+        "Clinicas veterinarias (Veterinary clinics)",
+        "Arquitetos (Architects)",
+        "Notarios (Notaries)",
+        "Seguros (Insurance)",
+        "Psicologos (Psychologists)",
+        "Pastelarias (Pastry shops)",
+        "Cafes",
+        "Bares (Bars)",
+        "Pizzarias (Pizzerias)",
+        "Escolas (Schools)",
+        "Creches (Daycare centers)",
+        "Serralharias (Locksmiths / metalworks)",
+        "Construcao civil (Construction)",
+        "Engenheiros (Engineers)"
+      ],
+      "prefill": "restaurantes",
+      "title": "Category",
+      "type": "string"
+    },
+    "customCategory": {
+      "description": "Free-text pai.pt category URL slug not in the curated list above, e.g. 'canalizadores' or 'oficinas-auto' (mode=search). Takes priority over 'Category' when set.",
+      "editor": "textfield",
+      "title": "Custom category (overrides selection above)",
+      "type": "string"
+    },
+    "customLocation": {
+      "description": "Free-text pai.pt location URL slug not in the curated list above, e.g. 'vila-franca-de-xira' or 'peniche' (mode=search). Takes priority over 'Location' when set.",
+      "editor": "textfield",
+      "title": "Custom location (overrides selection above)",
+      "type": "string"
+    },
+    "fetchDetails": {
+      "default": true,
+      "description": "For each search result, also visit its business profile page to collect address, phone, email, website, coordinates, and full category/tag lists. Recommended -- disable only for a faster, name-only preview scan (mode=search).",
+      "prefill": true,
+      "title": "Fetch full business profiles",
+      "type": "boolean"
+    },
+    "location": {
+      "default": "",
+      "description": "Portuguese city or concelho to search in. Leave as 'Any location (nationwide)' to search the category across all of Portugal (mode=search).",
+      "editor": "select",
+      "enum": [
+        "",
+        "custom",
+        "lisboa",
+        "porto",
+        "coimbra",
+        "braga",
+        "faro",
+        "aveiro",
+        "setubal",
+        "leiria",
+        "evora",
+        "viseu",
+        "guarda",
+        "beja",
+        "portalegre",
+        "santarem",
+        "castelo-branco",
+        "viana-do-castelo",
+        "vila-real",
+        "braganca",
+        "funchal",
+        "ponta-delgada",
+        "sintra",
+        "cascais",
+        "oeiras",
+        "almada",
+        "amadora",
+        "loures",
+        "gaia",
+        "vila-nova-de-gaia",
+        "matosinhos",
+        "guimaraes",
+        "odivelas",
+        "gondomar",
+        "maia",
+        "barcelos"
+      ],
+      "enumTitles": [
+        "Any location (nationwide)",
+        "Custom location (type slug below)",
+        "Lisboa",
+        "Porto",
+        "Coimbra",
+        "Braga",
+        "Faro",
+        "Aveiro",
+        "Setubal",
+        "Leiria",
+        "Evora",
+        "Viseu",
+        "Guarda",
+        "Beja",
+        "Portalegre",
+        "Santarem",
+        "Castelo Branco",
+        "Viana do Castelo",
+        "Vila Real",
+        "Braganca",
+        "Funchal (Madeira)",
+        "Ponta Delgada (Azores)",
+        "Sintra",
+        "Cascais",
+        "Oeiras",
+        "Almada",
+        "Amadora",
+        "Loures",
+        "Gaia",
+        "Vila Nova de Gaia",
+        "Matosinhos",
+        "Guimaraes",
+        "Odivelas",
+        "Gondomar",
+        "Maia",
+        "Barcelos"
+      ],
+      "prefill": "lisboa",
+      "title": "Location (concelho / city)",
+      "type": "string"
+    },
+    "maxItems": {
+      "default": 20,
+      "description": "Hard cap on the number of business records to return.",
+      "maximum": 2000,
+      "minimum": 1,
+      "prefill": 20,
+      "title": "Max items",
+      "type": "integer"
+    },
+    "minRating": {
+      "default": "",
+      "description": "Only return businesses rated at least this many stars, e.g. '4' for 4.0+. Businesses with no rating are still included (ratings are only shown on pai.pt once a business has reviews).",
+      "editor": "select",
+      "enum": [
+        "",
+        "1",
+        "2",
+        "3",
+        "4",
+        "5"
+      ],
+      "enumTitles": [
+        "No minimum (all businesses)",
+        "1+ stars",
+        "2+ stars",
+        "3+ stars",
+        "4+ stars",
+        "5 stars only"
+      ],
+      "prefill": "",
+      "title": "Minimum rating",
+      "type": "string"
+    },
+    "mode": {
+      "default": "search",
+      "description": "What to fetch: search a category + location, or fetch full business profiles from direct URLs.",
+      "editor": "select",
+      "enum": [
+        "search",
+        "detail"
+      ],
+      "enumTitles": [
+        "Search by category & location",
+        "Fetch business profiles by URL"
+      ],
+      "prefill": "search",
+      "title": "Mode",
+      "type": "string"
+    },
+    "openNowOnly": {
+      "default": false,
+      "description": "Only return businesses that are currently open, computed from each business's opening hours in the Europe/Lisbon timezone (mode=search). Businesses with no published hours are still included.",
+      "prefill": false,
+      "title": "Open now only",
+      "type": "boolean"
+    },
+    "sortBy": {
+      "default": "ranked",
+      "description": "How to order search results (mode=search).",
+      "editor": "select",
+      "enum": [
+        "ranked",
+        "popular"
+      ],
+      "enumTitles": [
+        "Classificacao (default ranking)",
+        "Mais Popular (most popular)"
+      ],
+      "prefill": "ranked",
+      "title": "Sort order",
+      "type": "string"
+    }
+  },
+  "required": [
+    "mode"
+  ],
+  "schemaVersion": 1,
+  "title": "PaiPt Scraper Input",
+  "type": "object"
+}

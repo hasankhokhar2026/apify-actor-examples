@@ -1,0 +1,153 @@
+# Our World in Data Chart & Article Extractor
+
+Our World in Data publishes research articles and thousands of interactive charts covering health, poverty, climate, population, and more, each backed by a downloadable dataset. This actor pulls that data out in structured form: recent articles by topic or keyword, the full data behind any chart by its slug, or country profile pages.
+
+## What this actor does
+
+- Browses recent Our World in Data articles, with optional keyword and topic filtering.
+- Downloads the underlying CSV dataset for any chart, given its slug from the chart's own URL, with optional country/region and year-range filters.
+- Downloads data for several chart slugs in a single run instead of one at a time.
+- Browses country profile pages, with name, description, and the charts referenced on that page.
+- Leaves a field out of a record whenever the source page doesn't have that value, rather than sending it empty.
+
+## Output per record
+
+### Articles (`recordType: "article"`)
+
+| Field | Description |
+|---|---|
+| `articleSlug` | URL slug of the article |
+| `title` | Article headline |
+| `publishedAt` / `updatedAt` | Publish and last-modified dates |
+| `authors` / `primaryAuthor` | Author names and the first-listed author |
+| `excerpt` | Short description or abstract |
+| `thumbnailUrl` | Cover image URL |
+| `relatedCharts` | Grapher chart slugs referenced in the article |
+| `articleUrl` | Canonical article URL |
+
+### Chart config (`recordType: "chartConfig"`, when `includeChartConfig` is on)
+
+| Field | Description |
+|---|---|
+| `chartSlug` / `chartId` | Chart's slug and internal OWID ID |
+| `title` / `subtitle` / `note` | Chart title, subtitle, and footnote |
+| `chartTypes` | Visualization types used, e.g. `LineChart`, `ScatterPlot` |
+| `citation` | Data source attribution |
+| `dataColumns` | Column names present in the chart's dataset |
+| `relatedQuestionUrls` | Links to related articles |
+| `chartUrl` | Canonical chart URL |
+
+### Chart data rows (`recordType: "chartDataRow"`)
+
+| Field | Description |
+|---|---|
+| `chartSlug` / `chartTitle` | Source chart's slug and title |
+| `entity` | Country, region, or aggregate name |
+| `entityCode` | ISO country code, when available |
+| `year` | Year of the data point |
+| *(variable columns)* | One field per data column in the chart, named from that chart's own CSV headers |
+| `sourceUrl` | Canonical chart URL |
+
+### Countries (`recordType: "country"`)
+
+| Field | Description |
+|---|---|
+| `countrySlug` | URL slug of the country page |
+| `countryName` | Country display name |
+| `description` | Short description from the page |
+| `thumbnailUrl` | Page thumbnail image |
+| `relatedCharts` | Grapher slugs referenced on the page |
+| `countryUrl` | Country profile URL |
+
+## Input
+
+| Field | Type | Default | Description |
+|---|---|---|---|
+| `mode` | string | `articles` | `articles`, `chartData`, `chartDataBulk`, or `countries`. |
+| `searchQuery` | string | – | Keyword to match against article titles and excerpts (`articles` mode). |
+| `topic` | string | – (all topics) | Restrict articles to one OWID topic area. |
+| `chartSlug` | string | – | Grapher chart slug to download, from `ourworldindata.org/grapher/{slug}` (`chartData` mode). |
+| `chartSlugs` | array | `[]` | Multiple chart slugs to download in one run (`chartDataBulk` mode). |
+| `entities` | array | `[]` | Restrict chart data rows to these countries/regions, e.g. `["Germany", "World"]`. Leave empty for all. |
+| `yearFrom` | integer | – | Earliest year to include in chart data rows. |
+| `yearTo` | integer | – | Latest year to include in chart data rows. |
+| `includeChartConfig` | boolean | `true` | Emit a chart-config record before the data rows for that chart. |
+| `maxItems` | integer | `100` | Maximum number of records to emit. |
+
+### Example: recent articles on a topic
+
+```json
+{
+  "mode": "articles",
+  "topic": "climate-change",
+  "maxItems": 20
+}
+```
+
+### Example: one chart's data for specific countries and years
+
+```json
+{
+  "mode": "chartData",
+  "chartSlug": "life-expectancy",
+  "entities": ["Germany", "France"],
+  "yearFrom": 1950,
+  "yearTo": 2023,
+  "maxItems": 500
+}
+```
+
+### Example: several charts' world-level data in one run
+
+```json
+{
+  "mode": "chartDataBulk",
+  "chartSlugs": ["co2-emissions-vs-gdp", "child-mortality", "global-education"],
+  "entities": ["World"],
+  "maxItems": 1000
+}
+```
+
+### Example: country profile lookup
+
+```json
+{
+  "mode": "countries",
+  "searchQuery": "germany",
+  "maxItems": 10
+}
+```
+
+## Use cases
+
+- **Research and academic work** — pull long-run datasets like life expectancy, CO2 emissions, or child mortality for analysis.
+- **Journalism** — find recent OWID articles on a topic and pair them with the chart data behind the story.
+- **Education** — assemble country or topic-specific statistics for teaching materials.
+- **Dashboards and pipelines** — refresh a known set of chart datasets on a schedule via `chartDataBulk`.
+- **Country comparisons** — pull the same chart's data for a handful of countries to compare trends side by side.
+
+## FAQ
+
+**Do I need an API key or login?**
+No. Everything this actor reads is publicly published on ourworldindata.org.
+
+**Where do I find a chart's slug?**
+It's the part of the chart's URL right after `/grapher/`, e.g. `life-expectancy` in `ourworldindata.org/grapher/life-expectancy`.
+
+**Why do chart data rows have different columns from chart to chart?**
+Each OWID chart publishes its own set of data columns in its CSV download, named for whatever it measures. This actor keeps those original column names (converted to camelCase) rather than forcing every chart into one fixed schema.
+
+**Can I pull a single country's history for a chart?**
+Yes — set `entities` to just that country's name, e.g. `["Japan"]`, and optionally narrow with `yearFrom`/`yearTo`.
+
+**Does `articles` mode return every article OWID has ever published?**
+It returns recent articles by default; matching more with `searchQuery` or `topic`, or raising `maxItems`, pulls further back into OWID's archive. It isn't meant to enumerate every article ever published in a single run.
+
+**What's the difference between `chartData` and `chartDataBulk`?**
+`chartData` downloads one chart by its slug. `chartDataBulk` does the same for a list of slugs in a single run, so you don't have to run the actor once per chart.
+
+**Why would a chart-config record be missing some fields?**
+Not every chart has a subtitle, footnote, or related questions published — those fields are only included when OWID's own chart config has them.
+
+**Is this affiliated with Our World in Data?**
+No. This actor reads Our World in Data's public pages and is not affiliated with, endorsed by, or connected to Our World in Data or the Global Change Data Lab.
