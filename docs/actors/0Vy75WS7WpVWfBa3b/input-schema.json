@@ -1,0 +1,54 @@
+{
+  "properties": {
+    "forceResidentialProxy": {
+      "default": false,
+      "description": "By default the actor tries a direct connection first and only falls back to the proxy above if blocked. Enable this to always use the proxy from the first attempt — recommended if your runs are seeing repeated 'access denied' errors or you're running on a short timeout, since skipping the (currently unreliable) direct attempt saves time and cost.",
+      "title": "Force residential proxy (skip direct connection)",
+      "type": "boolean"
+    },
+    "maxItems": {
+      "default": 50,
+      "description": "Maximum number of vehicles to return.",
+      "maximum": 500,
+      "minimum": 1,
+      "prefill": 3,
+      "title": "Max Items",
+      "type": "integer"
+    },
+    "proxyConfiguration": {
+      "default": {
+        "apifyProxyCountry": "DE",
+        "apifyProxyGroups": [
+          "RESIDENTIAL"
+        ],
+        "useApifyProxy": true
+      },
+      "description": "Optional — mobile.de is protected by Akamai Bot Manager. The actor first tries a direct connection (works from most Apify regions) and automatically falls back to this proxy if blocked. Recommended: Apify RESIDENTIAL proxy with country DE.",
+      "editor": "proxy",
+      "prefill": {
+        "apifyProxyCountry": "DE",
+        "apifyProxyGroups": [
+          "RESIDENTIAL"
+        ],
+        "useApifyProxy": true
+      },
+      "title": "Proxy Configuration",
+      "type": "object"
+    },
+    "startUrls": {
+      "default": [
+        "https://suchen.mobile.de/auto/volkswagen-golf.html"
+      ],
+      "description": "Mobile.de spec page URLs (suchen.mobile.de/auto/*.html format, e.g. https://suchen.mobile.de/auto/volkswagen-golf.html) or legacy search URLs (suchen.mobile.de/fahrzeuge/search.html?...). Spec page URLs are recommended — they embed full car listing data directly in the page.",
+      "editor": "stringList",
+      "prefill": [
+        "https://suchen.mobile.de/auto/volkswagen-golf.html"
+      ],
+      "title": "Start URLs",
+      "type": "array"
+    }
+  },
+  "schemaVersion": 1,
+  "title": "Mobile.de Scraper Input",
+  "type": "object"
+}
