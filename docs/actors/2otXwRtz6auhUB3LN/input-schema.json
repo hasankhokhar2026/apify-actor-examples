@@ -1,0 +1,89 @@
+{
+  "description": "Search UK property listings on Rightmove by location and purpose.",
+  "properties": {
+    "location": {
+      "default": "london",
+      "description": "UK city or region to search in.",
+      "editor": "select",
+      "enum": [
+        "london",
+        "manchester",
+        "birmingham",
+        "leeds",
+        "sheffield",
+        "liverpool",
+        "bristol",
+        "edinburgh",
+        "glasgow",
+        "cardiff",
+        "nottingham",
+        "coventry",
+        "belfast",
+        "leicester",
+        "newcastle",
+        "oxford",
+        "cambridge",
+        "york",
+        "exeter",
+        "brighton"
+      ],
+      "enumTitles": [
+        "London",
+        "Manchester",
+        "Birmingham",
+        "Leeds",
+        "Sheffield",
+        "Liverpool",
+        "Bristol",
+        "Edinburgh",
+        "Glasgow",
+        "Cardiff",
+        "Nottingham",
+        "Coventry",
+        "Belfast",
+        "Leicester",
+        "Newcastle",
+        "Oxford",
+        "Cambridge",
+        "York",
+        "Exeter",
+        "Brighton"
+      ],
+      "prefill": "london",
+      "title": "City / Location",
+      "type": "string"
+    },
+    "maxItems": {
+      "default": 20,
+      "description": "Maximum number of listings to return (1–500).",
+      "maximum": 500,
+      "minimum": 1,
+      "prefill": 20,
+      "title": "Max items",
+      "type": "integer"
+    },
+    "mode": {
+      "default": "buy",
+      "description": "Whether to search for properties for sale or rent.",
+      "editor": "select",
+      "enum": [
+        "buy",
+        "rent"
+      ],
+      "enumTitles": [
+        "For Sale",
+        "For Rent"
+      ],
+      "prefill": "buy",
+      "title": "Search mode",
+      "type": "string"
+    }
+  },
+  "required": [
+    "mode",
+    "location"
+  ],
+  "schemaVersion": 1,
+  "title": "Rightmove UK Scraper Input",
+  "type": "object"
+}

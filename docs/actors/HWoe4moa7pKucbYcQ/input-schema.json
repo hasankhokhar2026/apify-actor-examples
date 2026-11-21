@@ -1,0 +1,202 @@
+{
+  "description": "Search remote IT/tech job listings from Jobicy's public API. Filter by keyword, location, sector, job type, and more.",
+  "properties": {
+    "geo": {
+      "default": "",
+      "description": "Filter jobs by geographic region.",
+      "editor": "select",
+      "enum": [
+        "",
+        "usa",
+        "uk",
+        "canada",
+        "australia",
+        "europe",
+        "worldwide",
+        "germany",
+        "france",
+        "india",
+        "brazil",
+        "spain",
+        "netherlands",
+        "portugal",
+        "poland",
+        "sweden",
+        "switzerland",
+        "italy",
+        "israel",
+        "singapore",
+        "new-zealand"
+      ],
+      "enumTitles": [
+        "Any region",
+        "USA",
+        "UK",
+        "Canada",
+        "Australia",
+        "Europe",
+        "Worldwide",
+        "Germany",
+        "France",
+        "India",
+        "Brazil",
+        "Spain",
+        "Netherlands",
+        "Portugal",
+        "Poland",
+        "Sweden",
+        "Switzerland",
+        "Italy",
+        "Israel",
+        "Singapore",
+        "New Zealand"
+      ],
+      "prefill": "",
+      "title": "Geographic region",
+      "type": "string"
+    },
+    "jobIds": {
+      "description": "List of Jobicy job IDs or slugs to fetch specifically.",
+      "editor": "stringList",
+      "title": "Job IDs / slugs (mode=getJob)",
+      "type": "array"
+    },
+    "jobType": {
+      "default": "",
+      "description": "Filter by employment type.",
+      "editor": "select",
+      "enum": [
+        "",
+        "full-time",
+        "part-time",
+        "contract",
+        "freelance",
+        "internship"
+      ],
+      "enumTitles": [
+        "Any type",
+        "Full-time",
+        "Part-time",
+        "Contract",
+        "Freelance",
+        "Internship"
+      ],
+      "prefill": "",
+      "title": "Job type",
+      "type": "string"
+    },
+    "level": {
+      "default": "",
+      "description": "Filter by seniority level.",
+      "editor": "select",
+      "enum": [
+        "",
+        "junior",
+        "mid",
+        "senior",
+        "lead",
+        "manager",
+        "director",
+        "executive",
+        "internship"
+      ],
+      "enumTitles": [
+        "Any level",
+        "Junior",
+        "Mid",
+        "Senior",
+        "Lead",
+        "Manager",
+        "Director",
+        "Executive",
+        "Internship"
+      ],
+      "prefill": "",
+      "title": "Job level",
+      "type": "string"
+    },
+    "location": {
+      "description": "Additional text filter on location field (e.g. 'London', 'Remote UK'). Applied client-side after API fetch.",
+      "editor": "textfield",
+      "title": "Location (text filter)",
+      "type": "string"
+    },
+    "maxItems": {
+      "default": 100,
+      "description": "Maximum number of job records to return.",
+      "maximum": 10000,
+      "minimum": 1,
+      "prefill": 100,
+      "title": "Max items",
+      "type": "integer"
+    },
+    "minSalary": {
+      "description": "Only include jobs where the maximum salary is at least this value (USD per year). Jobs without salary data are always included.",
+      "maximum": 10000000,
+      "minimum": 0,
+      "title": "Minimum salary (USD/year)",
+      "type": "integer"
+    },
+    "mode": {
+      "default": "search",
+      "description": "What to fetch: search jobs or look up specific jobs by ID.",
+      "editor": "select",
+      "enum": [
+        "search",
+        "getJob"
+      ],
+      "enumTitles": [
+        "Search — find jobs by keyword, sector, location",
+        "Get Job — fetch specific jobs by slug/ID"
+      ],
+      "prefill": "search",
+      "title": "Mode",
+      "type": "string"
+    },
+    "query": {
+      "description": "Keyword to search in job title and tags (e.g. 'python developer', 'react', 'AWS').",
+      "editor": "textfield",
+      "prefill": "python",
+      "title": "Search keyword / tag",
+      "type": "string"
+    },
+    "sector": {
+      "default": "",
+      "description": "Filter by industry sector.",
+      "editor": "select",
+      "enum": [
+        "",
+        "dev",
+        "marketing",
+        "hr",
+        "management",
+        "education",
+        "healthcare",
+        "data-science",
+        "technical-support",
+        "business"
+      ],
+      "enumTitles": [
+        "Any sector",
+        "Development / Engineering",
+        "Marketing",
+        "Human Resources",
+        "Management",
+        "Education",
+        "Healthcare",
+        "Data Science & Analytics",
+        "Technical Support",
+        "Business Development"
+      ],
+      "prefill": "",
+      "title": "Industry / Sector",
+      "type": "string"
+    }
+  },
+  "required": [
+    "mode"
+  ],
+  "schemaVersion": 1,
+  "title": "JobServe Scraper Input",
+  "type": "object"
+}

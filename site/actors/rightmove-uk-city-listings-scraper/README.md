@@ -1,0 +1,100 @@
+# Rightmove UK City Listings Scraper
+
+Rightmove is the UK's largest property portal. This actor searches residential for-sale and to-rent listings across 20 major UK cities — from London and Manchester to Cardiff and Belfast — and returns each property as a structured record with price, size, tenure, agent contact and map coordinates, ready for comparison or lead work without visiting the site by hand.
+
+## What this actor does
+
+- Searches either the for-sale (`buy`) or to-rent (`rent`) channel for one of 20 supported UK cities
+- Paginates through Rightmove's own result pages automatically up to your requested item count
+- Parses floor-area text into separate square-foot and square-metre fields when Rightmove states a size
+- Extracts GPS coordinates, agent branch name and phone number, and the primary listing photo for every property
+- Omits any field Rightmove didn't display for that listing — no empty strings or nulls in the output
+
+## Output per property
+
+- `propertyId` — Rightmove's internal property ID
+- `address` — full display address
+- `bedrooms`, `bathrooms`
+- `sizeSqFt`, `sizeSqM` — parsed from the listing's stated floor area, when given
+- `propertyType` — sub-type (Detached, Semi-Detached, Flat, etc.)
+- `tenure` — Freehold or Leasehold, when stated
+- `price` — asking price or rent in GBP
+- `priceDisplay` — Rightmove's own formatted price string (e.g. "£425,000")
+- `priceFrequency` — rental frequency (e.g. monthly), for `rent` searches
+- `currency` — always GBP when price data is present
+- `transactionType` — `SALE` or `LET`
+- `channel` — Rightmove's internal listing channel
+- `summary` — short property summary text
+- `latitude`, `longitude` — GPS coordinates
+- `agentName`, `agentPhone` — listing agent or branch name and contact number
+- `imageUrl` — primary listing photo
+- `propertyUrl` — direct link to the Rightmove listing page
+- `listingStatus` — e.g. "New", "Reduced"
+- `listingDate` — date the listing was added or last updated
+- `addedOrReduced` — Rightmove's added/reduced label text
+
+## Input
+
+| Field | Type | Default | Description |
+|---|---|---|---|
+| `mode` | string | `buy` | `buy` (for sale) or `rent` (to rent) |
+| `location` | string | `london` | UK city to search (one of the 20 supported cities) |
+| `maxItems` | integer | `20` | Maximum number of listings to return (1–500) |
+
+### Example: flats for sale in London
+
+```json
+{
+  "mode": "buy",
+  "location": "london",
+  "maxItems": 50
+}
+```
+
+### Example: rentals in Edinburgh
+
+```json
+{
+  "mode": "rent",
+  "location": "edinburgh",
+  "maxItems": 30
+}
+```
+
+### Example: houses for sale in Cardiff
+
+```json
+{
+  "mode": "buy",
+  "location": "cardiff",
+  "maxItems": 100
+}
+```
+
+## Use cases
+
+- **Relocation and house-hunting** compare prices and sizes across several UK cities in one place
+- **Estate agency research** benchmark local asking prices and agent coverage by city
+- **Lettings market analysis** track rental price frequency and size across a city's current listings
+- **PropTech and valuation tools** feed live Rightmove asking prices into a comparables model
+- **Lead generation** collect agent branch names and phone numbers tied to current listings
+
+## FAQ
+
+**Which cities can I search?**
+Twenty major UK cities: London, Manchester, Birmingham, Leeds, Sheffield, Liverpool, Bristol, Edinburgh, Glasgow, Cardiff, Nottingham, Coventry, Belfast, Leicester, Newcastle, Oxford, Cambridge, York, Exeter and Brighton.
+
+**Does this cover commercial property?**
+No, this actor targets residential listings only — for sale or to rent.
+
+**Why are `sizeSqFt` or `sizeSqM` sometimes missing?**
+Rightmove only shows a floor area when the agent provided one. If the listing has no stated size, both fields are left out rather than showing zero.
+
+**Is this affiliated with Rightmove?**
+No, this is an independent actor that reads publicly available Rightmove listing data; it has no affiliation with Rightmove.
+
+**How many results can I get per run?**
+Up to 500 listings, capped by `maxItems`; the actor paginates through Rightmove's own result pages to collect them.
+
+**How fresh is the data?**
+Every run queries Rightmove live, so results reflect whatever is currently listed for that city and channel.
