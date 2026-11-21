@@ -4,55 +4,56 @@
 
 # GoldenPages.ie Business Finder by County & Category
 
-GoldenPages.ie is Ireland's business directory, covering trades, healthcare, hospitality, and professional services across all 26 counties. This actor searches it by category and county or town, or pulls full profile data — hours, email, coordinates, FAQs — for specific businesses you already have a link to.
+GoldenPages.ie is Ireland's business directory: trades, healthcare, hospitality and professional
+services across all 26 counties. This actor turns it into a structured lead and research dataset.
+Search by category or keyword and a county, city or town; search several categories and several
+places in one run; or paste the exact GoldenPages.ie URLs you already have. Each row is one
+business with the contact, location, rating, hours, payment, social and image data the directory
+publishes.
 
-## What this actor does
+## What you can do
 
-- Searches by business category and an Irish county, city, or town, or nationwide across all of Ireland.
-- Offers 48 curated categories and all 26 counties as ready-to-pick options, plus free-text overrides for anything not on those lists — GoldenPages.ie treats a custom category like a keyword search.
-- Correctly handles fada diacritics (á, é, í, ó, ú) in both search input and output, so place names like "Dún Laoghaire" come through intact.
-- Optionally fetches each business's own profile page for details the search listing doesn't show: GPS coordinates, structured opening hours, email, external website, payment methods accepted, and any published FAQ.
-- Leaves a field out of a record entirely when GoldenPages.ie never published that value, rather than returning it empty.
-
-## Output per business
-
-| Field | Description |
-|---|---|
-| `name` | Business name |
-| `category` / `categories` | Primary category and full list of registered categories (search results) or business type (profile lookups) |
-| `rating`, `reviewCount` | Average star rating and review count, where the business has any |
-| `verified`, `sponsored` | GoldenPages.ie's "Verified" badge and sponsored-listing flag |
-| `address` | Full address as shown on the search card (search results) |
-| `street`, `city`, `region`, `postalCode`, `country` | Address components (profile lookups) |
-| `latitude`, `longitude` | GPS coordinates (profile lookups only) |
-| `openingHours` | Structured opening hours as `{day, opens, closes}` entries (profile lookups, when published) |
-| `phone`, `email`, `website` | Contact details; `website` is always the business's own site, never a GoldenPages.ie link |
-| `facebookUrl`, `instagramUrl`, `twitterUrl`, `linkedinUrl`, `googleMapsUrl` | Published social and map links |
-| `images`, `logoUrl` | Business photos and logo |
-| `paymentAccepted` | Accepted payment methods (profile lookups, when published) |
-| `faqItems` | `{question, answer}` pairs from the business's own published FAQ (profile lookups, when published) |
-| `businessId`, `customerId` | GoldenPages.ie's internal listing identifiers |
-| `summary` | Short blurb from the search card (search results) |
-| `description` | Fuller description (profile lookups) |
-| `searchCategory`, `searchLocation` | The category and location used to find this result (search mode only) |
-| `sourceUrl` | Canonical GoldenPages.ie profile URL |
-| `recordType` | Always `"business"` |
-| `scrapedAt` | UTC timestamp of the scrape |
+- **Search one or many categories/keywords** across one or many counties, cities or towns, or
+  nationwide. Every category × location pair runs, and duplicate businesses are removed.
+- **Filter before you export** by verified badge, minimum rating, phone, website, published email,
+  opening hours or coordinates.
+- **Find businesses around a point** with a latitude/longitude centre and a kilometre radius. The
+  actor reads the real coordinates published on each listing, adds `distanceKm`, and drops
+  businesses without a published position when a radius is set.
+- **Pull full profiles** for email, FAQs, the full description and the photo gallery, or read
+  profile URLs from `businessUrls`. Search URLs and category browse URLs are accepted too.
+- **Keep Irish names intact** — fada diacritics (á, é, í, ó, ú) are transliterated for the search
+  URL and preserved in the output.
+- **Leave missing data out** — a field the directory never published for a business is omitted, not
+  returned as `null` or an empty string.
 
 ## Input
 
 | Field | Type | Default | Description |
 |---|---|---|---|
-| `mode` | string | `search` | `search` (category + county/town) or `byUrl` (fetch specific profile URLs). |
-| `category` | string | `restaurants` | One of 48 curated business categories, or `custom` to use `customCategory`. |
-| `customCategory` | string | – | Free-text category or keyword, overriding `category` when set. |
-| `county` | string | `dublin` | One of Ireland's 26 counties, `ireland` for nationwide, or `custom` to use `customLocation`. |
-| `customLocation` | string | – | Free-text city or town, overriding `county` when set. |
-| `sortBy` | string | `relevance` | Result order: `relevance` or `az` (business name). |
+| `mode` | string | `search` | `search` for category/keyword + location, or `byUrl` to read pasted GoldenPages.ie URLs. |
+| `searchTerms` | array | `[]` | One or more categories or keywords, e.g. `["restaurants", "hotels"]`. Overrides `category`/`customCategory` when set. |
+| `category` | string | `restaurants` | A ready-made Irish category (60+ options including `custom`), or `custom` to use `customCategory`. |
+| `customCategory` | string | — | Free-text category or keyword, e.g. `locksmith` or `IT services`. Overrides `category` when set. |
+| `locations` | array | `[]` | One or more counties, cities or towns, e.g. `["Dublin", "Cork"]`, or `["ireland"]`. Overrides `county`/`customLocation` when set. |
+| `county` | string | `dublin` | One of the 26 counties, `ireland` for nationwide, or `custom` to use `customLocation`. |
+| `customLocation` | string | — | Free-text city, town or Dublin postal area, e.g. `Blanchardstown` or `Dublin 15`. Overrides `county` when set. |
+| `sortBy` | string | `relevance` | `relevance` or `az` (business name). Relevance is the most reliable. |
 | `verifiedOnly` | boolean | `false` | Keep only businesses with GoldenPages.ie's "Verified" badge. |
-| `minRating` | integer | `0` | Keep only businesses rated at least this many stars (1-5); `0` applies no rating filter. |
-| `businessUrls` | array | `[]` | GoldenPages.ie profile URLs to fetch directly, in `byUrl` mode. |
-| `maxItems` | integer | `20` | Maximum number of business records to return. |
+| `minRating` | integer | `0` | Keep only businesses rated at least this many stars (0–5). 0 applies no rating filter. |
+| `withPhone` | boolean | `false` | Keep only businesses with a phone number. |
+| `withWebsite` | boolean | `false` | Keep only businesses with a published website. |
+| `withEmail` | boolean | `false` | Keep only businesses with a published email. Turns on profile detail fetching automatically. |
+| `withOpeningHours` | boolean | `false` | Keep only businesses with published opening hours. |
+| `withCoordinates` | boolean | `false` | Keep only businesses with latitude and longitude. |
+| `strictCategoryMatch` | boolean | `false` | Drop listings whose directory categories share no word with the search term. Useful with A–Z sort when paid placements from other categories appear. |
+| `latitude` | number | — | Centre latitude for `distanceKm` and the radius filter. Supply with `longitude`. |
+| `longitude` | number | — | Centre longitude for `distanceKm` and the radius filter. Supply with `latitude`. |
+| `radiusKm` | number | `0` | Keep only businesses within this many kilometres of the centre. 0 computes `distanceKm` without filtering. |
+| `includeDetails` | boolean | `false` | Also open each profile page to read email, FAQs, the full description and the photo gallery. Slower; auto-enabled by `withEmail`. |
+| `rehostImages` | boolean | `false` | Copy the logo and up to three gallery images into this run's Apify key-value store and return public URLs. Original URLs are kept in `*Original` fields. |
+| `businessUrls` | array | `[]` | goldenpages.ie business, advanced-search or category browse URLs. Profiles return one record each; listing URLs paginate. |
+| `maxItems` | integer | `20` | Hard cap on business records (1–5,000). Each results page carries 20 businesses, so very large values take longer. |
 
 ### Example: restaurants in Dublin
 
@@ -65,6 +66,17 @@ GoldenPages.ie is Ireland's business directory, covering trades, healthcare, hos
 }
 ```
 
+### Example: several categories across several counties
+
+```json
+{
+  "mode": "search",
+  "searchTerms": ["restaurants", "hotels", "pubs-bars"],
+  "locations": ["Dublin", "Cork", "Galway"],
+  "maxItems": 300
+}
+```
+
 ### Example: verified, highly rated solicitors nationwide
 
 ```json
@@ -74,65 +86,156 @@ GoldenPages.ie is Ireland's business directory, covering trades, healthcare, hos
   "county": "ireland",
   "verifiedOnly": true,
   "minRating": 4,
-  "maxItems": 50
+  "maxItems": 100
 }
 ```
 
-### Example: custom category and town
+### Example: businesses within 5 km of central Dublin
 
 ```json
 {
   "mode": "search",
-  "customCategory": "locksmith",
-  "customLocation": "Dun Laoghaire",
+  "category": "restaurants",
+  "county": "dublin",
+  "latitude": 53.3498,
+  "longitude": -6.2603,
+  "radiusKm": 5,
+  "withCoordinates": true,
+  "maxItems": 50
+}
+```
+
+### Example: full profiles with email and FAQs
+
+```json
+{
+  "mode": "search",
+  "category": "dentists",
+  "county": "cork",
+  "includeDetails": true,
+  "withEmail": true,
   "maxItems": 20
 }
 ```
 
-### Example: specific business profiles
+### Example: specific business profiles or a saved search
 
 ```json
 {
   "mode": "byUrl",
   "businessUrls": [
-    { "url": "https://www.goldenpages.ie/rudys-restaurant-blanchardstown-D15/" }
-  ]
+    { "url": "https://www.goldenpages.ie/rudys-restaurant-blanchardstown-D15/" },
+    { "url": "https://www.goldenpages.ie/q/business/advanced/where/cork/what/solicitors/1/" }
+  ],
+  "maxItems": 50
 }
 ```
 
-## Use cases
+## Output per business
 
-- **Trade lead generation** — build a list of electricians, plumbers, or builders by county for outreach.
-- **Local market research** — compare how many businesses of a category operate in different counties and how they're rated.
-- **Directory or comparison-site building** — feed structured Irish business listings into your own local-search product.
-- **Competitor mapping** — see who else serves a category and area, with ratings, verification status, and contact details.
-- **Franchise and site-selection analysis** — gauge how saturated a county already is for a given service before opening a location.
+| Field | Description |
+|---|---|
+| `name` | Business name. |
+| `businessId` / `customerId` | GoldenPages.ie listing identifiers. |
+| `sourceUrl` | Canonical GoldenPages.ie profile URL. |
+| `category` / `categories` | Primary category and all registered categories. |
+| `businessType` | Schema.org business type, e.g. `Restaurant`, `BarOrPub`, `Hotel`, `LocalBusiness`. |
+| `address` | Full address as shown on the listing. |
+| `street`, `city`, `region`, `postalCode`, `country` | Address components, including the Eircode when published. |
+| `latitude`, `longitude` | Published coordinates. |
+| `distanceKm` | Distance from the supplied centre, when `latitude`/`longitude` are set. |
+| `phone`, `phones` | Primary phone and any additional published numbers. |
+| `email` | Published profile email (`includeDetails` or `byUrl`). |
+| `website` | The business's own site, never a GoldenPages.ie link. |
+| `rating`, `reviewCount` | Average stars and review count, where published. |
+| `reviews` | Published review text with `author`, `date`, `rating` and `text`, parsed from the profile JSON-LD (HTML fallback). |
+| `verified`, `sponsored` | GoldenPages.ie's "Verified" badge and paid/featured flag. |
+| `openingHours` | `{day, opens, closes}` entries; closed days appear as `{day, closed: true}`. |
+| `paymentAccepted` | Published payment methods, normalised (Visa, MasterCard, Cash, Apple Pay, …). |
+| `description` | Full business description. |
+| `summary` | Short search-card blurb. |
+| `facebookUrl`, `instagramUrl`, `twitterUrl`, `linkedinUrl`, `youtubeUrl`, `tiktokUrl`, `pinterestUrl` | Published social profiles. |
+| `googleMapsUrl` | Published map link. |
+| `orderOnlineUrl` | Published online-ordering link. |
+| `logoUrl`, `imageUrl`, `images` | Logo, lead image and gallery image URLs. |
+| `logoUrlOriginal`, `imageUrlOriginal`, `imagesOriginal` | Original CDN URLs retained when `rehostImages` copies the files to Apify storage. |
+| `faqItems` | `{question, answer}` pairs from the business's published FAQ (`includeDetails` or `byUrl`). |
+| `whyChooseUs`, `featuredMessage`, `featuredMessageUrl` | Directory highlights and featured-message link. |
+| `searchCategory`, `searchLocation` | The term and place that produced the row (search/listing mode). |
+| `recordType` | Always `business`. |
+| `scrapedAt` | UTC timestamp of the scrape. |
+
+## How it works
+
+The actor reads the public search and business-profile pages on goldenpages.ie. It first uses a
+cookieless HTML mirror of the page over plain HTTP (Chrome user agent, short retries), which avoids
+browser startup and long navigation timeouts. If the mirror is unavailable, it falls back to a
+headless browser through an Ireland-pinned Apify datacenter proxy, with a broader Apify proxy pool
+as a backup. No account, API key, login, cookie or proxy setup is required from you.
+
+The search-results page already embeds a structured JSON-LD list with the business description,
+phone, website, address components, coordinates, hours, payment methods, social links, logo and
+map link. The actor merges that list into each result without an extra request. Profile pages are
+opened only when `includeDetails`, `withEmail` or `byUrl` asks for profile-only data (email, FAQs,
+full description, gallery, published review text).
+
+## Accuracy and limits
+
+- **Reviews are published only where the business has them.** The profile JSON-LD/HTML review is
+  returned in `reviews` with author, date, rating and text; listings with no published review text
+  expose only `rating`/`reviewCount`. The site does not provide a public multi-page review API.
+- **No server-side distance sort.** GoldenPages.ie's distance sort depends on the browser's live
+  geolocation. This actor instead uses the real coordinates published on each listing to compute
+  `distanceKm` and apply `radiusKm`. Businesses without a published position are skipped when a
+  radius is set.
+- **A–Z can include paid placements.** GoldenPages.ie may show paid businesses from other
+  categories at the top of an A–Z result set. Use `relevance` for the cleanest category results, or
+  turn on `strictCategoryMatch`.
+- **Image CDN is region-restricted.** GoldenPages' image host can refuse requests from outside
+  Ireland/Europe. Turn on `rehostImages` to copy the logo and a few gallery images into your Apify
+  key-value store so the URLs open for everyone.
+- **Large searches take time.** Each results page carries 20 businesses. Dublin had about 1,900
+  restaurants and nationwide had about 6,200 at the time of writing. `maxItems` caps the run;
+  splitting by location is the fastest way to cover a very large category.
+- **A custom category is a keyword search.** GoldenPages.ie treats an unknown category as a
+  keyword and may return general listings. Use a real category or a precise keyword for exact
+  matches.
 
 ## FAQ
 
-**What data does this read, and is it affiliated with GoldenPages.ie?**
-It reads the public search and business-profile pages on goldenpages.ie, Ireland's business directory. This is an independent, third-party actor and isn't affiliated with or endorsed by GoldenPages.ie.
+**Do I need a GoldenPages.ie account, API key or proxy?**
+No. The actor uses public pages and picks its own Apify proxy path.
 
-**Why do some businesses have no rating, email, or website?**
-GoldenPages.ie only shows a rating once a business has at least one review, and only shows contact or social details a business chose to publish. Anything not published for that business is left out of the record.
+**Is this affiliated with GoldenPages.ie?**
+No. It is an independent third-party tool. All trademarks belong to their owners.
 
-**Can I search an entire county, or all of Ireland at once?**
-Yes. Set `county` to any of the 26 counties for county-wide results, or to `"ireland"` for a nationwide search. `customLocation` narrows further to a specific city or town.
+**Why are some fields missing for a business?**
+GoldenPages.ie only publishes what a business or its listing provides. A missing value is omitted
+from the row rather than returned as `null`.
 
-**Why are coordinates only available in `byUrl` mode?**
-Search-result cards don't carry GPS data on the page — only the business's own profile page does, so `latitude`/`longitude` only appear when you fetch that profile directly.
+**Why do only some rows have coordinates or email?**
+Coordinates come from the listing's published map position. Email comes from the profile page and
+only exists when the business publishes one; enable `includeDetails` (or `withEmail`) to read it.
 
-**Do I need a login or proxy to run this?**
-No. No account, API key, login, or proxy input is required to use this actor.
+**Can I search several categories and several towns at once?**
+Yes. Put them in `searchTerms` and `locations`; every pair runs and duplicates are removed.
 
-**What's the difference between `summary` and `description`?**
-`summary` is the short blurb shown on a search-result card. `description` is the fuller text from the business's own profile page, only available via `byUrl`.
+**Can I paste a search URL instead of a profile URL?**
+Yes. `businessUrls` accepts profile pages, `/q/business/advanced/...` search pages and category
+browse pages. Listing URLs paginate until `maxItems`.
 
-**Why does a nonsense or very broad category keyword still return results?**
-GoldenPages.ie's own search falls back to a general listing rather than zero results when it doesn't recognize a category — this actor reports exactly what GoldenPages.ie's search returns. Use a real category or a specific keyword for precise matches.
+**Why is `email` empty even with `includeDetails` on?**
+The business does not publish an email on its GoldenPages.ie profile. The actor does not guess or
+harvest emails from third-party sites.
 
-**Is `sortBy` limited to relevance and name?**
-Yes. GoldenPages.ie's own distance-sort option depends on the visitor's live browser location rather than a place name, so it isn't something this actor can reproduce reliably; `relevance` and `az` are the two orders that work consistently from a location name.
+**What does `strictCategoryMatch` do?**
+It drops a listing when none of its directory categories share a word with your search term. It is
+off by default because GoldenPages.ie sometimes files a valid business under a different category
+name (pubs under Restaurants, for example).
 
-**How large can one search run get?**
-Up to `maxItems`, capped at 1000. Very broad nationwide category searches can have well over a thousand matching listings on GoldenPages.ie itself; `maxItems` is what bounds how many of those this run returns.
+## Data source
+
+Public business listings on [goldenpages.ie](https://www.goldenpages.ie), Ireland's business
+directory. The actor reads only the publicly visible listing and profile data. You are responsible
+for how you use the exported business contact data and for complying with applicable data
+protection and anti-spam rules.

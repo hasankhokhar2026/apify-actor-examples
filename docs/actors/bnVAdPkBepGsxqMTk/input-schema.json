@@ -1,129 +1,274 @@
 {
-  "description": "Search Jumia products, browse categories, grab flash deals, or fetch product details across 10 African markets.",
+  "description": "Choose a Jumia storefront and a way to collect products: keyword search, category, flash deals, product URLs, seller storefronts, or brand pages.",
   "properties": {
-    "categorySlug": {
-      "description": "Jumia category URL path segment, e.g. 'phones-tablets', 'electronics', 'fashion-men'. Find it in the URL after the domain: jumia.com.ng/phones-tablets/",
+    "brand": {
+      "description": "Brand name, slug or brand URL. Used by the brand mode and to narrow search/category results. Examples: samsung, apple, tecno, or https://www.jumia.com.ng/brands/apple/.",
       "editor": "textfield",
-      "title": "Category slug (mode=categoryBrowse)",
+      "title": "Brand",
+      "type": "string"
+    },
+    "categorySlug": {
+      "description": "A category path or a friendly key. Examples: phones-tablets, electronics, fashion, home-office. The actor translates the key to the selected market's own URL (for example telephone-tablette on jumia.ma). A full Jumia category URL also works.",
+      "editor": "textfield",
+      "title": "Category",
+      "type": "string"
+    },
+    "condition": {
+      "default": "any",
+      "description": "Filter by product condition. Jumia exposes new items, refurbished items and packaging-damaged items through different filters.",
+      "editor": "select",
+      "enum": [
+        "any",
+        "new",
+        "refurbished",
+        "packaging_damaged"
+      ],
+      "enumTitles": [
+        "Any condition",
+        "New",
+        "Refurbished",
+        "Packaging damaged"
+      ],
+      "prefill": "any",
+      "title": "Condition",
       "type": "string"
     },
     "country": {
       "default": "nigeria",
-      "description": "Jumia market / country to scrape.",
+      "description": "The active Jumia country storefront to use. Prices are returned in that market's local currency.",
       "editor": "select",
       "enum": [
         "nigeria",
         "kenya",
         "ghana",
         "egypt",
-        "south_africa",
         "morocco",
         "senegal",
+        "uganda",
+        "cote_divoire",
+        "south_africa",
         "cameroon",
-        "tanzania",
-        "uganda"
+        "tanzania"
       ],
       "enumTitles": [
-        "Nigeria (jumia.com.ng)",
-        "Kenya (jumia.com.ke)",
-        "Ghana (jumia.com.gh)",
-        "Egypt (jumia.com.eg)",
-        "South Africa (jumia.com.za)",
-        "Morocco (jumia.com.ma)",
-        "Senegal (jumia.com.sn)",
-        "Cameroon (jumia.com.cm)",
-        "Tanzania (jumia.com.tz)",
-        "Uganda (jumia.com.ug)"
+        "Nigeria - jumia.com.ng (NGN)",
+        "Kenya - jumia.co.ke (KES)",
+        "Ghana - jumia.com.gh (GHS)",
+        "Egypt - jumia.com.eg (EGP)",
+        "Morocco - jumia.ma (MAD)",
+        "Senegal - jumia.sn (XOF)",
+        "Uganda - jumia.ug (UGX)",
+        "Cote d'Ivoire - jumia.ci (XOF)",
+        "South Africa - closed, no retail storefront",
+        "Cameroon - closed, no retail storefront",
+        "Tanzania - closed, no retail storefront"
       ],
       "prefill": "nigeria",
-      "title": "Country",
+      "title": "Jumia storefront",
       "type": "string"
     },
+    "enrichDetails": {
+      "default": false,
+      "description": "Open each product page found in a listing to add description, specifications, seller score, warranty, return policy and the image gallery. Slower and more request-heavy.",
+      "prefill": false,
+      "title": "Add full product details",
+      "type": "boolean"
+    },
+    "expressOnly": {
+      "default": false,
+      "description": "Keep products fulfilled through Jumia Express.",
+      "prefill": false,
+      "title": "Jumia Express only",
+      "type": "boolean"
+    },
+    "includeReviews": {
+      "default": false,
+      "description": "For product detail and enriched listings, read the product's review pages and add them to the record.",
+      "prefill": false,
+      "title": "Include full reviews",
+      "type": "boolean"
+    },
     "keyword": {
-      "default": "smartphone",
-      "description": "Product search term (mode=search).",
+      "default": "",
+      "description": "Product words to search for. Also narrows brand listings when set.",
       "editor": "textfield",
       "prefill": "smartphone",
-      "title": "Search keyword",
+      "title": "Keyword",
       "type": "string"
     },
     "maxItems": {
       "default": 40,
-      "description": "Maximum number of products to return.",
-      "maximum": 500,
+      "description": "Stop after this many product records. Jumia caps one listing at 2,000 products (50 pages); enable price partitioning to combine bands.",
+      "maximum": 10000,
       "minimum": 1,
       "prefill": 40,
-      "title": "Max items",
+      "title": "Maximum products",
       "type": "integer"
     },
     "maxPages": {
       "default": 5,
-      "description": "Maximum listing pages to crawl (40 products per page).",
-      "maximum": 25,
+      "description": "How many listing pages to read, about 40 products per page. Jumia shows at most 50 pages for one listing.",
+      "maximum": 50,
       "minimum": 1,
       "prefill": 5,
-      "title": "Max pages",
+      "title": "Maximum listing pages",
       "type": "integer"
     },
     "maxPrice": {
-      "description": "Only include products with price ≤ this value (in local currency).",
+      "description": "Highest price to keep, in the selected market's local currency.",
       "minimum": 0,
-      "title": "Maximum price filter",
+      "title": "Maximum price",
       "type": "number"
     },
+    "maxReviews": {
+      "default": 20,
+      "description": "How many customer reviews to include per product when full reviews are enabled.",
+      "maximum": 100,
+      "minimum": 1,
+      "prefill": 20,
+      "title": "Maximum reviews",
+      "type": "integer"
+    },
+    "minDiscount": {
+      "default": "0",
+      "description": "Keep products discounted by at least this percentage.",
+      "editor": "select",
+      "enum": [
+        "0",
+        "10",
+        "20",
+        "30",
+        "40",
+        "50"
+      ],
+      "enumTitles": [
+        "Any discount",
+        "10% or more",
+        "20% or more",
+        "30% or more",
+        "40% or more",
+        "50% or more"
+      ],
+      "prefill": "0",
+      "title": "Minimum discount",
+      "type": "string"
+    },
     "minPrice": {
-      "description": "Only include products with price ≥ this value (in local currency).",
+      "description": "Lowest price to keep, in the selected market's local currency.",
       "minimum": 0,
-      "title": "Minimum price filter",
+      "title": "Minimum price",
       "type": "number"
     },
     "minRating": {
-      "description": "Only include products with rating ≥ this value (0–5).",
+      "description": "Keep products rated at least this many stars (0-5).",
       "maximum": 5,
       "minimum": 0,
-      "title": "Minimum rating filter",
+      "title": "Minimum rating",
       "type": "number"
+    },
+    "minSellerScore": {
+      "default": "0",
+      "description": "Keep products from sellers above a Jumia seller-score band.",
+      "editor": "select",
+      "enum": [
+        "0",
+        "1",
+        "2",
+        "3",
+        "4"
+      ],
+      "enumTitles": [
+        "Any seller",
+        "20% or more",
+        "40% or more",
+        "60% or more",
+        "80% or more"
+      ],
+      "prefill": "0",
+      "title": "Minimum seller score",
+      "type": "string"
     },
     "mode": {
       "default": "search",
-      "description": "What to scrape.",
+      "description": "How to find products. Search uses a keyword, category browses a catalog section, flashSales reads today's deals, productDetails opens specific URLs, sellerProducts reads a seller storefront, and brandProducts reads a brand page.",
       "editor": "select",
       "enum": [
         "search",
-        "productDetails",
         "categoryBrowse",
-        "flashSales"
+        "flashSales",
+        "productDetails",
+        "sellerProducts",
+        "brandProducts"
       ],
       "enumTitles": [
-        "Search products by keyword",
-        "Fetch details for specific product URLs",
-        "Browse a category by slug",
-        "Today's flash/daily deals"
+        "Search by keyword",
+        "Browse a category",
+        "Today's flash deals",
+        "Specific product URLs",
+        "Seller storefront",
+        "Brand page"
       ],
       "prefill": "search",
-      "title": "Mode",
+      "title": "Collection mode",
       "type": "string"
+    },
+    "officialStoreOnly": {
+      "default": false,
+      "description": "Keep products sold by brand-authorised official stores.",
+      "prefill": false,
+      "title": "Official stores only",
+      "type": "boolean"
+    },
+    "partitionByPrice": {
+      "default": false,
+      "description": "Split a large request into price bands and merge them by product SKU. Use this to go past one listing's 2,000-product / 50-page slice.",
+      "prefill": false,
+      "title": "Partition large runs by price",
+      "type": "boolean"
     },
     "productUrls": {
       "default": [],
-      "description": "List of Jumia product page URLs to fetch in detail.",
+      "description": "Jumia product page URLs for the specific product mode. The market is detected from each URL.",
       "editor": "stringList",
       "prefill": [],
-      "title": "Product URLs (mode=productDetails)",
+      "title": "Product URLs",
       "type": "array"
     },
-    "useProxy": {
-      "default": true,
-      "description": "Route requests through Apify's AUTO datacenter proxy pool to avoid IP blocks.",
-      "prefill": true,
-      "title": "Use Apify proxy",
-      "type": "boolean"
+    "sellerUrls": {
+      "default": [],
+      "description": "Seller storefront URLs (or slugs like 'jckm-cod') for the seller mode. A full seller profile URL is accepted too.",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Seller URLs or slugs",
+      "type": "array"
+    },
+    "sort": {
+      "default": "popularity",
+      "description": "Order of listing results, using the sort options Jumia itself offers.",
+      "editor": "select",
+      "enum": [
+        "popularity",
+        "newest",
+        "lowest-price",
+        "highest-price",
+        "rating"
+      ],
+      "enumTitles": [
+        "Popularity",
+        "Newest arrivals",
+        "Price: low to high",
+        "Price: high to low",
+        "Product rating"
+      ],
+      "prefill": "popularity",
+      "title": "Sort order",
+      "type": "string"
     }
   },
   "required": [
     "mode"
   ],
   "schemaVersion": 1,
-  "title": "Jumia Scraper Input",
+  "title": "Jumia marketplace input",
   "type": "object"
 }

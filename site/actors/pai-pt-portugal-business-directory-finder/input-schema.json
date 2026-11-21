@@ -1,27 +1,17 @@
 {
-  "description": "Search pai.pt (Paginas Amarelas, Portugal's business directory) listings by category and location, or fetch full business profiles by direct URL.",
+  "description": "Search pai.pt (Páginas Amarelas, Portugal's business directory) by keyword, category and location, or fetch full business profiles from URLs.",
   "properties": {
-    "businessUrls": {
+    "categories": {
       "default": [],
-      "description": "Direct pai.pt business profile URLs to fetch, e.g. https://www.pai.pt/paginas/161409-restaurantes-pezarroz. Use the 'sourceUrl' field from search results.",
-      "editor": "requestListSources",
-      "items": {
-        "properties": {
-          "url": {
-            "description": "pai.pt business profile URL.",
-            "title": "URL",
-            "type": "string"
-          }
-        },
-        "type": "object"
-      },
+      "description": "One or more pai.pt category slugs, e.g. 'restaurantes', 'advogados'. Each category is searched in every location below. Takes priority over the single Category field.",
+      "editor": "stringList",
       "prefill": [],
-      "title": "Business profile URLs (mode=detail)",
+      "title": "Category slugs (multi-category)",
       "type": "array"
     },
     "category": {
       "default": "restaurantes",
-      "description": "Business category to search for. Pick a common category from the list, or choose 'Custom category' and type your own slug below (mode=search).",
+      "description": "A common business category. Choose 'Custom category' to type a slug below instead.",
       "editor": "select",
       "enum": [
         "custom",
@@ -58,7 +48,7 @@
         "engenheiros"
       ],
       "enumTitles": [
-        "Custom category (type slug below)",
+        "Custom category (type a slug below)",
         "Restaurantes (Restaurants)",
         "Advogados (Lawyers)",
         "Dentistas (Dentists)",
@@ -87,7 +77,7 @@
         "Pizzarias (Pizzerias)",
         "Escolas (Schools)",
         "Creches (Daycare centers)",
-        "Serralharias (Locksmiths / metalworks)",
+        "Serralharias (Metal workshops)",
         "Construcao civil (Construction)",
         "Engenheiros (Engineers)"
       ],
@@ -96,27 +86,28 @@
       "type": "string"
     },
     "customCategory": {
-      "description": "Free-text pai.pt category URL slug not in the curated list above, e.g. 'canalizadores' or 'oficinas-auto' (mode=search). Takes priority over 'Category' when set.",
+      "description": "A pai.pt category URL slug not in the list above, e.g. 'canalizadores-e-picheleiros'. Used only when the category fields are empty.",
       "editor": "textfield",
-      "title": "Custom category (overrides selection above)",
+      "title": "Custom category slug",
       "type": "string"
     },
     "customLocation": {
-      "description": "Free-text pai.pt location URL slug not in the curated list above, e.g. 'vila-franca-de-xira' or 'peniche' (mode=search). Takes priority over 'Location' when set.",
+      "description": "A city, district or island name not in the list above, e.g. 'Vila Franca de Xira' or 'Distrito de Braga'. Used only when the location fields are empty.",
       "editor": "textfield",
-      "title": "Custom location (overrides selection above)",
+      "title": "Custom location",
       "type": "string"
     },
     "fetchDetails": {
       "default": true,
-      "description": "For each search result, also visit its business profile page to collect address, phone, email, website, coordinates, and full category/tag lists. Recommended -- disable only for a faster, name-only preview scan (mode=search).",
+      "description": "Visit each search result's profile page to add email, website, coordinates, rating, all phones, gallery, services and feature groups. Disable for a faster card-only scan.",
       "prefill": true,
+      "sectionCaption": "Output",
       "title": "Fetch full business profiles",
       "type": "boolean"
     },
     "location": {
       "default": "",
-      "description": "Portuguese city or concelho to search in. Leave as 'Any location (nationwide)' to search the category across all of Portugal (mode=search).",
+      "description": "A Portuguese city or concelho. Leave as 'Any location (nationwide)' to search across Portugal.",
       "editor": "select",
       "enum": [
         "",
@@ -158,7 +149,7 @@
       ],
       "enumTitles": [
         "Any location (nationwide)",
-        "Custom location (type slug below)",
+        "Custom location (type below)",
         "Lisboa",
         "Porto",
         "Coimbra",
@@ -195,21 +186,39 @@
         "Barcelos"
       ],
       "prefill": "lisboa",
-      "title": "Location (concelho / city)",
+      "title": "Location",
       "type": "string"
+    },
+    "locations": {
+      "default": [],
+      "description": "Cities, municipalities, districts or islands, e.g. 'Lisboa', 'Porto', 'Distrito de Braga'. Each is resolved through pai.pt's own location suggestions. Leave empty to use the single Location field.",
+      "editor": "stringList",
+      "prefill": [],
+      "sectionCaption": "Locations",
+      "title": "Locations (multi-location)",
+      "type": "array"
     },
     "maxItems": {
       "default": 20,
-      "description": "Hard cap on the number of business records to return.",
+      "description": "Hard cap on the number of business records to return across all searches.",
       "maximum": 2000,
       "minimum": 1,
       "prefill": 20,
       "title": "Max items",
       "type": "integer"
     },
+    "maxPages": {
+      "default": 50,
+      "description": "Maximum result pages to read for each keyword/category/location combination. Pai.pt caps a search at 50 pages.",
+      "maximum": 500,
+      "minimum": 1,
+      "prefill": 50,
+      "title": "Max pages per search",
+      "type": "integer"
+    },
     "minRating": {
       "default": "",
-      "description": "Only return businesses rated at least this many stars, e.g. '4' for 4.0+. Businesses with no rating are still included (ratings are only shown on pai.pt once a business has reviews).",
+      "description": "Keep only businesses rated at least this many stars. Businesses without a rating are kept because pai.pt only shows ratings after reviews.",
       "editor": "select",
       "enum": [
         "",
@@ -233,15 +242,15 @@
     },
     "mode": {
       "default": "search",
-      "description": "What to fetch: search a category + location, or fetch full business profiles from direct URLs.",
+      "description": "Choose 'Search businesses' to search by keyword/category and location, or 'Fetch profiles by URL' to read specific pai.pt profile pages.",
       "editor": "select",
       "enum": [
         "search",
         "detail"
       ],
       "enumTitles": [
-        "Search by category & location",
-        "Fetch business profiles by URL"
+        "Search businesses",
+        "Fetch profiles by URL"
       ],
       "prefill": "search",
       "title": "Mode",
@@ -249,32 +258,61 @@
     },
     "openNowOnly": {
       "default": false,
-      "description": "Only return businesses that are currently open, computed from each business's opening hours in the Europe/Lisbon timezone (mode=search). Businesses with no published hours are still included.",
+      "description": "Keep only businesses that are open now, computed from their published opening hours in the Europe/Lisbon timezone. Businesses without published hours are kept.",
       "prefill": false,
       "title": "Open now only",
       "type": "boolean"
     },
+    "searchQueries": {
+      "default": [],
+      "description": "What you would type into pai.pt, e.g. 'canalizador' or 'restaurante'. Each keyword is searched in every location below. Leave empty when using a category instead.",
+      "editor": "stringList",
+      "prefill": [],
+      "sectionCaption": "Search",
+      "title": "Search keywords",
+      "type": "array"
+    },
     "sortBy": {
       "default": "ranked",
-      "description": "How to order search results (mode=search).",
+      "description": "How pai.pt orders search results.",
       "editor": "select",
       "enum": [
         "ranked",
         "popular"
       ],
       "enumTitles": [
-        "Classificacao (default ranking)",
-        "Mais Popular (most popular)"
+        "Pai.pt ranking (default)",
+        "Most popular"
       ],
       "prefill": "ranked",
+      "sectionCaption": "Filters",
       "title": "Sort order",
       "type": "string"
+    },
+    "startUrls": {
+      "default": [],
+      "description": "Pai.pt search URLs, category URLs, business profile URLs, or a pai.pt/public listings sitemap URL (for example the public listings.xml.gz sitemap) to enumerate profiles beyond a single search.",
+      "editor": "requestListSources",
+      "items": {
+        "properties": {
+          "url": {
+            "description": "A pai.pt URL.",
+            "title": "URL",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "prefill": [],
+      "sectionCaption": "Start URLs",
+      "title": "Start URLs",
+      "type": "array"
     }
   },
   "required": [
     "mode"
   ],
   "schemaVersion": 1,
-  "title": "PaiPt Scraper Input",
+  "title": "Pai.pt Business Directory Input",
   "type": "object"
 }

@@ -1,14 +1,14 @@
 {
-  "description": "Search goldenpages.ie (Ireland's leading business directory) by category and county/city, or fetch full business profiles from direct goldenpages.ie URLs.",
+  "description": "Search goldenpages.ie (Ireland's business directory) by category or keyword and county, city or town, or fetch full business profiles from direct goldenpages.ie URLs.",
   "properties": {
     "businessUrls": {
       "default": [],
-      "description": "Direct goldenpages.ie business profile URLs to fetch, e.g. https://www.goldenpages.ie/rudys-restaurant-blanchardstown-D15/. Use the 'sourceUrl' field from search results.",
+      "description": "Direct goldenpages.ie URLs: a business profile, an advanced-search results page, or a category browse page. Profile URLs return one full record each; listing URLs are paginated. Use the sourceUrl from search results.",
       "editor": "requestListSources",
       "items": {
         "properties": {
           "url": {
-            "description": "goldenpages.ie business profile URL.",
+            "description": "goldenpages.ie business, search or category URL.",
             "title": "URL",
             "type": "string"
           }
@@ -16,12 +16,13 @@
         "type": "object"
       },
       "prefill": [],
-      "title": "Business profile URLs (mode=byUrl)",
+      "sectionCaption": "Direct URLs",
+      "title": "goldenpages.ie URLs",
       "type": "array"
     },
     "category": {
       "default": "restaurants",
-      "description": "Business category / type to search for. Pick a common category, or choose 'Custom category' and type your own below (mode=search).",
+      "description": "A common Irish business category. Choose 'Custom category' and type your own below if it is not listed.",
       "editor": "select",
       "enum": [
         "custom",
@@ -30,6 +31,9 @@
         "pubs-bars",
         "cafes-coffee-shops",
         "takeaways",
+        "chinese-restaurants",
+        "italian-restaurants",
+        "indian-restaurants",
         "hairdressers",
         "beauty-salons",
         "nail-salons",
@@ -72,7 +76,17 @@
         "security-services",
         "locksmiths",
         "kennels-catteries",
-        "pet-groomers"
+        "pet-groomers",
+        "book-stores",
+        "butchers",
+        "bakers",
+        "newsagents",
+        "service-stations",
+        "tyre-services",
+        "waste-disposal",
+        "travel-agents",
+        "employment-agencies",
+        "jewellers"
       ],
       "enumTitles": [
         "Custom category (type below)",
@@ -81,6 +95,9 @@
         "Pubs & Bars",
         "Cafes & Coffee Shops",
         "Takeaways",
+        "Chinese Restaurants",
+        "Italian Restaurants",
+        "Indian Restaurants",
         "Hairdressers",
         "Beauty Salons",
         "Nail Salons",
@@ -123,7 +140,17 @@
         "Security Services",
         "Locksmiths",
         "Kennels & Catteries",
-        "Pet Groomers"
+        "Pet Groomers",
+        "Book Stores",
+        "Butchers",
+        "Bakers",
+        "Newsagents",
+        "Service Stations",
+        "Tyre Services",
+        "Waste Disposal",
+        "Travel Agents",
+        "Employment Agencies",
+        "Jewellers"
       ],
       "prefill": "restaurants",
       "title": "Category",
@@ -131,7 +158,7 @@
     },
     "county": {
       "default": "dublin",
-      "description": "Irish county or city/town to search in (mode=search). Pick a county from the list, or choose 'Custom location' and type a specific city/town below.",
+      "description": "An Irish county, 'Nationwide', or 'Custom location' to type a city or town below.",
       "editor": "select",
       "enum": [
         "custom",
@@ -198,29 +225,63 @@
       "type": "string"
     },
     "customCategory": {
-      "description": "Free-text category/keyword not in the curated list above, e.g. 'locksmith' or 'IT services' (mode=search). Takes priority over 'Category' when set. goldenpages.ie matches this like a keyword search.",
+      "description": "Free-text category or keyword not in the list above, e.g. 'locksmith' or 'IT services'. Takes priority over Category when set (unless Categories or keywords is used).",
       "editor": "textfield",
-      "title": "Custom category (overrides selection above)",
+      "title": "Custom category or keyword",
       "type": "string"
     },
     "customLocation": {
-      "description": "Free-text city or town not in the county list above, e.g. 'Blanchardstown' or 'Dun Laoghaire' (mode=search). Takes priority over 'County / location' when set.",
+      "description": "Free-text city, town or Dublin postal area, e.g. 'Blanchardstown', 'Dun Laoghaire' or 'Dublin 15'. Takes priority over County / location when set (unless Counties, cities or towns is used).",
       "editor": "textfield",
-      "title": "Custom location (overrides selection above)",
+      "title": "Custom location (city or town)",
       "type": "string"
+    },
+    "includeDetails": {
+      "default": false,
+      "description": "Also open each business's profile page to read its published email, FAQ, full description and photo gallery. Slower; auto-enabled by 'Only businesses with an email'.",
+      "prefill": false,
+      "sectionCaption": "Details and images",
+      "title": "Fetch full profiles (email, FAQs, gallery)",
+      "type": "boolean"
+    },
+    "latitude": {
+      "description": "Latitude of a search centre, e.g. 53.3498 for central Dublin. Supply together with longitude to add distanceKm and enable the radius filter.",
+      "maximum": 90,
+      "minimum": -90,
+      "sectionCaption": "Nearby / radius",
+      "title": "Centre latitude",
+      "type": "number"
+    },
+    "locations": {
+      "default": [],
+      "description": "One or more places, e.g. [\"Dublin\", \"Cork\"]. Each is combined with every category/keyword above. Use \"ireland\" for nationwide. When set, this overrides County and Custom location.",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "title": "Counties, cities or towns (multi-search)",
+      "type": "array"
+    },
+    "longitude": {
+      "description": "Longitude of a search centre, e.g. -6.2603 for central Dublin. Supply together with latitude.",
+      "maximum": 180,
+      "minimum": -180,
+      "title": "Centre longitude",
+      "type": "number"
     },
     "maxItems": {
       "default": 20,
-      "description": "Hard cap on the number of business records to return.",
-      "maximum": 1000,
+      "description": "Hard cap on the number of business records to return. Large values take longer because each page carries 20 businesses.",
+      "maximum": 5000,
       "minimum": 1,
       "prefill": 20,
+      "sectionCaption": "Limits",
       "title": "Max items",
       "type": "integer"
     },
     "minRating": {
       "default": 0,
-      "description": "Only return businesses rated at least this many stars, e.g. 4 for 4.0+ (mode=search). 0 means no minimum. Businesses with no rating/reviews are excluded once this is set above 0.",
+      "description": "Keep only businesses rated at least this many stars. 0 means no minimum; businesses with no rating are excluded once this is above 0.",
       "maximum": 5,
       "minimum": 0,
       "prefill": 0,
@@ -229,23 +290,50 @@
     },
     "mode": {
       "default": "search",
-      "description": "What to fetch: search a category + county/city, or fetch full business profiles from direct goldenpages.ie URLs.",
+      "description": "What to fetch: search by category/keyword and location, or read the exact goldenpages.ie URLs you paste.",
       "editor": "select",
       "enum": [
         "search",
         "byUrl"
       ],
       "enumTitles": [
-        "Search by category & county/city",
-        "Fetch business profiles by URL"
+        "Search by category/keyword & location",
+        "Read specific goldenpages.ie URLs"
       ],
       "prefill": "search",
+      "sectionCaption": "Search",
       "title": "Mode",
       "type": "string"
     },
+    "radiusKm": {
+      "default": 0,
+      "description": "Keep only businesses with coordinates within this many kilometres of the centre. 0 computes distanceKm without filtering. Businesses without published coordinates are skipped when a radius is set.",
+      "maximum": 500,
+      "minimum": 0,
+      "prefill": 0,
+      "title": "Radius (km)",
+      "type": "number"
+    },
+    "rehostImages": {
+      "default": false,
+      "description": "Copy the logo and up to three gallery images into this run's key-value store and return public Apify URLs. Useful because GoldenPages' image CDN is region-restricted. Original URLs are kept in *Original fields.",
+      "prefill": false,
+      "title": "Copy images to Apify storage",
+      "type": "boolean"
+    },
+    "searchTerms": {
+      "default": [],
+      "description": "One or more business categories or keywords, e.g. [\"restaurants\", \"hotels\"]. Each is searched separately and combined with every location below. When set, this overrides Category and Custom category.",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "title": "Categories or keywords (multi-search)",
+      "type": "array"
+    },
     "sortBy": {
       "default": "relevance",
-      "description": "How goldenpages.ie orders search results (mode=search).",
+      "description": "How goldenpages.ie orders search results. Relevance is the most reliable; A-Z can include paid placements from other categories at the top.",
       "editor": "select",
       "enum": [
         "relevance",
@@ -259,11 +347,54 @@
       "title": "Sort order",
       "type": "string"
     },
+    "strictCategoryMatch": {
+      "default": false,
+      "description": "Drop listings whose directory categories share no word with your search term. Use this with A-Z sort when paid placements from other categories appear; it can also drop legitimate pubs/cafes that the site files under a different category name.",
+      "prefill": false,
+      "title": "Strict category matching",
+      "type": "boolean"
+    },
     "verifiedOnly": {
       "default": false,
-      "description": "Only return businesses with a goldenpages.ie 'Verified' badge (mode=search).",
+      "description": "Keep only businesses with GoldenPages.ie's 'Verified' badge.",
       "prefill": false,
+      "sectionCaption": "Filters",
       "title": "Verified listings only",
+      "type": "boolean"
+    },
+    "withCoordinates": {
+      "default": false,
+      "description": "Drop records without latitude/longitude.",
+      "prefill": false,
+      "title": "Only businesses with coordinates",
+      "type": "boolean"
+    },
+    "withEmail": {
+      "default": false,
+      "description": "Drop records without a published email. This turns on detail enrichment automatically, so the profile page can be read for its email.",
+      "prefill": false,
+      "title": "Only businesses with an email",
+      "type": "boolean"
+    },
+    "withOpeningHours": {
+      "default": false,
+      "description": "Drop records without published opening hours.",
+      "prefill": false,
+      "title": "Only businesses with opening hours",
+      "type": "boolean"
+    },
+    "withPhone": {
+      "default": false,
+      "description": "Drop records without a phone number.",
+      "prefill": false,
+      "title": "Only businesses with a phone",
+      "type": "boolean"
+    },
+    "withWebsite": {
+      "default": false,
+      "description": "Drop records without a published website.",
+      "prefill": false,
+      "title": "Only businesses with a website",
       "type": "boolean"
     }
   },

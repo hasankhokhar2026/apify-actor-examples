@@ -4,154 +4,165 @@
 
 # Our World in Data Chart & Article Extractor
 
-Our World in Data publishes research articles and thousands of interactive charts covering health, poverty, climate, population, and more, each backed by a downloadable dataset. This actor pulls that data out in structured form: recent articles by topic or keyword, the full data behind any chart by its slug, or country profile pages.
+Our World in Data publishes its research as articles, topic pages and interactive charts, and most charts have a downloadable dataset behind them. This actor turns those public resources into structured records: searchable articles, a chart catalog you can browse by topic or country, full chart metadata plus wide or long data rows, and country profiles that list the indicators available for that country.
 
-## What this actor does
+No login, cookie or API key is needed. Every request goes to a public Our World in Data page or endpoint.
 
-- Browses recent Our World in Data articles, with optional keyword and topic filtering.
-- Downloads the underlying CSV dataset for any chart, given its slug from the chart's own URL, with optional country/region and year-range filters.
-- Downloads data for several chart slugs in a single run instead of one at a time.
-- Browses country profile pages, with name, description, and the charts referenced on that page.
-- Leaves a field out of a record whenever the source page doesn't have that value, rather than sending it empty.
+## What you can collect
 
-## Output per record
+- **Articles** — keyword search across OWID's articles, data insights, announcements and topic pages, with topic, author, page-type, date-range and sort filters.
+- **Chart catalog** — find chart slugs by keyword, topic or the countries a chart covers. Use the slugs with the chart-data modes.
+- **Chart data** — fetch one chart by slug or URL: title, subtitle, citation, units, column descriptions, source URLs, and its full CSV dataset.
+- **Chart data bulk** — fetch several charts in one run, with the same filters.
+- **Country profiles** — country name, code, profile pages, and the charts/indicators available for that country.
 
-### Articles (`recordType: "article"`)
+## Quick start
 
-| Field | Description |
-|---|---|
-| `articleSlug` | URL slug of the article |
-| `title` | Article headline |
-| `publishedAt` / `updatedAt` | Publish and last-modified dates |
-| `authors` / `primaryAuthor` | Author names and the first-listed author |
-| `excerpt` | Short description or abstract |
-| `thumbnailUrl` | Cover image URL |
-| `relatedCharts` | Grapher chart slugs referenced in the article |
-| `articleUrl` | Canonical article URL |
-
-### Chart config (`recordType: "chartConfig"`, when `includeChartConfig` is on)
-
-| Field | Description |
-|---|---|
-| `chartSlug` / `chartId` | Chart's slug and internal OWID ID |
-| `title` / `subtitle` / `note` | Chart title, subtitle, and footnote |
-| `chartTypes` | Visualization types used, e.g. `LineChart`, `ScatterPlot` |
-| `citation` | Data source attribution |
-| `dataColumns` | Column names present in the chart's dataset |
-| `relatedQuestionUrls` | Links to related articles |
-| `chartUrl` | Canonical chart URL |
-
-### Chart data rows (`recordType: "chartDataRow"`)
-
-| Field | Description |
-|---|---|
-| `chartSlug` / `chartTitle` | Source chart's slug and title |
-| `entity` | Country, region, or aggregate name |
-| `entityCode` | ISO country code, when available |
-| `year` | Year of the data point |
-| *(variable columns)* | One field per data column in the chart, named from that chart's own CSV headers |
-| `sourceUrl` | Canonical chart URL |
-
-### Countries (`recordType: "country"`)
-
-| Field | Description |
-|---|---|
-| `countrySlug` | URL slug of the country page |
-| `countryName` | Country display name |
-| `description` | Short description from the page |
-| `thumbnailUrl` | Page thumbnail image |
-| `relatedCharts` | Grapher slugs referenced on the page |
-| `countryUrl` | Country profile URL |
-
-## Input
-
-| Field | Type | Default | Description |
-|---|---|---|---|
-| `mode` | string | `articles` | `articles`, `chartData`, `chartDataBulk`, or `countries`. |
-| `searchQuery` | string | – | Keyword to match against article titles and excerpts (`articles` mode). |
-| `topic` | string | – (all topics) | Restrict articles to one OWID topic area. |
-| `chartSlug` | string | – | Grapher chart slug to download, from `ourworldindata.org/grapher/{slug}` (`chartData` mode). |
-| `chartSlugs` | array | `[]` | Multiple chart slugs to download in one run (`chartDataBulk` mode). |
-| `entities` | array | `[]` | Restrict chart data rows to these countries/regions, e.g. `["Germany", "World"]`. Leave empty for all. |
-| `yearFrom` | integer | – | Earliest year to include in chart data rows. |
-| `yearTo` | integer | – | Latest year to include in chart data rows. |
-| `includeChartConfig` | boolean | `true` | Emit a chart-config record before the data rows for that chart. |
-| `maxItems` | integer | `100` | Maximum number of records to emit. |
-
-### Example: recent articles on a topic
+Recent climate articles:
 
 ```json
 {
   "mode": "articles",
-  "topic": "climate-change",
-  "maxItems": 20
+  "searchQuery": "climate change",
+  "topic": "Climate Change",
+  "sortBy": "newest",
+  "maxItems": 25
 }
 ```
 
-### Example: one chart's data for specific countries and years
+One chart's data for two countries and a short year range:
 
 ```json
 {
   "mode": "chartData",
   "chartSlug": "life-expectancy",
   "entities": ["Germany", "France"],
-  "yearFrom": 1950,
+  "yearFrom": 2000,
   "yearTo": 2023,
-  "maxItems": 500
+  "maxItems": 100
 }
 ```
 
-### Example: several charts' world-level data in one run
+Discover chart slugs for a country:
 
 ```json
 {
-  "mode": "chartDataBulk",
-  "chartSlugs": ["co2-emissions-vs-gdp", "child-mortality", "global-education"],
-  "entities": ["World"],
-  "maxItems": 1000
+  "mode": "chartCatalog",
+  "searchQuery": "energy",
+  "entities": ["Germany"],
+  "maxItems": 50
 }
 ```
 
-### Example: country profile lookup
+A country profile with its available indicators:
 
 ```json
 {
   "mode": "countries",
-  "searchQuery": "germany",
-  "maxItems": 10
+  "countries": ["Germany"],
+  "maxIndicatorsPerCountry": 50
 }
 ```
 
-## Use cases
+## Inputs
 
-- **Research and academic work** — pull long-run datasets like life expectancy, CO2 emissions, or child mortality for analysis.
-- **Journalism** — find recent OWID articles on a topic and pair them with the chart data behind the story.
-- **Education** — assemble country or topic-specific statistics for teaching materials.
-- **Dashboards and pipelines** — refresh a known set of chart datasets on a schedule via `chartDataBulk`.
-- **Country comparisons** — pull the same chart's data for a handful of countries to compare trends side by side.
+| Field | Type | Default | What it does |
+|---|---|---|---|
+| `mode` | select | `articles` | `articles`, `chartCatalog`, `chartData`, `chartDataBulk`, or `countries`. |
+| `searchQuery` | text | — | Keyword for articles and chart catalog; also a country-name search in countries mode when no country list is set. |
+| `topic` | select | All topics | Restricts articles and chart catalog results to one OWID topic. Legacy topic slugs are accepted. |
+| `author` | select | Any author | Restricts articles to one OWID author. |
+| `articleType` | select | `editorial` | Editorial (articles, data insights, announcements, topic pages), one exact page type, or everything. |
+| `sortBy` | select | `newest` | `newest`, `oldest`, or search `relevance`. |
+| `dateFrom` | text | — | Earliest publication date, `YYYY-MM-DD`. |
+| `dateTo` | text | — | Latest publication date, `YYYY-MM-DD`. |
+| `includeContent` | boolean | `false` | Adds OWID's full article text to each article record. |
+| `includeArticleDetails` | boolean | `false` | Visits each selected article page to fill related charts and any missing page metadata. Slower. |
+| `chartSlug` | text | — | One chart slug or full chart URL, e.g. `life-expectancy`. |
+| `chartSlugs` | string list | `[]` | Several chart slugs/URLs for bulk chart data. |
+| `entities` | string list | `[]` | Keep chart rows for these countries/regions. Names (`Germany`) and codes (`DEU`) both work. Empty means all. |
+| `columns` | string list | `[]` | Keep only these data columns, matched by CSV header, short name, display title or variable ID. Empty means all. |
+| `yearFrom` | integer | — | Earliest year in chart data rows. |
+| `yearTo` | integer | — | Latest year in chart data rows. |
+| `dataFormat` | select | `wide` | `wide`: one record per entity-year; `long`: one record per entity-year-column. |
+| `includeChartConfig` | boolean | `true` | Emit a chart metadata record before the chart's data rows. |
+| `countries` | string list | `[]` | Country names, slugs or ISO codes for countries mode. Empty uses `searchQuery`, then all listed countries. |
+| `maxIndicatorsPerCountry` | integer | `100` | How many chart indicators to list inside each country record, up to `5,000`. |
+| `maxItems` | integer | `100` | Hard cap on emitted records, up to `25,000`. |
+
+## Output per record
+
+Every record has `recordType` and `scrapedAt`. Empty values are omitted at every depth — a field is present only when the source really has it.
+
+### Articles (`recordType: "article"`)
+
+`articleSlug`, `title`, `publishedAt`, `updatedAt`, `authors`, `primaryAuthor`, `excerpt`, `excerptLong`, `thumbnailUrl`, `tags`, `pageType`, `importance`, `availableEntities`, `relatedCharts`, `content` (when requested), `articleUrl`.
+
+### Chart catalog (`recordType: "chart"`)
+
+`chartSlug`, `title`, `subtitle`, `variantName`, `chartType`, `chartTypes`, `tags`, `availableEntityCount`, `publishedAt`, `updatedAt`, `queryParams`, `chartUrl`, `csvUrl`, `metadataUrl`, `searchResultUrl`.
+
+### Chart metadata (`recordType: "chartConfig"`)
+
+`chartSlug`, `chartId`, `title`, `subtitle`, `note`, `variantName`, `originUrl`, `chartVersion`, `chartTypes`, `availableTabs`, `citation`, `source`, `columnDetails`, `dataColumns`, `unit`, `entityType`, `entityCount`, `grapherQueryParams`, `dateDownloaded`, `selectedEntityNames`, `dimensionVariableIds`, `isPublished`, `hasMapTab`, `lastUpdated`, `nextUpdate`, `chartUrl`, `csvUrl`, `metadataUrl`, `configUrl`, `searchResultUrl`, `dataAvailable`.
+
+When a chart has no downloadable CSV, the record also includes `dataUnavailableReason`, `valuesUrl` (OWID's public start/end values endpoint) and `previewValues` (the entities and values OWID shows in its search result for that chart). These are real OWID values, not a full time series.
+
+`columnDetails` is one object per data column with `column`, `titleShort`, `titleLong`, `shortName`, `unit`, `timespan`, `type`, `variableId`, `lastUpdated`, `nextUpdate`, `citationShort`, `descriptionShort`, and the chart's display name when it has one.
+
+### Chart data rows (`recordType: "chartDataRow"`)
+
+Wide format: `chartSlug`, `chartTitle`, `entity`, `entityCode`, `year` or `date`, one field per data column (named from the chart's own CSV header, in camelCase), and `sourceUrl`.
+
+Long format: `chartSlug`, `chartTitle`, `entity`, `entityCode`, `year` or `date`, `column`, `columnTitle`, `columnName`, `unit`, `value`, and `sourceUrl`.
+
+### Countries (`recordType: "country"`)
+
+`countrySlug`, `countryName`, `countryCode`, `countryShortCode`, `countryUrl`, `searchUrl`, `description`, `thumbnailUrl`, `tags`, `profiles`, `profileCount`, `availableIndicatorCount`, `availableIndicators`, `relatedCharts`, plus `isHistorical` / `isUnlisted` when they apply.
+
+Each profile object has `title`, `profileSlug`, `profileUrl`, `excerpt`, `tags`, `thumbnailUrl`, `publishedAt` and `updatedAt`. Each available indicator has `chartSlug`, `title`, `subtitle`, `tags`, `chartTypes` and `chartUrl`.
+
+## How the filters combine
+
+- Article filters compose: query + topic + author + page type + date range are all applied together.
+- Chart data filters compose: selected chart(s) + entities + years + columns.
+- `entities` accepts country names as they appear in the chart (`United States`), OWID/ISO codes (`USA`, `OWID_WRL` for World), two-letter codes (`DE`) and country slugs. Matching is case-insensitive and ignores a leading `~`; short forms are expanded through OWID's own country catalog so they match the chart's names and codes.
+- `columns` accepts the CSV header, a short name (`life_expectancy_0`), a display title, `titleLong`, or a numeric OWID variable ID. A token that matches nothing produces no data rows rather than all columns.
+- `dataFormat: "long"` is useful when charts have many columns: each value becomes its own record with its unit.
+
+## Data quality and limits
+
+- OWID does not redistribute every chart. About 2% of charts return `403` for their CSV and about 4% return `404`. The actor still emits their metadata when it exists, marks `dataAvailable: false`, adds `dataUnavailableReason`, and includes `previewValues` and `valuesUrl` when OWID publishes them. The run status names the affected slugs. The preview is not a full time series.
+- Chart rows are the full public CSV unless `entity`, `yearFrom`, `yearTo` or `columns` narrows them.
+- Article search covers OWID's public search index, not just the recent RSS feed. The index has 2,013 `pages` and 1,179 chronological records; merging and deduplicating them yields about 2,109 local records across all page types. Some canonical OWID pages that appear in the sitemap are absent from that index (for example `battery-price-decline`), so keyword search cannot return every sitemap URL. Date filtering is applied to the publication date.
+- The chart index caps a single query at 3,000 hits. The actor partitions by topic tag when you request the full catalog, so `chartCatalog` without filters can return all 4,092 `type:chart` records observed on 2026-11-21. The full catalog peaks around 215 MiB locally.
+- Country profile counts come from OWID; `availableIndicators` is capped by `maxIndicatorsPerCountry` while `availableIndicatorCount` reports the full total. Germany's 3,010 indicators fit within the 5,000 maximum and peak around 135 MiB locally.
+- `maxItems` caps emitted records across a run, including chart metadata records, and now allows up to 25,000. Verified locally (45.6 s, 131 MiB) and on the 512 MB cloud build (25,000 rows, 34.315 s, 112 MB).
+- Some charts use `Day` instead of `Year`; those rows expose a `date` field and a derived `year`.
+- The actor never fabricates missing values and omits empty fields.
 
 ## FAQ
 
-**Do I need an API key or login?**
-No. Everything this actor reads is publicly published on ourworldindata.org.
+**Do I need an API key, login or proxy?**
+No. Everything is public. The actor does not ask for cookies or proxy configuration and works without either.
 
-**Where do I find a chart's slug?**
-It's the part of the chart's URL right after `/grapher/`, e.g. `life-expectancy` in `ourworldindata.org/grapher/life-expectancy`.
+**Where do I get a chart slug?**
+Use `chartCatalog` mode, or copy the part after `/grapher/` in a chart URL. Chart-data inputs also accept the full URL.
 
-**Why do chart data rows have different columns from chart to chart?**
-Each OWID chart publishes its own set of data columns in its CSV download, named for whatever it measures. This actor keeps those original column names (converted to camelCase) rather than forcing every chart into one fixed schema.
+**Why does a chart return metadata but no rows?**
+OWID publishes metadata for more charts than it can redistribute as CSV. `dataAvailable`, `dataUnavailableReason`, `previewValues`, `valuesUrl` and the run status tell you which case you hit.
 
-**Can I pull a single country's history for a chart?**
-Yes — set `entities` to just that country's name, e.g. `["Japan"]`, and optionally narrow with `yearFrom`/`yearTo`.
+**Why do chart columns change from chart to chart?**
+Each chart publishes its own data columns. Wide mode keeps those names (camelCased); long mode puts each column into `column`, `columnTitle` and `unit` so every chart has the same shape.
 
-**Does `articles` mode return every article OWID has ever published?**
-It returns recent articles by default; matching more with `searchQuery` or `topic`, or raising `maxItems`, pulls further back into OWID's archive. It isn't meant to enumerate every article ever published in a single run.
+**Can I get one country's full history for many charts?**
+Yes. Use `chartDataBulk` with several slugs and `entities: ["Germany"]`, or use `countries` mode to discover indicators first.
 
-**What's the difference between `chartData` and `chartDataBulk`?**
-`chartData` downloads one chart by its slug. `chartDataBulk` does the same for a list of slugs in a single run, so you don't have to run the actor once per chart.
+**Does article mode return every page OWID has ever published?**
+It searches OWID's public page index, which covers articles, data insights, announcements, topic pages, about pages, profiles and featured visualizations. It does not cover every canonical sitemap URL: a small number of pages are absent from the search index and cannot be found by keyword. Choose `articleType` to narrow the result; `editorial` is the default.
 
-**Why would a chart-config record be missing some fields?**
-Not every chart has a subtitle, footnote, or related questions published — those fields are only included when OWID's own chart config has them.
+**Can I filter articles by author and date together?**
+Yes — combine `author`, `dateFrom`, `dateTo`, `topic` and `searchQuery` in one run.
 
 **Is this affiliated with Our World in Data?**
-No. This actor reads Our World in Data's public pages and is not affiliated with, endorsed by, or connected to Our World in Data or the Global Change Data Lab.
+No. It reads public pages and data files and is not affiliated with, endorsed by, or connected to Our World in Data or the Global Change Data Lab. OWID's charts, articles and data are published under CC BY unless stated otherwise; third-party data keeps its own terms, so check the citation in each chart's metadata before republishing.
