@@ -60,6 +60,24 @@ def clean_heading(text):
     return re.sub(r"[*_`]", "", text).strip()
 
 
+def opening_paragraph(intro, max_words=70):
+    """The README's first prose paragraph (no heading, image, badge, quote, table, list or code), cut at a sentence
+    end within max_words. Indexing deep dive 2026-11-21: the docs pages carried ~45% of their text verbatim from the
+    Store page (the whole README), so Google saw copies of apify.com; a page now quotes only this opening, attributed,
+    and links to the README on the Store for the rest."""
+    for block in re.split(r"\n\s*\n", intro or ""):
+        text = block.strip()
+        if not text or re.match(r"^(#|!\[|\[!\[|>|\||[-*+]\s|\d+\.\s|```|~~~|<)", text):
+            continue
+        words = re.sub(r"\s+", " ", text).split(" ")
+        if len(words) <= max_words:
+            return " ".join(words)
+        cut = " ".join(words[:max_words])
+        end = max(cut.rfind(". "), cut.rfind("! "), cut.rfind("? "))
+        return cut[:end + 1] if end > 40 else ""
+    return ""
+
+
 def subsections(body):
     """Split a section body at level-3 headings: [(heading or None, text)]."""
     parts, current, lines, fenced = [], None, [], False

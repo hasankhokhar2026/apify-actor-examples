@@ -40,7 +40,7 @@ Find restaurant details and complete menus from **DoorDash** store pages — nam
 
 | Field | Type | Default | Description |
 |---|---|---|---|
-| `storeUrls` | array | – | DoorDash store URLs to scrape |
+| `storeUrls` | array | – | DoorDash store URLs to scrape (**required**, at least one valid store URL) |
 | `maxItems` | integer | `10` | Maximum restaurants to scrape across all URLs (1–100) |
 
 ### Example: scrape a list of specific stores
@@ -87,5 +87,9 @@ Find restaurant details and complete menus from **DoorDash** store pages — nam
 **Do I need to configure a proxy?** No. The actor handles connections automatically and needs no proxy setup.
 
 **What happens if some store URLs fail?** The run status names every URL that could not be loaded, so a partial success is never reported as a clean run.
+
+**What happens if I don't provide any store URLs?** The run fails immediately with a clear status message instead of scraping an unrelated demo store. Every run needs at least one `https://www.doordash.com/store/<id>` URL.
+
+**How does `maxItems` work across multiple URLs?** URLs are scraped in the order you list them, duplicate store IDs are skipped, and the run stops as soon as `maxItems` restaurants have been emitted. Failed URLs do not count toward the cap.
 
 **Is this affiliated with DoorDash?** No. This is an independent third-party actor that reads DoorDash's public store pages.

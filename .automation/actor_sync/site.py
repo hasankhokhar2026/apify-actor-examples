@@ -333,6 +333,30 @@ class Site:
             return ""
         return f"{facts.money(thousand)} per 1,000 {facts.result_noun(summary)}s"
 
+    def card_line(self, actor, price=True):
+        """This site's own one-line summary of an Actor for lists, hubs and related links (indexing deep dive
+        2026-11-21): lists used to repeat each Store description word for word, so every catalog, hub and home page
+        read as a copy of the publisher's Store pages. The line says what comes back (the dataset's own labels)
+        and what it costs, from the published definition. Plain text; callers escape it."""
+        fields = facts.dataset_fields(actor)
+        names = []
+        for field, label, _ in fields:
+            name = (label or field).strip()
+            if name and name.casefold() not in [n.casefold() for n in names]:
+                names.append(name)
+            if len(names) == 3:
+                break
+        if fields and names:
+            rest = len(fields) - len(names)
+            text = ("Returns " + ", ".join(names) + f" and {rest} more field{'s' if rest != 1 else ''}." if rest > 0
+                    else "Returns " + join_words(names) + ".")
+        else:
+            text = "Output fields are described in the publisher's README."
+        phrase = self.price_phrase(actor) if price else ""
+        if phrase:
+            text += f" {phrase[0].upper()}{phrase[1:]} on the Free plan."
+        return text
+
     def platform_href(self, name):
         if name in self.hubs:
             return self.link(self.hubs[name])
@@ -444,7 +468,7 @@ class Site:
                 meta.append(f'<span>{esc(price)}</span>')
             rows.append(f'<li class="actor-row" data-actor-row data-search="{esc(search_text)}" data-categories="{esc("|".join(actor["categories"]))}"'
                         + (' hidden' if hidden_after is not None and index >= hidden_after else "")
-                        + f'><h{level}><a href="{target}">{esc(actor["title"])}</a></h{level}><p>{esc(actor["description"])}</p><p class="row-meta">{"".join(meta)}</p></li>')
+                        + f'><h{level}><a href="{target}">{esc(actor["title"])}</a></h{level}><p>{esc(self.card_line(actor, price=False))}</p><p class="row-meta">{"".join(meta)}</p></li>')
         return '<ul class="catalog" role="list">' + "".join(rows) + "</ul>"
 
     def compare_table(self, actors, caption):
@@ -457,7 +481,7 @@ class Site:
             fields = len(facts.dataset_fields(actor))
             price = self.price_phrase(actor) or "See the Store page"
             rows.append(f'<tr><th scope="row"><a href="{self.link(self.doc_path(actor))}">{esc(actor["title"])}</a></th>'
-                        f'<td data-label="What it collects">{esc(actor["description"])}</td><td data-label="You provide">{needs}</td>'
+                        f'<td data-label="What it collects">{esc(self.card_line(actor, price=False))}</td><td data-label="You provide">{needs}</td>'
                         f'<td data-label="Declared output fields">{fields if fields else "Described in the README"}</td><td data-label="Price on the Free plan">{esc(price)}</td></tr>')
         return (f'<div class="table-wrap compare"><table class="stack"><caption>{esc(caption)}</caption><thead><tr><th scope="col">Actor</th><th scope="col">What it collects</th>'
                 '<th scope="col">You provide</th><th scope="col">Declared output fields</th><th scope="col">Price on the Free plan</th></tr></thead><tbody>'
@@ -563,7 +587,7 @@ class Site:
             low, high = min(p[0] for p in known), max(p[0] for p in known)
             range_text = (f" Prices on the Free plan run from {facts.money(low)} to {facts.money(high)} per 1,000 results." if low != high
                           else f" Each costs {facts.money(low)} per 1,000 results on the Free plan.")
-        picks = "".join(f'<li><a href="{self.link(self.doc_path(a))}">{esc(a["title"])}</a>: {esc(a["description"])}</li>' for a in actors)
+        picks = "".join(f'<li><a href="{self.link(self.doc_path(a))}">{esc(a["title"])}</a>: {esc(self.card_line(a))}</li>' for a in actors)
         body = (f'<section class="intro"><h1>{esc(name)} scrapers and data tools</h1><p class="lead">{esc(self.brand)} publishes {len(actors)} Apify Actors that read {esc(name)}. '
                 f'Each one answers a different question, so pick by the data you need.{range_text}</p></section>'
                 f'<section class="block"><h2>Which {esc(name)} Actor do you need?</h2><ul class="picks">{picks}</ul></section>'
@@ -581,7 +605,7 @@ class Site:
         return [indexed[i] for i in preferred if i in indexed] + [a for a in self.actors if a["id"] not in preferred]
 
     def guides_index(self):
-        rows = "".join(f'<li><a href="{self.link(self.doc_path(a, "guides"))}">{esc(self.guide_title(a))}</a><p>{esc(a["description"])}</p></li>' for a in self.actors)
+        rows = "".join(f'<li><a href="{self.link(self.doc_path(a, "guides"))}">{esc(self.guide_title(a))}</a><p>{esc(self.card_line(a))}</p></li>' for a in self.actors)
         body = (f'<section class="intro"><h1>Export tutorials</h1><p class="lead">One tutorial per Actor: run it through the Apify API from Python, JavaScript or one HTTP call, '
                 'and save the results as CSV, Excel or JSON with the columns its dataset declares.</p></section>'
                 f'<ul class="guide-index" role="list">{rows}</ul>')
@@ -769,7 +793,7 @@ class Site:
                             f'<td data-label="What it holds">{inline_md(note) if note else ""}</td></tr>')
             parts.append(split_table("output-table", "Output fields", ["Field", "Label", "What it holds"], rows, 20, "output fields"))
         else:
-            parts.append('<p>The build declares no dataset fields. The publisher\'s notes below describe the records.</p>')
+            parts.append(f'<p>The build declares no dataset fields. The publisher\'s README on the <a href="{actor["url"]}">Store page</a> describes the records.</p>')
         if record:
             parts.append(code_block(json.dumps(record["record"], indent=2, ensure_ascii=False), "sample-record", "json",
                                     "Sample record from the publisher's README" + (f" ({record['heading']})" if record["heading"] else "")))
@@ -782,79 +806,71 @@ class Site:
         parts.append("</section>")
         return "".join(parts)
 
+    def readme_pointer(self, actor, sections):
+        """Where the publisher's own documentation lives (indexing deep dive 2026-11-21): the README is linked on the
+        Store, not copied here. Names what it covers by its section headings, so a reader knows what they will find."""
+        heads = [s["title"] for s in sections if s["title"]][:6]
+        covers = (" Its sections: " + join_words(f"&ldquo;{esc(h)}&rdquo;" for h in heads) + ".") if heads else ""
+        return (f'<p class="readme-pointer">The full README, with every mode, example and answer the publisher documents, is on the '
+                f'<a href="{actor["url"]}">Apify Store page</a>.{covers}</p>')
+
+    def first_run_note(self, actor):
+        """The input fields that cap a run's size (and so its cost), with their published default and maximum."""
+        limits = facts.limit_fields(actor)
+        if not limits:
+            return ""
+        noun = facts.result_noun(self.pricing.get(actor["id"]))
+        items = []
+        for item in limits:
+            bits = []
+            if item["default"] is not None:
+                bits.append(f"default {esc(item['default'])}")
+            if item["maximum"] is not None:
+                bits.append(f"maximum {esc(item['maximum'])}")
+            items.append(f"<code>{esc(item['field'])}</code>" + (f" ({', '.join(bits)})" if bits else ""))
+        return f'<p>Keep the first run small: {join_words(items)} cap{"s" if len(items) == 1 else ""} how many {esc(noun)}s a run collects, and so what it costs.</p>'
+
     def actor_page(self, actor):
+        """The reference page. Indexing deep dive 2026-11-21: this page used to reproduce the whole README (intro,
+        features, use cases, output/input/cost notes, examples, FAQ, limits): ~45% of its text was the Store page
+        word for word, and Google crawled almost none of these pages. It now carries what the Store page does not
+        (answer-first summary, field table, plan cost table with run totals, runnable code in four languages, input
+        reference, related Actors), quotes only the README's opening paragraph and links to the README on the Store."""
         actor_id = actor["id"]
         path = self.doc_path(actor)
         intro, sections = facts.split_sections(actor["readme"])
         used = {}
-        anchors = {}
-        kinds = {}
-        for section in sections:
-            kinds.setdefault(section["kind"], []).append(section)
-            anchors[re.sub(r"[^a-z0-9]+", "-", section["title"].casefold()).strip("-")] = anchor_id(section["title"])
-
-        def render(section, our_heading=None):
-            heading = esc(our_heading if our_heading is not None else section["title"])
-            section_id = anchor_id(section["title"])
-            used[section_id] = used.get(section_id, 0) + 1
-            if used[section_id] > 1:
-                section_id += "-" + str(used[section_id])
-            return f'<h3 id="{section_id}">{heading}</h3>' + readme_html(markdown(section["body"], used, anchors, shift=1))
-
         toc = [("summary", "In short")]
         content = self.summary(actor)
-        what = "".join(render(s) for s in kinds.get("what", []) + kinds.get("usecases", []))
-        if intro.strip() or what:
-            content += '<section id="about"><h2>What it does</h2>' + (readme_html(markdown(intro, used, anchors, shift=1)) if intro.strip() else "") + what + "</section>"
-            toc.append(("about", "What it does"))
-        content += self.output_section(actor, "".join(render(s) for s in kinds.get("output", [])), facts.readme_field_notes(sections))
+        opening = facts.opening_paragraph(intro)
+        about = (f'<figure class="publisher-quote"><blockquote>{readme_html(markdown(opening, used, {}, shift=1))}</blockquote>'
+                 f'<figcaption>The publisher\'s README</figcaption></figure>') if opening else ""
+        content += f'<section id="about"><h2>What it does</h2>{about}{self.readme_pointer(actor, sections)}</section>'
+        toc.append(("about", "What it does"))
+        content += self.output_section(actor, "", facts.readme_field_notes(sections))
         toc.append(("output", "What you get"))
         run_input, label = facts.best_input(actor)
-        examples = "".join(render(s) for s in kinds.get("examples", []))
         content += (f'<section id="run"><h2>Run it</h2><p>Set <code>APIFY_TOKEN</code> to your <a href="https://console.apify.com/settings/integrations">Apify API token</a>, '
                     f'then run the Actor with the input below ({esc(label.lower() if label[0].isupper() and not label[1:2].isupper() else label)}). Each run is billed to your Apify account. '
                     f'The <a href="{self.link(self.doc_path(actor, "guides"))}">export tutorial</a> turns the results into a CSV file or an Excel workbook.</p>'
-                    + self.code_samples(actor, "run", run_input)
-                    + (f'<div class="examples" id="example-inputs"><p class="examples-intro">More inputs from the publisher\'s README:</p>{examples}</div>' if examples else "") + "</section>")
+                    + self.first_run_note(actor)
+                    + self.code_samples(actor, "run", run_input) + "</section>")
         toc.append(("run", "Run it"))
         cost = self.cost_section(actor)
         if cost:
-            cost = cost.replace("</section>", "".join(render(s) for s in kinds.get("cost", [])) + "</section>") if kinds.get("cost") else cost
             content += cost
             toc.append(("cost", "What it costs"))
-        notes = "".join(render(s) for s in kinds.get("input", []))
-        notes_html = f'<details class="publisher-notes"><summary>The publisher\'s input notes</summary>{notes}</details>' if notes else ""
-        content += self.input_reference(actor, notes_html)
+        content += self.input_reference(actor)
         toc.append(("input", "Input reference"))
-        faq = facts.faq_items(sections)
-        faq_nodes = []
-        if faq:
-            questions = []
-            for question, answer in faq:
-                qid = anchor_id(question, "faq-")
-                used[qid] = used.get(qid, 0) + 1
-                if used[qid] > 1:
-                    qid += "-" + str(used[qid])
-                questions.append(f'<div class="qa"><h3 id="{qid}">{inline_md(question)}</h3>{readme_html(markdown(answer, used, anchors, shift=2))}</div>')
-                faq_nodes.append({"@type": "Question", "name": question, "acceptedAnswer": {"@type": "Answer", "text": plain(answer)[:500]}})
-            content += f'<section id="faq"><h2>Questions</h2>{"".join(questions)}</section>'
-            toc.append(("faq", "Questions"))
-        elif kinds.get("faq"):
-            content += '<section id="faq"><h2>Questions</h2>' + "".join(render(s) for s in kinds["faq"]) + "</section>"
-            toc.append(("faq", "Questions"))
-        rest = kinds.get("limits", []) + kinds.get("other", [])
-        rest.sort(key=lambda s: sections.index(s))
-        if rest:
-            content += '<section id="notes"><h2>Limits and notes</h2>' + "".join(render(s) for s in rest) + "</section>"
-            toc.append(("notes", "Limits and notes"))
         related = self.related(actor)
         if related:
             content += related
             toc.append(("related", "Related Actors"))
         content += (f'<section id="files"><h2>Source files</h2><p>This page is rebuilt from the default published build <code>{esc(actor["build_id"])}</code>. '
-                    'Download what it was built from: '
-                    f'<a href="README.md">README</a>, <a href="input-schema.json">input schema</a>, <a href="output-schema.json">output schema</a>, '
-                    f'<a href="dataset-schema.json">dataset schema</a>, <a href="key-value-schema.json">key-value store schema</a>.</p></section>')
+                    'Download the definitions it was built from: '
+                    f'<a href="input-schema.json">input schema</a>, <a href="output-schema.json">output schema</a>, '
+                    f'<a href="dataset-schema.json">dataset schema</a>, <a href="key-value-schema.json">key-value store schema</a>. '
+                    f'The README is on the <a href="{actor["url"]}">Store page</a>.</p></section>')
         contents = '<nav class="toc" aria-label="On this page"><h2 class="toc-title">On this page</h2><ol>' + "".join(f'<li><a href="#{k}">{v}</a></li>' for k, v in toc) + "</ol></nav>"
         cta = (f'<div class="cta"><a class="button" href="{actor["url"]}">Open in Apify Store</a>'
                f'<a class="button secondary" href="#run">Copy the API call</a></div>')
@@ -866,8 +882,6 @@ class Site:
                   else [("Topics", "topics/"), (category_name(self.primary_category(actor)), "topics/" + category_slug(self.primary_category(actor)) + "/")])
         crumbs.append((actor["title"], path))
         extra = [self.software_node(actor)]
-        if faq_nodes:
-            extra.append({"@type": "FAQPage", "@id": self.base + path + "#faq", "mainEntity": faq_nodes, "isPartOf": {"@id": self.base + path + "#webpage"}})
         price = self.price_phrase(actor)
         description = actor["description"]
         if price and len(description) + len(price) < 190:
@@ -877,7 +891,6 @@ class Site:
                   image=actor.get("picture_url"), crumbs=crumbs, extra_nodes=extra)
         for key in ("input_schema", "output_schema", "dataset_schema", "key_value_schema"):
             self.files[path + key.replace('_', '-') + ".json"] = json_text(actor.get(key))
-        self.files[path + "README.md"] = actor["readme"]
 
     def software_node(self, actor):
         node = {"@type": "SoftwareApplication", "@id": self.base + self.doc_path(actor) + "#software", "name": actor["title"],
@@ -904,7 +917,7 @@ class Site:
         picks = (same_site + same_topic)[:6]
         if not picks:
             return ""
-        items = "".join(f'<li><a href="{self.link(self.doc_path(a))}">{esc(a["title"])}</a><p>{esc(a["description"])}</p></li>' for a in picks)
+        items = "".join(f'<li><a href="{self.link(self.doc_path(a))}">{esc(a["title"])}</a><p>{esc(self.card_line(a))}</p></li>' for a in picks)
         more = []
         if platform in self.hubs:
             more.append(f'<a href="{self.link(self.hubs[platform])}">Compare all {len(self.platforms[platform])} {esc(platform)} Actors</a>')
@@ -958,13 +971,8 @@ class Site:
         if not columns:
             steps = steps[1:]
         body.append('<nav class="toc inline" aria-label="Steps"><h2 class="toc-title">Steps</h2><ol>' + "".join(f'<li><a href="#{k}">{v}</a></li>' for k, v in steps) + "</ol></nav>")
-        intro_text, sections = facts.split_sections(actor["readme"])
+        _, sections = facts.split_sections(actor["readme"])
         notes = facts.readme_field_notes(sections)
-        page_ids = {}  # one ID space for every README fragment on this page
-
-        def here(fragment):
-            # README links to its own sections live on the reference page, not on this guide.
-            return re.sub(r'href="#[^"]*"', f'href="{reference}"', fragment)
         if columns:
             rows = "".join(f'<tr><td><code>{esc(f)}</code></td><td data-label="Column header">{esc(l)}</td><td data-label="What it holds">{inline_md(notes[f]) if notes.get(f) else ""}</td></tr>'
                            for f, l in columns)
@@ -973,9 +981,6 @@ class Site:
                         f'in {len(views)} dataset view{"s" if len(views) != 1 else ""} ({view_names}). The export below keeps these, under the labels the publisher gave them:</p>'
                         f'<div class="table-wrap"><table><caption>Default export columns</caption><thead><tr><th scope="col">Field</th><th scope="col">Column header</th><th scope="col">What it holds</th></tr></thead>'
                         f'<tbody>{rows}</tbody></table></div><p>Swap in any field from the <a href="{reference}#output">output reference</a> to export it too.</p></section>')
-        uses = [x for x in sections if x["kind"] == "usecases"]
-        if uses:
-            body.append('<section id="uses"><h2>What people export it for</h2>' + readme_html(here(markdown(uses[0]["body"], page_ids, {}, shift=1))) + "</section>")
         body.append('<section id="token"><h2>Get an API token</h2><p>Copy it from '
                     '<a href="https://console.apify.com/settings/integrations">Console, Settings, API and Integrations</a>.</p>'
                     + code_block('export APIFY_TOKEN="your-token"', "token-export", "bash") + "</section>")
@@ -1044,11 +1049,14 @@ class Site:
                          if js_fields else "const { items } = await client.dataset(run.defaultDatasetId).listItems();\nawait writeFile('results.json', JSON.stringify(items, null, 2));\n"))
         body.append('<section id="javascript"><h2>The same in JavaScript</h2>' + code_block("npm install apify-client", "js-install", "bash")
                     + code_block(javascript, "js-run", "javascript", "export.mjs") + "</section>")
-        trouble = facts.troubleshooting(facts.faq_items(facts.split_sections(actor["readme"])[1]))
-        answers = "".join(f'<div class="qa"><h3>{inline_md(q)}</h3>{readme_html(here(markdown(a, page_ids, {}, shift=2)))}</div>' for q, a in trouble[:3])
-        more = "".join(f'<li><a href="{reference}#{anchor_id(q, "faq-")}">{inline_md(q)}</a></li>' for q, _ in trouble[3:8])
-        body.append('<section id="trouble"><h2>Fix common problems</h2>' + answers + (f"<p>More from the publisher:</p><ul>{more}</ul>" if more else "")
-                    + '<p>HTTP 401 means the token is missing; an empty file usually means the input matched nothing, which the run log in Console names.</p></section>')
+        # The publisher's own answers stay in the README on the Store (indexing deep dive 2026-11-21: copied here,
+        # they made this tutorial another copy of the Store page); the tutorial points there.
+        asks = len(facts.troubleshooting(facts.faq_items(sections)))
+        body.append('<section id="trouble"><h2>Fix common problems</h2>'
+                    '<p>HTTP 401 means the token is missing; an empty file usually means the input matched nothing, which the run log in Console names.</p>'
+                    + (f'<p>The README on the <a href="{actor["url"]}">Store page</a> answers {asks} troubleshooting question{"s" if asks != 1 else ""} for this Actor.</p>'
+                       if asks else f'<p>The README on the <a href="{actor["url"]}">Store page</a> documents this Actor\'s modes and limits.</p>')
+                    + '</section>')
         if summary and summary["primary"]:
             free = facts.per_thousand(summary, "FREE")
             body.append(f'<p>An export of 1,000 {esc(noun)}s costs {facts.money2(facts.run_cost(summary, "FREE", 1000))} in Actor charges on the Free plan, plus platform usage '
@@ -1175,6 +1183,9 @@ class Site:
                   'dataset definitions, default run memory and pay-per-event prices are read from its public Apify organization and each Actor\'s successful default build.</p>'
                   '<h2>What updates automatically</h2><p>New public Actors get a reference page and an API tutorial. Published changes regenerate the affected pages; the "Updated" date '
                   'on a page is the finish time of the build it was made from. Incomplete reads from Apify block publication instead of publishing a partial catalog.</p>'
+                  '<h2>What is linked, not copied</h2><p>Each Actor\'s README stays on its Apify Store page. A reference page quotes only the README\'s opening paragraph, '
+                  'uses its field notes and sample record, and links to the rest: the pages here add what the Store page does not show in one place, such as the field '
+                  'table, run totals per plan and code in four languages.</p>'
                   '<h2>What these pages do not claim</h2><p>Nothing here comes from running the Actors: the example inputs and sample records are the ones the publisher wrote in the README, '
                   'and the run totals are arithmetic on the published prices, not measured runs. Results depend on the source site and on your input. Check the Store page for the price '
                   'in force before a large run.</p>'
@@ -1205,7 +1216,7 @@ class Site:
         self.files["feed.xml"] = ('<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"><channel><title>' + xml_escape(self.brand + " export tutorials") + '</title><link>'
                                   + xml_escape(self.base + "guides/") + '</link><description>Export tutorials for each Actor</description>'
                                   + "".join('<item><title>' + xml_escape(self.guide_title(a)) + '</title><link>' + xml_escape(self.base + self.doc_path(a, "guides")) + '</link><guid isPermaLink="true">'
-                                            + xml_escape(self.base + self.doc_path(a, "guides")) + '</guid><description>' + xml_escape(a["description"]) + '</description></item>' for a in self.actors if self.base + self.doc_path(a, "guides") in self.indexed)
+                                            + xml_escape(self.base + self.doc_path(a, "guides")) + '</guid><description>' + xml_escape(self.card_line(a)) + '</description></item>' for a in self.actors if self.base + self.doc_path(a, "guides") in self.indexed)
                                   + '</channel></rss>\n')
         self.files[".nojekyll"] = ""
         for name in self.verification_files:
@@ -1216,6 +1227,7 @@ class Site:
                 raise SyncError("Invalid IndexNow key")
             self.files[key + ".txt"] = key
         validate_site(self.files, self.org, self.prefix)
+        self.mirror = mirror_check(self.files, self.actors, self.doc_path)
         return self.files
 
 
@@ -1391,6 +1403,48 @@ def similarity_check(files):
         if score > SIMILARITY_LIMIT:
             raise SyncError(f"Pages are too similar ({score:.2f} > {SIMILARITY_LIMIT}): {a} and {b}")
     return {kind: round(value[0], 3) for kind, value in worst.items()}
+
+
+# Indexing deep dive 2026-11-21: Actor pages carried ~45% of their text word for word from the Apify Store page (the
+# whole README), so Google saw copies of apify.com and crawled almost none of them. An indexable reference page or
+# tutorial may hold at most this share of its README's 8-word shingles (opening quote, field notes, sample record).
+MIRROR_LIMIT = 0.35
+
+
+def words_of(text):
+    return re.findall(r"[a-z0-9$.,']+", text.lower())
+
+
+def readme_share(page, readme):
+    """Share of the README's 8-word prose shingles (code fences dropped) that appear in the page's visible text."""
+    source = words_of(plain(readme or ""))
+    grams = {" ".join(source[i:i + 8]) for i in range(len(source) - 7)}
+    if len(grams) < 20:
+        return 0.0
+    body = page.replace("<!--readme-->", "").replace("<!--/readme-->", "")
+    body = re.sub(r'<header class="masthead">.*?</header>|<footer class="footer">.*?</footer>', " ", body, flags=re.S)
+    body = re.sub(r"<script\b.*?</script>|<pre\b.*?</pre>|<style\b.*?</style>|<head>.*?</head>", " ", body, flags=re.S)
+    seen = words_of(html.unescape(re.sub(r"<[^>]+>", " ", body)))
+    have = {" ".join(seen[i:i + 8]) for i in range(len(seen) - 7)}
+    return len(grams & have) / len(grams)
+
+
+def mirror_check(files, actors, doc_path):
+    """Fail the brand when an indexable reference page or tutorial reproduces its README (MIRROR_LIMIT). Returns
+    the highest share seen per kind for the run report."""
+    worst = {}
+    for actor in actors:
+        for kind in ("actors", "guides"):
+            name = doc_path(actor, kind) + "index.html"
+            page = files.get(name) or ""
+            if INDEX_ROBOTS not in page:
+                continue
+            share = readme_share(page, actor.get("readme"))
+            if share > worst.get(kind, (0,))[0]:
+                worst[kind] = (share, name)
+            if share > MIRROR_LIMIT:
+                raise SyncError(f"Page reproduces its README ({share:.2f} of its 8-word shingles > {MIRROR_LIMIT}): {name}")
+    return {kind: round(v[0], 3) for kind, v in worst.items()}
 
 
 def own_actor_ids(files):

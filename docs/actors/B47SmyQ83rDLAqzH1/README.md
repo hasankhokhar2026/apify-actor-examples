@@ -74,7 +74,7 @@ At least one of `startUrls` or `searchQueries` is required for a normal run. A t
 | `sortBy` | select | any | `most_relevant`, `price_asc`, `price_desc`, `date_desc`, `highest_reviews`. |
 | `minPrice` | number | - | Lower price bound in the market currency. Etsy `min` is used server-side and a local safeguard follows. |
 | `maxPrice` | number | - | Upper price bound in the market currency. |
-| `freeShippingOnly` | boolean | `false` | Use Etsy's `free_shipping=1` market filter. |
+| `freeShippingOnly` | boolean | `false` | Use Etsy's `free_shipping=1` market filter. Sponsored cards can bypass it, so every row is also checked locally and kept only when free shipping is visible. |
 | `starSellerOnly` | boolean | `false` | Use Etsy's `is_star_seller=1` market filter. |
 | `country` | string | `US` | Market locale: `US`, `DE`, `GB`, `FR`, `AU`, `CA`, `IT`, `ES`, `NL`, `JP`. |
 
@@ -137,6 +137,7 @@ Details requested, with honest fallback:
 - Etsy serves at most 25 market pages per query (roughly 200 listings). Larger `maxItems` values return what exists and set a partial status message instead of pretending the request was complete.
 - Category pages can be deeper, but DataDome may rate-limit very deep or rapid page walks. The actor retries, then reports a partial result with the reason.
 - Some keywords have no market page, return 404, or redirect to a category page. The actor tries alternate slug spellings, follows a working category redirect, and reports the specific reason for any task that still fails.
+- DataDome can hard-block a specific regional market from proxy egress even when other markets work. Germany (DE) is currently affected: the task is reported as `blocked` with the HTTP reason, and unrelated fallback rows are never emitted in its place.
 
 ## FAQ
 
