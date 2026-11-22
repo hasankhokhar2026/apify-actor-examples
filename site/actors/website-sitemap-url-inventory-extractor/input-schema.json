@@ -1,0 +1,48 @@
+{
+  "properties": {
+    "followSitemapIndexes": {
+      "default": true,
+      "description": "If the input points to a sitemap index (<sitemapindex>), fetch and merge every child sitemap.",
+      "prefill": true,
+      "title": "Follow sitemap index files",
+      "type": "boolean"
+    },
+    "maxUrls": {
+      "default": 0,
+      "description": "Maximum number of URLs to extract across all sitemaps. Set to 0 for no limit.",
+      "maximum": 1000000,
+      "minimum": 0,
+      "prefill": 500,
+      "title": "Max URLs",
+      "type": "integer"
+    },
+    "startUrls": {
+      "description": "One or more URLs. Accepts: a direct sitemap.xml URL (e.g., https://example.com/sitemap.xml), a sitemap index file, a gzipped sitemap (.xml.gz), or a bare domain (e.g., https://example.com) — the actor will auto-discover the sitemap via robots.txt and common paths.",
+      "editor": "stringList",
+      "minItems": 1,
+      "prefill": [
+        "https://onescales.com/sitemap.xml"
+      ],
+      "title": "Sitemap or site URLs",
+      "type": "array"
+    },
+    "urlFilterExclude": {
+      "description": "Drop URLs matching this Python regex (case-insensitive). Applied after the include filter.",
+      "editor": "textfield",
+      "title": "URL exclude regex (optional)",
+      "type": "string"
+    },
+    "urlFilterInclude": {
+      "description": "Only emit URLs matching this Python regex (case-insensitive). Leave blank to include everything.",
+      "editor": "textfield",
+      "title": "URL include regex (optional)",
+      "type": "string"
+    }
+  },
+  "required": [
+    "startUrls"
+  ],
+  "schemaVersion": 1,
+  "title": "Sitemap URL Extractor Input",
+  "type": "object"
+}

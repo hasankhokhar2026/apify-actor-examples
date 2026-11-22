@@ -1,0 +1,177 @@
+{
+  "description": "Search QQ Music (Tencent), fetch songs by URL, album tracks, playlist tracks, and top-100 rank charts. No login required.",
+  "properties": {
+    "albumId": {
+      "description": "QQ Music album id, e.g. 20612.",
+      "maximum": 999999999,
+      "minimum": 1,
+      "title": "Album ID (mode=byAlbum)",
+      "type": "integer"
+    },
+    "albumUrls": {
+      "default": [],
+      "description": "QQ Music album URLs as an alternative to albumId.",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Album URLs (mode=byAlbum)",
+      "type": "array"
+    },
+    "containsKeyword": {
+      "description": "Only keep songs whose title contains this substring (case-insensitive).",
+      "editor": "textfield",
+      "title": "Contains keyword",
+      "type": "string"
+    },
+    "includeLyric": {
+      "default": false,
+      "description": "Attach first 2000 chars of the LRC lyric to song records.",
+      "prefill": false,
+      "title": "Include lyrics (mode=bySongUrl)",
+      "type": "boolean"
+    },
+    "includeToplistInfo": {
+      "default": true,
+      "description": "Emit the toplist summary record before its tracks (mode=byToplist).",
+      "prefill": true,
+      "title": "Include toplist info record",
+      "type": "boolean"
+    },
+    "maxDurationSec": {
+      "description": "Drop songs longer than this.",
+      "maximum": 86400,
+      "minimum": 0,
+      "title": "Max duration (seconds)",
+      "type": "integer"
+    },
+    "maxItems": {
+      "default": 30,
+      "description": "Hard cap on emitted records.",
+      "maximum": 1000,
+      "minimum": 1,
+      "prefill": 30,
+      "title": "Max items",
+      "type": "integer"
+    },
+    "minDurationSec": {
+      "description": "Drop songs shorter than this.",
+      "maximum": 86400,
+      "minimum": 0,
+      "title": "Min duration (seconds)",
+      "type": "integer"
+    },
+    "mode": {
+      "default": "search",
+      "description": "What to fetch.",
+      "editor": "select",
+      "enum": [
+        "search",
+        "bySongUrl",
+        "byToplist",
+        "byAlbum",
+        "byPlaylist"
+      ],
+      "enumTitles": [
+        "Search songs",
+        "Fetch songs by URL",
+        "Top-100 rank charts",
+        "Album + tracks",
+        "Playlist + tracks"
+      ],
+      "prefill": "search",
+      "title": "Mode",
+      "type": "string"
+    },
+    "playlistId": {
+      "description": "QQ Music playlist disstid (long number), e.g. 5315973668.",
+      "editor": "textfield",
+      "title": "Playlist ID (mode=byPlaylist)",
+      "type": "string"
+    },
+    "playlistUrls": {
+      "default": [],
+      "description": "QQ Music playlist URLs as an alternative to playlistId.",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Playlist URLs (mode=byPlaylist)",
+      "type": "array"
+    },
+    "searchQuery": {
+      "default": "周杰伦",
+      "description": "Free-text query (mode=search).",
+      "editor": "textfield",
+      "prefill": "周杰伦",
+      "title": "Search query",
+      "type": "string"
+    },
+    "singerKeyword": {
+      "description": "Only keep songs whose primary singer contains this substring.",
+      "editor": "textfield",
+      "title": "Singer keyword",
+      "type": "string"
+    },
+    "songUrls": {
+      "default": [],
+      "description": "QQ Music song URLs, e.g. `https://y.qq.com/n/ryqq/songDetail/001Bbywq2gicae`.",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Song URLs (mode=bySongUrl)",
+      "type": "array"
+    },
+    "toplistId": {
+      "description": "QQ Music chart to fetch (top 100 tracks).",
+      "editor": "select",
+      "enum": [
+        "26",
+        "4",
+        "27",
+        "62",
+        "5",
+        "3",
+        "16",
+        "17",
+        "28",
+        "29",
+        "36",
+        "58",
+        "57",
+        "60",
+        "63",
+        "64",
+        "65",
+        "72",
+        "73",
+        "78"
+      ],
+      "enumTitles": [
+        "巅峰榜·热歌",
+        "巅峰榜·流行指数",
+        "巅峰榜·新歌",
+        "飙升榜",
+        "巅峰榜·内地",
+        "巅峰榜·欧美",
+        "巅峰榜·韩国",
+        "巅峰榜·日本",
+        "巅峰榜·网络歌曲",
+        "巅峰榜·影视金曲",
+        "巅峰榜·K歌金曲",
+        "说唱榜",
+        "电音榜",
+        "抖音热歌榜",
+        "DJ舞曲榜",
+        "综艺新歌榜",
+        "国风热歌榜",
+        "动漫音乐榜",
+        "游戏音乐榜",
+        "国乐榜"
+      ],
+      "title": "Toplist (mode=byToplist)",
+      "type": "string"
+    }
+  },
+  "required": [
+    "mode"
+  ],
+  "schemaVersion": 1,
+  "title": "QQ Music Scraper Input",
+  "type": "object"
+}

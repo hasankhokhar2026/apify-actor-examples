@@ -1,0 +1,72 @@
+{
+  "properties": {
+    "city": {
+      "description": "Narrow the search by city (e.g. 'Dallas'). Optional.",
+      "editor": "textfield",
+      "title": "City",
+      "type": "string"
+    },
+    "email": {
+      "description": "Email address to reverse-lookup (e.g. 'jane@example.com'). Optional alternative to name search.",
+      "editor": "textfield",
+      "title": "Email Address",
+      "type": "string"
+    },
+    "fullName": {
+      "description": "The full name of the person to look up (e.g. 'John Smith'). Combine with city/state for best results.",
+      "editor": "textfield",
+      "example": "John Smith",
+      "prefill": "John Smith",
+      "title": "Full Name",
+      "type": "string"
+    },
+    "maxItems": {
+      "default": 3,
+      "description": "Maximum number of matching people profiles to return. Defaults to 3.",
+      "editor": "number",
+      "maximum": 500,
+      "minimum": 1,
+      "prefill": 3,
+      "title": "Max Items",
+      "type": "integer"
+    },
+    "phone": {
+      "description": "Phone number to reverse-lookup (e.g. '(214) 349-3972'). Optional alternative to name search.",
+      "editor": "textfield",
+      "title": "Phone Number",
+      "type": "string"
+    },
+    "proxyConfiguration": {
+      "default": {
+        "apifyProxyCountry": "US",
+        "apifyProxyGroups": [
+          "RESIDENTIAL"
+        ],
+        "useApifyProxy": true
+      },
+      "description": "radaris.com blocks datacenter IPs. RESIDENTIAL US proxy is hardcoded; do not disable.",
+      "editor": "proxy",
+      "prefill": {
+        "apifyProxyCountry": "US",
+        "apifyProxyGroups": [
+          "RESIDENTIAL"
+        ],
+        "useApifyProxy": true
+      },
+      "title": "Proxy Configuration",
+      "type": "object"
+    },
+    "state": {
+      "description": "US state abbreviation to narrow the search (e.g. 'CA', 'TX', 'NY'). Optional.",
+      "editor": "textfield",
+      "example": "CA",
+      "prefill": "CA",
+      "title": "State",
+      "type": "string"
+    }
+  },
+  "required": [],
+  "schemaVersion": 1,
+  "title": "SkipTrace People Lookup Input",
+  "type": "object"
+}

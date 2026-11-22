@@ -1,0 +1,100 @@
+{
+  "actorSpecification": 1,
+  "fields": {
+    "properties": {
+      "addresses": {
+        "description": "Current and past addresses for the person.",
+        "items": {
+          "type": "object"
+        },
+        "nullable": true,
+        "type": "array"
+      },
+      "age": {
+        "description": "Estimated current age of the person.",
+        "nullable": true,
+        "type": "integer"
+      },
+      "emails": {
+        "description": "All email addresses associated with the person.",
+        "items": {
+          "type": "string"
+        },
+        "nullable": true,
+        "type": "array"
+      },
+      "fullName": {
+        "description": "Full name of the matched person.",
+        "nullable": true,
+        "type": "string"
+      },
+      "id": {
+        "description": "Stable identifier for the person record on the upstream source.",
+        "nullable": true,
+        "type": "string"
+      },
+      "relatives": {
+        "description": "Relatives and known associates of the person.",
+        "items": {
+          "type": "object"
+        },
+        "nullable": true,
+        "type": "array"
+      },
+      "scrapedAt": {
+        "description": "ISO-8601 UTC timestamp when this record was produced.",
+        "type": "string"
+      },
+      "type": {
+        "description": "Record type. 'skip_trace_person' for a person profile, 'skip_trace_blocked' for a sentinel row.",
+        "type": "string"
+      }
+    },
+    "type": "object"
+  },
+  "title": "SkipTrace People Lookup",
+  "views": {
+    "overview": {
+      "display": {
+        "component": "table",
+        "properties": {
+          "addresses": {
+            "format": "array",
+            "label": "Addresses"
+          },
+          "age": {
+            "format": "number",
+            "label": "Age"
+          },
+          "emails": {
+            "format": "array",
+            "label": "Emails"
+          },
+          "fullName": {
+            "format": "text",
+            "label": "Full Name"
+          },
+          "scrapedAt": {
+            "format": "text",
+            "label": "Scraped At"
+          },
+          "type": {
+            "format": "text",
+            "label": "Type"
+          }
+        }
+      },
+      "title": "People",
+      "transformation": {
+        "fields": [
+          "type",
+          "fullName",
+          "age",
+          "emails",
+          "addresses",
+          "scrapedAt"
+        ]
+      }
+    }
+  }
+}
