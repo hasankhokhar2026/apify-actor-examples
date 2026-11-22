@@ -1,0 +1,180 @@
+{
+  "description": "Search South African property listings on Property24 by province, transaction type, property type, and price/bedroom/bathroom filters, or fetch full listing details by URL.",
+  "properties": {
+    "bankRepossessionsOnly": {
+      "default": false,
+      "description": "Search Property24's dedicated Repossessions category instead of the regular market (mode=search). Always for-sale (forces `transactionType` to `forSale`); property type/price/bedroom/bathroom filters still apply.",
+      "prefill": false,
+      "title": "Bank-assisted sales & repossessions only",
+      "type": "boolean"
+    },
+    "bathroomsMin": {
+      "description": "Only include listings with at least this many bathrooms.",
+      "maximum": 50,
+      "minimum": 0,
+      "title": "Min bathrooms",
+      "type": "integer"
+    },
+    "bedroomsMin": {
+      "description": "Only include listings with at least this many bedrooms.",
+      "maximum": 50,
+      "minimum": 0,
+      "title": "Min bedrooms",
+      "type": "integer"
+    },
+    "includeFullDetails": {
+      "default": false,
+      "description": "Fetch each listing's detail page for full description, agent/agency info, exact address, coordinates, levies/rates, and room-by-room features. Adds one extra request per listing, so runs are slower. Always on for mode=byUrls.",
+      "prefill": false,
+      "title": "Include full listing details",
+      "type": "boolean"
+    },
+    "listingUrls": {
+      "default": [],
+      "description": "Full Property24 listing URLs to fetch directly, e.g. `https://www.property24.com/for-sale/blyde-riverwalk-estate/pretoria/gauteng/33014/116170024`.",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Listing URLs (mode=byUrls)",
+      "type": "array"
+    },
+    "maxItems": {
+      "default": 20,
+      "description": "Hard cap on emitted records.",
+      "maximum": 500,
+      "minimum": 1,
+      "prefill": 20,
+      "title": "Max items",
+      "type": "integer"
+    },
+    "mode": {
+      "default": "search",
+      "description": "What to fetch.",
+      "editor": "select",
+      "enum": [
+        "search",
+        "byUrls"
+      ],
+      "enumTitles": [
+        "Search / browse listings",
+        "Lookup specific listing URLs"
+      ],
+      "prefill": "search",
+      "title": "Mode",
+      "type": "string"
+    },
+    "priceMax": {
+      "description": "Maximum listing price in South African Rand.",
+      "maximum": 2000000000,
+      "minimum": 0,
+      "title": "Max price (ZAR)",
+      "type": "integer"
+    },
+    "priceMin": {
+      "description": "Minimum listing price in South African Rand.",
+      "maximum": 2000000000,
+      "minimum": 0,
+      "title": "Min price (ZAR)",
+      "type": "integer"
+    },
+    "propertyType": {
+      "default": "any",
+      "description": "Filter by property category (mode=search).",
+      "editor": "select",
+      "enum": [
+        "any",
+        "house",
+        "apartment",
+        "townhouse",
+        "vacantLand",
+        "farm",
+        "commercial",
+        "industrial"
+      ],
+      "enumTitles": [
+        "Any property type",
+        "House",
+        "Apartment / Flat",
+        "Townhouse",
+        "Vacant Land / Plot",
+        "Farm",
+        "Commercial Property",
+        "Industrial Property"
+      ],
+      "prefill": "any",
+      "title": "Property type",
+      "type": "string"
+    },
+    "province": {
+      "default": "gauteng",
+      "description": "South African province to search (mode=search).",
+      "editor": "select",
+      "enum": [
+        "gauteng",
+        "westernCape",
+        "kwazuluNatal",
+        "easternCape",
+        "freeState",
+        "limpopo",
+        "mpumalanga",
+        "northWest",
+        "northernCape"
+      ],
+      "enumTitles": [
+        "Gauteng",
+        "Western Cape",
+        "KwaZulu-Natal",
+        "Eastern Cape",
+        "Free State",
+        "Limpopo",
+        "Mpumalanga",
+        "North West",
+        "Northern Cape"
+      ],
+      "prefill": "gauteng",
+      "title": "Province",
+      "type": "string"
+    },
+    "sortBy": {
+      "default": "default",
+      "description": "Order emitted results (mode=search).",
+      "editor": "select",
+      "enum": [
+        "default",
+        "priceLowToHigh",
+        "priceHighToLow",
+        "mostBedrooms"
+      ],
+      "enumTitles": [
+        "Default (site order)",
+        "Price: low to high",
+        "Price: high to low",
+        "Most bedrooms first"
+      ],
+      "prefill": "default",
+      "title": "Sort by",
+      "type": "string"
+    },
+    "transactionType": {
+      "default": "forSale",
+      "description": "Buy or rent listings (mode=search).",
+      "editor": "select",
+      "enum": [
+        "forSale",
+        "toRent"
+      ],
+      "enumTitles": [
+        "For sale",
+        "To rent"
+      ],
+      "prefill": "forSale",
+      "title": "For sale or to rent",
+      "type": "string"
+    }
+  },
+  "required": [
+    "mode"
+  ],
+  "schemaVersion": 1,
+  "title": "Property24 Scraper Input",
+  "type": "object"
+}
