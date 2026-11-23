@@ -1,0 +1,86 @@
+{
+  "description": "Search UK Government Contracts Finder for procurement contracts and tenders.",
+  "properties": {
+    "maxItems": {
+      "default": 50,
+      "description": "Hard cap on emitted records.",
+      "maximum": 2000,
+      "minimum": 1,
+      "prefill": 50,
+      "title": "Max items",
+      "type": "integer"
+    },
+    "mode": {
+      "default": "recent",
+      "description": "What to scrape.",
+      "editor": "select",
+      "enum": [
+        "search",
+        "byStatus",
+        "recent"
+      ],
+      "enumTitles": [
+        "Search contracts by keyword",
+        "Browse contracts by status (active, awarded, etc.)",
+        "Most recently published contracts"
+      ],
+      "prefill": "recent",
+      "title": "Mode",
+      "type": "string"
+    },
+    "searchQuery": {
+      "default": "IT services",
+      "description": "Keyword to search contracts (mode=search). E.g. 'IT services', 'construction', 'consultancy'.",
+      "editor": "textfield",
+      "prefill": "IT services",
+      "title": "Search query",
+      "type": "string"
+    },
+    "sortOrder": {
+      "default": "publishedAt:DESC",
+      "description": "How to sort results.",
+      "editor": "select",
+      "enum": [
+        "publishedAt:DESC",
+        "publishedAt:ASC",
+        "value.amount:DESC",
+        "value.amount:ASC"
+      ],
+      "enumTitles": [
+        "Newest first",
+        "Oldest first",
+        "Highest value",
+        "Lowest value"
+      ],
+      "prefill": "publishedAt:DESC",
+      "title": "Sort order",
+      "type": "string"
+    },
+    "status": {
+      "default": "active",
+      "description": "Filter by contract status.",
+      "editor": "select",
+      "enum": [
+        "active",
+        "closed",
+        "cancelled",
+        "complete"
+      ],
+      "enumTitles": [
+        "Active / Open",
+        "Closed",
+        "Cancelled",
+        "Complete"
+      ],
+      "prefill": "active",
+      "title": "Contract status (mode=byStatus)",
+      "type": "string"
+    }
+  },
+  "required": [
+    "mode"
+  ],
+  "schemaVersion": 1,
+  "title": "UK Contracts Finder Scraper Input",
+  "type": "object"
+}
