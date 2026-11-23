@@ -4,47 +4,95 @@
 
 # Webpage Scroll-Through GIF Generator
 
-Taking a scrolling screen recording of a webpage usually means opening a screen-capture tool, scrolling by hand, and exporting a video. This actor automates the whole thing: point it at a URL and it scrolls the page top to bottom in a headless browser, capturing a frame at each step, then hands you back a single animated GIF.
+Turn a public webpage into a moving preview: the actor opens it in a headless browser, moves through it frame by frame, and encodes the result as a GIF, animated WebP or APNG. You get a single file plus a dataset row describing exactly what was captured.
 
-## What this actor does
+It is built for quick marketing previews, design and QA walkthroughs, changelogs and release comparisons where a screen recording would take longer than the task itself.
 
-- Loads any public URL in a headless browser at the viewport size you choose, then scrolls it down in fixed-pixel steps, capturing one frame per step.
-- Stops automatically once it reaches the bottom of the page, or at a frame cap you set, whichever comes first.
-- Optionally clicks a cookie-consent dismiss button first, so the banner doesn't show up in every captured frame.
-- Can wait extra time after the page loads before capturing starts, for pages that finish loading content asynchronously.
-- Downscales frames by an integer factor before encoding, trading sharpness for a smaller file; if capture or GIF assembly fails, the run records the reason instead of leaving the record incomplete.
+## What it does
+
+- **Scroll capture** moves down the page in fixed-pixel steps and stops at the bottom, at a pixel offset you choose, or at a frame cap.
+- **Static capture** holds the viewport still and records timed frames, useful for carousels, loaders and on-page animation.
+- **Full-page capture** records the whole scrollable page as one tall image.
+- **Scroll a container** instead of the window when a site uses its own app-style scroll panel.
+- **Wait for content** with four page-ready signals, an optional selector wait, and an extra delay.
+- **Clean the page** by clicking consent buttons and other selectors, hiding chat widgets or sticky bars, and auto-dismissing common cookie banners.
+- **Preload lazy content** by sweeping the page once before the first captured frame.
+- **Control the output**: GIF, animated WebP or APNG; palette size, WebP quality, downscale, crop, loop count and a longer hold on the last frame.
+- **See what happened**: the dataset row includes the page title, final URL, HTTP status, page height, scroll distance, frame-cap flag and non-fatal warnings.
+
+Every capture is anonymous and cookieless. No login, API key, proxy or browser setup is needed.
 
 ## Output per run
 
 | Field | Description |
 |---|---|
-| `url` | The page URL that was captured |
-| `gifUrl` | Public URL of the generated GIF |
-| `frameCount` | Number of frames captured before reaching the bottom of the page or the frame cap |
-| `width` / `height` | Final GIF dimensions in pixels, after downscaling |
+| `url` | The page URL that was requested |
+| `finalUrl` | Where the page ended up after redirects (only when it differs from `url`) |
+| `pageTitle` | The page's own title |
+| `httpStatus` | HTTP status of the main page |
+| `captureMode` | `scroll`, `static` or `fullPage` |
+| `outputFormat` | `gif`, `webp` or `apng` |
+| `fileName` | Key-value store record name, e.g. `output.gif` |
+| `gifUrl` | Direct URL of the generated animation file |
+| `frameCount` | Number of frames captured |
+| `width` / `height` | Final animation dimensions after crop and downscale |
 | `aspectRatio` | `width / height`, rounded to 3 decimal places |
-| `fileSizeBytes` | Size of the encoded GIF, in bytes |
-| `frameDelayMs` | Per-frame delay encoded into the GIF |
-| `durationMs` | Total GIF playback duration: `frameDelayMs × frameCount` |
+| `fileSizeBytes` | Size of the encoded file in bytes |
+| `frameDelayMs` | Normal per-frame playback delay |
+| `finalFrameDelayMs` | Playback delay used for the last frame |
+| `durationMs` | Sum of all frame delays |
+| `loopCount` | 0 means the animation loops forever |
+| `pageWidthPx` / `pageHeightPx` | Scrollable page size at capture time |
+| `scrollDistancePx` | Distance between the first and last scroll position |
+| `hitFrameCap` | `true` when `maxFrames` stopped capture before the chosen end |
+| `warnings` | Non-fatal notes, such as a selector that was not found |
 | `scrapedAt` | UTC timestamp of the run |
 
-If capture or encoding fails, the run instead produces a record with `type: "gif_scroll_error"`, a `reason`, and a short `message` describing what went wrong, along with `url` and `scrapedAt`.
+If capture or encoding fails, the run produces one record with `type: "gif_scroll_error"`, a `reason`, a short `message`, the `url` when known, and `scrapedAt`.
 
 ## Input
 
 | Field | Type | Default | Description |
 |---|---|---|---|
-| `url` | string | – | Page URL to capture. Must start with `http://` or `https://`. Required. |
+| `url` | string | - | Page to capture. A full `http(s)://` URL or a bare domain such as `example.com`. Required. |
+| `captureMode` | select | `scroll` | `scroll` moves down the page, `static` holds the window still, `fullPage` records one tall image. |
 | `viewportWidth` | integer | `1280` | Browser viewport width in pixels. |
 | `viewportHeight` | integer | `720` | Browser viewport height in pixels. |
-| `scrollStepPx` | integer | `250` | Pixels to scroll between captured frames; smaller values give a smoother animation with more frames. |
-| `frameDelayMs` | integer | `200` | Per-frame delay encoded into the GIF. |
-| `maxFrames` | integer | `60` | Maximum number of frames to capture, so very tall pages can't run indefinitely. |
-| `cookieWindowSelector` | string | – | CSS selector of a cookie-consent dismiss button to click after the page loads; skipped if not found. |
-| `waitToLoadPageMs` | integer | `0` | Extra wait, in milliseconds, after the page settles before the first frame is captured. |
-| `downscaleFactor` | integer | `2` | Integer factor to shrink each frame by before encoding; `1` keeps full resolution, higher values give a smaller but softer GIF. |
+| `deviceScaleFactor` | number | `1` | Pixel density from 1 to 3. `2` gives Retina-sharp frames at double resolution. |
+| `colorScheme` | select | `noPreference` | Preferred `light` or `dark` media scheme. |
+| `locale` | string | `en-US` | Browser language and region, such as `de-DE` or `ja-JP`. |
+| `userAgent` | string | - | Optional custom User-Agent; empty uses the actor's normal browser identity. |
+| `scrollStepPx` | integer | `250` | Pixels between captured frames while scrolling. Smaller is smoother but produces more frames. |
+| `scrollStartPx` | integer | `0` | Offset from the top where capture starts. |
+| `scrollEndPx` | integer | `0` | Offset where capture stops. `0` means the bottom of the page. |
+| `scrollContainerSelector` | string | - | CSS selector of an element with its own scrollbar. Empty scrolls the page window. |
+| `scrollSettleMs` | integer | `120` | Pause after each scroll so lazy content and scroll effects can render. |
+| `preloadLazyContent` | boolean | `false` | Sweep the whole page once, then return to the start before capturing. |
+| `waitUntil` | select | `domcontentloaded` | Page-ready signal: `domcontentloaded`, `load`, `networkidle` or `commit`. |
+| `pageTimeoutMs` | integer | `45000` | Page load timeout in milliseconds. |
+| `waitToLoadPageMs` | integer | `0` | Extra wait after the page is ready, before cleanup and capture. |
+| `waitForSelector` | string | - | Optional selector to wait for. The run continues with a warning if it never appears. |
+| `waitForSelectorTimeoutMs` | integer | `10000` | How long to wait for `waitForSelector`; `0` disables the wait. |
+| `dismissCookieBanners` | boolean | `true` | Click common consent buttons and hide known consent containers before capture. |
+| `cookieWindowSelector` | string | - | CSS selector of a consent button to click. Skipped if not found. |
+| `dismissSelectors` | array | `[]` | Additional selectors to click before capture, in order (pop-ups, tabs, overlays). |
+| `hideSelectors` | array | `[]` | Selectors of elements to hide, such as chat bubbles or sticky headers. |
+| `freezeAnimations` | boolean | `false` | Pause CSS keyframe animations for repeatable frames. |
+| `maxFrames` | integer | `60` | Frame cap in scroll mode; number of frames recorded in static mode. |
+| `captureIntervalMs` | integer | `200` | Delay between frames in static mode. |
+| `frameDelayMs` | integer | `200` | Per-frame playback delay encoded into the animation. |
+| `finalFrameDelayMs` | integer | `0` | Extra hold on the last frame; `0` uses the normal frame delay. |
+| `loopCount` | integer | `0` | Number of repeats; `0` loops forever. |
+| `outputFormat` | select | `gif` | `gif`, `webp` or `apng`. |
+| `downscaleFactor` | integer | `2` | Integer resize factor before encoding: `1` is full size, `2` is half, and so on. |
+| `colorCount` | integer | `256` | GIF palette size from 2 to 256 colours. |
+| `webpQuality` | integer | `80` | WebP quality from 1 to 100. |
+| `cropX` | integer | `0` | Left edge of a fixed crop rectangle. Any nonzero crop value turns cropping on. |
+| `cropY` | integer | `0` | Top edge of the crop rectangle. |
+| `cropWidth` | integer | `0` | Crop width; `0` uses the remaining width from `cropX`. |
+| `cropHeight` | integer | `0` | Crop height; `0` uses the remaining height from `cropY`. |
 
-### Example: default capture
+### Example: default scroll capture
 
 ```json
 {
@@ -52,56 +100,106 @@ If capture or encoding fails, the run instead produces a record with `type: "gif
 }
 ```
 
-### Example: taller viewport, slower scroll, sharper output
+### Example: a shorter, smoother section in WebP
 
 ```json
 {
-  "url": "https://example.com/long-landing-page",
-  "viewportWidth": 1440,
-  "viewportHeight": 900,
-  "scrollStepPx": 150,
-  "frameDelayMs": 300,
-  "downscaleFactor": 1,
-  "maxFrames": 100
+  "url": "https://example.com/landing-page",
+  "scrollStartPx": 700,
+  "scrollEndPx": 3200,
+  "scrollStepPx": 120,
+  "scrollSettleMs": 250,
+  "frameDelayMs": 120,
+  "outputFormat": "webp",
+  "webpQuality": 85,
+  "downscaleFactor": 1
 }
 ```
 
-### Example: dismiss a cookie banner and wait for async content
+### Example: record an animated hero without scrolling
 
 ```json
 {
-  "url": "https://example.com/app-landing",
-  "cookieWindowSelector": "button[aria-label=\"Accept all\"]",
-  "waitToLoadPageMs": 2000
+  "url": "https://example.com/product",
+  "captureMode": "static",
+  "maxFrames": 30,
+  "captureIntervalMs": 150,
+  "frameDelayMs": 100,
+  "freezeAnimations": false,
+  "outputFormat": "apng"
 }
 ```
 
-## Use cases
+### Example: app-style scroll panel, cropped to the panel
 
-- **Marketing and social previews** — produce a scrolling preview of a landing page to drop into a deck, Slack message, or social post.
-- **Design and QA review** — give reviewers a single animated artifact instead of a stack of full-page screenshots.
-- **Documentation** — embed a page walkthrough in a doc or changelog without recording and trimming a video.
-- **Release comparison** — recapture the same URL after a deploy to spot visual changes in a scroll-through.
+```json
+{
+  "url": "https://example.com/dashboard",
+  "scrollContainerSelector": "#activity-feed",
+  "cropX": 40,
+  "cropY": 120,
+  "cropWidth": 900,
+  "cropHeight": 600,
+  "waitForSelector": "#activity-feed .item",
+  "preloadLazyContent": true
+}
+```
+
+### Example: clean up a busy page
+
+```json
+{
+  "url": "https://example.com",
+  "dismissSelectors": ["#newsletter-popup button.close"],
+  "hideSelectors": [".chat-widget", "header.sticky"],
+  "dismissCookieBanners": true,
+  "waitToLoadPageMs": 1500,
+  "finalFrameDelayMs": 1500
+}
+```
+
+## How capture works
+
+Frames are captured one at a time, not recorded in real time. Each scroll position is a complete rendered frame, so the output is deterministic and has no dropped frames or half-painted tiles. The trade-off is that very fast page animation can be sampled between states; use `freezeAnimations` when repeatable frames matter more than motion.
+
+The scroll plan uses the page's real height. In bottom mode it re-checks the height as it goes, so lazy content that makes the page taller does not stop the capture early. `maxFrames` is still a hard guard, and `hitFrameCap` says when it was reached.
+
+Transient network changes are retried automatically. If `networkidle` never settles on a page with long-running requests, the actor falls back to `domcontentloaded` and records a warning instead of failing the run.
 
 ## FAQ
 
-**Does this need a proxy?**
-No — it captures pages over the run's normal network connection.
+**Do I need a proxy or login?**
+No. The actor captures public pages over its normal connection. Pages that require authentication are not supported.
 
-**Why did the GIF stop before reaching the bottom of the page?**
-Either it hit `maxFrames` first, or the page kept growing (infinite scroll) and the run reached its frame cap rather than scrolling forever. Raise `maxFrames` for longer pages.
+**Why is my GIF larger than expected?**
+GIF is limited to 256 colours and grows with page height, viewport size and frame count. Try `outputFormat: "webp"`, a higher `downscaleFactor`, a larger `scrollStepPx`, a smaller `scrollEndPx`, or a lower `colorCount`.
 
-**Why isn't the scrolling perfectly smooth?**
-GIF frame timing only supports hundredths-of-a-second increments, so `frameDelayMs` gets rounded to the nearest supported value. This actor targets quick previews, not frame-accurate video.
+**The animation stops before the bottom. What happened?**
+Check `hitFrameCap`. If it is `true`, raise `maxFrames`. On an infinite feed the page never ends, so choose a `scrollEndPx` or accept the frame cap.
 
-**How large will the GIF be?**
-It depends on page height, viewport size, and `downscaleFactor`. A full-resolution capture of a long page can run several megabytes; doubling `downscaleFactor` roughly quarters the frame area and shrinks the file accordingly.
+**Why does the last frame disappear too quickly?**
+Set `finalFrameDelayMs` to hold it longer. GIF timing is stored in hundredths of a second, so delays are rounded to the nearest supported value.
 
-**The page didn't capture — what happened?**
-Some sites block automated browsers outright. Check the output record: a `type: "gif_scroll_error"` record with a `reason` and `message` means capture or GIF assembly failed rather than silently producing an empty result.
+**Can I capture only part of a page?**
+Yes. Use `scrollStartPx`/`scrollEndPx` to limit the scroll range and the `cropX`/`cropY`/`cropWidth`/`cropHeight` fields to cut a fixed rectangle from each frame.
 
-**Can I get just the GIF file without the dataset record?**
-The `gifUrl` field in the dataset record is a direct link to the GIF file — open or download it from there.
+**Can I capture several pages in one run?**
+No. One run produces one animation file and one dataset row; use one run per URL so cost and failures stay predictable.
 
-**Does it work on pages behind a login?**
-No. The actor loads the URL as a normal anonymous visitor, so pages that require authentication to view won't render correctly.
+**How tall can a full-page capture be?**
+Tested up to about 95,000 px. The screenshot gets up to 120 seconds, but extremely tall pages can still hit browser memory or time limits; use a scroll capture or a crop for those.
+
+**Why are some images missing in a long capture?**
+They are probably lazy-loaded. Turn on `preloadLazyContent` and increase `scrollSettleMs`. A `waitForSelector` on a late element also helps.
+
+**Can I record a page without scrolling?**
+Set `captureMode` to `static`. Frames are taken at `captureIntervalMs` until `maxFrames`.
+
+**What about MP4 or WebM?**
+Not in this version. The actor validates `outputFormat` as `gif`, `webp` or `apng`; adding video needs an encoder dependency and a new build.
+
+**Why does a WebP sometimes report fewer stored frames than captured frames?**
+The GIF and WebP encoders merge identical consecutive frames and keep the total playback time. The dataset's `frameCount` is the number of frames captured; the animation looks the same. APNG keeps every captured frame.
+
+**A site blocks the browser.**
+Some sites reject automated browsers. The run then produces a `gif_scroll_error` row instead of an empty result, and the message gives the reason.

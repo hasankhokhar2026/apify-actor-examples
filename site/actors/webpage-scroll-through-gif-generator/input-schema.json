@@ -1,6 +1,62 @@
 {
-  "description": "Render a webpage in a headless browser, scroll it from top to bottom while capturing frames, and assemble the frames into an animated GIF.",
+  "description": "Render a public webpage in a headless browser, capture it while scrolling (or static, or full-page), and encode the frames as GIF, animated WebP or APNG.",
   "properties": {
+    "captureIntervalMs": {
+      "default": 200,
+      "description": "Time between frames when capture mode is Hold still. Ignored while scrolling.",
+      "editor": "number",
+      "maximum": 5000,
+      "minimum": 50,
+      "prefill": 200,
+      "title": "Static frame interval (ms)",
+      "type": "integer"
+    },
+    "captureMode": {
+      "default": "scroll",
+      "description": "How the page becomes an animation. Scroll down captures frames while moving through the page; Hold still records the visible window without scrolling; Full page records the whole page once.",
+      "editor": "select",
+      "enum": [
+        "scroll",
+        "static",
+        "fullPage"
+      ],
+      "enumTitles": [
+        "Scroll down the page",
+        "Hold the window still",
+        "One full-page image"
+      ],
+      "prefill": "scroll",
+      "title": "Capture mode",
+      "type": "string"
+    },
+    "colorCount": {
+      "default": 256,
+      "description": "Palette size for GIF output, from 2 to 256 colours. Lower values shrink the file; 256 preserves the most colour detail.",
+      "editor": "number",
+      "maximum": 256,
+      "minimum": 2,
+      "prefill": 256,
+      "title": "GIF colours",
+      "type": "integer"
+    },
+    "colorScheme": {
+      "default": "noPreference",
+      "description": "Media colour scheme requested from the page. Use Dark to capture a site's dark theme when it supports one.",
+      "editor": "select",
+      "enum": [
+        "noPreference",
+        "light",
+        "dark"
+      ],
+      "enumTitles": [
+        "No preference",
+        "Light",
+        "Dark"
+      ],
+      "prefill": "noPreference",
+      "title": "Preferred colour scheme",
+      "type": "string"
+    },
     "cookieWindowSelector": {
       "description": "CSS selector of a cookie-consent dismiss button to click after page load (e.g. button[aria-label=\"Accept all\"]). Skipped if not found.",
       "editor": "textfield",
@@ -8,44 +64,242 @@
       "title": "Cookie consent selector",
       "type": "string"
     },
+    "cropHeight": {
+      "default": 0,
+      "description": "Height of the crop rectangle. 0 uses the remaining height from the top edge.",
+      "editor": "number",
+      "maximum": 20000,
+      "minimum": 0,
+      "prefill": 0,
+      "title": "Crop height (px)",
+      "type": "integer"
+    },
+    "cropWidth": {
+      "default": 0,
+      "description": "Width of the crop rectangle. 0 uses the remaining width from the left edge.",
+      "editor": "number",
+      "maximum": 20000,
+      "minimum": 0,
+      "prefill": 0,
+      "title": "Crop width (px)",
+      "type": "integer"
+    },
+    "cropX": {
+      "default": 0,
+      "description": "Left edge of a fixed crop rectangle in captured pixels. Any nonzero crop value activates cropping; 0 starts at the left edge.",
+      "editor": "number",
+      "maximum": 20000,
+      "minimum": 0,
+      "prefill": 0,
+      "title": "Crop left (px)",
+      "type": "integer"
+    },
+    "cropY": {
+      "default": 0,
+      "description": "Top edge of the crop rectangle. 0 starts at the top of the viewport (or full page).",
+      "editor": "number",
+      "maximum": 20000,
+      "minimum": 0,
+      "prefill": 0,
+      "title": "Crop top (px)",
+      "type": "integer"
+    },
+    "deviceScaleFactor": {
+      "default": 1,
+      "description": "Pixel density of the browser. 1 is a standard screen; 2 produces Retina-sharp frames at double resolution (larger output).",
+      "editor": "number",
+      "maximum": 3,
+      "minimum": 1,
+      "prefill": 1,
+      "title": "Device scale factor",
+      "type": "number"
+    },
+    "dismissCookieBanners": {
+      "default": true,
+      "description": "Click common consent buttons and hide known consent containers (OneTrust, Cookiebot, Osano, Quantcast, CookieYes and similar) before capturing.",
+      "prefill": true,
+      "title": "Auto-dismiss common cookie banners",
+      "type": "boolean"
+    },
+    "dismissSelectors": {
+      "default": [],
+      "description": "Additional CSS selectors clicked in order before capture, such as consent buttons, pop-ups or tabs. Missing selectors add a warning and are skipped.",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "prefill": [],
+      "title": "Selectors to click",
+      "type": "array"
+    },
     "downscaleFactor": {
       "default": 2,
-      "description": "Resize each frame down by this integer factor before encoding (1 = no resize, 2 = half, 3 = third). Lower factors → larger but sharper GIF.",
+      "description": "Resize each frame down by this integer factor before encoding (1 = no resize, 2 = half, 3 = third). Higher values give smaller but softer files.",
       "maximum": 8,
       "minimum": 1,
+      "prefill": 2,
       "title": "Downscale factor",
+      "type": "integer"
+    },
+    "finalFrameDelayMs": {
+      "default": 0,
+      "description": "How long the last frame stays on screen. 0 uses the normal frame delay. A longer hold makes the bottom of the page readable.",
+      "editor": "number",
+      "maximum": 10000,
+      "minimum": 0,
+      "prefill": 0,
+      "title": "Last frame hold (ms)",
       "type": "integer"
     },
     "frameDelayMs": {
       "default": 200,
-      "description": "Per-frame delay encoded into the GIF.",
+      "description": "Per-frame playback delay encoded into the animation.",
       "maximum": 5000,
       "minimum": 50,
+      "prefill": 200,
       "title": "Frame delay (ms)",
+      "type": "integer"
+    },
+    "freezeAnimations": {
+      "default": false,
+      "description": "Pause CSS keyframe animations while capturing. Gives repeatable frames for animated pages; leave off to record motion.",
+      "prefill": false,
+      "title": "Freeze CSS animations",
+      "type": "boolean"
+    },
+    "hideSelectors": {
+      "default": [],
+      "description": "CSS selectors of elements to hide with a style rule, such as chat widgets, sticky headers or banners. Applied before the page draws, so late banners are caught too.",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "prefill": [],
+      "title": "Selectors to hide",
+      "type": "array"
+    },
+    "locale": {
+      "default": "en-US",
+      "description": "Language/region used by the browser (e.g. en-US, de-DE, ja-JP). Leave en-US for English.",
+      "editor": "textfield",
+      "prefill": "en-US",
+      "title": "Browser locale",
+      "type": "string"
+    },
+    "loopCount": {
+      "default": 0,
+      "description": "How many times the animation repeats. 0 loops forever.",
+      "editor": "number",
+      "maximum": 10,
+      "minimum": 0,
+      "prefill": 0,
+      "title": "Loop count",
       "type": "integer"
     },
     "maxFrames": {
       "default": 60,
-      "description": "Hard cap on frames captured (protects very-long pages from runaway runs).",
+      "description": "Hard cap on captured frames. In scroll mode it protects very long pages; in static mode it is the number of frames recorded.",
       "maximum": 300,
       "minimum": 2,
+      "prefill": 60,
+      "sectionCaption": "Frames & timing",
       "title": "Max frames",
+      "type": "integer"
+    },
+    "outputFormat": {
+      "default": "gif",
+      "description": "Animation file format. GIF is the most compatible; WebP is much smaller and supports full colour and transparency; APNG is lossless full colour with wide browser support.",
+      "editor": "select",
+      "enum": [
+        "gif",
+        "webp",
+        "apng"
+      ],
+      "enumTitles": [
+        "GIF (most compatible)",
+        "WebP (smaller file)",
+        "APNG (lossless full colour)"
+      ],
+      "prefill": "gif",
+      "sectionCaption": "Output & quality",
+      "title": "Output format",
+      "type": "string"
+    },
+    "pageTimeoutMs": {
+      "default": 45000,
+      "description": "How long to wait for the page to load before the run fails.",
+      "editor": "number",
+      "maximum": 120000,
+      "minimum": 5000,
+      "prefill": 45000,
+      "title": "Page load timeout (ms)",
+      "type": "integer"
+    },
+    "preloadLazyContent": {
+      "default": false,
+      "description": "Scroll through the whole page once before capturing, then return to the start. Makes below-the-fold lazy images and sections visible in the frames.",
+      "prefill": false,
+      "title": "Preload lazy content",
+      "type": "boolean"
+    },
+    "scrollContainerSelector": {
+      "description": "Optional CSS selector of an element with its own scrollbar (for app-style layouts). Leave empty to scroll the page window.",
+      "editor": "textfield",
+      "nullable": true,
+      "title": "Scroll container selector",
+      "type": "string"
+    },
+    "scrollEndPx": {
+      "default": 0,
+      "description": "Pixel offset where capture stops. 0 means the bottom of the page.",
+      "maximum": 200000,
+      "minimum": 0,
+      "prefill": 0,
+      "title": "Stop scroll at (px)",
+      "type": "integer"
+    },
+    "scrollSettleMs": {
+      "default": 120,
+      "description": "Pause after each scroll so lazy images and scroll-triggered content can render before the frame is captured.",
+      "editor": "number",
+      "maximum": 5000,
+      "minimum": 0,
+      "prefill": 120,
+      "title": "Settle time after scroll (ms)",
+      "type": "integer"
+    },
+    "scrollStartPx": {
+      "default": 0,
+      "description": "Pixel offset from the top where capture starts. Use it to skip a hero section or header.",
+      "maximum": 200000,
+      "minimum": 0,
+      "prefill": 0,
+      "title": "Start scroll at (px)",
       "type": "integer"
     },
     "scrollStepPx": {
       "default": 250,
-      "description": "How many pixels to scroll between each captured frame.",
+      "description": "How many pixels to scroll between captured frames. Smaller values give smoother motion with more frames.",
       "maximum": 2000,
       "minimum": 50,
+      "prefill": 250,
+      "sectionCaption": "Scrolling",
       "title": "Scroll step (px)",
       "type": "integer"
     },
     "url": {
-      "description": "The URL of the webpage to capture.",
+      "description": "Public page to capture. A full http(s) URL or a bare domain such as example.com.",
       "editor": "textfield",
-      "pattern": "^https?://",
+      "pattern": "^(https?://|[A-Za-z0-9][A-Za-z0-9.-]*\\.[A-Za-z]{2,})",
       "prefill": "https://apify.com",
       "title": "Page URL",
+      "type": "string"
+    },
+    "userAgent": {
+      "description": "Optional User-Agent header. Leave empty to use the actor's normal browser identity.",
+      "editor": "textfield",
+      "nullable": true,
+      "title": "Custom user agent",
       "type": "string"
     },
     "viewportHeight": {
@@ -53,6 +307,7 @@
       "description": "Browser viewport height.",
       "maximum": 1440,
       "minimum": 240,
+      "prefill": 720,
       "title": "Viewport height (px)",
       "type": "integer"
     },
@@ -61,16 +316,66 @@
       "description": "Browser viewport width.",
       "maximum": 2560,
       "minimum": 320,
+      "prefill": 1280,
       "title": "Viewport width (px)",
+      "type": "integer"
+    },
+    "waitForSelector": {
+      "description": "Optional CSS selector to wait for before capturing (e.g. #main-content). If it never appears, the run continues and adds a warning.",
+      "editor": "textfield",
+      "nullable": true,
+      "title": "Wait for selector",
+      "type": "string"
+    },
+    "waitForSelectorTimeoutMs": {
+      "default": 10000,
+      "description": "How long to wait for the selector above. 0 disables the wait.",
+      "editor": "number",
+      "maximum": 60000,
+      "minimum": 0,
+      "prefill": 10000,
+      "title": "Selector wait timeout (ms)",
       "type": "integer"
     },
     "waitToLoadPageMs": {
       "default": 0,
-      "description": "Additional milliseconds to wait after networkidle before capturing the first frame. Use for sites with async/sliding content.",
+      "description": "Additional milliseconds to wait after the page is ready and before captures start. Use for async or sliding content.",
       "editor": "number",
       "maximum": 30000,
       "minimum": 0,
+      "prefill": 0,
       "title": "Extra wait after load (ms)",
+      "type": "integer"
+    },
+    "waitUntil": {
+      "default": "domcontentloaded",
+      "description": "When navigation counts as ready. DOM ready is fast; Load waits for images; Network idle waits for quiet network; Commit returns immediately.",
+      "editor": "select",
+      "enum": [
+        "domcontentloaded",
+        "load",
+        "networkidle",
+        "commit"
+      ],
+      "enumTitles": [
+        "DOM ready",
+        "Load",
+        "Network idle",
+        "Commit (fastest)"
+      ],
+      "prefill": "domcontentloaded",
+      "sectionCaption": "Waiting & cleanup",
+      "title": "Page ready signal",
+      "type": "string"
+    },
+    "webpQuality": {
+      "default": 80,
+      "description": "Quality for WebP output, from 1 (smallest) to 100 (sharpest). Ignored for GIF and APNG.",
+      "editor": "number",
+      "maximum": 100,
+      "minimum": 1,
+      "prefill": 80,
+      "title": "WebP quality",
       "type": "integer"
     }
   },

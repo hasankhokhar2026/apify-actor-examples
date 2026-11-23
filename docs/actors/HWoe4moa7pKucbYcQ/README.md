@@ -4,108 +4,164 @@
 
 # Jobicy Remote Tech and IT Jobs Scraper
 
-Jobicy is a curated remote-jobs board focused on development, data, design, marketing and support roles that can be done from anywhere. This actor queries Jobicy's public job feed and returns clean, structured records — keyword search or direct lookup by job ID/slug — with salary, sector, seniority and geography fields filled in whenever the employer disclosed them.
+Jobicy is a remote-work job board with a public feed of technology, data, design, product, marketing, support, and other remote roles. This actor turns that feed into a clean dataset you can filter, schedule, and join with your own systems. It walks the feed's cursor to the end instead of stopping at the first page, so a single run can cover every listing Jobicy published in the last seven days.
 
-Note: this actor was built against Jobicy because the original JobServe.com board does not expose a public data feed; Jobicy covers the same remote IT/tech job niche with richer structured data (salary bands, seniority levels, sector tags).
+## What you can collect
 
-## What this actor does
+- Jobs matching a keyword or tag, a region, an industry, employment types, seniority levels, a salary range, company names, and posting dates.
+- Known jobs by numeric ID, listing slug, or full Jobicy URL, even when they are beyond the first page.
+- Current status (`active`, `closed`, or `unknown`) for a batch of stored job IDs.
+- Jobicy's own region and industry taxonomies, so downstream filters use the current slugs.
+- Optional plain-text and HTML descriptions, plus company profile links when Jobicy includes them.
 
-- Searches the current remote-jobs feed by keyword/tag, geographic region, sector, employment type, seniority level and minimum salary
-- Fetches specific jobs directly by their Jobicy ID or slug instead of searching
-- Strips HTML from job descriptions and excerpts so you get clean plain text
-- Normalizes multi-value sector and job-type tags into a primary field plus a full list when more than one applies
-- Stamps every record with a record type and a UTC scrape timestamp
-- Omits any field the source job posting didn't provide — no empty strings or nulls in the output
+No Jobicy account, API key, cookie, or proxy is needed. The actor uses the public jobs API at `jobicy.com/api/v2/remote-jobs` and `jobicy.com/api/jobs/status`.
 
-## Output per job
+## Modes
 
-- `jobId` — Jobicy's numeric job identifier
-- `jobSlug` — URL-friendly slug used in the listing link
-- `title`, `companyName`, `companyLogo`
-- `sector` — primary industry sector; `sectors` — full list when a job spans more than one
-- `jobType` — employment type (e.g. full-time, contract)
-- `location` — geographic location requirement as stated by the employer
-- `level` — seniority level
-- `excerpt` — short plain-text summary
-- `description` — full plain-text job description
-- `salaryMin`, `salaryMax`, `salaryCurrency`, `salaryPeriod` — only present when the posting discloses pay
-- `datePosted` — publication date
-- `jobUrl`, `applyUrl`, `sourceUrl` — link to the listing (apply and source currently point to the same URL)
-- `recordType` — always `"job"`
-- `scrapedAt` — UTC timestamp of the scrape
+| Mode | What it does |
+|---|---|
+| `search` | Reads the live 7-day feed with optional keyword, region, and industry filters, then applies the remaining filters locally. Default. |
+| `getJobs` | Scans the feed for the IDs, slugs, or URLs in `jobIds` and returns the matching job records. |
+| `getJobStatus` | Checks up to 100 IDs per request and returns one status record per ID. |
+| `getFilterOptions` | Exports the current location and/or industry taxonomy. |
 
-## Input
+## Inputs
 
-| Field | Type | Default | Description |
+| Setting | Type | Default | Description |
 |---|---|---|---|
-| `mode` | string | `search` | `search` (keyword + filters) or `getJob` (fetch by ID/slug) |
-| `query` | string | – | Keyword to match against job title and tags (mode=search) |
-| `geo` | string | – | Geographic region filter (e.g. `usa`, `uk`, `europe`, `worldwide`) |
-| `location` | string | – | Additional text filter applied to the location field after fetching |
-| `sector` | string | – | Industry sector filter (e.g. `dev`, `data-science`, `marketing`) |
-| `jobType` | string | – | Employment type filter (`full-time`, `part-time`, `contract`, `freelance`, `internship`) |
-| `level` | string | – | Seniority level filter |
-| `minSalary` | integer | – | Only include jobs whose maximum salary is at least this (USD/year); jobs without salary data always pass |
-| `jobIds` | array | – | Jobicy job IDs or slugs to fetch directly (mode=getJob) |
-| `maxItems` | integer | `100` | Maximum number of job records to return (1–10000) |
+| `mode` | string | `search` | `search`, `getJobs`, `getJobStatus`, or `getFilterOptions`. Legacy `getJob` is accepted as `getJobs`. |
+| `query` | string | — | Keyword or tag, 2–50 characters. Sent to Jobicy as its `tag` filter and also checked against the result text. Multi-word queries require every word to appear. |
+| `geo` | string | Any region | Region slug. The list covers 55 current Jobicy values, including `anywhere`, `usa`, `uk`, `europe`, `emea`, `apac`, and `latam`. Jobicy currently rejects its own `malaysia` filter, so the actor maps that value to `apac` and applies a Malaysia location filter unless you set `locationContains` yourself. |
+| `industry` | string | Any industry | Industry slug from Jobicy's 22-value taxonomy, such as `engineering`, `data-science`, or `marketing`. Legacy `sector` values are mapped in code. |
+| `jobTypes` | array | None | Any-match filter over `Full-Time`, `Part-Time`, `Contract`, `Temporary`, `Internship`, and `Freelance`. Legacy singular `jobType` is accepted. |
+| `levels` | array | None | Any-match filter over `Entry-Level`, `Junior`, `Midweight`, `Senior`, `Lead`, `Manager`, `Director`, and `Executive`. Legacy singular `level` is accepted; `mid`, `midlevel`, and `mid-level` map to `Midweight`. |
+| `companies` | array | None | Keep only exact company names, case-insensitive. |
+| `locationContains` | string | — | Extra substring filter on the displayed location. Legacy `location` is accepted. |
+| `minSalary` | integer | — | Keep jobs whose effective salary upper bound is at least this number. |
+| `maxSalary` | integer | — | Keep jobs whose effective salary lower bound is at most this number. |
+| `salaryCurrency` | string | Any currency | Exact currency gate. Set this with the salary bounds for a meaningful comparison across Jobicy's 13 currencies. |
+| `salaryPeriod` | string | Any period | Exact period gate: `yearly`, `monthly`, or `hourly`. |
+| `includeNoSalary` | boolean | `true` | Keep jobs without disclosed pay when a salary filter is set. |
+| `postedSince` | string | — | ISO date or timestamp lower bound, for example `2026-11-20`. |
+| `postedUntil` | string | — | ISO date or timestamp upper bound. |
+| `includeDescription` | boolean | `true` | Emit the plain-text `description`. |
+| `includeDescriptionHtml` | boolean | `false` | Also emit the original `descriptionHtml`. |
+| `jobIds` | array | None | IDs, slugs, or URLs for `getJobs`; numeric IDs (or ID-prefixed slugs/URLs) for `getJobStatus`. |
+| `taxonomyType` | string | `both` | For `getFilterOptions`: `both`, `locations`, or `industries`. |
+| `maxItems` | integer | `100` | Record cap from 1 to 10,000. The feed itself currently holds roughly 1,400 jobs in its 7-day window. The daily-test prefill uses 3. |
 
-### Example: search remote Python development roles
+Unknown or deprecated input keys are accepted by Apify and handled in code, so saved tasks keep running after the schema cleanup: `sector` → `industry`, `jobType` → `jobTypes`, `level` → `levels`, `location` → `locationContains`, `worldwide` → `anywhere`, and `mode=getJob` → `getJobs`.
+
+## Examples
+
+Search Python roles open to Europe:
 
 ```json
 {
   "mode": "search",
   "query": "python",
-  "sector": "dev",
-  "geo": "worldwide",
+  "geo": "europe",
   "maxItems": 50
 }
 ```
 
-### Example: senior remote jobs in Europe with a salary floor
+Senior or lead engineering roles with a USD yearly floor, excluding jobs that hide pay:
 
 ```json
 {
   "mode": "search",
-  "geo": "europe",
-  "level": "senior",
-  "minSalary": 70000,
-  "maxItems": 30
+  "industry": "engineering",
+  "levels": ["Senior", "Lead"],
+  "minSalary": 120000,
+  "salaryCurrency": "USD",
+  "salaryPeriod": "yearly",
+  "includeNoSalary": false,
+  "maxItems": 100
 }
 ```
 
-### Example: fetch specific jobs by slug
+Retrieve known jobs by ID, slug, or URL:
 
 ```json
 {
-  "mode": "getJob",
-  "jobIds": ["42001-senior-python-developer", "12345-react-engineer"]
+  "mode": "getJobs",
+  "jobIds": ["163849", "163849-senior-customer-success-emea", "https://jobicy.com/jobs/163850-account-manager-france-benelux-m-f-x"]
 }
 ```
 
-## Use cases
+Check whether stored IDs are still open:
 
-- **Remote-work job boards** mirror or supplement their listings with Jobicy's tech-focused feed
-- **Salary research** compare disclosed remote salary bands across sectors and seniority levels
-- **Recruiters** build a shortlist of currently-open remote roles matching a tech stack keyword
-- **Labour-market analysts** track how many remote dev/data/design roles are posted by region over time
-- **Candidates** set up keyword and salary-floor filters to monitor new openings in their field
+```json
+{
+  "mode": "getJobStatus",
+  "jobIds": ["163849", "163850", "1"]
+}
+```
+
+Export the current filter taxonomies:
+
+```json
+{
+  "mode": "getFilterOptions",
+  "taxonomyType": "both"
+}
+```
+
+## Output
+
+Each record has a `recordType`, so job, status, and taxonomy rows can share one dataset.
+
+### Job records (`recordType: "job"`)
+
+`jobId`, `jobSlug`, `title`, `companyName`, `companyLogo`, `sector`, `sectors`, `industrySlugs`, `jobType`, `jobTypes`, `location`, `locations`, `level`, `levels`, `excerpt`, `description`, `descriptionHtml` (optional), `companySlug`, `companyUrl`, `salaryMin`, `salaryMax`, `salaryCurrency`, `salaryPeriod`, `datePosted`, `jobUrl`, `applyUrl`, `sourceUrl`, `scrapedAt`.
+
+- `sector` and `sectors` are Jobicy's industry labels; `industrySlugs` maps them to filter slugs.
+- `jobType` and `level` keep the first/raw value; `jobTypes` and `levels` carry the full lists.
+- `location` is normalised to comma-space separators; `locations` is the split list.
+- Salary fields appear only when the employer disclosed pay. `salaryPeriod` is the source value (`yearly`, `monthly`, or `hourly`).
+- `companySlug` and `companyUrl` appear when the job description links to a Jobicy company page.
+- `descriptionHtml` appears only when `includeDescriptionHtml` is on.
+- Empty values are omitted, never written as `null`, `""`, or `[]`.
+
+### Status records (`recordType: "jobStatus"`)
+
+`jobId`, `jobStatus` (`active`, `closed`, or `unknown`), `checkedAt`, `scrapedAt`. `unknown` means Jobicy could not confirm the ID; it is not proof that the vacancy closed.
+
+### Taxonomy records (`recordType: "taxonomy"`)
+
+`taxonomyType` (`location` or `industry`), `taxonomyId`, `name`, `slug`, `scrapedAt`.
+
+## Coverage and limits
+
+- The public feed contains jobs published in the **last seven days**. On 2026-11-22 that was **1,437 jobs across 15 pages**. Newer runs may differ.
+- `getJobs` can only find jobs inside that window. Use `getJobStatus` for older stored IDs.
+- Keyword, region, and industry filters are applied by Jobicy. Employment type, seniority, salary, company, location text, and posting date are applied by the actor after fetching, so a narrow combination may need to scan more pages and can still return fewer rows than `maxItems`.
+- Jobicy's region matching is its own eligibility model, not a strict country check; the actor returns the labels Jobicy supplies. `malaysia` is listed by Jobicy's taxonomy but rejected by its live geo filter, so it is mapped to `apac` with a Malaysia location filter.
+- Salary is disclosed for roughly half of listings and appears in several currencies and periods. Set `salaryCurrency` and `salaryPeriod` when comparing numbers.
+- Jobicy rate-limits public requests to about one per second. The actor paces itself and backs off on `429` responses; no setting is required.
+- Some filter values are valid but have no matching jobs in the current feed: `Temporary`, `Freelance`, `Lead`, `Manager`, and `Executive`. They are kept so future listings are picked up; a run using one returns 0 rows and a status message explaining that the feed had no match.
+- Jobicy's image host and job/company detail pages block non-browser HTTP requests with Cloudflare (HTTP 403). Logo URLs are passed through from the API for compatibility but may need a browser to render. Company page extras (about text, phone, website, address) are not available through the public feed.
+- The feed is ordered newest-first by Jobicy; there is no custom sort. Jobicy does not expose recruiter contacts, IR35 status, contract duration, or application-form URLs through this API.
 
 ## FAQ
 
-**Is this the same as JobServe.com?**
-No. JobServe.com does not expose a public data feed, so this actor targets Jobicy, a remote-jobs board covering the same IT/tech niche with richer structured salary and sector data. It is not affiliated with either site.
+**Do I need an API key or proxy?**
+No. The actor calls Jobicy's public endpoints directly and requires no credentials or proxy configuration.
 
-**Why do some jobs have no salary fields?**
-Jobicy only shows salary data when the employer disclosed it. Jobs without a stated range simply omit `salaryMin`/`salaryMax` rather than showing a null or zero.
+**Why did a run scan more jobs than it saved?**
+The server filters are broad (keyword, region, industry). Type, seniority, salary, company, and date filters run after each page is fetched, so the actor may need several pages to fill `maxItems` or reach the end of the feed.
 
-**What's the difference between `sector` and `sectors`?**
-`sector` is always the primary sector for the job. `sectors` only appears when the posting is tagged with more than one sector, listing all of them.
+**Why are salary fields missing on some rows?**
+Jobicy only publishes pay when the employer provides it. The actor omits the salary fields rather than inventing a value.
 
-**How do I fetch a specific job I already know about?**
-Switch `mode` to `getJob` and list its ID or slug in `jobIds` to fetch those jobs directly instead of running a keyword search. Any `query`/`location`/`jobType`/`level`/`minSalary` filters you've also set still apply to the matched jobs, so leave them blank if you just want the listed IDs returned unconditionally.
+**Can I get jobs older than seven days?**
+Not from this feed. `getJobStatus` can still confirm whether an older ID is active or closed, but it does not return the original listing.
 
-**Does the `location` filter duplicate `geo`?**
-No — `geo` selects one of Jobicy's own region categories server-side, while `location` is an extra free-text filter applied afterward against whatever location string the job actually displays.
+**What happens when a request is rate-limited?**
+The actor waits for the advertised retry delay and retries. Repeated server errors use exponential backoff. A run whose source request is rejected with no records fails with the error instead of silently returning an empty dataset.
 
-**How current are the listings?**
-Every run re-queries the live feed, so results reflect whatever is posted on Jobicy at run time.
+**Is this affiliated with Jobicy?**
+No. It reads publicly available Jobicy data. Keep Jobicy's attribution and link requirements in mind when republishing listings; each record keeps the original `jobUrl`.
+
+**How current are the results?**
+Every run reads the live feed. The `datePosted` field is the source publication timestamp, and `scrapedAt` is when the record was saved.

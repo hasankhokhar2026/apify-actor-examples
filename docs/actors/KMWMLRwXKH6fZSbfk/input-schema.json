@@ -1,15 +1,15 @@
 {
-  "description": "Search live job listings on Jobberman.com (Nigeria's largest job board), or fetch full job details from listing URLs.",
+  "description": "Search live Jobberman job listings with keyword, location, industry, job function, work type and experience filters, replay Jobberman search URLs, or fetch specific listing URLs.",
   "properties": {
     "containsKeyword": {
-      "description": "Case-insensitive substring filter applied to title, company name, and description.",
+      "description": "Case-insensitive substring filter applied to the title, company, summary and full description.",
       "editor": "textfield",
       "title": "Must contain keyword",
       "type": "string"
     },
     "employmentType": {
       "default": "",
-      "description": "Filter results to a single employment type (applied client-side against the listing's displayed job type).",
+      "description": "Keep only records whose normalised employment type matches. Applied after fetching, so unknown values are never dropped.",
       "editor": "select",
       "enum": [
         "",
@@ -29,12 +29,12 @@
         "Temporary",
         "Volunteer"
       ],
-      "title": "Employment type",
+      "title": "Employment type (post-filter)",
       "type": "string"
     },
     "experienceLevel": {
       "default": "",
-      "description": "Filter to a Jobberman experience level.",
+      "description": "Restrict results to a Jobberman experience band.",
       "editor": "select",
       "enum": [
         "",
@@ -59,20 +59,21 @@
     },
     "includeFullDescription": {
       "default": true,
-      "description": "Fetch each listing's detail page for full description, requirements, deadline, and company info. Slower but richer. mode=byUrls always fetches the detail page.",
+      "description": "Open each listing page for the full description, exact dates, salary, requirements, company logo and badges. Turn off for faster card-only records.",
       "prefill": true,
-      "title": "Include full description (mode=search)",
+      "sectionCaption": "Output",
+      "title": "Fetch full job details",
       "type": "boolean"
     },
     "industry": {
       "default": "",
-      "description": "Filter to a Jobberman industry.",
+      "description": "Restrict results to an employer industry, for example IT & Telecoms or Banking, Finance & Insurance.",
       "editor": "select",
       "enum": [
         "",
+        "advertising-media-communications",
         "agriculture-fishing-forestry",
         "automotive-aviation",
-        "advertising-media-communications",
         "banking-finance-insurance",
         "construction",
         "education",
@@ -95,9 +96,9 @@
       ],
       "enumTitles": [
         "Any industry",
+        "Advertising, Media & Communications",
         "Agriculture, Fishing & Forestry",
         "Automotive & Aviation",
-        "Advertising, Media & Communications",
         "Banking, Finance & Insurance",
         "Construction",
         "Education",
@@ -123,7 +124,7 @@
     },
     "jobFunction": {
       "default": "",
-      "description": "Filter to a Jobberman job function.",
+      "description": "Restrict results to a job family, for example Software & Data or Sales.",
       "editor": "select",
       "enum": [
         "",
@@ -188,15 +189,16 @@
     },
     "listingUrls": {
       "default": [],
-      "description": "Direct Jobberman listing URLs, e.g. https://www.jobberman.com/listings/accountstax-senior-2k886k",
+      "description": "Direct Jobberman listing URLs, for example https://www.jobberman.com/listings/account-assistant-8mnppx. Used by the Fetch specific job URLs mode.",
       "editor": "stringList",
       "prefill": [],
-      "title": "Listing URLs (mode=byUrls)",
+      "sectionCaption": "URL modes",
+      "title": "Job listing URLs",
       "type": "array"
     },
     "location": {
       "default": "",
-      "description": "Filter to a Jobberman location region.",
+      "description": "Restrict results to a Nigerian state, region, remote jobs or jobs outside Nigeria. Use the slug values from the list; legacy `where` inputs may still send a display name.",
       "editor": "select",
       "enum": [
         "",
@@ -233,54 +235,87 @@
     },
     "maxItems": {
       "default": 30,
-      "description": "Hard cap on emitted records.",
-      "maximum": 1000,
+      "description": "Hard cap on the number of jobs pushed to the dataset.",
+      "maximum": 10000,
       "minimum": 1,
       "prefill": 30,
-      "title": "Max items",
+      "title": "Maximum jobs",
+      "type": "integer"
+    },
+    "maxPages": {
+      "default": 0,
+      "description": "Safety cap on pages fetched per search source. 0 chooses an automatic cap based on Maximum jobs.",
+      "maximum": 1000,
+      "minimum": 0,
+      "title": "Maximum search pages",
       "type": "integer"
     },
     "maxSalary": {
       "description": "Drop jobs whose disclosed salary band is entirely above this value. Jobs with no disclosed salary always pass through.",
       "maximum": 100000000,
       "minimum": 0,
-      "title": "Max salary (NGN/month)",
+      "title": "Maximum salary (NGN per month)",
       "type": "integer"
     },
     "minSalary": {
       "description": "Drop jobs whose disclosed salary band is entirely below this value. Jobs with no disclosed salary always pass through.",
       "maximum": 100000000,
       "minimum": 0,
-      "title": "Min salary (NGN/month)",
+      "title": "Minimum salary (NGN per month)",
       "type": "integer"
     },
     "mode": {
       "default": "search",
-      "description": "What to fetch.",
+      "description": "Choose what to scrape: a keyword/filter search, a list of pasted Jobberman search URLs, or a list of specific job-listing URLs.",
       "editor": "select",
       "enum": [
         "search",
-        "byUrls"
+        "byUrls",
+        "bySearchUrls"
       ],
       "enumTitles": [
-        "Search jobs (keyword + filters)",
-        "Fetch by listing URLs"
+        "Search jobs by keyword and filters",
+        "Fetch specific job URLs",
+        "Replay Jobberman search URLs"
       ],
       "prefill": "search",
+      "sectionCaption": "What to scrape",
       "title": "Mode",
       "type": "string"
     },
+    "postedWithinDays": {
+      "default": 0,
+      "description": "Keep jobs posted in the last N days. 0 means any date. Jobs with no date shown always pass through.",
+      "maximum": 3650,
+      "minimum": 0,
+      "title": "Posted within (days)",
+      "type": "integer"
+    },
+    "searchQueries": {
+      "default": [],
+      "description": "Run several keyword searches in one run. Each query is deduplicated against the others; useful for broad market coverage.",
+      "editor": "stringList",
+      "title": "Additional keywords",
+      "type": "array"
+    },
     "searchQuery": {
       "default": "sales",
-      "description": "Free-text keyword — job title, skill, or company name. Leave empty to browse all listings.",
+      "description": "Free-text keyword such as a job title, skill or company name. Leave empty to browse every live listing. Legacy inputs using `query`, `keyword` or `keywords` are accepted.",
       "editor": "textfield",
       "prefill": "sales",
-      "title": "Search query (mode=search)",
+      "title": "Search keyword",
       "type": "string"
+    },
+    "searchUrls": {
+      "default": [],
+      "description": "Paste filtered Jobberman search or category URLs, for example https://www.jobberman.com/jobs/software-data/lagos or https://www.jobberman.com/jobs?q=accountant&sort=popular. Each URL is replayed with pagination.",
+      "editor": "stringList",
+      "title": "Jobberman search URLs",
+      "type": "array"
     },
     "sortBy": {
       "default": "latest",
-      "description": "Sort order for search results (mode=search). Jobberman's own \"Latest\" / \"Featured\" / \"Popular\" toggle.",
+      "description": "Jobberman's own Latest, Featured or Popular order. Sorting is passed to the site and preserved across pagination.",
       "editor": "select",
       "enum": [
         "latest",
@@ -288,12 +323,36 @@
         "popular"
       ],
       "enumTitles": [
-        "Latest (default order)",
+        "Latest",
         "Featured",
         "Popular"
       ],
       "prefill": "latest",
-      "title": "Sort by",
+      "sectionCaption": "Filters and ordering",
+      "title": "Sort order",
+      "type": "string"
+    },
+    "workType": {
+      "default": "",
+      "description": "Restrict results to the site's own work-type groups: full time, part time, contract and temporary, internship and volunteer, or casual and seasonal.",
+      "editor": "select",
+      "enum": [
+        "",
+        "full-time",
+        "part-time",
+        "contract",
+        "internship-graduate",
+        "casual-seasonal"
+      ],
+      "enumTitles": [
+        "Any work type",
+        "Full Time",
+        "Part Time",
+        "Contract & Temporary",
+        "Internship & Volunteer",
+        "Casual & Seasonal"
+      ],
+      "title": "Work type",
       "type": "string"
     }
   },
@@ -301,6 +360,6 @@
     "mode"
   ],
   "schemaVersion": 1,
-  "title": "Jobberman Scraper Input",
+  "title": "Jobberman Nigeria Job Market Scraper Input",
   "type": "object"
 }

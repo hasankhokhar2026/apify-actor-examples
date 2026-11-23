@@ -1,13 +1,25 @@
 {
   "actorOutputSchemaVersion": 1,
-  "description": "Remote IT and tech job listings — title, company, sector, location, job type, level, salary range, description, and apply URL.",
+  "description": "Remote job records with salary, company, location, employment type, seniority, and description data; plus job-status records and filter taxonomies when those modes are used.",
   "properties": {
-    "jobs": {
-      "description": "Dataset containing all scraped remote IT/tech job records.",
+    "jobStatuses": {
+      "description": "Status checks for requested job IDs (recordType=jobStatus) in the same dataset.",
       "template": "{{links.apiDefaultDatasetUrl}}/items",
-      "title": "IT job listings",
+      "title": "Job status records",
+      "type": "string"
+    },
+    "jobs": {
+      "description": "Dataset containing job records (recordType=job), job-status records (recordType=jobStatus), and taxonomy records (recordType=taxonomy).",
+      "template": "{{links.apiDefaultDatasetUrl}}/items",
+      "title": "Remote job records",
+      "type": "string"
+    },
+    "taxonomies": {
+      "description": "Jobicy locations and industries (recordType=taxonomy) in the same dataset.",
+      "template": "{{links.apiDefaultDatasetUrl}}/items",
+      "title": "Filter taxonomies",
       "type": "string"
     }
   },
-  "title": "Jobicy Remote Tech and IT Jobs Scraper Output"
+  "title": "Jobicy Remote Tech & IT Jobs Scraper Output"
 }
