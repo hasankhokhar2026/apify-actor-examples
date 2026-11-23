@@ -1,0 +1,52 @@
+{
+  "properties": {
+    "maxItems": {
+      "default": 3,
+      "description": "Maximum number of property listings to return.",
+      "editor": "number",
+      "maximum": 500,
+      "minimum": 1,
+      "prefill": 3,
+      "title": "Max Items",
+      "type": "integer"
+    },
+    "proxyConfiguration": {
+      "default": {
+        "apifyProxyCountry": "GB",
+        "apifyProxyGroups": [
+          "RESIDENTIAL"
+        ],
+        "useApifyProxy": true
+      },
+      "description": "Apify RESIDENTIAL GB proxy is REQUIRED — Zoopla blocks datacenter IPs at the Cloudflare layer. Do not change these settings.",
+      "editor": "proxy",
+      "prefill": {
+        "apifyProxyCountry": "GB",
+        "apifyProxyGroups": [
+          "RESIDENTIAL"
+        ],
+        "useApifyProxy": true
+      },
+      "title": "Proxy Configuration",
+      "type": "object"
+    },
+    "searchUrls": {
+      "default": [
+        "https://www.zoopla.co.uk/for-sale/property/london/"
+      ],
+      "description": "Zoopla search URLs (e.g. https://www.zoopla.co.uk/for-sale/property/london/, https://www.zoopla.co.uk/to-rent/property/manchester/) or direct listing URLs (https://www.zoopla.co.uk/for-sale/details/<id>/). Search URLs enumerate listings; direct URLs are scraped individually.",
+      "editor": "stringList",
+      "prefill": [
+        "https://www.zoopla.co.uk/for-sale/property/london/"
+      ],
+      "title": "Search or Listing URLs",
+      "type": "array"
+    }
+  },
+  "required": [
+    "searchUrls"
+  ],
+  "schemaVersion": 1,
+  "title": "Zoopla UK Property Scraper Input",
+  "type": "object"
+}

@@ -1,0 +1,149 @@
+{
+  "description": "Search YellowPages.com for local businesses by keyword + location, browse a category, or enrich specific business profile URLs.",
+  "properties": {
+    "categorySlug": {
+      "description": "YellowPages category slug, e.g. `plumbers`, `pizza`, `hair-salons`, `auto-repair-service`. Found in category browse URLs: yellowpages.com/{location}/{category}.",
+      "editor": "textfield",
+      "title": "Category slug (mode=category)",
+      "type": "string"
+    },
+    "detailUrls": {
+      "default": [],
+      "description": "Full YellowPages business profile URLs (containing `/mip/`), e.g. `https://www.yellowpages.com/new-york-ny/mip/some-business-123456`.",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Business profile URLs (mode=businessDetail)",
+      "type": "array"
+    },
+    "fetchBusinessDetails": {
+      "default": false,
+      "description": "For search/category modes, visit each business's profile page to add hours, general info, and services/products. Slower and less reliable — leave off for fast, reliable runs.",
+      "prefill": false,
+      "title": "Fetch full business details",
+      "type": "boolean"
+    },
+    "geoLocationTerms": {
+      "default": "New York, NY",
+      "description": "City + state (e.g. `New York, NY`) or a 5-digit ZIP code (e.g. `10005`).",
+      "editor": "textfield",
+      "prefill": "New York, NY",
+      "title": "Location (mode=search)",
+      "type": "string"
+    },
+    "hasWebsiteOnly": {
+      "default": false,
+      "description": "Only keep businesses that list a website link.",
+      "prefill": false,
+      "title": "Has a website only",
+      "type": "boolean"
+    },
+    "locationSlug": {
+      "description": "YellowPages location slug, e.g. `new-york-ny`, `los-angeles-ca`, `chicago-il`.",
+      "editor": "textfield",
+      "title": "Location slug (mode=category)",
+      "type": "string"
+    },
+    "maxItems": {
+      "default": 30,
+      "description": "Hard cap on emitted records.",
+      "maximum": 500,
+      "minimum": 1,
+      "prefill": 30,
+      "title": "Max items",
+      "type": "integer"
+    },
+    "minRating": {
+      "description": "Only keep businesses with at least this star rating.",
+      "editor": "select",
+      "enum": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5"
+      ],
+      "enumTitles": [
+        "1+ stars",
+        "2+ stars",
+        "3+ stars",
+        "4+ stars",
+        "5 stars"
+      ],
+      "title": "Minimum rating (stars)",
+      "type": "string"
+    },
+    "minReviewCount": {
+      "description": "Only keep businesses with at least this many reviews.",
+      "maximum": 100000,
+      "minimum": 0,
+      "title": "Minimum review count",
+      "type": "integer"
+    },
+    "minYearsInBusiness": {
+      "description": "Only keep businesses that have been operating for at least this many years.",
+      "maximum": 200,
+      "minimum": 0,
+      "title": "Minimum years in business",
+      "type": "integer"
+    },
+    "mode": {
+      "default": "search",
+      "description": "What to fetch from YellowPages.com.",
+      "editor": "select",
+      "enum": [
+        "search",
+        "category",
+        "businessDetail"
+      ],
+      "enumTitles": [
+        "Search businesses (keyword + location)",
+        "Browse a category (category + location)",
+        "Enrich specific business profile URLs"
+      ],
+      "prefill": "search",
+      "title": "Mode",
+      "type": "string"
+    },
+    "openNowOnly": {
+      "default": false,
+      "description": "Only keep businesses shown as currently open.",
+      "prefill": false,
+      "title": "Currently open only",
+      "type": "boolean"
+    },
+    "searchTerms": {
+      "default": "restaurants",
+      "description": "What to search for, e.g. `restaurants`, `plumbers`, `Starbucks`. Leave blank to list all businesses at the location.",
+      "editor": "textfield",
+      "prefill": "restaurants",
+      "title": "Search terms (mode=search)",
+      "type": "string"
+    },
+    "sortBy": {
+      "default": "default",
+      "description": "How YellowPages should order results (applies to search and category modes).",
+      "editor": "select",
+      "enum": [
+        "default",
+        "distance",
+        "average_rating",
+        "name"
+      ],
+      "enumTitles": [
+        "Default (recommended)",
+        "Distance",
+        "Rating (highest first)",
+        "Name (A-Z)"
+      ],
+      "prefill": "default",
+      "title": "Sort order",
+      "type": "string"
+    }
+  },
+  "required": [
+    "mode"
+  ],
+  "schemaVersion": 1,
+  "title": "Yellow Pages Business Directory Scraper Input",
+  "type": "object"
+}
