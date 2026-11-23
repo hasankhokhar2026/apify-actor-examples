@@ -4,66 +4,27 @@
 
 # Property24 Listings and Bank Repossessions Scraper
 
-Property24 is South Africa's largest property portal, covering every province and property type from houses to farms and commercial space. This actor searches current for-sale or to-rent listings — including Property24's dedicated bank-repossession category — or looks up specific listings by URL, returning price, room counts, agent contact and (optionally) full listing detail.
+Property24 is the property portal most South Africans use to find a home, and it publishes no download button. This actor turns its public pages into a clean dataset: active sale and rental listings, new-development projects, and area sold-price trends. It works across South Africa and the Namibian, Botswanan, Zambian, Zimbabwean, Mozambican and Kenyan editions, with no login, cookies or API key.
 
-## What this actor does
+## What you can scrape
 
-- Searches by province, transaction type (for sale / to rent), property type, price range, and minimum bedrooms/bathrooms, or fetches an exact set of listing URLs directly
-- Can target Property24's dedicated Repossessions category instead of the regular market, for bank-assisted and repossessed sales
-- Sorts results by price or bedroom count, matching Property24's own sort options
-- Optionally follows each listing to its detail page for the full description, agent/agency contact, exact address, coordinates, levies/rates and room-by-room features
-- Omits any field the listing didn't provide — no empty strings or nulls in the output
+- **Filtered search** by country, area name or province, for-sale or to-rent, property type, price, bedrooms, bathrooms, parking, floor size, erf size, bank repossessions, auctions, show days and retirement properties.
+- **Pasted search URLs** from Property24, keeping every filter and sort already in the link. South African and other-edition URLs can be mixed in one run.
+- **Specific listing URLs** for exact lookups and price-change checks.
+- **New-development projects** that appear in ordinary results, with their from/to price range and unit count.
+- **Public area sold-price trends** (yearly average price) for a province, city or suburb.
+- **Full detail** on request: description, levies, rates and taxes, erf and floor size, price per m², listing date, features, agents, agency, gallery and map coordinates.
 
-## Output per listing
+The actor reads only public pages. It does not log in, does not call contact-detail handlers, and does not return agent phone numbers or e-mail addresses.
 
-Base fields present for every listing returned by `search`:
+## Quick start
 
-- `listingId`, `areaId`
-- `transactionType`, `propertyType`
-- `suburb`, `city`, `province`
-- `titleText`
-- `price` — or `priceOnApplication` when the agent didn't list a fixed price, or `pricePerSqm` for commercial listings quoted per square metre
-- `bedrooms`, `bathrooms`, `parkingSpaces`, `floorSizeSqm`
-- `imageUrl`, `listingUrl`, `sourceUrl`
-- `isBankRepossession` — only present when `bankRepossessionsOnly` is on
-- `recordType: "propertyListing"`, `scrapedAt`
-
-Additional fields when `includeFullDetails` is on, or always for `mode: byUrls`:
-
-- `title`, `description`, `datePosted`, `currency`
-- `agentName`, `agentProfileUrl`, `agencyName`, `agencyUrl`, `agencyLogoUrl`
-- `streetAddress`, `latitude`, `longitude`, `country`
-- `overview` — listing number, property type, listing date, floor size, price/m², levies, rates & taxes, transfer duty, pets policy, floor number (varies by property type)
-- `rooms` — bedroom/bathroom/kitchen/lounge detail as described by the agent
-- `externalFeatures` — parking detail
-- `building` — number of floors and other building-level detail
-- `otherFeatures` — security, special features, internet access, generator, wheelchair access
-- `images[]` — the full photo gallery
-- `listingNumber`
-
-## Input
-
-| Field | Type | Default | Description |
-|---|---|---|---|
-| `mode` | string | `search` | `search` (browse/filter) or `byUrls` (exact lookup) |
-| `transactionType` | string | `forSale` | `forSale` or `toRent` (mode=search) |
-| `propertyType` | string | `any` | `any`, `house`, `apartment`, `townhouse`, `vacantLand`, `farm`, `commercial` or `industrial` |
-| `province` | string | `gauteng` | One of the 9 South African provinces |
-| `priceMin` | integer | – | Minimum listing price in ZAR |
-| `priceMax` | integer | – | Maximum listing price in ZAR |
-| `bedroomsMin` | integer | – | Only include listings with at least this many bedrooms |
-| `bathroomsMin` | integer | – | Only include listings with at least this many bathrooms |
-| `bankRepossessionsOnly` | boolean | `false` | Search Property24's Repossessions category instead of the regular market; forces `transactionType` to `forSale` |
-| `sortBy` | string | `default` | `default`, `priceLowToHigh`, `priceHighToLow` or `mostBedrooms` |
-| `listingUrls` | array | `[]` | Property24 listing URLs to fetch directly (mode=byUrls) |
-| `includeFullDetails` | boolean | `false` | Fetch each listing's detail page for description, agent/agency info, address, coordinates and room features; always on for mode=byUrls |
-| `maxItems` | integer | `20` | Hard cap on emitted records (1–500) |
-
-### Example: family houses for sale in the Western Cape
+### Family houses for sale in the Western Cape
 
 ```json
 {
   "mode": "search",
+  "country": "za",
   "transactionType": "forSale",
   "propertyType": "house",
   "province": "westernCape",
@@ -74,32 +35,59 @@ Additional fields when `includeFullDetails` is on, or always for `mode: byUrls`:
 }
 ```
 
-### Example: apartments to rent in Gauteng, cheapest first
+### Apartments to rent in Sandton, cheapest first
 
 ```json
 {
   "mode": "search",
+  "country": "za",
+  "location": "Sandton",
   "transactionType": "toRent",
   "propertyType": "apartment",
-  "province": "gauteng",
   "sortBy": "priceLowToHigh",
   "maxItems": 30
 }
 ```
 
-### Example: bank-repossessed apartments nationwide filtered to Gauteng
+### Bank-repossessed properties in Gauteng
 
 ```json
 {
   "mode": "search",
-  "bankRepossessionsOnly": true,
-  "propertyType": "apartment",
+  "country": "za",
   "province": "gauteng",
+  "bankRepossessionsOnly": true,
   "maxItems": 30
 }
 ```
 
-### Example: look up specific listings by URL
+### Auctions and show days this week
+
+```json
+{
+  "mode": "search",
+  "country": "za",
+  "location": "Cape Town",
+  "auctionsOnly": true,
+  "onShowOnly": false,
+  "sortBy": "newest",
+  "maxItems": 100
+}
+```
+
+### Mirror a search you built on the site
+
+```json
+{
+  "mode": "searchUrls",
+  "searchUrls": [
+    "https://www.property24.com/for-sale/sea-point/cape-town/western-cape/11021?sp=pf%3D2000000%26pt%3D6000000%26bd%3D2"
+  ],
+  "maxItems": 100
+}
+```
+
+### Look up a specific listing
 
 ```json
 {
@@ -110,36 +98,131 @@ Additional fields when `includeFullDetails` is on, or always for `mode: byUrls`:
 }
 ```
 
-## Use cases
+### Compare another African edition
 
-- **Market research** — track median price and price-per-square-metre by province and property type
-- **Bargain hunting** — scan the bank-repossession category for below-market deals
-- **Relocation search** — build a filtered shortlist with agent contact details included
-- **Lead generation** — collect agent and agency contact info tied to active listings
-- **Listing monitoring** — re-run `byUrls` against saved listings to track price changes over time
+```json
+{
+  "mode": "search",
+  "country": "na",
+  "location": "Windhoek",
+  "transactionType": "forSale",
+  "maxItems": 50
+}
+```
+
+### Read area sold-price trends
+
+```json
+{
+  "mode": "soldPrices",
+  "province": "westernCape",
+  "location": "Sea Point, Cape Town",
+  "maxItems": 10
+}
+```
+
+## Input
+
+| Field | Type | Default | What it does |
+|---|---|---|---|
+| `mode` | select | `search` | `search`, `searchUrls`, `byUrls` or `soldPrices`. |
+| `country` | select | `za` | South Africa, Namibia, Botswana, Zambia, Zimbabwe, Mozambique or Kenya. |
+| `location` | text | - | City, suburb or area name, e.g. `Sandton`, `Sea Point, Cape Town`, `Windhoek`. Leave empty to use the province/country. |
+| `transactionType` | select | `forSale` | `forSale` or `toRent`. |
+| `propertyType` | select | `any` | Any, house, apartment, townhouse, vacant land, farm, commercial or industrial. |
+| `province` | select | `gauteng` | South African province used when no area name is given. |
+| `priceMin` / `priceMax` | integer | - | Price bounds in the edition's own currency. |
+| `bedroomsMin` | integer | - | Minimum bedrooms; studios count as 0. |
+| `bathroomsMin` | integer | - | Minimum bathrooms; half bathrooms are handled. |
+| `parkingMin` | integer | - | Minimum parking spaces or garages. |
+| `floorSizeMin` / `floorSizeMax` | integer | - | Building floor area in m². |
+| `erfSizeMin` / `erfSizeMax` | integer | - | Land/erf area in m². |
+| `bankRepossessionsOnly` | boolean | `false` | Search the bank-repossession facet. |
+| `auctionsOnly` | boolean | `false` | Only listing with an auction badge. |
+| `onShowOnly` | boolean | `false` | Only listings with a scheduled show day. |
+| `retirementOnly` | boolean | `false` | Only retirement properties. |
+| `sortBy` | select | `default` | Site order, newest, price low/high, most bedrooms, property type or size. |
+| `searchUrls` | string list | `[]` | Search pages for `mode=searchUrls`; keeps filters and sort baked into each URL. |
+| `listingUrls` | string list | `[]` | Listing pages for `mode=byUrls`. |
+| `includeFullDetails` | boolean | `false` | Open each result's detail page for costs, sizes, features, agents and gallery. |
+| `maxItems` | integer | `20` | Emitted-record cap, 1–10,000. |
+| `maxPages` | integer | `0` | Page cap per search URL; 0 decides from `maxItems` and the site's next link. |
+
+### How filters behave
+
+Price, bedrooms and parking are sent to Property24's own search where available. Bathrooms, floor size and erf size are checked against the values the listing publishes. A listing that does not publish a value is kept rather than guessed away, which is the honest behaviour for vacant land and sparse adverts. Set `includeFullDetails` when you need bathroom/floor/erf filtering to be as complete as the detail page allows.
+
+## Output
+
+One record per listing, development or trend. Fields appear only when Property24 published the value, so there are no nulls or blank strings.
+
+**Identity and price**
+
+- `listingId`, `areaId`, `listingNumber`, `listingUrl`, `sourceUrl`, `recordType`
+- `titleText` / `title`, `description`, `transactionType`, `propertyType`
+- `price`, `priceDisplay`, `currency`, `priceOnApplication`, `pricePerSqm`
+- `priceFrom`, `priceTo`, `developmentUnits` (new developments)
+- `rentalTerm`, `priceType`
+
+**Property facts**
+
+- `bedrooms`, `bathrooms`, `parkingSpaces`, `garages`, `kitchens`, `receptionRooms`
+- `floorSizeSqm`, `erfSizeSqm`, `furnished`, `petsAllowed`
+- `features[]`, `zoning`, `lifestyle`, `propertySubtype`
+
+**Location**
+
+- `suburb`, `city`, `province`, `country`, `streetAddress`
+- `latitude`, `longitude` (when the detail page publishes them)
+
+**People and costs**
+
+- `agentName`, `agentProfileUrl`, `agents[]` with name, image, profile id and contact-availability flags
+- `agencyName`, `agencyUrl`, `agencyLogoUrl`
+- `levies`, `ratesAndTaxes`, `specialLevies`
+
+**Dates and status**
+
+- `listingDate`, `datePosted`, `daysOnMarket`
+- `status`, `isAuction`, `isOnShow`, `onShowDate`, `isReduced`, `isRepossessed`, `isRetirement`, `isBankRepossession`, `hasNoTransferDuty`
+- `listingTier`, `hasGroupedDuplicates`, `agentsListingSameProperty`
+
+**Detail blocks**
+
+- `overview`, `rooms`, `externalFeatures`, `building`, `otherFeatures`
+- `images[]`, `primaryImageUrl`
+- `recordType: "propertyListing"` for a home, `"development"` for a new-build project, `"propertyTrend"` for an area-year trend.
+
+## Coverage and honest limits
+
+- **All seven editions search; non-ZA detail is best-effort.** Listing search works on all seven editions. Non-ZA detail pages use a different layout (Product JSON-LD plus a Property Overview table); the actor parses it when the page is reachable, including mobile URLs, but the site edge can still return 503 and then the search card is kept. Mozambique city slugs are normalized to the working maputo city / inhambane city pages; MZ inventory is thin.
+- **Sold listings are not a public feed.** Property24 publishes area averages and sells street-level property reports; it does not expose a public list of individual sold transactions. The `soldPrices` mode returns the public yearly average-price graph and labels those rows `propertyTrend`.
+- **Agent contact details are not collected.** Phone and e-mail reveal endpoints are excluded by the site's robots rules and contain personal data. Agent and agency names, profile links and contact-availability flags are returned where published.
+- **Source ceilings are real.** A very broad search can run out of pages before `maxItems`; the status message says what happened. Split by area, price band or property type for deeper coverage.
+- **The site occasionally blocks a page mid-run.** The actor retries with a fresh session, a browser TLS profile and a proxy escalation, and keeps the rows it already collected. Re-running from the same area usually picks up the rest.
 
 ## FAQ
 
-**Is this official Property24 data?**
-It's parsed directly from Property24's own listing and search-result pages, but this actor is an independent tool and not affiliated with Property24.
+**Do I need an Apify proxy or a paid plan?**
+No. The actor handles its connection path automatically. A proxy is never a required input.
 
-**Why do some listings show `priceOnApplication` instead of a number?**
-Some sellers list "Price on Application" rather than a fixed figure; the actor reports that instead of inventing a price.
+**Does it return South African prices in rand?**
+South African rows use ZAR. Each edition carries its own currency on every row (`currency` and, when shown, `priceDisplay`).
 
-**Why do some commercial listings show `pricePerSqm` instead of `price`?**
-Certain commercial listings — often ones covering multiple units of different sizes — quote a rate per square metre instead of one total price, so that rate is reported under its own field rather than mislabeled as the total price.
+**How do I get levies and rates?**
+Turn on `includeFullDetails`. Those numbers live on the listing's own page, not the result card. That mode also adds the full description, features, agents and gallery.
 
-**Why do `overview`, `rooms` and `externalFeatures` vary between listings?**
-Property24 lets agents fill in different fields depending on property type (e.g. erf size for a house, levies for an apartment). The actor only reports what the agent actually entered.
+**Why is `price` missing on some rows?**
+The seller chose "price on application" or published a development range. `priceOnApplication`, `priceFrom` and `priceTo` describe those cases; the actor does not invent a number.
 
-**What's the difference between `search` and `byUrls`?**
-`search` browses and filters listings by province, type, price and rooms. `byUrls` looks up specific listing URLs you already have — from a previous run or shared elsewhere — and always returns full detail.
+**What is the difference between `floorSizeSqm` and `erfSizeSqm`?**
+Floor size is the building; erf size is the land. The actor reads which dimension Property24 actually published instead of treating one as the other.
 
-**What does `bankRepossessionsOnly` actually search?**
-Property24 runs a dedicated nationwide Repossessions feed for bank-assisted and repossessed sales, typically priced below market. Turning this on searches that feed instead of the regular province category; province and property-type filters are then applied on top of that nationwide feed. Matching listings are tagged `isBankRepossession: true` but otherwise use the same fields as any other listing.
+**Can I monitor new listings?**
+Sort by `newest` and schedule the actor; compare `listingId` values between runs. A built-in “only new rows” state is deliberately not part of this version, so every run is stateless and predictable.
 
-**Why might a run return fewer records than `maxItems`?**
-Property24 occasionally returns a transient error for one page of results; when that happens the actor keeps whatever it already collected rather than failing the whole run. Re-running, or raising `maxItems`, usually recovers the rest.
+**Why did I get fewer rows than `maxItems`?**
+Either the area has fewer matching listings, a filter removed the rest, or the source stopped serving pages. The run status says which; widening a filter or splitting the area usually finds more.
 
-**How current is the data?**
-Every run reads Property24's live pages, so prices and availability reflect what's currently listed.
+**Is the data official?**
+It is parsed from Property24's public pages. This actor is independent and not affiliated with Property24.

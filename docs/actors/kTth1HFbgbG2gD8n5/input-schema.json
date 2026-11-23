@@ -1,43 +1,135 @@
 {
-  "description": "Search QQ Music (Tencent), fetch songs by URL, album tracks, playlist tracks, and top-100 rank charts. No login required.",
+  "description": "Search QQ Music songs, artists, albums and playlists; fetch songs by URL/MID, artist catalogs, album tracks, playlist tracks, chart rankings, lyrics and song comments. No login required.",
   "properties": {
     "albumId": {
-      "description": "QQ Music album id, e.g. 20612.",
+      "description": "Numeric QQ Music album id, e.g. 20612 (mode=byAlbum).",
       "maximum": 999999999,
       "minimum": 1,
-      "title": "Album ID (mode=byAlbum)",
+      "sectionCaption": "Album",
+      "title": "Album ID",
       "type": "integer"
     },
     "albumUrls": {
       "default": [],
-      "description": "QQ Music album URLs as an alternative to albumId.",
+      "description": "Album URLs or album MIDs as an alternative to albumId (mode=byAlbum).",
       "editor": "stringList",
       "prefill": [],
-      "title": "Album URLs (mode=byAlbum)",
+      "title": "Album URLs or MIDs",
       "type": "array"
     },
-    "containsKeyword": {
-      "description": "Only keep songs whose title contains this substring (case-insensitive).",
+    "artistMid": {
+      "description": "QQ Music singer MID, e.g. `0025NhlN2yWrP4`, or an artist profile URL (mode=byArtist).",
       "editor": "textfield",
-      "title": "Contains keyword",
+      "sectionCaption": "Artist",
+      "title": "Artist MID",
       "type": "string"
+    },
+    "artistSongOrder": {
+      "default": "popularity",
+      "description": "Order of the artist's song catalog (mode=byArtist).",
+      "editor": "select",
+      "enum": [
+        "popularity",
+        "latest"
+      ],
+      "enumTitles": [
+        "Most popular first",
+        "Newest first"
+      ],
+      "prefill": "popularity",
+      "title": "Artist song order",
+      "type": "string"
+    },
+    "artistUrls": {
+      "default": [],
+      "description": "Artist profile URLs or MIDs as an alternative to artistMid (mode=byArtist).",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Artist URLs or MIDs",
+      "type": "array"
+    },
+    "commentSort": {
+      "default": "newest",
+      "description": "Order of song comments (mode=comments). Newest supports incremental pulls with commentsSince.",
+      "editor": "select",
+      "enum": [
+        "newest",
+        "hot"
+      ],
+      "enumTitles": [
+        "Newest first",
+        "Most liked (hot) first"
+      ],
+      "prefill": "newest",
+      "sectionCaption": "Comments",
+      "title": "Comment order",
+      "type": "string"
+    },
+    "commentsSince": {
+      "description": "ISO date or datetime, e.g. `2026-07-01` or `2026-07-01T00:00:00Z`. Older comments are skipped (mode=comments; use with commentSort=newest for incremental runs).",
+      "editor": "textfield",
+      "title": "Only comments after",
+      "type": "string"
+    },
+    "containsKeyword": {
+      "description": "Only keep song records whose title contains this substring (case-insensitive). Other record types pass through.",
+      "editor": "textfield",
+      "title": "Title contains keyword",
+      "type": "string"
+    },
+    "includeArtistAlbums": {
+      "default": false,
+      "description": "Also emit one summary record per album in the artist's catalog (mode=byArtist).",
+      "prefill": false,
+      "title": "Include artist album summaries",
+      "type": "boolean"
+    },
+    "includeArtistInfo": {
+      "default": true,
+      "description": "Emit one artist record with bio, follower and catalog counts before the artist's songs (mode=byArtist).",
+      "prefill": true,
+      "title": "Include artist profile record",
+      "type": "boolean"
+    },
+    "includeCommentCount": {
+      "default": false,
+      "description": "Add a `commentCount` field to every song record. Costs one extra request per song.",
+      "prefill": false,
+      "title": "Include comment count on songs",
+      "type": "boolean"
+    },
+    "includeCommentReplies": {
+      "default": false,
+      "description": "Attach up to 10 nested replies to each comment record (mode=comments).",
+      "prefill": false,
+      "title": "Include comment replies",
+      "type": "boolean"
     },
     "includeLyric": {
       "default": false,
-      "description": "Attach first 2000 chars of the LRC lyric to song records.",
+      "description": "Attach the first 2,000 characters of timed LRC lyrics to each song record (mode=bySongUrl).",
       "prefill": false,
-      "title": "Include lyrics (mode=bySongUrl)",
+      "title": "Include lyrics",
       "type": "boolean"
     },
     "includeToplistInfo": {
       "default": true,
-      "description": "Emit the toplist summary record before its tracks (mode=byToplist).",
+      "description": "Emit the chart's summary record before its tracks (mode=byToplist).",
       "prefill": true,
-      "title": "Include toplist info record",
+      "title": "Include chart summary record",
       "type": "boolean"
     },
+    "maxCommentsPerSong": {
+      "default": 50,
+      "description": "Comment cap for each song (mode=comments). The newest cursor chain is followed up to this cap; 2,000 is supported, while the default 50 keeps runs cheap. Source rate limits can end paging earlier.",
+      "maximum": 2000,
+      "minimum": 1,
+      "prefill": 50,
+      "title": "Max comments per song",
+      "type": "integer"
+    },
     "maxDurationSec": {
-      "description": "Drop songs longer than this.",
+      "description": "Drop song records longer than this.",
       "maximum": 86400,
       "minimum": 0,
       "title": "Max duration (seconds)",
@@ -45,17 +137,18 @@
     },
     "maxItems": {
       "default": 30,
-      "description": "Hard cap on emitted records.",
-      "maximum": 1000,
+      "description": "Hard cap on emitted records, including summary and error records.",
+      "maximum": 10000,
       "minimum": 1,
       "prefill": 30,
-      "title": "Max items",
+      "title": "Max records",
       "type": "integer"
     },
     "minDurationSec": {
-      "description": "Drop songs shorter than this.",
+      "description": "Drop song records shorter than this. Album, playlist, artist, chart and comment records are never dropped by song filters.",
       "maximum": 86400,
       "minimum": 0,
+      "sectionCaption": "Filters & limits",
       "title": "Min duration (seconds)",
       "type": "integer"
     },
@@ -66,59 +159,97 @@
       "enum": [
         "search",
         "bySongUrl",
-        "byToplist",
         "byAlbum",
-        "byPlaylist"
+        "byPlaylist",
+        "byArtist",
+        "byToplist",
+        "toplists",
+        "comments"
       ],
       "enumTitles": [
-        "Search songs",
-        "Fetch songs by URL",
-        "Top-100 rank charts",
-        "Album + tracks",
-        "Playlist + tracks"
+        "Search songs, artists, albums or playlists",
+        "Fetch songs by URL or MID",
+        "Album details + tracks",
+        "Playlist details + tracks",
+        "Artist profile + songs + albums",
+        "One chart + its tracks",
+        "List every chart",
+        "Song comments"
       ],
       "prefill": "search",
+      "sectionCaption": "What to scrape",
       "title": "Mode",
       "type": "string"
     },
     "playlistId": {
-      "description": "QQ Music playlist disstid (long number), e.g. 5315973668.",
+      "description": "QQ Music playlist disstid, e.g. 7039749142 (mode=byPlaylist).",
       "editor": "textfield",
-      "title": "Playlist ID (mode=byPlaylist)",
+      "sectionCaption": "Playlist",
+      "title": "Playlist ID",
       "type": "string"
     },
     "playlistUrls": {
       "default": [],
-      "description": "QQ Music playlist URLs as an alternative to playlistId.",
+      "description": "Playlist URLs or numeric playlist IDs as an alternative to playlistId (mode=byPlaylist).",
       "editor": "stringList",
       "prefill": [],
-      "title": "Playlist URLs (mode=byPlaylist)",
+      "title": "Playlist URLs or IDs",
       "type": "array"
     },
     "searchQuery": {
       "default": "周杰伦",
-      "description": "Free-text query (mode=search).",
+      "description": "Free-text query such as a song title, artist name, album name or playlist theme (mode=search).",
       "editor": "textfield",
       "prefill": "周杰伦",
+      "sectionCaption": "Search",
       "title": "Search query",
       "type": "string"
     },
-    "singerKeyword": {
-      "description": "Only keep songs whose primary singer contains this substring.",
-      "editor": "textfield",
-      "title": "Singer keyword",
+    "searchType": {
+      "default": "songs",
+      "description": "Entity type returned by search (mode=search).",
+      "editor": "select",
+      "enum": [
+        "songs",
+        "artists",
+        "albums",
+        "playlists"
+      ],
+      "enumTitles": [
+        "Songs",
+        "Artists",
+        "Albums",
+        "Playlists"
+      ],
+      "prefill": "songs",
+      "title": "Search for",
       "type": "string"
+    },
+    "singerKeyword": {
+      "description": "Only keep song records whose credited singers contain this substring. Other record types pass through.",
+      "editor": "textfield",
+      "title": "Singer contains keyword",
+      "type": "string"
+    },
+    "songMids": {
+      "default": [],
+      "description": "Bare QQ Music song MIDs as an alternative to song URLs, e.g. `001Bbywq2gicae` (mode=bySongUrl or comments).",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Song MIDs",
+      "type": "array"
     },
     "songUrls": {
       "default": [],
-      "description": "QQ Music song URLs, e.g. `https://y.qq.com/n/ryqq/songDetail/001Bbywq2gicae`.",
+      "description": "QQ Music song URLs, e.g. `https://y.qq.com/n/ryqq/songDetail/001Bbywq2gicae` (mode=bySongUrl or comments).",
       "editor": "stringList",
       "prefill": [],
-      "title": "Song URLs (mode=bySongUrl)",
+      "sectionCaption": "Songs",
+      "title": "Song URLs",
       "type": "array"
     },
     "toplistId": {
-      "description": "QQ Music chart to fetch (top 100 tracks).",
+      "description": "QQ Music chart to fetch (mode=byToplist). New charts appear via mode=toplists.",
       "editor": "select",
       "enum": [
         "26",
@@ -164,8 +295,17 @@
         "游戏音乐榜",
         "国乐榜"
       ],
-      "title": "Toplist (mode=byToplist)",
+      "sectionCaption": "Charts",
+      "title": "Chart",
       "type": "string"
+    },
+    "toplistUrls": {
+      "default": [],
+      "description": "Chart URLs or numeric chart IDs, as an alternative to toplistId (mode=byToplist).",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Chart URLs or IDs",
+      "type": "array"
     }
   },
   "required": [

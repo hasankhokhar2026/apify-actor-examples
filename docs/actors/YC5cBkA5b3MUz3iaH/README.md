@@ -4,99 +4,163 @@
 
 # Website Sitemap URL Inventory Extractor
 
-Every website that wants to be indexed by search engines publishes a sitemap listing its own pages. This actor reads that sitemap — or finds it for you from a bare domain — and turns it into a flat dataset of every URL the site declares, along with whatever last-modified date, priority and image/video/language metadata the sitemap carries.
+A website that wants search engines to index its pages publishes an XML sitemap, and often a sitemap index, an image sitemap, a video sitemap, a Google News sitemap, a text sitemap or an RSS/Atom feed. This actor reads those public files and turns them into one flat dataset row per URL, with the publisher's own dates and hints intact.
+
+It is an inventory tool, not a crawler: it reads only the sitemap files, never the pages they list, so it stays fast, light and free of cookies, logins or proxy setup.
 
 ## What this actor does
 
-- Accepts a direct sitemap URL, a gzipped sitemap, a sitemap index file, or just a bare domain (it discovers the sitemap via `robots.txt` and common fallback paths)
-- Expands nested sitemap index files recursively and merges every child sitemap into one flat URL list
-- Carries through per-URL `lastmod`, `changefreq` and `priority` values whenever the sitemap declares them
-- Preserves image, video and hreflang-alternate annotations attached to a URL when the sitemap's `<image>`, `<video>` or alternate-language extensions are present
-- Lets you narrow the output with include/exclude regex filters instead of exporting every URL on the site
-- Omits any field the sitemap didn't provide for a URL — no empty strings or nulls in the output
+- Reads XML sitemaps, sitemap indexes, gzip files, plain-text sitemaps and RSS/Atom feeds.
+- Accepts a direct sitemap, index, `.xml.gz`, `.txt`, feed or `robots.txt` URL, a bare domain, or a homepage.
+- Finds sitemaps from `robots.txt` `Sitemap:` lines, the homepage `<link rel="sitemap">` hint, and the usual sitemap paths. When no sitemap is advertised, it also follows RSS/Atom autodiscovery links from the homepage.
+- Follows nested sitemap indexes with a user-controlled depth and file budget, and uses index `lastmod` values to skip stale branches when a date filter is on.
+- Parses sitemaps with or without an XML namespace, and sitemaps that declare an old or non-standard xhtml namespace.
+- Carries through `lastmod`, `changefreq` and `priority` whenever the publisher provides them, plus a normalised `lastmodIso`.
+- Extracts the full Google image, video, Google News and hreflang annotations, including `x-default`.
+- Removes duplicate URLs across overlapping sitemaps, and can filter by date, host, or a regex/plain-text/wildcard URL pattern.
+- Omits every field the sitemap did not provide; there are no empty strings, nulls, empty arrays or empty objects in a row.
+- Emits a single `sitemap_error` status row when nothing could be read, so an empty run is never silent.
 
-## Output per URL
+## Output
 
-- `url` — the page URL listed in the sitemap
-- `lastmod` — last-modified timestamp, when the sitemap declares one
-- `changefreq` — publisher-declared change frequency (e.g. `daily`, `weekly`, `monthly`)
-- `priority` — publisher-declared priority hint (0.0–1.0)
-- `source` — the specific sitemap file this URL came from, useful when a sitemap index fans out to many child files
-- `images` — image sitemap entries attached to the URL, when present
-- `videos` — video sitemap entries attached to the URL, when present
-- `alternates` — hreflang alternate-language URLs attached to the URL, when present
+Each dataset row describes one URL:
 
-If no URLs could be extracted at all, the dataset instead contains a single status record (`type: "sitemap_error"`) explaining why, rather than being silently empty.
+| Field | Meaning |
+|---|---|
+| `url` | The page URL declared by the sitemap or feed, resolved to an absolute http(s) URL. |
+| `lastmod` | The publisher's raw last-modified value, unchanged. |
+| `lastmodIso` | The same value normalised to UTC ISO 8601 when it can be parsed. |
+| `changefreq` | The publisher's change-frequency hint, when declared. |
+| `priority` | The publisher's priority hint as a number, when declared. |
+| `host` | Hostname of the page URL. |
+| `source` | The sitemap or feed file that declared this URL. |
+| `sourceType` | `urlset`, `txt`, `rss` or `atom`. |
+| `sitemapDepth` | How many index levels deep the source sitemap was; `0` for a supplied file. |
+| `sourceSitemapLastmod` | The `lastmod` on this sitemap's entry in its parent index, when present. |
+| `title` | Item title for RSS/Atom feed rows. |
+| `images` | Image sitemap entries: `loc`, `title`, `caption`, `license`, `geoLocation`. |
+| `videos` | Video sitemap entries. See the field list below. |
+| `news` | Google News entries: `title`, `publicationName`, `language`, `publicationDate`, `genres`, `keywords`, `stockTickers`. |
+| `alternates` | hreflang links: `hreflang`, `href`, including `x-default`. |
+| `mobile` | `true` when the URL entry carries a mobile sitemap marker. |
+| `scrapedAt` | When this run extracted the row. |
+
+Video entries carry `title`, `description`, `thumbnail`, `contentUrl`, `playerUrl`, `durationSeconds`, `publicationDate`, `expirationDate`, `rating`, `viewCount`, `familyFriendly`, `tags`, `categories`, `galleryUrl`, `uploader`, `platforms`, `restrictions`, `requiresSubscription` and `live` when the sitemap declares them.
+
+If no URL can be extracted, the dataset contains one row with `type: "sitemap_error"`, a `reason`, a plain-language `message`, the requested URLs, the sitemap URLs visited and, when applicable, the failed ones.
 
 ## Input
 
 | Field | Type | Default | Description |
 |---|---|---|---|
-| `startUrls` | array | – | Sitemap URLs, sitemap index URLs, `.xml.gz` URLs, or bare domains (required) |
-| `maxUrls` | integer | `0` | Upper bound on total URLs returned across all sitemaps; `0` means unlimited |
-| `followSitemapIndexes` | boolean | `true` | When true, nested sitemap index files are fetched and merged recursively |
-| `urlFilterInclude` | string | – | Only emit URLs matching this regex (case-insensitive) |
-| `urlFilterExclude` | string | – | Drop URLs matching this regex, applied after the include filter |
+| `startUrls` | array | - | Sitemap, sitemap index, `.xml.gz`, `.txt`, RSS/Atom feed, `robots.txt`, bare domain or homepage URLs. Required. |
+| `discoverSitemaps` | boolean | `true` | Find sitemaps from robots.txt, the homepage sitemap link, common paths, and RSS/Atom autodiscovery links when a site URL is supplied. |
+| `followSitemapIndexes` | boolean | `true` | Fetch and merge the child sitemaps listed in a sitemap index. |
+| `maxSitemapDepth` | integer | `5` | Maximum sitemap-index depth to follow (0–10). |
+| `maxSitemaps` | integer | `1000` | Maximum sitemap files to attempt per run (1–10,000). |
+| `maxUrls` | integer | `0` | Maximum URL rows to emit; 0 means unlimited. Filtered and duplicate URLs do not count. |
+| `lastmodAfter` | string | - | Keep URLs dated on or after this point. Accepts ISO dates/timestamps and windows such as `7 days`, `24 hours`, `2 weeks`. |
+| `keepUrlsWithoutLastmod` | boolean | `false` | Keep undated URLs when a date filter is active. |
+| `urlFilterInclude` | string | - | Keep only URLs matching this pattern. |
+| `urlFilterExclude` | string | - | Drop URLs matching this pattern, after the include filter. |
+| `urlMatchMode` | string | `regex` | `regex`, `text` or `glob` for both URL filters. |
+| `sameHostOnly` | boolean | `false` | Drop URLs whose host differs from the host of your input URLs. |
+| `deduplicateUrls` | boolean | `true` | Emit each URL once even when several sitemaps list it. |
+| `includeImages` | boolean | `true` | Include image sitemap metadata. |
+| `includeVideos` | boolean | `true` | Include video sitemap metadata. |
+| `includeNews` | boolean | `true` | Include Google News metadata. |
+| `includeAlternates` | boolean | `true` | Include hreflang alternates. |
 
-### Example: extract an entire site's sitemap
+`urlMatchMode=regex` uses Python regular expressions, case-insensitively. `text` matches a literal substring. `glob` uses `*` for any characters except `/`, `**` for any characters including `/`, and `?` for one character.
 
-```json
-{
-  "startUrls": ["https://example.com/sitemap.xml"],
-  "maxUrls": 5000
-}
-```
+## Examples
 
-### Example: discover the sitemap from a bare domain
-
-```json
-{
-  "startUrls": ["https://example.com"],
-  "followSitemapIndexes": true
-}
-```
-
-### Example: only recent product pages
+### Read a known sitemap index
 
 ```json
 {
   "startUrls": ["https://example.com/sitemap_index.xml"],
-  "urlFilterInclude": "/products/",
-  "urlFilterExclude": "/tag/|/category/",
+  "maxUrls": 5000
+}
+```
+
+### Discover the sitemaps from a bare domain
+
+```json
+{
+  "startUrls": ["example.com"],
+  "discoverSitemaps": true,
+  "deduplicateUrls": true
+}
+```
+
+### Only pages changed in the last week
+
+```json
+{
+  "startUrls": ["https://example.com/sitemap.xml"],
+  "lastmodAfter": "7 days",
+  "includeAlternates": false,
+  "includeImages": false
+}
+```
+
+### Product URLs only, using a wildcard filter
+
+```json
+{
+  "startUrls": ["https://example.com/sitemap.xml"],
+  "urlMatchMode": "glob",
+  "urlFilterInclude": "**/products/**",
+  "urlFilterExclude": "**/products/tag/**"
+}
+```
+
+### RSS or Atom feed as a sitemap
+
+```json
+{
+  "startUrls": ["https://example.com/feed.xml", "https://example.com/sitemap.txt"],
   "maxUrls": 2000
 }
 ```
 
-## Use cases
+## Limits and honest notes
 
-- **SEO audits** — pull every URL a site declares and cross-check it against actual search-engine coverage
-- **Site migrations** — build a complete URL inventory before cutover, to plan redirects
-- **Competitive research** — map the shape of a competitor's catalog, blog or news archive from their own sitemap
-- **Crawl seed lists** — feed the extracted URLs into a downstream scraper or indexing pipeline
-- **Broken-link audits** — pair the URL list with a link checker to find stale or dead pages across a large site
+- The sitemap protocol asks publishers to keep each file at or below 50,000 URLs and 50 MB uncompressed. This is a publisher limit, not an actor truncation: the actor reads larger files and only refuses a single fetched file above 100 MB as a safety guard.
+- `maxUrls` defaults to `0`, which means no total-row limit. You can set a cap up to 1,000,000. The actor attempts at most 10,000 sitemap files (default 1,000) and follows at most 10 index levels (default 5); these two are hard actor caps.
+- A date filter uses `lastmod`, then the feed date, then a news publication date. When none is readable, the URL counts as undated and is dropped unless `keepUrlsWithoutLastmod` is on. With a date filter, a child sitemap whose own entry in the parent index is older than the cutoff is skipped for speed; turn on `keepUrlsWithoutLastmod` to fetch every child anyway. An invalid date window is logged and ignored rather than failing the run.
+- `changefreq` and `priority` are the publisher's hints. Search engines may ignore them; this actor does not invent or recalculate them.
+- A sitemap can be incomplete. Pages that the site owner did not include in a sitemap cannot appear here.
+- Some sites block sitemap requests from automated clients (a 403 challenge or a captcha) or return an HTML page at the sitemap URL. Those paths fail softly and are logged; check the site in a browser and pass the exact file if you know it.
+- This actor does not check the HTTP status, canonical tag or indexing status of the pages it lists, and does not remember URLs between runs. Use a dedicated link checker for status checks and a scheduler plus your own storage for new-URL monitoring.
+- The actor does not use a proxy or cookies. If a site blocks the request, the block is a site-side limitation, not a missing setting.
 
 ## FAQ
 
-**Is a proxy or login needed?**
-No. Sitemaps are public files meant to be read by search engines, so they aren't gated by cookies or IP.
+**Do I need a proxy, login or API key?**
+No. Sitemaps are public files meant for search engines. The actor reads them over plain HTTPS without cookies or credentials.
 
-**What if I don't know the sitemap URL?**
-Pass the bare domain — the actor checks `robots.txt` for a declared sitemap and falls back to common paths before giving up.
+**What if I do not know the sitemap URL?**
+Pass the domain or homepage. The actor reads `robots.txt`, the homepage's `<link rel="sitemap">` hint, common sitemap paths, and—when no sitemap is advertised—the homepage's RSS/Atom autodiscovery links. If the site blocks those probes, pass the exact sitemap or feed URL.
 
-**Does it follow nested sitemap indexes?**
-Yes, by default; set `followSitemapIndexes` to `false` to only read the top-level file and stop there.
+**Which formats are supported?**
+XML urlsets, sitemap indexes, gzip files (detected by content, not by the `.gz` suffix), plain-text sitemaps, RSS 2.0, RSS 1.0/RDF and Atom feeds.
 
-**Why is `lastmod` or `priority` missing on some URLs?**
-Those fields are optional in the sitemap standard — if the publisher didn't include one for a URL, it's left out rather than padded with a placeholder.
+**Are nested sitemap indexes followed?**
+Yes, up to `maxSitemapDepth`. Set it to 0 or turn off `followSitemapIndexes` to read only the files you supplied.
 
-**Can it extract image or video sitemap data?**
-Yes, when the sitemap itself uses the image/video sitemap extensions, those entries are preserved on the matching URL's record.
+**Why is `lastmod` or `priority` missing on some rows?**
+Both are optional in the sitemap standard. The field is omitted rather than padded with a placeholder.
 
-**What happens if a site has no sitemap at all?**
-If `robots.txt` doesn't declare one and none of the common fallback paths work, there's nothing to parse — this actor reads sitemaps, it doesn't crawl a site's HTML to rebuild one.
+**Why do I also see `lastmodIso`?**
+`lastmod` is exactly what the publisher wrote, while `lastmodIso` is the same moment in UTC ISO 8601 for sorting and joins. It is present only when the value can be parsed.
 
-**Can a site's sitemap be missing pages that actually exist?**
-Yes — the extracted list is only as complete as the sitemap the site publishes; pages left out of the sitemap by the site owner won't appear here.
+**Does it extract image, video, news and hreflang data?**
+Yes, when the sitemap carries those extensions. Each toggle can turn a block off to keep the dataset smaller. hreflang is read even from old or non-standard xhtml namespaces.
 
-**Is this the same as a general-purpose site crawler?**
-No. This actor only reads XML sitemap files; it doesn't render pages or follow on-page links, which keeps it fast and free of proxy requirements.
+**Does it follow the page URLs?**
+No. It reads only the sitemap files, which keeps runs cheap and avoids touching the target site's pages.
+
+**What happens when a site has no sitemap?**
+The run emits one `sitemap_error` row explaining that no URLs were extracted. A site without a published sitemap cannot be inventoried this way.

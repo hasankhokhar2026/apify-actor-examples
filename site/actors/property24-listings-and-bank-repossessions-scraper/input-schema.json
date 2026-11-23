@@ -1,79 +1,178 @@
 {
-  "description": "Search South African property listings on Property24 by province, transaction type, property type, and price/bedroom/bathroom filters, or fetch full listing details by URL.",
+  "description": "Search Property24 listings across South Africa, Namibia, Botswana, Zambia, Zimbabwe, Mozambique and Kenya, paste search or listing URLs, or read area sold-price trends. No login, cookies or API key needed.",
   "properties": {
+    "auctionsOnly": {
+      "default": false,
+      "description": "Only include listings carrying Property24's auction badge (mode=search).",
+      "prefill": false,
+      "title": "Auctions only",
+      "type": "boolean"
+    },
     "bankRepossessionsOnly": {
       "default": false,
-      "description": "Search Property24's dedicated Repossessions category instead of the regular market (mode=search). Always for-sale (forces `transactionType` to `forSale`); property type/price/bedroom/bathroom filters still apply.",
+      "description": "Search Property24's bank-repossession facet (mode=search). Matches are tagged `isBankRepossession: true`.",
       "prefill": false,
-      "title": "Bank-assisted sales & repossessions only",
+      "title": "Bank repossessions only",
       "type": "boolean"
     },
     "bathroomsMin": {
-      "description": "Only include listings with at least this many bathrooms.",
+      "description": "Only include listings with at least this many bathrooms. Half bathrooms count as decimals at the source and are compared correctly.",
       "maximum": 50,
       "minimum": 0,
-      "title": "Min bathrooms",
+      "title": "Minimum bathrooms",
       "type": "integer"
     },
     "bedroomsMin": {
-      "description": "Only include listings with at least this many bedrooms.",
+      "description": "Only include listings with at least this many bedrooms. Studios count as 0.",
       "maximum": 50,
       "minimum": 0,
-      "title": "Min bedrooms",
+      "title": "Minimum bedrooms",
+      "type": "integer"
+    },
+    "country": {
+      "default": "za",
+      "description": "Which Property24 edition to search. South Africa has the largest inventory; the other editions use their own currencies and city indexes.",
+      "editor": "select",
+      "enum": [
+        "za",
+        "na",
+        "bw",
+        "zm",
+        "zw",
+        "mz",
+        "ke"
+      ],
+      "enumTitles": [
+        "South Africa (property24.com)",
+        "Namibia (property24.co.na)",
+        "Botswana (property24.co.bw)",
+        "Zambia (property24.co.zm)",
+        "Zimbabwe (property24.co.zw)",
+        "Mozambique (property24.co.mz)",
+        "Kenya (property24.co.ke)"
+      ],
+      "prefill": "za",
+      "title": "Country edition",
+      "type": "string"
+    },
+    "erfSizeMax": {
+      "description": "Only include listings whose erf (land) size is at most this many square metres.",
+      "maximum": 10000000,
+      "minimum": 0,
+      "title": "Maximum erf / land size (m²)",
+      "type": "integer"
+    },
+    "erfSizeMin": {
+      "description": "Only include listings whose erf (land) size is at least this many square metres. Houses, farms and plots often publish erf size instead of floor size.",
+      "maximum": 10000000,
+      "minimum": 0,
+      "title": "Minimum erf / land size (m²)",
+      "type": "integer"
+    },
+    "floorSizeMax": {
+      "description": "Only include listings whose building floor size is at most this many square metres.",
+      "maximum": 1000000,
+      "minimum": 0,
+      "title": "Maximum floor size (m²)",
+      "type": "integer"
+    },
+    "floorSizeMin": {
+      "description": "Only include listings whose building floor size is at least this many square metres. Listings without a published floor size are kept.",
+      "maximum": 1000000,
+      "minimum": 0,
+      "title": "Minimum floor size (m²)",
       "type": "integer"
     },
     "includeFullDetails": {
       "default": false,
-      "description": "Fetch each listing's detail page for full description, agent/agency info, exact address, coordinates, levies/rates, and room-by-room features. Adds one extra request per listing, so runs are slower. Always on for mode=byUrls.",
+      "description": "Open each result's detail page for the full description, levies, rates and taxes, erf/floor size, price per m², features, agents and photo gallery. Adds one request per listing and makes runs slower. Always on for mode=byUrls.",
       "prefill": false,
-      "title": "Include full listing details",
+      "title": "Fetch full listing details",
       "type": "boolean"
     },
     "listingUrls": {
       "default": [],
-      "description": "Full Property24 listing URLs to fetch directly, e.g. `https://www.property24.com/for-sale/blyde-riverwalk-estate/pretoria/gauteng/33014/116170024`.",
+      "description": "Specific Property24 listing pages to fetch, for example `https://www.property24.com/for-sale/blyde-riverwalk-estate/pretoria/gauteng/33014/116170024`.",
       "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
       "prefill": [],
       "title": "Listing URLs (mode=byUrls)",
       "type": "array"
     },
+    "location": {
+      "description": "A city, suburb or area name, for example `Sandton`, `Sea Point, Cape Town` or `Windhoek`. Leave empty to search the selected province (South Africa) or the whole country edition. Ignored when mode is `searchUrls`.",
+      "editor": "textfield",
+      "title": "Area name (optional)",
+      "type": "string"
+    },
     "maxItems": {
       "default": 20,
-      "description": "Hard cap on emitted records.",
-      "maximum": 500,
+      "description": "Hard cap on emitted records. Use 20 for a test run, or up to 10,000 for a full area sweep. Deep searches may hit Property24's own inventory ceiling.",
+      "maximum": 10000,
       "minimum": 1,
       "prefill": 20,
-      "title": "Max items",
+      "sectionCaption": "Output and limits",
+      "title": "Maximum results",
+      "type": "integer"
+    },
+    "maxPages": {
+      "default": 0,
+      "description": "Hard cap on search pages per search URL. 0 lets the actor decide from Maximum results and the site's own next-page link.",
+      "maximum": 500,
+      "minimum": 0,
+      "prefill": 0,
+      "title": "Maximum result pages",
       "type": "integer"
     },
     "mode": {
       "default": "search",
-      "description": "What to fetch.",
+      "description": "Choose how to start: search with the filters below, paste Property24 search URLs, look up specific listing URLs, or read public area sold-price trends.",
       "editor": "select",
       "enum": [
         "search",
-        "byUrls"
+        "searchUrls",
+        "byUrls",
+        "soldPrices"
       ],
       "enumTitles": [
-        "Search / browse listings",
-        "Lookup specific listing URLs"
+        "Search listings with filters",
+        "Paste search result URLs",
+        "Look up specific listing URLs",
+        "Area sold-price trends"
       ],
       "prefill": "search",
-      "title": "Mode",
+      "sectionCaption": "What to scrape",
+      "title": "What to scrape",
       "type": "string"
     },
+    "onShowOnly": {
+      "default": false,
+      "description": "Only include listings with a scheduled show day (mode=search). The show date is returned as `onShowDate` when published.",
+      "prefill": false,
+      "title": "On-show listings only",
+      "type": "boolean"
+    },
+    "parkingMin": {
+      "description": "Only include listings with at least this many parking spaces or garages.",
+      "maximum": 50,
+      "minimum": 0,
+      "title": "Minimum parking spaces",
+      "type": "integer"
+    },
     "priceMax": {
-      "description": "Maximum listing price in South African Rand.",
+      "description": "Highest price in the edition's own currency. Leave empty for no maximum.",
       "maximum": 2000000000,
       "minimum": 0,
-      "title": "Max price (ZAR)",
+      "title": "Maximum price",
       "type": "integer"
     },
     "priceMin": {
-      "description": "Minimum listing price in South African Rand.",
+      "description": "Lowest price in the edition's own currency (ZAR for South Africa). Leave empty for no minimum.",
       "maximum": 2000000000,
       "minimum": 0,
-      "title": "Min price (ZAR)",
+      "title": "Minimum price",
       "type": "integer"
     },
     "propertyType": {
@@ -106,7 +205,7 @@
     },
     "province": {
       "default": "gauteng",
-      "description": "South African province to search (mode=search).",
+      "description": "Province to search when country is South Africa and no area name is given (mode=search).",
       "editor": "select",
       "enum": [
         "gauteng",
@@ -131,24 +230,48 @@
         "Northern Cape"
       ],
       "prefill": "gauteng",
-      "title": "Province",
+      "title": "South African province",
       "type": "string"
+    },
+    "retirementOnly": {
+      "default": false,
+      "description": "Only include retirement properties (mode=search).",
+      "prefill": false,
+      "title": "Retirement properties only",
+      "type": "boolean"
+    },
+    "searchUrls": {
+      "default": [],
+      "description": "Property24 search pages to scrape, for example `https://www.property24.com/for-sale/cape-town/western-cape/432`. Filters and sort already in each URL are kept. Any edition can be mixed.",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "prefill": [],
+      "title": "Search result URLs (mode=searchUrls)",
+      "type": "array"
     },
     "sortBy": {
       "default": "default",
-      "description": "Order emitted results (mode=search).",
+      "description": "Order of emitted results (mode=search).",
       "editor": "select",
       "enum": [
         "default",
+        "newest",
         "priceLowToHigh",
         "priceHighToLow",
-        "mostBedrooms"
+        "mostBedrooms",
+        "propertyType",
+        "size"
       ],
       "enumTitles": [
         "Default (site order)",
+        "Most recent first",
         "Price: low to high",
         "Price: high to low",
-        "Most bedrooms first"
+        "Most bedrooms first",
+        "Property type",
+        "Largest size first"
       ],
       "prefill": "default",
       "title": "Sort by",

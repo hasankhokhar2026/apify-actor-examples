@@ -1,13 +1,13 @@
 {
   "actorOutputSchemaVersion": 1,
-  "description": "Songs, toplists, albums and playlists from QQ Music — name, singers, album, duration, cover art, file sizes, pay status, chart data.",
+  "description": "One dataset with typed records: song, artist, album, playlist, toplist, comment and error. Songs carry identifiers, singers, album, duration, cover art, file sizes, pay flags, chart rank when applicable and optional lyric/comment count. Artists carry bio, follower and catalog counts. Comments carry author, text, likes, replies and timestamps. Empty fields are omitted.",
   "properties": {
     "items": {
-      "description": "Dataset containing all scraped QQ Music records (recordType: song | toplist | album | playlist | error).",
+      "description": "Dataset containing all scraped records. Use the recordType field to split songs, artists, albums, playlists, charts, comments and errors.",
       "template": "{{links.apiDefaultDatasetUrl}}/items",
       "title": "QQ Music records",
       "type": "string"
     }
   },
-  "title": "QQ Music Charts, Albums and Playlists Scraper Output"
+  "title": "QQ Music Songs, Artists, Charts and Comments Scraper Output"
 }

@@ -1,6 +1,58 @@
 {
   "actorSpecification": 1,
   "views": {
+    "extensions": {
+      "display": {
+        "component": "table",
+        "properties": {
+          "alternates": {
+            "format": "array",
+            "label": "Hreflang alternates"
+          },
+          "images": {
+            "format": "array",
+            "label": "Images"
+          },
+          "lastmodIso": {
+            "format": "text",
+            "label": "Last modified (ISO)"
+          },
+          "news": {
+            "format": "array",
+            "label": "News"
+          },
+          "sourceSitemapLastmod": {
+            "format": "text",
+            "label": "Index lastmod"
+          },
+          "title": {
+            "format": "text",
+            "label": "Feed title"
+          },
+          "url": {
+            "format": "link",
+            "label": "URL"
+          },
+          "videos": {
+            "format": "array",
+            "label": "Videos"
+          }
+        }
+      },
+      "title": "Sitemap metadata",
+      "transformation": {
+        "fields": [
+          "url",
+          "lastmodIso",
+          "title",
+          "news",
+          "images",
+          "videos",
+          "alternates",
+          "sourceSitemapLastmod"
+        ]
+      }
+    },
     "overview": {
       "display": {
         "component": "table",
@@ -8,6 +60,10 @@
           "changefreq": {
             "format": "text",
             "label": "Change frequency"
+          },
+          "host": {
+            "format": "text",
+            "label": "Host"
           },
           "lastmod": {
             "format": "text",
@@ -17,9 +73,17 @@
             "format": "number",
             "label": "Priority"
           },
+          "sitemapDepth": {
+            "format": "number",
+            "label": "Index depth"
+          },
           "source": {
             "format": "link",
             "label": "Source sitemap"
+          },
+          "sourceType": {
+            "format": "text",
+            "label": "Sitemap format"
           },
           "url": {
             "format": "link",
@@ -34,6 +98,9 @@
           "lastmod",
           "changefreq",
           "priority",
+          "host",
+          "sourceType",
+          "sitemapDepth",
           "source"
         ]
       }

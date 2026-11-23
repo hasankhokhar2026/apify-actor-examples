@@ -1,41 +1,143 @@
 {
   "properties": {
+    "deduplicateUrls": {
+      "default": true,
+      "description": "Emit each page URL once even when it appears in several sitemaps. Turn off to keep one row per sitemap listing.",
+      "prefill": true,
+      "title": "Remove duplicate URLs",
+      "type": "boolean"
+    },
+    "discoverSitemaps": {
+      "default": true,
+      "description": "When the input is a domain or homepage, read robots.txt, the homepage <link rel=\"sitemap\"> hint, common sitemap paths and—when no sitemap is advertised—the homepage's RSS/Atom autodiscovery links. Turn off to read only the exact URLs you supplied.",
+      "prefill": true,
+      "title": "Find sitemaps automatically",
+      "type": "boolean"
+    },
     "followSitemapIndexes": {
       "default": true,
-      "description": "If the input points to a sitemap index (<sitemapindex>), fetch and merge every child sitemap.",
+      "description": "When a sitemap index points to child sitemaps, fetch and merge them. Turn off to read only the sitemap files you supplied and stop at any index.",
       "prefill": true,
-      "title": "Follow sitemap index files",
+      "title": "Follow sitemap indexes",
       "type": "boolean"
+    },
+    "includeAlternates": {
+      "default": true,
+      "description": "Add the xhtml:link hreflang alternates attached to a URL, including x-default, even when the sitemap uses a legacy xhtml namespace.",
+      "prefill": true,
+      "title": "Include hreflang alternates",
+      "type": "boolean"
+    },
+    "includeImages": {
+      "default": true,
+      "description": "Add the image sitemap entries attached to a URL (location, title, caption, license, geo location).",
+      "prefill": true,
+      "sectionCaption": "Metadata to include",
+      "title": "Include image metadata",
+      "type": "boolean"
+    },
+    "includeNews": {
+      "default": true,
+      "description": "Add the Google News entries attached to a URL: publication name and language, publication date, headline, genres, keywords and stock tickers.",
+      "prefill": true,
+      "title": "Include Google News metadata",
+      "type": "boolean"
+    },
+    "includeVideos": {
+      "default": true,
+      "description": "Add the video sitemap entries attached to a URL, including thumbnail, player/content URLs, duration, dates, tags, categories, ratings, restrictions and live status.",
+      "prefill": true,
+      "title": "Include video metadata",
+      "type": "boolean"
+    },
+    "keepUrlsWithoutLastmod": {
+      "default": false,
+      "description": "When a date filter is set, also keep URLs and feed items that carry no usable date. Without this, undated entries are dropped by the date filter.",
+      "prefill": false,
+      "title": "Keep URLs without a date",
+      "type": "boolean"
+    },
+    "lastmodAfter": {
+      "description": "Keep URLs whose lastmod, feed date or news publication date is on or after this point. Use an ISO date (2026-01-01), a full timestamp, or a relative window such as \"7 days\", \"24 hours\" or \"2 weeks\". Leave blank to keep every URL.",
+      "editor": "textfield",
+      "title": "Only URLs modified on or after",
+      "type": "string"
+    },
+    "maxSitemapDepth": {
+      "default": 5,
+      "description": "How many levels of nested sitemap indexes to follow. 0 reads only the supplied sitemaps, 1 follows one index level, and so on.",
+      "maximum": 10,
+      "minimum": 0,
+      "prefill": 5,
+      "title": "Maximum sitemap-index depth",
+      "type": "integer"
+    },
+    "maxSitemaps": {
+      "default": 1000,
+      "description": "Stop after attempting this many sitemap files (indexes and child sitemaps both count). Protects very large sitemap trees such as newspaper archives.",
+      "maximum": 10000,
+      "minimum": 1,
+      "prefill": 1000,
+      "sectionCaption": "Limits",
+      "title": "Maximum sitemap files",
+      "type": "integer"
     },
     "maxUrls": {
       "default": 0,
-      "description": "Maximum number of URLs to extract across all sitemaps. Set to 0 for no limit.",
+      "description": "Total URL rows to emit across all inputs. Set to 0 for no limit. Filtered and duplicate URLs do not count toward this cap.",
       "maximum": 1000000,
       "minimum": 0,
       "prefill": 500,
-      "title": "Max URLs",
+      "title": "Maximum URLs",
       "type": "integer"
     },
+    "sameHostOnly": {
+      "default": false,
+      "description": "Drop URLs whose hostname differs from the host of your input URLs. Useful when a sitemap includes CDN or alternate-domain pages you do not want.",
+      "prefill": false,
+      "title": "Only URLs on the input host",
+      "type": "boolean"
+    },
     "startUrls": {
-      "description": "One or more URLs. Accepts: a direct sitemap.xml URL (e.g., https://example.com/sitemap.xml), a sitemap index file, a gzipped sitemap (.xml.gz), or a bare domain (e.g., https://example.com) — the actor will auto-discover the sitemap via robots.txt and common paths.",
+      "description": "One or more URLs. Accepts a sitemap, sitemap index, .xml.gz file, sitemap.txt, RSS/Atom feed, robots.txt URL, bare domain (example.com) or homepage. With discovery on, site URLs are resolved through robots.txt, the homepage's sitemap link and common sitemap paths.",
       "editor": "stringList",
       "minItems": 1,
       "prefill": [
         "https://onescales.com/sitemap.xml"
       ],
-      "title": "Sitemap or site URLs",
+      "sectionCaption": "Sitemaps to read",
+      "title": "Sitemap, site or feed URLs",
       "type": "array"
     },
     "urlFilterExclude": {
-      "description": "Drop URLs matching this Python regex (case-insensitive). Applied after the include filter.",
+      "description": "Drop URLs that match this pattern, applied after the include filter. Uses the same URL match mode.",
       "editor": "textfield",
-      "title": "URL exclude regex (optional)",
+      "title": "URLs matching (exclude filter)",
       "type": "string"
     },
     "urlFilterInclude": {
-      "description": "Only emit URLs matching this Python regex (case-insensitive). Leave blank to include everything.",
+      "description": "Keep only URLs that match this pattern. Interpretation depends on URL match mode: a regular expression, a plain-text substring, or a wildcard pattern. Leave blank to keep every URL.",
       "editor": "textfield",
-      "title": "URL include regex (optional)",
+      "sectionCaption": "URL filters",
+      "title": "URLs matching (include filter)",
+      "type": "string"
+    },
+    "urlMatchMode": {
+      "default": "regex",
+      "description": "How the include and exclude filters are interpreted. Regular expressions are case-insensitive. Plain text matches a literal substring. Wildcards use * for any characters except /, ** for any characters including /, and ? for one character.",
+      "editor": "select",
+      "enum": [
+        "regex",
+        "text",
+        "glob"
+      ],
+      "enumTitles": [
+        "Regular expression",
+        "Plain text contains",
+        "Wildcard pattern"
+      ],
+      "prefill": "regex",
+      "title": "URL filter mode",
       "type": "string"
     }
   },
@@ -43,6 +145,6 @@
     "startUrls"
   ],
   "schemaVersion": 1,
-  "title": "Sitemap URL Extractor Input",
+  "title": "Website Sitemap URL Inventory Extractor Input",
   "type": "object"
 }

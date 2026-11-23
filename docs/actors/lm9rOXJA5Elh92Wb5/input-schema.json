@@ -1,8 +1,17 @@
 {
+  "description": "Search Talent.com's local sites, replay saved search URLs, fetch individual job pages, or look up salary statistics. No account, cookie or API key is needed.",
   "properties": {
+    "companyName": {
+      "description": "Only return jobs matching this employer name (mode=search). Works on the United States, Canada and United Kingdom sites; Talent.com ignores it elsewhere, so the actor does too.",
+      "editor": "textfield",
+      "sectionCaption": "Filters",
+      "sectionDescription": "Talent.com supports different filters per country. Unsupported combinations are skipped with a warning instead of returning zero jobs.",
+      "title": "Company name filter",
+      "type": "string"
+    },
     "country": {
       "default": "www",
-      "description": "Which talent.com country site to search (mode=search). Talent.com runs a separate site per country with genuinely local results — e.g. \"London\" only returns UK jobs if Country is set to United Kingdom; left at United States, \"London\" instead matches the US town of that name.",
+      "description": "Which local Talent.com site to use. Each country is a separate job index with its own listings, currency and language. Canada and Russia sites may block non-local networks.",
       "editor": "select",
       "enum": [
         "www",
@@ -165,29 +174,52 @@
         "Zambia"
       ],
       "prefill": "www",
-      "title": "Country",
+      "title": "Country site",
       "type": "string"
     },
     "datePosted": {
-      "description": "Only return jobs posted within this many days (mode=search). Leave empty for any time.",
+      "description": "Only return jobs found within this many days (mode=search). Leave empty for any time.",
       "editor": "select",
       "enum": [
         "1",
         "3",
         "7",
-        "14"
+        "14",
+        "30",
+        "90"
       ],
       "enumTitles": [
         "Last 24 hours",
         "Last 3 days",
         "Last 7 days",
-        "Last 14 days"
+        "Last 14 days",
+        "Last 30 days",
+        "Last 90 days"
       ],
-      "title": "Date posted (max age)",
+      "title": "Date posted",
       "type": "string"
     },
+    "descriptionMaxLength": {
+      "default": 0,
+      "description": "Truncate plain-text descriptions to this many characters (0 = no limit). Applies to descriptions and snippets.",
+      "editor": "number",
+      "maximum": 100000,
+      "minimum": 0,
+      "title": "Max description length",
+      "type": "integer"
+    },
+    "fetchFullDescriptions": {
+      "default": false,
+      "description": "Open each job page during a search to fill the full description when the search page only has a snippet (mode=search or bySearchUrls). Adds one request per job.",
+      "editor": "checkbox",
+      "prefill": false,
+      "sectionCaption": "Output",
+      "sectionDescription": "Control volume, description length and optional detail enrichment.",
+      "title": "Fetch full descriptions",
+      "type": "boolean"
+    },
     "jobType": {
-      "description": "Only return jobs of this employment type (mode=search). Leave empty for all types.",
+      "description": "Only return jobs of this employment type (mode=search). Supported on the United States, Canada and United Kingdom sites only; ignored elsewhere with a warning.",
       "editor": "select",
       "enum": [
         "full-time",
@@ -207,23 +239,23 @@
       "type": "string"
     },
     "jobUrls": {
-      "description": "Full talent.com job URLs to fetch details for (mode=byJobUrls). Example: https://www.talent.com/view?id=123456789012345678",
+      "description": "Talent.com job page URLs or numeric job ids (mode=byJobUrls). Example: https://www.talent.com/view?id=626159695573821803. Job ids are scoped to their country site; the URL's own host wins.",
       "editor": "stringList",
       "prefill": [
-        "https://www.talent.com/view?id=630921865107343938"
+        "https://www.talent.com/view?id=626159695573821803"
       ],
-      "title": "Job URLs",
+      "title": "Job URLs or ids",
       "type": "array"
     },
     "keyword": {
-      "description": "Job title or keyword to search for (mode=search). Example: \"software engineer\", \"nurse\", \"warehouse\".",
+      "description": "A single job title or keyword (mode=search or salary). Example: \"software engineer\", \"nurse\", \"warehouse\". Combined with Search keywords when both are set.",
       "editor": "textfield",
       "prefill": "software engineer",
       "title": "Job keyword / title",
       "type": "string"
     },
     "location": {
-      "description": "City, state, or region to search in (mode=search). Example: \"New York, NY\", \"London\", \"Toronto\". Leave empty to search all locations.",
+      "description": "City, state, or region (mode=search or salary). Example: \"New York, NY\", \"London\", \"Toronto\". Leave empty to search all locations. Location text is matched loosely, like the site's own search box.",
       "editor": "textfield",
       "prefill": "New York, NY",
       "title": "Location",
@@ -231,7 +263,7 @@
     },
     "maxItems": {
       "default": 50,
-      "description": "Maximum number of job records to return.",
+      "description": "Maximum number of job or salary records to return across all searches and URLs.",
       "editor": "number",
       "maximum": 1000,
       "minimum": 1,
@@ -241,25 +273,29 @@
     },
     "maxPages": {
       "default": 5,
-      "description": "Maximum number of search-result pages to crawl (mode=search). Each page holds ~20 jobs.",
+      "description": "Maximum result pages per search (mode=search or bySearchUrls). Talent.com shows about 20 jobs per page and stops after a few pages per query.",
       "editor": "number",
       "maximum": 50,
       "minimum": 1,
       "prefill": 5,
-      "title": "Max search pages",
+      "title": "Max pages per search",
       "type": "integer"
     },
     "mode": {
       "default": "search",
-      "description": "search: browse/filter job listings by keyword and location. byJobUrls: fetch full job detail (description, salary, JobPosting metadata) for specific talent.com job URLs.",
+      "description": "What to collect: job search results, saved search URLs, individual job pages, or salary statistics.",
       "editor": "select",
       "enum": [
         "search",
-        "byJobUrls"
+        "bySearchUrls",
+        "byJobUrls",
+        "salary"
       ],
       "enumTitles": [
-        "Search jobs by keyword/location",
-        "Fetch job details by URL"
+        "Search jobs by keyword and location",
+        "Replay saved search URLs",
+        "Fetch job details by URL or id",
+        "Look up salary statistics"
       ],
       "prefill": "search",
       "title": "Mode",
@@ -269,57 +305,63 @@
       "default": {
         "useApifyProxy": true
       },
-      "description": "Optional. Only used automatically if talent.com starts blocking requests; the free AUTO datacenter group is used.",
+      "description": "Optional. The actor requests directly first and only uses this proxy after a block or rate-limit. The free AUTO datacenter group is enough; no paid proxy is required.",
       "editor": "proxy",
       "prefill": {
         "useApifyProxy": true
       },
+      "sectionCaption": "Advanced",
+      "sectionDescription": "Optional settings for unusual networks.",
       "title": "Proxy configuration",
       "type": "object"
     },
     "quickApplyOnly": {
       "default": false,
-      "description": "Only return jobs that support talent.com's one-click Quick Apply (mode=search).",
+      "description": "Only return jobs with Talent.com's one-click Quick Apply (mode=search). Supported on the same country sites as Remote only; ignored elsewhere with a warning.",
       "editor": "checkbox",
+      "prefill": false,
       "title": "Quick Apply only",
       "type": "boolean"
     },
     "radiusMiles": {
       "default": 25,
-      "description": "Distance from the location to include in results, in miles (mode=search). Common values: 5, 10, 25, 50, 100.",
+      "description": "Search radius around the location, in miles (mode=search). Mapped to Talent.com's supported distance stops: 2, 5, 10, 15, 30 or 60 miles (nearest stop).",
       "editor": "number",
       "maximum": 100,
       "minimum": 5,
       "prefill": 25,
-      "title": "Search radius (miles)",
+      "title": "Distance (miles)",
       "type": "integer"
     },
     "remoteOnly": {
       "default": false,
-      "description": "Only return remote/work-from-home jobs (mode=search).",
+      "description": "Only return remote/work-from-home jobs (mode=search). Supported on ca, www (US), uk, in, ch, es, nl, it, de and fr sites; ignored elsewhere with a warning.",
       "editor": "checkbox",
+      "prefill": false,
       "title": "Remote only",
       "type": "boolean"
     },
-    "sortBy": {
-      "default": "relevance",
-      "description": "Result ordering (mode=search).",
-      "editor": "select",
-      "enum": [
-        "relevance",
-        "date"
-      ],
-      "enumTitles": [
-        "Most relevant",
-        "Most recent"
-      ],
-      "prefill": "relevance",
-      "title": "Sort by",
-      "type": "string"
+    "searchQueries": {
+      "description": "One or more job titles or keywords (mode=search or salary). Each query runs as its own search; results are deduplicated by job id. The legacy single 'keyword' field is combined with this list.",
+      "editor": "stringList",
+      "sectionCaption": "Search jobs",
+      "sectionDescription": "Used by mode=search and mode=salary. Set a keyword and/or a location.",
+      "title": "Search keywords",
+      "type": "array"
+    },
+    "searchUrls": {
+      "description": "Talent.com search or category URLs to replay (mode=bySearchUrls). Examples: https://www.talent.com/jobs?k=nurse&l=London or https://uk.talent.com/jobs/k-nurse-l-london. Unsupported filters in a pasted URL are removed.",
+      "editor": "stringList",
+      "sectionCaption": "Fetch from URLs",
+      "sectionDescription": "Use these modes to replay saved searches or collect specific job pages without retyping filters.",
+      "title": "Search URLs",
+      "type": "array"
     }
   },
-  "required": [],
+  "required": [
+    "mode"
+  ],
   "schemaVersion": 1,
-  "title": "Talent.com Jobs Scraper input",
+  "title": "Talent.com Jobs and Salary Scraper input",
   "type": "object"
 }
