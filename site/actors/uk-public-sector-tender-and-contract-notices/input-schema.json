@@ -1,80 +1,444 @@
 {
-  "description": "Search UK Government Contracts Finder for procurement contracts and tenders.",
+  "description": "Search UK Government Contracts Finder for procurement notices, tenders and contract awards.",
   "properties": {
+    "approachMarketFrom": {
+      "description": "Only planning notices with an approach-to-market date on or after this date.",
+      "editor": "datepicker",
+      "title": "Approach to market from",
+      "type": "string"
+    },
+    "approachMarketTo": {
+      "description": "Only planning notices with an approach-to-market date on or before this date.",
+      "editor": "datepicker",
+      "title": "Approach to market to",
+      "type": "string"
+    },
+    "awardedFrom": {
+      "description": "Only award notices awarded on or after this date.",
+      "editor": "datepicker",
+      "title": "Awarded from",
+      "type": "string"
+    },
+    "awardedTo": {
+      "description": "Only award notices awarded on or before this date.",
+      "editor": "datepicker",
+      "title": "Awarded to",
+      "type": "string"
+    },
+    "awardedToSme": {
+      "default": false,
+      "description": "Only award notices where the winning supplier is marked as an SME.",
+      "prefill": false,
+      "title": "Awarded to an SME only",
+      "type": "boolean"
+    },
+    "awardedToVcse": {
+      "default": false,
+      "description": "Only award notices where the winning supplier is marked as a VCSE.",
+      "prefill": false,
+      "title": "Awarded to a VCSE only",
+      "type": "boolean"
+    },
+    "buyerContains": {
+      "description": "Keep notices whose buying organisation name contains this text (case-insensitive). Applied after the server search and re-checked on every record.",
+      "editor": "textfield",
+      "sectionCaption": "Additional filters",
+      "sectionDescription": "Suitability, buyer and status refinements.",
+      "title": "Buyer name contains",
+      "type": "string"
+    },
+    "cpvCodes": {
+      "default": [],
+      "description": "Exact CPV codes or numeric prefixes, e.g. 72000000, 72, 45215. A prefix matches every code below it.",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "prefill": [],
+      "title": "CPV codes or prefixes",
+      "type": "array",
+      "uniqueItems": true
+    },
+    "cpvSector": {
+      "default": "any",
+      "description": "Filter by one of the 45 CPV root sectors. A sector also matches all of its sub-codes. Leave on Any for all sectors.",
+      "editor": "select",
+      "enum": [
+        "any",
+        "03000000",
+        "09000000",
+        "14000000",
+        "15000000",
+        "16000000",
+        "18000000",
+        "19000000",
+        "22000000",
+        "24000000",
+        "30000000",
+        "31000000",
+        "32000000",
+        "33000000",
+        "34000000",
+        "35000000",
+        "37000000",
+        "38000000",
+        "39000000",
+        "41000000",
+        "42000000",
+        "43000000",
+        "44000000",
+        "45000000",
+        "48000000",
+        "50000000",
+        "51000000",
+        "55000000",
+        "60000000",
+        "63000000",
+        "64000000",
+        "65000000",
+        "66000000",
+        "70000000",
+        "71000000",
+        "72000000",
+        "73000000",
+        "75000000",
+        "76000000",
+        "77000000",
+        "79000000",
+        "80000000",
+        "85000000",
+        "90000000",
+        "92000000",
+        "98000000"
+      ],
+      "enumTitles": [
+        "Any CPV sector",
+        "03000000: Agricultural, farming, fishing, forestry and related products",
+        "09000000: Petroleum products, fuel, electricity and other sources of energy",
+        "14000000: Mining, basic metals and related products",
+        "15000000: Food, beverages, tobacco and related products",
+        "16000000: Agricultural machinery",
+        "18000000: Clothing, footwear, luggage articles and accessories",
+        "19000000: Leather and textile fabrics, plastic and rubber materials",
+        "22000000: Printed matter and related products",
+        "24000000: Chemical products",
+        "30000000: Office and computing machinery, equipment and supplies",
+        "31000000: Electrical machinery, apparatus, equipment and consumables; lighting",
+        "32000000: Radio, television, communication, telecommunication and related equipment",
+        "33000000: Medical equipments, pharmaceuticals and personal care products",
+        "34000000: Transport equipment and auxiliary products to transportation",
+        "35000000: Security, fire-fighting, police and defence equipment",
+        "37000000: Musical instruments, sport goods, games, toys, handicraft and art materials",
+        "38000000: Laboratory, optical and precision equipments (excluding glasses)",
+        "39000000: Furniture, furnishings, domestic appliances and cleaning products",
+        "41000000: Collected and purified water",
+        "42000000: Industrial machinery",
+        "43000000: Machinery for mining, quarrying, construction equipment",
+        "44000000: Construction structures and materials; auxiliary products to construction",
+        "45000000: Construction work",
+        "48000000: Software package and information systems",
+        "50000000: Repair and maintenance services",
+        "51000000: Installation services (except software)",
+        "55000000: Hotel, restaurant and retail trade services",
+        "60000000: Transport services (excluding waste transport)",
+        "63000000: Supporting and auxiliary transport services; travel agencies services",
+        "64000000: Postal and telecommunications services",
+        "65000000: Public utilities",
+        "66000000: Financial and insurance services",
+        "70000000: Real estate services",
+        "71000000: Architectural, construction, engineering and inspection services",
+        "72000000: IT services: consulting, software development, Internet and support",
+        "73000000: Research and development services and related consultancy services",
+        "75000000: Administration, defence and social security services",
+        "76000000: Services related to the oil and gas industry",
+        "77000000: Agricultural, forestry, horticultural, aquacultural and apicultural services",
+        "79000000: Business services: law, marketing, consulting, recruitment, printing and security",
+        "80000000: Education and training services",
+        "85000000: Health and social work services",
+        "90000000: Sewage, refuse, cleaning and environmental services",
+        "92000000: Recreational, cultural and sporting services",
+        "98000000: Other community, social and personal services"
+      ],
+      "prefill": "any",
+      "title": "CPV sector",
+      "type": "string"
+    },
+    "deadlineFrom": {
+      "description": "Only notices whose tender deadline is on or after this date.",
+      "editor": "datepicker",
+      "title": "Closing from",
+      "type": "string"
+    },
+    "deadlineTo": {
+      "description": "Only notices whose tender deadline is on or before this date.",
+      "editor": "datepicker",
+      "title": "Closing to",
+      "type": "string"
+    },
+    "dedupeByOcid": {
+      "default": false,
+      "description": "When enabled, keep only the latest release for each OCDS procurement (ocid). Search rows without an ocid fall back to the notice ID.",
+      "prefill": false,
+      "title": "One record per procurement",
+      "type": "boolean"
+    },
+    "includeDetails": {
+      "default": true,
+      "description": "Fetch the full notice batch (buyer contact, awards, documents, withdrawal data). One batch request per 50 notices.",
+      "prefill": false,
+      "title": "Include full notice details",
+      "type": "boolean"
+    },
     "maxItems": {
       "default": 50,
-      "description": "Hard cap on emitted records.",
+      "description": "Hard cap on emitted records. The Search API returns at most 1,000 matches per request; recent follows cursor pages.",
       "maximum": 2000,
       "minimum": 1,
-      "prefill": 50,
+      "prefill": 3,
       "title": "Max items",
       "type": "integer"
     },
     "mode": {
       "default": "recent",
-      "description": "What to scrape.",
+      "description": "What to scrape. recent follows the OCDS feed; search uses the Contracts Finder Search API; byStatus is the legacy alias for search + status; byNoticeId fetches specific notices.",
       "editor": "select",
       "enum": [
+        "recent",
         "search",
         "byStatus",
-        "recent"
+        "byNoticeId"
       ],
       "enumTitles": [
-        "Search contracts by keyword",
-        "Browse contracts by status (active, awarded, etc.)",
-        "Most recently published contracts"
+        "Most recently published notices",
+        "Search notices by keyword and filters",
+        "Browse notices by status (legacy alias)",
+        "Fetch specific notices by ID or URL"
       ],
       "prefill": "recent",
+      "sectionCaption": "Mode",
+      "sectionDescription": "Pick the lookup path, then set only the filters you need.",
       "title": "Mode",
       "type": "string"
     },
+    "noticeIds": {
+      "default": [],
+      "description": "For mode=byNoticeId: Contracts Finder notice GUIDs or notice URLs, one per line. Release IDs are accepted too.",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "prefill": [],
+      "sectionCaption": "Specific notices",
+      "sectionDescription": "Fetch exact notices by ID or pasted URL.",
+      "title": "Notice IDs or URLs",
+      "type": "array",
+      "uniqueItems": true
+    },
+    "onlyOpen": {
+      "default": false,
+      "description": "Keep only Open notices whose closing date is in the future.",
+      "prefill": false,
+      "title": "Still open for bids",
+      "type": "boolean"
+    },
+    "publishedFrom": {
+      "description": "Only notices first published on or after this date.",
+      "editor": "datepicker",
+      "sectionCaption": "Date filters",
+      "sectionDescription": "Published, closing, award and approach-to-market ranges.",
+      "title": "Published from",
+      "type": "string"
+    },
+    "publishedTo": {
+      "description": "Only notices first published on or before this date.",
+      "editor": "datepicker",
+      "title": "Published to",
+      "type": "string"
+    },
+    "regions": {
+      "default": [],
+      "description": "Only notices delivered in these regions. Leave empty for every region. Any-region notices are always included.",
+      "editor": "select",
+      "items": {
+        "enum": [
+          "United Kingdom",
+          "England",
+          "North East",
+          "North West",
+          "Yorkshire and the Humber",
+          "East Midlands",
+          "West Midlands",
+          "East of England",
+          "London",
+          "South East",
+          "South West",
+          "Scotland",
+          "Wales",
+          "Northern Ireland",
+          "Isle of Man",
+          "Channel Islands",
+          "British Oversea Territories",
+          "Europe",
+          "Rest of the World"
+        ],
+        "enumTitles": [
+          "United Kingdom",
+          "England",
+          "North East",
+          "North West",
+          "Yorkshire and the Humber",
+          "East Midlands",
+          "West Midlands",
+          "East of England",
+          "London",
+          "South East",
+          "South West",
+          "Scotland",
+          "Wales",
+          "Northern Ireland",
+          "Isle of Man",
+          "Channel Islands",
+          "British Oversea Territories",
+          "Europe",
+          "Rest of the World"
+        ],
+        "type": "string"
+      },
+      "prefill": [],
+      "title": "Delivery regions",
+      "type": "array",
+      "uniqueItems": true
+    },
     "searchQuery": {
       "default": "IT services",
-      "description": "Keyword to search contracts (mode=search). E.g. 'IT services', 'construction', 'consultancy'.",
+      "description": "Words or phrases to find in the notice title, description, buyer, supplier or CPV text (mode=search or byStatus). Supports \"exact phrase\", +required words and OR by default, like Contracts Finder.",
       "editor": "textfield",
       "prefill": "IT services",
-      "title": "Search query",
+      "sectionCaption": "Search and notice type",
+      "sectionDescription": "Server-side keyword, status and stage filters.",
+      "title": "Keyword search",
       "type": "string"
     },
     "sortOrder": {
       "default": "publishedAt:DESC",
-      "description": "How to sort results.",
+      "description": "Order of the delivered records. Legacy sort values are still accepted.",
       "editor": "select",
       "enum": [
+        "relevance",
         "publishedAt:DESC",
         "publishedAt:ASC",
         "value.amount:DESC",
-        "value.amount:ASC"
+        "value.amount:ASC",
+        "deadline:ASC",
+        "deadline:DESC",
+        "awardedDate:DESC",
+        "awardedDate:ASC",
+        "contractEndDate:ASC"
       ],
       "enumTitles": [
-        "Newest first",
-        "Oldest first",
-        "Highest value",
-        "Lowest value"
+        "Relevance (search mode)",
+        "Newest publication first",
+        "Oldest publication first",
+        "Highest value first",
+        "Lowest value first",
+        "Closing date, soonest first",
+        "Closing date, latest first",
+        "Most recently awarded first",
+        "Earliest award first",
+        "Contract end date, soonest first"
       ],
       "prefill": "publishedAt:DESC",
+      "sectionCaption": "Output",
+      "sectionDescription": "Delivery size and enrichment.",
       "title": "Sort order",
+      "type": "string"
+    },
+    "stage": {
+      "default": "any",
+      "description": "Filter by the stage of the notice. Open tenders are Contract notices with status Open; awards are Contract notices with status Awarded; pipeline and early engagement are separate notice types. Recent's all-stage feed also includes implementation releases; the Search API has no reliable implementation-only filter.",
+      "editor": "select",
+      "enum": [
+        "any",
+        "tender",
+        "award",
+        "planning",
+        "earlyEngagement"
+      ],
+      "enumTitles": [
+        "Any stage",
+        "Tender opportunities",
+        "Awarded contracts",
+        "Pipeline / future opportunities",
+        "Early engagement"
+      ],
+      "prefill": "any",
+      "title": "Procurement stage",
       "type": "string"
     },
     "status": {
       "default": "active",
-      "description": "Filter by contract status.",
+      "description": "Filter by notice status. Legacy values active/closed/cancelled/complete are still accepted and mapped to Open/Closed/Withdrawn/Awarded.",
       "editor": "select",
       "enum": [
+        "any",
+        "Open",
+        "Closed",
+        "Withdrawn",
+        "Awarded",
         "active",
         "closed",
         "cancelled",
         "complete"
       ],
       "enumTitles": [
-        "Active / Open",
+        "Any status",
+        "Open",
         "Closed",
-        "Cancelled",
-        "Complete"
+        "Withdrawn",
+        "Awarded",
+        "Active / Open (legacy)",
+        "Closed (legacy)",
+        "Cancelled (legacy)",
+        "Complete / Awarded (legacy)"
       ],
       "prefill": "active",
-      "title": "Contract status (mode=byStatus)",
+      "title": "Notice status",
       "type": "string"
+    },
+    "subcontractOnly": {
+      "default": false,
+      "description": "Only notices marked as subcontract or supply-chain opportunities.",
+      "prefill": false,
+      "title": "Subcontract notices only",
+      "type": "boolean"
+    },
+    "suitableForSme": {
+      "default": false,
+      "description": "Only notices marked suitable for small and medium enterprises.",
+      "prefill": false,
+      "title": "Suitable for SMEs only",
+      "type": "boolean"
+    },
+    "suitableForVcse": {
+      "default": false,
+      "description": "Only notices marked suitable for voluntary, community and social enterprises.",
+      "prefill": false,
+      "title": "Suitable for VCSEs only",
+      "type": "boolean"
+    },
+    "valueFrom": {
+      "description": "Only notices whose stated value range reaches at least this amount. Notices with no stated value are dropped when a value or date filter is set.",
+      "maximum": 1000000000000,
+      "minimum": 0,
+      "title": "Minimum value (GBP)",
+      "type": "number"
+    },
+    "valueTo": {
+      "description": "Only notices whose stated value range starts at or below this amount.",
+      "maximum": 1000000000000,
+      "minimum": 0,
+      "title": "Maximum value (GBP)",
+      "type": "number"
     }
   },
   "required": [

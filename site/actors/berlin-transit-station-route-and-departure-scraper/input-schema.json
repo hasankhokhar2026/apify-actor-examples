@@ -1,0 +1,68 @@
+{
+  "description": "Search German transit stations, find routes, or get live departure boards via the free BVG REST API.",
+  "properties": {
+    "destination": {
+      "default": "Hamburg Hauptbahnhof",
+      "description": "Arrival station name (mode=routes).",
+      "editor": "textfield",
+      "prefill": "Hamburg Hauptbahnhof",
+      "title": "Destination station",
+      "type": "string"
+    },
+    "maxItems": {
+      "default": 20,
+      "description": "Maximum number of records to return.",
+      "maximum": 200,
+      "minimum": 1,
+      "prefill": 20,
+      "title": "Max items",
+      "type": "integer"
+    },
+    "mode": {
+      "default": "stations",
+      "description": "What to fetch.",
+      "editor": "select",
+      "enum": [
+        "stations",
+        "routes",
+        "departures"
+      ],
+      "enumTitles": [
+        "Search stations",
+        "Find routes between two stations",
+        "Live departure board"
+      ],
+      "prefill": "stations",
+      "title": "Mode",
+      "type": "string"
+    },
+    "origin": {
+      "default": "Berlin Hauptbahnhof",
+      "description": "Departure station name (mode=routes).",
+      "editor": "textfield",
+      "prefill": "Berlin Hauptbahnhof",
+      "title": "Origin station",
+      "type": "string"
+    },
+    "query": {
+      "default": "Berlin",
+      "description": "Station name to search for (mode=stations or mode=departures).",
+      "editor": "textfield",
+      "prefill": "Berlin",
+      "title": "Station search query",
+      "type": "string"
+    },
+    "stationId": {
+      "description": "Specific BVG stop ID for departures (optional, mode=departures).",
+      "editor": "textfield",
+      "title": "Station ID",
+      "type": "string"
+    }
+  },
+  "required": [
+    "mode"
+  ],
+  "schemaVersion": 1,
+  "title": "Deutsche Bahn / BVG Scraper Input",
+  "type": "object"
+}

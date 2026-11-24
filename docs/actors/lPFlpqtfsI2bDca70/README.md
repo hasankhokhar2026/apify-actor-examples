@@ -4,128 +4,174 @@
 
 # Arkansas Business Entity Filings and Officers Scraper
 
-The Arkansas Secretary of State keeps a free public register of every business entity filed in the state. This actor searches that register by corporation name, assumed (DBA) name, registered agent, or an exact filing number, then follows through to each entity's own filing record for its officers, registered agent address and — for out-of-state entities — their home jurisdiction.
+Arkansas registers corporations, LLCs, partnerships, cooperatives, banks, insurers, name reservations and other filing types with the Secretary of State. This actor reads that free public register, follows each search hit to its own filing record, and returns the details the state publishes: filing type, status, date filed, registered agent, principal address, fictitious names, officers and out-of-state origin.
 
-## What this actor does
+No login, cookie, API key or proxy setup is needed from you. The actor handles the state site's browser check automatically and uses the free Apify datacenter proxy when it is available.
 
-- Searches by corporation/business name (matches anywhere in the name), fictitious/assumed name, registered agent name, or an exact filing number
-- Narrows a registered-agent search further by the agent's city and/or state
-- Filters any search to one specific entity/filing type, out of 35 types the register itself distinguishes (corporation, LLC, LP, cooperative, bank, name reservation, and more)
-- Follows through from the search results to each entity's own detail record for filing type, status, dates, registered agent and officers
-- Captures the out-of-state home address and state of origin for entities formed outside Arkansas but registered to do business there
-- Omits any field the entity's record left blank — no empty strings or placeholder dashes in the output
+## Search modes
+
+| Mode | What it searches |
+|---|---|
+| `byName` | Corporation / business name (matches anywhere in the name) |
+| `byFictitiousName` | Fictitious, DBA or assumed name |
+| `byAgent` | Registered agent name, optionally narrowed by agent city/state |
+| `byFilingNumber` | One exact filing number, or a batch via `filingNumbers` |
+| `byCorpType` | Every entity of one filing/entity type |
+| `byAgentCity` | Every record whose registered agent is in a city |
+| `byAgentState` | Every record whose registered agent is in a state |
+| `advanced` | ANDs every populated filter in a single query |
+
+`corpTypeId` works in every mode. `statusFilter` is applied to the returned rows and accepts the state's own status words, including `Good Standing`, `Not Current`, `Forfeited Charter`, `Revoked`, `Dissolved`, `Withdrawn`, `Merged`, `Converted`, `Expired`, `Cancelled`, and `Other` for a status not in the list.
+
+The state caps one query at 250 rows. Turn on `expandCappedResults` to repeat a capped query once per entity type and deduplicate the results; it costs extra requests but reaches past 250 rows for broad name/agent searches. Searches that are themselves narrowed to one entity type remain capped at 250 by the state.
 
 ## Output per entity
 
-- `corporationName`
-- `filingNumber`
-- `filingType` — e.g. "Domestic Limited Liability Company", "Foreign For Profit Corporation"
-- `status` — e.g. "Good Standing", "Withdrawn", "Forfeited Charter"
-- `filedUnderAct` — statutory act reference on file
-- `fictitiousNames[]` — DBA/assumed names, when on file
-- `principalAddress` — when the state's own record discloses one (most entities leave this blank)
+- `corporationName`, `filingNumber`
+- `filingType` - e.g. `Foreign For Profit Corporation`, `Domestic Limited Liability Company`
+- `filingTypeCategory` - normalized group such as `Limited Liability Company`, `Name Reservation`, `Bank`
+- `entityTypeGroup` - `Foreign` or `Domestic`
+- `isForeign` - boolean
+- `status`, `isGoodStanding`
+- `filedUnderAct`
+- `fictitiousNames[]`, `fictitiousNameCount`
+- `principalAddress` and `principalAddressLine1` / `State` / `PostalCode`
 - `registeredAgentName`, `registeredAgentAddress`
-- `registeredAgentCity`, `registeredAgentState`
-- `dateFiled` — `YYYY-MM-DD`
-- `officers[]` — list of `{name, title}`
-- `foreignName`, `foreignAddress`, `stateOfOrigin` — only for entities formed outside Arkansas
-- `certificateOfGoodStandingUrl`, `franchiseTaxPaymentUrl` — links to the state's own paid-service pages, not purchases made by this actor
-- `sourceUrl`
+- `registeredAgentCity`, `registeredAgentState`, `registeredAgentAddressLine1`, `registeredAgentPostalCode`
+- `dateFiled` - `YYYY-MM-DD`
+- `officers[]` - `{name, title, roleCategory}`; `currentOfficers[]` and `organizers[]` split by role
+- `officerCount`
+- `foreignName`, `foreignAddress` and `foreignAddressLine1` / `State` / `PostalCode`
+- `stateOfOrigin`
+- `certificateOfGoodStandingUrl`, `franchiseTaxPaymentUrl` - links to the state's own paid services; the actor never buys anything
+- `detailUrl` - the entity's own public record
+- `sourceUrl` - the filing-number search that reproduces the record
 - `recordType: "entity"`, `scrapedAt`
+
+Every field is omit-empty at every depth: a value the state left blank is left out, never emitted as `null`, `""`, `N/A`, `-` or a lone comma. The state's `SEE FILE` officer placeholder is dropped and lone dotted initials (`SPENCER . WIRTHLIN`) are normalized (`SPENCER WIRTHLIN`).
 
 ## Input
 
 | Field | Type | Default | Description |
 |---|---|---|---|
-| `mode` | string | `byName` | `byName`, `byFictitiousName`, `byAgent` or `byFilingNumber` |
-| `corpName` | string | `GOOGLE` | Corporation/business name to search (mode=byName) |
-| `fictitiousName` | string | – | Fictitious/assumed name to search (mode=byFictitiousName) |
-| `agentName` | string | – | Registered agent name to search (mode=byAgent) |
-| `agentCity` | string | – | Narrow the agent search to a city (mode=byAgent, optional) |
-| `agentState` | string | – | Narrow the agent search to a US state (mode=byAgent, optional) |
-| `filingNumber` | string | – | Exact Arkansas filing number (mode=byFilingNumber) |
-| `corpTypeId` | string | `All Types` | Restrict results to one of 35 entity/filing types, any mode |
-| `proxyConfiguration` | object | `{"useApifyProxy": true}` | Required proxy configuration |
-| `maxItems` | integer | `25` | Hard cap on emitted records (1–200) |
+| `mode` | select | `byName` | One of the eight modes above |
+| `corpName` | string | - (prefill `GOOGLE`) | Name to search (byName) |
+| `exactNameMatch` | boolean | `false` | Keep only exact legal-name matches (byName) |
+| `fictitiousName` | string | - | DBA / assumed name (byFictitiousName) |
+| `agentName` | string | - | Registered agent name (byAgent) |
+| `agentCity` | string | - | Registered-agent city (byAgentCity, optional elsewhere) |
+| `agentState` | select | Any | Registered-agent state (byAgentState, optional elsewhere) |
+| `filingNumber` | string | - | Exact filing number (byFilingNumber) |
+| `filingNumbers` | string list | `[]` | Several exact filing numbers in one run |
+| `corpTypeId` | select | All Types | Entity/filing type from the state's 36 options |
+| `statusFilter` | select | All statuses | Keep records with one state status, or `Other` |
+| `includeDetails` | boolean | `true` | Fetch the full detail record; off returns search-row fields only |
+| `expandCappedResults` | boolean | `false` | Repeat a capped query by entity type |
+| `maxItems` | integer | `25` | Hard cap on emitted records (1-1000) |
+| `proxyConfiguration` | object | AUTO | Optional Apify proxy override |
 
-### Example: search by corporation name
+### Examples
 
-```json
-{
-  "mode": "byName",
-  "corpName": "GOOGLE",
-  "maxItems": 10
-}
-```
-
-### Example: search by assumed/DBA name
+Search by name:
 
 ```json
-{
-  "mode": "byFictitiousName",
-  "fictitiousName": "GOOGLE FI",
-  "maxItems": 10
-}
+{ "mode": "byName", "corpName": "WALMART", "maxItems": 25 }
 ```
 
-### Example: every entity a registered agent represents in-state
+Exact legal-name check:
+
+```json
+{ "mode": "byName", "corpName": "WALMART INC.", "exactNameMatch": true }
+```
+
+Every entity a registered agent represents in Arkansas, filtered to current standing:
 
 ```json
 {
   "mode": "byAgent",
-  "agentName": "Corporation Service Company",
+  "agentName": "CORPORATION SERVICE COMPANY",
   "agentState": "AR",
-  "maxItems": 25
+  "statusFilter": "Good Standing",
+  "maxItems": 100
 }
 ```
 
-### Example: look up by exact filing number
+Look up one exact filing number:
 
 ```json
-{
-  "mode": "byFilingNumber",
-  "filingNumber": "811066819"
-}
+{ "mode": "byFilingNumber", "filingNumber": "811066819", "includeDetails": true }
 ```
 
-### Example: name search restricted to one entity type
+Batch filing numbers:
 
 ```json
-{
-  "mode": "byName",
-  "corpName": "WALMART",
-  "corpTypeId": "7",
-  "maxItems": 25
-}
+{ "mode": "byFilingNumber", "filingNumbers": ["811066819", "100067582"] }
 ```
+
+Every domestic LLC name containing `WAL` (single type, so the state's 250 cap still applies):
+
+```json
+{ "mode": "byName", "corpName": "WAL", "corpTypeId": "7", "maxItems": 250 }
+```
+
+Broad capped search expanded across all entity types:
+
+```json
+{ "mode": "byName", "corpName": "WAL", "expandCappedResults": true, "maxItems": 500 }
+```
+
+Filter by state status and fetch search-row fields only:
+
+```json
+{ "mode": "byCorpType", "corpTypeId": "24", "statusFilter": "Good Standing", "includeDetails": false }
+```
+
+## Data source and usage notes
+
+The register is published by the Arkansas Secretary of State at `sos-corp-search.ark.org` and is free to read. Search results are a server-rendered table; each entity's `Corporation Details` view carries the fuller record. The free record has no filing history, no annual-report list and no document images; the state sells certified copies and bulk data separately, and this actor only surfaces the public links for those paid services.
+
+The site sits behind CloudFront and AWS WAF. A normal HTTP client can receive a `202`, `405` or `403` challenge. The actor opens the public search page in a real headless browser once per run to obtain the short-lived WAF token, then uses that token for the search and detail requests. If a later request is challenged, the token is refreshed and the request retried. This uses no user cookie or login. If an IP is temporarily rate-limited, the optional Apify datacenter proxy provides a fresh session; no residential proxy is used.
 
 ## Use cases
 
-- **Due diligence** — confirm a counterparty's Arkansas filing date, entity type and registered agent before contracting
-- **Compliance and KYC** — verify a business's legal entity name, filing number and listed officers
-- **Registered agent research** — find every entity a given agent represents across Arkansas
-- **Foreign-qualification research** — identify out-of-state entities registered to do business in Arkansas and trace their home jurisdiction
-- **Name-availability checks** — see what similarly named entities already exist before registering a new one
+- **Due diligence** - confirm a counterparty's Arkansas filing date, filing type, status and registered agent
+- **Compliance and KYC** - verify the legal name, filing number and listed officers of a business
+- **Registered-agent research** - find every entity an agent represents, in a city or across a state
+- **Entity-type inventories** - collect every bank, insurer, LLC, name reservation or other filing type
+- **Foreign-qualification research** - identify out-of-state entities registered in Arkansas and trace their home jurisdiction
+- **Name-availability screening** - see existing legal and fictitious names before filing
 
 ## FAQ
 
 **Is this official Arkansas state data?**
-It's read directly from the Arkansas Secretary of State's own free public business-entity search; this actor is an independent third-party tool and not affiliated with the State of Arkansas.
+It is read directly from the Arkansas Secretary of State's free public business-entity search. This actor is an independent third-party tool and is not affiliated with the State of Arkansas.
 
-**Is this data legally binding, like a Certificate of Good Standing?**
-No. This actor returns the same free informational data the public search page shows. For an official certified Certificate of Good Standing, use the state's own paid ordering channel, linked from each record's `certificateOfGoodStandingUrl`.
+**Is this the same as a Certificate of Good Standing?**
+No. It returns the free informational record the public search shows. For a certified certificate, use the state's own paid page linked as `certificateOfGoodStandingUrl`.
 
-**Why did my search return zero results?**
-The query most likely has no match in the register. Name search matches anywhere within the name, so try a shorter or broader name fragment before concluding there's no match.
+**Why did my search return zero records?**
+The query probably has no match. The site matches names anywhere inside the name, so try a shorter fragment. For filing-number searches the number must be exact; partial numbers return nothing.
 
-**What does `stateOfOrigin` mean?**
-For a "foreign" entity — one formed outside Arkansas but registered to do business there — this is the two-letter code of its home state or country, e.g. `DE` for a Delaware-incorporated company.
+**Why are there at most 250 results for one query?**
+The state truncates a single search at 250 rows and says so on the page. Narrow the search, add an entity type, or turn on `expandCappedResults` (which repeats a capped query once per entity type). Even that expansion cannot go past 250 for a query that already selects a single entity type, because the state's own cap then applies inside that slice.
 
 **Why is `principalAddress` often missing?**
-The state's own detail record leaves this blank for most entities on file; it's only included when the record actually has one.
+The state leaves that field blank for many entities. The actor omits it rather than inventing a value. The same omit-empty rule applies to foreign-origin fields and officers.
 
-**Does this actor pay for certificates or franchise tax on my behalf?**
-No. It surfaces the state's own links for those paid services (`certificateOfGoodStandingUrl`, `franchiseTaxPaymentUrl`) but never completes a purchase.
+**Why is an officer title missing?**
+The state sometimes lists a name without a title. The `name` is kept and `title` is omitted.
+
+**Does the actor buy certificates or pay franchise tax?**
+No. It only records the state's own links for those paid services.
 
 **How current is the data?**
-Each run reads the Secretary of State's live search, so results reflect the register's current state at the moment of the search.
+Each run reads the live public search and detail pages, so the output reflects the register at the moment of the run.
+
+**Can I get filing history, annual reports or document images?**
+No. The free public detail record does not publish them. The state sells certified copies and bulk data separately; this actor only links to the state's paid services and never buys them.
+
+**What happens if the state rate-limits the IP?**
+The actor uses a real browser session, retries with pacing, and can fall back from a failing proxy to a direct browser session. If the state keeps blocking a shared IP, wait and rerun, or enable the free AUTO proxy in the optional proxy field.
+
+**Does this actor download the state's bulk data?**
+No. The bulk download service is a separate paid Tyler/Arkansas.gov subscription. This actor reads only the free public search pages.

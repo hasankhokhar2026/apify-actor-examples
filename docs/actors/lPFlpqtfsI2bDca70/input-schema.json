@@ -1,10 +1,10 @@
 {
-  "description": "Search Arkansas's free public business-entity database (sos-corp-search.ark.org) by one of 4 search axes. Only the fields relevant to the selected `mode` are used.",
+  "description": "Search Arkansas's free public business-entity register (sos-corp-search.ark.org) by name, fictitious name, registered agent, filing number or entity type. Only fields for the selected mode are sent to the site.",
   "properties": {
     "agentCity": {
-      "description": "Narrow the registered-agent search to a specific city, e.g. `LITTLE ROCK`.",
+      "description": "Restrict the search to a registered-agent city, e.g. `LITTLE ROCK`.",
       "editor": "textfield",
-      "title": "Registered agent city (mode=byAgent, optional)",
+      "title": "Registered agent city (mode=byAgentCity, optional for byAgent/byAgentState/advanced)",
       "type": "string"
     },
     "agentName": {
@@ -15,7 +15,7 @@
     },
     "agentState": {
       "default": "",
-      "description": "Narrow the registered-agent search to a specific US state.",
+      "description": "Restrict the search to a registered-agent US state or district.",
       "editor": "select",
       "enum": [
         "",
@@ -126,20 +126,19 @@
         "Wyoming"
       ],
       "prefill": "",
-      "title": "Registered agent state (mode=byAgent, optional)",
+      "title": "Registered agent state (mode=byAgentState, optional elsewhere)",
       "type": "string"
     },
     "corpName": {
-      "default": "GOOGLE",
-      "description": "Business/corporation name to search for, e.g. `GOOGLE`. Matches anywhere in the name.",
+      "description": "Business or corporation name to search for, e.g. `GOOGLE` (the prefill uses GOOGLE). The site matches anywhere inside the name.",
       "editor": "textfield",
       "prefill": "GOOGLE",
-      "title": "Corporation name (mode=byName)",
+      "title": "Corporation / business name (mode=byName)",
       "type": "string"
     },
     "corpTypeId": {
       "default": "",
-      "description": "Restrict results to a specific entity/filing type. Leave as \"All Types\" to search every type.",
+      "description": "Restrict results to one entity/filing type from the state's own dropdown. Leave as All Types to search every type.",
       "editor": "select",
       "enum": [
         "",
@@ -181,7 +180,7 @@
       ],
       "enumTitles": [
         "All Types",
-        "Benefit Corporation",
+        "Benefit Corporation / Foreign Cooperative (Ag, Mkt, Gen)",
         "Domestic For Profit Corporation (New Code)",
         "Domestic For Profit Corporation (Old Code)",
         "Domestic Nonprofit Corporation (New Code)",
@@ -207,7 +206,7 @@
         "Insurance Company",
         "Name Reservation",
         "Name Registration",
-        "Name Reservation (Alt.)",
+        "Name Reservation (alternate legacy code)",
         "Domestic Public Water Authority",
         "Foreign Public Water Authority",
         "Domestic Series LLC",
@@ -215,28 +214,60 @@
         "Foreign Series LLC",
         "Foreign Protected Series",
         "Video Service Provider",
-        "International Student Exchange Visitor Placement Organization Registration"
+        "International Student Exchange Visitor Placement Organization Registration (ISEVPO)"
       ],
       "prefill": "",
       "title": "Entity type filter (all modes, optional)",
       "type": "string"
     },
+    "exactNameMatch": {
+      "default": false,
+      "description": "Keep only results whose legal name exactly matches `corpName` (case-insensitive). The site search itself is always a contains match, so this filter runs on the returned rows.",
+      "prefill": false,
+      "title": "Exact legal-name match (mode=byName)",
+      "type": "boolean"
+    },
+    "expandCappedResults": {
+      "default": false,
+      "description": "When a query hits the site's 250-row limit and no entity type is selected, repeat the query once per entity type and deduplicate. Costs extra requests.",
+      "prefill": false,
+      "title": "Expand results past the site's 250-row cap",
+      "type": "boolean"
+    },
     "fictitiousName": {
-      "description": "Fictitious (DBA/assumed) name to search for, e.g. `GOOGLE FI`.",
+      "description": "DBA or assumed name to search for, e.g. `GOOGLE FI`.",
       "editor": "textfield",
       "title": "Fictitious / assumed name (mode=byFictitiousName)",
       "type": "string"
     },
     "filingNumber": {
-      "description": "Exact Arkansas filing number, e.g. `811066819`.",
+      "description": "Exact Arkansas filing number, e.g. `811066819`. Leading zeros are accepted; partial numbers are not.",
       "editor": "textfield",
       "title": "Filing number (mode=byFilingNumber)",
       "type": "string"
     },
+    "filingNumbers": {
+      "default": [],
+      "description": "Optionally look up several exact filing numbers in one run. Applies only in filing-number mode.",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "prefill": [],
+      "title": "Filing numbers (mode=byFilingNumber, batch)",
+      "type": "array"
+    },
+    "includeDetails": {
+      "default": true,
+      "description": "Open each entity's detail record for type, filed date, registered agent address, officers, fictitious names and foreign-origin fields. Turn off for a faster search-row-only export.",
+      "prefill": true,
+      "title": "Fetch full entity detail",
+      "type": "boolean"
+    },
     "maxItems": {
       "default": 25,
       "description": "Hard cap on emitted records.",
-      "maximum": 200,
+      "maximum": 1000,
       "minimum": 1,
       "prefill": 10,
       "title": "Max items",
@@ -244,19 +275,27 @@
     },
     "mode": {
       "default": "byName",
-      "description": "Which search axis to use.",
+      "description": "Which search axis to use. `Advanced` ANDs every populated filter in one query.",
       "editor": "select",
       "enum": [
         "byName",
         "byFictitiousName",
         "byAgent",
-        "byFilingNumber"
+        "byFilingNumber",
+        "byCorpType",
+        "byAgentCity",
+        "byAgentState",
+        "advanced"
       ],
       "enumTitles": [
-        "By corporation name",
-        "By fictitious (assumed) name",
+        "By corporation / business name",
+        "By fictitious (DBA / assumed) name",
         "By registered agent name",
-        "By exact filing number"
+        "By exact filing number",
+        "By entity type",
+        "By registered-agent city",
+        "By registered-agent state",
+        "Advanced - combine every filter"
       ],
       "prefill": "byName",
       "title": "Search mode",
@@ -266,18 +305,65 @@
       "default": {
         "useApifyProxy": true
       },
-      "description": "Uses Apify's free datacenter (AUTO) proxy group to get a fresh IP if a request is temporarily rate-limited. Residential proxy is never used by this actor.",
+      "description": "Optional Apify proxy override. The actor automatically uses the free datacenter (AUTO) group when this is left at its default; residential proxy is never used.",
       "editor": "proxy",
       "prefill": {
         "useApifyProxy": true
       },
-      "title": "Proxy configuration",
+      "title": "Proxy configuration (optional)",
       "type": "object"
+    },
+    "statusFilter": {
+      "default": "",
+      "description": "Keep only records whose state-reported status matches. Applied after the site search; use a narrow query if the site hits its 250-row cap.",
+      "editor": "select",
+      "enum": [
+        "",
+        "Good Standing",
+        "In Good Standing",
+        "Not Current",
+        "Forfeited Charter",
+        "Revoked",
+        "Dissolved",
+        "Withdrawn",
+        "Merged",
+        "Converted",
+        "Expired",
+        "Used",
+        "Pending",
+        "Statutorily Dissolved",
+        "Administratively Dissolved",
+        "Cancelled",
+        "Other"
+      ],
+      "enumTitles": [
+        "All statuses",
+        "Good Standing",
+        "In Good Standing",
+        "Not Current",
+        "Forfeited Charter",
+        "Revoked",
+        "Dissolved",
+        "Withdrawn",
+        "Merged",
+        "Converted",
+        "Expired",
+        "Used",
+        "Pending",
+        "Statutorily Dissolved",
+        "Administratively Dissolved",
+        "Cancelled",
+        "Other status not listed"
+      ],
+      "prefill": "",
+      "sectionCaption": "Result filters",
+      "sectionDescription": "Optional controls for how many records are returned and how much detail is fetched.",
+      "title": "Status filter (optional)",
+      "type": "string"
     }
   },
   "required": [
-    "mode",
-    "proxyConfiguration"
+    "mode"
   ],
   "schemaVersion": 1,
   "title": "Arkansas Secretary of State Business Search Scraper Input",

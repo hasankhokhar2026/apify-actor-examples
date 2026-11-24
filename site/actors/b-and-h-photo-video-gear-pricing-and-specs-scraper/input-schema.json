@@ -1,0 +1,169 @@
+{
+  "description": "Scrape products from B&H Photo Video (bhphotovideo.com). Search by keyword, browse categories, fetch product details, or scrape from URLs.",
+  "properties": {
+    "category": {
+      "default": "cameras-and-camcorders",
+      "description": "Product category to browse (mode=byCategory).",
+      "editor": "select",
+      "enum": [
+        "cameras-and-camcorders",
+        "lenses-and-filters",
+        "lighting",
+        "audio",
+        "computers-and-tablets",
+        "televisions-and-displays",
+        "video",
+        "tripods-and-supports",
+        "accessories"
+      ],
+      "enumTitles": [
+        "Cameras & Camcorders",
+        "Lenses & Filters",
+        "Lighting",
+        "Audio",
+        "Computers & Tablets",
+        "Televisions & Displays",
+        "Video",
+        "Tripods & Supports",
+        "Accessories"
+      ],
+      "prefill": "cameras-and-camcorders",
+      "title": "Category",
+      "type": "string"
+    },
+    "condition": {
+      "default": "all",
+      "description": "Filter by product condition.",
+      "editor": "select",
+      "enum": [
+        "all",
+        "new",
+        "used"
+      ],
+      "enumTitles": [
+        "All conditions",
+        "New only",
+        "Used only"
+      ],
+      "prefill": "all",
+      "title": "Condition filter",
+      "type": "string"
+    },
+    "fetchDetails": {
+      "default": false,
+      "description": "When enabled in search/category modes, visits each product page to fetch full specs and description. Slower but more complete.",
+      "prefill": false,
+      "title": "Fetch full product details",
+      "type": "boolean"
+    },
+    "inStockOnly": {
+      "default": false,
+      "description": "When enabled, only emit products that are currently in stock.",
+      "prefill": false,
+      "title": "In-stock items only",
+      "type": "boolean"
+    },
+    "maxItems": {
+      "default": 20,
+      "description": "Maximum number of products to emit.",
+      "maximum": 500,
+      "minimum": 1,
+      "prefill": 20,
+      "title": "Max items",
+      "type": "integer"
+    },
+    "maxPrice": {
+      "description": "Skip products priced above this value.",
+      "maximum": 100000,
+      "minimum": 0,
+      "title": "Maximum price (USD)",
+      "type": "integer"
+    },
+    "minPrice": {
+      "description": "Skip products priced below this value.",
+      "maximum": 100000,
+      "minimum": 0,
+      "title": "Minimum price (USD)",
+      "type": "integer"
+    },
+    "minRating": {
+      "description": "Only emit products with rating >= this value (1.0–5.0).",
+      "maximum": 5,
+      "minimum": 1,
+      "title": "Minimum star rating",
+      "type": "number"
+    },
+    "mode": {
+      "default": "search",
+      "description": "What to scrape.",
+      "editor": "select",
+      "enum": [
+        "search",
+        "byCategory",
+        "productDetails",
+        "byUrl"
+      ],
+      "enumTitles": [
+        "Search products by keyword",
+        "Browse a product category",
+        "Fetch product details by product ID or SKU",
+        "Scrape one or more product URLs"
+      ],
+      "prefill": "search",
+      "title": "Mode",
+      "type": "string"
+    },
+    "productIds": {
+      "default": [],
+      "description": "List of B&H product IDs (numeric, e.g. '1769090') or B&H SKUs (e.g. 'CAER1001845'). Used with mode=productDetails.",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Product IDs (mode=productDetails)",
+      "type": "array"
+    },
+    "searchQuery": {
+      "default": "mirrorless camera",
+      "description": "Keyword or phrase to search for (mode=search).",
+      "editor": "textfield",
+      "prefill": "mirrorless camera",
+      "title": "Search query",
+      "type": "string"
+    },
+    "sortBy": {
+      "default": "relevance",
+      "description": "How to sort search or category results.",
+      "editor": "select",
+      "enum": [
+        "relevance",
+        "priceAsc",
+        "priceDesc",
+        "topRated",
+        "newArrivals"
+      ],
+      "enumTitles": [
+        "Relevance (default)",
+        "Price: Low to High",
+        "Price: High to Low",
+        "Top Rated",
+        "New Arrivals"
+      ],
+      "prefill": "relevance",
+      "title": "Sort results by",
+      "type": "string"
+    },
+    "startUrls": {
+      "default": [],
+      "description": "List of B&H Photo product or search page URLs to scrape.",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Start URLs (mode=byUrl)",
+      "type": "array"
+    }
+  },
+  "required": [
+    "mode"
+  ],
+  "schemaVersion": 1,
+  "title": "B&H Photo Scraper Input",
+  "type": "object"
+}

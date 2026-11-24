@@ -1,0 +1,246 @@
+{
+  "description": "Search flights on Kiwi.com by route and date, fetch popular routes from a city, or look up airports/cities/stations.",
+  "properties": {
+    "cabinClass": {
+      "default": "economy",
+      "description": "Cabin class for the search (mode=search, popularRoutes).",
+      "editor": "select",
+      "enum": [
+        "economy",
+        "premium",
+        "business",
+        "first"
+      ],
+      "enumTitles": [
+        "Economy",
+        "Premium",
+        "Business",
+        "First"
+      ],
+      "prefill": "economy",
+      "title": "Cabin class",
+      "type": "string"
+    },
+    "containsKeyword": {
+      "description": "Only keep flights whose airline, flight number, origin or destination contains this text (case-insensitive).",
+      "editor": "textfield",
+      "title": "Contains keyword",
+      "type": "string"
+    },
+    "currency": {
+      "default": "usd",
+      "description": "Currency for all prices (ISO 4217).",
+      "editor": "select",
+      "enum": [
+        "usd",
+        "eur",
+        "gbp",
+        "jpy",
+        "aud",
+        "cad",
+        "chf",
+        "cny",
+        "hkd",
+        "sgd",
+        "nzd",
+        "inr",
+        "pkr",
+        "aed",
+        "sar",
+        "qar",
+        "kwd",
+        "try",
+        "sek",
+        "nok",
+        "dkk",
+        "pln",
+        "czk",
+        "myr",
+        "thb",
+        "idr",
+        "php",
+        "vnd",
+        "brl",
+        "mxn",
+        "zar",
+        "npr"
+      ],
+      "enumTitles": [
+        "US Dollar (USD)",
+        "Euro (EUR)",
+        "British Pound (GBP)",
+        "Japanese Yen (JPY)",
+        "Australian Dollar (AUD)",
+        "Canadian Dollar (CAD)",
+        "Swiss Franc (CHF)",
+        "Chinese Yuan (CNY)",
+        "Hong Kong Dollar (HKD)",
+        "Singapore Dollar (SGD)",
+        "New Zealand Dollar (NZD)",
+        "Indian Rupee (INR)",
+        "Pakistani Rupee (PKR)",
+        "UAE Dirham (AED)",
+        "Saudi Riyal (SAR)",
+        "Qatari Riyal (QAR)",
+        "Kuwaiti Dinar (KWD)",
+        "Turkish Lira (TRY)",
+        "Swedish Krona (SEK)",
+        "Norwegian Krone (NOK)",
+        "Danish Krone (DKK)",
+        "Polish Zloty (PLN)",
+        "Czech Koruna (CZK)",
+        "Malaysian Ringgit (MYR)",
+        "Thai Baht (THB)",
+        "Indonesian Rupiah (IDR)",
+        "Philippine Peso (PHP)",
+        "Vietnamese Dong (VND)",
+        "Brazilian Real (BRL)",
+        "Mexican Peso (MXN)",
+        "South African Rand (ZAR)",
+        "Nepalese Rupee (NPR)"
+      ],
+      "prefill": "usd",
+      "title": "Currency",
+      "type": "string"
+    },
+    "destination": {
+      "default": "paris",
+      "description": "Airport code, city name, or Kiwi place ID (mode=search). Use `anywhere` to search all destinations.",
+      "editor": "textfield",
+      "prefill": "paris",
+      "title": "Destination",
+      "type": "string"
+    },
+    "maxItems": {
+      "default": 20,
+      "description": "Hard cap on emitted records.",
+      "maximum": 500,
+      "minimum": 1,
+      "prefill": 10,
+      "title": "Max items",
+      "type": "integer"
+    },
+    "maxPrice": {
+      "description": "Drop itineraries priced above this amount (in the selected currency).",
+      "maximum": 1000000,
+      "minimum": 1,
+      "title": "Max price",
+      "type": "number"
+    },
+    "mode": {
+      "default": "search",
+      "description": "What to fetch.",
+      "editor": "select",
+      "enum": [
+        "search",
+        "popularRoutes",
+        "stationLookup"
+      ],
+      "enumTitles": [
+        "Search flights (origin → destination → date)",
+        "Popular routes from a city",
+        "Look up airports, cities and stations"
+      ],
+      "prefill": "search",
+      "title": "Mode",
+      "type": "string"
+    },
+    "origin": {
+      "default": "london",
+      "description": "Airport code, city name, or Kiwi place ID (mode=search, popularRoutes). Examples: `LTN`, `london`, `City:london_gb`.",
+      "editor": "textfield",
+      "prefill": "london",
+      "title": "Origin",
+      "type": "string"
+    },
+    "passengers": {
+      "default": 1,
+      "description": "Number of adult passengers (1-9).",
+      "maximum": 9,
+      "minimum": 1,
+      "prefill": 1,
+      "title": "Passengers",
+      "type": "integer"
+    },
+    "proxyConfiguration": {
+      "default": {
+        "useApifyProxy": true
+      },
+      "description": "Optional Apify proxy. The actor runs without a proxy and only uses it lazily if the Kiwi API starts rate-limiting (429) or blocking (403).",
+      "editor": "proxy",
+      "prefill": {
+        "useApifyProxy": true
+      },
+      "title": "Proxy configuration",
+      "type": "object"
+    },
+    "returnDate": {
+      "description": "Optional return date (mode=search). Format `YYYY-MM-DD`. When omitted, Kiwi returns flights with any return date.",
+      "editor": "textfield",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+      "title": "Return date",
+      "type": "string"
+    },
+    "sortBy": {
+      "default": "QUALITY",
+      "description": "How Kiwi.com sorts the returned itineraries.",
+      "editor": "select",
+      "enum": [
+        "QUALITY",
+        "PRICE",
+        "DURATION",
+        "TAKEOFF_ASC",
+        "LANDING_ASC"
+      ],
+      "enumTitles": [
+        "Quality (Kiwi default)",
+        "Cheapest first",
+        "Fastest first",
+        "Earliest take-off",
+        "Earliest landing"
+      ],
+      "prefill": "QUALITY",
+      "title": "Sort order",
+      "type": "string"
+    },
+    "stationQuery": {
+      "description": "Free-text term to search airports, cities, countries and points of interest (mode=stationLookup).",
+      "editor": "textfield",
+      "title": "Station lookup query",
+      "type": "string"
+    },
+    "stops": {
+      "default": "any",
+      "description": "Filter itineraries by the number of stops on the outbound journey.",
+      "editor": "select",
+      "enum": [
+        "any",
+        "nonstop",
+        "1plus",
+        "2plus"
+      ],
+      "enumTitles": [
+        "Any number of stops",
+        "Nonstop only",
+        "At least 1 stop",
+        "At least 2 stops"
+      ],
+      "prefill": "any",
+      "title": "Max stops",
+      "type": "string"
+    },
+    "travelDate": {
+      "description": "Departure date (mode=search). Format `YYYY-MM-DD`. When omitted, the actor uses today + 30 days.",
+      "editor": "textfield",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+      "title": "Travel date",
+      "type": "string"
+    }
+  },
+  "required": [
+    "mode"
+  ],
+  "schemaVersion": 1,
+  "title": "Kiwi.com Scraper Input",
+  "type": "object"
+}

@@ -4,103 +4,172 @@
 
 # UK Public Sector Tender and Contract Notices Scraper
 
-Contracts Finder is the UK government's open database of public-sector procurement notices — contracts above the transparency threshold from central departments, the NHS, local councils, universities and housing associations. This actor pulls those notices as structured records: buyer, value, dates, status, procurement method and (where awarded) the winning supplier.
+Contracts Finder is the UK government's public procurement notice service. This actor reads its official, keyless APIs and returns one clean record per notice: buyer and contact details, status and stage, values, CPV codes and descriptions, delivery regions, key dates, awarded suppliers, documents and the source link.
 
 ## What this actor does
 
-- Returns the most recently published contract notices, newest first, with no search terms needed
-- Searches notices by free-text keyword (e.g. "IT services", "construction", "consultancy")
-- Browses notices filtered to a single status (`active` or `complete` are the statuses that actually appear on live notices; see FAQ)
-- Sorts any mode by publication date or contract value, ascending or descending
-- Captures CPV classification codes and awarded supplier details whenever the notice has them
-- Omits any field a notice didn't carry — no empty strings or nulls in the output
+- **Recent notices** — newest OCDS releases, following the API cursor, with optional stage, status, date and client-side filters.
+- **Keyword search** — real server-side text search over notice title, description, buyer, supplier and CPV text, with exact-phrase and required-word support.
+- **Browse by status** — the legacy `byStatus` mode, still accepted and mapped to the search API.
+- **Fetch by ID or URL** — paste Contracts Finder notice links or GUIDs and get the full notice detail in one batch.
+- **Filters** — stage, status, CPV sector or code prefix, region, value range, six date ranges, buyer name, SME/VCSE suitability, awarded-to SME/VCSE, subcontract and still-open.
+- **Full detail** — buyer contact block, awards (value, supplier name/address/DUNS, dates, procedure), CPV descriptions, framework and extension flags, documents and withdrawal data.
+- **No credentials** — public data only, no login, API key or proxy configuration. No personal contact data is required to run the actor.
+- Output is **omit-empty** at every depth: fields the notice does not carry are left out rather than stored as null or blank.
 
-## Output per contract
+Data is published by Contracts Finder under the Open Government Licence v3.0. This actor is an independent reader of that public data, not a UK government service.
 
-- `ocidId` — the notice's Open Contracting ID
-- `title`, `description`
-- `buyer`, `buyerId` — buying organisation name and ID
-- `publishedDate`, `publishedAt` — publication date of the notice
-- `status` — e.g. active, closed, cancelled, complete
-- `procurementMethod`, `procurementMethodDetails`
-- `valueAmount`, `valueCurrency` — contract value and currency, usually GBP
-- `cpvCategories` — CPV classification codes, when assigned
-- `contractStartDate`, `contractEndDate`
-- `tenderEndDate` — tender closing date, when the notice is still open
-- `supplierName`, `supplierCountry` — awarded supplier, when the contract has reached award stage
-- `sourceUrl` — link to the notice on Contracts Finder
-- `recordType: "contract"`, `scrapedAt`
+## Modes
+
+| Mode | What it returns | Best for |
+|---|---|---|
+| `recent` | Newest notices for the selected stage/status, following OCDS cursor pages | A daily new-notice feed |
+| `search` | Notices matching `searchQuery` and every other filter | Finding opportunities by keyword |
+| `byStatus` | Legacy alias for `search` with the old `status` values | Existing saved tasks |
+| `byNoticeId` | Full detail for the GUIDs or URLs in `noticeIds` | Enriching a known notice list |
 
 ## Input
 
 | Field | Type | Default | Description |
 |---|---|---|---|
-| `mode` | string | `recent` | `recent` (latest notices), `search` (by keyword) or `byStatus` (by status) |
-| `searchQuery` | string | `IT services` | Keyword to search (mode=search) |
-| `status` | string | `active` | `active`, `closed`, `cancelled` or `complete` (mode=byStatus) |
-| `sortOrder` | string | `publishedAt:DESC` | `publishedAt:DESC`, `publishedAt:ASC`, `value.amount:DESC` or `value.amount:ASC` |
-| `maxItems` | integer | `50` | Hard cap on emitted records (1–2000) |
+| `mode` | string | `recent` | `recent`, `search`, `byStatus` or `byNoticeId` |
+| `searchQuery` | string | `IT services` | Keyword search for `search` / `byStatus` |
+| `status` | string | `active` | `any`, `Open`, `Closed`, `Withdrawn`, `Awarded`, or legacy `active`, `closed`, `cancelled`, `complete` |
+| `stage` | string | `any` | `any`, `tender`, `award`, `planning`, `earlyEngagement` |
+| `noticeIds` | array | `[]` | Notice GUIDs or URLs for `byNoticeId` |
+| `cpvSector` | string | `any` | One of the 45 CPV root sectors |
+| `cpvCodes` | array | `[]` | CPV codes or numeric prefixes, e.g. `72000000`, `72`; a prefix is padded to its 8-digit parent and matches sub-codes |
+| `regions` | array | `[]` | Delivery regions; empty means every region |
+| `valueFrom` | number | — | Minimum stated value in GBP |
+| `valueTo` | number | — | Maximum stated value in GBP |
+| `publishedFrom` | date | — | First publication on or after this date |
+| `publishedTo` | date | — | First publication on or before this date |
+| `deadlineFrom` | date | — | Tender closing date on or after this date |
+| `deadlineTo` | date | — | Tender closing date on or before this date |
+| `awardedFrom` | date | — | Award date on or after this date |
+| `awardedTo` | date | — | Award date on or before this date |
+| `approachMarketFrom` | date | — | Approach-to-market date on or after this date |
+| `approachMarketTo` | date | — | Approach-to-market date on or before this date |
+| `buyerContains` | string | — | Buyer name contains this text |
+| `suitableForSme` | boolean | `false` | Only notices suitable for SMEs |
+| `suitableForVcse` | boolean | `false` | Only notices suitable for VCSEs |
+| `awardedToSme` | boolean | `false` | Only awards to an SME |
+| `awardedToVcse` | boolean | `false` | Only awards to a VCSE |
+| `subcontractOnly` | boolean | `false` | Only subcontract / supply-chain notices |
+| `onlyOpen` | boolean | `false` | Only Open notices with a future deadline |
+| `sortOrder` | string | `publishedAt:DESC` | `relevance`, publication, value, deadline, award or contract-end order |
+| `maxItems` | integer | `50` | Hard cap on emitted records (1-2000) |
+| `includeDetails` | boolean | `true` | Fetch full notice details in batches |
+| `dedupeByOcid` | boolean | `false` | Keep the latest release per procurement where an `ocid` exists |
 
-### Example: latest published notices
+The daily test prefill is the smallest run with output: `recent`, keyword `IT services`, status `active`, `maxItems` 3 and `includeDetails` off.
+
+## Examples
+
+Newest notices, full detail:
 
 ```json
 {
   "mode": "recent",
-  "maxItems": 50
+  "maxItems": 50,
+  "includeDetails": true
 }
 ```
 
-### Example: search by keyword, highest value first
+Open IT tenders in London:
 
 ```json
 {
   "mode": "search",
-  "searchQuery": "construction",
-  "sortOrder": "value.amount:DESC",
+  "searchQuery": "software",
+  "stage": "tender",
+  "status": "Open",
+  "cpvSector": "72000000",
+  "regions": ["London"],
+  "onlyOpen": true,
   "maxItems": 100
 }
 ```
 
-### Example: all currently active tenders
+Awards in the last quarter, highest value first:
 
 ```json
 {
-  "mode": "byStatus",
-  "status": "active",
+  "mode": "search",
+  "stage": "award",
+  "status": "Awarded",
+  "publishedFrom": "2026-08-01",
+  "publishedTo": "2026-10-31",
+  "sortOrder": "value.amount:DESC",
+  "includeDetails": true,
   "maxItems": 200
 }
 ```
 
-## Use cases
+Specific notices by URL:
 
-- **SME bid alerts** — monitor newly published notices in a sector before the tender deadline passes
-- **Procurement analytics** — track contract value and award trends across buyers and sectors
-- **Supplier intelligence** — see which suppliers are winning contracts with which buyers
-- **Public spending research** — build a dataset of government spend by department or local authority
-- **Sales targeting** — identify buyers currently running live tenders in your category
+```json
+{
+  "mode": "byNoticeId",
+  "noticeIds": [
+    "https://www.contractsfinder.service.gov.uk/notice/43e6be48-00b9-4c6c-b7ae-ffad2f0b099b"
+  ],
+  "includeDetails": true
+}
+```
+
+Legacy input still works:
+
+```json
+{
+  "mode": "byStatus",
+  "status": "complete",
+  "maxItems": 20
+}
+```
+
+## Output fields
+
+- **Identity** — `noticeId`, `noticeIdentifier`, `ocidId`, `releaseId`, `releaseTags`, `stage`, `noticeType`, `noticeStatus`, `status`
+- **Notice** — `title`, `description`, `additionalText`, `sector`, `procurementMethod`, `procurementMethodDetails`, `procurementCategory`, `frameworkAgreement`, `extensionPossible`
+- **Buyer** — `buyer`, `buyerId`, `buyerContactName`, `buyerEmail`, `buyerPhone`, `buyerAddress`, `buyerTown`, `buyerPostcode`, `buyerCountry`, `buyerWebsite`
+- **Money** — `valueAmount`, `valueLow`, `valueHigh`, `valueCurrency`, `awardedValue`, `awardedCurrency`
+- **Classification** — `cpvCodes`, `cpvDescriptions`, `cpvCategories`
+- **Delivery** — `deliveryRegions`, `deliveryPostcode`, `locationLat`, `locationLon`, `nationwide`, `subcontract`, `supplyChain`
+- **Dates** — `publishedDate`, `publishedAt`, `tenderEndDate`, `deadlineDate`, `approachMarketDate`, `awardedDate`, `contractStartDate`, `contractEndDate`, `lastUpdatedDate`, `withdrawnDate`
+- **Awards** — `supplierName`, `supplierNames`, `supplierAddress`, `supplierDuns`, `supplierId`, `supplierCountry`, `awardStatus`, `awards[]`
+- **Documents** — `documents[]` with title, URL, type, format and filename
+- **Suitability** — `suitableForSme`, `suitableForVcse`, `awardedToSme`, `awardedToVcse`
+- **Provenance** — `sourceUrl`, `license`, `recordType`, `scrapedAt`
+
+## Limitations
+
+- **Search API cap.** The keyword Search API returns at most 1,000 matches per request even when it reports more hits. Narrow the filters, split the date range, or use `recent` (OCDS cursor pages) when you need a long continuous window.
+- **Buyer filter cap.** `buyerContains` is applied to the first 1,000 search candidates because the API has no buyer field. Add a keyword or narrow the dates/CPV when the buyer is rare.
+- **OCID coverage.** The Search API and the full-notice endpoint do not expose the OCDS `ocid`. `ocidId`, `releaseId` and `releaseTags` are filled by `recent`; Search and by-ID records carry `noticeId` and omit `ocidId`.
+- **Detail enrichment.** `includeDetails` adds one batch request per 50 notices. Turning it off is faster but omits buyer contacts, award detail and documents.
+- **Notices without values.** Notices that publish no value are dropped when a value filter is set. The actor never guesses a value.
+- **Sorting window.** The APIs have no sort parameter. Value, deadline, award and contract-end sorts are applied to the fetched candidate window (up to 1,000 search results or the recent scan cap), not to the entire history.
+- **Service limits.** Contracts Finder applies rate limits. The actor paces its requests and waits when asked; a long run can therefore be slow.
+- **Implementation stage.** The OCDS feed includes implementation releases in `recent` with `status: any`; the keyword Search API has no reliable implementation-only filter, so `implementation` is not a stage option.
+- **Scope.** This actor covers Contracts Finder. Find a Tender is a separate service and is not read here.
 
 ## FAQ
 
-**Is this official UK government data?**
-Yes — notices come from Contracts Finder, the Cabinet Office's own procurement transparency service, published under the Open Government Licence; this actor is an independent tool for reading that public data, not operated by the UK government.
+**Is this official data?**
+Yes. Notices come from Contracts Finder, the Cabinet Office's public procurement service, under the Open Government Licence v3.0.
 
-**What contracts are included?**
-Public-sector contracts above the mandatory transparency threshold — central government, NHS, local authorities, universities and housing associations among others.
+**Why is `ocidId` missing on some rows?**
+The keyword search and full-notice APIs do not publish it. `recent` rows include it because the OCDS feed does.
 
-**Why do some contracts have no `supplierName`?**
-Supplier details only appear once a contract reaches award stage. Notices that are still open for tender won't have a supplier yet.
+**Why do `closed` and `cancelled` still work?**
+Legacy enum values are mapped in code to `Closed` and `Withdrawn`, which the Search API supports.
 
-**Why are `valueAmount` or `cpvCategories` sometimes missing?**
-Not every notice discloses a contract value or assigns CPV classification codes; those fields are left out rather than shown as zero or empty.
+**Why is `supplierName` missing?**
+Supplier details appear only once a contract has an award notice. Open tenders have no winner yet.
 
-**What's the difference between `recent` and `search` with no keyword?**
-`recent` returns the newest notices across every stage, regardless of keyword. `search` only looks at tender-stage notices and filters them by `searchQuery`; use `recent` when you just want the latest feed.
+**Can I get more than 1,000 search results?**
+Split the query by date, region or CPV sector, or use `recent` with a date window and client-side filters.
 
-**How current is the data?**
-Contracts Finder publishes new notices daily; each run reads the live feed, so results reflect whatever has been published at run time.
-
-**Can I filter by buyer or region directly?**
-Not as a dedicated input field — use `searchQuery` with the buyer or region name as a keyword, since Contracts Finder's own search matches against notice text including buyer names.
-
-**Do `closed` and `cancelled` return results in `byStatus` mode?**
-In practice, live notices only ever carry a `tender.status` of `active` (open tenders) or `complete` (awarded contracts), so those two statuses are the reliable choices; `closed` and `cancelled` currently match no live notices.
+**Does the actor need cookies or a proxy?**
+No. All data comes from public JSON APIs with no login, key or proxy.

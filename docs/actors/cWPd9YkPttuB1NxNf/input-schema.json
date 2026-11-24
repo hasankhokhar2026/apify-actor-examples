@@ -1,0 +1,96 @@
+{
+  "description": "Search active auctions, browse by make, fetch listing details, or explore completed auction results from bringatrailer.com.",
+  "properties": {
+    "make": {
+      "description": "Car manufacturer for mode=byMake. Examples: porsche, bmw, ferrari, ford, toyota. Use the make slug as it appears in the BaT URL (e.g. 'porsche' for bringatrailer.com/porsche/).",
+      "editor": "textfield",
+      "title": "Car make",
+      "type": "string"
+    },
+    "maxBid": {
+      "description": "Only include listings with a current bid at or below this amount.",
+      "minimum": 0,
+      "title": "Max current bid (USD)",
+      "type": "number"
+    },
+    "maxItems": {
+      "default": 20,
+      "description": "Maximum number of listings to return.",
+      "maximum": 500,
+      "minimum": 1,
+      "prefill": 20,
+      "title": "Max items",
+      "type": "integer"
+    },
+    "maxYear": {
+      "description": "Only include listings from this year or older.",
+      "maximum": 2025,
+      "minimum": 1900,
+      "title": "Max year filter",
+      "type": "integer"
+    },
+    "minBid": {
+      "description": "Only include listings with a current bid at or above this amount.",
+      "minimum": 0,
+      "title": "Min current bid (USD)",
+      "type": "number"
+    },
+    "minYear": {
+      "description": "Only include listings from this year or newer.",
+      "maximum": 2025,
+      "minimum": 1900,
+      "title": "Min year filter",
+      "type": "integer"
+    },
+    "mode": {
+      "default": "search",
+      "description": "What to scrape.",
+      "editor": "select",
+      "enum": [
+        "search",
+        "byMake",
+        "getListing",
+        "results",
+        "featured"
+      ],
+      "enumTitles": [
+        "Search active auctions by keyword/make/model",
+        "Browse all listings for a specific car make",
+        "Get full details for specific listing URL(s)",
+        "Browse recently completed auction results",
+        "Currently featured / spotlight auctions"
+      ],
+      "prefill": "search",
+      "title": "Mode",
+      "type": "string"
+    },
+    "searchQuery": {
+      "description": "Keyword to search (make, model, year). Used in mode=search. Examples: 'porsche 911', 'bmw e30', '1967 mustang'.",
+      "editor": "textfield",
+      "prefill": "porsche",
+      "title": "Search query",
+      "type": "string"
+    },
+    "sold": {
+      "default": false,
+      "description": "In mode=results: if true, only include listings that sold (exclude no-sale results).",
+      "prefill": false,
+      "title": "Include sold only",
+      "type": "boolean"
+    },
+    "startUrls": {
+      "default": [],
+      "description": "One or more listing page URLs for mode=getListing. Example: https://bringatrailer.com/listing/1993-porsche-911-carrera-2-coupe-26/",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Listing URLs (mode=getListing)",
+      "type": "array"
+    }
+  },
+  "required": [
+    "mode"
+  ],
+  "schemaVersion": 1,
+  "title": "Bring a Trailer Car Auctions Scraper Input",
+  "type": "object"
+}

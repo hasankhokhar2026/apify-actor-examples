@@ -1,0 +1,597 @@
+{
+  "description": "Search jobs.ac.uk by keyword/location/discipline/contract filters, or fetch specific job posting URLs directly.",
+  "properties": {
+    "academicDisciplines": {
+      "default": [],
+      "description": "Filter to one or more academic subject areas.",
+      "editor": "select",
+      "items": {
+        "enum": [
+          "agriculture-food-and-veterinary",
+          "architecture-building-and-planning",
+          "biological-sciences",
+          "business-and-management-studies",
+          "computer-sciences",
+          "creative-arts-and-design",
+          "economics",
+          "education-studies-inc-tefl",
+          "engineering-and-technology",
+          "health-and-medical",
+          "historical-and-philosophical-studies",
+          "information-management-and-librarianship",
+          "languages-literature-and-culture",
+          "law",
+          "mathematics-and-statistics",
+          "media-and-communications",
+          "physical-and-environmental-sciences",
+          "politics-and-government",
+          "psychology",
+          "social-sciences-and-social-care",
+          "sport-and-leisure"
+        ],
+        "enumTitles": [
+          "Agriculture, Food & Veterinary",
+          "Architecture, Building & Planning",
+          "Biological Sciences",
+          "Business & Management Studies",
+          "Computer Sciences",
+          "Creative Arts & Design",
+          "Economics",
+          "Education Studies (inc. TEFL)",
+          "Engineering & Technology",
+          "Health & Medical",
+          "Historical & Philosophical Studies",
+          "Information Management & Librarianship",
+          "Languages, Literature & Culture",
+          "Law",
+          "Mathematics & Statistics",
+          "Media & Communications",
+          "Physical & Environmental Sciences",
+          "Politics & Government",
+          "Psychology",
+          "Social Sciences & Social Care",
+          "Sport & Leisure"
+        ],
+        "type": "string"
+      },
+      "prefill": [],
+      "title": "Academic disciplines",
+      "type": "array"
+    },
+    "academicSubDisciplines": {
+      "default": [],
+      "description": "Filter to one or more narrower academic sub-fields (e.g. Cyber Security within Computer Sciences). Independent of `academicDisciplines` -- can be used alone or combined.",
+      "editor": "select",
+      "items": {
+        "enum": [
+          "agriculture",
+          "food-science",
+          "forestry",
+          "veterinary-science",
+          "architecture-and-building",
+          "urban-and-rural-planning",
+          "biochemistry",
+          "biology",
+          "botany",
+          "genetics",
+          "microbiology",
+          "molecular-biology-and-biophysics",
+          "other-biological-sciences",
+          "zoology",
+          "accountancy-and-finance",
+          "business-studies",
+          "hospitality-and-leisure",
+          "human-resources-management",
+          "management",
+          "marketing",
+          "other-business-and-management-studies",
+          "real-estate-management",
+          "artificial-intelligence",
+          "computer-science",
+          "cyber-security",
+          "information-systems",
+          "software-engineering",
+          "design",
+          "fine-art",
+          "music",
+          "other-creative-arts",
+          "performing-arts",
+          "education-studies-education",
+          "research-methods",
+          "teacher-training",
+          "tefl-tesol",
+          "aerospace-engineering",
+          "biotechnology",
+          "chemical-engineering",
+          "civil-engineering",
+          "electrical-and-electronic-engineering",
+          "maritime-technology",
+          "mechanical-engineering",
+          "metallurgy-and-minerals-technology",
+          "other-engineering",
+          "production-engineering-and-manufacturing",
+          "anatomy-physiology-and-pathology",
+          "medical-technology",
+          "medicine-and-dentistry",
+          "nursing",
+          "nutrition",
+          "pharmacology-toxicology-and-pharmacy",
+          "archaeology",
+          "history",
+          "history-of-art",
+          "philosophy",
+          "theology-and-religious-studies",
+          "curatorial-studies",
+          "information-science",
+          "librarianship",
+          "other-information-management-and-librarianship",
+          "classics",
+          "cultural-studies",
+          "languages",
+          "linguistics",
+          "literature",
+          "mathematics",
+          "statistics",
+          "communication-studies",
+          "journalism",
+          "media-studies",
+          "publishing",
+          "chemistry",
+          "environmental-sciences",
+          "geography",
+          "geology",
+          "materials-science",
+          "ocean-sciences",
+          "other-physical-sciences",
+          "physics-and-astronomy",
+          "anthropology",
+          "human-and-social-geography",
+          "other-social-sciences",
+          "social-policy",
+          "social-work",
+          "sociology",
+          "sports-and-leisure-management",
+          "sports-coaching",
+          "sports-science"
+        ],
+        "enumTitles": [
+          "Agriculture",
+          "Food Science",
+          "Forestry",
+          "Veterinary Science",
+          "Architecture & Building",
+          "Urban & Rural Planning",
+          "Biochemistry",
+          "Biology",
+          "Botany",
+          "Genetics",
+          "Microbiology",
+          "Molecular Biology & Biophysics",
+          "Other Biological Sciences",
+          "Zoology",
+          "Accountancy & Finance",
+          "Business Studies",
+          "Hospitality & Leisure",
+          "Human Resources Management",
+          "Management",
+          "Marketing",
+          "Other Business & Management Studies",
+          "Real Estate Management",
+          "Artificial Intelligence",
+          "Computer Science",
+          "Cyber Security",
+          "Information Systems",
+          "Software Engineering",
+          "Design",
+          "Fine Art",
+          "Music",
+          "Other Creative Arts",
+          "Performing Arts",
+          "Education Studies",
+          "Research Methods",
+          "Teacher Training",
+          "TEFL/TESOL",
+          "Aerospace Engineering",
+          "Biotechnology",
+          "Chemical Engineering",
+          "Civil Engineering",
+          "Electrical & Electronic Engineering",
+          "Maritime Technology",
+          "Mechanical Engineering",
+          "Metallurgy & Minerals Technology",
+          "Other Engineering",
+          "Production Engineering & Manufacturing",
+          "Anatomy, Physiology & Pathology",
+          "Medical Technology",
+          "Medicine & Dentistry",
+          "Nursing",
+          "Nutrition",
+          "Pharmacology, Toxicology & Pharmacy",
+          "Archaeology",
+          "History",
+          "History of Art",
+          "Philosophy",
+          "Theology & Religious Studies",
+          "Curatorial Studies",
+          "Information Science",
+          "Librarianship",
+          "Other Information Management & Librarianship",
+          "Classics",
+          "Cultural Studies",
+          "Languages",
+          "Linguistics",
+          "Literature",
+          "Mathematics",
+          "Statistics",
+          "Communication Studies",
+          "Journalism",
+          "Media Studies",
+          "Publishing",
+          "Chemistry",
+          "Environmental Sciences",
+          "Geography",
+          "Geology",
+          "Materials Science",
+          "Ocean Sciences",
+          "Other Physical Sciences",
+          "Physics & Astronomy",
+          "Anthropology",
+          "Human & Social Geography",
+          "Other Social Sciences",
+          "Social Policy",
+          "Social Work",
+          "Sociology",
+          "Sports & Leisure Management",
+          "Sports Coaching",
+          "Sports Science"
+        ],
+        "type": "string"
+      },
+      "prefill": [],
+      "title": "Academic sub-disciplines",
+      "type": "array"
+    },
+    "contractTypes": {
+      "default": [],
+      "description": "Filter by contract type.",
+      "editor": "select",
+      "items": {
+        "enum": [
+          "permanent",
+          "fixed-term-contract",
+          "temporary"
+        ],
+        "enumTitles": [
+          "Permanent",
+          "Fixed-term contract",
+          "Temporary"
+        ],
+        "type": "string"
+      },
+      "prefill": [],
+      "title": "Contract type",
+      "type": "array"
+    },
+    "distanceMiles": {
+      "default": 0,
+      "description": "Sent to jobs.ac.uk alongside `location`, but the site only honors a mile-radius when `location` was resolved through its browser-side autocomplete widget (not available to a server-side scraper), so this has no effect on which jobs are returned. Kept for forward-compatibility only; use a broader/narrower `location` string to widen or narrow results instead.",
+      "editor": "number",
+      "maximum": 250,
+      "minimum": 0,
+      "prefill": 0,
+      "title": "Search radius (miles) - advisory only",
+      "type": "integer"
+    },
+    "employerSectors": {
+      "default": [],
+      "description": "Filter by type of hiring organisation.",
+      "editor": "select",
+      "items": {
+        "enum": [
+          "charity-not-for-profit",
+          "commercial-organisations",
+          "further-education",
+          "public-sector",
+          "science-and-research-organisations",
+          "universities-higher-education-institutions"
+        ],
+        "enumTitles": [
+          "Charity / not-for-profit",
+          "Commercial organisations",
+          "Further education",
+          "Public sector",
+          "Science & research organisations",
+          "Universities / higher education institutions"
+        ],
+        "type": "string"
+      },
+      "prefill": [],
+      "title": "Employer sector",
+      "type": "array"
+    },
+    "fetchFullDescription": {
+      "default": true,
+      "description": "Visit each job's detail page to include the full description, structured salary, employment type and closing date. Slower but much richer output. Always on for mode=byUrls.",
+      "prefill": true,
+      "title": "Fetch full job description",
+      "type": "boolean"
+    },
+    "fundingTypes": {
+      "default": [],
+      "description": "For postgraduate study listings: restrict by funding eligibility.",
+      "editor": "select",
+      "items": {
+        "enum": [
+          "eu-students",
+          "international-students",
+          "self-funded-students",
+          "uk-students"
+        ],
+        "enumTitles": [
+          "EU students",
+          "International students",
+          "Self-funded students",
+          "UK students"
+        ],
+        "type": "string"
+      },
+      "prefill": [],
+      "title": "PhD funding type",
+      "type": "array"
+    },
+    "hoursTypes": {
+      "default": [],
+      "description": "Filter by working hours.",
+      "editor": "select",
+      "items": {
+        "enum": [
+          "full-time",
+          "part-time"
+        ],
+        "enumTitles": [
+          "Full time",
+          "Part time"
+        ],
+        "type": "string"
+      },
+      "prefill": [],
+      "title": "Hours",
+      "type": "array"
+    },
+    "jobTypes": {
+      "default": [],
+      "description": "Restrict to Masters or PhD study opportunities instead of staff jobs.",
+      "editor": "select",
+      "items": {
+        "enum": [
+          "masters",
+          "phds"
+        ],
+        "enumTitles": [
+          "Masters",
+          "PhDs"
+        ],
+        "type": "string"
+      },
+      "prefill": [],
+      "title": "Postgraduate study type",
+      "type": "array"
+    },
+    "jobUrls": {
+      "default": [],
+      "description": "Direct jobs.ac.uk job posting URLs to fetch, e.g. `https://www.jobs.ac.uk/job/DSI921/senior-statistical-analyst`.",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Job URLs (mode=byUrls)",
+      "type": "array"
+    },
+    "keywords": {
+      "description": "Free-text search terms (job title, skill, employer name). Leave empty to browse by discipline/filters only.",
+      "editor": "textfield",
+      "prefill": "research",
+      "title": "Keywords",
+      "type": "string"
+    },
+    "location": {
+      "description": "UK town/city, region, or country text to filter jobs by (e.g. `London`, `Manchester`, `Scotland`). Matched as a case-insensitive substring against each job's advertised location - jobs.ac.uk's own distance-radius search requires a browser-only autocomplete widget with no free server-side equivalent, so this is a text match rather than a precise mile radius.",
+      "editor": "textfield",
+      "title": "Location",
+      "type": "string"
+    },
+    "locationFacet": {
+      "description": "A single jobs.ac.uk location facet, as a real working server-side filter (unlike `location`/`distanceMiles` above). Use a continent (`Europe`), country (`United Kingdom`, `Ireland`, `United States`), UK nation (`England`, `Scotland`, `Wales`, `Northern Ireland`) or UK county/city-region (`Greater London`, `Oxfordshire`, `Greater Manchester`, `Cambridgeshire`, etc.) - free text is auto-slugified (e.g. `Greater London` -> `greater-london`). Only ONE value is honored meaningfully: jobs.ac.uk ANDs multiple location facets together, and since a job only has one location, combining two different regions always yields 0 results - so pass a single region per run. An unrecognized value simply yields 0 results rather than erroring.",
+      "editor": "textfield",
+      "title": "Location region/country filter (exact match)",
+      "type": "string"
+    },
+    "maxItems": {
+      "default": 25,
+      "description": "Hard cap on emitted records.",
+      "maximum": 1000,
+      "minimum": 1,
+      "prefill": 25,
+      "title": "Max items",
+      "type": "integer"
+    },
+    "mode": {
+      "default": "search",
+      "description": "What to fetch.",
+      "editor": "select",
+      "enum": [
+        "search",
+        "byUrls"
+      ],
+      "enumTitles": [
+        "Search / browse jobs",
+        "Fetch specific job URLs"
+      ],
+      "prefill": "search",
+      "title": "Mode",
+      "type": "string"
+    },
+    "nonAcademicDisciplines": {
+      "default": [],
+      "description": "Filter to one or more professional-services job families (HE administration, IT, HR, etc.).",
+      "editor": "select",
+      "items": {
+        "enum": [
+          "administrative",
+          "estates-and-facilities-management",
+          "finance-and-procurement",
+          "fundraising-alumni-bids-and-grants",
+          "health-wellbeing-and-care",
+          "hospitality-retail-conferences-and-events",
+          "human-resources",
+          "international-activities",
+          "it-services",
+          "laboratory-clinical-and-technician",
+          "legal-compliance-and-policy",
+          "library-services-data-and-information-management",
+          "pr-marketing-sales-and-communication",
+          "project-management-and-consulting",
+          "senior-management",
+          "sports-and-leisure",
+          "student-services",
+          "sustainability",
+          "web-design-and-development",
+          "other"
+        ],
+        "enumTitles": [
+          "Administrative",
+          "Estates & Facilities Management",
+          "Finance & Procurement",
+          "Fundraising, Alumni, Bids & Grants",
+          "Health, Wellbeing & Care",
+          "Hospitality, Retail, Conferences & Events",
+          "Human Resources",
+          "International Activities",
+          "IT Services",
+          "Laboratory, Clinical & Technician",
+          "Legal, Compliance & Policy",
+          "Library Services, Data & Information Management",
+          "PR, Marketing, Sales & Communication",
+          "Project Management & Consulting",
+          "Senior Management",
+          "Sports & Leisure",
+          "Student Services",
+          "Sustainability",
+          "Web Design & Development",
+          "Other"
+        ],
+        "type": "string"
+      },
+      "prefill": [],
+      "title": "Professional / non-academic disciplines",
+      "type": "array"
+    },
+    "qualificationTypes": {
+      "default": [],
+      "description": "For postgraduate study listings: restrict by qualification type.",
+      "editor": "select",
+      "items": {
+        "enum": [
+          "integrated-masters-doctorate",
+          "international-doctorate",
+          "phd",
+          "professional-doctorate"
+        ],
+        "enumTitles": [
+          "Integrated Masters + Doctorate",
+          "International Doctorate",
+          "PhD",
+          "Professional Doctorate"
+        ],
+        "type": "string"
+      },
+      "prefill": [],
+      "title": "PhD qualification type",
+      "type": "array"
+    },
+    "salaryBands": {
+      "default": [],
+      "description": "Filter by advertised annual salary band (GBP).",
+      "editor": "select",
+      "items": {
+        "enum": [
+          "up-to-9999",
+          "10000-14999",
+          "15000-19999",
+          "20000-24999",
+          "25000-29999",
+          "30000-39999",
+          "40000-49999",
+          "50000-59999",
+          "60000-69999",
+          "70000-79999",
+          "80000-89999",
+          "90000-99999",
+          "over-100000"
+        ],
+        "enumTitles": [
+          "Up to £9,999",
+          "£10,000 - £14,999",
+          "£15,000 - £19,999",
+          "£20,000 - £24,999",
+          "£25,000 - £29,999",
+          "£30,000 - £39,999",
+          "£40,000 - £49,999",
+          "£50,000 - £59,999",
+          "£60,000 - £69,999",
+          "£70,000 - £79,999",
+          "£80,000 - £89,999",
+          "£90,000 - £99,999",
+          "Over £100,000"
+        ],
+        "type": "string"
+      },
+      "prefill": [],
+      "title": "Salary band",
+      "type": "array"
+    },
+    "sortOrder": {
+      "default": "relevance",
+      "description": "Result ordering.",
+      "editor": "select",
+      "enum": [
+        "relevance",
+        "datePlaced",
+        "closingDate"
+      ],
+      "enumTitles": [
+        "Relevance",
+        "Date placed (newest first)",
+        "Closing date (soonest first)"
+      ],
+      "prefill": "relevance",
+      "title": "Sort by",
+      "type": "string"
+    },
+    "workplaceTypes": {
+      "default": [],
+      "description": "Filter by remote/hybrid/on-site working arrangement.",
+      "editor": "select",
+      "items": {
+        "enum": [
+          "hybrid",
+          "remote",
+          "on-site"
+        ],
+        "enumTitles": [
+          "Hybrid",
+          "Remote",
+          "On-site"
+        ],
+        "type": "string"
+      },
+      "prefill": [],
+      "title": "Workplace",
+      "type": "array"
+    }
+  },
+  "required": [
+    "mode"
+  ],
+  "schemaVersion": 1,
+  "title": "Jobs.ac.uk Academic Jobs Scraper Input",
+  "type": "object"
+}
