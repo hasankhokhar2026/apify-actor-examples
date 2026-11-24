@@ -2,8 +2,16 @@
   "actorSpecification": 1,
   "fields": {
     "properties": {
+      "aiSummary": {
+        "description": "Mobile.de AI summary (detail mode)",
+        "type": "object"
+      },
+      "attributes": {
+        "description": "Full spec table (detail mode)",
+        "type": "array"
+      },
       "bodyType": {
-        "description": "Body type",
+        "description": "Readable body type",
         "type": "string"
       },
       "category": {
@@ -14,6 +22,14 @@
         "description": "CO2 class",
         "type": "string"
       },
+      "co2Emissions": {
+        "description": "CO2 emissions",
+        "type": "string"
+      },
+      "condition": {
+        "description": "New/used/damaged condition text",
+        "type": "string"
+      },
       "consumption": {
         "description": "Combined consumption",
         "type": "string"
@@ -22,20 +38,96 @@
         "description": "Country code",
         "type": "string"
       },
+      "countryVersion": {
+        "description": "Country version",
+        "type": "string"
+      },
       "currency": {
         "description": "Currency code",
         "type": "string"
       },
+      "dealerAdRealityRate": {
+        "description": "Ad-reality percentage",
+        "type": "number"
+      },
+      "dealerConsultingScore": {
+        "description": "Dealer consulting score",
+        "type": "number"
+      },
+      "dealerFriendlinessScore": {
+        "description": "Dealer friendliness score",
+        "type": "number"
+      },
+      "dealerHomepage": {
+        "description": "Dealer's own website resolved from the mobile.de redirect",
+        "type": "string"
+      },
+      "dealerHomepageUrl": {
+        "description": "mobile.de dealer-homepage redirect URL",
+        "type": "string"
+      },
+      "dealerLanguages": {
+        "description": "Languages spoken by the dealer",
+        "type": "string"
+      },
       "dealerName": {
-        "description": "Dealer name",
+        "description": "Seller name",
+        "type": "string"
+      },
+      "dealerOpeningHours": {
+        "description": "Opening hours by day",
+        "type": "array"
+      },
+      "dealerPersonName": {
+        "description": "Dealer contact person",
+        "type": "string"
+      },
+      "dealerPersonRole": {
+        "description": "Dealer contact role",
         "type": "string"
       },
       "dealerPhone": {
-        "description": "Dealer phone number",
+        "description": "Primary phone number",
         "type": "string"
       },
+      "dealerPhones": {
+        "description": "All phone numbers",
+        "type": "array"
+      },
+      "dealerRatingLink": {
+        "description": "Dealer review-page URL",
+        "type": "string"
+      },
+      "dealerRatingTotal": {
+        "description": "Total dealer ratings",
+        "type": "number"
+      },
+      "dealerRecommendationRate": {
+        "description": "Dealer recommendation percentage",
+        "type": "number"
+      },
+      "dealerResponseTimeScore": {
+        "description": "Dealer response-time score",
+        "type": "number"
+      },
+      "dealerReviews": {
+        "description": "Aggregate dealer rating plus recent review entries",
+        "type": "object"
+      },
       "dealerType": {
-        "description": "DEALER or PRIVATE",
+        "description": "Legacy dealer type label",
+        "type": "string"
+      },
+      "dealerWithMobileSince": {
+        "description": "When the dealer joined mobile.de",
+        "type": "string"
+      },
+      "description": {
+        "description": "Seller description as text (detail mode)",
+        "type": "string"
+      },
+      "descriptionHtml": {
+        "description": "Seller description as HTML (detail mode)",
         "type": "string"
       },
       "displacementCcm": {
@@ -51,28 +143,92 @@
         "type": "string"
       },
       "exteriorColor": {
-        "description": "Exterior color",
+        "description": "Exterior colour (English)",
         "type": "string"
+      },
+      "features": {
+        "description": "Full equipment list (detail mode)",
+        "type": "array"
+      },
+      "financePlans": {
+        "description": "Finance offers (detail mode)",
+        "type": "array"
       },
       "firstRegistration": {
         "description": "First registration MM/YYYY",
         "type": "string"
       },
       "fuelType": {
-        "description": "Fuel type",
+        "description": "Fuel type (English)",
         "type": "string"
+      },
+      "hasDamage": {
+        "description": "Listed as damaged",
+        "type": "boolean"
       },
       "id": {
         "description": "Mobile.de listing ID",
         "type": "integer"
       },
-      "location": {
-        "description": "Dealer town",
+      "images": {
+        "description": "All image URLs",
+        "type": "array"
+      },
+      "inspectionValidUntil": {
+        "description": "HU/TÜV validity or New",
         "type": "string"
+      },
+      "isNew": {
+        "description": "New vehicle flag",
+        "type": "boolean"
+      },
+      "isOnStock": {
+        "description": "On-stock flag (detail mode)",
+        "type": "boolean"
+      },
+      "isVideoEnabled": {
+        "description": "Listing has a video",
+        "type": "boolean"
+      },
+      "kbaHsn": {
+        "description": "German KBA HSN code",
+        "type": "string"
+      },
+      "kbaTsn": {
+        "description": "German KBA TSN code",
+        "type": "string"
+      },
+      "latitude": {
+        "description": "Seller latitude",
+        "type": "number"
+      },
+      "listingCreatedAt": {
+        "description": "Listing creation time (ISO 8601)",
+        "type": "string"
+      },
+      "listingModifiedAt": {
+        "description": "Listing modification time (ISO 8601)",
+        "type": "string"
+      },
+      "listingRenewedAt": {
+        "description": "Listing renewal time (ISO 8601)",
+        "type": "string"
+      },
+      "location": {
+        "description": "Seller town",
+        "type": "string"
+      },
+      "longitude": {
+        "description": "Seller longitude",
+        "type": "number"
       },
       "make": {
         "description": "Manufacturer",
         "type": "string"
+      },
+      "makeId": {
+        "description": "Mobile.de make ID",
+        "type": "integer"
       },
       "mileageKm": {
         "description": "Mileage in km",
@@ -82,12 +238,28 @@
         "description": "Model name",
         "type": "string"
       },
+      "modelId": {
+        "description": "Mobile.de model ID",
+        "type": "integer"
+      },
+      "noRatingReason": {
+        "description": "Why mobile.de could not rate the price",
+        "type": "string"
+      },
       "numImages": {
         "description": "Number of photos",
         "type": "integer"
       },
+      "operatingHours": {
+        "description": "Operating hours (machines)",
+        "type": "integer"
+      },
+      "partnerName": {
+        "description": "Partner site name",
+        "type": "string"
+      },
       "postalCode": {
-        "description": "Dealer postal code",
+        "description": "Seller postal code",
         "type": "string"
       },
       "powerHp": {
@@ -107,15 +279,47 @@
         "type": "integer"
       },
       "price": {
-        "description": "Gross price (integer, native currency)",
+        "description": "Gross price (native currency)",
         "type": "integer"
       },
       "priceFormatted": {
-        "description": "Formatted price",
+        "description": "Formatted gross price",
         "type": "string"
       },
+      "priceNet": {
+        "description": "Net price when shown separately",
+        "type": "integer"
+      },
+      "priceNote": {
+        "description": "Price note / delivery",
+        "type": "string"
+      },
+      "pricePreviousAmount": {
+        "description": "Previous gross price when reduced",
+        "type": "integer"
+      },
       "priceRating": {
-        "description": "Price rating",
+        "description": "Mobile.de price rating code",
+        "type": "string"
+      },
+      "priceRatingLabel": {
+        "description": "Localized price rating label",
+        "type": "string"
+      },
+      "priceRatingPosition": {
+        "description": "Price position versus the rating bands",
+        "type": "integer"
+      },
+      "priceRatingThresholds": {
+        "description": "Six fair-value price thresholds",
+        "type": "array"
+      },
+      "priceType": {
+        "description": "FIXED, NEGOTIABLE, ...",
+        "type": "string"
+      },
+      "reason": {
+        "description": "Diagnostic reason when no vehicles were returned",
         "type": "string"
       },
       "scrapedAt": {
@@ -126,38 +330,102 @@
         "description": "Seat count",
         "type": "integer"
       },
+      "segment": {
+        "description": "Mobile.de segment",
+        "type": "string"
+      },
+      "sellerAddress": {
+        "description": "Seller address",
+        "type": "string"
+      },
+      "sellerCity": {
+        "description": "Seller city",
+        "type": "string"
+      },
+      "sellerCountry": {
+        "description": "Seller country",
+        "type": "string"
+      },
+      "sellerId": {
+        "description": "Mobile.de seller ID",
+        "type": "integer"
+      },
+      "sellerRating": {
+        "description": "Seller rating score",
+        "type": "number"
+      },
+      "sellerRatingCount": {
+        "description": "Seller rating count",
+        "type": "integer"
+      },
+      "sellerType": {
+        "description": "DEALER, PRIVATE or COMMERCIAL",
+        "type": "string"
+      },
       "shortTitle": {
         "description": "Short title",
         "type": "string"
       },
+      "similarAds": {
+        "description": "Compact similar-vehicle ads",
+        "type": "array"
+      },
+      "similarAdsTotal": {
+        "description": "Total similar ads reported by mobile.de",
+        "type": "integer"
+      },
+      "site": {
+        "description": "Diagnostic site name",
+        "type": "string"
+      },
+      "sku": {
+        "description": "Dealer stock keeping unit",
+        "type": "string"
+      },
+      "status": {
+        "description": "Diagnostic status when no vehicles were returned",
+        "type": "string"
+      },
       "subTitle": {
-        "description": "Variant / trim level",
+        "description": "Variant / trim text",
         "type": "string"
       },
       "title": {
         "description": "Full title (make + model + variant)",
         "type": "string"
       },
+      "totalCount": {
+        "description": "Total matches reported by mobile.de for the search that produced this row",
+        "type": "integer"
+      },
       "transmission": {
-        "description": "Transmission type",
+        "description": "Transmission (English)",
         "type": "string"
       },
       "url": {
         "description": "Full listing URL",
         "type": "string"
       },
+      "vatRate": {
+        "description": "VAT rate percentage",
+        "type": "number"
+      },
       "vehicleClass": {
         "description": "Vehicle class code",
         "type": "string"
       },
+      "weightKg": {
+        "description": "Weight in kg",
+        "type": "integer"
+      },
       "yearConstructed": {
-        "description": "Year of first registration",
+        "description": "Year of first registration / construction",
         "type": "integer"
       }
     },
     "type": "object"
   },
-  "title": "Mobile.de Cars",
+  "title": "Mobile.de Vehicles",
   "views": {
     "detailed": {
       "display": {
@@ -170,6 +438,10 @@
           "category": {
             "format": "text",
             "label": "Category"
+          },
+          "condition": {
+            "format": "text",
+            "label": "Condition"
           },
           "consumption": {
             "format": "text",
@@ -187,10 +459,6 @@
             "format": "text",
             "label": "Phone"
           },
-          "dealerType": {
-            "format": "text",
-            "label": "Dealer Type"
-          },
           "displacementCcm": {
             "format": "number",
             "label": "CCM"
@@ -205,7 +473,7 @@
           },
           "exteriorColor": {
             "format": "text",
-            "label": "Color"
+            "label": "Colour"
           },
           "fuelType": {
             "format": "text",
@@ -215,9 +483,21 @@
             "format": "number",
             "label": "ID"
           },
+          "latitude": {
+            "format": "number",
+            "label": "Lat"
+          },
+          "listingCreatedAt": {
+            "format": "text",
+            "label": "Listed"
+          },
           "location": {
             "format": "text",
             "label": "Location"
+          },
+          "longitude": {
+            "format": "number",
+            "label": "Lon"
           },
           "make": {
             "format": "text",
@@ -243,6 +523,10 @@
             "format": "number",
             "label": "HP"
           },
+          "powerKw": {
+            "format": "number",
+            "label": "kW"
+          },
           "previousOwners": {
             "format": "number",
             "label": "Owners"
@@ -251,21 +535,29 @@
             "format": "number",
             "label": "Price"
           },
-          "priceFormatted": {
-            "format": "text",
-            "label": "Price (fmt)"
+          "priceNet": {
+            "format": "number",
+            "label": "Net"
           },
           "priceRating": {
             "format": "text",
             "label": "Rating"
           },
+          "priceRatingLabel": {
+            "format": "text",
+            "label": "Rating label"
+          },
           "scrapedAt": {
             "format": "text",
-            "label": "Scraped At"
+            "label": "Scraped"
           },
           "seats": {
             "format": "number",
             "label": "Seats"
+          },
+          "sellerType": {
+            "format": "text",
+            "label": "Seller"
           },
           "title": {
             "format": "text",
@@ -278,6 +570,10 @@
           "url": {
             "format": "link",
             "label": "URL"
+          },
+          "vatRate": {
+            "format": "number",
+            "label": "VAT %"
           },
           "yearConstructed": {
             "format": "number",
@@ -294,18 +590,22 @@
           "model",
           "category",
           "price",
-          "priceFormatted",
+          "priceNet",
+          "vatRate",
           "priceRating",
+          "priceRatingLabel",
           "mileageKm",
           "yearConstructed",
           "fuelType",
           "transmission",
+          "powerKw",
           "powerHp",
           "bodyType",
           "exteriorColor",
           "doors",
           "seats",
           "previousOwners",
+          "condition",
           "emissionClass",
           "consumption",
           "displacementCcm",
@@ -313,9 +613,12 @@
           "location",
           "postalCode",
           "country",
+          "sellerType",
           "dealerName",
-          "dealerType",
           "dealerPhone",
+          "latitude",
+          "longitude",
+          "listingCreatedAt",
           "url",
           "scrapedAt"
         ]
@@ -349,6 +652,10 @@
             "format": "text",
             "label": "Price (fmt)"
           },
+          "priceRating": {
+            "format": "text",
+            "label": "Rating"
+          },
           "title": {
             "format": "text",
             "label": "Title"
@@ -373,6 +680,7 @@
           "title",
           "price",
           "priceFormatted",
+          "priceRating",
           "mileageKm",
           "yearConstructed",
           "fuelType",

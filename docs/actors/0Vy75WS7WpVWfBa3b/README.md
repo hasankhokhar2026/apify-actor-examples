@@ -4,112 +4,228 @@
 
 # Mobile.de Vehicle Listings and Price Rating Scraper
 
-Mobile.de is Germany's largest vehicle marketplace, with over a million live listings for cars, vans and estate cars. This actor turns a mobile.de spec page or search URL into a flat dataset of vehicles, each carrying mobile.de's own "is this a good price?" rating alongside full specs and dealer contact details.
+Mobile.de is Germany's largest vehicle marketplace. This actor reads mobile.de's own consumer JSON API without a login, cookie or browser, and turns a filter set, a pasted search URL, or a list of vehicle IDs into clean vehicle records. Each record keeps mobile.de's own price-fairness rating and its six fair-value bands, the gross and net price with VAT, the full spec sheet, seller contact and GPS. An optional detail pass adds the seller's description, the complete equipment list, every photo and the finance offers.
+
+It covers all 13 mobile.de vehicle classes: cars, motorbikes, motorhomes, vans, trucks, tractor units, buses, trailers, semi-trailers, agricultural vehicles, construction machines, forklifts and e-bikes.
 
 ## What this actor does
 
-- Accepts either a mobile.de spec page URL (e.g. `suchen.mobile.de/auto/volkswagen-golf.html`) or a legacy filtered search URL, and walks its result pages up to your requested item count
-- Deduplicates by listing ID, since mobile.de repeats promoted "top ads" across multiple result pages
-- Carries through mobile.de's own price-fairness verdict (`priceRating`) for each vehicle, when the listing has one
-- Keeps numeric fields (price, mileage, power, year, seats, etc.) at `0` when mobile.de didn't disclose a value, and omits text fields entirely when they're missing, so you never have to handle `null`
-- Works without logging in or accepting cookies
-
-## Output per vehicle
-
-### Identity
-- `id` — mobile.de listing ID
-- `url` — full listing URL
-- `title`, `shortTitle`, `subTitle` — full title, make+model only, and the variant/trim text
-- `make`, `model`, `category` — manufacturer, model name, body category (Estate car, Sedan, SUV, etc.)
-- `vehicleClass` — vehicle class code
-
-### Price
-- `price`, `currency`, `priceFormatted` — gross price as an integer, currency code, and mobile.de's formatted price string
-- `priceRating` — `VERY_GOOD_PRICE`, `GOOD_PRICE`, `FAIR_PRICE`, `INCREASED_PRICE` or `HIGH_PRICE`
-
-### Specifications
-- `mileageKm`, `powerKw`, `powerHp`
-- `firstRegistration`, `yearConstructed`
-- `fuelType`, `transmission`, `bodyType`, `exteriorColor`, `doors`, `seats`
-- `previousOwners`
-- `emissionClass`, `co2Class`, `consumption`, `displacementCcm`
-
-### Media and dealer
-- `numImages`, `previewImage`
-- `location`, `postalCode`, `country`
-- `dealerName`, `dealerType` (`DEALER` or `PRIVATE`), `dealerPhone`
-
-### Metadata
-- `scrapedAt` — ISO 8601 scrape timestamp
-
-If mobile.de blocks every access path during a run, the dataset instead gets a single status record with `status` (`blocked` or `error`), `site`, `reason`, and `scrapedAt`.
+- **Search without a URL.** Set a make, model, price range, first-registration year, mileage, power, fuel, gearbox, body type, colour, seller type, condition, emission class or postcode radius. The actor resolves make/model names against mobile.de's own reference data and builds the search.
+- **Paste any mobile.de link.** Search URLs, model/spec pages, listing URLs and dealer links all work, including mixed lists.
+- **Fetch exact vehicles.** Give listing IDs or listing URLs and get those vehicles directly.
+- **Enrich every row.** Turn on `includeDetails` for the seller description, equipment list, full attribute table, gallery and finance plans. Add `includeReviews`, `includeSimilarAds` and `includeDealerProfile` for dealer reviews, similar vehicles, opening hours and the dealer homepage.
+- **Keep the price picture.** Gross price, net price, VAT rate, price type, previous price, mobile.de's rating code and label, its six price thresholds and the no-rating reason when mobile.de cannot judge.
+- **Keep the seller picture.** Seller ID and type, name, all phones, address, town, postcode, country, GPS coordinates and the dealer rating where published.
+- **Stay honest about limits.** mobile.de serves at most 2,000 rows per query; the actor says so and lets you split the query with more search terms or narrower filters.
+- **No nulls.** Numeric legacy fields use their documented zero default; text and optional detail fields are omitted when mobile.de has no value. Images are returned with a working size rule.
 
 ## Input
 
+Every field is optional. A run needs at least one target: filters/keywords, a start URL, or listing IDs.
+
 | Field | Type | Default | Description |
 |---|---|---|---|
-| `startUrls` | array | `["https://suchen.mobile.de/auto/volkswagen-golf.html"]` | Mobile.de spec page URLs or legacy `search.html?...` URLs |
-| `maxItems` | integer | `50` | Maximum number of vehicles to return (1–500) |
-| `proxyConfiguration` | object | Apify RESIDENTIAL (DE) | Used automatically only if the first direct attempt is blocked |
-| `forceResidentialProxy` | boolean | `false` | Skip the direct-connection attempt and use the configured proxy from the first request |
+| `mode` | select | `auto` | `auto`, `search`, `urls` or `details`. Auto infers the mode from the other inputs. |
+| `searchQueries` | array | Any | Free-text terms matched against the listing title and description. Each query runs separately. |
+| `startUrls` | array | `["https://suchen.mobile.de/auto/volkswagen-golf.html"]` | Search, model/spec, listing or dealer URLs. Mixed lists are allowed. |
+| `listingIds` | array | Any | Mobile.de listing IDs or listing URLs to fetch directly. |
+| `vehicleType` | select | `cars` | One of the 13 vehicle classes. |
+| `make` | text | - | Manufacturer as mobile.de spells it. Unknown names fall back to a keyword search. |
+| `model` | text | - | Model or series of the make. |
+| `sellerId` | text | - | Only vehicles from this dealer (mobile.de seller ID). |
+| `country` | select | All countries | Only vehicles offered in this country (DE, AT, CH, NL, FR, IT, PL, ...). |
+| `minPrice` | integer | - | Minimum gross price in EUR. |
+| `maxPrice` | integer | - | Maximum gross price in EUR. |
+| `minYear` | integer | - | Earliest first-registration year. |
+| `maxYear` | integer | - | Latest first-registration year. |
+| `minMileage` | integer | - | Minimum mileage in km. |
+| `maxMileage` | integer | - | Maximum mileage in km. |
+| `minPowerKw` | integer | - | Minimum power in kW. |
+| `maxPowerKw` | integer | - | Maximum power in kW. |
+| `minEngineCc` | integer | - | Minimum engine displacement in ccm. |
+| `maxEngineCc` | integer | - | Maximum engine displacement in ccm. |
+| `minSeats` | integer | - | Minimum number of seats. |
+| `maxSeats` | integer | - | Maximum number of seats. |
+| `fuelType` | multi-select | Any | Petrol, diesel, electric, hybrid, diesel hybrid, CNG, LPG, hydrogen, ethanol, other. |
+| `transmission` | multi-select | Any | Automatic, manual, semi-automatic. |
+| `bodyType` | multi-select | Any | Car body types: saloon, estate, SUV/off-road, small car, convertible, sports car, van, other. |
+| `color` | multi-select | Any | Exterior colours: beige, blue, brown, yellow, gold, green, grey, orange, red, black, silver, purple, white. |
+| `sellerType` | select | All sellers | Dealer, private seller or company vehicles. |
+| `condition` | select | Any condition | New or used. |
+| `emissionClass` | select | Any emission class | Euro 1 through Euro 7, including 6c, 6d-TEMP, 6d and 6e. |
+| `previousOwners` | select | Any number of owners | Up to 1, 2, 3 or 4 previous owners. |
+| `priceRating` | multi-select | Any | Very good price, good price or fair price (cars only). |
+| `onlineSinceDays` | select | Any time | Last 1, 3, 7 or 14 days. |
+| `inspectionValidMonths` | select | Any | New inspection, or at least 3, 6, 9, 12 or 18 months of HU/TÜV validity. |
+| `adOptions` | multi-select | Any | Ads with pictures, video, discount offers or leasing. |
+| `driveType` | select | Any drive type | All-wheel, front-wheel or rear-wheel drive. |
+| `climatisation` | select | Any climatisation | No climate control, manual/automatic, or automatic with 2, 3 or 4 zones. |
+| `doors` | select | Any number of doors | 2/3, 4/5 or 6/7 doors (cars only). |
+| `interiorColor` | select | Any interior colour | Beige, black, blue, brown, grey, red or other. |
+| `usedCarSeal` | select | Any programme | Manufacturer approved-used programmes such as BMW Premium Selection or Porsche Approved. |
+| `damagedOnly` | boolean | `false` | Keep only listings marked as damaged. |
+| `vatReclaimableOnly` | boolean | `false` | Keep only listings where VAT is shown separately. |
+| `location` | text | - | German town, postcode or `latitude,longitude` to search around. |
+| `radiusKm` | select | `100` | Radius in km from the location. |
+| `sortBy` | select | `relevance` | Relevance, price, mileage, year, oldest/newest or operating hours. |
+| `maxItems` | integer | `50` | Maximum vehicles across all queries and URLs (1–10,000). |
+| `includeDetails` | boolean | `false` | Fetch each listing's detail page for description, equipment, gallery and finance. |
+| `includeImages` | boolean | `true` | Include the full photo list. The preview image is always included. |
+| `includeReviews` | boolean | `false` | Add the dealer's aggregate rating and up to 10 recent reviews. Cached per dealer; private sellers have none. |
+| `includeSimilarAds` | boolean | `false` | Add a compact `similarAds` array (up to 10) and `similarAdsTotal`. |
+| `includeDealerProfile` | boolean | `false` | Add dealer opening hours, languages, rating breakdown, contact person, homepage redirect and resolved homepage. |
+| `proxyConfiguration` | proxy | Apify residential (DE) | Optional fallback. The actor tries direct first and switches automatically after a block. |
+| `forceResidentialProxy` | boolean | `false` | Skip the direct attempt and use the configured proxy immediately. |
+| `extraFilters` | JSON | `{}` | Advanced mobile.de filter pass-through, e.g. `{"fe": ["ABS"], "cy": "6:8"}`. |
 
-### Example: a specific model's current listings
+### Example: keyword search
 
 ```json
 {
-    "startUrls": ["https://suchen.mobile.de/auto/volkswagen-golf.html"],
+    "searchQueries": ["volkswagen golf gti"],
     "maxItems": 100
 }
 ```
 
-### Example: legacy search URL with price and fuel filters
+### Example: make, model, price and fuel
 
 ```json
 {
-    "startUrls": [
-        "https://suchen.mobile.de/fahrzeuge/search.html?isSearchRequest=true&s=Car&vc=Car&ms=1900;17;;;&fr=2020&ft=DIESEL&mnp=30000"
-    ],
+    "vehicleType": "cars",
+    "make": "Volkswagen",
+    "model": "Golf",
+    "minPrice": 8000,
+    "maxPrice": 25000,
+    "minYear": 2018,
+    "maxMileage": 120000,
+    "fuelType": ["petrol", "diesel"],
+    "transmission": ["automatic"],
+    "sortBy": "price_low_to_high",
     "maxItems": 200
 }
 ```
 
-### Example: force the residential proxy on short-timeout schedules
+### Example: full details around a postcode
 
 ```json
 {
-    "startUrls": ["https://suchen.mobile.de/auto/bmw-m3.html"],
-    "maxItems": 50,
-    "forceResidentialProxy": true
+    "make": "BMW",
+    "model": "3er",
+    "location": "10115",
+    "radiusKm": "50",
+    "includeDetails": true,
+    "includeReviews": true,
+    "includeSimilarAds": true,
+    "includeDealerProfile": true,
+    "maxItems": 20
 }
 ```
 
+### Example: exact vehicles
+
+```json
+{
+    "mode": "details",
+    "listingIds": ["432394659", "https://suchen.mobile.de/auto-inserat/audi-rs5-greu%C3%9Fen/432394659.html"],
+    "includeDetails": true
+}
+```
+
+### Example: a dealer's stock
+
+```json
+{
+    "startUrls": ["https://home.mobile.de/home/index.html?customerId=18862256"],
+    "maxItems": 50
+}
+```
+
+## Output per vehicle
+
+The 38 original fields keep their names and meanings.
+
+### Identity and listing
+- `id`, `url`, `title`, `shortTitle`, `subTitle`
+- `make`, `model`, `makeId`, `modelId`, `category`, `bodyType`, `vehicleClass`, `segment`
+- `partnerName`, `listingCreatedAt`, `listingModifiedAt`, `listingRenewedAt`, `scrapedAt`
+
+### Price
+- `price`, `currency`, `priceFormatted`, `priceNet`, `vatRate`, `priceType`, `pricePreviousAmount`, `priceNote`
+- `priceRating`, `priceRatingLabel`, `priceRatingThresholds`, `priceRatingPosition`, `noRatingReason`
+
+### Specifications
+- `mileageKm`, `powerKw`, `powerHp`, `firstRegistration`, `yearConstructed`
+- `fuelType`, `transmission`, `bodyType`, `exteriorColor`, `doors`, `seats`, `previousOwners`
+- `condition`, `hasDamage`, `isNew`, `isVideoEnabled`, `inspectionValidUntil`
+- `emissionClass`, `co2Class`, `co2Emissions`, `consumption`, `displacementCcm`, `weightKg`, `countryVersion`, `operatingHours`
+- `kbaHsn`, `kbaTsn`
+
+### Media and detail enrichment
+- `numImages`, `previewImage`, `images`
+- `description`, `descriptionHtml`, `features`, `attributes`, `financePlans`, `aiSummary`
+- `isOnStock`, `sku`
+- `totalCount` — mobile.de's total match count for the search that produced the row
+- `dealerReviews` — aggregate rating/count plus recent review entries (when `includeReviews`)
+- `similarAds`, `similarAdsTotal` — compact similar-vehicle rows (when `includeSimilarAds`)
+
+### Seller and location
+- `location`, `postalCode`, `country`, `latitude`, `longitude`
+- `sellerId`, `sellerType`, `dealerName`, `dealerType`, `dealerPhone`, `dealerPhones`
+- `sellerAddress`, `sellerCity`, `sellerCountry`, `sellerRating`, `sellerRatingCount`
+- `dealerHomepage`, `dealerHomepageUrl`, `dealerOpeningHours`, `dealerLanguages`, `dealerWithMobileSince`
+- `dealerRatingLink`, `dealerRatingTotal`, `dealerRecommendationRate`, `dealerAdRealityRate`
+- `dealerConsultingScore`, `dealerFriendlinessScore`, `dealerResponseTimeScore`, `dealerPersonName`, `dealerPersonRole`
+
+If a run returns no vehicles, the dataset gets one diagnostic record with `status`, `site`, `reason` and `scrapedAt` instead of an empty dataset.
+
 ## Use cases
 
-- **Used-car market research** — track price distribution and inventory age by make and model
-- **Deal hunting** — filter on `priceRating` to surface listings mobile.de itself flags as a good deal
-- **Dealer monitoring** — watch a specific dealer's inventory for new or changed listings
-- **Regional comparisons** — scope a search URL to a postal-code radius and compare local pricing
-- **EV market tracking** — filter the results on `fuelType` to follow electric and hybrid supply over time
+- **Used-car market research:** track price distributions and inventory by make, model, year and region.
+- **Deal finding:** filter on mobile.de's own price rating and fair-value bands.
+- **Dealer monitoring:** pull a dealer's whole stock by seller ID or dealer URL.
+- **Business buying:** isolate VAT-reclaimable listings with the net price and VAT rate.
+- **EV and hybrid tracking:** follow electric and hybrid supply, power and battery-heavy models.
+- **Cross-border sourcing:** compare the same model across Germany and nearby markets.
 
 ## FAQ
 
 **Is this affiliated with mobile.de?**
-No. This is an independent actor that reads publicly available mobile.de listing pages; it has no affiliation with mobile.de.
+No. It is an independent tool that reads publicly available mobile.de listing data.
 
-**Why do I get a `dealerType` of `PRIVATE` on some listings?**
-mobile.de lists both trade dealers and private sellers; `dealerType` reflects whichever the listing itself declares.
-
-**Why are there fewer unique vehicles than `maxItems` implies?**
-mobile.de repeats promoted "top ads" across multiple pages of the same search; this actor deduplicates by listing ID, so the figure you get is the count of distinct vehicles, not raw rows fetched.
+**Do I need a login, cookie or API key?**
+No. The actor reads mobile.de's own public JSON API with no account credentials.
 
 **Do I need a proxy?**
-Not necessarily. The actor tries a direct connection first and only uses the configured proxy as a fallback if that's blocked. Set `forceResidentialProxy` to `true` to skip straight to the proxy if your runs are hitting blocks or run on a short timeout.
+No. It tries a direct connection first and switches to the configured proxy automatically if mobile.de blocks it. Leave the proxy field as-is for a reliable fallback, or set `forceResidentialProxy` to start with the proxy.
 
-**Can I point `startUrls` at any mobile.de page?**
-It expects either a spec page (`suchen.mobile.de/auto/*.html`) or a filtered search page (`suchen.mobile.de/fahrzeuge/search.html?...`) — paste the URL straight from your browser after applying filters on the site.
+**Why do I get fewer vehicles than the result total?**
+mobile.de serves at most the first 2,000 rows of any one query. The actor reports this in the log and status message. Use several `searchQueries`, narrower price/year ranges, a specific model or a postcode radius to reach more.
 
-**How fresh is the data?**
-Each run reads the current mobile.de result pages live, so prices and availability reflect what's listed at run time.
+**Why is `firstRegistration` empty on some new cars?**
+mobile.de lists brand-new, unregistered vehicles without a first registration. The construction year and condition are still filled where mobile.de publishes them.
 
-**Why are fields never `null`?**
-Numeric fields (price, mileage, power, year, seats, and the like) default to `0` when mobile.de didn't disclose a value, rather than `null`. Text fields are simply left out of the record when they're missing, the same as a blank string.
+**Why are private sellers missing a name or phone?**
+mobile.de hides private-seller contact details at the source. The actor omits those fields rather than inventing them.
+
+**Why do I need `includeDetails` for descriptions and equipment?**
+The search API returns the listing card. Descriptions, equipment lists, complete spec tables, galleries and finance plans come from each listing's detail page; enabling the toggle adds one request per vehicle.
+
+**How do reviews, similar ads and dealer profiles work?**
+They are separate optional toggles. Each requires the listing detail page; reviews and similar ads add one request per dealer/listing and are cached per dealer within the run. Private sellers have no review page or opening hours, so those fields are omitted.
+
+**Why is `dealerHomepage` sometimes missing?**
+The dealer may not publish a website, or mobile.de may not expose the redirect. `dealerHomepageUrl` is still retained when mobile.de provides the redirect.
+
+**Are values in English?**
+Yes. Fuel, transmission, body and colour values are normalized to stable English labels, while the seller's own description stays in the language the seller wrote.
+
+**What is `extraFilters`?**
+An escape hatch for mobile.de filters not exposed as normal fields. Values are passed to the search API as-is, so use mobile.de's own parameter names and tokens.
+
+## Limitations
+
+- mobile.de caps each query at 2,000 reachable rows. Split the search to go wider.
+- Private sellers usually hide name and phone; those fields are absent.
+- Body-type and some equipment filters are vehicle-class-specific. The normal body-type field covers cars; use `extraFilters` for other classes.
+- Listing seller contact (name, phones, address, GPS and aggregate rating/count) is included when published. Reviews, similar ads, opening hours and the dealer homepage are optional enrichments; full legal imprint/VAT/director data remains a separate dealer-page mode.
+- The actor does not track price changes between runs; compare datasets from two runs to spot changes.

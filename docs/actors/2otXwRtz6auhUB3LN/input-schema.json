@@ -1,89 +1,225 @@
 {
-  "description": "Search UK property listings on Rightmove by location and purpose.",
+  "description": "Search Rightmove for sale, rental, new-build or student property anywhere in the UK, or fetch listings from Rightmove URLs and property IDs.",
   "properties": {
-    "location": {
-      "default": "london",
-      "description": "UK city or region to search in.",
+    "furnishType": {
+      "default": "",
+      "description": "Furnished or unfurnished filter for rental and student searches. Sale searches ignore it.",
       "editor": "select",
       "enum": [
-        "london",
-        "manchester",
-        "birmingham",
-        "leeds",
-        "sheffield",
-        "liverpool",
-        "bristol",
-        "edinburgh",
-        "glasgow",
-        "cardiff",
-        "nottingham",
-        "coventry",
-        "belfast",
-        "leicester",
-        "newcastle",
-        "oxford",
-        "cambridge",
-        "york",
-        "exeter",
-        "brighton"
+        "",
+        "furnished",
+        "unfurnished"
       ],
       "enumTitles": [
-        "London",
-        "Manchester",
-        "Birmingham",
-        "Leeds",
-        "Sheffield",
-        "Liverpool",
-        "Bristol",
-        "Edinburgh",
-        "Glasgow",
-        "Cardiff",
-        "Nottingham",
-        "Coventry",
-        "Belfast",
-        "Leicester",
-        "Newcastle",
-        "Oxford",
-        "Cambridge",
-        "York",
-        "Exeter",
-        "Brighton"
+        "Any furnishing",
+        "Furnished",
+        "Unfurnished"
       ],
-      "prefill": "london",
-      "title": "City / Location",
+      "prefill": "",
+      "title": "Furnishing",
       "type": "string"
+    },
+    "includeLetAgreed": {
+      "default": false,
+      "description": "Also return rental listings marked Let Agreed. Applies to to-rent and student searches.",
+      "prefill": false,
+      "title": "Include let agreed",
+      "type": "boolean"
+    },
+    "includeSSTC": {
+      "default": false,
+      "description": "Also return sale listings marked Sold Subject To Contract. Applies to for-sale and new-homes searches.",
+      "prefill": false,
+      "title": "Include sold subject to contract",
+      "type": "boolean"
+    },
+    "location": {
+      "default": "london",
+      "description": "UK city, town, region, outcode or postcode (for example `London`, `Manchester`, `Stoke-on-Trent`, `SW1A` or `SW16 1QA`). Used by every mode except `byUrl`.",
+      "editor": "textfield",
+      "prefill": "london",
+      "title": "Location",
+      "type": "string"
+    },
+    "maxBedrooms": {
+      "description": "Largest number of bedrooms to include. Leave empty for no maximum.",
+      "maximum": 20,
+      "minimum": 0,
+      "title": "Maximum bedrooms",
+      "type": "integer"
     },
     "maxItems": {
       "default": 20,
-      "description": "Maximum number of listings to return (1–500).",
-      "maximum": 500,
+      "description": "Maximum number of property records to return (1-2000).",
+      "maximum": 2000,
       "minimum": 1,
       "prefill": 20,
+      "sectionCaption": "Results",
       "title": "Max items",
+      "type": "integer"
+    },
+    "maxPrice": {
+      "description": "Highest asking price or rent in GBP. Leave empty for no maximum.",
+      "maximum": 100000000,
+      "minimum": 0,
+      "title": "Maximum price (GBP)",
+      "type": "integer"
+    },
+    "minBedrooms": {
+      "default": 0,
+      "description": "Smallest number of bedrooms to include. 0 means no minimum.",
+      "maximum": 20,
+      "minimum": 0,
+      "prefill": 0,
+      "title": "Minimum bedrooms",
+      "type": "integer"
+    },
+    "minPrice": {
+      "description": "Lowest asking price or rent in GBP. Leave empty for no minimum.",
+      "maximum": 100000000,
+      "minimum": 0,
+      "title": "Minimum price (GBP)",
       "type": "integer"
     },
     "mode": {
       "default": "buy",
-      "description": "Whether to search for properties for sale or rent.",
+      "description": "What to search: properties for sale, properties to rent, new-build homes, student accommodation, or a specific Rightmove URL/ID. Legacy values such as `forSale` and `toRent` still work.",
       "editor": "select",
       "enum": [
         "buy",
-        "rent"
+        "rent",
+        "newHomes",
+        "student",
+        "byUrl"
       ],
       "enumTitles": [
-        "For Sale",
-        "For Rent"
+        "For sale",
+        "To rent",
+        "New homes",
+        "Student accommodation",
+        "By URL or property ID"
       ],
       "prefill": "buy",
+      "sectionCaption": "Search",
       "title": "Search mode",
       "type": "string"
+    },
+    "mustHave": {
+      "default": "",
+      "description": "Require a garden or parking. Leave as No requirement to include everything.",
+      "editor": "select",
+      "enum": [
+        "",
+        "garden",
+        "parking"
+      ],
+      "enumTitles": [
+        "No requirement",
+        "Garden",
+        "Parking"
+      ],
+      "prefill": "",
+      "title": "Must have",
+      "type": "string"
+    },
+    "propertyType": {
+      "default": "",
+      "description": "Restrict results to one property type. Leave as Any type for all types.",
+      "editor": "select",
+      "enum": [
+        "",
+        "detached",
+        "semi-detached",
+        "terraced",
+        "flat",
+        "bungalow",
+        "land",
+        "park home"
+      ],
+      "enumTitles": [
+        "Any type",
+        "Detached",
+        "Semi-detached",
+        "Terraced",
+        "Flat / apartment",
+        "Bungalow",
+        "Land",
+        "Park home"
+      ],
+      "prefill": "",
+      "sectionCaption": "Filters",
+      "title": "Property type",
+      "type": "string"
+    },
+    "radius": {
+      "default": "0.0",
+      "description": "How far around the location to search. Postcode searches usually need a radius above This area only.",
+      "editor": "select",
+      "enum": [
+        "0.0",
+        "0.25",
+        "0.5",
+        "1.0",
+        "3.0",
+        "5.0",
+        "10.0",
+        "15.0",
+        "20.0",
+        "30.0",
+        "40.0"
+      ],
+      "enumTitles": [
+        "This area only",
+        "Within 1/4 mile",
+        "Within 1/2 mile",
+        "Within 1 mile",
+        "Within 3 miles",
+        "Within 5 miles",
+        "Within 10 miles",
+        "Within 15 miles",
+        "Within 20 miles",
+        "Within 30 miles",
+        "Within 40 miles"
+      ],
+      "prefill": "0.0",
+      "title": "Search radius",
+      "type": "string"
+    },
+    "sortBy": {
+      "default": "2",
+      "description": "Order of results, matching Rightmove's own sort options.",
+      "editor": "select",
+      "enum": [
+        "2",
+        "1",
+        "6",
+        "10",
+        "4"
+      ],
+      "enumTitles": [
+        "Most recent",
+        "Highest price",
+        "Lowest price",
+        "Most relevant",
+        "Oldest listing"
+      ],
+      "prefill": "2",
+      "title": "Sort order",
+      "type": "string"
+    },
+    "startUrls": {
+      "default": [],
+      "description": "One or more Rightmove search-page URLs, property-page URLs, or bare numeric property IDs. Used by mode `byUrl`; pasted search filters are preserved.",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Rightmove URLs or property IDs",
+      "type": "array"
     }
   },
   "required": [
-    "mode",
-    "location"
+    "mode"
   ],
   "schemaVersion": 1,
-  "title": "Rightmove UK Scraper Input",
+  "title": "Rightmove UK Property Scraper Input",
   "type": "object"
 }

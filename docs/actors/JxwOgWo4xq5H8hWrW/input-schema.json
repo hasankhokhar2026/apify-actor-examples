@@ -1,15 +1,31 @@
 {
-  "description": "Search YellowPages.com for local businesses by keyword + location, browse a category, or enrich specific business profile URLs.",
+  "description": "Search YellowPages.com by keyword and location, browse a category, enrich business profile URLs, or replay any Yellow Pages search/category/profile URL.",
   "properties": {
+    "categoryFilter": {
+      "default": "none",
+      "description": "Apply Yellow Pages' own category filter where the site supports it.",
+      "editor": "select",
+      "enum": [
+        "none",
+        "open-24-hours"
+      ],
+      "enumTitles": [
+        "No category filter",
+        "Open 24 hours"
+      ],
+      "prefill": "none",
+      "title": "Category filter",
+      "type": "string"
+    },
     "categorySlug": {
-      "description": "YellowPages category slug, e.g. `plumbers`, `pizza`, `hair-salons`, `auto-repair-service`. Found in category browse URLs: yellowpages.com/{location}/{category}.",
+      "description": "Yellow Pages category slug, e.g. `plumbers`, `pizza`, `hair-salons`, `auto-repair-service`.",
       "editor": "textfield",
       "title": "Category slug (mode=category)",
       "type": "string"
     },
     "detailUrls": {
       "default": [],
-      "description": "Full YellowPages business profile URLs (containing `/mip/`), e.g. `https://www.yellowpages.com/new-york-ny/mip/some-business-123456`.",
+      "description": "Full Yellow Pages business profile URLs containing `/mip/`, e.g. `https://www.yellowpages.com/new-york-ny/mip/some-business-123456`.",
       "editor": "stringList",
       "prefill": [],
       "title": "Business profile URLs (mode=businessDetail)",
@@ -17,103 +33,202 @@
     },
     "fetchBusinessDetails": {
       "default": false,
-      "description": "For search/category modes, visit each business's profile page to add hours, general info, and services/products. Slower and less reliable — leave off for fast, reliable runs.",
+      "description": "Visit each result's profile page to add hours, geo, description, email, services, brands, payments, social links and reviews.",
       "prefill": false,
+      "sectionCaption": "Detail enrichment",
       "title": "Fetch full business details",
       "type": "boolean"
     },
     "geoLocationTerms": {
       "default": "New York, NY",
-      "description": "City + state (e.g. `New York, NY`) or a 5-digit ZIP code (e.g. `10005`).",
+      "description": "A US city and state (`New York, NY`), a ZIP code (`10005`), or a neighborhood (`Brooklyn, NY`).",
       "editor": "textfield",
       "prefill": "New York, NY",
       "title": "Location (mode=search)",
       "type": "string"
     },
+    "geoLocations": {
+      "default": [],
+      "description": "More cities, ZIP codes, or neighborhoods. Each location is cross-joined with every search term.",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Additional locations (mode=search)",
+      "type": "array"
+    },
+    "hasEmailOnly": {
+      "default": false,
+      "description": "Only keep businesses with a public email. Automatically turns on profile-page enrichment.",
+      "prefill": false,
+      "title": "Has an email only",
+      "type": "boolean"
+    },
     "hasWebsiteOnly": {
       "default": false,
-      "description": "Only keep businesses that list a website link.",
+      "description": "Only keep businesses that list a website.",
       "prefill": false,
       "title": "Has a website only",
       "type": "boolean"
     },
+    "includeAds": {
+      "default": true,
+      "description": "Keep the sponsored cards Yellow Pages places above organic results. Turn off for organic-only lead lists.",
+      "prefill": true,
+      "title": "Include sponsored listings",
+      "type": "boolean"
+    },
+    "includeClosedBusinesses": {
+      "default": true,
+      "description": "Keep businesses the site marks as closed. Turn off to drop permanently or temporarily closed listings.",
+      "prefill": true,
+      "title": "Include closed businesses",
+      "type": "boolean"
+    },
+    "includeReviews": {
+      "default": false,
+      "description": "Add each business's reviews. This opens the profile page and follows review pages, so runs are slower.",
+      "prefill": false,
+      "title": "Include customer reviews",
+      "type": "boolean"
+    },
     "locationSlug": {
-      "description": "YellowPages location slug, e.g. `new-york-ny`, `los-angeles-ca`, `chicago-il`.",
+      "description": "Yellow Pages location slug, e.g. `new-york-ny`, `los-angeles-ca`, `chicago-il`.",
       "editor": "textfield",
       "title": "Location slug (mode=category)",
       "type": "string"
     },
+    "maxDetailFetches": {
+      "default": 150,
+      "description": "Cap on profile-page fetches for detail enrichment. 0 means no cap.",
+      "maximum": 1000,
+      "minimum": 0,
+      "prefill": 150,
+      "title": "Max detail pages per run",
+      "type": "integer"
+    },
     "maxItems": {
       "default": 30,
-      "description": "Hard cap on emitted records.",
-      "maximum": 500,
+      "description": "Hard cap on emitted business records across all searches and URLs.",
+      "maximum": 1000,
       "minimum": 1,
       "prefill": 30,
+      "sectionCaption": "Output limits",
       "title": "Max items",
       "type": "integer"
     },
+    "maxPages": {
+      "default": 0,
+      "description": "Stop each search or category after this many result pages. 0 means follow the source until it runs out.",
+      "maximum": 100,
+      "minimum": 0,
+      "prefill": 0,
+      "title": "Max pages per search",
+      "type": "integer"
+    },
+    "maxReviewsPerBusiness": {
+      "default": 10,
+      "description": "Review cap per business when `includeReviews` is on. 0 means collect every review the source serves.",
+      "maximum": 2000,
+      "minimum": 0,
+      "prefill": 10,
+      "title": "Max reviews per business",
+      "type": "integer"
+    },
     "minRating": {
-      "description": "Only keep businesses with at least this star rating.",
+      "description": "Only keep businesses rated at least this many stars. Businesses with no rating are kept.",
       "editor": "select",
       "enum": [
         "1",
+        "1.5",
         "2",
+        "2.5",
         "3",
+        "3.5",
         "4",
+        "4.5",
         "5"
       ],
       "enumTitles": [
         "1+ stars",
+        "1.5+ stars",
         "2+ stars",
+        "2.5+ stars",
         "3+ stars",
+        "3.5+ stars",
         "4+ stars",
+        "4.5+ stars",
         "5 stars"
       ],
-      "title": "Minimum rating (stars)",
+      "sectionCaption": "Filters",
+      "title": "Minimum rating",
       "type": "string"
     },
     "minReviewCount": {
-      "description": "Only keep businesses with at least this many reviews.",
-      "maximum": 100000,
+      "description": "Only keep businesses with at least this many reviews. Unrated businesses are kept.",
+      "maximum": 1000000,
       "minimum": 0,
       "title": "Minimum review count",
       "type": "integer"
     },
     "minYearsInBusiness": {
-      "description": "Only keep businesses that have been operating for at least this many years.",
+      "description": "Only keep businesses that have operated at least this many years. Businesses without the badge are kept.",
       "maximum": 200,
       "minimum": 0,
       "title": "Minimum years in business",
       "type": "integer"
     },
+    "minYearsWithYellowPages": {
+      "description": "Only keep businesses with at least this many years on Yellow Pages. Businesses without the badge are kept.",
+      "maximum": 200,
+      "minimum": 0,
+      "title": "Minimum years with Yellow Pages",
+      "type": "integer"
+    },
     "mode": {
       "default": "search",
-      "description": "What to fetch from YellowPages.com.",
+      "description": "What to scrape: keyword search, category browse, known profile URLs, or pasted Yellow Pages URLs.",
       "editor": "select",
       "enum": [
         "search",
         "category",
-        "businessDetail"
+        "businessDetail",
+        "startUrls"
       ],
       "enumTitles": [
-        "Search businesses (keyword + location)",
-        "Browse a category (category + location)",
-        "Enrich specific business profile URLs"
+        "Search by keyword + location",
+        "Browse a category + location",
+        "Enrich business profile URLs",
+        "Replay pasted Yellow Pages URLs"
       ],
       "prefill": "search",
+      "sectionCaption": "What to scrape",
       "title": "Mode",
       "type": "string"
     },
+    "open24HoursOnly": {
+      "default": false,
+      "description": "Only keep businesses whose status or hours say they are open 24 hours.",
+      "prefill": false,
+      "title": "Open 24 hours only",
+      "type": "boolean"
+    },
     "openNowOnly": {
       "default": false,
-      "description": "Only keep businesses shown as currently open.",
+      "description": "Only keep businesses the site shows as open at scrape time.",
       "prefill": false,
       "title": "Currently open only",
       "type": "boolean"
     },
+    "searchQueries": {
+      "default": [],
+      "description": "More keywords to run. Each term is cross-joined with every location, and duplicates are skipped.",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Additional search terms (mode=search)",
+      "type": "array"
+    },
     "searchTerms": {
       "default": "restaurants",
-      "description": "What to search for, e.g. `restaurants`, `plumbers`, `Starbucks`. Leave blank to list all businesses at the location.",
+      "description": "A business type or keyword, e.g. `restaurants`, `plumbers`, `Starbucks`. Leave blank to list every business at the location.",
       "editor": "textfield",
       "prefill": "restaurants",
       "title": "Search terms (mode=search)",
@@ -121,7 +236,7 @@
     },
     "sortBy": {
       "default": "default",
-      "description": "How YellowPages should order results (applies to search and category modes).",
+      "description": "The same four orders Yellow Pages offers for search and category results.",
       "editor": "select",
       "enum": [
         "default",
@@ -130,20 +245,38 @@
         "name"
       ],
       "enumTitles": [
-        "Default (recommended)",
+        "Default (Best Match)",
         "Distance",
         "Rating (highest first)",
         "Name (A-Z)"
       ],
       "prefill": "default",
+      "sectionCaption": "Search options",
       "title": "Sort order",
       "type": "string"
+    },
+    "startPage": {
+      "default": 1,
+      "description": "Start at this results page. Useful when resuming a long search; ignored for profile URLs.",
+      "maximum": 100,
+      "minimum": 1,
+      "prefill": 1,
+      "title": "First result page",
+      "type": "integer"
+    },
+    "startUrls": {
+      "default": [],
+      "description": "Search-result URLs, category URLs, and business profile URLs. Address bars and `/mip/` links both work.",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Yellow Pages URLs (mode=startUrls)",
+      "type": "array"
     }
   },
   "required": [
     "mode"
   ],
   "schemaVersion": 1,
-  "title": "Yellow Pages Business Directory Scraper Input",
+  "title": "YellowPages.com Business Directory Scraper Input",
   "type": "object"
 }

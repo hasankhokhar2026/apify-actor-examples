@@ -4,101 +4,221 @@
 
 # US Land for Sale Listings Scraper
 
-Rural and recreational land listings — ranches, farms, hunting ground, timberland and waterfront parcels across the US — pulled from LandWatch.com and its Land.com network sister sites. If LandWatch blocks a request, the actor automatically retries the equivalent search on LandFlip or LotFlip so you still get a dataset instead of an empty run.
+Find rural, recreational, agricultural, residential and commercial land for sale across the
+United States. This actor reads three independent public land marketplaces — LandSearch,
+LandHub and LandCentury — without cookies, logins, API keys or a proxy, and returns one clean
+record per parcel with price, price per acre, acreage, location, GPS, features, taxes, price
+history, photos, documents and broker contact.
+
+It accepts typed locations (state, county, city, ZIP) or pasted search URLs. LandWatch and
+Land.com search URLs from older tasks are mapped to the same location on the current sources, so
+existing schedules keep working. There is no browser, no residential proxy and no fabricated
+fallback record: if a query genuinely matches nothing, the actor says so instead of inventing a
+row.
 
 ## What this actor does
 
-- Accepts LandWatch category pages, state/county/city filter pages, or direct listing URLs as search input
-- Follows listing links from search pages and visits each one for full detail
-- Falls back to LandFlip (larger tracts) or LotFlip (smaller parcels) automatically when LandWatch can't be reached, mapping the same state/region filter across sites
-- Derives boolean land-feature flags (waterfront, utilities, road access, surveyed, mineral rights, timber, fenced, wooded) from the listing's stated features and description text
-- Omits any field the source listing didn't provide — no empty strings or nulls
-- If every attempt is blocked, the run still finishes with a single sentinel record explaining why, instead of failing silently
+- Searches by state, county, city, ZIP, keyword, land type, one of 72 land tags, sale/lease/
+  auction format, status, price, acreage, price per acre, bedrooms, bathrooms, building size,
+  year built and days on market.
+- Sorts by newest, price, acreage, recently updated or the source's recommended order.
+- Fetches specific listing URLs or numeric IDs in bulk.
+- Enriches every listing with detail-page data: full description, coordinates, street address,
+  property type, features, utilities, schools, taxes, legal description, deed type, parcel ID,
+  listing history, owner-financing terms, auction/video/map links, attachments and agent or
+  broker contact details.
+- Omits empty fields at every depth. No nulls, empty strings, empty arrays or empty objects are
+  pushed.
+- Uses three sources for resilience: LandSearch (largest catalog and deepest filters), LandHub
+  (public JSON API and broker contact block) and LandCentury (owner-financing, parcel and deed
+  data). `dataSource: auto` tries them in that order.
 
-## Output per land listing
+## Output per listing
 
-- `type` — `land_listing` (or `land_blocked` for the no-data sentinel record)
-- `id`, `url`, `title`
-- `price` — asking price in USD
-- `acres`
-- `state`, `county`, `city`, `zip`
-- `latitude`, `longitude`
-- `features` — list of amenities/attributes as shown on the listing
-- `images` — gallery image URLs
-- `descriptionText` — full listing description
-- `broker`, `brokerName`, `brokerPhone` — basic broker contact fields
-- `brokerageName`, `brokeragePhone`, `brokerageWebsite` — fuller brokerage block when the source provides one
-- `listingType`, `listingStatus`, `mls` — listing classification and MLS number, when disclosed
-- `landType`, `propertyCategory`, `zoning`
-- `taxes` — annual property tax, when stated
-- `waterfront`, `hasUtilities`, `hasRoadAccess`, `surveyed`, `mineral`, `timber`, `fenced`, `wooded` — boolean flags, present only when true
-- `publishedAt` — original listing date
-- `source` — hostname the record was fetched from (`landwatch.com`, `landflip.com` or `lotflip.com`)
-- `scrapedAt`
+`type` is `land_listing`. Fields are present only when the source provides a real value.
 
-The `land_blocked` sentinel record (when every source is unreachable) instead has `type: "land_blocked"`, `reason`, `url`, `message`, and `scrapedAt`; it may also include `requestedUrls` and `blockedUrls`.
+- Identity: `id`, `url`, `title`, `source`, `sourceUrl`, `scrapedAt`
+- Price: `price`, `priceCurrency`, `pricePerAcre`, `ownerFinancePrice`,
+  `ownerFinanceTerms`, `estimatedMonthlyPayment`, `deposit`, `processingFee`
+- Size/location: `acres`, `streetAddress`, `city`, `county`, `state`, `zip`, `latitude`,
+  `longitude`
+- Classification: `listingType`, `listingStatus`, `landType`, `propertyCategory`,
+  `propertyTypes`, `tags`, `zoning`, `roadAccess`, `terrain`, `subdivision`, `showing`
+- Building: `bedrooms`, `bathrooms`, `squareFeet`, `lotSizeSquareFeet`, `yearBuilt`
+- Land facts: `features`, `utilities`, `schools`, `schoolDistrict`, `taxes`, `taxYear`,
+  `parcelId`, `parcelIds`, `deedType`, `legalDescription`, `mls`, `propertyNumber`
+- Media and files: `images`, `documents`, `videoUrl`, `mapUrl`, `auctionUrl`, `buyNowUrl`,
+  `parcelBoundary` (GeoJSON Polygon/MultiPolygon; opt-in, LandHub map shares)
+- Broker: `broker`, `brokerName`, `brokerPhone`, `brokerageName`, `brokeragePhone`,
+  `brokerageEmail`, `brokerageWebsite`, `brokerageAddress`, `brokerageLogo`, `agentProfileUrl`
+- History and flags: `priceHistory`, `listedAt`, `publishedAt`, `updatedAt`, `waterfront`,
+  `hasUtilities`, `hasRoadAccess`, `surveyed`, `mineral`, `timber`, `fenced`, `wooded`,
+  `isOwnerFinanced`, `isAuction`
+
+Feature flags are included only when true, which means "not stated" rather than "false".
 
 ## Input
 
 | Field | Type | Default | Description |
 |---|---|---|---|
-| `searchUrls` | array | `["https://www.landwatch.com/all-land-for-sale"]` | LandWatch category, state/county/city filter, or direct listing URLs |
-| `maxItems` | integer | `3` | Maximum number of land listings to return (1–500) |
-| `proxyConfiguration` | object | Apify RESIDENTIAL (US) | Required proxy configuration; LandWatch blocks non-residential IPs at the network edge |
+| `mode` | select | `search` | `search` uses locations/filters, `byUrls` reads `listingUrls`, `byIds` reads `listingIds`. |
+| `searchUrls` | string list | `[]` | Optional legacy search URLs. LandWatch/Land.com category or state URLs are mapped to LandSearch; LandSearch/LandHub/LandCentury search or listing URLs are used directly. |
+| `searchQuery` | string | - | Free-text keyword matched against title, description, features, location and tags. |
+| `state` | select | - | US state; `(Any state)` searches nationwide. |
+| `county` | string | - | County name, with or without the word County. |
+| `city` | string | - | City name. Use with a state for an exact city page. |
+| `zipCode` | string | - | 5-digit ZIP; overrides city/county/state. |
+| `landType` | select | `any` | Agricultural, commercial, recreational or residential. |
+| `tag` | select | `any` | One of 72 land tags such as hunting, waterfront, timberland or owner financing. |
+| `listingFormat` | select | `any` | For sale, lease or auction. |
+| `listingStatus` | select | `any` | Active, under contract or sold, when the source reports it. |
+| `minPrice` | integer | - | Minimum asking price in USD. |
+| `maxPrice` | integer | - | Maximum asking price in USD. |
+| `minAcres` | number | - | Minimum acreage. |
+| `maxAcres` | number | - | Maximum acreage. |
+| `minPricePerAcre` | number | - | Minimum price per acre. |
+| `maxPricePerAcre` | number | - | Maximum price per acre. |
+| `minBedrooms` | integer | - | Minimum bedrooms on the property. |
+| `minBathrooms` | number | - | Minimum bathrooms; decimals allowed. |
+| `minBuildingSqft` | integer | - | Minimum house/building square footage. |
+| `maxBuildingSqft` | integer | - | Maximum house/building square footage. |
+| `minYearBuilt` | integer | - | Earliest house/building year. |
+| `maxYearBuilt` | integer | - | Latest house/building year. |
+| `maxDaysOnMarket` | integer | - | Maximum days since the listing was first seen. |
+| `hasStructure` | select | `any` | Any, with house/building, or land only. |
+| `requireImages` | boolean | `false` | Drop listings without photo URLs. |
+| `sortBy` | select | `forYou` | Recommended, newest, price high/low, acreage large/small, recently updated. |
+| `dataSource` | select | `auto` | Automatic or force LandSearch, LandHub or LandCentury. |
+| `includeDetails` | boolean | `true` | Visit each detail page for the full record. |
+| `includeParcelBoundary` | boolean | `false` | Opt-in: fetch LandHub/id.land map-share GeoJSON and add `parcelBoundary` when available. |
+| `maxItems` | integer | `20` | Hard cap on emitted listings (1–5,000). |
+| `listingUrls` | string list | `[]` | Direct listing URLs for `mode=byUrls`. |
+| `listingIds` | string list | `[]` | LandSearch or LandHub numeric IDs for `mode=byIds`. |
 
-### Example: all current land-for-sale listings
+The daily prefill is the cheapest output-producing run:
+`{"mode":"search","searchUrls":["https://www.landwatch.com/all-land-for-sale"],"maxItems":3,"includeDetails":true}`.
+The legacy `proxyConfiguration` key from old tasks is accepted but ignored, because no proxy is
+needed.
+
+### Examples
+
+Nationwide, three records:
 
 ```json
 {
-  "searchUrls": ["https://www.landwatch.com/all-land-for-sale"],
-  "maxItems": 20
+  "mode": "search",
+  "maxItems": 3
 }
 ```
 
-### Example: Texas land listings
+Hunting land in Texas, at least 20 acres, under $500,000, cheapest first:
 
 ```json
 {
-  "searchUrls": ["https://www.landwatch.com/texas-land-for-sale"],
+  "mode": "search",
+  "state": "Texas",
+  "tag": "hunting",
+  "minAcres": 20,
+  "maxPrice": 500000,
+  "sortBy": "priceLowToHigh",
   "maxItems": 50
 }
 ```
 
-### Example: specific listing URLs
+Owner-financed land in Arizona:
 
 ```json
 {
-  "searchUrls": [
-    "https://www.landwatch.com/property/40-acres-in-llano-county-texas/12345678"
+  "mode": "search",
+  "state": "Arizona",
+  "tag": "owner-financing",
+  "maxItems": 25
+}
+```
+
+Specific listing URLs:
+
+```json
+{
+  "mode": "byUrls",
+  "listingUrls": [
+    "https://www.landsearch.com/properties/120-fabelhaft-cir-fredericksburg-tx-78624/4145054"
   ],
+  "maxItems": 1
+}
+```
+
+Specific LandHub or LandSearch IDs:
+
+```json
+{
+  "mode": "byIds",
+  "dataSource": "landhub",
+  "listingIds": ["5357"],
   "maxItems": 1
 }
 ```
 
 ## Use cases
 
-- **Land investors** scan current acreage, price-per-acre and broker contact across a state or county
-- **Hunting and recreational buyers** filter by waterfront, road access or timber flags to shortlist parcels
-- **Rural brokers** monitor competing listings and pricing in their market
-- **Agricultural researchers** track farmland and ranch listing volume and pricing trends by region
-- **Market comparison tools** merge LandWatch, LandFlip and LotFlip coverage into one dataset
+- Land investors screen acreage, price per acre and owner-financing terms by county or state.
+- Hunting and recreational buyers shortlist parcels by tag, water, timber or road access.
+- Rural brokers monitor competing listings, price changes and broker contacts.
+- Agricultural researchers track farmland and ranch inventory across markets.
+- Data teams merge three land marketplaces into one normalized dataset without proxy costs.
 
 ## FAQ
 
-**Is this affiliated with LandWatch?**
-No. This is an independent actor that reads publicly available listing pages from LandWatch and the Land.com network; it has no affiliation with LandWatch or Land.com.
+**Is this affiliated with any listing site?**
+No. It is an independent reader of publicly available listing pages and APIs.
 
-**Why does the actor sometimes use LandFlip or LotFlip instead of LandWatch?**
-LandWatch occasionally blocks automated requests. When that happens, the actor maps your search to the equivalent LandFlip (larger tracts) or LotFlip (smaller parcels) search instead, so the run still returns data. The `source` field shows which site a given record came from.
+**Do I need a proxy or login?**
+No. The actor uses cookieless public sources and needs no proxy, cookies, account or API key.
 
-**Why do I get a single `land_blocked` record instead of listings?**
-That sentinel only appears when every source — LandWatch, LandFlip and LotFlip — was unreachable for your search during the run. It lets the run finish cleanly rather than failing with no output.
+**What happens to my old LandWatch or Land.com search URLs?**
+State and nationwide search URLs are mapped to the equivalent location on the current sources.
+Old direct LandWatch/Land.com listing URLs cannot be fetched without a browser; the actor logs
+that and continues with any other search fields you supplied.
 
-**Do I need to configure the proxy myself?**
-The required proxy configuration is pre-set to Apify's residential US pool, which LandWatch requires to avoid being blocked at the network edge; you don't need to change it.
+**Why do I get fewer rows than the source count?**
+LandSearch is read through its public JSON API in 100-listing pages, so the former 5,000-row
+query ceiling no longer applies; `maxItems` is the only cap. LandHub is read 1,000 listings at a
+time (about 25,000 available), and LandCentury about 3,000.
 
-**Why are feature flags like `waterfront` or `timber` sometimes absent instead of `false`?**
-Flags are only included when the listing's features or description actually indicate that attribute is present — absence means "not stated," not necessarily "false."
+**How do I choose a source?**
+Leave `dataSource` at `auto` for the best coverage. Force `landsearch`, `landhub` or
+`landcentury` when you need a specific site's fields or want to compare sources.
 
-**Can I pass a direct listing URL instead of a search page?**
-Yes — `searchUrls` accepts direct LandWatch listing URLs alongside category and location filter pages.
+**Does this actor show sold or under-contract listings?**
+Yes when a source publishes them. LandSearch is active-sale only; automatic mode routes
+under-contract and sold searches to LandHub and LandCentury, which expose those statuses.
+
+**Why are some fields missing on some rows?**
+Sources disclose different data. Missing means the source did not state it; fields are never
+filled with guesses, nulls or empty values.
+
+**Are images and documents hotlinkable?**
+Yes. The actor returns the source CDN URLs directly; they were verified without cookies during
+the revamp.
+
+**Can I get boundary polygons?**
+Yes for listings whose LandHub record includes a public id.land map share. Set
+`includeParcelBoundary` to `true`; the actor reads the map-share GeoJSON and adds
+`parcelBoundary` as a GeoJSON Polygon/MultiPolygon. LandSearch/LandCentury do not publish
+geometry, and `mapUrl` is still returned where available.
+
+## Data source and honest limits
+
+- LandSearch is read through `api.landsearch.com/v1/listings` (100 per page, filters and detail
+  included). The translate HTML mirror and a Chromium fallback cover API/page failures; the
+  canonical listing URL remains in `url`.
+- LandHub is read through its public JSON search API and Next.js detail pages.
+- LandCentury is read through its server-rendered search and detail pages. Its prices are
+  stored in cents by the source and are converted to dollars.
+- LandHub and LandCentury cannot apply every filter server-side; the actor filters the fetched
+  rows locally, so a highly selective filter can require more pages. LandCentury sort orders are
+  applied to the fetched page set (at most five pages) because its public pages have no sort axis.
+- Listing status and sold data are limited to what each source publishes. There is no complete
+  historical sold archive or agent-directory record type. Parcel polygons are available only
+  when the LandHub/id.land map share contains a public Polygon and `includeParcelBoundary` is on.
+- All fields are omit-empty; there are no sentinel records.

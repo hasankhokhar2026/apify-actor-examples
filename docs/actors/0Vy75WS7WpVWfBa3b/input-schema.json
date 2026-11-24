@@ -1,19 +1,641 @@
 {
   "properties": {
+    "adOptions": {
+      "description": "Only ads with these media or offer options. Leave empty for all.",
+      "editor": "select",
+      "items": {
+        "enum": [
+          "pictures",
+          "video",
+          "price_reduced",
+          "ebike_leasing"
+        ],
+        "enumTitles": [
+          "Ads with pictures",
+          "Ads with video",
+          "Discount offers",
+          "Leasing available"
+        ],
+        "type": "string"
+      },
+      "title": "Ad options",
+      "type": "array"
+    },
+    "bodyType": {
+      "description": "Car body types. Leave empty for all. For non-car vehicle types use the advanced extraFilters instead, because mobile.de has class-specific body options.",
+      "editor": "select",
+      "items": {
+        "enum": [
+          "limousine",
+          "estate_car",
+          "off_road",
+          "small_car",
+          "cabrio",
+          "sports_car",
+          "van",
+          "other_car"
+        ],
+        "enumTitles": [
+          "Saloon",
+          "Estate car",
+          "SUV / off-road / pickup",
+          "Small car",
+          "Convertible / roadster",
+          "Sports car / coupe",
+          "Van / minibus",
+          "Other vehicle type"
+        ],
+        "type": "string"
+      },
+      "title": "Body type",
+      "type": "array"
+    },
+    "climatisation": {
+      "default": "",
+      "description": "Air-conditioning type.",
+      "editor": "select",
+      "enum": [
+        "",
+        "none",
+        "manual",
+        "automatic",
+        "automatic_2_zones",
+        "automatic_3_zones",
+        "automatic_4_zones"
+      ],
+      "enumTitles": [
+        "Any climatisation",
+        "No climatisation",
+        "Manual or automatic climate control",
+        "Automatic air conditioning",
+        "Automatic, 2 zones",
+        "Automatic, 3 zones",
+        "Automatic, 4 zones"
+      ],
+      "title": "Climatisation",
+      "type": "string"
+    },
+    "color": {
+      "description": "Only these exterior colours. Leave empty for all.",
+      "editor": "select",
+      "items": {
+        "enum": [
+          "beige",
+          "blue",
+          "brown",
+          "yellow",
+          "gold",
+          "green",
+          "grey",
+          "orange",
+          "red",
+          "black",
+          "silver",
+          "purple",
+          "white"
+        ],
+        "enumTitles": [
+          "Beige",
+          "Blue",
+          "Brown",
+          "Yellow",
+          "Gold",
+          "Green",
+          "Grey",
+          "Orange",
+          "Red",
+          "Black",
+          "Silver",
+          "Purple",
+          "White"
+        ],
+        "type": "string"
+      },
+      "title": "Exterior colour",
+      "type": "array"
+    },
+    "condition": {
+      "default": "",
+      "description": "New or used vehicles.",
+      "editor": "select",
+      "enum": [
+        "",
+        "new",
+        "used"
+      ],
+      "enumTitles": [
+        "Any condition",
+        "New",
+        "Used"
+      ],
+      "title": "Condition",
+      "type": "string"
+    },
+    "country": {
+      "default": "",
+      "description": "Only vehicles offered in this country. Leave empty for every market.",
+      "editor": "select",
+      "enum": [
+        "",
+        "DE",
+        "AT",
+        "CH",
+        "NL",
+        "BE",
+        "LU",
+        "FR",
+        "IT",
+        "ES",
+        "PT",
+        "PL",
+        "CZ",
+        "SK",
+        "HU",
+        "RO",
+        "BG",
+        "HR",
+        "SI",
+        "DK",
+        "SE",
+        "FI",
+        "NO",
+        "IE",
+        "GB",
+        "GR",
+        "EE",
+        "LV",
+        "LT"
+      ],
+      "enumTitles": [
+        "All countries",
+        "Germany",
+        "Austria",
+        "Switzerland",
+        "Netherlands",
+        "Belgium",
+        "Luxembourg",
+        "France",
+        "Italy",
+        "Spain",
+        "Portugal",
+        "Poland",
+        "Czechia",
+        "Slovakia",
+        "Hungary",
+        "Romania",
+        "Bulgaria",
+        "Croatia",
+        "Slovenia",
+        "Denmark",
+        "Sweden",
+        "Finland",
+        "Norway",
+        "Ireland",
+        "United Kingdom",
+        "Greece",
+        "Estonia",
+        "Latvia",
+        "Lithuania"
+      ],
+      "title": "Seller country",
+      "type": "string"
+    },
+    "damagedOnly": {
+      "default": false,
+      "description": "Keep only listings mobile.de marks as damaged vehicles.",
+      "prefill": false,
+      "title": "Damaged vehicles only",
+      "type": "boolean"
+    },
+    "doors": {
+      "default": "",
+      "description": "Cars only: number of doors.",
+      "editor": "select",
+      "enum": [
+        "",
+        "two_or_three",
+        "four_or_five",
+        "six_or_seven"
+      ],
+      "enumTitles": [
+        "Any number of doors",
+        "2/3",
+        "4/5",
+        "6/7"
+      ],
+      "title": "Doors",
+      "type": "string"
+    },
+    "driveType": {
+      "default": "",
+      "description": "Drivetrain (cars, motorhomes, vans).",
+      "editor": "select",
+      "enum": [
+        "",
+        "all_wheel",
+        "front",
+        "rear"
+      ],
+      "enumTitles": [
+        "Any drive type",
+        "All-wheel drive",
+        "Front-wheel drive",
+        "Rear-wheel drive"
+      ],
+      "title": "Drive type",
+      "type": "string"
+    },
+    "emissionClass": {
+      "default": "",
+      "description": "Euro emission standard.",
+      "editor": "select",
+      "enum": [
+        "",
+        "euro1",
+        "euro2",
+        "euro3",
+        "euro4",
+        "euro5",
+        "euro6",
+        "euro6c",
+        "euro6d_temp",
+        "euro6d",
+        "euro6e",
+        "euro7"
+      ],
+      "enumTitles": [
+        "Any emission class",
+        "Euro 1",
+        "Euro 2",
+        "Euro 3",
+        "Euro 4",
+        "Euro 5",
+        "Euro 6",
+        "Euro 6c",
+        "Euro 6d-TEMP",
+        "Euro 6d",
+        "Euro 6e",
+        "Euro 7"
+      ],
+      "title": "Emission class",
+      "type": "string"
+    },
+    "extraFilters": {
+      "default": {},
+      "description": "Advanced pass-through for mobile.de filter parameters not exposed above, e.g. {\"fe\": [\"ABS\", \"NAVIGATION_SYSTEM\"], \"cy\": \"6:8\"}. Values are appended to the search query.",
+      "editor": "json",
+      "prefill": {},
+      "sectionCaption": "Advanced",
+      "sectionDescription": "Optional raw mobile.de filter parameters. Use only when the normal filters do not cover a need.",
+      "title": "Advanced extra filters",
+      "type": "object"
+    },
     "forceResidentialProxy": {
       "default": false,
-      "description": "By default the actor tries a direct connection first and only falls back to the proxy above if blocked. Enable this to always use the proxy from the first attempt — recommended if your runs are seeing repeated 'access denied' errors or you're running on a short timeout, since skipping the (currently unreliable) direct attempt saves time and cost.",
-      "title": "Force residential proxy (skip direct connection)",
+      "description": "Skip the direct attempt and use the configured proxy immediately. Useful on short schedules or when direct requests are repeatedly blocked.",
+      "prefill": false,
+      "title": "Force proxy from the first request",
       "type": "boolean"
+    },
+    "fuelType": {
+      "description": "Only these fuel types. Leave empty for all fuels.",
+      "editor": "select",
+      "items": {
+        "enum": [
+          "petrol",
+          "diesel",
+          "electric",
+          "hybrid",
+          "hybrid_diesel",
+          "cng",
+          "lpg",
+          "hydrogen",
+          "ethanol",
+          "other"
+        ],
+        "enumTitles": [
+          "Petrol",
+          "Diesel",
+          "Electric",
+          "Hybrid (petrol/electric)",
+          "Hybrid (diesel/electric)",
+          "Natural gas (CNG)",
+          "LPG",
+          "Hydrogen",
+          "Ethanol (FFV, E85)",
+          "Other fuel type"
+        ],
+        "type": "string"
+      },
+      "sectionCaption": "Equipment, condition & seller",
+      "sectionDescription": "Narrow by equipment, condition, emissions and seller. Values marked with a class restriction only apply to that vehicle type.",
+      "title": "Fuel type",
+      "type": "array"
+    },
+    "includeDealerProfile": {
+      "default": false,
+      "description": "Add the dealer's opening hours, languages, member-since date, rating breakdown, contact person and resolved homepage from the listing detail.",
+      "prefill": false,
+      "title": "Include dealer profile",
+      "type": "boolean"
+    },
+    "includeDetails": {
+      "default": false,
+      "description": "Fetch each listing's detail page for the seller description, complete equipment list, full spec table, gallery, finance offers and dealer profile. One extra request per vehicle.",
+      "prefill": false,
+      "title": "Include full listing details",
+      "type": "boolean"
+    },
+    "includeImages": {
+      "default": true,
+      "description": "Include the complete photo list in each record. The preview image is always included.",
+      "prefill": true,
+      "title": "Include all image URLs",
+      "type": "boolean"
+    },
+    "includeReviews": {
+      "default": false,
+      "description": "Fetch the dealer's public review page and add the aggregate rating plus up to 10 recent reviews. Reviews are cached per dealer within a run; private sellers have none.",
+      "prefill": false,
+      "title": "Include dealer reviews",
+      "type": "boolean"
+    },
+    "includeSimilarAds": {
+      "default": false,
+      "description": "Fetch mobile.de's similar-vehicle list for each listing and add a compact similarAds array (up to 10 ads) plus similarAdsTotal.",
+      "prefill": false,
+      "title": "Include similar ads",
+      "type": "boolean"
+    },
+    "inspectionValidMonths": {
+      "default": "",
+      "description": "Cars only: remaining main inspection (TÜV/HU) validity.",
+      "editor": "select",
+      "enum": [
+        "",
+        "new",
+        "3",
+        "6",
+        "9",
+        "12",
+        "18"
+      ],
+      "enumTitles": [
+        "Any",
+        "New inspection",
+        "3 months",
+        "6 months",
+        "9 months",
+        "12 months",
+        "18 months"
+      ],
+      "title": "Inspection valid for at least (months)",
+      "type": "string"
+    },
+    "interiorColor": {
+      "default": "",
+      "description": "Cars only: interior colour.",
+      "editor": "select",
+      "enum": [
+        "",
+        "beige",
+        "black",
+        "blue",
+        "brown",
+        "grey",
+        "red",
+        "other"
+      ],
+      "enumTitles": [
+        "Any interior colour",
+        "Beige",
+        "Black",
+        "Blue",
+        "Brown",
+        "Grey",
+        "Red",
+        "Other"
+      ],
+      "title": "Interior colour",
+      "type": "string"
+    },
+    "listingIds": {
+      "default": [],
+      "description": "Mobile.de listing IDs (e.g. 432394659) or listing URLs to fetch directly. Use this for exact vehicles you already know.",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Listing IDs",
+      "type": "array"
+    },
+    "location": {
+      "description": "German town, postcode, or coordinates (latitude,longitude) to search around. Places are resolved with mobile.de's own suggestions.",
+      "editor": "textfield",
+      "sectionCaption": "Location & sorting",
+      "sectionDescription": "Search around a place and choose the result order.",
+      "title": "Location",
+      "type": "string"
+    },
+    "make": {
+      "description": "Manufacturer as mobile.de spells it, e.g. Volkswagen, BMW, Mercedes-Benz. Names are resolved against mobile.de's own make list; an unknown name falls back to a free-text keyword search.",
+      "editor": "textfield",
+      "title": "Make",
+      "type": "string"
+    },
+    "maxEngineCc": {
+      "description": "Highest engine displacement in cubic centimetres. 0 or empty means no upper bound.",
+      "editor": "number",
+      "maximum": 20000,
+      "minimum": 0,
+      "title": "Maximum engine size (ccm)",
+      "type": "integer"
     },
     "maxItems": {
       "default": 50,
-      "description": "Maximum number of vehicles to return.",
-      "maximum": 500,
+      "description": "Maximum number of vehicles to return across all queries and URLs. mobile.de serves at most 2,000 rows per individual query.",
+      "maximum": 10000,
       "minimum": 1,
       "prefill": 3,
-      "title": "Max Items",
+      "sectionCaption": "Output & limits",
+      "sectionDescription": "Control the row count and optional detail enrichment.",
+      "title": "Max items",
       "type": "integer"
+    },
+    "maxMileage": {
+      "description": "Highest odometer reading in kilometres. 0 or empty means no upper bound.",
+      "editor": "number",
+      "maximum": 5000000,
+      "minimum": 0,
+      "title": "Maximum mileage (km)",
+      "type": "integer"
+    },
+    "maxPowerKw": {
+      "description": "Highest engine power in kilowatts. 0 or empty means no upper bound.",
+      "editor": "number",
+      "maximum": 5000,
+      "minimum": 0,
+      "title": "Maximum power (kW)",
+      "type": "integer"
+    },
+    "maxPrice": {
+      "description": "Highest gross price in euros. 0 or empty means no upper bound.",
+      "editor": "number",
+      "maximum": 10000000,
+      "minimum": 0,
+      "title": "Maximum price (EUR)",
+      "type": "integer"
+    },
+    "maxSeats": {
+      "description": "Highest number of seats. 0 or empty means no upper bound.",
+      "editor": "number",
+      "maximum": 100,
+      "minimum": 0,
+      "title": "Maximum seats",
+      "type": "integer"
+    },
+    "maxYear": {
+      "description": "Latest first-registration year. 0 or empty means no upper bound.",
+      "editor": "number",
+      "maximum": 2100,
+      "minimum": 0,
+      "title": "First registration to (year)",
+      "type": "integer"
+    },
+    "minEngineCc": {
+      "description": "Lowest engine displacement in cubic centimetres. 0 or empty means no lower bound.",
+      "editor": "number",
+      "maximum": 20000,
+      "minimum": 0,
+      "title": "Minimum engine size (ccm)",
+      "type": "integer"
+    },
+    "minMileage": {
+      "description": "Lowest odometer reading in kilometres. 0 or empty means no lower bound.",
+      "editor": "number",
+      "maximum": 5000000,
+      "minimum": 0,
+      "title": "Minimum mileage (km)",
+      "type": "integer"
+    },
+    "minPowerKw": {
+      "description": "Lowest engine power in kilowatts. 0 or empty means no lower bound.",
+      "editor": "number",
+      "maximum": 5000,
+      "minimum": 0,
+      "title": "Minimum power (kW)",
+      "type": "integer"
+    },
+    "minPrice": {
+      "description": "Lowest gross price in euros. 0 or empty means no lower bound.",
+      "editor": "number",
+      "maximum": 10000000,
+      "minimum": 0,
+      "title": "Minimum price (EUR)",
+      "type": "integer"
+    },
+    "minSeats": {
+      "description": "Lowest number of seats. 0 or empty means no lower bound.",
+      "editor": "number",
+      "maximum": 100,
+      "minimum": 0,
+      "title": "Minimum seats",
+      "type": "integer"
+    },
+    "minYear": {
+      "description": "Earliest first-registration year. 0 or empty means no lower bound. New, unregistered cars may have no first registration.",
+      "editor": "number",
+      "maximum": 2100,
+      "minimum": 0,
+      "title": "First registration from (year)",
+      "type": "integer"
+    },
+    "mode": {
+      "default": "auto",
+      "description": "How to find vehicles. Auto infers from the inputs: listing IDs/URLs → details, filters/keywords → search, otherwise the start URLs. Use Search to build a query from filters, URLs to paste search/spec/listing/dealer links, and Details to fetch exact listing IDs.",
+      "editor": "select",
+      "enum": [
+        "auto",
+        "search",
+        "urls",
+        "details"
+      ],
+      "enumTitles": [
+        "Auto (recommended)",
+        "Search by filters or keywords",
+        "Paste mobile.de URLs",
+        "Fetch exact listing IDs"
+      ],
+      "prefill": "auto",
+      "sectionCaption": "What to scrape",
+      "sectionDescription": "Pick a mode or leave Auto. Search needs filters or keywords; URLs accepts search, spec, listing and dealer links; Details takes listing IDs or listing links.",
+      "title": "Mode",
+      "type": "string"
+    },
+    "model": {
+      "description": "Model or model series of the make, e.g. Golf, 3er, C-Class. Requires make for exact resolution; otherwise it is used as free text.",
+      "editor": "textfield",
+      "title": "Model",
+      "type": "string"
+    },
+    "onlineSinceDays": {
+      "default": "",
+      "description": "Only listings published within this many days.",
+      "editor": "select",
+      "enum": [
+        "",
+        "1",
+        "3",
+        "7",
+        "14"
+      ],
+      "enumTitles": [
+        "Any time",
+        "Last 1 day",
+        "Last 3 days",
+        "Last 7 days",
+        "Last 14 days"
+      ],
+      "title": "Online since",
+      "type": "string"
+    },
+    "previousOwners": {
+      "default": "",
+      "description": "Maximum number of previous owners (cars, motorbikes, motorhomes).",
+      "editor": "select",
+      "enum": [
+        "",
+        "1",
+        "2",
+        "3",
+        "4"
+      ],
+      "enumTitles": [
+        "Any number of owners",
+        "Up to 1",
+        "Up to 2",
+        "Up to 3",
+        "Up to 4"
+      ],
+      "title": "Previous owners",
+      "type": "string"
+    },
+    "priceRating": {
+      "description": "mobile.de's own price-fairness rating (cars only). Leave empty for all.",
+      "editor": "select",
+      "items": {
+        "enum": [
+          "very_good_price",
+          "good_price",
+          "reasonable_price"
+        ],
+        "enumTitles": [
+          "Very good price",
+          "Good price",
+          "Fair price"
+        ],
+        "type": "string"
+      },
+      "title": "Price rating",
+      "type": "array"
     },
     "proxyConfiguration": {
       "default": {
@@ -23,7 +645,7 @@
         ],
         "useApifyProxy": true
       },
-      "description": "Optional — mobile.de is protected by Akamai Bot Manager. The actor first tries a direct connection (works from most Apify regions) and automatically falls back to this proxy if blocked. Recommended: Apify RESIDENTIAL proxy with country DE.",
+      "description": "Optional. The actor tries a direct connection first; the configured proxy is used automatically only after a block. Apify residential (DE) is a reliable fallback.",
       "editor": "proxy",
       "prefill": {
         "apifyProxyCountry": "DE",
@@ -32,20 +654,254 @@
         ],
         "useApifyProxy": true
       },
-      "title": "Proxy Configuration",
+      "sectionCaption": "Proxy",
+      "sectionDescription": "No proxy is required. The actor switches to this proxy automatically when mobile.de blocks the direct connection.",
+      "title": "Proxy configuration",
       "type": "object"
+    },
+    "radiusKm": {
+      "default": "100",
+      "description": "Distance from the location. Used only when a location is set.",
+      "editor": "select",
+      "enum": [
+        "10",
+        "20",
+        "30",
+        "40",
+        "50",
+        "60",
+        "70",
+        "100",
+        "150",
+        "200",
+        "250",
+        "300",
+        "500",
+        "1000"
+      ],
+      "enumTitles": [
+        "10 km",
+        "20 km",
+        "30 km",
+        "40 km",
+        "50 km",
+        "60 km",
+        "70 km",
+        "100 km",
+        "150 km",
+        "200 km",
+        "250 km",
+        "300 km",
+        "500 km",
+        "1000 km"
+      ],
+      "title": "Radius (km)",
+      "type": "string"
+    },
+    "searchQueries": {
+      "default": [],
+      "description": "Free-text terms matched against the listing title and description, e.g. \"volkswagen golf\" or \"panoramic roof\". Each query runs as its own search and results are deduplicated by listing ID.",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Search queries",
+      "type": "array"
+    },
+    "sellerId": {
+      "description": "Only vehicles sold by this dealer (mobile.de seller ID). A numeric dealer URL also works in Start URLs.",
+      "editor": "textfield",
+      "title": "Seller ID",
+      "type": "string"
+    },
+    "sellerType": {
+      "default": "",
+      "description": "Dealer, private seller, or company vehicles.",
+      "editor": "select",
+      "enum": [
+        "",
+        "dealer",
+        "private",
+        "company"
+      ],
+      "enumTitles": [
+        "All sellers",
+        "Dealer",
+        "Private seller",
+        "Company vehicles"
+      ],
+      "title": "Seller type",
+      "type": "string"
+    },
+    "sortBy": {
+      "default": "relevance",
+      "description": "Result order. Operating-hours sorts apply to machines; year sorts use construction year where the class has no first registration.",
+      "editor": "select",
+      "enum": [
+        "relevance",
+        "price_low_to_high",
+        "price_high_to_low",
+        "mileage_low_to_high",
+        "mileage_high_to_low",
+        "year_old_to_new",
+        "year_new_to_old",
+        "oldest",
+        "most_recent",
+        "operating_hours_low_to_high",
+        "operating_hours_high_to_low"
+      ],
+      "enumTitles": [
+        "Relevance",
+        "Price: low to high",
+        "Price: high to low",
+        "Mileage: low to high",
+        "Mileage: high to low",
+        "Year: old to new",
+        "Year: new to old",
+        "Oldest listings",
+        "Newest listings",
+        "Operating hours: low to high",
+        "Operating hours: high to low"
+      ],
+      "title": "Sort results by",
+      "type": "string"
     },
     "startUrls": {
       "default": [
         "https://suchen.mobile.de/auto/volkswagen-golf.html"
       ],
-      "description": "Mobile.de spec page URLs (suchen.mobile.de/auto/*.html format, e.g. https://suchen.mobile.de/auto/volkswagen-golf.html) or legacy search URLs (suchen.mobile.de/fahrzeuge/search.html?...). Spec page URLs are recommended — they embed full car listing data directly in the page.",
+      "description": "Mobile.de search URLs (suchen.mobile.de/fahrzeuge/search.html?...), model/spec URLs (suchen.mobile.de/auto/volkswagen-golf.html), listing URLs, or dealer links. Mixed lists are allowed.",
       "editor": "stringList",
       "prefill": [
         "https://suchen.mobile.de/auto/volkswagen-golf.html"
       ],
       "title": "Start URLs",
       "type": "array"
+    },
+    "transmission": {
+      "description": "Only these gearbox types. Leave empty for all.",
+      "editor": "select",
+      "items": {
+        "enum": [
+          "automatic",
+          "manual",
+          "semi_automatic"
+        ],
+        "enumTitles": [
+          "Automatic",
+          "Manual gearbox",
+          "Semi-automatic"
+        ],
+        "type": "string"
+      },
+      "title": "Transmission",
+      "type": "array"
+    },
+    "usedCarSeal": {
+      "default": "",
+      "description": "Manufacturer approved-used seal (cars, motorbikes, vans).",
+      "editor": "select",
+      "enum": [
+        "",
+        "aston_martin",
+        "bmw",
+        "bentley",
+        "cupra_approved",
+        "ferrari",
+        "hyundai_promise",
+        "jaguar",
+        "kia",
+        "landrover",
+        "lucid",
+        "mini",
+        "nissan",
+        "porsche",
+        "rolls_royce",
+        "seat",
+        "lamborghini",
+        "skoda",
+        "spoticar",
+        "spoticar_premium",
+        "toyota",
+        "volvo",
+        "vw_tradeport",
+        "vw",
+        "harley_davidson"
+      ],
+      "enumTitles": [
+        "Any programme",
+        "Aston Martin Timeless",
+        "BMW Premium Selection",
+        "Certified by Bentley",
+        "CUPRA Approved",
+        "Ferrari Approved",
+        "Hyundai Promise",
+        "Jaguar Approved",
+        "Kia Certified Used Cars",
+        "Land Rover Approved",
+        "Lucid Recharged",
+        "MINI NEXT",
+        "Nissan Intelligent Choice",
+        "Porsche Approved",
+        "Rolls-Royce Provenance",
+        "SEAT Certified Used Cars",
+        "Selezione Lamborghini Certified Pre-Owned",
+        "Škoda plus",
+        "SPOTICAR",
+        "SPOTICAR Premium",
+        "Toyota Approved Used Cars",
+        "VOLVO SELEKT",
+        "VW NFZ Certified Used Cars",
+        "VW Certified Used Cars",
+        "Harley-Davidson H-D Certified"
+      ],
+      "title": "Approved used programme",
+      "type": "string"
+    },
+    "vatReclaimableOnly": {
+      "default": false,
+      "description": "Keep only listings where VAT is shown separately (VAT-deductible).",
+      "prefill": false,
+      "title": "VAT reclaimable only",
+      "type": "boolean"
+    },
+    "vehicleType": {
+      "default": "cars",
+      "description": "Which mobile.de vehicle class to search. Body types and some filters differ between classes.",
+      "editor": "select",
+      "enum": [
+        "cars",
+        "motorbikes",
+        "motorhomes",
+        "vans",
+        "trucks",
+        "semi_trailer_trucks",
+        "buses",
+        "trailers",
+        "semi_trailers",
+        "agricultural_vehicles",
+        "construction_machines",
+        "forklifts",
+        "ebikes"
+      ],
+      "enumTitles": [
+        "Cars",
+        "Motorbikes",
+        "Motorhomes & campers",
+        "Vans up to 7.5 t",
+        "Trucks over 7.5 t",
+        "Tractor units",
+        "Buses & coaches",
+        "Trailers",
+        "Semi-trailers",
+        "Agricultural vehicles",
+        "Construction machines",
+        "Forklifts",
+        "E-bikes"
+      ],
+      "prefill": "cars",
+      "sectionCaption": "Vehicle filters",
+      "sectionDescription": "All filters are optional. Ranges accept 0 or empty for no bound. Filters apply in Search mode and to dealer stock.",
+      "title": "Vehicle type",
+      "type": "string"
     }
   },
   "schemaVersion": 1,
