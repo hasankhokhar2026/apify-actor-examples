@@ -78,6 +78,13 @@ jobs:
           path: site
       - name: Publish GitHub Pages
         id: deployment
+        continue-on-error: true
+        uses: {action('actions/deploy-pages')}
+      - name: Wait before retrying the publication
+        if: steps.deployment.outcome == 'failure'
+        run: sleep 90
+      - name: Publish GitHub Pages (retry)
+        if: steps.deployment.outcome == 'failure'
         uses: {action('actions/deploy-pages')}
 '''
     files[".automation/validate.py"] = '''"""Validate the exact static artifact before deployment."""
