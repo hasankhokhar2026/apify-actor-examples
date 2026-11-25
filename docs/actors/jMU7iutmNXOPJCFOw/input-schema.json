@@ -1,0 +1,91 @@
+{
+  "properties": {
+    "category": {
+      "default": "auti",
+      "description": "Njuskalo category to scrape. Used when Start URLs is empty.",
+      "editor": "select",
+      "enum": [
+        "auti",
+        "prodaja-stanova",
+        "iznajmljivanje-stanova",
+        "prodaja-kuca",
+        "mobiteli",
+        "informatika",
+        "audio-video-foto",
+        "od-glave-do-pete",
+        "sve-za-dom",
+        "posao",
+        "turisticki-smjestaj",
+        "hrana-pice"
+      ],
+      "enumTitles": [
+        "Cars",
+        "Apartments for sale",
+        "Apartments for rent",
+        "Houses for sale",
+        "Mobile phones",
+        "IT / computers",
+        "Audio / video / photo",
+        "Fashion",
+        "Home goods",
+        "Jobs",
+        "Tourist accommodation",
+        "Food & beverages"
+      ],
+      "prefill": "auti",
+      "title": "Category",
+      "type": "string"
+    },
+    "fetchDetails": {
+      "default": false,
+      "description": "If enabled, fetches each listing's detail page for richer fields (full description, seller info, all images, coordinates, category-specific attributes). Doubles HTTP request count.",
+      "editor": "checkbox",
+      "title": "Fetch Listing Details",
+      "type": "boolean"
+    },
+    "keyword": {
+      "description": "Optional free-text keyword. Appended to the category URL as ?keywords=...",
+      "editor": "textfield",
+      "title": "Keyword (optional)",
+      "type": "string"
+    },
+    "maxItems": {
+      "default": 50,
+      "description": "Maximum number of listings to return (1–10,000).",
+      "editor": "number",
+      "maximum": 10000,
+      "minimum": 1,
+      "title": "Max Items",
+      "type": "integer"
+    },
+    "proxyConfiguration": {
+      "description": "REQUIRED: Njuskalo geo-blocks non-Croatian IPs at the TCP level. Use Apify Residential proxy with apifyProxyCountry='HR'. The default prefill is correct — do not change unless you know what you're doing.",
+      "editor": "proxy",
+      "prefill": {
+        "apifyProxyCountry": "HR",
+        "apifyProxyGroups": [
+          "RESIDENTIAL"
+        ],
+        "useApifyProxy": true
+      },
+      "title": "Proxy Configuration (required)",
+      "type": "object"
+    },
+    "startUrls": {
+      "description": "Njuskalo category/search/detail URLs. Apply filters on njuskalo.hr first, then paste the URL. If empty, the Category dropdown is used.",
+      "editor": "stringList",
+      "prefill": [
+        "https://www.njuskalo.hr/auti"
+      ],
+      "title": "Start URLs (optional)",
+      "type": "array"
+    }
+  },
+  "required": [
+    "category",
+    "proxyConfiguration"
+  ],
+  "schemaVersion": 1,
+  "title": "Njuskalo Scraper Input",
+  "type": "object"
+}

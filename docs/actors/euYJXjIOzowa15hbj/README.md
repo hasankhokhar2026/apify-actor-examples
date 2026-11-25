@@ -4,93 +4,132 @@
 
 # US People Search and Address Lookup Scraper
 
-Skip tracing means turning a name into a current address, relatives and known aliases — the kind of lookup collections agencies, process servers and recruiters do manually on public-records sites. This actor automates that name-based lookup against Radaris's public people-search profiles and returns each matching profile as a structured record.
+Skip tracing starts with a name and ends with a way to reach the person: a current area, earlier cities, visible phone numbers, aliases and relatives. This actor turns a first and last name into structured public-record profiles and, when you ask it to, opens each profile for the current ZIP code and any landline numbers the source shows without a login.
+
+It reads [Peoplesearch.com](https://peoplesearch.com), a cookieless Whitepages people-search site. No account, API key or proxy setup is needed.
 
 ## What this actor does
 
-- Looks up a person by full name, optionally narrowed by city and/or US state to disambiguate common names
-- Returns every matching public profile as its own record, including known addresses, relatives and alternate name spellings
-- Attaches geo-coordinates for the primary address when the source provides them
-- Never throws on a bad or unsupported input — it returns a status record explaining what went wrong instead of failing the run silently
-- Omits any field the source profile didn't carry — no empty strings or nulls in the output
+- Searches by first and last name, optionally narrowed by city and US state
+- Returns one record per matching person, capped by `maxItems`
+- Collects the age band, current location, known previous cities, aliases, relatives and visible phone counts from the result cards
+- Optionally opens each matching profile to add the current street address with ZIP code and every full landline number shown publicly
+- Keeps names, addresses, relatives and aliases exactly as the source displays them; masked cell numbers are reported as counts, never invented
+- Returns a status record instead of crashing when the input is invalid, the search is empty or the source is unavailable
+- Omits empty fields at every depth, so no `null`, `""`, `[]` or `{}` appears in the dataset
 
 ## Output per person
 
-- `type` — always `skip_trace_person` for a matched profile
-- `id` — a stable identifier for the matched profile
-- `url` — the canonical public profile URL the record was built from
-- `fullName`, `firstName`, `lastName`
-- `age` — when disclosed
-- `birthDate`, `birthYear` — when the profile discloses a birth date
-- `jobTitle`, `occupation`, `worksFor` — employment details, when the profile carries them
-- `education[]` — school or university names, when listed
-- `phoneNumbers[]`, `emails[]` — contact details, when the profile exposes them
-- `addresses[]` — known locations, each with whatever subset of `street`, `city`, `state`, `zip`, `country` is available
-- `relatives[]` — family members and known associates, each with `name` and, when available, `relation`, `url`, `age`, `city` and `state`
-- `alternateNames[]`, `nicknames[]` — alternate spellings or known aliases (the same list under both keys)
-- `latitude`, `longitude` — geo-coordinates of the primary known address
-- `scrapedAt` — UTC scrape timestamp
+- `type` - `skip_trace_person` for a match; `skip_trace_blocked` for a status row
+- `source` - `peoplesearch.com`
+- `id`, `url` - stable profile identifier and canonical public profile URL
+- `fullName`, `firstName`, `lastName`, `nameSuffix` - name parts when the source exposes them
+- `ageRange` - the source's age band, for example `40s`
+- `location` - current city and state from the result card
+- `addresses[]` - current and known previous locations, each with the available subset of `street`, `city`, `state` and `zip`
+- `phoneNumbers[]` - full phone numbers visible without a login (usually landlines)
+- `phoneNumberCount`, `landlineCount`, `cellPhoneCount` - counts reported by the source, including masked cell numbers
+- `relatives[]` - names with city and state when listed
+- `alternateNames[]`, `nicknames[]` - known aliases (the same list under both keys)
+- `emails[]` - populated only when a profile exposes an email
+- `searchName`, `searchLocation` - the query echoed on every row so batches are easy to join back to your list
+- `latitude`, `longitude` - populated only when the source provides coordinates
+- `scrapedAt` - UTC scrape timestamp
 
-If the lookup fails or returns nothing, the dataset instead contains a status record (`type: "skip_trace_blocked"`) with a `reason` of `invalid_input`, `upstream_error` or `empty_result`, so a run never silently returns an empty dataset without explanation.
+Status rows carry `type: "skip_trace_blocked"` and a `reason` of `invalid_input`, `upstream_error` or `empty_result`.
 
 ## Input
 
 | Field | Type | Default | Description |
 |---|---|---|---|
-| `fullName` | string | – | Full name of the person to look up |
-| `city` | string | – | City to narrow the search |
-| `state` | string | – | US state abbreviation to narrow the search |
-| `phone` | string | – | Accepted but not used for lookup — this actor only supports name-based search |
-| `email` | string | – | Accepted but not used for lookup — this actor only supports name-based search |
-| `maxItems` | integer | `3` | Maximum number of matching person records to return (1–500) |
-| `proxyConfiguration` | object | Apify RESIDENTIAL (US) | Required proxy configuration used to fetch each profile page |
+| `fullName` | string | – | First and last name to look up. Required for every lookup. The daily prefill uses `John Smith`. |
+| `city` | string | – | Optional city to narrow the search. The daily prefill uses `Dallas`. |
+| `state` | string | `ANY` | Optional two-letter US state or `ANY` for nationwide. The daily prefill uses `TX`. |
+| `includeDetails` | boolean | `true` | Open each profile for the ZIP code and visible landline numbers. Turn off for a faster run with card-level fields only. |
+| `maxItems` | integer | `3` | Maximum number of matching people to return (1–500). The daily prefill uses `2`. |
 
-### Example: basic name lookup
+### Example: name only
 
 ```json
 {
-  "fullName": "John Smith",
-  "maxItems": 3
+    "fullName": "John Smith",
+    "maxItems": 3
 }
 ```
 
-### Example: disambiguating a common name with city and state
+### Example: disambiguate with a city and state
 
 ```json
 {
-  "fullName": "John Smith",
-  "city": "Dallas",
-  "state": "TX",
-  "maxItems": 5
+    "fullName": "John Smith",
+    "city": "Dallas",
+    "state": "TX",
+    "maxItems": 5
+}
+```
+
+### Example: fast card-level run
+
+```json
+{
+    "fullName": "Maria Garcia",
+    "state": "CA",
+    "includeDetails": false,
+    "maxItems": 10
 }
 ```
 
 ## Use cases
 
-- **Skip tracing for debt collection or process serving** — turn a name into a current address and relatives to contact
-- **Lead enrichment** — attach addresses and age to a lead list that only has names
-- **Background research** — gather known aliases and associated family members for a name before outreach
-- **Recruiter sourcing** — confirm location details for a candidate before scheduling local interviews
+- **Lawful re-contact** - recover a current city or ZIP code for someone you already have a lawful reason to reach
+- **Process serving and collections research** - shortlist possible matches by age band, location and relatives before manual verification
+- **Lead enrichment** - append public location and alias data to a name-only list
+- **People research** - gather known aliases and family connections around a name
+
+This actor is not a consumer reporting agency and its output is not a consumer report. Do not use it for credit, employment, tenant, insurance or other FCRA-covered decisions.
+
+## What changed in this version
+
+- The previous data source stopped serving people records and now shows only a legal notice, so the actor now reads Peoplesearch.com.
+- `fullName`, `city`, `state` and `maxItems` keep working, and the default prefill still returns records.
+- No proxy configuration is needed. The old `proxyConfiguration` key from saved tasks is accepted and ignored.
+- The old `phone` key now refines a name lookup when `fullName` is supplied: only profiles whose visible numbers match the supplied number are kept. `phone` alone still returns an `invalid_input` status row because the source cannot reverse-search a number.
+- The old `email` key is ignored because the source does not expose emails. A warning is logged and added to the status message.
+- Every previous output field name is preserved. `age` is no longer filled because the source discloses only an age band; use the new `ageRange` field. Fields the source does not carry are omitted rather than set to `null`.
+
+## Limitations
+
+- **US records only.** The source covers the United States.
+- **Name lookup only.** The source requires a first and last name; it does not offer reverse-phone, reverse-email or reverse-address search. No proxy or browser trick changes that.
+- **Cell numbers are masked.** Public profiles show cell-number counts and sometimes full landlines, but not full cell digits. The actor never guesses the missing digits.
+- **No emails in practice.** The field exists for compatibility and is omitted unless a profile exposes one.
+- **Exact age is not disclosed.** The source publishes a decade band, so `ageRange` is returned instead of `age`.
+- **Location narrows, it does not filter.** When the source cannot find the name in the requested city it may widen the search. The `location` and `searchLocation` fields let you see the difference.
+- **Profile pages can occasionally be rate-limited.** When a profile request is blocked, the actor keeps the search-card fields and reports how many pages could not be read in the run status. Retries use fresh proxy exits.
+- **Results are public records.** They can be stale, incomplete or refer to a namesake. Verify important facts independently.
 
 ## FAQ
 
-**Is this affiliated with Radaris?**
-No. This is an independent actor that reads publicly available Radaris profile pages; it is not operated by or affiliated with Radaris.
+**Do I need an Apify proxy or a login for this actor?**
+No. Requests go directly to a cookieless public site. If that site ever rejects the request, the actor automatically retries through an Apify datacenter proxy; you never configure one yourself.
 
-**Can I look up a phone number or email address instead of a name?**
-No — Radaris only indexes people by name. Supplying `phone` or `email` without a `fullName` returns an `invalid_input` status record rather than a lookup.
+**Why is `age` missing from my rows?**
+The source publishes only an age band such as `40s`. That value is in `ageRange`. The old `age` field is kept in the output schema for compatibility but is not fabricated.
 
-**Why do I only get one result for a common name?**
-Radaris aggregates profiles sharing the same first and last name on a single page. Add `city` and/or `state` to narrow the match before increasing `maxItems`.
+**Why does a profile show "3 cell phone numbers" but no cell digits?**
+The source masks cell numbers for non-subscribers. The actor reports the count in `cellPhoneCount` and only writes full numbers it can actually read.
 
-**Why would I get a `skip_trace_blocked` record instead of a person?**
-That happens when the lookup input was invalid, the source page couldn't be fetched, or the page loaded with no matching profile data — each case is labeled with its own `reason` so you can distinguish them.
+**Can I look up a phone number or an email address on its own?**
+No. The source has no reverse-phone or reverse-email endpoint. With both `fullName` and `phone`, the phone is used as a filter over the name results; an email is ignored with a warning.
 
-**Do I need to configure the proxy myself?**
-No — the required residential US proxy configuration is pre-set and should be left as-is; Radaris blocks the lookup otherwise.
+**Why did my city and state return people from other places?**
+Peoplesearch may widen a search when it has no local match. Check `location` against `searchLocation`; try a nearby larger city or drop `city` and keep `state`.
 
-**How current is the address and relative data?**
-Results reflect whatever Radaris's public profile currently shows; this actor doesn't maintain its own historical record of past addresses.
+**What does `includeDetails` do to cost and speed?**
+It adds one profile request per returned person. With it off, each search page is the only request and you still get names, age bands, current locations, aliases, relatives and phone counts.
 
-**What does `maxItems` control here?**
-It caps how many distinct matching profiles are returned for the name you searched — the default of 3 fits most lead-enrichment workflows where you only need the top match or two.
+**Why do I sometimes get a `skip_trace_blocked` row?**
+It identifies an invalid name, an empty search or an unavailable source. The `reason` and `message` fields say which, so the run never ends with a silent empty dataset.
+
+**Is this affiliated with Peoplesearch or Whitepages?**
+No. It is an independent reader of publicly accessible pages.

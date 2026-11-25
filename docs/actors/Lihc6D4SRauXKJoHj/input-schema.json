@@ -1,0 +1,229 @@
+{
+  "description": "Search Michelin-starred restaurants, filter by city or star rating, or scrape individual restaurant pages from guide.michelin.com.",
+  "properties": {
+    "city": {
+      "description": "City name to browse restaurants in (mode=byCity), e.g. `Paris`, `Tokyo`, `New York`.",
+      "editor": "textfield",
+      "title": "City",
+      "type": "string"
+    },
+    "country": {
+      "default": "",
+      "description": "Filter by country slug used in Michelin Guide URLs. Use lowercase slug format (e.g. 'france', 'japan', 'united-states'). The value is automatically normalized to lowercase if entered manually.",
+      "editor": "select",
+      "enum": [
+        "",
+        "france",
+        "japan",
+        "united-states",
+        "united-kingdom",
+        "italy",
+        "spain",
+        "germany",
+        "switzerland",
+        "belgium",
+        "netherlands",
+        "austria",
+        "sweden",
+        "norway",
+        "denmark",
+        "portugal",
+        "singapore",
+        "hong-kong-macau",
+        "south-korea",
+        "china",
+        "taiwan",
+        "thailand",
+        "malaysia",
+        "brazil",
+        "mexico",
+        "canada",
+        "australia"
+      ],
+      "enumTitles": [
+        "All countries",
+        "France",
+        "Japan",
+        "United States",
+        "United Kingdom",
+        "Italy",
+        "Spain",
+        "Germany",
+        "Switzerland",
+        "Belgium",
+        "Netherlands",
+        "Austria",
+        "Sweden",
+        "Norway",
+        "Denmark",
+        "Portugal",
+        "Singapore",
+        "Hong Kong & Macau",
+        "South Korea",
+        "China",
+        "Taiwan",
+        "Thailand",
+        "Malaysia",
+        "Brazil",
+        "Mexico",
+        "Canada",
+        "Australia"
+      ],
+      "prefill": "",
+      "title": "Country",
+      "type": "string"
+    },
+    "cuisineFilter": {
+      "default": "",
+      "description": "Filter by cuisine type. Note: 'Classic Cuisine' and 'Traditional Cuisine' are how Michelin labels most French/regional cuisine in France — use those options to find French cuisine restaurants in Paris, Lyon, etc. 'French' matches restaurants explicitly labeled 'French' by Michelin, which is more common outside France.",
+      "editor": "select",
+      "enum": [
+        "",
+        "classic",
+        "traditional",
+        "french",
+        "japanese",
+        "italian",
+        "chinese",
+        "mediterranean",
+        "contemporary",
+        "creative",
+        "seafood",
+        "steakhouse",
+        "sushi",
+        "thai",
+        "korean",
+        "indian",
+        "spanish",
+        "american",
+        "european",
+        "modern-british",
+        "cantonese",
+        "dim-sum",
+        "ramen",
+        "vegetarian"
+      ],
+      "enumTitles": [
+        "All cuisines",
+        "Classic Cuisine",
+        "Traditional Cuisine",
+        "French",
+        "Japanese",
+        "Italian",
+        "Chinese",
+        "Mediterranean",
+        "Contemporary",
+        "Creative",
+        "Seafood",
+        "Steakhouse",
+        "Sushi",
+        "Thai",
+        "Korean",
+        "Indian",
+        "Spanish",
+        "American",
+        "European",
+        "Modern British",
+        "Cantonese",
+        "Dim Sum",
+        "Ramen",
+        "Vegetarian"
+      ],
+      "prefill": "",
+      "title": "Cuisine filter",
+      "type": "string"
+    },
+    "includeDetails": {
+      "default": false,
+      "description": "If enabled, the scraper visits each individual restaurant page for additional data (phone, website, geo-coordinates, opening hours, full description). Note: detail pages may be rate-limited or blocked in some regions; listing data is always scraped regardless of this setting.",
+      "prefill": false,
+      "title": "Fetch restaurant detail pages",
+      "type": "boolean"
+    },
+    "maxItems": {
+      "default": 20,
+      "description": "Maximum number of restaurant records to emit.",
+      "maximum": 5000,
+      "minimum": 1,
+      "prefill": 5,
+      "title": "Max items",
+      "type": "integer"
+    },
+    "mode": {
+      "default": "starredRestaurants",
+      "description": "What to fetch from the Michelin Guide.",
+      "editor": "select",
+      "enum": [
+        "starredRestaurants",
+        "search",
+        "byCity",
+        "byUrl"
+      ],
+      "enumTitles": [
+        "Starred & Bib Gourmand restaurants (browse all)",
+        "Search restaurants by name or keyword",
+        "Browse restaurants by city",
+        "Scrape individual restaurant URL(s)"
+      ],
+      "prefill": "starredRestaurants",
+      "title": "Mode",
+      "type": "string"
+    },
+    "proxyConfiguration": {
+      "default": {
+        "useApifyProxy": true
+      },
+      "description": "Apify proxy settings. AUTO datacenter proxy is used by default for Michelin Guide bot-detection bypass.",
+      "editor": "proxy",
+      "prefill": {
+        "useApifyProxy": true
+      },
+      "title": "Proxy configuration",
+      "type": "object"
+    },
+    "searchQuery": {
+      "description": "Restaurant name or keyword to search for (mode=search).",
+      "editor": "textfield",
+      "title": "Search query",
+      "type": "string"
+    },
+    "starFilter": {
+      "default": "",
+      "description": "Filter restaurants by Michelin distinction (applies to all modes).",
+      "editor": "select",
+      "enum": [
+        "",
+        "1",
+        "2",
+        "3",
+        "bib",
+        "selected"
+      ],
+      "enumTitles": [
+        "All distinctions",
+        "1 Star",
+        "2 Stars",
+        "3 Stars",
+        "Bib Gourmand",
+        "Selected (Michelin Plate)"
+      ],
+      "prefill": "",
+      "title": "Star / distinction filter",
+      "type": "string"
+    },
+    "startUrls": {
+      "default": [],
+      "description": "List of Michelin Guide restaurant page URLs to scrape (mode=byUrl). Each item must have a `url` key, e.g. `https://guide.michelin.com/en/ile-de-france/paris/restaurant/guy-savoy`.",
+      "editor": "requestListSources",
+      "prefill": [],
+      "title": "Start URLs (mode=byUrl)",
+      "type": "array"
+    }
+  },
+  "required": [
+    "mode"
+  ],
+  "schemaVersion": 1,
+  "title": "Michelin Guide Scraper Input",
+  "type": "object"
+}

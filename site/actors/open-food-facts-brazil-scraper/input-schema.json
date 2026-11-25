@@ -1,0 +1,92 @@
+{
+  "description": "Search Brazilian food products from Open Food Facts Brazil by keyword, category, or brand.",
+  "properties": {
+    "barcodes": {
+      "default": [],
+      "description": "List of EAN-13 or EAN-8 barcodes to look up.",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Barcodes / EANs (mode=byBarcode)",
+      "type": "array"
+    },
+    "brandName": {
+      "description": "Brand to filter by, e.g. 'Nestlé', 'Sadia', 'Vigor', 'Camil'.",
+      "editor": "textfield",
+      "title": "Brand name (mode=byBrand)",
+      "type": "string"
+    },
+    "categoryTag": {
+      "description": "Open Food Facts category tag, e.g. 'cereais', 'biscoitos', 'iogurtes', 'sucos', 'massas'. Use lowercase with hyphens.",
+      "editor": "textfield",
+      "title": "Category tag (mode=byCategory)",
+      "type": "string"
+    },
+    "maxItems": {
+      "default": 50,
+      "description": "Maximum number of products to return.",
+      "maximum": 500,
+      "minimum": 1,
+      "prefill": 50,
+      "title": "Max items",
+      "type": "integer"
+    },
+    "mode": {
+      "default": "search",
+      "description": "What to scrape.",
+      "editor": "select",
+      "enum": [
+        "search",
+        "byBarcode",
+        "byCategory",
+        "byBrand"
+      ],
+      "enumTitles": [
+        "Search products by keyword",
+        "Lookup products by barcode (EAN)",
+        "Browse by category",
+        "Browse by brand"
+      ],
+      "prefill": "search",
+      "title": "Mode",
+      "type": "string"
+    },
+    "nutritionGradeFilter": {
+      "default": "",
+      "description": "Only return products with this Nutri-Score grade or better. 'a' = best, 'e' = worst.",
+      "editor": "select",
+      "enum": [
+        "",
+        "a",
+        "b",
+        "c",
+        "d",
+        "e"
+      ],
+      "enumTitles": [
+        "No filter",
+        "A (best)",
+        "B",
+        "C",
+        "D",
+        "E (worst)"
+      ],
+      "prefill": "",
+      "title": "Nutrition grade filter",
+      "type": "string"
+    },
+    "searchQuery": {
+      "default": "arroz",
+      "description": "Free-text search term (mode=search). Examples: 'arroz', 'feijão', 'biscoito', 'iogurte'.",
+      "editor": "textfield",
+      "prefill": "arroz",
+      "title": "Search query",
+      "type": "string"
+    }
+  },
+  "required": [
+    "mode"
+  ],
+  "schemaVersion": 1,
+  "title": "Open Food Facts Brazil Scraper Input",
+  "type": "object"
+}

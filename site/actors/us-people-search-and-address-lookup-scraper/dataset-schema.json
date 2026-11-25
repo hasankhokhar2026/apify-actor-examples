@@ -3,56 +3,162 @@
   "fields": {
     "properties": {
       "addresses": {
-        "description": "Current and past addresses for the person.",
+        "description": "Current and known previous locations. Each item contains whichever of street, city, state and zip the source exposes.",
         "items": {
           "type": "object"
         },
-        "nullable": true,
         "type": "array"
       },
       "age": {
-        "description": "Estimated current age of the person.",
-        "nullable": true,
+        "description": "Exact age when a source discloses it (the current source discloses only a range).",
         "type": "integer"
       },
-      "emails": {
-        "description": "All email addresses associated with the person.",
+      "ageRange": {
+        "description": "Approximate age band disclosed by the source, for example '40s'.",
+        "type": "string"
+      },
+      "alternateNames": {
+        "description": "Known aliases and alternate spellings.",
         "items": {
           "type": "string"
         },
-        "nullable": true,
         "type": "array"
+      },
+      "birthDate": {
+        "description": "Birth date when a profile discloses one.",
+        "type": "string"
+      },
+      "birthYear": {
+        "description": "Birth year when a profile discloses one.",
+        "type": "integer"
+      },
+      "cellPhoneCount": {
+        "description": "Number of cell phones the source reports.",
+        "type": "integer"
+      },
+      "education": {
+        "description": "Schools or universities when a profile lists them.",
+        "items": {
+          "type": "string"
+        },
+        "type": "array"
+      },
+      "emails": {
+        "description": "Email addresses when a profile exposes them.",
+        "items": {
+          "type": "string"
+        },
+        "type": "array"
+      },
+      "firstName": {
+        "description": "First name parsed from the profile.",
+        "type": "string"
       },
       "fullName": {
         "description": "Full name of the matched person.",
-        "nullable": true,
         "type": "string"
       },
       "id": {
-        "description": "Stable identifier for the person record on the upstream source.",
-        "nullable": true,
+        "description": "Stable identifier of the person profile on the source.",
+        "type": "string"
+      },
+      "jobTitle": {
+        "description": "Job title when a profile discloses one.",
+        "type": "string"
+      },
+      "landlineCount": {
+        "description": "Number of landlines the source reports.",
+        "type": "integer"
+      },
+      "lastName": {
+        "description": "Last name parsed from the profile.",
+        "type": "string"
+      },
+      "latitude": {
+        "description": "Latitude when a source provides coordinates.",
+        "type": "number"
+      },
+      "location": {
+        "description": "Current city and state as shown on the search result.",
+        "type": "string"
+      },
+      "longitude": {
+        "description": "Longitude when a source provides coordinates.",
+        "type": "number"
+      },
+      "message": {
+        "description": "Human-readable status message for a status row.",
+        "type": "string"
+      },
+      "nameSuffix": {
+        "description": "Name suffix such as Jr., Sr., II or III when the profile carries one.",
+        "type": "string"
+      },
+      "nicknames": {
+        "description": "The same aliases under the legacy nickname key.",
+        "items": {
+          "type": "string"
+        },
+        "type": "array"
+      },
+      "occupation": {
+        "description": "Occupation when a profile discloses one.",
+        "type": "string"
+      },
+      "phoneNumberCount": {
+        "description": "Total phone numbers the source reports for this person (including masked cells).",
+        "type": "integer"
+      },
+      "phoneNumbers": {
+        "description": "Phone numbers visible without a login. Cell numbers masked by the source are never fabricated.",
+        "items": {
+          "type": "string"
+        },
+        "type": "array"
+      },
+      "reason": {
+        "description": "Status-row reason: invalid_input, upstream_error or empty_result.",
         "type": "string"
       },
       "relatives": {
-        "description": "Relatives and known associates of the person.",
+        "description": "Relatives and known associates, with a name and when available city and state.",
         "items": {
           "type": "object"
         },
-        "nullable": true,
         "type": "array"
       },
       "scrapedAt": {
         "description": "ISO-8601 UTC timestamp when this record was produced.",
         "type": "string"
       },
+      "searchLocation": {
+        "description": "The city/state supplied in the input, echoed for joining rows back to a list.",
+        "type": "string"
+      },
+      "searchName": {
+        "description": "The name supplied in the input, echoed for joining rows back to a list.",
+        "type": "string"
+      },
+      "source": {
+        "description": "Cookieless data source that produced the record (peoplesearch.com).",
+        "type": "string"
+      },
       "type": {
-        "description": "Record type. 'skip_trace_person' for a person profile, 'skip_trace_blocked' for a sentinel row.",
+        "description": "Record type. 'skip_trace_person' for a person profile, 'skip_trace_blocked' for a status row.",
+        "type": "string"
+      },
+      "url": {
+        "description": "Canonical public profile URL.",
+        "type": "string"
+      },
+      "worksFor": {
+        "description": "Employer when a profile discloses one.",
         "type": "string"
       }
     },
     "type": "object"
   },
-  "title": "SkipTrace People Lookup",
+  "title": "Skip Trace People Lookup",
   "views": {
     "overview": {
       "display": {
@@ -62,17 +168,25 @@
             "format": "array",
             "label": "Addresses"
           },
-          "age": {
-            "format": "number",
-            "label": "Age"
-          },
-          "emails": {
-            "format": "array",
-            "label": "Emails"
+          "ageRange": {
+            "format": "text",
+            "label": "Age Range"
           },
           "fullName": {
             "format": "text",
             "label": "Full Name"
+          },
+          "location": {
+            "format": "text",
+            "label": "Location"
+          },
+          "phoneNumbers": {
+            "format": "array",
+            "label": "Phones"
+          },
+          "relatives": {
+            "format": "array",
+            "label": "Relatives"
           },
           "scrapedAt": {
             "format": "text",
@@ -81,6 +195,10 @@
           "type": {
             "format": "text",
             "label": "Type"
+          },
+          "url": {
+            "format": "text",
+            "label": "Profile URL"
           }
         }
       },
@@ -89,9 +207,12 @@
         "fields": [
           "type",
           "fullName",
-          "age",
-          "emails",
+          "ageRange",
+          "location",
+          "phoneNumbers",
           "addresses",
+          "relatives",
+          "url",
           "scrapedAt"
         ]
       }

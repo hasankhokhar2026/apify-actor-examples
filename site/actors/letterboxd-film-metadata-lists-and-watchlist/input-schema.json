@@ -1,0 +1,228 @@
+{
+  "description": "Scrape film metadata, search results, popular films, lists, film reviews, byCrew (director/actor/studio/country), or user profiles + watchlists from Letterboxd.",
+  "properties": {
+    "crewSlug": {
+      "description": "Letterboxd slug for the chosen `crewType`. E.g. `christopher-nolan` (director), `timothee-chalamet` (actor), `a24` (studio), `japan` or `south-korea` (country).",
+      "editor": "textfield",
+      "prefill": "christopher-nolan",
+      "title": "Crew slug (mode=byCrew)",
+      "type": "string"
+    },
+    "crewType": {
+      "default": "director",
+      "description": "Which crew axis to browse films by.",
+      "editor": "select",
+      "enum": [
+        "director",
+        "actor",
+        "studio",
+        "country"
+      ],
+      "enumTitles": [
+        "Director",
+        "Actor / cast member",
+        "Production studio",
+        "Country of origin"
+      ],
+      "prefill": "director",
+      "title": "Crew type (mode=byCrew)",
+      "type": "string"
+    },
+    "enrichSearchResults": {
+      "default": false,
+      "description": "When `mode=search`, also visit each film's page to pull full metadata (rating, genres, cast). Adds ~0.5s per result but enables year/rating/genre filters.",
+      "prefill": false,
+      "title": "Enrich search results with full film page",
+      "type": "boolean"
+    },
+    "filmSlug": {
+      "description": "Single film slug or URL whose reviews to scrape (e.g. `parasite-2019`).",
+      "editor": "textfield",
+      "prefill": "parasite-2019",
+      "title": "Film slug (mode=filmReviews)",
+      "type": "string"
+    },
+    "filmSlugs": {
+      "default": [
+        "parasite-2019"
+      ],
+      "description": "Film slugs (e.g. `parasite-2019`) or full Letterboxd URLs (`https://letterboxd.com/film/parasite-2019/`).",
+      "editor": "stringList",
+      "prefill": [
+        "parasite-2019"
+      ],
+      "title": "Film slugs / URLs (mode=film)",
+      "type": "array"
+    },
+    "genre": {
+      "description": "Drop films missing this genre. Also used to scope `mode=popular` URL.",
+      "editor": "select",
+      "enum": [
+        "Action",
+        "Adventure",
+        "Animation",
+        "Comedy",
+        "Crime",
+        "Documentary",
+        "Drama",
+        "Family",
+        "Fantasy",
+        "History",
+        "Horror",
+        "Music",
+        "Mystery",
+        "Romance",
+        "Science Fiction",
+        "TV Movie",
+        "Thriller",
+        "War",
+        "Western"
+      ],
+      "enumTitles": [
+        "Action",
+        "Adventure",
+        "Animation",
+        "Comedy",
+        "Crime",
+        "Documentary",
+        "Drama",
+        "Family",
+        "Fantasy",
+        "History",
+        "Horror",
+        "Music",
+        "Mystery",
+        "Romance",
+        "Science Fiction",
+        "TV Movie",
+        "Thriller",
+        "War",
+        "Western"
+      ],
+      "title": "Genre filter",
+      "type": "string"
+    },
+    "listUrl": {
+      "description": "Full Letterboxd list URL (e.g. `https://letterboxd.com/dave/list/official-top-250-narrative-feature-films/`). Leave empty to fetch the popular-lists index for the chosen `popularPeriod`.",
+      "editor": "textfield",
+      "title": "List URL (mode=lists)",
+      "type": "string"
+    },
+    "maxItems": {
+      "default": 25,
+      "description": "Hard cap on emitted records.",
+      "maximum": 500,
+      "minimum": 1,
+      "prefill": 25,
+      "title": "Max items",
+      "type": "integer"
+    },
+    "maxYear": {
+      "description": "Drop films released after this year.",
+      "maximum": 2100,
+      "minimum": 1880,
+      "title": "Max release year",
+      "type": "integer"
+    },
+    "minRating": {
+      "description": "Drop films with average rating (0-5 scale ×100, so 350 = 3.5/5) below this. Optional.",
+      "maximum": 500,
+      "minimum": 0,
+      "title": "Min average rating",
+      "type": "integer"
+    },
+    "minYear": {
+      "description": "Drop films released before this year.",
+      "maximum": 2100,
+      "minimum": 1880,
+      "title": "Min release year",
+      "type": "integer"
+    },
+    "mode": {
+      "default": "film",
+      "description": "What to fetch.",
+      "editor": "select",
+      "enum": [
+        "film",
+        "search",
+        "userProfile",
+        "lists",
+        "popular",
+        "filmReviews",
+        "byCrew",
+        "userWatchlist"
+      ],
+      "enumTitles": [
+        "Single film by slug or URL",
+        "Search films by title",
+        "User profile + activity stats",
+        "List contents (provide listUrl) OR popular lists index",
+        "Popular films (by week / month / year / all-time)",
+        "Reviews for a film (by activity)",
+        "Films by crew (director / actor / studio / country)",
+        "User watchlist (paginated)"
+      ],
+      "prefill": "film",
+      "title": "Mode",
+      "type": "string"
+    },
+    "popularPeriod": {
+      "default": "week",
+      "description": "Time window for popularity ranking.",
+      "editor": "select",
+      "enum": [
+        "week",
+        "month",
+        "year",
+        "all-time"
+      ],
+      "enumTitles": [
+        "This week",
+        "This month",
+        "This year",
+        "All time"
+      ],
+      "prefill": "week",
+      "title": "Popular period (mode=popular / lists)",
+      "type": "string"
+    },
+    "proxy": {
+      "default": {
+        "apifyProxyGroups": [
+          "RESIDENTIAL"
+        ],
+        "useApifyProxy": true
+      },
+      "description": "Optional Apify Proxy. Letterboxd's autocomplete endpoint (used by `mode=search`) blocks many datacenter IPs, so residential is recommended for search. `mode=film` and `mode=userProfile` work without proxy.",
+      "editor": "proxy",
+      "prefill": {
+        "apifyProxyGroups": [
+          "RESIDENTIAL"
+        ],
+        "useApifyProxy": true
+      },
+      "title": "Apify Proxy (optional)",
+      "type": "object"
+    },
+    "searchQuery": {
+      "description": "Film title query (e.g. `Dune`, `The Godfather`). Note: the underlying autocomplete API returns at most ~100 results per query; for deeper results use `mode=film` with explicit `filmSlugs`.",
+      "editor": "textfield",
+      "prefill": "Dune",
+      "title": "Search query (mode=search)",
+      "type": "string"
+    },
+    "username": {
+      "description": "Letterboxd username (without @).",
+      "editor": "textfield",
+      "prefill": "dave",
+      "title": "Username (mode=userProfile / userWatchlist)",
+      "type": "string"
+    }
+  },
+  "required": [
+    "mode"
+  ],
+  "schemaVersion": 1,
+  "title": "Letterboxd Scraper Input",
+  "type": "object"
+}

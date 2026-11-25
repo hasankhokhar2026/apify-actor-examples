@@ -1,24 +1,66 @@
 {
-  "description": "Search Chewy.com for pet products, browse by category or brand, or enrich specific product URLs.",
+  "description": "Search Chewy.com by keyword, browse category, brand or listing URLs, or look up specific products. Every field below is used by the actor.",
   "properties": {
     "autoshipOnly": {
       "default": false,
-      "description": "Only return products eligible for Chewy Autoship subscription.",
+      "description": "Only return products that offer Chewy Autoship.",
       "prefill": false,
       "title": "Autoship eligible only",
       "type": "boolean"
     },
     "brandName": {
-      "description": "Brand name to scrape all products for (mode=byBrand). Example: `Royal Canin`, `Blue Buffalo`.",
+      "description": "Brand to scrape (mode=byBrand). Example: `Royal Canin`, `Blue Buffalo`.",
       "editor": "textfield",
       "title": "Brand name (mode=byBrand)",
       "type": "string"
     },
+    "brandNames": {
+      "default": [],
+      "description": "Several brands to scrape in one run (mode=byBrand).",
+      "editor": "stringList",
+      "title": "Brand names (mode=byBrand)",
+      "type": "array"
+    },
     "categoryUrl": {
-      "description": "Full Chewy category URL to browse (mode=byCategory). Example: `https://www.chewy.com/b/dry-food-294`.",
+      "description": "Full Chewy category URL (mode=byCategory). Example: `https://www.chewy.com/b/dry-food-294`.",
       "editor": "textfield",
       "title": "Category URL (mode=byCategory)",
       "type": "string"
+    },
+    "categoryUrls": {
+      "default": [],
+      "description": "Several Chewy category URLs to browse in one run (mode=byCategory).",
+      "editor": "stringList",
+      "title": "Category URLs (mode=byCategory)",
+      "type": "array"
+    },
+    "dealOnly": {
+      "default": false,
+      "description": "Only return products Chewy marks as a current deal.",
+      "prefill": false,
+      "title": "Deals only",
+      "type": "boolean"
+    },
+    "enrichDetails": {
+      "default": false,
+      "description": "Fetch each product's detail page to add variants, ingredients, attributes and packaging. Slower but richer output; off by default.",
+      "prefill": false,
+      "title": "Enrich with product details",
+      "type": "boolean"
+    },
+    "excludeKeywords": {
+      "default": [],
+      "description": "Skip products whose name contains any of these words (case-insensitive).",
+      "editor": "stringList",
+      "title": "Exclude keywords",
+      "type": "array"
+    },
+    "excludeProductIds": {
+      "default": [],
+      "description": "Skip these product ids or SKUs.",
+      "editor": "stringList",
+      "title": "Exclude product ids",
+      "type": "array"
     },
     "inStockOnly": {
       "default": false,
@@ -27,12 +69,19 @@
       "title": "In stock only",
       "type": "boolean"
     },
+    "listingUrls": {
+      "default": [],
+      "description": "Any Chewy search, category, brand or deals URL (mode=byListingUrls). Product URLs are also accepted and treated as product lookups.",
+      "editor": "stringList",
+      "title": "Listing URLs (mode=byListingUrls)",
+      "type": "array"
+    },
     "maxItems": {
       "default": 50,
       "description": "Maximum number of products to return.",
       "maximum": 5000,
       "minimum": 1,
-      "prefill": 50,
+      "prefill": 3,
       "title": "Max items",
       "type": "integer"
     },
@@ -41,17 +90,17 @@
       "maximum": 10000,
       "minimum": 0,
       "title": "Maximum price ($)",
-      "type": "integer"
+      "type": "number"
     },
     "minPrice": {
       "description": "Only return products priced at or above this value.",
       "maximum": 10000,
       "minimum": 0,
       "title": "Minimum price ($)",
-      "type": "integer"
+      "type": "number"
     },
     "minRating": {
-      "description": "Only return products with an average rating at or above this value (0.0–5.0).",
+      "description": "Only return products rated at or above this value (0.0–5.0).",
       "maximum": 5,
       "minimum": 0,
       "title": "Minimum rating",
@@ -59,27 +108,38 @@
     },
     "mode": {
       "default": "search",
-      "description": "How to find products. `search` for keyword search, `byCategory` to browse a category URL, `byBrand` for all products of a brand, `byProductUrls` to enrich specific product pages.",
+      "description": "How to find products. `search` for keyword search, `byCategory` for category URLs, `byBrand` for a brand name, `byProductUrls` for product page URLs, `byProductIds` for bare Chewy product ids, and `byListingUrls` for any Chewy listing/search URL.",
       "editor": "select",
       "enum": [
         "search",
         "byCategory",
         "byBrand",
-        "byProductUrls"
+        "byProductUrls",
+        "byProductIds",
+        "byListingUrls"
       ],
       "enumTitles": [
         "Search products",
-        "Browse by category URL",
-        "All products by brand name",
-        "Enrich specific product URLs"
+        "Browse category URLs",
+        "All products by brand",
+        "Product page URLs",
+        "Chewy product ids",
+        "Any Chewy listing URL"
       ],
       "prefill": "search",
       "title": "Mode",
       "type": "string"
     },
+    "newOnly": {
+      "default": false,
+      "description": "Only return products Chewy marks as new.",
+      "prefill": false,
+      "title": "New products only",
+      "type": "boolean"
+    },
     "petType": {
       "default": "all",
-      "description": "Filter search results by pet type (mode=search).",
+      "description": "Only return products for this pet type. Applied server-side when Chewy exposes a pet facet and verified from product detail pages otherwise.",
       "editor": "select",
       "enum": [
         "all",
@@ -89,7 +149,8 @@
         "bird",
         "reptile",
         "small-pet",
-        "farm-animal"
+        "farm-animal",
+        "horse"
       ],
       "enumTitles": [
         "All pets",
@@ -99,11 +160,27 @@
         "Bird",
         "Reptile",
         "Small pet",
-        "Farm animal"
+        "Farm animal",
+        "Horse"
       ],
       "prefill": "all",
       "title": "Pet type filter",
       "type": "string"
+    },
+    "productIds": {
+      "default": [],
+      "description": "Bare Chewy product ids (the number after /dp/) or product URLs (mode=byProductIds).",
+      "editor": "stringList",
+      "title": "Product ids (mode=byProductIds)",
+      "type": "array"
+    },
+    "searchQueries": {
+      "default": [],
+      "description": "Run several keyword searches in one go (mode=search). When filled, these run in addition to `searchQuery`.",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Search queries",
+      "type": "array"
     },
     "searchQuery": {
       "default": "dog food",
@@ -115,7 +192,7 @@
     },
     "sortBy": {
       "default": "best-match",
-      "description": "Sort order for search and category results.",
+      "description": "Result order for search, category, brand and listing modes.",
       "editor": "select",
       "enum": [
         "best-match",
@@ -123,7 +200,8 @@
         "bestselling",
         "price-asc",
         "price-desc",
-        "new-arrivals"
+        "new-arrivals",
+        "most-reviewed"
       ],
       "enumTitles": [
         "Best match",
@@ -131,7 +209,8 @@
         "Best selling",
         "Price: Low to High",
         "Price: High to Low",
-        "New arrivals"
+        "New arrivals",
+        "Most reviewed"
       ],
       "prefill": "best-match",
       "title": "Sort by",
@@ -139,7 +218,7 @@
     },
     "startUrls": {
       "default": [],
-      "description": "List of Chewy product page URLs to enrich (mode=byProductUrls). Example: `https://www.chewy.com/royal-canin-adult-dry-dog-food/dp/123456`.",
+      "description": "Chewy product page URLs to enrich (mode=byProductUrls). Example: `https://www.chewy.com/royal-canin-adult-dry-dog-food/dp/123456`.",
       "editor": "stringList",
       "prefill": [],
       "title": "Product URLs (mode=byProductUrls)",

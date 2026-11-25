@@ -1,0 +1,160 @@
+{
+  "description": "Search Macy's by keyword, browse a department/category listing, or fetch full product detail by ID.",
+  "properties": {
+    "brand": {
+      "description": "Case-insensitive substring match against the product brand (e.g. `Nike`, `Ralph Lauren`).",
+      "editor": "textfield",
+      "title": "Brand contains",
+      "type": "string"
+    },
+    "categoryPath": {
+      "description": "A Macy's category/department path. Pick a common one from the dropdown-style examples below, or paste any `macys.com/shop/...` category URL / path.",
+      "editor": "select",
+      "enum": [
+        "womens-clothing",
+        "womens/clothing/dresses?id=5449",
+        "mens-clothing",
+        "mens/clothing/shirts?id=20626",
+        "shoes",
+        "mens/shoes?id=55822",
+        "handbags-accessories",
+        "jewelry-watches",
+        "beauty",
+        "kids-baby?id=5991",
+        "for-the-home",
+        "sale"
+      ],
+      "enumTitles": [
+        "Women's Clothing",
+        "Women's Dresses",
+        "Men's Clothing",
+        "Men's Shirts",
+        "Shoes (women's default)",
+        "Men's Shoes",
+        "Handbags & Accessories",
+        "Jewelry & Watches",
+        "Beauty",
+        "Kids & Baby Clothes",
+        "Home",
+        "Sale / Clearance"
+      ],
+      "title": "Category path (mode=category)",
+      "type": "string"
+    },
+    "excludeSponsored": {
+      "default": false,
+      "description": "Macy's interleaves paid-placement (\"featured\") tiles into search/category listings that ignore the requested sort order (e.g. a pricier sponsored item can appear mid-way through a Price: Low to High sort). Enable to drop these and keep only organically-ranked/sorted results.",
+      "prefill": false,
+      "title": "Exclude sponsored/featured items",
+      "type": "boolean"
+    },
+    "includeReviews": {
+      "default": false,
+      "description": "When true, `product` mode also emits a `reviews[]` array (author, date, title, text, rating) parsed from the product page's review data. Off by default to keep records compact.",
+      "prefill": false,
+      "title": "Include customer reviews (mode=product)",
+      "type": "boolean"
+    },
+    "maxItems": {
+      "default": 50,
+      "description": "Hard cap on emitted records.",
+      "maximum": 1000,
+      "minimum": 1,
+      "prefill": 50,
+      "title": "Max items",
+      "type": "integer"
+    },
+    "maxPrice": {
+      "description": "Drop products priced above this amount.",
+      "maximum": 100000,
+      "minimum": 0,
+      "title": "Max price (USD)",
+      "type": "integer"
+    },
+    "minPrice": {
+      "description": "Drop products priced below this amount.",
+      "maximum": 100000,
+      "minimum": 0,
+      "title": "Min price (USD)",
+      "type": "integer"
+    },
+    "minRating": {
+      "description": "Drop products with a review rating below this value.",
+      "maximum": 5,
+      "minimum": 0,
+      "title": "Min rating (0-5)",
+      "type": "integer"
+    },
+    "mode": {
+      "default": "search",
+      "description": "What to fetch.",
+      "editor": "select",
+      "enum": [
+        "search",
+        "category",
+        "product"
+      ],
+      "enumTitles": [
+        "Search products by keyword",
+        "Browse a department/category listing",
+        "Lookup full product detail by ID"
+      ],
+      "prefill": "search",
+      "title": "Mode",
+      "type": "string"
+    },
+    "onSaleOnly": {
+      "default": false,
+      "description": "Only emit products that are currently discounted from an original price.",
+      "prefill": false,
+      "title": "On-sale only",
+      "type": "boolean"
+    },
+    "productIds": {
+      "default": [],
+      "description": "Macy's numeric product IDs (e.g. `20663500`) or full product page URLs.",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Product IDs / URLs (mode=product)",
+      "type": "array"
+    },
+    "searchQuery": {
+      "default": "womens dresses",
+      "description": "Free-text keyword search (mode=search), e.g. `womens dresses`, `running shoes`, `mens suit`.",
+      "editor": "textfield",
+      "prefill": "womens dresses",
+      "title": "Search query",
+      "type": "string"
+    },
+    "sortBy": {
+      "default": "ORIGINAL",
+      "description": "Sort order for listing results.",
+      "editor": "select",
+      "enum": [
+        "ORIGINAL",
+        "PRICE_LOW_TO_HIGH",
+        "PRICE_HIGH_TO_LOW",
+        "TOP_RATED",
+        "BEST_SELLERS",
+        "NEW_ITEMS"
+      ],
+      "enumTitles": [
+        "Featured Items",
+        "Price: Low to High",
+        "Price: High to Low",
+        "Customers' Top Rated",
+        "Best Sellers",
+        "New Arrivals"
+      ],
+      "prefill": "ORIGINAL",
+      "title": "Sort order (search / category)",
+      "type": "string"
+    }
+  },
+  "required": [
+    "mode"
+  ],
+  "schemaVersion": 1,
+  "title": "Macy's Scraper Input",
+  "type": "object"
+}

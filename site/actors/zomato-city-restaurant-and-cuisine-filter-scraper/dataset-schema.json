@@ -1,6 +1,63 @@
 {
   "actorSpecification": 1,
   "views": {
+    "menu": {
+      "display": {
+        "component": "table",
+        "properties": {
+          "category": {
+            "format": "text",
+            "label": "Category"
+          },
+          "currency": {
+            "format": "text",
+            "label": "Currency"
+          },
+          "description": {
+            "format": "text",
+            "label": "Description"
+          },
+          "isVeg": {
+            "format": "boolean",
+            "label": "Veg"
+          },
+          "menu": {
+            "format": "text",
+            "label": "Menu"
+          },
+          "name": {
+            "format": "text",
+            "label": "Dish"
+          },
+          "price": {
+            "format": "number",
+            "label": "Price"
+          },
+          "recordType": {
+            "format": "text",
+            "label": "Type"
+          },
+          "restaurantName": {
+            "format": "text",
+            "label": "Restaurant"
+          }
+        }
+      },
+      "title": "Menu items",
+      "transformation": {
+        "fields": [
+          "recordType",
+          "restaurantName",
+          "menu",
+          "category",
+          "name",
+          "price",
+          "currency",
+          "isVeg",
+          "description"
+        ]
+      }
+    },
     "overview": {
       "display": {
         "component": "table",
@@ -21,6 +78,10 @@
             "format": "text",
             "label": "Name"
           },
+          "price.currency": {
+            "format": "text",
+            "label": "Currency"
+          },
           "price.for_two": {
             "format": "number",
             "label": "For Two"
@@ -28,6 +89,10 @@
           "ratings.aggregate": {
             "format": "number",
             "label": "Rating"
+          },
+          "recordType": {
+            "format": "text",
+            "label": "Type"
           },
           "status": {
             "format": "text",
@@ -42,14 +107,110 @@
       "title": "Restaurants",
       "transformation": {
         "fields": [
+          "recordType",
           "name",
           "cuisines",
           "ratings.aggregate",
           "price.for_two",
+          "price.currency",
           "location.locality",
           "location.city",
           "status",
           "url"
+        ]
+      }
+    },
+    "photos": {
+      "display": {
+        "component": "table",
+        "properties": {
+          "commentCount": {
+            "format": "number",
+            "label": "Comments"
+          },
+          "likeCount": {
+            "format": "number",
+            "label": "Likes"
+          },
+          "recordType": {
+            "format": "text",
+            "label": "Type"
+          },
+          "restaurantName": {
+            "format": "text",
+            "label": "Restaurant"
+          },
+          "timestamp": {
+            "format": "text",
+            "label": "Uploaded"
+          },
+          "url": {
+            "format": "image",
+            "label": "Photo"
+          }
+        }
+      },
+      "title": "Photos",
+      "transformation": {
+        "fields": [
+          "recordType",
+          "restaurantName",
+          "timestamp",
+          "url",
+          "likeCount",
+          "commentCount"
+        ]
+      }
+    },
+    "reviews": {
+      "display": {
+        "component": "table",
+        "properties": {
+          "likeCount": {
+            "format": "number",
+            "label": "Likes"
+          },
+          "rating": {
+            "format": "number",
+            "label": "Rating"
+          },
+          "recordType": {
+            "format": "text",
+            "label": "Type"
+          },
+          "restaurantName": {
+            "format": "text",
+            "label": "Restaurant"
+          },
+          "reviewDate": {
+            "format": "text",
+            "label": "Date"
+          },
+          "reviewText": {
+            "format": "text",
+            "label": "Review"
+          },
+          "reviewUrl": {
+            "format": "link",
+            "label": "Review URL"
+          },
+          "userName": {
+            "format": "text",
+            "label": "Reviewer"
+          }
+        }
+      },
+      "title": "Reviews",
+      "transformation": {
+        "fields": [
+          "recordType",
+          "reviewDate",
+          "rating",
+          "userName",
+          "reviewText",
+          "restaurantName",
+          "likeCount",
+          "reviewUrl"
         ]
       }
     }

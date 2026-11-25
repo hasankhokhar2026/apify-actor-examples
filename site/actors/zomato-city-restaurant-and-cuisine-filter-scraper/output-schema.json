@@ -1,14 +1,32 @@
 {
   "actorOutputSchemaVersion": 1,
-  "description": "Restaurant records with name, cuisines, ratings, cost for two, location, and contact details scraped from Zomato city, cuisine, and locality pages.",
+  "description": "Restaurant rows with contact, rating, offer and menu data; review rows with text, replies and photos; dish rows with prices; and photo rows. Choose the view in the Apify Console or through ?view= on the dataset API.",
   "properties": {
+    "menuItems": {
+      "description": "One row per dish from Menu mode.",
+      "template": "{{links.apiDefaultDatasetUrl}}/items?view=menu",
+      "title": "Menu items",
+      "type": "string"
+    },
+    "photos": {
+      "description": "One row per gallery photo from Photos mode or includePhotos.",
+      "template": "{{links.apiDefaultDatasetUrl}}/items?view=photos",
+      "title": "Photos",
+      "type": "string"
+    },
     "restaurants": {
-      "description": "Dataset containing all scraped restaurants.",
-      "template": "{{links.apiDefaultDatasetUrl}}/items",
-      "title": "Scraped Restaurants",
+      "description": "Restaurant rows, including full menu and review data when those toggles are on.",
+      "template": "{{links.apiDefaultDatasetUrl}}/items?view=overview",
+      "title": "Restaurants",
+      "type": "string"
+    },
+    "reviews": {
+      "description": "One row per review from Reviews mode or includeReviews.",
+      "template": "{{links.apiDefaultDatasetUrl}}/items?view=reviews",
+      "title": "Reviews",
       "type": "string"
     }
   },
-  "title": "Zomato City Restaurant & Cuisine Filter Scraper Output",
+  "title": "Zomato Restaurant, Menu & Review Data Extractor Output",
   "type": "object"
 }

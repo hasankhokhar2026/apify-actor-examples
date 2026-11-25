@@ -4,58 +4,73 @@
 
 # Chewy Pet Product Price & Autoship Finder
 
-Chewy is one of the largest US online pet retailers, selling food, treats, toys and supplies for dogs, cats and other pets. This actor searches Chewy by keyword, category URL, brand name or a specific list of product URLs, and returns each product as a structured record with pricing, Autoship subscription price, rating and variant detail.
+Chewy.com is the largest US online pet retailer. This actor turns its public catalog into structured product records: current price, Autoship price, list price, rating, stock, variants, ingredients and package attributes.
 
-## What this actor does
+It runs without a Chewy login, cookies, API key or proxy configuration. Three ways to start: a keyword, a category/brand/listing URL, or a list of product ids or product URLs.
 
-- Searches Chewy products by keyword, with optional pet-type and sort filters
-- Browses every product in a given category URL
-- Pulls every product listed under a specific brand name
-- Enriches a list of specific Chewy product URLs with full detail, including size/flavor variants
-- Empty fields are omitted from records — a field only appears when Chewy actually shows that data for the product
+## What it does
 
-## Output per product
+- Keyword search across the full Chewy catalog, with multiple queries per run
+- Category, brand and deals browsing by URL or brand name
+- Product lookup by `/dp/<id>` URL, bare id, or a pasted list
+- Optional detail enrichment: every size/flavor variant with its own price, stock and GTIN
+- Filters for price, rating, stock, Autoship, deals, new products and pet type
+- Records are omit-empty: a field appears only when Chewy publishes it for that product
 
-- `productId` — Chewy's product/part number
-- `name` — full product name
-- `url` — canonical product URL
-- `imageUrl` — main product image
-- `images` — additional product image URLs
-- `price` — current price in USD
-- `salePrice` — sale price, when the product is discounted
-- `autoshipPrice` — price under Chewy's Autoship subscription
-- `brand` — brand/manufacturer name
-- `brandUrl` — brand's page on Chewy
-- `category`, `subcategory` — e.g. `Dog` / `Food`
-- `rating` — average customer rating (0–5)
-- `reviewCount` — total number of reviews
-- `inStock` — `true` when the product is currently in stock
-- `isAutoship` — `true` when Autoship is available for the product
-- `pricePerUnit` — unit price text, e.g. `$1.25/oz`
-- `petType` — pet type the product is intended for
-- `description` — full product description (from product detail pages)
-- `productVariants` — array of size/flavor options, each with its own price and stock status
-- `recordType` — always `chewyProduct`
-- `scrapedAt` — ISO 8601 timestamp of the scrape
+## Data source
+
+The actor reads Chewy's own public JSON endpoints for listings and catalog entries. If a JSON surface is temporarily blocked or rate-limited, it falls back to the public server-rendered page through a cookieless Google Translate mirror. No browser, login, cookie, API key or proxy is required. If Chewy changes its page shape, open an issue with the input and product URL.
 
 ## Input
 
 | Field | Type | Default | Description |
 |---|---|---|---|
-| `mode` | string | `search` | `search`, `byCategory`, `byBrand`, or `byProductUrls` |
-| `searchQuery` | string | `dog food` | Keyword search, used in `search` mode |
-| `petType` | string | `all` | `all`, `dog`, `cat`, `fish`, `bird`, `reptile`, `small-pet`, or `farm-animal` — used in `search` mode |
-| `sortBy` | string | `best-match` | `best-match`, `top-rated`, `bestselling`, `price-asc`, `price-desc`, or `new-arrivals` — used in `search` mode |
-| `brandName` | string | – | Brand name to scrape all products for, used in `byBrand` mode |
-| `categoryUrl` | string | – | Full Chewy category URL to browse, used in `byCategory` mode |
-| `startUrls` | array | `[]` | Chewy product page URLs to enrich, used in `byProductUrls` mode |
-| `minPrice` / `maxPrice` | integer | – | Price range in USD |
-| `minRating` | number | – | Minimum average rating (0.0–5.0) |
-| `inStockOnly` | boolean | `false` | Only return products currently in stock |
-| `autoshipOnly` | boolean | `false` | Only return products eligible for Autoship |
-| `maxItems` | integer | `50` | Maximum number of products to return (1–5000) |
+| `mode` | string | `search` | `search`, `byCategory`, `byBrand`, `byProductUrls`, `byProductIds`, or `byListingUrls` |
+| `searchQuery` | string | `dog food` | Keyword for `search` mode |
+| `searchQueries` | array | `[]` | Additional keywords; each runs as its own search |
+| `petType` | string | `all` | `all`, `dog`, `cat`, `fish`, `bird`, `reptile`, `small-pet`, `farm-animal`, or `horse` |
+| `sortBy` | string | `best-match` | `best-match`, `top-rated`, `bestselling`, `price-asc`, `price-desc`, `new-arrivals`, or `most-reviewed` |
+| `brandName` | string | – | Brand for `byBrand`, e.g. `Royal Canin` |
+| `brandNames` | array | `[]` | Several brands for `byBrand` |
+| `categoryUrl` | string | – | Chewy category URL for `byCategory`, e.g. `https://www.chewy.com/b/dry-food-294` |
+| `categoryUrls` | array | `[]` | Several category URLs for `byCategory` |
+| `startUrls` | array | `[]` | Product page URLs for `byProductUrls` |
+| `productIds` | array | `[]` | Bare Chewy ids or /dp/ URLs for `byProductIds` |
+| `listingUrls` | array | `[]` | Any Chewy search, category, brand or deals URL for `byListingUrls` |
+| `minPrice` | number | – | Minimum current price in USD |
+| `maxPrice` | number | – | Maximum current price in USD |
+| `minRating` | number | – | Minimum average rating (0–5) |
+| `inStockOnly` | boolean | `false` | Keep only in-stock products |
+| `autoshipOnly` | boolean | `false` | Keep only products that offer Autoship |
+| `dealOnly` | boolean | `false` | Keep only products marked as deals |
+| `newOnly` | boolean | `false` | Keep only products marked as new |
+| `enrichDetails` | boolean | `false` | Fetch full detail for every listing product (variants, ingredients, attributes) |
+| `excludeKeywords` | array | `[]` | Skip products whose name contains any word |
+| `excludeProductIds` | array | `[]` | Skip these product ids or SKUs |
+| `maxItems` | integer | `50` | Maximum records returned (1–5000) |
 
-### Example: dog food under $30, in stock
+Older saved tasks that send `query`, `brand`, `category`, `productUrls`, `maxResults`, `onlyInStock`, `autoshipEligibleOnly` or `sort` keep working: those keys are mapped in code, not shown as fields.
+
+## Output
+
+One dataset row per product. Common fields:
+
+- `productId`, `sku`, `parentPartNumber`, `name`, `url`, `brand`, `brands`, `currency`
+- `price`, `autoshipPrice`, `autoshipDiscountPct`, `listPrice`, `salePrice`, `pricePerUnit`
+- `rating`, `reviewCount`, `inStock`, `isAutoship`
+- `isDeal`, `isNew`, `isPrescription`, `isChewyExclusive`, `isBundle`, `isDiscontinued`
+- `imageUrl`, `images`, `description`, `keyBenefits`, `gtin`
+- `petType`, `petTypes`, `lifestage`, `breedSize`, `foodForm`, `flavor`, `specialDiet`, `healthFeature`
+- `ingredients`, `caloricContent`, `cautions`, `productType`, `packagingType`, `madeIn`, `sourcedFrom`
+- `packaging` (weight, dimensions, quantity and units)
+- `productVariants` (per-size/flavor part number, price, Autoship price, stock, GTIN, URL)
+- `reviews` (up to 10 embedded review texts) and `questions` (Q&A with answers) when the mirror PDP fallback supplies them
+- `ratingDistribution`, `questionsCount`, `claims`, `categoryPath` (when the PDP fallback supplies them)
+- `recordType` (`chewyProduct`) and `scrapedAt` (ISO 8601)
+
+## Examples
+
+Dog food under $30, in stock, cheapest first:
 
 ```json
 {
@@ -64,51 +79,59 @@ Chewy is one of the largest US online pet retailers, selling food, treats, toys 
   "petType": "dog",
   "maxPrice": 30,
   "inStockOnly": true,
+  "sortBy": "price-asc",
   "maxItems": 50
 }
 ```
 
-### Example: every product from one brand
+Every size of a brand, with variants:
 
 ```json
 {
   "mode": "byBrand",
   "brandName": "Royal Canin",
+  "enrichDetails": true,
   "maxItems": 100
 }
 ```
 
-### Example: enrich specific product pages with variants
+A product watch-list:
 
 ```json
 {
-  "mode": "byProductUrls",
-  "startUrls": [
-    "https://www.chewy.com/royal-canin-adult-dry-dog-food/dp/123456"
-  ]
+  "mode": "byProductIds",
+  "productIds": ["34244", "123456"],
+  "maxItems": 20
 }
 ```
 
 ## Use cases
 
-- **Price monitoring** — track a watch-list of products for price or Autoship-discount changes
-- **Brand catalog audits** — pull every product from a brand to check pricing and stock consistency
-- **Category benchmarking** — compare price-per-unit across a whole category like dry dog food
-- **Variant research** — enrich product URLs to see every size/flavor option and its individual price
-- **Review tracking** — snapshot `rating` and `reviewCount` over time to watch sentiment trends
+- Price and Autoship monitoring for a product or brand watch-list
+- Category benchmarking with price-per-unit and stock comparisons
+- Variant research: all sizes/flavors, GTINs and per-variant prices
+- New-product and deal discovery by category
+- Pet-food attribute research: ingredients, life stage, breed size, food form, special diet
 
 ## FAQ
 
-**Do I need a Chewy account?** No — only publicly available product listings are read; no login or API key is required.
+**Do I need a Chewy account or API key?** No. The actor reads public product pages and catalog JSON.
 
-**What is Autoship, and what does `autoshipPrice` mean?** Autoship is Chewy's recurring-delivery subscription, usually priced lower than a one-time purchase. `autoshipPrice` is that subscription price when the product offers it; `isAutoship` tells you whether the option exists at all.
+**Why is `description` or `ingredients` missing on some rows?** Those fields exist only on product detail pages. Turn on `enrichDetails`, or use `byProductUrls`/`byProductIds`.
 
-**Why does a product have no `productVariants`?** That field is only populated when scraping product detail pages (`byProductUrls` mode or detail enrichment); search and category listing cards don't expose per-variant pricing.
+**Why does a listing row show a parent id?** Chewy groups sizes and flavors under one parent product. `productId` is that parent; `sku` is the listed size/flavor. `productVariants` lists all of them when detail enrichment is on.
 
-**Can I filter by multiple pet types at once?** `petType` accepts one value per run; to cover several pet types, run the actor once per type.
+**How many products can a run return?** Up to `maxItems`, with a hard cap of 5,000. Very large filtered runs can stop after repeated pages with no matches; widen the filters if that happens.
 
-**What's the difference between `search` and `byCategory` mode?** `search` uses Chewy's keyword search and respects `petType`/`sortBy`; `byCategory` walks a specific category URL directly, which is useful for exhaustively covering one product category.
+**Where do reviews and Q&A come from?** The mirror PDP fallback embeds up to 10 review texts and the visible Q&A. Direct catalog records and listing rows omit them; they still include `rating` and `reviewCount`.
 
-**How many products can one run return?** Up to `maxItems`, capped at 5000.
+**Is this affiliated with Chewy?** No. It is an independent third-party scraper of publicly available Chewy product data.
 
-**Is this affiliated with Chewy?** No. This is an independent, third-party actor that reads Chewy.com's publicly available product pages; it is not operated by or affiliated with Chewy, Inc.
+## Limitations
+
+- Direct Chewy HTML is Kasada-protected (HTTP 429 challenge); the actor uses Chewy's public JSON catalog endpoints instead.
+- Chewy does not expose every possible attribute for every product; omitted fields mean Chewy did not publish them on the page read.
+- The detail API exposes ingredients and guaranteed analysis for many pet-food products, but not all categories.
+- Chewy image URLs are normalized to a working CDN size suffix (`._AC_SS300_V1_.jpg` or an existing sized variant). Bare `,1` image paths return HTTP 403; the actor rewrites them so `imageUrl` and `images` resolve.
+- Google Translate mirror fallback is rate-limited; the actor paces and retries, but a very large run may finish with fewer rows than requested if Chewy's JSON endpoints are unavailable.
+- Review text and Q&A are included only on records built through the mirror PDP fallback; direct catalog and listing records return counts and ratings only.
