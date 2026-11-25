@@ -229,6 +229,35 @@ def fit_title(title, *suffixes, limit=68):
     return title
 
 
+# Bing Webmaster audit 2026-11-25: search results show about 70 title characters and 160 description characters.
+# The full <title> got " | <brand>" on top of a title already fitted to 68 (median 78 characters on Actor pages), and
+# the meta description was cut at 200 characters mid-word. Both are now fitted where the head is written.
+TITLE_MAX = 70
+DESCRIPTION_MAX = 160
+
+
+def page_title(title, brand, limit=TITLE_MAX):
+    """The <title>: the page title plus " | brand" when that still fits the limit, otherwise the page title alone."""
+    if brand in title:
+        return title
+    full = title + " | " + brand
+    return full if len(full) <= limit else title
+
+
+def meta_description(text, limit=DESCRIPTION_MAX):
+    """A meta/og description of at most `limit` characters, never cut inside a word: the longest run of whole
+    sentences when that keeps at least half the room, else whole words and an ellipsis."""
+    text = re.sub(r"\s+", " ", text or "").strip()
+    if len(text) <= limit:
+        return text
+    window = text[:limit + 1]
+    ends = [m.end() - 1 for m in re.finditer(r"[.!?](?= )", window)]
+    if ends and ends[-1] + 1 >= limit // 2:
+        return window[:ends[-1] + 1]
+    head = text[:limit].rsplit(" ", 1)[0].rstrip(" ,;:-–—(")
+    return head + "…"
+
+
 # Each theme speaks in its own voice on the shared pages, so independent sites never read as one
 # template. Facts are the same placeholders everywhere; only the wording differs.
 COPY = {
@@ -412,7 +441,8 @@ class Site:
         ld = json.dumps(structured, ensure_ascii=False, separators=(",", ":")).replace("<", "\\u003c")
         ld_hash = base64.b64encode(hashlib.sha256(ld.encode()).digest()).decode()
         csp = f"default-src 'self'; script-src 'self' 'sha256-{ld_hash}'; style-src 'self'; img-src 'self' https: data:; connect-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'"
-        full_title = title if self.brand in title else title + " | " + self.brand
+        full_title = page_title(title, self.brand)
+        snippet = meta_description(description)
         navigation = "".join(f'<a href="{self.link(route)}"' + (' aria-current="page"' if label == active else "") + f'>{label.title()}</a>'
                              for label, route in [("actors", "actors/"), ("sites", "sites/"), ("topics", "topics/"), ("guides", "guides/")])
         header_search = ""
@@ -430,9 +460,9 @@ class Site:
         social = f'<meta property="og:image" content="{esc(image)}"><meta name="twitter:card" content="summary">' if image else '<meta name="twitter:card" content="summary">'
         content = (f'<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">'
                    f'<meta http-equiv="Content-Security-Policy" content="{esc(csp)}"><title>{esc(full_title)}</title>'
-                   f'<meta name="description" content="{esc(description[:200])}"><meta name="robots" content="{"noindex,follow" if noindex else "index,follow,max-image-preview:large,max-snippet:-1"}">{refresh}'
+                   f'<meta name="description" content="{esc(snippet)}"><meta name="robots" content="{"noindex,follow" if noindex else "index,follow,max-image-preview:large,max-snippet:-1"}">{refresh}'
                    f'<link rel="canonical" href="{esc(redirect or canonical)}"><meta property="og:title" content="{esc(full_title)}">'
-                   f'<meta property="og:description" content="{esc(description[:200])}"><meta property="og:type" content="{"article" if kind == "TechArticle" else "website"}">'
+                   f'<meta property="og:description" content="{esc(snippet)}"><meta property="og:type" content="{"article" if kind == "TechArticle" else "website"}">'
                    f'<meta property="og:url" content="{esc(redirect or canonical)}"><meta property="og:site_name" content="{esc(self.brand)}">{social}'
                    f'<meta name="theme-color" content="{esc(self.org.get("site", {}).get("accent", "#155dfb"))}">'
                    f'<link rel="icon" href="{self.asset("assets/mark.svg")}" type="image/svg+xml"><link rel="stylesheet" href="{self.asset("assets/site.css")}">'
@@ -927,7 +957,7 @@ class Site:
     # ------------------------------------------------------------------ export tutorial
 
     def guide_title(self, actor):
-        return fit_title(actor["title"], ": export to CSV, Excel or JSON", ": CSV and Excel export", " export", limit=78)
+        return fit_title(actor["title"], ": export to CSV, Excel or JSON", ": CSV and Excel export", " export", limit=TITLE_MAX)
 
     def export_columns(self, actor, limit=8):
         """The columns a reader exports by default: the first dataset view's fields with their
@@ -1337,7 +1367,7 @@ def google_ld_problems(node, where="ld"):
     return problems
 
 
-def validate_page(name, page, audit):
+def validate_page(name, page, audit, brand=None):
     """Critical checks for one rendered page; a failure blocks that brand's publication."""
     problems = []
     if audit.h1 != 1:
@@ -1348,6 +1378,13 @@ def validate_page(name, page, audit):
         problems.append("missing or repeated title")
     if not audit.description:
         problems.append("missing meta description")
+    elif len(audit.description) > DESCRIPTION_MAX:
+        problems.append("meta description longer than %d characters (%d)" % (DESCRIPTION_MAX, len(audit.description)))
+    title = re.search(r"<title>(.*?)</title>", page, flags=re.S)
+    if title:
+        text = html.unescape(title.group(1))
+        if brand and len(text) > TITLE_MAX and text.endswith(" | " + brand):
+            problems.append("title with the brand suffix is longer than %d characters (%d)" % (TITLE_MAX, len(text)))
     if not audit.canonical:
         problems.append("missing canonical link")
     if re.search(r"<[a-z][^>]*\sstyle=", page):
@@ -1466,7 +1503,7 @@ def validate_site(files, org, prefix):
             audit.feed(content)
             if audit.h1 != 1 or audit.duplicate_ids:
                 raise SyncError("Rendered page has invalid heading or duplicate ID structure: " + name)
-            problems = validate_page(name, content, audit)
+            problems = validate_page(name, content, audit, org.get("brand"))
             if problems:
                 raise SyncError("Rendered page fails the page checks: " + name + ": " + "; ".join(problems))
             audits[name] = audit
