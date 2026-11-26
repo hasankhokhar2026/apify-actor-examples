@@ -1,0 +1,293 @@
+{
+  "description": "Search Redbubble products by keyword, browse an artist's shop, or fetch full product detail from a product URL.",
+  "properties": {
+    "artistUsernames": {
+      "default": [],
+      "description": "Redbubble artist usernames, e.g. `blah707` (from redbubble.com/people/<username>/shop).",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Artist usernames (mode=byArtist)",
+      "type": "array"
+    },
+    "category": {
+      "default": "all-departments",
+      "description": "Restrict results to a Redbubble product category (mode=search and mode=byArtist).",
+      "editor": "select",
+      "enum": [
+        "all-departments",
+        "u-clothing",
+        "w-dresses",
+        "u-sweatshirts",
+        "u-tees",
+        "u-tanks",
+        "kids-clothes",
+        "k-pullover-hoodie",
+        "k-tee-crew",
+        "b-onesie-short",
+        "u-phone-cases",
+        "u-case-iphone",
+        "u-case-samsung",
+        "all-stickers",
+        "u-prints",
+        "u-print-board-gallery",
+        "u-print-art",
+        "u-print-canvas",
+        "u-print-frame",
+        "u-print-photo",
+        "u-print-poster",
+        "u-decor",
+        "u-block-acrylic",
+        "u-apron",
+        "u-bath-mat",
+        "u-bedding",
+        "u-duvet",
+        "u-blanket",
+        "u-clock",
+        "u-coasters",
+        "u-jigsaw-puzzle",
+        "u-die-cut-magnet",
+        "u-mugs",
+        "u-pillows",
+        "u-shower-curtain",
+        "u-print-tapestry",
+        "u-stationery",
+        "u-card-greeting",
+        "u-notebook-hardcover",
+        "all-mouse-pads",
+        "u-card-post",
+        "u-notebook-spiral",
+        "u-accessories",
+        "u-backpack",
+        "u-duffle-bag",
+        "all-hats",
+        "u-bucket-hat",
+        "all-caps",
+        "u-pin-button",
+        "w-scarf",
+        "u-socks",
+        "u-tech-accessories",
+        "u-case-laptop-sleeve",
+        "all-totes",
+        "u-bag-studiopouch"
+      ],
+      "enumTitles": [
+        "All Departments",
+        "All Clothing",
+        "Dresses",
+        "Sweatshirts & Hoodies",
+        "T-Shirts",
+        "Tank Tops",
+        "All Kids & Babies",
+        "Kids Pullover Hoodies",
+        "Kids T-Shirt",
+        "Short Sleeve Baby One-Pieces",
+        "All Phone Cases",
+        "iPhone Cases",
+        "Samsung Cases",
+        "All Stickers",
+        "All Wall Art",
+        "Art Board Prints",
+        "Art Prints",
+        "Canvas Prints",
+        "Framed Prints",
+        "Photographic Prints",
+        "Posters",
+        "All Home & Living",
+        "Acrylic Blocks",
+        "Aprons",
+        "Bath Mats",
+        "Bedding",
+        "Duvet Covers",
+        "Throw Blankets",
+        "Clocks",
+        "Coasters",
+        "Jigsaw Puzzles",
+        "Magnets",
+        "Mugs",
+        "Pillows & Cushions",
+        "Shower Curtains",
+        "Tapestries",
+        "All Stationery & Office",
+        "Greeting Cards",
+        "Hardcover Journals",
+        "Mouse Pads & Desk Mats",
+        "Postcards",
+        "Spiral Notebooks",
+        "All Accessories",
+        "Backpacks",
+        "Duffle Bags",
+        "Hats",
+        "Bucket Hats",
+        "Caps",
+        "Pins",
+        "Scarves",
+        "Socks",
+        "Tech Accessories",
+        "Laptop Sleeves",
+        "Tote Bags",
+        "Zipper Pouches"
+      ],
+      "prefill": "all-departments",
+      "title": "Product category",
+      "type": "string"
+    },
+    "extraFilters": {
+      "default": [],
+      "description": "Optional raw `key=value` filter pairs for category-specific sidebar filters not covered by the fields above — e.g. `tShirtColor=tShirtColor-black`, `fit=fit-slim-fit`, `neckType=neckType-crew-neck`, `sleeveLength=sleeveLength-short-sleeve`, `tShirtSize=tShirtSize-m`, `priceFilter=price-low`. Each product category on redbubble.com/shop exposes its own set — open the desired category, apply a filter in the sidebar, and copy the resulting `key=value` pair from the URL. Ignored/dropped if malformed or if the key duplicates a dedicated field above (mode=search and mode=byArtist).",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Extra filters (advanced)",
+      "type": "array"
+    },
+    "gender": {
+      "default": "all",
+      "description": "Restrict apparel results (t-shirts, hoodies, dresses, etc.) to a gender fit. Ignored for non-apparel categories such as stickers or mugs (mode=search and mode=byArtist).",
+      "editor": "select",
+      "enum": [
+        "all",
+        "gender-women",
+        "gender-men"
+      ],
+      "enumTitles": [
+        "Everyone",
+        "Women's Fit",
+        "Men's Fit"
+      ],
+      "prefill": "all",
+      "title": "Gender (apparel only)",
+      "type": "string"
+    },
+    "includeMatureContent": {
+      "default": false,
+      "description": "Include products tagged as mature/adult content in results (mode=search).",
+      "prefill": false,
+      "title": "Include mature content",
+      "type": "boolean"
+    },
+    "maxItems": {
+      "default": 50,
+      "description": "Hard cap on emitted records.",
+      "maximum": 1000,
+      "minimum": 1,
+      "prefill": 50,
+      "title": "Max items",
+      "type": "integer"
+    },
+    "maxPrice": {
+      "description": "Drop products more expensive than this (after any discount), in USD.",
+      "maximum": 10000,
+      "minimum": 0,
+      "title": "Max price (USD)",
+      "type": "integer"
+    },
+    "medium": {
+      "default": "all",
+      "description": "Restrict search results to a specific artwork medium/technique (mode=search).",
+      "editor": "select",
+      "enum": [
+        "all",
+        "design",
+        "digital",
+        "drawing",
+        "painting",
+        "photography"
+      ],
+      "enumTitles": [
+        "All Mediums",
+        "Design & Illustration",
+        "Digital Art",
+        "Drawing",
+        "Painting & Mixed Media",
+        "Photography"
+      ],
+      "prefill": "all",
+      "title": "Artwork medium",
+      "type": "string"
+    },
+    "minPrice": {
+      "description": "Drop products cheaper than this (after any discount), in USD.",
+      "maximum": 10000,
+      "minimum": 0,
+      "title": "Min price (USD)",
+      "type": "integer"
+    },
+    "mode": {
+      "default": "search",
+      "description": "What to fetch.",
+      "editor": "select",
+      "enum": [
+        "search",
+        "byArtist",
+        "byProductUrl"
+      ],
+      "enumTitles": [
+        "Search products by keyword",
+        "Browse an artist's shop",
+        "Fetch product detail by URL"
+      ],
+      "prefill": "search",
+      "title": "Mode",
+      "type": "string"
+    },
+    "productUrls": {
+      "default": [],
+      "description": "Full Redbubble product page URLs, e.g. `https://www.redbubble.com/i/sticker/Title-by-artist/12345.ABCDE`.",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Product URLs (mode=byProductUrl)",
+      "type": "array"
+    },
+    "proxyConfiguration": {
+      "default": {
+        "useApifyProxy": true
+      },
+      "description": "Requests are made directly first; this free Apify datacenter proxy is only engaged automatically as a fallback if Redbubble blocks the actor's IP.",
+      "editor": "proxy",
+      "prefill": {
+        "useApifyProxy": true
+      },
+      "title": "Proxy configuration",
+      "type": "object"
+    },
+    "searchQuery": {
+      "default": "cat",
+      "description": "Free-text keyword search (mode=search).",
+      "editor": "textfield",
+      "prefill": "cat",
+      "title": "Search query",
+      "type": "string"
+    },
+    "sortOrder": {
+      "default": "relevant",
+      "description": "Result ordering (mode=search and mode=byArtist).",
+      "editor": "select",
+      "enum": [
+        "relevant",
+        "trending",
+        "recent",
+        "top selling"
+      ],
+      "enumTitles": [
+        "Most Relevant",
+        "Trending",
+        "Newest",
+        "Best Selling"
+      ],
+      "prefill": "relevant",
+      "title": "Sort order",
+      "type": "string"
+    },
+    "style": {
+      "description": "Optional product-style filter code, e.g. `u-active-t-shirt` (Active) or `u-tee-boxy` (Boxy) within the T-Shirts category. Style codes are specific to each product category — open the desired category on redbubble.com/shop and check the \"Style\" filter sidebar for the codes available there. Ignored if the chosen category has no style variants (mode=search and mode=byArtist).",
+      "editor": "textfield",
+      "title": "Product style (advanced)",
+      "type": "string"
+    }
+  },
+  "required": [
+    "mode"
+  ],
+  "schemaVersion": 1,
+  "title": "Redbubble Scraper Input",
+  "type": "object"
+}

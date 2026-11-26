@@ -1,0 +1,156 @@
+{
+  "description": "Search podcasts and episodes, browse trending charts, or get episode lists for specific podcasts.",
+  "properties": {
+    "category": {
+      "default": "",
+      "description": "Filter to a specific podcast category (all modes).",
+      "editor": "select",
+      "enum": [
+        "",
+        "1488",
+        "1489",
+        "1303",
+        "1324",
+        "1321",
+        "1533",
+        "1545",
+        "1318",
+        "1483",
+        "1462",
+        "1512",
+        "1304",
+        "1314",
+        "1310",
+        "1301",
+        "1513"
+      ],
+      "enumTitles": [
+        "All categories",
+        "True Crime",
+        "News",
+        "Comedy",
+        "Society & Culture",
+        "Business",
+        "Science",
+        "Sports",
+        "Technology",
+        "Fiction",
+        "History",
+        "Health & Fitness",
+        "Kids & Family",
+        "Religion & Spirituality",
+        "Music",
+        "Arts",
+        "Government"
+      ],
+      "title": "Category",
+      "type": "string"
+    },
+    "language": {
+      "default": "us",
+      "description": "Filter to a specific language by country store (modes: searchPodcasts, trending).",
+      "editor": "select",
+      "enum": [
+        "us",
+        "gb",
+        "de",
+        "fr",
+        "es",
+        "pt",
+        "jp",
+        "kr",
+        "cn",
+        "it",
+        "nl",
+        "se",
+        "dk",
+        "fi",
+        "no",
+        "pl",
+        "ru",
+        "br",
+        "mx",
+        "in",
+        "au",
+        "ca"
+      ],
+      "enumTitles": [
+        "United States (English)",
+        "United Kingdom (English)",
+        "Germany (German)",
+        "France (French)",
+        "Spain (Spanish)",
+        "Portugal (Portuguese)",
+        "Japan (Japanese)",
+        "South Korea (Korean)",
+        "China (Chinese)",
+        "Italy (Italian)",
+        "Netherlands (Dutch)",
+        "Sweden (Swedish)",
+        "Denmark (Danish)",
+        "Finland (Finnish)",
+        "Norway (Norwegian)",
+        "Poland (Polish)",
+        "Russia (Russian)",
+        "Brazil (Portuguese)",
+        "Mexico (Spanish)",
+        "India (English/Hindi)",
+        "Australia (English)",
+        "Canada (English/French)"
+      ],
+      "prefill": "us",
+      "title": "Language",
+      "type": "string"
+    },
+    "maxItems": {
+      "default": 50,
+      "description": "Hard cap on records emitted.",
+      "maximum": 500,
+      "minimum": 1,
+      "prefill": 20,
+      "title": "Max items",
+      "type": "integer"
+    },
+    "mode": {
+      "default": "searchPodcasts",
+      "description": "What to scrape.",
+      "editor": "select",
+      "enum": [
+        "searchPodcasts",
+        "searchEpisodes",
+        "trending",
+        "podcastDetails"
+      ],
+      "enumTitles": [
+        "Search podcasts by keyword",
+        "Search episodes across all podcasts",
+        "Trending / top-chart podcasts",
+        "Episode list for specific podcast URLs"
+      ],
+      "prefill": "searchPodcasts",
+      "title": "Mode",
+      "type": "string"
+    },
+    "podcastUrls": {
+      "default": [],
+      "description": "List of Apple Podcasts URLs to fetch episode lists for, e.g. https://podcasts.apple.com/us/podcast/crime-junkie/id1322200189.",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Podcast URLs (mode=podcastDetails)",
+      "type": "array"
+    },
+    "searchQuery": {
+      "description": "Keyword to search for (modes: searchPodcasts, searchEpisodes).",
+      "editor": "textfield",
+      "prefill": "true crime",
+      "title": "Search query",
+      "type": "string"
+    }
+  },
+  "required": [
+    "mode"
+  ],
+  "schemaVersion": 1,
+  "title": "Podchaser Scraper Input",
+  "type": "object"
+}

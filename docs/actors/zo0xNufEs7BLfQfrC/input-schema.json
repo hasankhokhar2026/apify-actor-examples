@@ -1,0 +1,208 @@
+{
+  "description": "Browse and search Research Square preprints, or fetch individual preprints by URL.",
+  "properties": {
+    "articleType": {
+      "description": "Filter browse results to one article type (mode=browseByType).",
+      "editor": "select",
+      "enum": [
+        "Research Article",
+        "Original Research",
+        "Review",
+        "Comment",
+        "Protocol",
+        "Video",
+        "Brief Report",
+        "Case Report"
+      ],
+      "enumTitles": [
+        "Research Article",
+        "Original Research",
+        "Review",
+        "Comment",
+        "Protocol",
+        "Video",
+        "Brief Report",
+        "Case Report"
+      ],
+      "title": "Article type (mode=browseByType)",
+      "type": "string"
+    },
+    "filterArticleType": {
+      "description": "Post-fetch filter applied to all modes: only emit preprints of this article type.",
+      "editor": "select",
+      "enum": [
+        "Research Article",
+        "Original Research",
+        "Review",
+        "Comment",
+        "Protocol",
+        "Video",
+        "Brief Report",
+        "Case Report"
+      ],
+      "enumTitles": [
+        "Research Article",
+        "Original Research",
+        "Review",
+        "Comment",
+        "Protocol",
+        "Video",
+        "Brief Report",
+        "Case Report"
+      ],
+      "title": "Article type filter",
+      "type": "string"
+    },
+    "maxItems": {
+      "default": 50,
+      "description": "Hard cap on emitted records.",
+      "maximum": 1000,
+      "minimum": 1,
+      "prefill": 20,
+      "title": "Max items",
+      "type": "integer"
+    },
+    "mode": {
+      "default": "search",
+      "description": "What to fetch.",
+      "editor": "select",
+      "enum": [
+        "search",
+        "browseBySubject",
+        "browseByType",
+        "byUrl"
+      ],
+      "enumTitles": [
+        "Search preprints by keyword",
+        "Browse by subject area",
+        "Browse by article type",
+        "Fetch preprints by URL"
+      ],
+      "prefill": "search",
+      "title": "Mode",
+      "type": "string"
+    },
+    "publishYearMax": {
+      "description": "Drop preprints posted after this year.",
+      "maximum": 2100,
+      "minimum": 1990,
+      "title": "Posted year (max)",
+      "type": "integer"
+    },
+    "publishYearMin": {
+      "description": "Drop preprints posted before this year.",
+      "maximum": 2100,
+      "minimum": 1990,
+      "title": "Posted year (min)",
+      "type": "integer"
+    },
+    "searchQuery": {
+      "default": "cancer",
+      "description": "Free-text keyword query (mode=search).",
+      "editor": "textfield",
+      "prefill": "cancer",
+      "title": "Search query",
+      "type": "string"
+    },
+    "subjectArea": {
+      "description": "Filter browse results to one subject area (mode=browseBySubject). Also applies as a filter in search mode.",
+      "editor": "select",
+      "enum": [
+        "Agricultural Sciences",
+        "Biochemistry",
+        "Cell Biology",
+        "Environment & Ecology",
+        "Evolutionary & Developmental Biology",
+        "Interdisciplinary Biology",
+        "Microbiology",
+        "Molecular Biology & Genetics",
+        "Neuroscience",
+        "Pharmacology & Toxicology",
+        "Zoology & Plant Biology",
+        "Veterinary Medicine",
+        "General Medicine",
+        "Internal Medicine Specialties",
+        "Diagnostic Specialties",
+        "Interdisciplinary Medicine",
+        "Public Health",
+        "Surgery",
+        "Communication",
+        "Education",
+        "Arts & Humanities",
+        "Public Policy",
+        "Economics",
+        "Political Science",
+        "Information Management",
+        "Social & Behavioral Sciences",
+        "Computer Science",
+        "Mathematics",
+        "Statistics",
+        "Business",
+        "Law",
+        "Space Science",
+        "Chemistry",
+        "Earth Science",
+        "Physics",
+        "Paleontology",
+        "Engineering",
+        "Materials Science"
+      ],
+      "enumTitles": [
+        "Agricultural Sciences",
+        "Biochemistry",
+        "Cell Biology",
+        "Environment & Ecology",
+        "Evolutionary & Developmental Biology",
+        "Interdisciplinary Biology",
+        "Microbiology",
+        "Molecular Biology & Genetics",
+        "Neuroscience",
+        "Pharmacology & Toxicology",
+        "Zoology & Plant Biology",
+        "Veterinary Medicine",
+        "General Medicine",
+        "Internal Medicine Specialties",
+        "Diagnostic Specialties",
+        "Interdisciplinary Medicine",
+        "Public Health",
+        "Surgery",
+        "Communication",
+        "Education",
+        "Arts & Humanities",
+        "Public Policy",
+        "Economics",
+        "Political Science",
+        "Information Management",
+        "Social & Behavioral Sciences",
+        "Computer Science",
+        "Mathematics",
+        "Statistics",
+        "Business",
+        "Law",
+        "Space Science",
+        "Chemistry",
+        "Earth Science",
+        "Physics",
+        "Paleontology",
+        "Engineering",
+        "Materials Science"
+      ],
+      "title": "Subject area (mode=browseBySubject)",
+      "type": "string"
+    },
+    "urls": {
+      "default": [],
+      "description": "Research Square preprint URLs, e.g. `https://www.researchsquare.com/article/rs-10118362/v1` (mode=byUrl).",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Preprint URLs (mode=byUrl)",
+      "type": "array"
+    }
+  },
+  "required": [
+    "mode"
+  ],
+  "schemaVersion": 1,
+  "title": "Research Square Scraper Input",
+  "type": "object"
+}

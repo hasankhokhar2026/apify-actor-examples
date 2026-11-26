@@ -1,0 +1,190 @@
+{
+  "description": "List OpenSanctions datasets, or stream the entities (persons, organizations, companies, vessels) of a chosen dataset. Uses the free OpenSanctions bulk data — no API key required.",
+  "properties": {
+    "dataset": {
+      "default": "us_ofac_sdn",
+      "description": "Which dataset to stream entities from (used in `getDatasetEntities` mode). Pick a well-known sanctions/PEP list or a consolidated collection. Run `listDatasets` to discover all 400+ dataset names.",
+      "editor": "select",
+      "enum": [
+        "us_ofac_sdn",
+        "us_ofac_cons",
+        "us_bis_denied",
+        "us_trade_csl",
+        "eu_fsf",
+        "un_sc_sanctions",
+        "ch_seco_sanctions",
+        "ca_dfatd_sema_sanctions",
+        "au_dfat_sanctions",
+        "fr_tresor_gels_avoir",
+        "jp_mof_sanctions",
+        "interpol_red_notices",
+        "ru_acf_bribetakers",
+        "everypolitician",
+        "wd_peps",
+        "sanctions",
+        "us_sanctions",
+        "eu_sanctions",
+        "peps",
+        "crime",
+        "debarment",
+        "wanted",
+        "default"
+      ],
+      "enumTitles": [
+        "US OFAC SDN List (source)",
+        "US OFAC Consolidated / non-SDN (source)",
+        "US BIS Denied Persons List (source)",
+        "US Trade Consolidated Screening List (source)",
+        "EU Financial Sanctions Files / FSF (source)",
+        "UN Security Council Consolidated (source)",
+        "Swiss SECO Sanctions (source)",
+        "Canada Consolidated Sanctions / SEMA (source)",
+        "Australia DFAT Sanctions (source)",
+        "France Tresor Asset Freezes (source)",
+        "Japan METI/MOF Sanctions (source)",
+        "INTERPOL Red Notices (source)",
+        "ACF List of War Enablers (source)",
+        "EveryPolitician Legislators (source)",
+        "Wikidata Politically Exposed Persons (source)",
+        "Consolidated Sanctions (collection)",
+        "United States Sanctions (collection)",
+        "European Union Sanctions (collection)",
+        "Politically Exposed Persons / PEPs (collection)",
+        "Warrants & Criminal Entities (collection)",
+        "Debarred Companies & Individuals (collection)",
+        "Wanted Lists (collection)",
+        "OpenSanctions Default / everything (collection)"
+      ],
+      "prefill": "us_ofac_sdn",
+      "title": "Dataset",
+      "type": "string"
+    },
+    "datasetName": {
+      "description": "Optional: type any dataset name from the index to override the dropdown above (e.g. \"gb_hmt_sanctions\", \"il_mod_terror\"). Also accepts an OpenSanctions dataset page URL. Leave empty to use the dropdown. Run `listDatasets` to discover valid names.",
+      "editor": "textfield",
+      "title": "Dataset name (advanced override)",
+      "type": "string"
+    },
+    "datasetType": {
+      "default": "all",
+      "description": "When listing datasets (`listDatasets` mode), restrict to sources, collections, or external datasets.",
+      "editor": "select",
+      "enum": [
+        "all",
+        "source",
+        "collection",
+        "external"
+      ],
+      "enumTitles": [
+        "All dataset types",
+        "Sources (individual official lists)",
+        "Collections (consolidated groups)",
+        "External (enrichment datasets)"
+      ],
+      "title": "Dataset type filter",
+      "type": "string"
+    },
+    "maxItems": {
+      "default": 100,
+      "description": "Maximum number of records to return (entities or datasets).",
+      "maximum": 10000,
+      "minimum": 1,
+      "prefill": 100,
+      "title": "Max Items",
+      "type": "integer"
+    },
+    "mode": {
+      "default": "getDatasetEntities",
+      "description": "What to scrape: stream the entities of one dataset, or list all available datasets.",
+      "editor": "select",
+      "enum": [
+        "getDatasetEntities",
+        "listDatasets"
+      ],
+      "enumTitles": [
+        "Get dataset entities (persons, companies, ...)",
+        "List all datasets"
+      ],
+      "prefill": "getDatasetEntities",
+      "title": "Mode",
+      "type": "string"
+    },
+    "schema": {
+      "default": "Any",
+      "description": "Filter entities by FollowTheMoney type. `Organization` includes companies and public bodies; `Legal entity` includes persons and organizations. Applies to `getDatasetEntities` mode.",
+      "editor": "select",
+      "enum": [
+        "Any",
+        "Person",
+        "Organization",
+        "Company",
+        "LegalEntity",
+        "Vessel",
+        "Address"
+      ],
+      "enumTitles": [
+        "Any type",
+        "Person",
+        "Organization (incl. companies & public bodies)",
+        "Company",
+        "Legal entity (persons + organizations)",
+        "Vessel",
+        "Address"
+      ],
+      "prefill": "Person",
+      "title": "Entity type (schema)",
+      "type": "string"
+    },
+    "topic": {
+      "default": "any",
+      "description": "Filter entities by OpenSanctions topic. Topics are hierarchical: choosing `crime` also matches `crime.fin`, `crime.fraud`, etc. Applies to `getDatasetEntities` mode.",
+      "editor": "select",
+      "enum": [
+        "any",
+        "sanction",
+        "sanction.linked",
+        "sanction.control",
+        "role.pep",
+        "role.rca",
+        "role.oligarch",
+        "crime",
+        "crime.fin",
+        "crime.fraud",
+        "crime.terror",
+        "crime.war",
+        "crime.traffick",
+        "debarment",
+        "export.control",
+        "poi",
+        "wanted"
+      ],
+      "enumTitles": [
+        "Any topic",
+        "Sanctioned entity",
+        "Sanction-linked",
+        "Sanction ownership/control",
+        "Politically exposed person (PEP)",
+        "Relative or close associate (RCA)",
+        "Oligarch",
+        "Crime (any)",
+        "Financial crime",
+        "Fraud",
+        "Terrorism",
+        "War crimes",
+        "Trafficking",
+        "Debarment",
+        "Export control",
+        "Person of interest",
+        "Wanted"
+      ],
+      "title": "Topic",
+      "type": "string"
+    }
+  },
+  "required": [
+    "mode"
+  ],
+  "schemaVersion": 1,
+  "title": "OpenSanctions Scraper Input",
+  "type": "object"
+}
