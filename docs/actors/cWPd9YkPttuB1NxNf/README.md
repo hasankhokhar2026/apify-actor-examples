@@ -4,121 +4,218 @@
 
 # Bring a Trailer Auction & Sold Price Tracker
 
-Bring a Trailer (BaT) is the leading online auction house for enthusiast and collector cars. This actor pulls both live bidding activity and already-closed auction outcomes, so you can watch a market in motion instead of reading a static listing page.
+Bring a Trailer is where enthusiast and collector vehicles change hands in public, one timed auction at a time. This actor turns those auctions into a structured dataset: live bidding, closed outcomes, sold prices, reserve results, vehicle specifications, seller and location, full photo galleries, documents, and the public bid ladder. It reads the same public data BaT renders for its own auction pages, so no account, cookie, or API key is needed.
 
-## What this actor does
+## What you can collect
 
-- **Five ways in**: search by keyword, browse every listing under one manufacturer, fetch specific listing URLs, page through recent completed results, or pull the current homepage-featured auctions.
-- **Live vs. closed in one record shape**: active listings carry a running `currentBid`, closed ones carry the final price and whether the reserve was met.
-- **Title parsing**: splits the free-text listing title into model year, make, and model automatically.
-- **Narrows results** by model-year range and bid amount so you don't have to post-filter a large export.
-- Fields that aren't present on a given listing (e.g. mileage on a results-page card) are omitted rather than returned empty.
+| Mode | What it does | Best for |
+|---|---|---|
+| `search` | Finds live and completed auctions by keyword | "Porsche 911", "E30 M3", "Land Cruiser FJ40" |
+| `active` | Every live auction on the site | A current-market snapshot |
+| `results` | Completed auctions, sold or reserve-not-met | Sold-price comps and historical analysis |
+| `byMake` | One manufacturer, optionally one model | Porsche, Ferrari, Land Rover, BMW |
+| `getListing` | Full detail for specific listing URLs | A known lot, VIN, or photo set |
+| `featured` | Premium live auctions (legacy `featured` mode) | Paid premium placements |
+| `homeFeatured` | Homepage Featured Auctions | The actual homepage spotlight module |
 
-## Output per listing
+Every list mode returns a compact record. Turn on **Open each listing page** to add the full detail layer to any list mode: specifications, VIN, mileage, seller type, every photo, video, PDF document, engagement counters, and the complete public bid history. **Include comments** adds the public discussion thread when details are opened.
 
-- `listingId` — BaT listing ID or URL slug
-- `title` — full listing title as published
-- `year`, `make`, `model` — parsed out of the title
-- `currentBid`, `currency` — current bid for active auctions or the final price for closed ones
-- `bidCount` — number of bids placed (mode=`getListing` only)
-- `auctionStatus` — `active`, `sold`, or `no_sale` (reserve not met)
-- `endDate` — auction close time, ISO 8601
-- `location` — seller's city/state or country
-- `mileage` — odometer reading in miles (mode=`getListing` only)
-- `transmission` — transmission type as written in the BaT essentials box (mode=`getListing` only)
-- `sellerName`, `sellerProfileUrl` — BaT seller username and profile link (mode=`getListing` only)
-- `description` — listing excerpt or meta description
-- `images` — array of photo URLs hosted on bringatrailer.com
-- `noReserve` — `true` when the auction was listed with no reserve
-- `lotNumber` — BaT lot number (mode=`getListing` only)
-- `url` — canonical listing URL
-- `scrapedAt` — ISO 8601 timestamp of when the record was collected
+## What is in a record
 
-## Input
+Core auction fields:
 
-| Field | Type | Default | Description |
-|---|---|---|---|
-| `mode` | string | `search` | `search`, `byMake`, `getListing`, `results`, or `featured` |
-| `searchQuery` | string | – | Keyword — make, model, or year (mode=`search`) |
-| `make` | string | – | Manufacturer slug as it appears in the BaT URL, e.g. `porsche`, `ferrari` (mode=`byMake`) |
-| `startUrls` | array | `[]` | Full listing page URLs to fetch (mode=`getListing`) |
-| `minYear` | integer | – | Only include this model year or newer |
-| `maxYear` | integer | – | Only include this model year or older |
-| `minBid` | number | – | Only include listings bid at or above this amount (USD) |
-| `maxBid` | number | – | Only include listings bid at or below this amount (USD) |
-| `sold` | boolean | `false` | In mode=`results`, keep only listings that actually sold |
-| `maxItems` | integer | `20` | Maximum listings to return (1–500) |
+- `listingId`, `title`, `url`, `sourceUrl`, `recordType`
+- `year`, `make`, `model`, `era`
+- `auctionStatus` — `active`, `sold`, `no_sale`, `withdrawn`, or `ended`
+- `currentBid` and `soldPrice` — the running/final bid and the actual sale price when BaT reports one
+- `currency`, `priceText`, `resultText`
+- `reserveMet`, `noReserve`, `premium`, `alumni`, `homeFeatured`
+- `bidCount`, `commentCount`, `viewCount`, `watcherCount`
+- `endDate`, `soldDate`
+- `location`, `country`, `countryCode`
+- `thumbnailUrl`, `images`, `imageCount`
+- `description`, `scrapedAt`
 
-### Example: search for a model with a bid floor
+Detail fields, when **Open each listing page** is on:
+
+- `sellerName`, `sellerProfileUrl`, `sellerType`
+- `lotNumber`, `vin`, `mileage`, `mileageUnit`, `mileageMiles`, `mileageText`
+- `engine`, `transmission`, `drivetrain`, `exteriorColor`, `interiorColor`, `titleStatus`
+- `listingDetails` — every bullet from the BaT Essentials box
+- `specifications` — the parsed specification object
+- `images` — full-resolution gallery URLs, capped by **Max photos per listing**
+- `videos` — title, video URL, thumbnail, and player URL
+- `documents` — BaT-hosted PDFs, such as reports and reference material
+- `carfaxUrl` when BaT links a Carfax report
+- `bidHistory` - every public bid with amount, time, and bidder username
+- `comments` - optional public comment thread with author, text, time, and likes (`includeComments`)
+- `openingBid`, `firstBidAt`, `lastBidAt`
+
+Fields that the source does not carry for a particular lot are omitted rather than returned as `null`. A parts lot, for example, may have no VIN or mileage; a completed-feed record has no bid count until its listing page is opened.
+
+## Input examples
+
+Search live and completed auctions:
 
 ```json
 {
   "mode": "search",
-  "searchQuery": "bmw e30",
-  "minBid": 10000,
-  "maxItems": 40
+  "searchQuery": "Porsche 911 GT3",
+  "maxItems": 50
 }
 ```
 
-### Example: every Ferrari listing, newer than 1990
+Sold-only comps for a model:
 
 ```json
 {
   "mode": "byMake",
-  "make": "ferrari",
-  "minYear": 1990,
+  "make": "Porsche",
+  "model": "911",
+  "auctionStatus": "sold",
+  "yearFrom": 1990,
+  "yearTo": 1998,
+  "sort": "highest_bid",
+  "maxItems": 200
+}
+```
+
+Live auctions with no reserve, ending soonest:
+
+```json
+{
+  "mode": "active",
+  "listingType": "noreserve",
+  "sort": "ending_soonest",
   "maxItems": 100
 }
 ```
 
-### Example: fetch specific listings
+A specific lot, with specs, every photo, and bid history:
 
 ```json
 {
   "mode": "getListing",
   "startUrls": [
     "https://bringatrailer.com/listing/1993-porsche-911-carrera-2-coupe-26/"
-  ]
+  ],
+  "maxImages": 500,
+  "includeBidHistory": true
 }
 ```
 
-### Example: closed results, sold only
+Recent completed results with the full detail layer:
 
 ```json
 {
   "mode": "results",
-  "sold": true,
-  "maxItems": 50
+  "auctionStatus": "sold",
+  "soldWithin": "30D",
+  "includeDetails": true,
+  "maxImages": 30,
+  "maxItems": 100
 }
 ```
 
-## Use cases
+## Input reference
 
-- **Price benchmarking** — compare a car you're about to list against recently sold comparables.
-- **Market research** — track how sale prices for a model trend over a run of completed auctions.
-- **Sourcing** — scan active listings under a make for cars that match a buy criteria.
-- **Appraisal support** — pull mileage, transmission and seller details alongside price for a specific listing.
-- **Auction monitoring** — watch the featured/homepage auctions without checking the site manually.
+| Field | Type | Default | Description |
+|---|---|---|---|
+| `mode` | string | `search` | `search`, `active`, `results`, `byMake`, `getListing`, `featured` (legacy premium), or `homeFeatured` |
+| `searchQuery` | string | - | Keyword for `search` |
+| `make` | string | - | Manufacturer for `byMake` |
+| `model` | string | - | Optional model for `byMake` |
+| `startUrls` | array | `[]` | Listing URLs for `getListing` |
+| `yearFrom` | integer | - | Model year lower bound |
+| `yearTo` | integer | - | Model year upper bound |
+| `priceFrom` | number | - | Price lower bound |
+| `priceTo` | number | - | Price upper bound |
+| `auctionStatus` | string | `all` | `all`, `sold`, or `unsold` |
+| `sort` | string | - | Mode-dependent; `newest` for results, `ending_soonest` for live |
+| `category` | string | `all` | BaT category ID |
+| `era` | string | `all` | Decade ID |
+| `origin` | string | `all` | Origin ID |
+| `location` | string | `all` | Supported two-letter country code |
+| `includeTaxonomy` | boolean | `false` | Fill category/origin/era from facet list queries |
+| `convertToCurrency` | string | `none` | `none`, `USD`, `EUR`, or `GBP` |
+| `listingType` | string | `all` | `all`, `noreserve`, `premium`, or `alumni` |
+| `soldWithin` | string | `all` | `all`, `7D`, `30D`, `1Y`, `2Y`, or `5Y` |
+| `includeDetails` | boolean | `false` | Open each listing page |
+| `includeBidHistory` | boolean | `true` | Include public bids when details are opened |
+| `includeComments` | boolean | `false` | Include public comments when details are opened |
+| `maxImages` | integer | `20` | Gallery photo cap per detail record |
+| `maxItems` | integer | `20` | Stop after this many records |
+
+## Filters
+
+- **Model year** — `yearFrom` / `yearTo`
+- **Price** — `priceFrom` / `priceTo`, in each listing's own currency
+- **Auction outcome** — all, sold only, or reserve-not-met/withdrawn
+- **Sort** — recently closed, oldest, highest bid, most viewed, or ending soonest
+- **Category** — Aircraft through Wheels, using BaT's own categories
+- **Era** — 1900s through 2020s and Pre-1900
+- **Origin** — American, British, French, German, Italian, Japanese, and more
+- **Seller country** - the 30 countries BaT's results filter exposes
+- **Category/origin/era fill** - enable **Fill category, origin and era** (`includeTaxonomy`) to add those fields to list-only records without opening details
+- **Currency conversion** - optionally convert current/sold prices to USD, EUR, or GBP with BaT's endpoint at the current rate
+- **Listing type** — No Reserve, Premium, or BaT Alumni
+- **Closed within** — 7 days through 5 years
+
+## How it works, and what it deliberately does not do
+
+The actor reads BaT's public auction feed and the public results filter endpoint that powers the site's own Results page. Live auctions come from the current-auction feed and are filtered in the actor. Completed auctions use BaT's server-side filters and pagination. Detail pages are fetched only when you ask for them, so a large list run stays cheap.
+
+- **No login, cookies, or API key.** Everything is public.
+- **No fabricated fields.** If BaT does not show a VIN, mileage figure, document, or sale price on that listing, the field is absent.
+- **No currency conversion.** Prices are reported in the listing's own currency.
+- **Comment text is optional.** The actor always reports comment counts and public bids; set **Include comments** to add the discussion thread when details are opened.
+- **No reserve threshold.** BaT does not publish the reserve amount; `reserveMet` is the public outcome, not a hidden number. This is a confirmed hard limit, independently audited on 87 detail pages.
+- **Media durability is not guaranteed.** The actor emits BaT CDN URLs that are currently public; it does not rehost or archive them. This is a confirmed hard limit.
+
+### The 10,000-row query ceiling
+
+BaT returns at most 10,000 completed results per query. The actor requests 50 per page, so a full query is 200 pages. For larger requested runs, the actor splits the query by model year and, if a single year is still capped, by category, removing duplicates as it goes. A run of more than 10,000 therefore keeps collecting across slices. If one slice truly exceeds the ceiling after that partitioning, the run says so in its status message instead of silently stopping.
+
+Highest-bid runs above 10,000 use a model-year partition merge with BaT's own `(-currentBid, -endDate, id)` tie-break, so the global order stays exact. Most-viewed runs above 10,000 use raw detail-page view counts (BaT's internal Popular composite is not published) and are slower.
+
+### Detail-page cost
+
+**Open each listing page** adds one request per emitted listing. That is the right setting for VINs, specifications, galleries, PDFs, and bid history on a few hundred lots. Leave it off for a 10,000-row price export; the list feed already carries the price, status, date, year, make, model, country, and thumbnail.
 
 ## FAQ
 
-**Does this need a BaT account or API key?**
-No — BaT's auction pages are public, so no login or key is required.
+**Do I need a BaT account?**
+No. The actor uses only public pages and public JSON endpoints.
 
-**What's the difference between `search` and `results`?**
-`search` matches both active and completed auctions against a keyword. `results` only walks the completed-auctions feed, which is useful when you specifically want closed sales.
+**What is the difference between `currentBid` and `soldPrice`?**
+`currentBid` is the running bid on a live auction and the final high bid on a closed one. `soldPrice` is the price BaT reports as the sale result. On a sale after the auction, those two numbers can differ; `priceSourceDisagreement` flags that case.
 
-**Why do some records have no `mileage` or `transmission`?**
-Those details come from the listing's "Essentials" box, which this actor only reads in `getListing` mode. Search, `byMake`, `results` and `featured` records come from listing cards, which don't carry that box.
+**Why do completed-feed records lack bid counts or photos?**
+That feed only carries summary fields. Set **Open each listing page** to add the bid count, full gallery, documents, seller type, VIN, and specifications. Category, origin, and era can be added without details with **Fill category, origin and era** (`includeTaxonomy`); that option makes up to 54 facet list requests.
 
-**What does `auctionStatus: "no_sale"` mean?**
-The listing had a reserve price that bidding never reached, so BaT closed it without a sale.
+**Why do some records have no `year` or `make`?**
+Not every BaT lot is a vehicle. Parts, memorabilia, trailers, and shop equipment can appear in the results. The title parser only fills year/make/model when a model year is present.
 
-**Is `currentBid` the final price for closed auctions?**
-Yes — once an auction ends, `currentBid` holds the last (winning, or highest unmet-reserve) bid amount.
+**Can I get more than 10,000 results for one make?**
+Yes. Ask for a larger `maxItems`; the actor partitions the query by model year and category. You can also narrow by year, category, or country yourself to keep each slice below the cap.
 
-**Can I restrict results to a year range?**
-Yes, with `minYear` and `maxYear`, applied after year is parsed from the title.
+**What is the difference between `featured` and `homeFeatured`?**
+`featured` is the legacy premium-active list (paid Premium placements). `homeFeatured` parses the actual homepage ?Featured Auctions? module, which includes both premium and non-premium lots.
+
+**How does currency conversion work?**
+Set `convertToCurrency` to `USD`, `EUR`, or `GBP`. The actor uses BaT's own cookieless multicurrency endpoint at the current rate and adds `convertedPrice`, `convertedCurrency`, and `fxRate` fields; original `currentBid`, `soldPrice`, and `currency` are unchanged. Historical auction-date FX is not used.
+
+**Does the actor collect comments?**
+Yes, optionally: turn on **Open each listing page** and **Include comments**. Bid history is separate and controlled by **Include bid history**.
+
+**Does highest-bid sorting stay global above 10,000 rows?**
+Yes. The actor partitions by model year and merges the slices with BaT's own bid/end-time tie-break, so the first page is the true global highest-bid order. Most-viewed above 10,000 uses raw detail-page view counts because BaT's internal Popular composite is not published.
+
+**Which countries can I filter by?**
+The 30 country codes BaT's public results filter accepts (North America, Europe, Australia/New Zealand). Other location values are not exposed because they return zero from the site's filter.
+
+**Are the image and document URLs permanent?**
+No guarantee. They are public BaT CDN URLs at scrape time and currently open without a referer or cookie, but BaT can remove a listing and its media. The actor does not rehost media; treat those URLs as scrape-time references, not an archive. This is a documented media-durability risk.
 
 **Is this affiliated with Bring a Trailer?**
-No. This is an independent, third-party actor that reads publicly available BaT pages.
+No. It is an independent third-party actor that reads publicly available auction data.

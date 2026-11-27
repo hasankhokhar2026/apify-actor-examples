@@ -1,9 +1,17 @@
 {
-  "description": "Search flights on Kiwi.com by route and date, fetch popular routes from a city, or look up airports/cities/stations.",
+  "description": "Search flights on Kiwi.com by route and date or date range, build multi-city trips, chart daily fares, fetch popular routes from a city, or look up airports/cities/stations. No account, API key or proxy setup is needed.",
   "properties": {
+    "airlines": {
+      "default": [],
+      "description": "Only keep itineraries that include at least one of these 2-letter IATA airline codes, e.g. `U2`, `FR`, `BA`.",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Include airlines",
+      "type": "array"
+    },
     "cabinClass": {
       "default": "economy",
-      "description": "Cabin class for the search (mode=search, popularRoutes).",
+      "description": "Cabin class for the search.",
       "editor": "select",
       "enum": [
         "economy",
@@ -21,8 +29,17 @@
       "title": "Cabin class",
       "type": "string"
     },
+    "children": {
+      "default": 0,
+      "description": "Number of child passengers (0–8).",
+      "maximum": 8,
+      "minimum": 0,
+      "prefill": 0,
+      "title": "Children",
+      "type": "integer"
+    },
     "containsKeyword": {
-      "description": "Only keep flights whose airline, flight number, origin or destination contains this text (case-insensitive).",
+      "description": "Only keep flights whose airline, flight number, airport or city contains this text (case-insensitive).",
       "editor": "textfield",
       "title": "Contains keyword",
       "type": "string"
@@ -44,7 +61,6 @@
         "sgd",
         "nzd",
         "inr",
-        "pkr",
         "aed",
         "sar",
         "qar",
@@ -59,11 +75,9 @@
         "thb",
         "idr",
         "php",
-        "vnd",
         "brl",
         "mxn",
-        "zar",
-        "npr"
+        "zar"
       ],
       "enumTitles": [
         "US Dollar (USD)",
@@ -78,7 +92,6 @@
         "Singapore Dollar (SGD)",
         "New Zealand Dollar (NZD)",
         "Indian Rupee (INR)",
-        "Pakistani Rupee (PKR)",
         "UAE Dirham (AED)",
         "Saudi Riyal (SAR)",
         "Qatari Riyal (QAR)",
@@ -93,11 +106,9 @@
         "Thai Baht (THB)",
         "Indonesian Rupiah (IDR)",
         "Philippine Peso (PHP)",
-        "Vietnamese Dong (VND)",
         "Brazilian Real (BRL)",
         "Mexican Peso (MXN)",
-        "South African Rand (ZAR)",
-        "Nepalese Rupee (NPR)"
+        "South African Rand (ZAR)"
       ],
       "prefill": "usd",
       "title": "Currency",
@@ -105,26 +116,67 @@
     },
     "destination": {
       "default": "paris",
-      "description": "Airport code, city name, or Kiwi place ID (mode=search). Use `anywhere` to search all destinations.",
+      "description": "Airport code, city name, or Kiwi place ID (search, priceCalendar). Use `anywhere` to search every destination.",
       "editor": "textfield",
       "prefill": "paris",
       "title": "Destination",
       "type": "string"
     },
+    "excludeAirlines": {
+      "default": [],
+      "description": "Drop itineraries that include any of these 2-letter IATA airline codes.",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Exclude airlines",
+      "type": "array"
+    },
+    "infants": {
+      "default": 0,
+      "description": "Number of infant passengers (0–8).",
+      "maximum": 8,
+      "minimum": 0,
+      "prefill": 0,
+      "title": "Infants",
+      "type": "integer"
+    },
+    "legs": {
+      "default": [],
+      "description": "For mode=multiCity: 2–8 objects like `{\"origin\":\"london\",\"destination\":\"paris\",\"date\":\"2026-12-15\"}`. Each leg is a separate flight.",
+      "editor": "json",
+      "prefill": [],
+      "title": "Multi-city legs",
+      "type": "array"
+    },
+    "maxDurationMinutes": {
+      "description": "Drop itineraries longer than this door-to-door duration. Kiwi's server ignores the duration filter, so this is applied to the returned rows.",
+      "maximum": 10000,
+      "minimum": 30,
+      "title": "Maximum duration (minutes)",
+      "type": "integer"
+    },
     "maxItems": {
       "default": 20,
-      "description": "Hard cap on emitted records.",
-      "maximum": 500,
+      "description": "Hard cap on emitted records (1–1000). Kiwi serves one page per search: up to 500 one-way/return rows and up to 1000 multi-city rows. The live total can be lower; no cursor exists.",
+      "maximum": 1000,
       "minimum": 1,
-      "prefill": 10,
+      "prefill": 1,
+      "sectionCaption": "Output",
       "title": "Max items",
       "type": "integer"
     },
     "maxPrice": {
-      "description": "Drop itineraries priced above this amount (in the selected currency).",
+      "description": "Drop itineraries priced above this amount (selected currency).",
       "maximum": 1000000,
-      "minimum": 1,
-      "title": "Max price",
+      "minimum": 0,
+      "title": "Maximum price",
+      "type": "number"
+    },
+    "minPrice": {
+      "description": "Keep itineraries priced at or above this amount (selected currency).",
+      "maximum": 1000000,
+      "minimum": 0,
+      "sectionCaption": "Filters",
+      "title": "Minimum price",
       "type": "number"
     },
     "mode": {
@@ -133,21 +185,26 @@
       "editor": "select",
       "enum": [
         "search",
+        "multiCity",
+        "priceCalendar",
         "popularRoutes",
         "stationLookup"
       ],
       "enumTitles": [
-        "Search flights (origin → destination → date)",
+        "Search flights (origin → destination)",
+        "Multi-city trip (2–8 legs)",
+        "Daily price calendar",
         "Popular routes from a city",
         "Look up airports, cities and stations"
       ],
       "prefill": "search",
+      "sectionCaption": "What to fetch",
       "title": "Mode",
       "type": "string"
     },
     "origin": {
       "default": "london",
-      "description": "Airport code, city name, or Kiwi place ID (mode=search, popularRoutes). Examples: `LTN`, `london`, `City:london_gb`.",
+      "description": "Airport code, city name, or Kiwi place ID. Examples: `LTN`, `london`, `City:london_gb` (search, priceCalendar, popularRoutes, multiCity fallback).",
       "editor": "textfield",
       "prefill": "london",
       "title": "Origin",
@@ -155,30 +212,25 @@
     },
     "passengers": {
       "default": 1,
-      "description": "Number of adult passengers (1-9).",
+      "description": "Number of adult passengers (1–9).",
       "maximum": 9,
       "minimum": 1,
       "prefill": 1,
-      "title": "Passengers",
+      "title": "Adults",
       "type": "integer"
     },
-    "proxyConfiguration": {
-      "default": {
-        "useApifyProxy": true
-      },
-      "description": "Optional Apify proxy. The actor runs without a proxy and only uses it lazily if the Kiwi API starts rate-limiting (429) or blocking (403).",
-      "editor": "proxy",
-      "prefill": {
-        "useApifyProxy": true
-      },
-      "title": "Proxy configuration",
-      "type": "object"
-    },
     "returnDate": {
-      "description": "Optional return date (mode=search). Format `YYYY-MM-DD`. When omitted, Kiwi returns flights with any return date.",
+      "description": "Return date (YYYY-MM-DD) for round-trip search and priceCalendar. For priceCalendar it sets the trip length.",
       "editor": "textfield",
       "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
       "title": "Return date",
+      "type": "string"
+    },
+    "returnDateEnd": {
+      "description": "Optional last date of a return range (YYYY-MM-DD) for round-trip search.",
+      "editor": "textfield",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+      "title": "Return date range end",
       "type": "string"
     },
     "sortBy": {
@@ -189,15 +241,21 @@
         "QUALITY",
         "PRICE",
         "DURATION",
-        "TAKEOFF_ASC",
-        "LANDING_ASC"
+        "POPULARITY",
+        "SOURCE_TAKEOFF",
+        "DESTINATION_LANDING",
+        "DESTINATION_TAKEOFF",
+        "SOURCE_LANDING"
       ],
       "enumTitles": [
         "Quality (Kiwi default)",
         "Cheapest first",
         "Fastest first",
-        "Earliest take-off",
-        "Earliest landing"
+        "Popularity",
+        "Earliest departure",
+        "Earliest arrival",
+        "Earliest destination departure",
+        "Earliest source landing"
       ],
       "prefill": "QUALITY",
       "title": "Sort order",
@@ -211,7 +269,7 @@
     },
     "stops": {
       "default": "any",
-      "description": "Filter itineraries by the number of stops on the outbound journey.",
+      "description": "Filter by the number of stops on the outbound journey.",
       "editor": "select",
       "enum": [
         "any",
@@ -230,10 +288,36 @@
       "type": "string"
     },
     "travelDate": {
-      "description": "Departure date (mode=search). Format `YYYY-MM-DD`. When omitted, the actor uses today + 30 days.",
+      "description": "Outbound departure date (YYYY-MM-DD) for search, priceCalendar and popularRoutes. When omitted, the actor uses today + 30 days.",
       "editor": "textfield",
       "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
-      "title": "Travel date",
+      "sectionCaption": "Dates and passengers",
+      "title": "Departure date",
+      "type": "string"
+    },
+    "travelDateEnd": {
+      "description": "Optional last date of a departure range (YYYY-MM-DD). Search requests the whole range in one call; priceCalendar returns one row per day.",
+      "editor": "textfield",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+      "title": "Departure date range end",
+      "type": "string"
+    },
+    "tripType": {
+      "default": "auto",
+      "description": "Auto (default) is one-way unless returnDate is set, then round-trip. Choose oneWay or roundTrip to force it.",
+      "editor": "select",
+      "enum": [
+        "auto",
+        "oneWay",
+        "roundTrip"
+      ],
+      "enumTitles": [
+        "Auto (returnDate decides)",
+        "One-way",
+        "Round-trip"
+      ],
+      "prefill": "auto",
+      "title": "Trip type",
       "type": "string"
     }
   },
@@ -241,6 +325,6 @@
     "mode"
   ],
   "schemaVersion": 1,
-  "title": "Kiwi.com Scraper Input",
+  "title": "Kiwi.com Flight Fares & Popular Routes Scraper Input",
   "type": "object"
 }

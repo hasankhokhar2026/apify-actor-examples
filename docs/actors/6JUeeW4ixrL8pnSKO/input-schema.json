@@ -1,68 +1,398 @@
 {
-  "description": "Search German transit stations, find routes, or get live departure boards via the free BVG REST API.",
+  "description": "Search stations, pull live departure and arrival boards, plan journeys with real-time platforms and transfers, find nearby stops, check accessibility, or collect VBB/DB disruptions. No login, key or proxy needed.",
   "properties": {
+    "accessibility": {
+      "default": "any",
+      "description": "Filter journeys by step-free accessibility (mode=journeys).",
+      "editor": "select",
+      "enum": [
+        "any",
+        "partial",
+        "complete"
+      ],
+      "enumTitles": [
+        "Any route",
+        "Partially accessible",
+        "Fully accessible"
+      ],
+      "prefill": "any",
+      "title": "Accessibility",
+      "type": "string"
+    },
+    "address": {
+      "description": "Street address used as the reachable-from origin (mode=reachable). Coordinates are also required.",
+      "editor": "textfield",
+      "title": "Address",
+      "type": "string"
+    },
+    "arrivalTime": {
+      "description": "ISO 8601 arrival time for journeys (mode=journeys). Used only when `departureTime` is empty.",
+      "editor": "textfield",
+      "title": "Arrival time",
+      "type": "string"
+    },
+    "bike": {
+      "default": false,
+      "description": "Only plan journeys that allow bicycle carriage (mode=journeys).",
+      "prefill": false,
+      "title": "Allow bicycles",
+      "type": "boolean"
+    },
+    "departureTime": {
+      "description": "ISO 8601 date/time for journeys, or the board start time for departures/arrivals. Empty means now. Example: `2026-12-01T08:30:00+01:00`.",
+      "editor": "textfield",
+      "title": "Departure time",
+      "type": "string"
+    },
     "destination": {
       "default": "Hamburg Hauptbahnhof",
-      "description": "Arrival station name (mode=routes).",
+      "description": "Arrival station name (mode=journeys).",
       "editor": "textfield",
       "prefill": "Hamburg Hauptbahnhof",
       "title": "Destination station",
       "type": "string"
     },
+    "destinationId": {
+      "description": "Optional destination ID, DHID/IFOPT or 9-digit VBB ID (mode=journeys). Overrides `destination`.",
+      "editor": "textfield",
+      "title": "Destination station ID",
+      "type": "string"
+    },
+    "direction": {
+      "description": "Only departures/arrivals heading to this station name or ID (modes=departures, arrivals).",
+      "editor": "textfield",
+      "sectionCaption": "Boards and filters",
+      "sectionDescription": "Used by departure and arrival boards.",
+      "title": "Direction filter",
+      "type": "string"
+    },
+    "disruptionSource": {
+      "default": "all",
+      "description": "Which disruption feed to use (mode=disruptions). `all` combines every source.",
+      "editor": "select",
+      "enum": [
+        "all",
+        "vbb",
+        "db",
+        "elevators"
+      ],
+      "enumTitles": [
+        "All sources",
+        "VBB departure/journey remarks",
+        "DB Verkehrslage (nationwide)",
+        "Elevator outages (brokenlifts)"
+      ],
+      "prefill": "all",
+      "sectionCaption": "Disruption alerts",
+      "sectionDescription": "Used by the disruptions mode.",
+      "title": "Disruption source",
+      "type": "string"
+    },
+    "duration": {
+      "default": 60,
+      "description": "How many minutes ahead the departure/arrival board should cover (modes=departures, arrivals, disruptions with source=vbb).",
+      "maximum": 360,
+      "minimum": 5,
+      "prefill": 60,
+      "title": "Board window (minutes)",
+      "type": "integer"
+    },
+    "east": {
+      "description": "Eastern bounding-box longitude (mode=radar).",
+      "maximum": 180,
+      "minimum": -180,
+      "title": "East longitude",
+      "type": "number"
+    },
+    "evaNumber": {
+      "description": "Optional Deutsche Bahn EVA number for a station-specific DB disruption query (mode=disruptions, source=db).",
+      "editor": "textfield",
+      "title": "DB EVA number",
+      "type": "string"
+    },
+    "includeElevatorHistory": {
+      "default": false,
+      "description": "Attach brokenlifts station-page outage history to elevator records (mode=disruptions, source=elevators/all).",
+      "prefill": false,
+      "title": "Include elevator history",
+      "type": "boolean"
+    },
+    "includeRemarks": {
+      "default": true,
+      "description": "Attach warning/status remarks to departures, arrivals and journeys (modes=departures, arrivals, journeys).",
+      "prefill": true,
+      "title": "Include disruption remarks",
+      "type": "boolean"
+    },
+    "includeStopovers": {
+      "default": false,
+      "description": "Include intermediate stops inside each journey leg (mode=journeys). Adds detail and payload size.",
+      "prefill": false,
+      "title": "Include stopovers",
+      "type": "boolean"
+    },
+    "language": {
+      "default": "en",
+      "description": "Language of operational text such as departure directions and disruption captions.",
+      "editor": "select",
+      "enum": [
+        "en",
+        "de"
+      ],
+      "enumTitles": [
+        "English",
+        "German"
+      ],
+      "prefill": "en",
+      "title": "Result language",
+      "type": "string"
+    },
+    "latitude": {
+      "description": "Centre latitude for nearby search (mode=nearby). If omitted, `query` is resolved to coordinates first.",
+      "maximum": 90,
+      "minimum": -90,
+      "sectionCaption": "Nearby search",
+      "sectionDescription": "Use explicit coordinates, or a station/place name in `query` when coordinates are empty.",
+      "title": "Latitude",
+      "type": "number"
+    },
+    "line": {
+      "description": "Optional line name such as `RE5`, `S5` or `ICE 606` for DB disruptions (mode=disruptions, source=db).",
+      "editor": "textfield",
+      "title": "DB line filter",
+      "type": "string"
+    },
+    "longitude": {
+      "description": "Centre longitude for nearby search (mode=nearby).",
+      "maximum": 180,
+      "minimum": -180,
+      "title": "Longitude",
+      "type": "number"
+    },
+    "lookaheadDays": {
+      "default": 7,
+      "description": "How many days ahead to include DB Verkehrslage alerts (mode=disruptions). 0 means today only.",
+      "maximum": 14,
+      "minimum": 0,
+      "prefill": 7,
+      "title": "Disruption look-ahead (days)",
+      "type": "integer"
+    },
+    "maxDuration": {
+      "default": 30,
+      "description": "Maximum travel time from the address (mode=reachable).",
+      "maximum": 120,
+      "minimum": 1,
+      "prefill": 30,
+      "title": "Max reachable duration (minutes)",
+      "type": "integer"
+    },
     "maxItems": {
       "default": 20,
-      "description": "Maximum number of records to return.",
-      "maximum": 200,
+      "description": "Maximum number of records to return (1-1000).",
+      "maximum": 1000,
       "minimum": 1,
-      "prefill": 20,
+      "prefill": 3,
       "title": "Max items",
       "type": "integer"
     },
     "mode": {
       "default": "stations",
-      "description": "What to fetch.",
+      "description": "What to fetch. The legacy value `routes` is still accepted and runs the journeys mode.",
       "editor": "select",
       "enum": [
         "stations",
+        "nearby",
+        "departures",
+        "arrivals",
+        "journeys",
         "routes",
-        "departures"
+        "disruptions",
+        "radar",
+        "reachable"
       ],
       "enumTitles": [
         "Search stations",
-        "Find routes between two stations",
-        "Live departure board"
+        "Find nearby stations",
+        "Live departures",
+        "Live arrivals",
+        "Plan journeys",
+        "Plan journeys / routes (legacy)",
+        "Disruption alerts",
+        "Live vehicle radar",
+        "Reachable stops"
       ],
       "prefill": "stations",
       "title": "Mode",
       "type": "string"
     },
+    "north": {
+      "description": "Northern bounding-box latitude for radar (mode=radar).",
+      "maximum": 90,
+      "minimum": -90,
+      "sectionCaption": "Radar / reachable",
+      "sectionDescription": "Used by live vehicle radar and reachable-stop searches.",
+      "title": "North latitude",
+      "type": "number"
+    },
     "origin": {
       "default": "Berlin Hauptbahnhof",
-      "description": "Departure station name (mode=routes).",
+      "description": "Departure station name (mode=journeys).",
       "editor": "textfield",
       "prefill": "Berlin Hauptbahnhof",
+      "sectionCaption": "Journey planning",
+      "sectionDescription": "Used by the journeys mode. Provide station names or explicit IDs; IDs win when both are set.",
       "title": "Origin station",
       "type": "string"
     },
+    "originId": {
+      "description": "Optional origin ID, DHID/IFOPT or 9-digit VBB ID (mode=journeys). Overrides `origin`.",
+      "editor": "textfield",
+      "title": "Origin station ID",
+      "type": "string"
+    },
     "query": {
-      "default": "Berlin",
-      "description": "Station name to search for (mode=stations or mode=departures).",
+      "description": "Station, stop or place name. Used by stations, departures, arrivals and VBB/elevator disruptions. Also used as the centre for nearby when coordinates are not set.",
       "editor": "textfield",
       "prefill": "Berlin",
       "title": "Station search query",
       "type": "string"
     },
+    "radius": {
+      "default": 1000,
+      "description": "Maximum distance from the centre for nearby stops (mode=nearby).",
+      "maximum": 5000,
+      "minimum": 50,
+      "prefill": 1000,
+      "title": "Search radius (metres)",
+      "type": "integer"
+    },
+    "south": {
+      "description": "Southern bounding-box latitude (mode=radar).",
+      "maximum": 90,
+      "minimum": -90,
+      "title": "South latitude",
+      "type": "number"
+    },
+    "state": {
+      "default": "all",
+      "description": "Optional state filter for DB Verkehrslage alerts (mode=disruptions, source=db or all).",
+      "editor": "select",
+      "enum": [
+        "all",
+        "Baden-Württemberg",
+        "Bayern",
+        "Berlin",
+        "Brandenburg",
+        "Bremen",
+        "Hamburg",
+        "Hessen",
+        "Mecklenburg-Vorpommern",
+        "Niedersachsen",
+        "Nordrhein-Westfalen",
+        "Rheinland-Pfalz",
+        "Saarland",
+        "Sachsen",
+        "Sachsen-Anhalt",
+        "Schleswig-Holstein",
+        "Thüringen"
+      ],
+      "enumTitles": [
+        "All states",
+        "Baden-Württemberg",
+        "Bavaria",
+        "Berlin",
+        "Brandenburg",
+        "Bremen",
+        "Hamburg",
+        "Hesse",
+        "Mecklenburg-Vorpommern",
+        "Lower Saxony",
+        "North Rhine-Westphalia",
+        "Rhineland-Palatinate",
+        "Saarland",
+        "Saxony",
+        "Saxony-Anhalt",
+        "Schleswig-Holstein",
+        "Thuringia"
+      ],
+      "prefill": "all",
+      "title": "German state",
+      "type": "string"
+    },
     "stationId": {
-      "description": "Specific BVG stop ID for departures (optional, mode=departures).",
+      "description": "Optional VBB station ID, DHID/IFOPT (e.g. `900003201` or `de:11000:900003201`). Skips the name lookup for departures, arrivals, disruptions and stations.",
       "editor": "textfield",
       "title": "Station ID",
       "type": "string"
+    },
+    "transfers": {
+      "description": "Maximum number of changes for journeys (mode=journeys). Leave empty to let the source decide.",
+      "maximum": 10,
+      "minimum": 0,
+      "title": "Max transfers",
+      "type": "integer"
+    },
+    "transportModes": {
+      "default": [],
+      "description": "Only include these line modes. Empty means all modes. Applies to stations, departures, arrivals and journeys.",
+      "editor": "select",
+      "items": {
+        "enum": [
+          "suburban",
+          "subway",
+          "tram",
+          "bus",
+          "ferry",
+          "express",
+          "regional"
+        ],
+        "enumTitles": [
+          "S-Bahn",
+          "U-Bahn",
+          "Tram",
+          "Bus",
+          "Ferry",
+          "Express train (ICE/IC)",
+          "Regional train (RE/RB)"
+        ],
+        "type": "string"
+      },
+      "prefill": [],
+      "title": "Transport modes",
+      "type": "array",
+      "uniqueItems": true
+    },
+    "walkingSpeed": {
+      "default": "normal",
+      "description": "Walking speed used for transfer walks (mode=journeys).",
+      "editor": "select",
+      "enum": [
+        "slow",
+        "normal",
+        "fast"
+      ],
+      "enumTitles": [
+        "Slow",
+        "Normal",
+        "Fast"
+      ],
+      "prefill": "normal",
+      "title": "Walking speed",
+      "type": "string"
+    },
+    "west": {
+      "description": "Western bounding-box longitude (mode=radar).",
+      "maximum": 180,
+      "minimum": -180,
+      "title": "West longitude",
+      "type": "number"
     }
   },
   "required": [
     "mode"
   ],
   "schemaVersion": 1,
-  "title": "Deutsche Bahn / BVG Scraper Input",
+  "title": "Berlin Transit Station, Route and Departure Scraper Input",
   "type": "object"
 }

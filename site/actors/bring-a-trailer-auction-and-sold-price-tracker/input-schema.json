@@ -1,96 +1,457 @@
 {
-  "description": "Search active auctions, browse by make, fetch listing details, or explore completed auction results from bringatrailer.com.",
+  "description": "Collect live Bring a Trailer auctions, completed sold/reserve-not-met results, full vehicle specifications, seller details, photos, documents, and public bid history.",
   "properties": {
-    "make": {
-      "description": "Car manufacturer for mode=byMake. Examples: porsche, bmw, ferrari, ford, toyota. Use the make slug as it appears in the BaT URL (e.g. 'porsche' for bringatrailer.com/porsche/).",
-      "editor": "textfield",
-      "title": "Car make",
+    "auctionStatus": {
+      "default": "all",
+      "description": "For completed results: include every outcome, only sold auctions, or only reserve-not-met/withdrawn lots.",
+      "editor": "select",
+      "enum": [
+        "all",
+        "sold",
+        "unsold"
+      ],
+      "enumTitles": [
+        "All outcomes",
+        "Sold only",
+        "Reserve not met / no sale"
+      ],
+      "title": "Auction outcome",
       "type": "string"
     },
-    "maxBid": {
-      "description": "Only include listings with a current bid at or below this amount.",
-      "minimum": 0,
-      "title": "Max current bid (USD)",
-      "type": "number"
+    "category": {
+      "default": "all",
+      "description": "Limit to one BaT category.",
+      "editor": "select",
+      "enum": [
+        "all",
+        "543",
+        "431",
+        "383",
+        "415",
+        "434",
+        "560",
+        "426",
+        "428",
+        "429",
+        "556",
+        "447",
+        "430",
+        "70",
+        "379",
+        "10",
+        "11",
+        "557",
+        "436",
+        "479",
+        "553",
+        "433",
+        "432",
+        "544",
+        "21",
+        "418",
+        "380"
+      ],
+      "enumTitles": [
+        "All categories",
+        "Aircraft",
+        "All-Terrain Vehicles",
+        "Boats",
+        "Charity & Non-Profit",
+        "Convertibles",
+        "Diesels",
+        "Electric Vehicles",
+        "Go-Karts",
+        "Hot Rods",
+        "Kei Vehicles",
+        "Military Vehicles",
+        "Minibikes & Scooters",
+        "Motorcycles",
+        "Parts",
+        "Projects",
+        "Race Cars",
+        "Right-Hand Drive",
+        "RVs & Campers",
+        "Service Vehicles",
+        "Side-by-Sides",
+        "Station Wagons",
+        "Tractors",
+        "Trains",
+        "Truck & 4x4",
+        "Vans",
+        "Wheels"
+      ],
+      "title": "Category",
+      "type": "string"
+    },
+    "convertToCurrency": {
+      "default": "none",
+      "description": "Add convertedPrice, convertedCurrency and fxRate using BaT's cookieless multicurrency endpoint. Original price fields are preserved. The endpoint converts at the current rate, not the historical auction-date rate.",
+      "editor": "select",
+      "enum": [
+        "none",
+        "USD",
+        "EUR",
+        "GBP"
+      ],
+      "enumTitles": [
+        "No conversion",
+        "USD",
+        "EUR",
+        "GBP"
+      ],
+      "prefill": "none",
+      "title": "Convert prices to",
+      "type": "string"
+    },
+    "era": {
+      "default": "all",
+      "description": "Limit to one model-year decade.",
+      "editor": "select",
+      "enum": [
+        "all",
+        "2020",
+        "2010",
+        "2000",
+        "1990",
+        "1980",
+        "1970",
+        "1960",
+        "1950",
+        "1940",
+        "1930",
+        "1920",
+        "1910",
+        "1900",
+        "pre-1900"
+      ],
+      "enumTitles": [
+        "All eras",
+        "2020s",
+        "2010s",
+        "2000s",
+        "1990s",
+        "1980s",
+        "1970s",
+        "1960s",
+        "1950s",
+        "1940s",
+        "1930s",
+        "1920s",
+        "1910s",
+        "1900s",
+        "Pre-1900"
+      ],
+      "title": "Era",
+      "type": "string"
+    },
+    "includeBidHistory": {
+      "default": true,
+      "description": "When details are opened, include every public bid with its amount, time, and bidder username.",
+      "prefill": false,
+      "title": "Include bid history",
+      "type": "boolean"
+    },
+    "includeComments": {
+      "default": false,
+      "description": "When details are opened, include the public comment thread with author, text, time, and likes. Bid history is controlled separately.",
+      "prefill": false,
+      "title": "Include comments",
+      "type": "boolean"
+    },
+    "includeDetails": {
+      "default": false,
+      "description": "Adds full specifications, VIN, mileage, seller type, every photo, documents, engagement counters, and bid history. It costs one extra request per listing, so leave it off for large runs.",
+      "prefill": false,
+      "sectionCaption": "Detail enrichment",
+      "title": "Open each listing page",
+      "type": "boolean"
+    },
+    "includeTaxonomy": {
+      "default": false,
+      "description": "Adds category, origin and era to list-only records by querying BaT's facet filters. Up to 54 extra list requests; leave off for the cheapest runs.",
+      "prefill": false,
+      "title": "Fill category, origin and era on list records",
+      "type": "boolean"
+    },
+    "listingType": {
+      "default": "all",
+      "description": "Limit to no-reserve auctions, premium placements, or repeat BaT Alumni listings.",
+      "editor": "select",
+      "enum": [
+        "all",
+        "noreserve",
+        "premium",
+        "alumni"
+      ],
+      "enumTitles": [
+        "All listings",
+        "No Reserve",
+        "Premium",
+        "BaT Alumni (repeat listing)"
+      ],
+      "title": "Listing type",
+      "type": "string"
+    },
+    "location": {
+      "default": "all",
+      "description": "Limit to one country where the vehicle is located.",
+      "editor": "select",
+      "enum": [
+        "all",
+        "CA",
+        "US",
+        "AT",
+        "BE",
+        "HR",
+        "CY",
+        "CZ",
+        "DK",
+        "FI",
+        "FR",
+        "DE",
+        "GR",
+        "HU",
+        "IE",
+        "IT",
+        "LT",
+        "LU",
+        "MT",
+        "MC",
+        "NL",
+        "NO",
+        "PL",
+        "PT",
+        "SK",
+        "ES",
+        "SE",
+        "CH",
+        "GB",
+        "AU",
+        "NZ"
+      ],
+      "enumTitles": [
+        "All countries",
+        "Canada",
+        "United States",
+        "Austria",
+        "Belgium",
+        "Croatia",
+        "Cyprus",
+        "Czech Republic",
+        "Denmark",
+        "Finland",
+        "France",
+        "Germany",
+        "Greece",
+        "Hungary",
+        "Ireland",
+        "Italy",
+        "Lithuania",
+        "Luxembourg",
+        "Malta",
+        "Monaco",
+        "Netherlands",
+        "Norway",
+        "Poland",
+        "Portugal",
+        "Slovakia",
+        "Spain",
+        "Sweden",
+        "Switzerland",
+        "United Kingdom",
+        "Australia",
+        "New Zealand"
+      ],
+      "title": "Seller country",
+      "type": "string"
+    },
+    "make": {
+      "description": "Manufacturer to browse, e.g. 'Porsche', 'Mercedes-Benz', 'Land Rover'. Used in mode=byMake and optionally in mode=search.",
+      "editor": "textfield",
+      "title": "Make",
+      "type": "string"
+    },
+    "maxImages": {
+      "default": 20,
+      "description": "How many gallery photo URLs to include when details are opened. The total available count is always reported in imageCount.",
+      "maximum": 1000,
+      "minimum": 1,
+      "prefill": 1,
+      "title": "Max photos per listing",
+      "type": "integer"
     },
     "maxItems": {
       "default": 20,
-      "description": "Maximum number of listings to return.",
-      "maximum": 500,
+      "description": "Stop after this many listings. BaT returns at most 10,000 completed results per query, so larger runs are split by model year and category automatically.",
+      "maximum": 50000,
       "minimum": 1,
-      "prefill": 20,
-      "title": "Max items",
-      "type": "integer"
-    },
-    "maxYear": {
-      "description": "Only include listings from this year or older.",
-      "maximum": 2025,
-      "minimum": 1900,
-      "title": "Max year filter",
-      "type": "integer"
-    },
-    "minBid": {
-      "description": "Only include listings with a current bid at or above this amount.",
-      "minimum": 0,
-      "title": "Min current bid (USD)",
-      "type": "number"
-    },
-    "minYear": {
-      "description": "Only include listings from this year or newer.",
-      "maximum": 2025,
-      "minimum": 1900,
-      "title": "Min year filter",
+      "prefill": 1,
+      "sectionCaption": "Output",
+      "title": "Max listings",
       "type": "integer"
     },
     "mode": {
       "default": "search",
-      "description": "What to scrape.",
+      "description": "Choose live auctions, completed results, a keyword search, a make/model browse, or full details for specific listing URLs.",
       "editor": "select",
       "enum": [
         "search",
+        "active",
+        "results",
         "byMake",
         "getListing",
-        "results",
-        "featured"
+        "featured",
+        "homeFeatured"
       ],
       "enumTitles": [
-        "Search active auctions by keyword/make/model",
-        "Browse all listings for a specific car make",
-        "Get full details for specific listing URL(s)",
-        "Browse recently completed auction results",
-        "Currently featured / spotlight auctions"
+        "Search live + completed auctions by keyword",
+        "Live auctions only",
+        "Completed results (sold and reserve-not-met)",
+        "Browse one make or model",
+        "Full details for specific listing URLs",
+        "Premium live auctions (legacy 'featured' mode)",
+        "Homepage Featured Auctions"
       ],
-      "prefill": "search",
-      "title": "Mode",
+      "prefill": "results",
+      "sectionCaption": "Collection",
+      "title": "What to collect",
       "type": "string"
+    },
+    "model": {
+      "description": "Model to narrow a make browse, e.g. '911', 'E30 M3', 'Defender'. Used in mode=byMake and optionally in mode=search.",
+      "editor": "textfield",
+      "title": "Model (optional)",
+      "type": "string"
+    },
+    "origin": {
+      "default": "all",
+      "description": "Limit to one manufacturing origin, such as German, Italian, or Japanese.",
+      "editor": "select",
+      "enum": [
+        "all",
+        "3",
+        "499",
+        "4",
+        "498",
+        "542",
+        "497",
+        "6",
+        "7",
+        "8",
+        "9",
+        "496",
+        "441",
+        "82",
+        "18"
+      ],
+      "enumTitles": [
+        "All origins",
+        "American",
+        "Brazilian",
+        "British",
+        "Canadian",
+        "Czech",
+        "Dutch",
+        "French",
+        "German",
+        "Italian",
+        "Japanese",
+        "Korean",
+        "Prewar",
+        "Spanish",
+        "Swedish"
+      ],
+      "title": "Vehicle origin",
+      "type": "string"
+    },
+    "priceFrom": {
+      "description": "Keep listings whose current bid or sold price is at least this amount, in each listing's own currency.",
+      "minimum": 0,
+      "title": "Price from",
+      "type": "number"
+    },
+    "priceTo": {
+      "description": "Keep listings whose current bid or sold price is at most this amount, in each listing's own currency.",
+      "minimum": 0,
+      "title": "Price to",
+      "type": "number"
     },
     "searchQuery": {
-      "description": "Keyword to search (make, model, year). Used in mode=search. Examples: 'porsche 911', 'bmw e30', '1967 mustang'.",
+      "description": "Make, model, or phrase to search, e.g. 'Porsche 911', 'BMW E30 M3', 'Land Cruiser FJ40'. Used in mode=search. Live auctions are matched on their title and BaT keywords; completed auctions use BaT's own results search.",
       "editor": "textfield",
-      "prefill": "porsche",
-      "title": "Search query",
+      "title": "Search keyword",
       "type": "string"
     },
-    "sold": {
-      "default": false,
-      "description": "In mode=results: if true, only include listings that sold (exclude no-sale results).",
-      "prefill": false,
-      "title": "Include sold only",
-      "type": "boolean"
+    "soldWithin": {
+      "default": "all",
+      "description": "For completed results: limit to auctions that closed in this recent window.",
+      "editor": "select",
+      "enum": [
+        "all",
+        "7D",
+        "30D",
+        "1Y",
+        "2Y",
+        "5Y"
+      ],
+      "enumTitles": [
+        "All time",
+        "Last 7 days",
+        "Last 30 days",
+        "Last year",
+        "Last 2 years",
+        "Last 5 years"
+      ],
+      "title": "Closed within",
+      "type": "string"
+    },
+    "sort": {
+      "description": "How to order the collected listings. Defaults to Ending soonest for live/featured runs and Recently closed for completed results.",
+      "editor": "select",
+      "enum": [
+        "newest",
+        "oldest",
+        "highest_bid",
+        "most_viewed",
+        "ending_soonest"
+      ],
+      "enumTitles": [
+        "Recently closed first",
+        "Oldest first",
+        "Highest bid first",
+        "Most viewed first",
+        "Ending soonest first"
+      ],
+      "title": "Sort order",
+      "type": "string"
     },
     "startUrls": {
       "default": [],
-      "description": "One or more listing page URLs for mode=getListing. Example: https://bringatrailer.com/listing/1993-porsche-911-carrera-2-coupe-26/",
+      "description": "BaT listing page URLs for mode=getListing, e.g. https://bringatrailer.com/listing/1993-porsche-911-carrera-2-coupe-26/.",
       "editor": "stringList",
-      "prefill": [],
-      "title": "Listing URLs (mode=getListing)",
+      "title": "Listing URLs",
       "type": "array"
+    },
+    "yearFrom": {
+      "description": "Keep listings whose model year is this year or newer.",
+      "maximum": 2030,
+      "minimum": 1900,
+      "sectionCaption": "Filters",
+      "title": "Model year from",
+      "type": "integer"
+    },
+    "yearTo": {
+      "description": "Keep listings whose model year is this year or older.",
+      "maximum": 2030,
+      "minimum": 1900,
+      "title": "Model year to",
+      "type": "integer"
     }
   },
   "required": [
     "mode"
   ],
   "schemaVersion": 1,
-  "title": "Bring a Trailer Car Auctions Scraper Input",
+  "title": "Bring a Trailer Auction & Sold Price Tracker Input",
   "type": "object"
 }

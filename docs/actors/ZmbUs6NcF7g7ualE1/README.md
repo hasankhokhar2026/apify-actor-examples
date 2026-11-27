@@ -4,88 +4,176 @@
 
 # Kiwi.com Flight Fares & Popular Routes Scraper
 
-Scrape **Kiwi.com** — the flight metasearch engine famous for virtual interlining (self-transfer connections between non-cooperating airlines). Search flights between any origin and destination, pull the most popular routes from a city with live prices, and look up airports, cities and stations. No login, no cookies, no proxy required.
+Scrape **Kiwi.com** — the flight metasearch engine known for virtual interlining (self-transfer
+connections between airlines that don't normally sell together). Get true one-way and round-trip
+itineraries, build multi-city trips, chart the cheapest fare for every day of a date range, pull
+popular routes from a city, and resolve airports, cities and stations. No login, cookies, API key
+or proxy setup is required.
 
 ## What this actor does
 
-- **Three modes:** `search` (flights by route + date), `popularRoutes` (top destinations from a city), `stationLookup` (airport / city / station autocomplete)
-- **Live prices** in 32 currencies (ISO 4217)
-- **Full itinerary details** — airlines, flight numbers, departure/arrival times, durations, stops, layovers, bag allowances, virtual-interlining flags
-- **Four cabin classes** — Economy, Premium, Business and First
-- **`anywhere` destination** — search flights from your origin to every destination Kiwi can price
-- **Optional return date** — or let Kiwi return flights with any return date
-- **Filters:** max stops, max price, keyword match, sort order
-- **Empty fields are omitted** — you only ever see fields the API actually returned
+- **Five modes:** `search` (one-way or round-trip), `multiCity` (2–8 legs), `priceCalendar`
+  (lowest fare per day), `popularRoutes` (top destinations from a city) and `stationLookup`
+  (airport / city / station autocomplete).
+- **True one-way and round-trip searches** with separate departure and return dates, or date
+  ranges searched in a single request.
+- **Multi-city itineraries** with 2–8 legs and a booking link for the whole trip.
+- **Daily price calendar** — one row per day with the lowest fare and Kiwi's `CHEAP` /
+  `AVERAGE` / `EXPENSIVE` rating.
+- **Live prices** in 29 currencies, four cabin classes, and passenger mixes with adults, children
+  and infants.
+- **Full itinerary detail** — every leg and segment with airline, operating airline, flight number,
+  airports, local and UTC times, duration, stops and layovers.
+- **Booking links** for every itinerary, plus every booking option Kiwi exposes with its provider
+  and price.
+- **Filters:** max stops, include/exclude airlines, price range, maximum duration and keyword.
+- **Empty fields are omitted** — you only see values the API actually returned.
 
-## Output per flight (mode = `search`)
+## Output per flight (`recordType: "flight"`)
 
-- `itineraryId`
-- `originCity`, `originAirport` (IATA code), `originAirportName`
-- `destinationCity`, `destinationAirport`, `destinationAirportName`
-- `departureTime`, `arrivalTime` (local times) plus `departureTimeUtc`, `arrivalTimeUtc`
-- `durationMinutes`, `outboundDurationMinutes`, `stops`
-- `layoverMinutes[]` — one entry per connection on the outbound journey
-- `price`, `priceBeforeDiscount`, `currency`
-- `airlines[]`, `airlineNames[]`, `flightNumbers[]`
-- `includedHandBags`, `includedCheckedBags`, `hasNoCheckedBaggage`, `hasNoBaggageSupported`
-- `isVirtualInterlining`, `isTrueHiddenCity`, `isThrowawayTicket`
-- Return legs (when present): `isReturn`, `returnDepartureTime`, `returnArrivalTime`, `returnAirlines[]`, `inboundDurationMinutes`, `nightsInDestination`
-- `provider` (e.g. `Kiwi.com`), `seatsLeft`
-- `sourceUrl` — the exact Kiwi.com results page for this search
-- `recordType: "flight"`, `scrapedAt`
+Every record starts with `tripType` (`oneWay`, `roundTrip` or `multiCity`), `itineraryId`, `price`,
+`currency`, `priceEur`, `provider` and `scrapedAt`.
 
-## Output per popular route (mode = `popularRoutes`)
+- **Route:** `originCity`, `originAirport` (IATA), `originAirportName`, `destinationCity`,
+  `destinationAirport`, `destinationAirportName`.
+- **Dates and times:** `departureDate`, `departureTime`, `departureTimeUtc`, `arrivalDate`,
+  `arrivalTime`, `arrivalTimeUtc`; return trips add `returnDate`, `returnDepartureTime`,
+  `returnArrivalTime`.
+- **Journey:** `durationMinutes`, `outboundDurationMinutes`, `inboundDurationMinutes`, `stops`,
+  `layoverMinutes[]`, `airlines[]`, `airlineNames[]`, `flightNumbers[]`, `isReturn`,
+  `nightsInDestination`.
+- **Detailed legs:** `legs[]` — one object per direction or multi-city leg, each with its own route,
+  times, duration, stops, airlines, flight numbers, layovers and `segments[]`.
+- **Detailed segments:** `segments[]` — every flight with airline and operating airline, flight
+  number, cabin, airports, local and UTC times, duration and the following layover.
+- **Price and booking:** `price`, `priceBeforeDiscount`, `priceEur`, `currency`, `bookingUrl`,
+  `bookingProvider`, `bookingProviderCode`, `bookingContentProvider`, `bookingSubprovider`,
+  `bookingProduct` (`KIWI_BASIC` / `KIWI_GUARANTEE` / `KIWI_REST`),
+  `bookingOptions[]` (each with provider, content provider, product, price and booking URL).
+- **Bags and ticket type:** `includedCheckedBags`, `includedHandBags`, `includedPersonalItem`,
+  `checkedBagTiers[]`, `handBagTiers[]`, `personalItemTiers[]` (price + dimensions),
+  `hasNoCheckedBaggage`, `hasNoBaggageSupported`, `isVirtualInterlining`, `isTrueHiddenCity`,
+  `isThrowawayTicket`, `seatsLeft`, `pnrCount`.
+- **Kiwi Guarantee:** `guaranteeAvailable`, `guaranteeFee`, `automaticCheckinAvailable`,
+  `instantChatSupportAvailable`, `disruptionProtectionAvailable`.
+- **Links:** `sourceUrl` — the exact Kiwi.com results page for the trip; `bookingUrl` — the
+  Kiwi.com booking page for that itinerary.
 
-- `itineraryId`
-- `originCity`, `originAirport`, `destinationCity`, `destinationAirport`, `destinationCountry`
-- `price`, `priceBeforeDiscount`, `currency`
-- `sourceUrl` — Kiwi.com results page for the route
-- `recordType: "popularRoute"`, `scrapedAt`
+## Output per calendar day (`recordType: "priceCalendarDay"`)
 
-## Output per station (mode = `stationLookup`)
+- `date` — the departure date.
+- `price`, `currency`, `priceRating` (`CHEAP`, `AVERAGE` or `EXPENSIVE`).
+- `tripType`, `originCity`, `originAirport`, `destinationCity`, `destinationAirport`,
+  `destinationCountry`, `nightsInDestination` (round-trip), `sourceUrl`, `scrapedAt`.
 
-- `name`, `kind` (City / Airport & station / Country / …), `code` (IATA for airports, metro code for cities)
-- `cityName`, `countryCode`, `countryName`, `airportsCount`
-- `latitude`, `longitude`
-- `id` — the Kiwi place id (`City:london_gb`, `Station:airport:LGW`) you can paste straight back into `origin` / `destination`
-- `legacyId`, `slug`
-- `sourceUrl`, `recordType: "station"`, `scrapedAt`
+## Output per popular route (`recordType: "popularRoute"`)
+
+- `originCity`, `originAirport`, `originAirportName`, `destinationCity`, `destinationAirport`,
+  `destinationAirportName`, `destinationCountry`, `destinationCountryName`.
+- `price`, `priceBeforeDiscount`, `priceEur`, `currency`.
+- `sourceUrl`, `scrapedAt`.
+
+## Output per station (`recordType: "station"`)
+
+- `name`, `kind` (City / Airport / Station / Country / Region / …), `code`, `stationType`.
+- `cityName`, `countryCode`, `countryName`, `subdivisionName`, `airportsCount`, `timezone`.
+- `latitude`, `longitude`.
+- `id` — the Kiwi place id (`City:london_gb`, `Station:airport:LGW`) that can be pasted back into
+  `origin` or `destination`.
+- `legacyId`, `slug`, `sourceUrl`, `scrapedAt`.
 
 ## Input
 
 | Field | Type | Default | Description |
 |---|---|---|---|
-| `mode` | string (select) | `search` | `search`, `popularRoutes` or `stationLookup` |
-| `origin` | string | `london` | Airport code, city name or Kiwi place id (mode=search, popularRoutes) |
-| `destination` | string | `paris` | Airport code, city name or Kiwi place id; use `anywhere` for all destinations (mode=search) |
-| `stationQuery` | string | – | Free-text term (mode=stationLookup) |
-| `travelDate` | string | – | Departure date `YYYY-MM-DD` (mode=search); when omitted the actor uses today + 30 days |
-| `returnDate` | string | – | Optional return date `YYYY-MM-DD` (mode=search) |
-| `currency` | string (select) | `usd` | 32 currencies (ISO 4217) |
-| `stops` | string (select) | `any` | `any` / `nonstop` / `1plus` / `2plus` |
-| `passengers` | int | `1` | 1–9 adults |
-| `cabinClass` | string (select) | `economy` | `economy` / `premium` / `business` / `first` |
-| `sortBy` | string (select) | `QUALITY` | Quality / price / duration / take-off / landing |
-| `maxPrice` | number | – | Drop itineraries above this price |
-| `containsKeyword` | string | – | Keep only flights matching this text (airline, flight number, city) |
-| `maxItems` | int | `20` | Hard cap (1–500) |
-| `proxyConfiguration` | object | – | Optional; only used lazily if the API rate-limits or blocks |
+| `mode` | select | `search` | `search`, `multiCity`, `priceCalendar`, `popularRoutes`, `stationLookup` |
+| `tripType` | select | `auto` | `auto` (returnDate decides), `oneWay`, `roundTrip` |
+| `origin` | string | `london` | Airport code, city name or Kiwi place id |
+| `destination` | string | `paris` | Airport code, city name or Kiwi place id; `anywhere` allowed in search |
+| `legs` | array | – | Multi-city legs: `{"origin":"london","destination":"paris","date":"2026-12-15"}` |
+| `stationQuery` | string | – | Free-text place search (stationLookup) |
+| `travelDate` | string | - | Departure date `YYYY-MM-DD`; when omitted, the actor uses today + 30 days |
+| `travelDateEnd` | string | – | Last date of a departure range |
+| `returnDate` | string | – | Return date `YYYY-MM-DD` |
+| `returnDateEnd` | string | – | Last date of a return range |
+| `passengers` | int | 1 | Adults, 1–9 |
+| `children` | int | 0 | Children, 0–8 |
+| `infants` | int | 0 | Infants, 0–8 |
+| `cabinClass` | select | `economy` | `economy`, `premium`, `business`, `first` |
+| `currency` | select | `usd` | 32 ISO 4217 currencies |
+| `stops` | select | `any` | `any`, `nonstop`, `1plus`, `2plus` |
+| `airlines` | list | – | Include only itineraries with at least one of these IATA codes |
+| `excludeAirlines` | list | – | Drop itineraries with any of these IATA codes |
+| `minPrice` / `maxPrice` | number | – | Price range in the selected currency |
+| `maxDurationMinutes` | int | – | Drop itineraries longer than this |
+| `sortBy` | select | `QUALITY` | `QUALITY`, `PRICE`, `DURATION`, `POPULARITY`, `SOURCE_TAKEOFF`, `DESTINATION_LANDING`, `DESTINATION_TAKEOFF`, `SOURCE_LANDING` |
+| `containsKeyword` | string | – | Keep flights whose airline, flight number, airport or city matches |
+| `maxItems` | int | 20 | Hard cap, 1–1000. Up to 500 one-way/return, up to 1000 multi-city; no cursor exists. |
 
-### Example: cheap direct flights from London to Paris
+Legacy `proxyConfiguration` keys are accepted but ignored; the actor needs no proxy.
+
+### Example: cheap nonstop one-way
 
 ```json
 {
   "mode": "search",
+  "tripType": "oneWay",
   "origin": "london",
   "destination": "paris",
-  "travelDate": "2026-09-15",
+  "travelDate": "2026-12-15",
   "stops": "nonstop",
   "sortBy": "PRICE",
   "maxItems": 25
 }
 ```
 
-### Example: popular routes from Dubai with return dates
+### Example: round-trip with a return date range
+
+```json
+{
+  "mode": "search",
+  "tripType": "roundTrip",
+  "origin": "LHR",
+  "destination": "City:tokyo_jp",
+  "travelDate": "2026-12-10",
+  "travelDateEnd": "2026-12-12",
+  "returnDate": "2026-12-20",
+  "returnDateEnd": "2026-12-22",
+  "cabinClass": "economy",
+  "maxPrice": 900,
+  "maxItems": 40
+}
+```
+
+### Example: multi-city London → Paris → Rome
+
+```json
+{
+  "mode": "multiCity",
+  "legs": [
+    {"origin": "london", "destination": "paris", "date": "2026-12-15"},
+    {"origin": "paris", "destination": "rome", "date": "2026-12-18"}
+  ],
+  "currency": "eur",
+  "maxItems": 20
+}
+```
+
+### Example: a month of daily fares
+
+```json
+{
+  "mode": "priceCalendar",
+  "origin": "london",
+  "destination": "rome",
+  "travelDate": "2026-12-01",
+  "travelDateEnd": "2026-12-31",
+  "currency": "gbp",
+  "maxItems": 31
+}
+```
+
+### Example: popular routes from Dubai
 
 ```json
 {
@@ -106,62 +194,77 @@ Scrape **Kiwi.com** — the flight metasearch engine famous for virtual interlin
 }
 ```
 
-### Example: long-haul with a stop, any airline
-
-```json
-{
-  "mode": "search",
-  "origin": "LHR",
-  "destination": "City:tokyo_jp",
-  "travelDate": "2026-10-02",
-  "stops": "any",
-  "maxPrice": 900,
-  "currency": "usd",
-  "maxItems": 15
-}
-```
-
-### Example: business class to anywhere
-
-```json
-{
-  "mode": "search",
-  "origin": "london",
-  "destination": "anywhere",
-  "cabinClass": "business",
-  "maxItems": 10
-}
-```
-
 ## Use cases
 
-- **Travel price intelligence** — track how fares on a route evolve and detect virtual-interlining deals
-- **Competitive fare monitoring** — compare Kiwi.com pricing against direct-airline prices
-- **Route planning tools** — power "popular destinations from my city" widgets
-- **Airport/city data enrichment** — resolve IATA codes, coordinates and country info for place names
-- **Travel search engines** — feed real itineraries into metasearch prototypes
+- **Fare monitoring** — schedule daily runs and build a price history for a route.
+- **Price calendars** — find the cheapest departure day in a month without running the actor once
+  per day.
+- **Travel search engines** — feed real itineraries, segments and booking links into a metasearch
+  prototype.
+- **Virtual-interlining research** — detect self-transfer trips and compare them with single-ticket
+  fares.
+- **Route planning** — power "popular destinations from my city" widgets or multi-city planners.
+- **Airport/city enrichment** — resolve IATA codes, coordinates, timezones and country data.
 
 ## Data source and limitations
 
-- **Data source:** Kiwi.com's own public flight-search service — the same one www.kiwi.com uses. No authentication is required.
-- **Live prices:** flight fares are live quotes from Kiwi.com's fare engine. They change constantly and can be heavy to compute — searches can take 20–60 seconds for busy routes.
-- **Anti-bot caveat:** Kiwi.com may rate-limit or block aggressive scraping. The actor is designed to work without a proxy, but you can enable one in `proxyConfiguration` if a run gets blocked.
-- **One-way and multi-city:** this actor mirrors Kiwi's default search behaviour — a date-only search returns flights with any return date, exactly like www.kiwi.com. Multi-city and true one-way search shapes are not exposed.
-- **Pagination:** the API returns one page of results per search (25–100 itineraries depending on filters). Kiwi's "show more" flow is interactive, so results are capped per search. Raise `maxItems` up to 100 for one page of results.
-- **Sort caveat:** `TAKEOFF_ASC` and `LANDING_ASC` are valid Kiwi sort values but the return-search API returns no itineraries for them — use `QUALITY`, `PRICE` or `DURATION` for mode=search.
-- **Date availability:** fares are only returned for dates Kiwi.com can price (typically up to ~11 months ahead). Dates in the past return zero results.
-- **Not affiliated:** this actor is a third-party tool and is not affiliated with or endorsed by Kiwi.com.
+- **Data source:** Kiwi.com's own public flight-search service (the GraphQL endpoint used by
+  www.kiwi.com). No authentication is required.
+- **Live prices:** fares are live quotes from Kiwi.com's fare engine. They change constantly and
+  busy routes can take 20–60 seconds.
+- **Multi-city:** supports 2–8 legs. The multi-city search uses the same public endpoint as the
+  Kiwi.com website and needs a short-lived page token that the actor builds automatically; no
+  user cookies are involved.
+- **Price calendar:** Kiwi returns daily prices only within its booking horizon (about one year;
+  the observed series ended around 2027-11-21 for a 2027-01-01 start). The actor caps a calendar
+  request at 400 days, which is above the source horizon; dates beyond the horizon cannot be
+  produced by splitting the range.
+- **Result ceiling:** Kiwi serves one page per search, but its size is not capped at 283: a
+  35-route limit-500 matrix returned 0–493 one-way rows (12 routes above 283), and multi-city
+  returned 996 at limit 1000. The actor requests up to 500 one-way/return and up to 1000 multi-city
+  and emits whatever the source page contains. There is no offset/cursor parameter; the
+  `serverToken` is a wait/poll token, not a page cursor.
+- **Duration filter:** Kiwi's server accepts a duration filter but does not apply it, so
+  `maxDurationMinutes` is applied to the returned rows. A very strict duration or price filter can
+  therefore yield fewer rows than the source holds.
+- **Stopover filter:** Kiwi's `stopoverTime` server parameter does change the result set, but in
+  probes it removed every connecting itinerary once `start > 0` (including layovers that would fit
+  the range), so it is not exposed as a layover-duration input. Layover durations remain available
+  in the output for client-side use.
+- **Booking panel:** `bookingUrl` and the provider-level `bookingOptions` come from the search
+  response. Kiwi.com is the merchant and the public booking page exposes its own Basic / Benefits /
+  Guarantee products; there is no multi-seller agency list to scrape. `bookingOptions` includes
+  every product Kiwi exposes with its price and booking URL.
+- **Seats left:** Kiwi only returns `seatsLeft` when it exposes a count; the field is omitted
+  otherwise.
+- **Date availability:** fares are only returned for dates Kiwi can price (typically up to ~11
+  months ahead). Dates in the past return zero results.
+- **Not affiliated:** this actor is a third-party tool and is not affiliated with or endorsed by
+  Kiwi.com.
 
 ## FAQ
 
-**Do I need an API key or cookies?** No. The actor reads Kiwi.com's public flight-search service, which requires no authentication.
+**Do I need an API key or cookies?** No. The actor reads Kiwi.com's public flight-search service,
+which requires no authentication.
 
-**Why are prices higher than on kiwi.com?** Kiwi.com's pricing includes their service fees and can change between requests. The price shown is the live quote at scrape time.
+**Why are prices higher than on kiwi.com?** Kiwi.com's pricing includes its service fees and can
+change between requests. The price shown is the live quote at scrape time.
 
-**What does `isVirtualInterlining` mean?** Kiwi.com's signature feature — two flights on separate tickets (e.g. different airlines that don't cooperate) connected with a self-transfer. If it's `true`, the passenger must collect bags and check in again themselves; a checked bag is usually not included.
+**What does `isVirtualInterlining` mean?** Kiwi.com's signature feature — two flights on separate
+tickets connected with a self-transfer. If it is `true`, the passenger must collect bags and check
+in again; a checked bag is usually not included.
 
-**Why are some fields missing on my records?** All fields are omitted when the API doesn't return them (no sentinel values). For example `returnDepartureTime` only appears when the search includes a return leg, and `layoverMinutes` only for connecting flights.
+**Why are some fields missing?** All fields are omitted when the API doesn't return them. For
+example `returnDepartureTime` only appears on round-trip records and `layoverMinutes` only for
+connecting flights.
 
-**Can I scrape prices for a whole month?** Not in one call — each search covers a single departure date. Run the actor per date and merge the datasets.
+**Can I search a whole month?** Yes. Set `travelDate` and `travelDateEnd` to search a departure
+range, or use `mode=priceCalendar` to get the lowest fare for each day.
 
-**Is this affiliated with Kiwi.com?** No — this is a third-party actor using Kiwi.com's public API.
+**Can I get more than one page?** Kiwi serves one page per request; there is no offset/cursor
+parameter. The one-way/return page can carry up to 500 rows (493 observed) and multi-city up to
+1000 (996 observed). Set `maxItems` accordingly; the live total can be lower and the source total
+guarantees nothing beyond that page.
+
+**Is this affiliated with Kiwi.com?** No — this is a third-party actor using Kiwi.com's public
+search service.

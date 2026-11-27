@@ -4,119 +4,295 @@
 
 # Berlin Transit Station, Route and Departure Scraper
 
-Berlin and Brandenburg run one of Europe's densest local transit networks — S-Bahn, U-Bahn, trams, buses, ferries and regional rail under the VBB fare union. This actor gives you three ways into that network: find a stop by name, plan a journey between two stops, or pull a live departure board for a single stop.
+Pull live Berlin and Brandenburg transit data — stations, departure and arrival boards, multi-leg journeys, nearby stops, accessibility-aware routes, and disruption alerts — from public VBB/DB data feeds. No login, API key or proxy setup is required, and every record is built from real transit data with empty fields omitted.
 
 ## What this actor does
 
-- **Station lookup** — search any Berlin/Brandenburg stop name and get back matches with coordinates and the transport modes served there.
-- **Journey planning** — resolve an origin and destination stop by name and return upcoming journeys with timing, transfers and price.
-- **Live departures** — pull the next scheduled departures from a specific stop, including real-time delay minutes when reported.
-- Covers every local transport mode in the network: suburban (S-Bahn), subway (U-Bahn), tram, bus, ferry, express and regional trains that call at a covered stop.
-- Fields that aren't available for a given record (e.g. no delay reported, or no price for a journey) are omitted rather than returned empty.
+- **Nine modes:** `stations`, `nearby`, `departures`, `arrivals`, `journeys`, `routes`, `disruptions`, `radar`, `reachable`.
+- **Station intelligence:** names, 9-digit IDs, DHID/IFOPT IDs, coordinates, served transport modes, line details, colours, GTFS accessibility flags, and elevator-path counts.
+- **Live boards:** planned and actual times, platform, delay in minutes, trip ID, operator, direction, occupancy hints, and warning/status remarks.
+- **Journey planning:** transfers, duration, per-leg platforms and delays, walking distances, stopovers, operator and line details, plus accessibility, bicycle and walking-speed filters. Local VBB fares and long-distance DB fares are attached when the sources return them. The legacy `routes` mode still works.
+- **Disruption coverage:** VBB departure/journey remarks, network-wide DB Verkehrslage communications (cause, effect, DE/EN captions, affected lines and stations, `line`/`evaNumber` filters), and elevator outages from the VBB-linked brokenlifts feed with optional history.
+- **Live vehicle radar:** positions, lines, directions, trip IDs, and next stopovers for vehicles inside a bounding box.
+- **Reachable stops:** stations reachable from an address or coordinate within a travel-time budget, grouped by duration.
+- **Elevator history:** optional brokenlifts.org outage history for elevator records, with a source page per elevator.
+- **Nearby search:** find stops around coordinates, a station, or a place name, with distance in metres.
+- **Mode and language filters:** limit results to S-Bahn, U-Bahn, tram, bus, ferry, express or regional trains, in English or German.
+- Fields that a source does not provide for a record are omitted, never returned as `null`, `""`, `[]` or `{}`.
 
-## Output: per station (mode=`stations`)
+## Output: per station (`mode=stations`, `mode=nearby`)
 
-- `stationId` — unique stop identifier
-- `stationName` — station or stop name
-- `type` — stop/station type as reported by the network
-- `lat`, `lng` — coordinates
-- `transportModes` — list of modes served at this stop (e.g. `suburban`, `bus`)
-- `lines` — up to 10 line names serving this stop
-- `recordType` — always `station`
-- `scrapedAt` — ISO 8601 timestamp of collection
+- `stationId` — station DHID/IFOPT when available (legacy format)
+- `stationIbnr` — 9-digit VBB station ID
+- `stationName`, `type`
+- `lat`, `lng`
+- `transportModes` — served modes (`suburban`, `subway`, `tram`, `bus`, `ferry`, `express`, `regional`)
+- `lines` — up to 10 line names (legacy field)
+- `lineDetails` — line name, ID, product, product name, raw mode, operator and colours
+- `ifoptId`, `stationDhid`
+- `wheelchairBoarding`, `elevatorPathways`, `hasElevator` �?" GTFS-derived accessibility when available
+- `distanceMeters` �?" only in nearby mode
+- `source` �?" `db` only when the station came from the DB fallback
+- `sourceUrl` �?" the exact VBB API query or DB station-search query that produced the record
+- `recordType: "station"`, `scrapedAt`
 
-## Output: per journey (mode=`routes`)
+## Output: per departure or arrival (`mode=departures`, `mode=arrivals`)
 
-- `origin`, `destination` — resolved stop names
-- `departure`, `arrival` — timestamps for the first and last leg
-- `durationMinutes` — total journey time
-- `transfers` — number of changes
-- `price`, `currency` — fare, when the route carries pricing data
-- `transportModes` — modes used across all legs (includes `walking` for transfer walks)
+- `stationId`, `stationName` — the board's station
+- `line`, `lineId`, `product`, `productName`, `mode` — legacy `mode` is the raw HAFAS mode, `product` is the specific service
+- `operator`
+- `towards` — departure direction (departures)
+- `origin`, `provenance`, `direction` — arrival origin and line direction (arrivals)
+- `scheduledAt`, `plannedAt` — actual/estimated time and planned time
+- `delayMinutes`
+- `platform`, `plannedPlatform`, `prognosisType`
+- `tripId`
+- `occupancy` — when the source reports an occupancy forecast
+- `cancelled` — when the source marks the trip as cancelled
+- `disruptions` — warning/status remarks with `severity`, `code`, `text` and an optional `url`
+- `sourceUrl` — the public VBB Fahrinfo source page
+- `recordType: "departure"` or `"arrival"`, `scrapedAt`
+
+## Output: per journey (`mode=journeys`)
+
+- `origin`, `destination`, `originId`, `destinationId`
+- `departure`, `arrival` — first departure and last arrival
+- `departurePlanned`, `arrivalPlanned`
+- `departureDelayMinutes`, `arrivalDelayMinutes`
+- `departurePlatform`, `arrivalPlatform`
+- `durationMinutes`, `transfers`
+- `price`, `currency` — VBB local fare or DB long-distance fare when the source returns one (amount in EUR)
+- `fareProvider` — `vbb` or `db`; identifies which source supplied `price`
+- `fareOptions[]`, `fareName`, `fareDescription` — available local fare products for the journey
+- `transportModes` — legacy raw modes, including `walking`
+- `products` — specific products used (e.g. `express`, `suburban`)
 - `lines` — line names used, leg by leg
-- `recordType` — always `journey`
-- `scrapedAt` — ISO 8601 timestamp of collection
+- `tripIds`
+- `occupancy`
+- `legs[]` — per-leg `origin`, `destination`, IDs, times, platforms, delays, `line`, `product`, `mode`, `operator`, `direction`, `walking`, `distanceMeters`, `tripId`, `reachable`, `cancelled`, `disruptions[]` and optional `stopovers[]`
+- `disruptions` — deduplicated journey and leg warnings/status messages
+- `accessibilityRequested`, `bikeRequested` — present when those filters are used
+- `sourceUrl` — the public VBB Fahrinfo source page
+- `recordType: "journey"`, `scrapedAt`
 
-## Output: per departure (mode=`departures`)
+## Output: per disruption (`mode=disruptions`)
 
-- `stationId`, `stationName` — the stop the board is for
-- `line` — line name (e.g. `S1`, `M41`)
-- `mode` — transport mode of that line
-- `operator` — operating company
-- `towards` — destination/direction shown on the board
-- `scheduledAt` — scheduled departure time
-- `delayMinutes` — reported delay in minutes, when available
-- `recordType` — always `departure`
-- `scrapedAt` — ISO 8601 timestamp of collection
+Common fields:
+
+- `source` — `vbb`, `db` or `elevators`
+- `sourceUrl` — the matching public source page (VBB Fahrinfo, DB Verkehrslage or brokenlifts.org)
+- `recordType: "disruption"`, `scrapedAt`
+
+VBB remarks:
+
+- `stationId`, `stationName`, `line`, `product`, `mode`, `towards`, `when`
+- `severity`, `code`, `text`, `url`
+
+DB Verkehrslage:
+
+- `disruptionId`, `caption`, `captionDe`, `captionEn`
+- `cause`, `causeCode`, `effect`, `effectCode`
+- `begin`, `end`, `published`, `intervals`
+- `states`, `channels`, `organisationalUnits`
+- `lines`, `stations`, `sections`, `alternativeRoutes`
+- `immediate`, `childCount`
+
+Elevator outages:
+
+- `stationId`, `stationName`, `elevatorDescription`, `status`, `elevatorId`
+- `history[]` — optional past outages with `start`, `end` and `message` when `includeElevatorHistory=true`
+- `sourceUrl` — the brokenlifts.org station/elevator page when available
 
 ## Input
 
 | Field | Type | Default | Description |
 |---|---|---|---|
-| `mode` | string | `stations` | `stations`, `routes`, or `departures` |
-| `query` | string | `Berlin` | Stop name to search (mode=`stations`), or to resolve a departure board when `stationId` isn't set (mode=`departures`) |
-| `origin` | string | `Berlin Hauptbahnhof` | Departure stop name (mode=`routes`) |
-| `destination` | string | `Hamburg Hauptbahnhof` | Arrival stop name (mode=`routes`) — see FAQ: use a Berlin/Brandenburg stop name for a real match |
-| `stationId` | string | – | Specific stop ID to use directly for a departure board (mode=`departures`), skips the name lookup |
-| `maxItems` | integer | `20` | Maximum records to return (1–200) |
+| `mode` | string | `stations` | `stations` / `nearby` / `departures` / `arrivals` / `journeys` / `disruptions` / `radar` / `reachable`. The legacy value `routes` runs `journeys`. |
+| `query` | string | – (prefill `Berlin`) | Station or place name for station search, boards, VBB/elevator disruptions, and the nearby centre when coordinates are empty. Station/board modes fall back to Berlin when empty. |
+| `stationId` | string | – | Station ID, DHID or IFOPT. Skips the name lookup. |
+| `origin` | string | `Berlin Hauptbahnhof` | Journey origin name (mode=journeys). |
+| `destination` | string | `Hamburg Hauptbahnhof` | Journey destination name (mode=journeys). |
+| `originId` | string | – | Journey origin ID; overrides `origin`. |
+| `destinationId` | string | – | Journey destination ID; overrides `destination`. |
+| `departureTime` | string | – | ISO 8601 time for journeys, or board start time. Empty means now. |
+| `arrivalTime` | string | – | ISO 8601 arrival time for journeys, used when `departureTime` is empty. |
+| `transfers` | integer | – | Maximum changes for journeys (0–10). Empty lets the planner decide. |
+| `accessibility` | string | `any` | `any` / `partial` / `complete` journey accessibility filter. |
+| `bike` | boolean | `false` | Only journeys that allow bicycle carriage. |
+| `walkingSpeed` | string | `normal` | `slow` / `normal` / `fast` transfer walking speed. |
+| `includeStopovers` | boolean | `false` | Add intermediate stops inside journey legs. |
+| `latitude` | number | – | Nearby/reachable centre latitude. |
+| `longitude` | number | – | Nearby/reachable centre longitude. |
+| `radius` | integer | `1000` | Nearby radius in metres (50–5000). |
+| `north`, `south`, `east`, `west` | number | — | Radar bounding box (mode=radar). |
+| `address` | string | — | Reachable origin address (mode=reachable); `query` is the fallback. |
+| `maxDuration` | integer | `30` | Reachable travel-time budget in minutes (1–120). |
+| `direction` | string | – | Only departures/arrivals heading to this station name or ID. |
+| `duration` | integer | `60` | Board window in minutes (5–360). |
+| `transportModes` | array | `[]` | Limit to any of `suburban`, `subway`, `tram`, `bus`, `ferry`, `express`, `regional`. Empty means all. |
+| `language` | string | `en` | `en` / `de` operational text. |
+| `includeRemarks` | boolean | `true` | Attach warning/status remarks to boards and journeys. |
+| `disruptionSource` | string | `all` | `all` / `vbb` / `db` / `elevators` (mode=disruptions). |
+| `state` | string | `all` | German state filter for DB alerts (mode=disruptions). |
+| `line` | string | — | DB line filter, e.g. `RE5` or `S5` (mode=disruptions). |
+| `evaNumber` | string | — | DB station EVA/IFOPT filter (mode=disruptions). |
+| `includeElevatorHistory` | boolean | `false` | Attach brokenlifts outage history to elevator records. |
+| `lookaheadDays` | integer | `7` | Days ahead for DB alerts (0–14). |
+| `maxItems` | integer | `20` | Maximum records (1–1000). Prefill uses 3. |
 
-### Example: search for a stop
+### Example: search stations
 
 ```json
 {
   "mode": "stations",
-  "query": "Alexanderplatz"
+  "query": "Alexanderplatz",
+  "maxItems": 5
 }
 ```
 
-### Example: plan a journey
+### Example: live departures for one line mode
+
+```json
+{
+  "mode": "departures",
+  "stationId": "900003201",
+  "transportModes": ["suburban", "regional"],
+  "duration": 90,
+  "maxItems": 20
+}
+```
+
+### Example: accessible journey with stopovers
+
+```json
+{
+  "mode": "journeys",
+  "origin": "Berlin Hauptbahnhof",
+  "destination": "Potsdam Hauptbahnhof",
+  "accessibility": "complete",
+  "includeStopovers": true,
+  "maxItems": 3
+}
+```
+
+### Example: nearby stops
+
+```json
+{
+  "mode": "nearby",
+  "latitude": 52.5215,
+  "longitude": 13.4113,
+  "radius": 500,
+  "maxItems": 10
+}
+```
+
+### Example: live vehicle radar
+
+```json
+{
+  "mode": "radar",
+  "north": 52.56,
+  "south": 52.49,
+  "east": 13.47,
+  "west": 13.33,
+  "duration": 60,
+  "maxItems": 50
+}
+```
+
+### Example: stops reachable from an address
+
+```json
+{
+  "mode": "reachable",
+  "address": "Berlin Hauptbahnhof",
+  "maxDuration": 20,
+  "maxItems": 100
+}
+```
+
+### Example: DB disruption by line with elevator history
+
+```json
+{
+  "mode": "disruptions",
+  "disruptionSource": "elevators",
+  "includeElevatorHistory": true,
+  "maxItems": 20
+}
+```
+
+### Example: DB disruption alerts for Berlin
+
+```json
+{
+  "mode": "disruptions",
+  "disruptionSource": "db",
+  "state": "Berlin",
+  "lookaheadDays": 3,
+  "maxItems": 20
+}
+```
+
+### Example: legacy route request
 
 ```json
 {
   "mode": "routes",
   "origin": "Berlin Hauptbahnhof",
-  "destination": "Potsdam Hauptbahnhof",
-  "maxItems": 5
-}
-```
-
-### Example: live departure board by station ID
-
-```json
-{
-  "mode": "departures",
-  "stationId": "900000100003",
-  "maxItems": 20
+  "destination": "Hamburg Hauptbahnhof",
+  "maxItems": 3
 }
 ```
 
 ## Use cases
 
-- **Travel planning tools** — resolve a Berlin-area stop name and preview upcoming journeys before booking.
-- **Delay monitoring** — poll a stop's departure board to track live delays through the day.
-- **Trip comparison** — compare transfer count and duration across journey options for the same route.
-- **Transit app prototyping** — pull real stop IDs, coordinates and served lines to seed a dataset.
-- **Commuter research** — check which transport modes serve a given stop before relying on it.
+- **Departure boards and displays** — poll a station's live departures with platforms and delays.
+- **Commuter apps** — plan step-free journeys and show transfer-specific platforms and walking legs.
+- **Disruption monitoring** — combine local VBB warnings, nationwide DB alerts and elevator outages in one dataset.
+- **Travel analytics** — compare transfer counts, journey duration and line products across routes.
+- **Accessibility research** — filter journeys by accessibility and list current elevator outages near selected stations.
+- **Mobility prototyping** — seed maps and planners with real station IDs, coordinates, line details and nearby stops.
 
 ## FAQ
 
-**Does this cover all of Germany, or just Berlin?**
-Just the Berlin/Brandenburg (VBB) network. A query for a stop outside that area (e.g. a Munich or Hamburg address) won't error — it will fuzzy-match the closest-sounding Berlin/Brandenburg stop name instead, which can produce a misleading result. Stick to stops within Berlin and Brandenburg for reliable matches.
+**Does this work without an API key or login?**
 
-**Does this only cover Deutsche Bahn long-distance trains?**
-No — it covers the local Berlin/Brandenburg network: S-Bahn, U-Bahn, trams, buses, ferries and regional trains, wherever that mode of transport serves the stop you searched. Long-distance ICE/IC services aren't indexed by this data source.
+Yes. The actor uses public transit feeds that need no account, cookie or key. Nothing has to be configured before running it.
 
-**How do I find a `stationId` for the departures mode?**
-Run mode=`stations` first with a name query; each result includes `stationId`. You can then pass that ID directly, or just leave `stationId` empty and set `query` to the stop name.
+**Is it Berlin-only?**
+
+The local network coverage is Berlin and Brandenburg (S-Bahn, U-Bahn, tram, bus, ferry and regional trains). The same planner also returns long-distance and regional trains at many German and nearby European stations, and station search works for those stations too.
 
 **Why is `price` missing from some journeys?**
-Not every route returns fare data; when a journey has no fare attached, the `price` and `currency` fields are left out of that record.
 
-**Why is `delayMinutes` missing from some departures?**
-It's only included when the network reports an active delay for that departure; on-time departures simply omit it.
+Local VBB journeys usually include a fare, and the actor also includes the available fare products in `fareOptions`. For long-distance journeys the actor attempts a DB long-distance fare lookup and marks the result with `fareProvider: "db"`. If DB blocks the automated fare request, the price is omitted rather than guessed; journey planning still succeeds. All fares are in EUR. DB currently blocks fare requests from Apify cloud datacenter IPs with `OPS_BLOCKED`; prices are omitted there rather than guessed. Elevator current outages work, but brokenlifts history pages are also blocked from cloud IPs, so `history` may be absent.
+
+**Why is `platform` missing on some departures or journey legs?**
+
+Bus and tram stops often have no platform number, and some rail services do not report one. The field is omitted for those records.
+
+**What is the difference between `mode` and `product` on a departure?**
+
+`mode` is the raw transport mode reported by the source (for example `train`), kept for backward compatibility. `product` is the specific service class, such as `suburban`, `subway`, `tram`, `express` or `regional`.
+
+**Which station ID formats are accepted?**
+
+`stationId` accepts a 9-digit VBB ID (e.g. `900003201`), a DHID/IFOPT (e.g. `de:11000:900003201`) or a platform-level DHID. Output records include both `stationId` (DHID when available) and `stationIbnr` (9-digit).
+
+**Where do disruptions come from?**
+
+`disruptionSource=vbb` reads warning/status remarks attached to departure boards. `disruptionSource=db` reads network-wide DB Verkehrslage communications with cause, effect, affected lines/stations and DE/EN captions. `disruptionSource=elevators` reads the brokenlifts.org elevator outage feed linked by VBB. `all` combines them.
 
 **Is the data real-time?**
-Station and journey data reflects the network's current schedule; departure boards reflect live timing including delays where reported.
+
+Departure and arrival boards, journey legs and delays use real-time data whenever the upstream operator reports it. If no real-time update exists, planned times are returned.
+
+**Are results filtered exactly?**
+
+Yes. `transportModes`, `state`, `direction`, journey accessibility, bicycle and walking-speed filters are applied to the returned records. Empty result sets produce a clear status message instead of a crash.
 
 **Is this affiliated with Deutsche Bahn, BVG or VBB?**
-No. This is an independent, third-party actor built on publicly available Berlin/Brandenburg transit data.
+
+No. This is an independent, third-party actor built on publicly available transit data. All names and marks belong to their respective owners.

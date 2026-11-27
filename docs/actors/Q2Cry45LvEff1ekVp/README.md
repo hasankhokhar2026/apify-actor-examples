@@ -4,58 +4,125 @@
 
 # Open Food Facts Brazil Scraper
 
-Pull packaged-food product data for the Brazilian market from [Open Food Facts Brazil](https://br.openfoodfacts.org), the community-maintained, open database covering products sold in Brazil. Search by keyword, browse a category or brand, or look up exact products by EAN barcode — every record carries Nutri-Score, NOVA processing group, Eco-Score, and per-100g nutrition facts where the community has entered them.
+Scrape **Open Food Facts Brazil** — the community-maintained, open database of packaged foods sold in Brazil. Search by keyword, browse the whole Brazilian catalog, or drill into a category, brand, retail store, or exact barcode. Every record carries the three Open Food Facts scores (Nutri-Score, NOVA, Eco-Score), per-100g nutrition, ingredients, allergens, labels, stores, package photos, and the product's public page. No account, API key, or proxy is needed.
 
 ## What this actor does
 
-- **Four modes:** `search` (keyword), `byBarcode` (exact EAN-13/EAN-8 lookup), `byCategory`, `byBrand`
-- **Three Open Food Facts scores per product:** Nutri-Score (A–E nutrition grade), NOVA group (1–4 processing level), and Eco-Score (A–E environmental grade)
-- **Full nutrition panel** — calories, fat, saturated fat, carbohydrates, sugars, proteins, salt, and fiber per 100g
-- **Nutri-Score floor filter** — drop products below a chosen grade in any mode
+- **Six modes:** keyword search, browse-all, category, brand, store, and barcode/product-URL lookup
+- **Brazil-scoped results:** every discovery query is filtered to products tagged as sold in Brazil, and each hydrated record is re-checked
+- **Three scores plus filters:** Nutri-Score, NOVA processing group, and Eco-Score, with server-side "grade or better" filters (NOVA is exact)
+- **Full label data:** ingredient text and structured ingredient trees, allergens, traces, additives, labels, nutrient levels, and packaging
+- **Package images:** front, ingredients, nutrition, packaging, small, and thumbnail URLs when Open Food Facts has uploaded them
+- **Sorting and scale:** best match, most scanned, best Nutri-Score, best Eco-Score, recently updated, or recently added; 10,000-row single-page runs and 41 automatic created-time partitions for the full ~38,700-product catalog (max 50,000)
 - **Empty fields are omitted** — a product only carries the facts contributors actually entered for it
 
 ## Output per product
 
-- `barcode` — EAN-13/EAN-8
-- `productName` — usually in Portuguese
-- `brand` — primary brand; `brands[]` lists every brand on the label when there's more than one
-- `categories[]` — up to 10 category tags
-- `nutritionGrade` — Nutri-Score, `a` (best) to `e` (worst)
-- `novaGroup` — 1 (minimally processed) to 4 (ultra-processed)
-- `ecoscoreGrade` — Eco-Score, `a` to `e`
-- `calories`, `fat`, `saturatedFat`, `carbohydrates`, `sugars`, `proteins`, `salt`, `fiber` — all per 100g
-- `ingredientsText` — full ingredients list, as entered
-- `allergens[]`, `labels[]` — up to 10 labels (organic, fair-trade, etc.)
-- `quantity`, `packaging`
-- `countries[]` — up to 5 countries where the product is sold
-- `imageUrl` — front-of-pack photo
-- `productUrl` — the product's Open Food Facts page
-- `sourceUrl` — the Open Food Facts endpoint the actor queried for this run
-- `recordType: "food_product"`, `scrapedAt`
+Identity and taxonomies:
+
+- `barcode` — EAN-8, EAN-13, UPC or GTIN
+- `productName` — Portuguese name when present, otherwise the language-neutral or English name
+- `productNameEn`, `genericName`
+- `brand` — primary brand; `brands[]` lists every brand when there is more than one
+- `categories[]` — up to 10 cleaned category tags; `categoriesTags[]` keeps the raw taxonomy tags
+- `countries[]` — up to 5 country names; `countriesTags[]` keeps the raw tags
+- `soldInBrazil` — `true` or `false` when the country list is known
+- `productUrl` — the product's page on br.openfoodfacts.org
+
+Scores and nutrition (all values per 100 g unless stated):
+
+- `nutritionGrade` — Nutri-Score `a` (best) to `e` (worst)
+- `novaGroup` — NOVA processing group 1–4
+- `ecoscoreGrade` — Eco-Score `a-plus` (best) to `e`
+- `nutriscoreScore`, `ecoscoreScore` — numeric scores when Open Food Facts computes them
+- `novaGroupsMarkers[]` — processing markers with group, field and taxonomy tag
+- `calories` / `energyKcal`, `energyKj`, `fat`, `saturatedFat`, `transFat`, `carbohydrates`, `sugars`, `addedSugars`, `proteins`, `salt`, `sodium`, `fiber`
+- `nutrientLevels` — `{fat, salt, sugars, saturatedFat}` as `low` / `moderate` / `high`
+- `completenessScore` — 0–100 data-completeness indicator
+
+Ingredients and label declarations:
+
+- `ingredientsText` — full ingredient declaration as entered
+- `ingredients[]` — structured ingredient tree with ids, text, percentages, vegan/vegetarian flags and palm-oil status
+- `ingredientsCount`, `knownIngredientsCount`, `unknownIngredientsCount`, `ingredientsTags[]`, `ingredientsAnalysisTags[]`
+- `additives[]`, `additivesCount`
+- `allergens[]` — cleaned allergen names; `allergensTags[]` keeps raw tags
+- `traces[]`
+- `labels[]` — up to 10 labels; `labelsTags[]` keeps raw tags
+
+Packaging and retail:
+
+- `quantity`, `productQuantity`, `productQuantityUnit`
+- `servingSize`, `servingQuantity`, `servingQuantityUnit`
+- `packaging`, `packagingText`, `packagingTags[]`, `packagings[]` — material, shape, recycling, units and quantity per unit
+- `stores[]`, `storeCount` — retailers recorded for the product
+- `purchasePlaces[]`, `purchasePlacesTags[]` — where contributors recorded the product for sale
+- `origins[]`, `originsText`, `manufacturingPlaces[]`, `embCodes[]`
+
+Images and lifecycle:
+
+- `imageUrl` — primary front-of-pack photo
+- `imageFrontUrl`, `imageIngredientsUrl`, `imageNutritionUrl`, `imagePackagingUrl`
+- `imageSmallUrl`, `imageThumbUrl`, `imagePackagingSmallUrl`, `imagePackagingThumbUrl`
+- `uniqueScans`
+- `createdAt`, `lastModifiedAt`, `lastUpdatedAt`, `lastImageAt` - ISO timestamps
+- `statesTags[]`, `dataQualityTags[]`, `dataQualityErrorsTags[]`, `dataQualityWarningsTags[]`, `dataQualityInfoTags[]`, `isObsolete`
+- `officialUrl` - manufacturer/product page when the source records an http(s) URL; `officialUrlStatus: "unverified"` (some sites block or return 404)
+- `price`, `priceCurrency`, `priceDate`, `priceStore`, `priceLocation`, `priceLatitude`, `priceLongitude`, `priceIsDiscounted`, `priceWithoutDiscount`, `priceCount` - latest Open Prices record when `includePrices` is enabled
+- `recordType: "food_product"`, `scrapedAt`, `sourceUrl`
 
 ## Input
 
 | Field | Type | Default | Description |
 |---|---|---|---|
-| `mode` | string | `search` | `search` / `byBarcode` / `byCategory` / `byBrand` |
-| `searchQuery` | string | `arroz` | Keyword to search (mode=search) |
-| `barcodes` | array | `[]` | EAN-13/EAN-8 codes to look up (mode=byBarcode) |
-| `categoryTag` | string | – | Category tag, e.g. `cereais`, `biscoitos` (mode=byCategory) |
-| `brandName` | string | – | Brand name, e.g. `Camil`, `Nestlé` (mode=byBrand) |
-| `nutritionGradeFilter` | string | – (none) | Keep only products at this Nutri-Score grade or better |
-| `maxItems` | int | `50` | Hard cap on emitted records (1–500) |
+| `mode` | string | `search` | `search` / `browse` / `byBarcode` / `byCategory` / `byBrand` / `byStore` |
+| `searchQuery` | string | – (prefill `arroz`) | Keyword used in any discovery mode |
+| `barcodes` | array | `[]` | Codes or product URLs (mode=byBarcode) |
+| `categoryTag` | string | – | Category name, tag or URL (mode=byCategory; also filters other discovery modes) |
+| `brandName` | string | – | Brand name, tag or URL (mode=byBrand; also filters other discovery modes) |
+| `storeTag` | string | – | Store name, tag or URL (mode=byStore; also filters other discovery modes) |
+| `nutritionGradeFilter` | string | – (none) | Keep Nutri-Score at this grade or better |
+| `novaGroupFilter` | string | – (none) | Keep exactly this NOVA group (1–4) |
+| `ecoscoreGradeFilter` | string | – (none) | Keep Eco-Score at this grade or better (`a-plus` / `a` … `e`) |
+| `sortBy` | string | `relevance` | `relevance` / `popularity` / `lastModified` / `created` / `nutriscore` / `ecoscore` |
+| `maxItems` | int | `50` | Hard cap (1–50,000); above 10,000 automatically uses 41 created-time partitions |
+| `includePrices` | boolean | `false` | Fetch latest Open Prices record (BRL price, date, store, location); sparse and adds one request per 100 products |
 
-### Example: search for a staple food
+### Example: a keyword search with a nutrition floor
 
 ```json
 {
   "mode": "search",
-  "searchQuery": "feijão",
+  "searchQuery": "leite condensado",
+  "nutritionGradeFilter": "c",
   "maxItems": 40
 }
 ```
 
-### Example: a brand's catalog, A/B grade only
+### Example: the most-scanned Brazilian products
+
+```json
+{
+  "mode": "browse",
+  "sortBy": "popularity",
+  "maxItems": 500
+}
+```
+
+### Example: a category with NOVA and Eco-Score filters
+
+```json
+{
+  "mode": "byCategory",
+  "categoryTag": "biscoitos",
+  "novaGroupFilter": "4",
+  "ecoscoreGradeFilter": "b",
+  "sortBy": "lastModified",
+  "maxItems": 200
+}
+```
+
+### Example: a brand catalog
 
 ```json
 {
@@ -66,42 +133,78 @@ Pull packaged-food product data for the Brazilian market from [Open Food Facts B
 }
 ```
 
-### Example: look up specific barcodes
+### Example: products recorded at a Brazilian retailer
+
+```json
+{
+  "mode": "byStore",
+  "storeTag": "Carrefour",
+  "sortBy": "popularity",
+  "maxItems": 100
+}
+```
+
+### Example: exact barcodes or product URLs
 
 ```json
 {
   "mode": "byBarcode",
-  "barcodes": ["7891000055120", "7896004001254"]
+  "barcodes": ["7891000100103", "7896006779674", "https://br.openfoodfacts.org/produit/7894900010015"]
 }
 ```
 
 ## Use cases
 
-- **Nutrition research** — compare Nutri-Score and NOVA processing level across a food category
-- **Private-label benchmarking** — pull every product from a competing Brazilian brand
-- **Barcode enrichment** — attach nutrition facts to an internal product catalog by EAN
-- **Regulatory/labeling audits** — check allergen and label declarations across a brand's range
-- **Sustainability screening** — filter or sort by Eco-Score for a category
+- **Nutrition research** — compare Nutri-Score, NOVA processing level and Eco-Score across a Brazilian food category
+- **Private-label benchmarking** — pull every product from a competing Brazilian brand or retailer
+- **Barcode enrichment** — attach ingredients, allergens and nutrition facts to an internal catalog by EAN
+- **Regulatory and labeling audits** — check allergen, trace and label declarations across a brand's range
+- **Sustainability screening** — filter by Eco-Score and inspect packaging materials at scale
+- **Retail assortment analysis** — see which products contributors recorded at Carrefour, Assaí, Extra, BIG or Pão de Açúcar
 
 ## FAQ
 
 **Do I need an account or API key?**
-No. Open Food Facts is a free, community-maintained database with no registration required.
+No. Open Food Facts is a free, open, community-maintained database, and this actor reads its public data without credentials or a proxy.
+
+**Is this a global Open Food Facts scraper?**
+No. Discovery modes are scoped to products tagged as sold in Brazil. Barcode mode is an exact lookup and can return a product that is not tagged for Brazil; check `soldInBrazil` when that matters.
 
 **Why is a field missing on some products?**
-Open Food Facts is crowd-sourced — a product only has the fields a contributor filled in. Nothing is guessed or filled with a placeholder; the field is simply left out.
+Open Food Facts is crowd-sourced. A product only has the fields a contributor filled in. Nothing is guessed or replaced with a placeholder — the field is simply left out.
 
-**What does the NOVA group mean?**
-It's a 1–4 food-processing classification: 1 = unprocessed/minimally processed, 2 = processed culinary ingredients, 3 = processed foods, 4 = ultra-processed foods.
+**What do Nutri-Score, NOVA and Eco-Score mean?**
+Nutri-Score grades nutritional quality from A (best) to E (worst). NOVA groups foods by processing level from 1 (unprocessed) to 4 (ultra-processed). Eco-Score grades environmental impact from A+ (best) to E. All three are computed by Open Food Facts, not by this actor.
 
-**What language are product names and ingredients in?**
-Mostly Portuguese, since this dataset targets products sold in Brazil, though some entries carry English or multilingual text if that's how a contributor entered them.
+**Why do fewer records come back than `maxItems`?**
+A query can genuinely have fewer matches, or the filters can exclude products whose score is unknown. A single search is capped at 10,000 matches, but `maxItems` above 10,000 automatically switches to 41 created-time partitions covering the full Brazilian catalog (38,715 products at the last audit). A 10,000-row run now uses one 10,000 page and returns 10,000 unique codes; use `sortBy: "created"` when you need deterministic ordering.
 
-**Can I combine `nutritionGradeFilter` with keyword search?**
-Yes — it applies on top of `search`, `byCategory`, and `byBrand` alike, keeping only products at or above the chosen grade.
+**Why does a large barcode run take minutes?**
+Bulk barcode mode uses the v2 100-code batch endpoint (~1,000 products/minute) for six or more codes; single exact lookups still use the live product endpoint at 15/minute. Missing codes are reported, not fabricated.
 
-**How current is the data?**
-Live at request time. Open Food Facts is edited continuously by its contributor community, so a product's score or nutrition facts can change between runs.
+**How fresh is the data?**
+Barcode lookups read the live database. Discovery results come from Open Food Facts' search index, which can trail the live database by hours. Scores and ingredient lists change as the community edits products.
+
+**Can I combine filters with a keyword or category?**
+Yes. Keyword, category, brand, store, Nutri-Score, NOVA and Eco-Score filters combine in every discovery mode.
+
+**Are the image links stable?**
+The image URLs point to Open Food Facts' public image CDN and were valid at scrape time. A later edit can replace a photo, so re-run the actor if a link stops resolving.
+
+**What is `officialUrlStatus: "unverified"`?**
+When Open Food Facts records an http(s) manufacturer/product link, it is returned as `officialUrl`. The actor does not fetch every external site, so the link is marked unverified: in a 30-link audit 17 returned 200 and the rest were blocked, 404 or dead. Treat it as a lead and keep `productUrl` as the stable reference.
+
+**Why does "most scanned" differ from the old browse page?**
+The actor uses the Open Food Facts search index's scan count, which is the same ordering as the official search interface's "Most scanned products". The legacy `br.openfoodfacts.org/1` page uses a different server-side popularity metric and is not the source for this ordering.
+
+**Why can result order change between runs?**
+The actor breaks equal-score and equal-scan ties by barcode, so its own order is deterministic. The upstream index can still add or withdraw documents between runs. Use `sortBy: "created"` when you need a stable order for pagination or exports.
+
+**Are prices and stock included?**
+Prices are available through the official Open Prices project when you set `includePrices: true`: the actor returns the latest BRL price, date, store and location where a contributor recorded one. Prices are sparse (1 live price in the 30-code audit). Stock is not available in Open Prices or the Open Food Facts product schema, so it is not invented.
+
+**How do I export the full Brazilian catalog?**
+Set `maxItems` above 10,000 (up to 50,000). The actor automatically splits the query into 41 created-time partitions, dedupes by barcode, and stops at the requested cap. The partition counts summed to 38,715 products at the last audit; the index still changes over time.
 
 **Is this affiliated with Open Food Facts?**
-No. This actor reads Open Food Facts' own free public data; it is not affiliated with or endorsed by the Open Food Facts association.
+No. This is an independent third-party actor that reads Open Food Facts' public data. Open Food Facts is not affiliated with or endorsing it.

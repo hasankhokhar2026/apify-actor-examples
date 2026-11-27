@@ -1,32 +1,65 @@
 {
-  "description": "Search Brazilian food products from Open Food Facts Brazil by keyword, category, or brand.",
+  "description": "Scrape Brazilian packaged-food products from Open Food Facts by keyword, category, brand, store, or barcode. Filter by Nutri-Score, NOVA and Eco-Score.",
   "properties": {
     "barcodes": {
       "default": [],
-      "description": "List of EAN-13 or EAN-8 barcodes to look up.",
+      "description": "EAN-8/EAN-13/UPC codes or Open Food Facts product URLs (mode=byBarcode). One per item.",
       "editor": "stringList",
       "prefill": [],
-      "title": "Barcodes / EANs (mode=byBarcode)",
+      "title": "Barcodes or product URLs",
       "type": "array"
     },
     "brandName": {
-      "description": "Brand to filter by, e.g. 'Nestlé', 'Sadia', 'Vigor', 'Camil'.",
+      "description": "Brand name, taxonomy tag, or Open Food Facts brand URL. Examples: 'Camil', 'Nestlé', 'Sadia', 'xx:camil'.",
       "editor": "textfield",
-      "title": "Brand name (mode=byBrand)",
+      "title": "Brand (mode=byBrand)",
       "type": "string"
     },
     "categoryTag": {
-      "description": "Open Food Facts category tag, e.g. 'cereais', 'biscoitos', 'iogurtes', 'sucos', 'massas'. Use lowercase with hyphens.",
+      "description": "Category name, taxonomy tag, or Open Food Facts category URL. Examples: 'cereais', 'biscoitos', 'iogurtes', 'en:rices', 'pt:cereais'.",
       "editor": "textfield",
-      "title": "Category tag (mode=byCategory)",
+      "title": "Category (mode=byCategory)",
       "type": "string"
+    },
+    "ecoscoreGradeFilter": {
+      "default": "",
+      "description": "Keep products with this Eco-Score grade or better.",
+      "editor": "select",
+      "enum": [
+        "",
+        "a-plus",
+        "a",
+        "b",
+        "c",
+        "d",
+        "e"
+      ],
+      "enumTitles": [
+        "No filter",
+        "A+ (best)",
+        "A or better",
+        "B or better",
+        "C or better",
+        "D or better",
+        "E"
+      ],
+      "prefill": "",
+      "title": "Eco-Score filter",
+      "type": "string"
+    },
+    "includePrices": {
+      "default": false,
+      "description": "Fetch the latest Open Prices record (BRL price, date, store and location) for each product. Sparse: prices exist for a small share of products; adds one Open Prices request per 100 products.",
+      "prefill": false,
+      "title": "Include Open Prices",
+      "type": "boolean"
     },
     "maxItems": {
       "default": 50,
-      "description": "Maximum number of products to return.",
-      "maximum": 500,
+      "description": "Maximum number of products to return. Values above 10,000 automatically use 41 created-time partitions covering the full Brazilian catalog (~38,700 products).",
+      "maximum": 50000,
       "minimum": 1,
-      "prefill": 50,
+      "prefill": 3,
       "title": "Max items",
       "type": "integer"
     },
@@ -36,23 +69,50 @@
       "editor": "select",
       "enum": [
         "search",
+        "browse",
         "byBarcode",
         "byCategory",
-        "byBrand"
+        "byBrand",
+        "byStore"
       ],
       "enumTitles": [
-        "Search products by keyword",
-        "Lookup products by barcode (EAN)",
+        "Search by keyword",
+        "Browse all Brazilian products",
+        "Look up by barcode or product URL",
         "Browse by category",
-        "Browse by brand"
+        "Browse by brand",
+        "Browse by store"
       ],
       "prefill": "search",
+      "sectionCaption": "What to scrape",
       "title": "Mode",
+      "type": "string"
+    },
+    "novaGroupFilter": {
+      "default": "",
+      "description": "Keep only products in this NOVA processing group: 1 = unprocessed, 2 = processed ingredients, 3 = processed, 4 = ultra-processed.",
+      "editor": "select",
+      "enum": [
+        "",
+        "1",
+        "2",
+        "3",
+        "4"
+      ],
+      "enumTitles": [
+        "No filter",
+        "1 — unprocessed or minimally processed",
+        "2 — processed culinary ingredients",
+        "3 — processed foods",
+        "4 — ultra-processed foods"
+      ],
+      "prefill": "",
+      "title": "NOVA group filter",
       "type": "string"
     },
     "nutritionGradeFilter": {
       "default": "",
-      "description": "Only return products with this Nutri-Score grade or better. 'a' = best, 'e' = worst.",
+      "description": "Keep products with this Nutri-Score grade or better. Applies to all discovery and barcode modes.",
       "editor": "select",
       "enum": [
         "",
@@ -65,21 +125,52 @@
       "enumTitles": [
         "No filter",
         "A (best)",
-        "B",
-        "C",
-        "D",
-        "E (worst)"
+        "B or better",
+        "C or better",
+        "D or better",
+        "E"
       ],
       "prefill": "",
-      "title": "Nutrition grade filter",
+      "sectionCaption": "Filters",
+      "title": "Nutri-Score filter",
       "type": "string"
     },
     "searchQuery": {
-      "default": "arroz",
-      "description": "Free-text search term (mode=search). Examples: 'arroz', 'feijão', 'biscoito', 'iogurte'.",
+      "description": "Free-text keyword (all modes). Examples: 'arroz', 'feijão', 'biscoito', 'leite condensado'. Leave empty in browse mode to list products without a keyword.",
       "editor": "textfield",
       "prefill": "arroz",
       "title": "Search query",
+      "type": "string"
+    },
+    "sortBy": {
+      "default": "relevance",
+      "description": "Result order. 'Best match' uses keyword relevance; browse modes default to most scanned.",
+      "editor": "select",
+      "enum": [
+        "relevance",
+        "popularity",
+        "lastModified",
+        "created",
+        "nutriscore",
+        "ecoscore"
+      ],
+      "enumTitles": [
+        "Best match (keyword relevance)",
+        "Most scanned",
+        "Recently updated",
+        "Recently added",
+        "Best Nutri-Score",
+        "Best Eco-Score"
+      ],
+      "prefill": "relevance",
+      "sectionCaption": "Output",
+      "title": "Sort by",
+      "type": "string"
+    },
+    "storeTag": {
+      "description": "Retail store name, tag, or Open Food Facts store URL. Examples: 'Carrefour', 'Assaí', 'Extra', 'BIG', 'Pão de Açúcar'.",
+      "editor": "textfield",
+      "title": "Store (mode=byStore)",
       "type": "string"
     }
   },
