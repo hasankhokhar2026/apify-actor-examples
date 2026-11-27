@@ -1,0 +1,78 @@
+{
+  "description": "Search the Texas Comptroller's Franchise Tax Account Status registry by entity name, Comptroller taxpayer number, or Texas Secretary of State file number.",
+  "properties": {
+    "entityName": {
+      "default": "walmart",
+      "description": "Business name to search for (2-50 characters). Partial/starts-with matches are returned by the registry.",
+      "editor": "textfield",
+      "prefill": "walmart",
+      "title": "Entity name (mode=byName)",
+      "type": "string"
+    },
+    "fetchDetails": {
+      "default": true,
+      "description": "When mode=byName, fetch the full account-status record (registered agent, addresses, officers) for each match instead of just the name/taxpayer ID summary. Adds one extra request per match.",
+      "prefill": true,
+      "title": "Fetch full details for name-search results",
+      "type": "boolean"
+    },
+    "maxItems": {
+      "default": 20,
+      "description": "Hard cap on emitted records.",
+      "maximum": 500,
+      "minimum": 1,
+      "prefill": 20,
+      "title": "Max items",
+      "type": "integer"
+    },
+    "maxOfficers": {
+      "default": 25,
+      "description": "Cap on how many officers/directors to include per business record.",
+      "maximum": 200,
+      "minimum": 1,
+      "prefill": 25,
+      "title": "Max officers/directors per record",
+      "type": "integer"
+    },
+    "mode": {
+      "default": "byName",
+      "description": "What to search by.",
+      "editor": "select",
+      "enum": [
+        "byName",
+        "byTaxpayerNumber",
+        "bySosFileNumber"
+      ],
+      "enumTitles": [
+        "Search by entity name",
+        "Lookup by Comptroller taxpayer number",
+        "Lookup by Texas SOS file number"
+      ],
+      "prefill": "byName",
+      "title": "Mode",
+      "type": "string"
+    },
+    "sosFileNumbers": {
+      "default": [],
+      "description": "Texas Secretary of State filing numbers.",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "SOS file numbers (mode=bySosFileNumber)",
+      "type": "array"
+    },
+    "taxpayerNumbers": {
+      "default": [],
+      "description": "11-digit Texas Comptroller taxpayer numbers.",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Taxpayer numbers (mode=byTaxpayerNumber)",
+      "type": "array"
+    }
+  },
+  "required": [
+    "mode"
+  ],
+  "schemaVersion": 1,
+  "title": "Texas Franchise Tax Account Status Scraper Input",
+  "type": "object"
+}

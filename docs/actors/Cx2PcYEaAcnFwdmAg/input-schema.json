@@ -1,0 +1,149 @@
+{
+  "description": "Scrape upcoming events by city, artist profiles, or venue profiles from Resident Advisor (ra.co).",
+  "properties": {
+    "artistName": {
+      "description": "Artist slug or name for artist profile (mode=artistProfile). Example: aphex-twin, bicep, peggy-gou.",
+      "editor": "textfield",
+      "title": "Artist name / slug",
+      "type": "string"
+    },
+    "city": {
+      "description": "City name for event search (mode=eventsByCity). Examples: london, berlin, new-york, amsterdam, paris.",
+      "editor": "textfield",
+      "prefill": "london",
+      "title": "City",
+      "type": "string"
+    },
+    "countryCode": {
+      "default": "gb",
+      "description": "Country for event search (mode=eventsByCity). Two-letter code.",
+      "editor": "select",
+      "enum": [
+        "gb",
+        "de",
+        "us",
+        "nl",
+        "fr",
+        "au",
+        "jp",
+        "be",
+        "it",
+        "es",
+        "pt",
+        "se",
+        "dk",
+        "no",
+        "fi",
+        "br",
+        "mx",
+        "ca",
+        "za",
+        "in",
+        "sg",
+        "at",
+        "ch",
+        "ie",
+        "pl",
+        "cz",
+        "hu",
+        "gr",
+        "ro",
+        "ar",
+        "co",
+        "cl",
+        "nz",
+        "kr",
+        "th"
+      ],
+      "enumTitles": [
+        "United Kingdom",
+        "Germany",
+        "United States",
+        "Netherlands",
+        "France",
+        "Australia",
+        "Japan",
+        "Belgium",
+        "Italy",
+        "Spain",
+        "Portugal",
+        "Sweden",
+        "Denmark",
+        "Norway",
+        "Finland",
+        "Brazil",
+        "Mexico",
+        "Canada",
+        "South Africa",
+        "India",
+        "Singapore",
+        "Austria",
+        "Switzerland",
+        "Ireland",
+        "Poland",
+        "Czech Republic",
+        "Hungary",
+        "Greece",
+        "Romania",
+        "Argentina",
+        "Colombia",
+        "Chile",
+        "New Zealand",
+        "South Korea",
+        "Thailand"
+      ],
+      "prefill": "gb",
+      "title": "Country code",
+      "type": "string"
+    },
+    "dateFrom": {
+      "description": "Fetch events from this date onwards. Defaults to today if empty. Format: YYYY-MM-DD.",
+      "editor": "textfield",
+      "title": "Date from (YYYY-MM-DD)",
+      "type": "string"
+    },
+    "dateTo": {
+      "description": "Fetch events up to this date. Leave empty for no upper bound. Format: YYYY-MM-DD.",
+      "editor": "textfield",
+      "title": "Date to (YYYY-MM-DD)",
+      "type": "string"
+    },
+    "maxItems": {
+      "default": 20,
+      "description": "Maximum number of records to return.",
+      "maximum": 200,
+      "minimum": 1,
+      "prefill": 20,
+      "title": "Max items",
+      "type": "integer"
+    },
+    "mode": {
+      "default": "eventsByCity",
+      "description": "What to scrape from Resident Advisor.",
+      "editor": "select",
+      "enum": [
+        "eventsByCity",
+        "artistProfile",
+        "venueProfile"
+      ],
+      "enumTitles": [
+        "Events by city — upcoming events for a city",
+        "Artist profile — artist info + upcoming events",
+        "Venue profile — club/venue info + recent events"
+      ],
+      "prefill": "eventsByCity",
+      "title": "Mode",
+      "type": "string"
+    },
+    "venueSlug": {
+      "description": "Venue slug or name for venue profile (mode=venueProfile). Example: fabric, berghain, panorama-bar.",
+      "editor": "textfield",
+      "title": "Venue slug or search term",
+      "type": "string"
+    }
+  },
+  "required": [],
+  "schemaVersion": 1,
+  "title": "Resident Advisor (RA) Scraper Input",
+  "type": "object"
+}

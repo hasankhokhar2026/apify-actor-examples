@@ -1,0 +1,197 @@
+{
+  "description": "Search TpT resources by keyword, browse by grade or subject, fetch product details, or scrape an entire teacher store.",
+  "properties": {
+    "format": {
+      "default": "",
+      "description": "Filter by resource format/file type.",
+      "editor": "select",
+      "enum": [
+        "",
+        "PDF",
+        "Google Apps",
+        "PowerPoint",
+        "Word Document",
+        "Excel Spreadsheets",
+        "Easel Activity",
+        "Interactive Notebooks",
+        "Lesson Plans",
+        "Task Cards",
+        "Tests",
+        "Worksheets",
+        "Workbooks"
+      ],
+      "enumTitles": [
+        "Any format",
+        "PDF / Printables",
+        "Google Apps",
+        "PowerPoint Presentations",
+        "Microsoft Word Document",
+        "Microsoft Excel Spreadsheets",
+        "Easel Activity",
+        "Interactive Notebooks",
+        "Lesson Plans",
+        "Task Cards",
+        "Tests / Assessments",
+        "Worksheets",
+        "Workbooks"
+      ],
+      "prefill": "",
+      "title": "Resource format",
+      "type": "string"
+    },
+    "grade": {
+      "default": "",
+      "description": "Filter by grade level. Required for mode=byGrade.",
+      "editor": "select",
+      "enum": [
+        "",
+        "PreK",
+        "Kindergarten",
+        "1st",
+        "2nd",
+        "3rd",
+        "4th",
+        "5th",
+        "6th",
+        "7th",
+        "8th",
+        "9th",
+        "10th",
+        "11th",
+        "12th",
+        "Higher Education",
+        "Adult Education",
+        "Homeschool",
+        "Not Grade Specific"
+      ],
+      "enumTitles": [
+        "Any grade",
+        "Pre-K",
+        "Kindergarten",
+        "1st Grade",
+        "2nd Grade",
+        "3rd Grade",
+        "4th Grade",
+        "5th Grade",
+        "6th Grade",
+        "7th Grade",
+        "8th Grade",
+        "9th Grade",
+        "10th Grade",
+        "11th Grade",
+        "12th Grade",
+        "Higher Education",
+        "Adult Education",
+        "Homeschool",
+        "Not Grade Specific"
+      ],
+      "prefill": "",
+      "title": "Grade level",
+      "type": "string"
+    },
+    "isFree": {
+      "default": false,
+      "description": "When enabled, only return free resources.",
+      "prefill": false,
+      "title": "Free resources only",
+      "type": "boolean"
+    },
+    "maxItems": {
+      "default": 24,
+      "description": "Maximum number of product records to return.",
+      "maximum": 5000,
+      "minimum": 1,
+      "prefill": 24,
+      "title": "Max items",
+      "type": "integer"
+    },
+    "minRating": {
+      "description": "Minimum average rating (TpT uses 1–5 star scale).",
+      "maximum": 5,
+      "minimum": 0,
+      "title": "Min rating",
+      "type": "number"
+    },
+    "minReviews": {
+      "description": "Minimum number of reviews/ratings.",
+      "maximum": 1000000,
+      "minimum": 0,
+      "title": "Min reviews",
+      "type": "integer"
+    },
+    "mode": {
+      "default": "search",
+      "description": "What to scrape.",
+      "editor": "select",
+      "enum": [
+        "search",
+        "byGrade",
+        "bySubject",
+        "getProduct",
+        "getStore"
+      ],
+      "enumTitles": [
+        "Search resources by keyword",
+        "Browse resources by grade level",
+        "Browse resources by subject area",
+        "Get product details by URL(s)",
+        "Get all products from a teacher's store"
+      ],
+      "prefill": "search",
+      "title": "Mode",
+      "type": "string"
+    },
+    "searchQuery": {
+      "default": "multiplication worksheets",
+      "description": "Keyword(s) to search for resources (mode=search).",
+      "editor": "textfield",
+      "prefill": "multiplication worksheets",
+      "title": "Search query",
+      "type": "string"
+    },
+    "startUrls": {
+      "default": [],
+      "description": "TpT product or store URLs (modes: getProduct, getStore). Example: https://www.teacherspayteachers.com/Product/Multiplication-Worksheets-4061393",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Start URLs",
+      "type": "array"
+    },
+    "subject": {
+      "default": "",
+      "description": "Filter by subject area. Required for mode=bySubject.",
+      "editor": "select",
+      "enum": [
+        "",
+        "Arts & Music",
+        "English Language Arts",
+        "Foreign Language",
+        "Math",
+        "Science",
+        "Social Studies - History",
+        "Special Education",
+        "Holidays/Seasonal"
+      ],
+      "enumTitles": [
+        "Any subject",
+        "Arts & Music",
+        "English Language Arts",
+        "Foreign Language / World Languages",
+        "Math",
+        "Science",
+        "Social Studies / History",
+        "Special Education",
+        "Holidays & Seasonal"
+      ],
+      "prefill": "",
+      "title": "Subject area",
+      "type": "string"
+    }
+  },
+  "required": [
+    "mode"
+  ],
+  "schemaVersion": 1,
+  "title": "Teachers Pay Teachers Store & Product Scraper Input",
+  "type": "object"
+}

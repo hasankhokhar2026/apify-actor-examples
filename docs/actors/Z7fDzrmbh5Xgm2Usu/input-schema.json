@@ -1,0 +1,50 @@
+{
+  "description": "Input for TipRanks Scraper.",
+  "properties": {
+    "maxItems": {
+      "default": 20,
+      "description": "Max records to return.",
+      "maximum": 500,
+      "minimum": 1,
+      "prefill": 20,
+      "title": "Max items",
+      "type": "integer"
+    },
+    "mode": {
+      "default": "stockConsensus",
+      "description": "What to fetch.",
+      "editor": "select",
+      "enum": [
+        "stockConsensus",
+        "analystRatings"
+      ],
+      "enumTitles": [
+        "Stock Consensus (buy/hold/sell counts + price target)",
+        "Analyst Ratings (individual analyst ratings)"
+      ],
+      "prefill": "stockConsensus",
+      "title": "Mode",
+      "type": "string"
+    },
+    "tickers": {
+      "default": [
+        "AAPL",
+        "TSLA"
+      ],
+      "description": "Stock ticker symbols.",
+      "editor": "stringList",
+      "prefill": [
+        "AAPL",
+        "TSLA"
+      ],
+      "title": "Tickers",
+      "type": "array"
+    }
+  },
+  "required": [
+    "mode"
+  ],
+  "schemaVersion": 1,
+  "title": "TipRanks Scraper Input",
+  "type": "object"
+}
