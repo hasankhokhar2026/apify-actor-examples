@@ -4,121 +4,230 @@
 
 # Research Square Preprint Search & Subject Browser
 
-Research Square hosts hundreds of thousands of preprints posted ahead of journal peer review, spanning medicine, life sciences, engineering and the social sciences. This actor turns that catalog into structured records you can search by keyword, browse by subject area or article type, or fetch directly by preprint URL.
+Research Square is a preprint server where researchers post manuscripts before or during journal
+review. This actor turns its public catalogue into structured JSON records: search by keyword,
+browse by subject or article type, filter by author, journal, status and date, or pull exact
+articles by URL, ID or DOI. Records include the abstract, authors with affiliations, keywords,
+DOI, version history, PDF links, views, downloads and citation tallies.
 
-## What this actor does
+The actor reads Research Square's public website JSON endpoints. No cookies, login, API key or
+proxy setup is required.
 
-- Runs a free-text keyword search across the full Research Square preprint catalog
-- Browses the catalog filtered to one subject area (choose from 38 curated areas, e.g. Molecular Biology & Genetics, Neuroscience, Public Health)
-- Browses the catalog filtered to one article type (Research Article, Review, Case Report, etc.)
-- Fetches full metadata for specific preprints when given their URLs, including DOI, abstract and PDF link
-- Applies optional post-fetch filters for posted year and article type across every mode
-- Empty fields are omitted from records
+## What you can do
 
-## Output per preprint
+- **Keyword search** across titles, abstracts and author keywords.
+- **Browse the newest preprints** with no query.
+- **Browse by subject** across all 337 leaf subjects; top-level categories expand to their children.
+- **Browse by article type**, status, journal, author, title or abstract text.
+- **Date windows** (`postedAfter` / `postedBefore`) and COVID-19-only filtering.
+- **Fetch exact articles** by article URL, bare ID, DOI link or DOI.
+- **Choose detail level**: fast listing rows, full article details, engagement metrics, or citation tallies.
+- **Altmetric attention data** is added at the `citations` level: score, attention counts and the Altmetric details link, keyless.
+- **Related preprints** can be added per record (opt-in), using the same journal + first-subject list the article page shows.
+- **Runs above 10,000 rows** are collected in date windows so the site's offset limit does not truncate them.
+- Omit-empty output: a field the source does not have for a record is left out, never `null` or blank.
 
-- `articleId` — Research Square identifier, e.g. `rs-10118362`
-- `title` — preprint title
-- `articleType` — e.g. `Research Article`, `Review`
-- `status` — preprint status, e.g. `under-review`
-- `journalTitle` — target or affiliated journal name
-- `journal` — journal identifier/short name
-- `doiVersion` — version segment of the DOI (e.g. `v1`, `v2`)
-- `postedAt` — date the preprint was posted
-- `postedYear` — year extracted from `postedAt`
-- `authors` — list of author names
-- `primaryAuthor` — first listed author
-- `subjectAreas` — list of subject areas assigned to the preprint
-- `doi` — full DOI (available when fetched by URL)
-- `publicationDate` — citation publication date (available when fetched by URL)
-- `pdfUrl` — direct PDF download link (available when fetched by URL)
-- `abstract` — preprint abstract (available when fetched by URL)
-- `articleUrl` / `sourceUrl` — link to the preprint page
-- `recordType` — always `preprint`
-- `scrapedAt` — timestamp of extraction
+## Output fields
+
+| Field | Meaning |
+|---|---|
+| `articleId` | Research Square identifier, e.g. `rs-11849967`, `pex-1809`, `nprot-4503` |
+| `title` | Preprint title |
+| `articleType` / `articleTypeLabel` | Raw article type and a display label |
+| `status` / `statusLabel` | `posted`, `under-review`, `in-revision`, `published-in-journal` and a display label |
+| `journal` / `journalIdentity` / `journalTitle` | Linked journal slug and title |
+| `doi` / `doiUrl` | DOI and resolver link (derived for `rs-`/`pex-` listing rows) |
+| `doiVersion` / `version` | Preprint version number |
+| `postedAt` / `postedDateTime` / `postedYear` | Posting date, full timestamp and year |
+| `publicationDate` | Citation publication date (same as posting date) |
+| `createdAt` / `updatedAt` | Submission creation and last update timestamps |
+| `thumbnailUrl` | Listing thumbnail when Research Square provides one |
+| `authors` / `primaryAuthor` | Author names in order and the first author |
+| `authorsDetailed` | Per-author `name`, `institution`, `orcid`, `correspondingAuthor`, `submittingAuthor` |
+| `affiliations` | Unique author institutions |
+| `correspondingAuthor` | Name of the corresponding author, when flagged |
+| `abstract` | Plain-text abstract |
+| `keywords` | Author-supplied keywords |
+| `subjectAreas` / `subjectPaths` | Leaf subject names and Nature-style taxonomy paths |
+| `versions` | All non-draft versions when there is more than one |
+| `publishedDoi` / `publishedUrl` / `publishedAt` / `publishedJournalTitle` | Published-version linkage |
+| `license` / `licenseUrl` | License name and URL |
+| `funders` | Funder name, identifier and award number when supplied |
+| `declarations` | Human-subject, animal-subject, consent and conflict declarations |
+| `pdfUrl` / `pdfPageUrl` | Direct PDF asset URL and the article's PDF page |
+| `files` | Manuscript, figure and thumbnail files with role, filename, size and URL |
+| `videoId` / `videoThumbnailUrl` | Video identity and thumbnail for video articles |
+| `views` / `downloads` | Engagement counters from Research Square |
+| `commentCount` | Public, approved comments (citation level) |
+| `citationCount` | Citation statements tracked by scite |
+| `supportingCitationCount` / `contradictingCitationCount` / `mentioningCitationCount` / `unclassifiedCitationCount` | Citation sentiment breakdown |
+| `citingPublicationsCount` | Unique citing publications |
+| `altmetricScore` / `altmetricId` / `altmetricUrl` | Altmetric attention score, identifier and details link (citations level, when Altmetric tracks the DOI) |
+| `altmetricCitedByPostsCount` / `altmetricCitedByTweetersCount` / `altmetricCitedByNewsCount` / `altmetricCitedByFeedsCount` / `altmetricCitedByAccountsCount` / `altmetricReadersCount` | Altmetric attention breakdown (citations level) |
+| `relatedPreprints` | Up to 5 related preprints (opt-in via `includeRelated`), each with id, title, authors, type, status, DOI and URL |
+| `articleUrl` / `sourceUrl` | Preprint page URL |
+| `recordType` | `preprint` or `protocol` |
+| `scrapedAt` | Extraction timestamp (ISO 8601, UTC) |
 
 ## Input
 
-| Field | Type | Default | Description |
+| Field | Type | Default | Notes |
 |---|---|---|---|
-| `mode` | string | `search` | `search`, `browseBySubject`, `browseByType` or `byUrl` |
-| `searchQuery` | string | `cancer` | Free-text keyword query (mode=search) |
-| `subjectArea` | string | – | Subject area to browse (mode=browseBySubject); also filters search mode |
-| `articleType` | string | – | Article type to browse (mode=browseByType) |
-| `urls` | array | `[]` | Preprint URLs to fetch directly, e.g. `https://www.researchsquare.com/article/rs-10118362/v1` (mode=byUrl) |
-| `publishYearMin` | integer | – | Drop preprints posted before this year |
-| `publishYearMax` | integer | – | Drop preprints posted after this year |
-| `filterArticleType` | string | – | Post-fetch filter applied to every mode: only emit preprints of this article type |
-| `maxItems` | integer | `50` | Hard cap on emitted records (1–1000) |
+| `mode` | select | `search` | `search`, `browseAll`, `browseBySubject`, `browseByType`, `byUrl`, `byDoi` |
+| `searchQuery` | text | – | Required for `search`; matches titles, abstracts and keywords (the default prefill uses `cancer`) |
+| `author` | text | – | Author-name substring |
+| `titleContains` | text | – | Words in the title |
+| `abstractContains` | text | – | Words in the abstract |
+| `subjectArea` | select | – | 337 leaf subjects plus 38 top-level categories (top-level expands to children) |
+| `subjectPath` | text | – | Advanced exact path, e.g. `Health sciences/Oncology` |
+| `articleType` | select | – | 33 article-type values; required for `browseByType` |
+| `status` | select | `all` | All / Posted / Under Review / Under Revision / Published |
+| `journal` | select | `all` | 1,569 journal slugs with titles |
+| `onlyCovid` | boolean | `false` | Site's COVID-19 collection |
+| `postedAfter` / `postedBefore` | date | – | Inclusive `YYYY-MM-DD` |
+| `detailLevel` | select | `citations` | `listing`, `details`, `metrics`, `citations` |
+| `includeRelated` | boolean | `false` | Add up to 5 related preprints per record (one extra request per record) |
+| `urls` | list | `[]` | Article URLs, IDs or DOI links (`byUrl`) |
+| `dois` | list | `[]` | DOIs such as `10.21203/rs.3.rs-11849967/v1` (`byDoi`) |
+| `maxItems` | integer | `50` | 1–50,000 |
 
-### Example: keyword search
+### Detail levels
 
-```json
-{
-  "mode": "search",
-  "searchQuery": "cancer",
-  "maxItems": 20
-}
-```
+- `listing` — listing metadata only; one search request per 1,000 rows.
+- `details` — adds abstract, keywords, authors with affiliations/ORCID, versions, files and PDF.
+- `metrics` — details plus views and downloads.
+- `citations` — metrics plus scite citation tallies, public comment counts and Altmetric attention.
 
-### Example: browse a subject area
+Each extra level adds one request per record (citation tallies are batched, Altmetric is one
+request per DOI). Use `listing` for large exports and `citations` for analysis. Related preprints
+are independent of the detail level and add one request per record when enabled.
 
-```json
-{
-  "mode": "browseBySubject",
-  "subjectArea": "Public Health",
-  "maxItems": 50
-}
-```
+## Examples
 
-### Example: fetch specific preprints
-
-```json
-{
-  "mode": "byUrl",
-  "urls": [
-    "https://www.researchsquare.com/article/rs-10118362/v1",
-    "https://www.researchsquare.com/article/rs-10559621/v1"
-  ]
-}
-```
-
-### Example: recent reviews only
+Keyword search with full details:
 
 ```json
 {
   "mode": "search",
   "searchQuery": "machine learning",
-  "filterArticleType": "Review",
-  "publishYearMin": 2024,
-  "maxItems": 30
+  "detailLevel": "citations",
+  "maxItems": 100
 }
 ```
 
-## Use cases
+Browse a subject:
 
-- **Literature monitoring** — catch new preprints in a research field before they clear peer review
-- **Competitive intelligence** — see which labs or companies are posting work in a given subject area
-- **Meta-research and bibliometrics** — build datasets of preprint metadata for citation or trend analysis
-- **Grant and partnership scouting** — find active research groups publishing in a specific domain
-- **Journal and publisher monitoring** — track preprints heading toward a particular journal via `journalTitle`
+```json
+{
+  "mode": "browseBySubject",
+  "subjectArea": "Oncology",
+  "status": "under-review",
+  "postedAfter": "2025-01-01",
+  "maxItems": 200
+}
+```
+
+Browse one journal:
+
+```json
+{
+  "mode": "browseAll",
+  "journal": "bmc-cancer",
+  "maxItems": 500
+}
+```
+
+Fetch exact articles:
+
+```json
+{
+  "mode": "byUrl",
+  "urls": [
+    "https://www.researchsquare.com/article/rs-11849967/v1",
+    "rs-44805",
+    "https://doi.org/10.21203/rs.3.rs-4078436/v1"
+  ]
+}
+```
+
+Fetch by DOI:
+
+```json
+{
+  "mode": "byDoi",
+  "dois": ["10.21203/rs.3.rs-11849967/v1", "10.21203/rs.3.rs-4078436/v1"]
+}
+```
+
+Large listing export:
+
+```json
+{
+  "mode": "browseAll",
+  "postedAfter": "2025-01-01",
+  "detailLevel": "listing",
+  "maxItems": 20000
+}
+```
+
+## How it works
+
+The actor calls the same public JSON endpoints the Research Square browse and article pages use:
+
+- `/api/search` for listing, filters and pagination.
+- `/api/article/{id}/v{n}` for full article metadata.
+- `/api/met?article_identity={id}` for views and downloads.
+- `api.scite.ai/tallies` for citation tallies keyed by DOI.
+
+Everything is fetched without cookies or credentials. The actor retries 429/5xx responses with
+backoff. If an article-detail request fails, the listing row is still emitted with the fields that
+are available; metrics or citations are simply omitted for that row.
+
+## Limits worth knowing
+
+- **No sort control.** Research Square's browse API exposes no sort parameter. Keyword searches
+  return relevance order; browse modes return newest first.
+- **10,000-offset cap.** A single query can page up to 10,000 rows. The actor automatically splits
+  larger runs into date windows, newest first, and deduplicates by `articleId`. Very large
+  keyword searches therefore return window order rather than one global relevance ranking.
+- **Subject taxonomy.** The site's subject dropdown uses 337 leaf names. Newer records also carry
+  Nature-style paths such as `Health sciences/Oncology`; use `subjectPath` for those.
+- **Protocol DOIs.** `10.21203/...` DOIs resolve to Research Square. Older `10.1038/protex...`
+  protocol DOIs now resolve to protocols.io; fetch those by their Research Square article URL in
+  `byUrl` instead.
+- **Conditional fields.** ORCID, affiliations, funders, PDFs, keywords, versions,
+  published-version links and citation tallies are present only when Research Square has them.
+  They are omitted otherwise.
+- **Citation source.** Citation counts come from scite and are citation statements, not a
+  bibliometric citation index. `citingPublicationsCount` counts unique citing publications.
+- **Altmetric coverage.** Altmetric only has attention data for a minority of preprints. When it
+  does not track a DOI, the Altmetric fields are omitted. The public badge endpoint is keyless
+  but undocumented and may rate-limit; those records simply keep the remaining fields.
+- **Related preprints.** The list is Research Square's journal + first-subject heuristic from the
+  article sidebar, not a semantic similarity model, and is available only when `includeRelated`
+  is enabled.
+- **No Dimensions metrics.** Dimensions' public metrics endpoint carries a license that restricts
+  unregistered organizations, so its citation counts are deliberately not used.
 
 ## FAQ
 
-**What is Research Square?** An independent preprint server where researchers post manuscripts before or during journal submission, across medicine, life sciences and other fields.
+**Is this an official Research Square product?** No. It is an independent data extraction tool
+and is not affiliated with Research Square Company.
 
-**Is this affiliated with Research Square?** No. This is an independent data extraction tool and has no affiliation with Research Square Company.
+**Do I need an API key?** No. The actor uses the public website endpoints and works without
+credentials. Research Square also offers a token-based API for higher rate limits; this actor
+does not need it.
 
-**How is a preprint different from a published paper?** A preprint is an early, not-yet-peer-reviewed version of a manuscript. The `status` field (e.g. `under-review`) tells you where it stands.
+**Can I schedule it for new preprints?** Yes. Use `browseAll` with `postedAfter` set to your last
+run date, or `search` with a topic query, and schedule the actor.
 
-**What does `doiVersion` mean?** Preprints can be revised; `doiVersion` reflects which revision (`v1`, `v2`, …) the record describes.
+**Why are some records missing an abstract or PDF?** Those fields require `detailLevel` set to
+`details` or higher, and the source must actually provide them. Video records often have no PDF.
 
-**Why do some records lack an `abstract` or `doi`?** Those fields are only populated in `byUrl` mode, where the actor loads the full preprint page. Search and browse modes return listing-level metadata only.
+**Why do views/downloads change between runs?** They are live counters, not a historical snapshot.
 
-**Can I combine a subject area with a keyword search?** Yes — `subjectArea` applies as an additional filter in `search` mode on top of `searchQuery`.
+**Can I get the published journal article?** When Research Square knows about it, the record
+includes `publishedDoi`, `publishedUrl`, `publishedAt` and `publishedJournalTitle`.
 
-**How many preprints can one run return?** Up to `maxItems`, capped at 1000 per run.
-
-**How fresh is the data?** Each run reads the live Research Square listings at request time, so results reflect preprints posted up to that moment.
-
-**Does `byUrl` accept any Research Square link?** It accepts preprint article URLs in the form `/article/rs-XXXX/v1`. Journal pages, author profiles and other non-preprint URLs are not supported.
+**Does it work with the production Research Square site only?** Yes, `www.researchsquare.com`.
+Protocol Exchange articles hosted on the same site are included.

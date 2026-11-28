@@ -1,270 +1,26 @@
 {
-  "description": "Search jobs.ac.uk by keyword/location/discipline/contract filters, or fetch specific job posting URLs directly.",
+  "description": "Search jobs.ac.uk by keyword, sector, region, discipline, job type, hours, contract, workplace, salary or posting date, or fetch specific jobs.ac.uk posting URLs, or enumerate every current vacancy from the site sitemap. The search filters are applied client-side over the complete current board (about 1,856 live jobs).",
   "properties": {
-    "academicDisciplines": {
-      "default": [],
-      "description": "Filter to one or more academic subject areas.",
-      "editor": "select",
-      "items": {
-        "enum": [
-          "agriculture-food-and-veterinary",
-          "architecture-building-and-planning",
-          "biological-sciences",
-          "business-and-management-studies",
-          "computer-sciences",
-          "creative-arts-and-design",
-          "economics",
-          "education-studies-inc-tefl",
-          "engineering-and-technology",
-          "health-and-medical",
-          "historical-and-philosophical-studies",
-          "information-management-and-librarianship",
-          "languages-literature-and-culture",
-          "law",
-          "mathematics-and-statistics",
-          "media-and-communications",
-          "physical-and-environmental-sciences",
-          "politics-and-government",
-          "psychology",
-          "social-sciences-and-social-care",
-          "sport-and-leisure"
-        ],
-        "enumTitles": [
-          "Agriculture, Food & Veterinary",
-          "Architecture, Building & Planning",
-          "Biological Sciences",
-          "Business & Management Studies",
-          "Computer Sciences",
-          "Creative Arts & Design",
-          "Economics",
-          "Education Studies (inc. TEFL)",
-          "Engineering & Technology",
-          "Health & Medical",
-          "Historical & Philosophical Studies",
-          "Information Management & Librarianship",
-          "Languages, Literature & Culture",
-          "Law",
-          "Mathematics & Statistics",
-          "Media & Communications",
-          "Physical & Environmental Sciences",
-          "Politics & Government",
-          "Psychology",
-          "Social Sciences & Social Care",
-          "Sport & Leisure"
-        ],
-        "type": "string"
-      },
-      "prefill": [],
-      "title": "Academic disciplines",
-      "type": "array"
-    },
-    "academicSubDisciplines": {
-      "default": [],
-      "description": "Filter to one or more narrower academic sub-fields (e.g. Cyber Security within Computer Sciences). Independent of `academicDisciplines` -- can be used alone or combined.",
-      "editor": "select",
-      "items": {
-        "enum": [
-          "agriculture",
-          "food-science",
-          "forestry",
-          "veterinary-science",
-          "architecture-and-building",
-          "urban-and-rural-planning",
-          "biochemistry",
-          "biology",
-          "botany",
-          "genetics",
-          "microbiology",
-          "molecular-biology-and-biophysics",
-          "other-biological-sciences",
-          "zoology",
-          "accountancy-and-finance",
-          "business-studies",
-          "hospitality-and-leisure",
-          "human-resources-management",
-          "management",
-          "marketing",
-          "other-business-and-management-studies",
-          "real-estate-management",
-          "artificial-intelligence",
-          "computer-science",
-          "cyber-security",
-          "information-systems",
-          "software-engineering",
-          "design",
-          "fine-art",
-          "music",
-          "other-creative-arts",
-          "performing-arts",
-          "education-studies-education",
-          "research-methods",
-          "teacher-training",
-          "tefl-tesol",
-          "aerospace-engineering",
-          "biotechnology",
-          "chemical-engineering",
-          "civil-engineering",
-          "electrical-and-electronic-engineering",
-          "maritime-technology",
-          "mechanical-engineering",
-          "metallurgy-and-minerals-technology",
-          "other-engineering",
-          "production-engineering-and-manufacturing",
-          "anatomy-physiology-and-pathology",
-          "medical-technology",
-          "medicine-and-dentistry",
-          "nursing",
-          "nutrition",
-          "pharmacology-toxicology-and-pharmacy",
-          "archaeology",
-          "history",
-          "history-of-art",
-          "philosophy",
-          "theology-and-religious-studies",
-          "curatorial-studies",
-          "information-science",
-          "librarianship",
-          "other-information-management-and-librarianship",
-          "classics",
-          "cultural-studies",
-          "languages",
-          "linguistics",
-          "literature",
-          "mathematics",
-          "statistics",
-          "communication-studies",
-          "journalism",
-          "media-studies",
-          "publishing",
-          "chemistry",
-          "environmental-sciences",
-          "geography",
-          "geology",
-          "materials-science",
-          "ocean-sciences",
-          "other-physical-sciences",
-          "physics-and-astronomy",
-          "anthropology",
-          "human-and-social-geography",
-          "other-social-sciences",
-          "social-policy",
-          "social-work",
-          "sociology",
-          "sports-and-leisure-management",
-          "sports-coaching",
-          "sports-science"
-        ],
-        "enumTitles": [
-          "Agriculture",
-          "Food Science",
-          "Forestry",
-          "Veterinary Science",
-          "Architecture & Building",
-          "Urban & Rural Planning",
-          "Biochemistry",
-          "Biology",
-          "Botany",
-          "Genetics",
-          "Microbiology",
-          "Molecular Biology & Biophysics",
-          "Other Biological Sciences",
-          "Zoology",
-          "Accountancy & Finance",
-          "Business Studies",
-          "Hospitality & Leisure",
-          "Human Resources Management",
-          "Management",
-          "Marketing",
-          "Other Business & Management Studies",
-          "Real Estate Management",
-          "Artificial Intelligence",
-          "Computer Science",
-          "Cyber Security",
-          "Information Systems",
-          "Software Engineering",
-          "Design",
-          "Fine Art",
-          "Music",
-          "Other Creative Arts",
-          "Performing Arts",
-          "Education Studies",
-          "Research Methods",
-          "Teacher Training",
-          "TEFL/TESOL",
-          "Aerospace Engineering",
-          "Biotechnology",
-          "Chemical Engineering",
-          "Civil Engineering",
-          "Electrical & Electronic Engineering",
-          "Maritime Technology",
-          "Mechanical Engineering",
-          "Metallurgy & Minerals Technology",
-          "Other Engineering",
-          "Production Engineering & Manufacturing",
-          "Anatomy, Physiology & Pathology",
-          "Medical Technology",
-          "Medicine & Dentistry",
-          "Nursing",
-          "Nutrition",
-          "Pharmacology, Toxicology & Pharmacy",
-          "Archaeology",
-          "History",
-          "History of Art",
-          "Philosophy",
-          "Theology & Religious Studies",
-          "Curatorial Studies",
-          "Information Science",
-          "Librarianship",
-          "Other Information Management & Librarianship",
-          "Classics",
-          "Cultural Studies",
-          "Languages",
-          "Linguistics",
-          "Literature",
-          "Mathematics",
-          "Statistics",
-          "Communication Studies",
-          "Journalism",
-          "Media Studies",
-          "Publishing",
-          "Chemistry",
-          "Environmental Sciences",
-          "Geography",
-          "Geology",
-          "Materials Science",
-          "Ocean Sciences",
-          "Other Physical Sciences",
-          "Physics & Astronomy",
-          "Anthropology",
-          "Human & Social Geography",
-          "Other Social Sciences",
-          "Social Policy",
-          "Social Work",
-          "Sociology",
-          "Sports & Leisure Management",
-          "Sports Coaching",
-          "Sports Science"
-        ],
-        "type": "string"
-      },
-      "prefill": [],
-      "title": "Academic sub-disciplines",
-      "type": "array"
-    },
     "contractTypes": {
       "default": [],
-      "description": "Filter by contract type.",
+      "description": "Client-side contract filter. Older saved tasks use `permanent`, `fixed-term-contract` and `temporary`.",
       "editor": "select",
       "items": {
         "enum": [
+          "Fixed-Term/Contract",
+          "Permanent",
+          "Temporary",
           "permanent",
           "fixed-term-contract",
           "temporary"
         ],
         "enumTitles": [
+          "Fixed-Term/Contract",
           "Permanent",
-          "Fixed-term contract",
-          "Temporary"
+          "Temporary",
+          "Permanent (legacy value)",
+          "Fixed-term contract (legacy value)",
+          "Temporary (legacy value)"
         ],
         "type": "string"
       },
@@ -272,85 +28,40 @@
       "title": "Contract type",
       "type": "array"
     },
-    "distanceMiles": {
-      "default": 0,
-      "description": "Sent to jobs.ac.uk alongside `location`, but the site only honors a mile-radius when `location` was resolved through its browser-side autocomplete widget (not available to a server-side scraper), so this has no effect on which jobs are returned. Kept for forward-compatibility only; use a broader/narrower `location` string to widen or narrow results instead.",
-      "editor": "number",
-      "maximum": 250,
-      "minimum": 0,
-      "prefill": 0,
-      "title": "Search radius (miles) - advisory only",
-      "type": "integer"
-    },
-    "employerSectors": {
+    "disciplines": {
       "default": [],
-      "description": "Filter by type of hiring organisation.",
-      "editor": "select",
+      "description": "Client-side discipline filter. Values are matched against the live board's discipline labels (e.g. `Computer Sciences`, `Cyber Security`, `Economics`); old saved-task slugs such as `computer-sciences` or `agriculture-food-and-veterinary` are also accepted. Leave empty for all disciplines.",
+      "editor": "stringList",
       "items": {
-        "enum": [
-          "charity-not-for-profit",
-          "commercial-organisations",
-          "further-education",
-          "public-sector",
-          "science-and-research-organisations",
-          "universities-higher-education-institutions"
-        ],
-        "enumTitles": [
-          "Charity / not-for-profit",
-          "Commercial organisations",
-          "Further education",
-          "Public sector",
-          "Science & research organisations",
-          "Universities / higher education institutions"
-        ],
         "type": "string"
       },
       "prefill": [],
-      "title": "Employer sector",
+      "title": "Disciplines",
       "type": "array"
     },
     "fetchFullDescription": {
       "default": true,
-      "description": "Visit each job's detail page to include the full description, structured salary, employment type and closing date. Slower but much richer output. Always on for mode=byUrls.",
+      "description": "Visit each posting's detail page for the full description, structured salary, dates, hours, contract, workplace, employer job reference and apply link. When off, search rows still carry the complete listing fields from the current board dataset. Always on for byUrls/allJobs.",
       "prefill": true,
-      "title": "Fetch full job description",
+      "title": "Fetch full job details",
       "type": "boolean"
-    },
-    "fundingTypes": {
-      "default": [],
-      "description": "For postgraduate study listings: restrict by funding eligibility.",
-      "editor": "select",
-      "items": {
-        "enum": [
-          "eu-students",
-          "international-students",
-          "self-funded-students",
-          "uk-students"
-        ],
-        "enumTitles": [
-          "EU students",
-          "International students",
-          "Self-funded students",
-          "UK students"
-        ],
-        "type": "string"
-      },
-      "prefill": [],
-      "title": "PhD funding type",
-      "type": "array"
     },
     "hoursTypes": {
       "default": [],
-      "description": "Filter by working hours.",
+      "description": "Client-side working-hours filter. Older saved tasks use `full-time` / `part-time`.",
       "editor": "select",
       "items": {
         "enum": [
+          "Full Time",
+          "Part Time",
           "full-time",
           "part-time"
         ],
         "enumTitles": [
-          "Full time",
-          "Part time"
+          "Full Time",
+          "Part Time",
+          "Full time (legacy value)",
+          "Part time (legacy value)"
         ],
         "type": "string"
       },
@@ -360,156 +71,147 @@
     },
     "jobTypes": {
       "default": [],
-      "description": "Restrict to Masters or PhD study opportunities instead of staff jobs.",
+      "description": "Client-side job-type filter. Older saved tasks use the values `phds` and `masters`.",
       "editor": "select",
       "items": {
         "enum": [
+          "Academic",
+          "Research",
+          "Teaching",
+          "PhDs",
+          "phds",
+          "Masters",
           "masters",
-          "phds"
+          "Professional and Managerial",
+          "Further Education Jobs"
         ],
         "enumTitles": [
+          "Academic",
+          "Research",
+          "Teaching",
+          "PhDs",
+          "PhDs (legacy value)",
           "Masters",
-          "PhDs"
+          "Masters (legacy value)",
+          "Professional and Managerial",
+          "Further Education Jobs"
         ],
         "type": "string"
       },
       "prefill": [],
-      "title": "Postgraduate study type",
+      "title": "Job types",
       "type": "array"
     },
     "jobUrls": {
       "default": [],
-      "description": "Direct jobs.ac.uk job posting URLs to fetch, e.g. `https://www.jobs.ac.uk/job/DSI921/senior-statistical-analyst`.",
+      "description": "Direct jobs.ac.uk posting URLs, e.g. `https://www.jobs.ac.uk/job/DTS722/lecturer-in-pharmacy-practice-maternity`. Also accepts `/job/DTS722/...` paths.",
       "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
       "prefill": [],
       "title": "Job URLs (mode=byUrls)",
       "type": "array"
     },
     "keywords": {
-      "description": "Free-text search terms (job title, skill, employer name). Leave empty to browse by discipline/filters only.",
+      "description": "Free-text terms matched by jobs.ac.uk against the job title, employer, department, disciplines and location (e.g. `lecturer`, `research fellow`, `PhD studentship`). Leave empty to browse all jobs that match the other filters.",
       "editor": "textfield",
-      "prefill": "research",
+      "prefill": "lecturer",
       "title": "Keywords",
-      "type": "string"
-    },
-    "location": {
-      "description": "UK town/city, region, or country text to filter jobs by (e.g. `London`, `Manchester`, `Scotland`). Matched as a case-insensitive substring against each job's advertised location - jobs.ac.uk's own distance-radius search requires a browser-only autocomplete widget with no free server-side equivalent, so this is a text match rather than a precise mile radius.",
-      "editor": "textfield",
-      "title": "Location",
-      "type": "string"
-    },
-    "locationFacet": {
-      "description": "A single jobs.ac.uk location facet, as a real working server-side filter (unlike `location`/`distanceMiles` above). Use a continent (`Europe`), country (`United Kingdom`, `Ireland`, `United States`), UK nation (`England`, `Scotland`, `Wales`, `Northern Ireland`) or UK county/city-region (`Greater London`, `Oxfordshire`, `Greater Manchester`, `Cambridgeshire`, etc.) - free text is auto-slugified (e.g. `Greater London` -> `greater-london`). Only ONE value is honored meaningfully: jobs.ac.uk ANDs multiple location facets together, and since a job only has one location, combining two different regions always yields 0 results - so pass a single region per run. An unrecognized value simply yields 0 results rather than erroring.",
-      "editor": "textfield",
-      "title": "Location region/country filter (exact match)",
       "type": "string"
     },
     "maxItems": {
       "default": 25,
-      "description": "Hard cap on emitted records.",
-      "maximum": 1000,
+      "description": "Hard cap on emitted records. jobs.ac.uk currently publishes about 1,856 live vacancies.",
+      "maximum": 3000,
       "minimum": 1,
-      "prefill": 25,
+      "prefill": 3,
       "title": "Max items",
       "type": "integer"
     },
     "mode": {
       "default": "search",
-      "description": "What to fetch.",
+      "description": "What to fetch: run a search, fetch specific posting URLs, or enumerate every live vacancy from jobs.ac.uk's sitemap.",
       "editor": "select",
       "enum": [
         "search",
-        "byUrls"
+        "byUrls",
+        "allJobs"
       ],
       "enumTitles": [
-        "Search / browse jobs",
-        "Fetch specific job URLs"
+        "Search jobs.ac.uk",
+        "Fetch specific job URLs",
+        "Every current vacancy (sitemap)"
       ],
       "prefill": "search",
       "title": "Mode",
       "type": "string"
     },
-    "nonAcademicDisciplines": {
-      "default": [],
-      "description": "Filter to one or more professional-services job families (HE administration, IT, HR, etc.).",
-      "editor": "select",
-      "items": {
-        "enum": [
-          "administrative",
-          "estates-and-facilities-management",
-          "finance-and-procurement",
-          "fundraising-alumni-bids-and-grants",
-          "health-wellbeing-and-care",
-          "hospitality-retail-conferences-and-events",
-          "human-resources",
-          "international-activities",
-          "it-services",
-          "laboratory-clinical-and-technician",
-          "legal-compliance-and-policy",
-          "library-services-data-and-information-management",
-          "pr-marketing-sales-and-communication",
-          "project-management-and-consulting",
-          "senior-management",
-          "sports-and-leisure",
-          "student-services",
-          "sustainability",
-          "web-design-and-development",
-          "other"
-        ],
-        "enumTitles": [
-          "Administrative",
-          "Estates & Facilities Management",
-          "Finance & Procurement",
-          "Fundraising, Alumni, Bids & Grants",
-          "Health, Wellbeing & Care",
-          "Hospitality, Retail, Conferences & Events",
-          "Human Resources",
-          "International Activities",
-          "IT Services",
-          "Laboratory, Clinical & Technician",
-          "Legal, Compliance & Policy",
-          "Library Services, Data & Information Management",
-          "PR, Marketing, Sales & Communication",
-          "Project Management & Consulting",
-          "Senior Management",
-          "Sports & Leisure",
-          "Student Services",
-          "Sustainability",
-          "Web Design & Development",
-          "Other"
-        ],
-        "type": "string"
-      },
-      "prefill": [],
-      "title": "Professional / non-academic disciplines",
-      "type": "array"
+    "onlyNew": {
+      "default": false,
+      "description": "Suppress jobs already delivered by an earlier run using the same state store. Off by default; the daily test prefill never uses it.",
+      "prefill": false,
+      "title": "Only new vacancies since last run",
+      "type": "boolean"
     },
-    "qualificationTypes": {
-      "default": [],
-      "description": "For postgraduate study listings: restrict by qualification type.",
+    "postedAfter": {
+      "description": "Client-side posting-date floor in `YYYY-MM-DD` form. Search mode filters on each job's `goLive` date; allJobs mode filters the sitemap `<lastmod>` (which equals `goLive`). Leave empty for no date filter.",
+      "editor": "textfield",
+      "title": "Posted on or after",
+      "type": "string"
+    },
+    "postedWithinDays": {
+      "default": 0,
+      "description": "Client-side freshness filter: keep vacancies posted in the last N days (0 = off). When combined with `postedAfter`, the more restrictive date wins.",
+      "maximum": 3650,
+      "minimum": 0,
+      "prefill": 0,
+      "title": "Posted within the last N days",
+      "type": "integer"
+    },
+    "region": {
+      "default": "All locations",
+      "description": "jobs.ac.uk's own regional facet: 13 published regions plus `All locations`, which does not filter. `England` covers London and the four English sub-regions; `Asia` and `Middle East` both match the source label `Asia & the Middle East`; `South America` matches `South & Central America`.",
       "editor": "select",
-      "items": {
-        "enum": [
-          "integrated-masters-doctorate",
-          "international-doctorate",
-          "phd",
-          "professional-doctorate"
-        ],
-        "enumTitles": [
-          "Integrated Masters + Doctorate",
-          "International Doctorate",
-          "PhD",
-          "Professional Doctorate"
-        ],
-        "type": "string"
-      },
-      "prefill": [],
-      "title": "PhD qualification type",
-      "type": "array"
+      "enum": [
+        "All locations",
+        "London",
+        "England",
+        "Scotland",
+        "Wales",
+        "Northern Ireland",
+        "Republic of Ireland",
+        "Europe",
+        "Asia",
+        "Africa",
+        "North America",
+        "South America",
+        "Australasia",
+        "Middle East"
+      ],
+      "enumTitles": [
+        "All locations",
+        "London",
+        "England",
+        "Scotland",
+        "Wales",
+        "Northern Ireland",
+        "Republic of Ireland",
+        "Europe",
+        "Asia",
+        "Africa",
+        "North America",
+        "South America",
+        "Australasia",
+        "Middle East"
+      ],
+      "prefill": "All locations",
+      "title": "Region",
+      "type": "string"
     },
     "salaryBands": {
       "default": [],
-      "description": "Filter by advertised annual salary band (GBP).",
+      "description": "Legacy annual salary bands (GBP). Matched client-side against the advert's numeric salary range; adverts without a numeric salary are excluded when a band is selected. Use `salaryMin` / `salaryMax` for an exact range.",
       "editor": "select",
       "items": {
         "enum": [
@@ -545,41 +247,89 @@
         "type": "string"
       },
       "prefill": [],
-      "title": "Salary band",
+      "title": "Salary bands (legacy)",
       "type": "array"
     },
-    "sortOrder": {
-      "default": "relevance",
-      "description": "Result ordering.",
+    "salaryMax": {
+      "description": "Client-side annual salary ceiling: keeps adverts whose own maximum advertised salary is at most this value. Adverts without a numeric salary are excluded when set.",
+      "maximum": 10000000,
+      "minimum": 0,
+      "title": "Maximum salary (GBP)",
+      "type": "integer"
+    },
+    "salaryMin": {
+      "description": "Client-side annual salary floor: keeps adverts whose own minimum advertised salary is at least this value. Adverts without a numeric salary are excluded when set.",
+      "maximum": 10000000,
+      "minimum": 0,
+      "title": "Minimum salary (GBP)",
+      "type": "integer"
+    },
+    "sector": {
+      "default": "All sectors",
+      "description": "jobs.ac.uk's top-level vacancy sector. `All sectors` does not filter.",
       "editor": "select",
       "enum": [
-        "relevance",
-        "datePlaced",
-        "closingDate"
+        "All sectors",
+        "Academic & Research",
+        "Professional & Support Services",
+        "PhD / Studentship"
       ],
       "enumTitles": [
-        "Relevance",
-        "Date placed (newest first)",
-        "Closing date (soonest first)"
+        "All sectors",
+        "Academic & Research",
+        "Professional & Support Services",
+        "PhD / Studentship"
       ],
-      "prefill": "relevance",
+      "prefill": "All sectors",
+      "title": "Sector",
+      "type": "string"
+    },
+    "sortOrder": {
+      "default": "datePlaced",
+      "description": "Date placed returns the newest vacancies first; closing date returns the vacancies closing soonest first. `relevance` is a legacy value kept for saved tasks; it behaves as date placed.",
+      "editor": "select",
+      "enum": [
+        "datePlaced",
+        "closingDate",
+        "relevance"
+      ],
+      "enumTitles": [
+        "Date placed (newest first)",
+        "Closing date (soonest first)",
+        "Relevance (legacy; same as date placed)"
+      ],
+      "prefill": "datePlaced",
       "title": "Sort by",
+      "type": "string"
+    },
+    "stateKeyValueStoreName": {
+      "default": "jobs-ac-uk-seen-jobs",
+      "description": "Named key-value store used to remember delivered job IDs when `onlyNew` is enabled. Use a different store name to keep separate alert histories.",
+      "editor": "textfield",
+      "prefill": "jobs-ac-uk-seen-jobs",
+      "title": "Only-new state store",
       "type": "string"
     },
     "workplaceTypes": {
       "default": [],
-      "description": "Filter by remote/hybrid/on-site working arrangement.",
+      "description": "Client-side workplace filter. Older saved tasks use `on-site`, `hybrid` and `remote`.",
       "editor": "select",
       "items": {
         "enum": [
-          "hybrid",
-          "remote",
-          "on-site"
-        ],
-        "enumTitles": [
+          "On Site",
           "Hybrid",
           "Remote",
-          "On-site"
+          "on-site",
+          "hybrid",
+          "remote"
+        ],
+        "enumTitles": [
+          "On Site",
+          "Hybrid",
+          "Remote",
+          "On-site (legacy value)",
+          "Hybrid (legacy value)",
+          "Remote (legacy value)"
         ],
         "type": "string"
       },
@@ -592,6 +342,6 @@
     "mode"
   ],
   "schemaVersion": 1,
-  "title": "Jobs.ac.uk Academic Jobs Scraper Input",
+  "title": "Jobs.ac.uk Academic Vacancy & Studentship Scraper Input",
   "type": "object"
 }

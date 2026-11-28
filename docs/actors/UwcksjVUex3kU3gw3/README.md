@@ -4,112 +4,236 @@
 
 # Jobs.ac.uk Academic Vacancy & Studentship Scraper
 
-Scrape [jobs.ac.uk](https://www.jobs.ac.uk) — the UK's leading job board for academic, research, and higher-education careers. Search by keyword and location, browse by 21 academic and 20 professional-services disciplines, filter by contract type, hours, salary band, workplace and employer sector, or fetch specific job posting URLs directly. No login, no account, no cookies.
+Turn the live jobs.ac.uk board into structured rows: UK and overseas academic,
+research, professional-services and PhD studentship vacancies, with the numeric
+advert ID, employer, department, region, advertised salary, dates, hours,
+contract, workplace, discipline tags, job types, the employer's application link
+and the complete advert text.
 
-## What this actor does
+No login, no cookies, no API key, no proxy setup.
 
-- **Two modes:** `search` (keyword / location / discipline / filter browsing) and `byUrls` (fetch specific job posting URLs)
-- **Full discipline coverage:** 21 academic subject areas (Biological Sciences, Engineering, Law, Psychology, etc.), 89 narrower academic sub-disciplines (e.g. Cyber Security, Software Engineering), and 20 professional-services job families (IT Services, HR, Estates & Facilities, etc.)
-- **Postgraduate study listings:** filter to Masters/PhD opportunities by qualification type and funding eligibility
-- **Rich filters:** hours (full/part-time), contract type, workplace (remote/hybrid/on-site), 13 salary bands, employer sector, search radius
-- **Full job descriptions:** optionally visits each job's detail page for the complete description, structured salary, employment type and closing date
-- **Empty fields are omitted**
+## What you can collect
 
-## Output per job
+- **Keyword search** across the current board (e.g. `lecturer`, `research fellow`,
+  `PhD studentship`).
+- **Sector filter**: Academic & Research, Professional & Support Services, or
+  PhD / Studentship.
+- **Region filter**: the site's own regional facets (13 published regions plus
+  `All locations`), from London and Scotland to Europe, Asia, the Middle East, Africa,
+  the Americas and Australasia. `England` covers London and the English sub-regions.
+- **Discipline, job type, hours, contract, workplace, salary and posting-date
+  filters** applied to the complete current board before detail pages are fetched.
+- **Sort** newest first or by the soonest closing date.
+- **Specific postings** by pasting jobs.ac.uk URLs.
+- **Every current vacancy** from the site's own sitemap (about 1,856 live jobs at the
+  time of writing), independent of the search page.
+- **Only-new runs** that remember which job IDs an earlier run already delivered.
 
-- `title`, `jobUrl`, `jobReference` (jobs.ac.uk advert code, e.g. `DSI921`)
-- `employer`, `employerLogoUrl`, `employerWebsite`
-- `department` (when advertised)
-- `location`, `locationCity`, `locationRegion`, `locationCountry`
-- `salaryRaw` (as advertised), `salaryAmount`, `salaryCurrency`, `salaryPeriod`
-- `employmentTypes[]` (e.g. `Full Time`, `Fixed-Term/Contract`)
-- `description` (full plain-text job description)
-- `datePosted`, `closingDate` — ISO 8601
-- `locationRaw`, `datePlacedRaw`, `closingDateRaw` — the plain text shown on the search results listing card itself (mode=search only); the detail-page fields above are added alongside these, not in place of them
-- `recordType: "job"`, `scrapedAt`
+## Output
 
-With `fetchFullDescription: false` (mode=search only; always on for `byUrls`), the detail page is never visited, so `description`, `datePosted`, `closingDate`, `employmentTypes`, and the structured `salaryAmount`/`salaryCurrency`/`salaryPeriod`/`location`/`locationCity`/`locationRegion`/`locationCountry` fields are unavailable — only the listing-card fields (`locationRaw`, `salaryRaw`, `datePlacedRaw`, `closingDateRaw`, plus `title`/`employer`/`jobUrl`) are returned.
+One JSON row per vacancy. Fields the source does not publish for a row are omitted
+(never returned as `null` or an empty string).
+
+| Field | Meaning |
+|---|---|
+| `advertId`, `title`, `jobUrl`, `jobReference` | Numeric jobs.ac.uk advert ID, job title, posting URL, and the site's advert code (e.g. `DTS722`). |
+| `employer`, `department` | Hiring institution and department/faculty when advertised. |
+| `sector` | `Academic & Research`, `Professional & Support Services`, or `PhD / Studentship`. |
+| `jobTypes` | Source job types such as `Academic`, `Research`, `Teaching`, `PhDs`, `Masters`, `Professional and Managerial`. |
+| `isFeatured` | Present when the advert carries jobs.ac.uk's featured flag. |
+| `location`, `locations`, `locationRegion`, `locationRaw` | The advertised region label(s) (the site's display labels, e.g. `London`, `South East England`, `Asia & the Middle East`). |
+| `locationCountry` | `United Kingdom` for UK regions, `Ireland` for Republic of Ireland; omitted for other regions because the source only labels the region. |
+| `salaryRaw`, `salaryMin`, `salaryMax`, `salaryCurrency`, `salaryPeriod`, `salaryAmount` | The advert's salary text plus the structured numeric range when published. `salaryAmount` is kept for single-value adverts. |
+| `hoursType`, `contractType`, `workplaceType` | `full-time`, `part-time` or `full-time-or-part-time`; the contract label; and `on-site`/`hybrid`/`remote`. |
+| `employmentTypes` | The raw employment-type list from the page's structured data (e.g. `Full Time`, `Fixed-Term/Contract`). |
+| `datePosted`, `closingDate` | ISO 8601 dates from the posting (date placed and closing date). |
+| `datePlacedRaw`, `closingDateRaw` | The raw date text shown on the source (`YYYY-MM-DD` in the current board dataset); useful when detail fetching is off. |
+| `employerJobRef` | The employer's own reference when the advert states one. |
+| `description`, `descriptionHtml` | Full advert text (plain text and original HTML); present when detail fetching is on. |
+| `disciplines` | Discipline/subject pills shown on the advert (e.g. `Computer Sciences`, `Cyber Security`). |
+| `applyUrl`, `applyDomain`, `applicationMethod` | The employer's application link, its domain, and `external`/`email`/`none`. |
+| `contactEmails` | Named contact addresses published in the advert (up to 10). |
+| `listingType` | `standard` when the page carries structured JobPosting data, `enhanced` for the fallback layout. |
+| `hasFullDescription` | Present when the detail page was read. |
+| `recordType`, `scrapedAt` | `job` and the scrape timestamp. |
 
 ## Input
 
-| Field | Type | Default | Description |
-|---|---|---|---|
-| `mode` | string | `search` | `search` / `byUrls` |
-| `keywords` | string | – | Free-text search terms |
-| `location` | string | – | UK town/city/postcode/country (advisory text match against each job's advertised location; jobs.ac.uk ignores this server-side without a browser-resolved place, see FAQ) |
-| `distanceMiles` | select | `0` | Search radius around `location` (advisory only, see FAQ) |
-| `locationFacet` | string | – | A single real, working jobs.ac.uk location filter — continent/country/UK nation/UK county (e.g. `Scotland`, `Greater London`, `Oxfordshire`); auto-slugified from free text |
-| `sortOrder` | select | `relevance` | `relevance` / `datePlaced` / `closingDate` |
-| `academicDisciplines` | array (enum) | – | 21 academic subject areas |
-| `academicSubDisciplines` | array (enum) | – | 89 narrower academic sub-fields (e.g. Cyber Security, Software Engineering) — independent of `academicDisciplines`, can combine or be used alone |
-| `nonAcademicDisciplines` | array (enum) | – | 20 professional-services job families |
-| `jobTypes` | array (enum) | – | `masters` / `phds` — restrict to postgraduate study |
-| `hoursTypes` | array (enum) | – | `full-time` / `part-time` |
-| `contractTypes` | array (enum) | – | `permanent` / `fixed-term-contract` / `temporary` |
-| `workplaceTypes` | array (enum) | – | `hybrid` / `remote` / `on-site` |
-| `salaryBands` | array (enum) | – | 13 GBP salary bands |
-| `employerSectors` | array (enum) | – | 6 employer types |
-| `qualificationTypes` | array (enum) | – | PhD qualification type (postgrad listings) |
-| `fundingTypes` | array (enum) | – | PhD funding eligibility (postgrad listings) |
-| `jobUrls` | array | – | Direct job URLs (mode=byUrls) |
-| `fetchFullDescription` | bool | `true` | Visit detail page for full description/salary/dates |
-| `maxItems` | int | `25` | Hard cap (1–1000) |
+| Field | Default | Notes |
+|---|---|---|
+| `mode` | `search` | `search`, `byUrls`, or `allJobs` (sitemap). |
+| `keywords` | – | Free-text terms matched against title, employer, department, disciplines and region. Empty = all. |
+| `sector` | `All sectors` | `All sectors`, `Academic & Research`, `Professional & Support Services`, `PhD / Studentship`. |
+| `region` | `All locations` | One of the 13 published regions, or `All locations`. `England` includes London; `Asia`/`Middle East` both match `Asia & the Middle East`; `South America` matches `South & Central America`. |
+| `sortOrder` | `datePlaced` | `datePlaced` (newest) or `closingDate` (soonest); legacy `relevance` is kept for saved tasks and behaves as `datePlaced`. |
+| `disciplines` | `[]` | Discipline labels (or old saved-task slugs); empty = all. |
+| `jobTypes` | `[]` | `Academic`, `Research`, `Teaching`, `PhDs`, `Masters`, `Professional and Managerial`, `Further Education Jobs`; old `phds`/`masters` values are accepted. |
+| `hoursTypes` | `[]` | `Full Time` / `Part Time`; old `full-time`/`part-time` values are accepted. |
+| `contractTypes` | `[]` | `Fixed-Term/Contract`, `Permanent`, `Temporary`. |
+| `workplaceTypes` | `[]` | `On Site`, `Hybrid`, `Remote`. |
+| `salaryBands` | `[]` | Legacy annual GBP bands matched against the advert's own minimum salary. |
+| `salaryMin` / `salaryMax` | – | Exact annual GBP floor / ceiling on the advert's advertised minimum / maximum. |
+| `postedAfter` | – | `YYYY-MM-DD` posting floor; search uses `goLive`, allJobs uses sitemap `lastmod` (equal to `goLive`). |
+| `postedWithinDays` | `0` | Keep vacancies posted in the last N days; `0` = off. |
+| `jobUrls` | `[]` | Posting URLs for `mode=byUrls`. |
+| `fetchFullDescription` | `true` | Read each posting's detail page. Search rows already carry the complete listing fields when off; always on for `byUrls` and `allJobs`. |
+| `onlyNew` | `false` | Suppress job IDs already delivered using `stateKeyValueStoreName`. |
+| `stateKeyValueStoreName` | `jobs-ac-uk-seen-jobs` | Named store for the only-new history. |
+| `maxItems` | `25` | 1–3,000. The daily test prefill uses 3. |
 
-### Example: computer science jobs in London, full-time & permanent
+Older saved tasks may still send `location`, `locationFacet`, `jobTypes`, `salaryBands`,
+`distanceMiles`, `relevance`, or the old discipline/contract/salary facet arrays. Supported
+keys are mapped in code; unsupported ones (`distanceMiles`, `qualificationTypes`,
+`fundingTypes`, `employerSectors`) are ignored with a note. They are deliberately not shown
+in the input form.
+
+### Example: computer-science lecturers, newest first
 
 ```json
 {
   "mode": "search",
   "keywords": "lecturer",
-  "location": "London",
-  "distanceMiles": 20,
-  "academicDisciplines": ["computer-sciences"],
-  "hoursTypes": ["full-time"],
-  "contractTypes": ["permanent"],
+  "sector": "Academic & Research",
+  "region": "England",
+  "disciplines": ["Computer Sciences"],
+  "sortOrder": "datePlaced",
   "maxItems": 50
 }
 ```
 
-### Example: funded PhD studentships for UK students
+### Example: funded PhD studentships closing soonest
 
 ```json
 {
   "mode": "search",
-  "jobTypes": ["phds"],
-  "fundingTypes": ["uk-students"],
+  "sector": "PhD / Studentship",
+  "jobTypes": ["PhDs"],
+  "sortOrder": "closingDate",
   "maxItems": 50
 }
 ```
 
-### Example: fetch specific job postings
+### Example: vacancies posted in the last week
+
+```json
+{
+  "mode": "search",
+  "postedWithinDays": 7,
+  "maxItems": 100
+}
+```
+
+### Example: specific postings
 
 ```json
 {
   "mode": "byUrls",
-  "jobUrls": ["https://www.jobs.ac.uk/job/DSI921/senior-statistical-analyst"]
+  "jobUrls": ["https://www.jobs.ac.uk/job/DTS722/lecturer-in-pharmacy-practice-maternity"]
 }
 ```
 
+### Example: monitor the whole board
+
+```json
+{
+  "mode": "allJobs",
+  "onlyNew": true,
+  "stateKeyValueStoreName": "my-academic-alerts",
+  "maxItems": 100
+}
+```
+
+## How it reads the board
+
+The current jobs.ac.uk search page is a static Next.js shell. The browser hydrates
+it from a public CDN chunk that embeds the complete board as one JSON array (1,856
+jobs at the time of writing). The actor fetches that chunk, applies the keyword,
+sector, region, discipline, job-type, hours, contract, workplace, salary and
+posting-date filters in memory, sorts the matches, and then visits detail pages only
+for the rows it will emit. This is the same complete dataset the site's own search
+uses, so the filters narrow the full board instead of a first page of cards.
+
+Detail rows combine the page's schema.org `JobPosting` block with its rendered details
+table, so the description, salary, dates, hours, contract, workplace, discipline tags
+and apply action all come from the advert itself. Date filtering uses each job's
+`goLive` date in search mode and the sitemap `<lastmod>` (equal to `goLive`) in
+allJobs mode. If the current dataset chunk cannot be loaded, the actor refuses to
+return unfiltered rows for a filtered request.
+
+jobs.ac.uk changes its layout and facet labels from time to time. The actor discovers
+the dataset chunk from the live page on every run, reads the facet values from that
+run's dataset, and keeps parsers for the pre-November-2026 search and detail layouts.
+
 ## Use cases
 
-- **HE recruitment intelligence** — track hiring trends across UK universities and research institutes
-- **Academic job alerts** — build a custom feed filtered by discipline/salary/contract type
-- **PhD/Masters discovery** — surface funded postgraduate opportunities by subject and funding type
-- **Salary benchmarking** — aggregate advertised salary bands by discipline or sector
-- **Employer research** — enumerate all current openings at a specific university or research body
+- **Academic job alerts** — a daily feed of new lectureships, research posts and
+  studentships filtered by sector, region, discipline and posting date.
+- **Recruitment intelligence** — track which universities and research institutes are
+  hiring, in which departments, and at what advertised salary.
+- **Salary benchmarking** — compare advertised ranges by discipline, sector or region.
+- **PhD discovery** — collect studentship adverts and their full funding descriptions.
+- **Application pipelines** — feed job rows, descriptions and employer apply links into
+  a CRM, spreadsheet, database or AI workflow.
 
 ## FAQ
 
-**Does this require a jobs.ac.uk account?** No — all listings and job detail pages scraped are publicly accessible without login.
+**Do I need a jobs.ac.uk account, cookies or an API key?** No. Everything is read from
+public pages and the site's public CDN bundle.
 
-**Why are some fields (like `department`) missing on some jobs?** Not every advertiser fills in every field (e.g. department is often left blank for external/company employers). Empty fields are omitted rather than returned as null.
+**Why do some fields appear only on some rows?** The source does not publish every
+field on every advert (for example, department, employer job reference and contact
+email are often absent). Those fields are omitted rather than filled with a guess.
 
-**What's the difference between `academicDisciplines` and `nonAcademicDisciplines`?** jobs.ac.uk splits its taxonomy into academic subject areas (used for lecturer/researcher roles) and professional-services job families (used for university administration, IT, HR, estates, etc. roles).
+**Why is `salaryCurrency` sometimes missing, and can it be EUR?** jobs.ac.uk's
+structured data labels numeric salaries as GBP (69/69 sampled numeric detail rows),
+and most overseas adverts are already GBP-converted. A few adverts publish no
+structured salary and keep their local currency in the salary text; the actor exposes
+the currency it can prove from that text (for example, DTK319 at University College
+Cork is EUR).
 
-**How do I get funded PhD listings only?** Set `jobTypes: ["phds"]` and optionally `fundingTypes` to restrict by student eligibility (UK/EU/international/self-funded).
+**Why is there no city filter?** The current jobs.ac.uk board publishes only 16
+region-level labels and no city, county, postcode or coordinates. City and distance
+parameters that the old site accepted are no longer honoured; a free-text legacy
+`location` is matched against the listing text and is not a radius filter.
 
-**Can I combine multiple filters?** Yes — all filters combine with AND logic, matching jobs.ac.uk's own faceted search.
+**Can I filter by contract, hours, workplace, salary, discipline or job type?** Yes.
+Those filters are applied client-side to the complete current board before detail
+pages are fetched. Qualification type and funding eligibility are still not
+structured by the source; they remain free text inside the description.
 
-**Why doesn't `location`/`distanceMiles` actually restrict results?** jobs.ac.uk's own `location`/`distance` query parameters only take effect when `location` is resolved through a browser-side Google Places autocomplete widget (not available to a server-side scraper) — verified live: the site's own result count is identical with and without them. This actor applies `location` as an advisory case-insensitive text match against each job's advertised location instead. For a filter that actually changes which jobs the server returns, use `locationFacet` (e.g. `Scotland`, `Greater London`) — a genuine jobs.ac.uk facet, confirmed live to change the result count. Only pass one `locationFacet` value per run: jobs.ac.uk ANDs multiple location facets together, and since a job only has one location, combining two different regions always yields 0 results.
+**Why is there no employer sector filter?** The current source publishes the
+vacancy sector and job type, not the old six-value employer-type facet.
 
-**How fresh is the data?** jobs.ac.uk lists new roles daily; the `datePosted` and `closingDate` fields (from each job's detail page) reflect the advertiser's own dates.
+**How fresh is the data?** Every run reads the live board dataset and live detail
+pages; `datePosted` and `closingDate` are the advertiser's own dates.
+
+**What does `onlyNew` do?** It stores delivered advert codes in a named key-value
+store and skips them on the next run. Use a different store name for a separate alert
+history. It is off by default, so the daily test prefill always returns rows.
+
+## Limitations
+
+These are source limitations, not parser gaps:
+
+- jobs.ac.uk publishes region only, not city or a precise distance radius; city-level
+  filtering and the old `distanceMiles` behaviour are not available from the public
+  pages.
+- Student qualification type and funding eligibility appear only in the free-text
+  description, so they are not returned as structured fields.
+- The source publishes no employer logo, employer website or `locationCity`; those
+  fields are omitted. The numeric `advertId` is published by the current dataset.
+- The source publishes the vacancy sector and job types, not the old six-value
+  employer-type facet; that legacy filter is ignored with a note.
+- Overseas country is not published reliably; `locationCountry` is omitted outside the
+  UK and Republic of Ireland.
+- `sector` comes from the board dataset, so `byUrls`/`allJobs` rows have it from the
+  dataset when the URL matches a current board row; rows fetched only by an old URL
+  may omit it.
+- `hoursType` is normalized for the hours labels jobs.ac.uk uses (`Full Time`, `Part Time`,
+  and the combined `Full Time / Part Time`); any other wording is omitted rather than guessed.
+- jobs.ac.uk occasionally shows a service notice at the top of the page; the actor
+  reads the listings below it.
+- `onlyNew` keeps up to 10,000 advert codes of history per state store.
+
+jobs.ac.uk is a third-party site. You are responsible for complying with its terms and
+for how you use the data.

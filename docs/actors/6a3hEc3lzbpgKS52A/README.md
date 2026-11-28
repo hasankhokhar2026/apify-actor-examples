@@ -4,107 +4,191 @@
 
 # Open Food Facts UK Scraper
 
-Look up packaged food sold in the United Kingdom through [Open Food Facts UK](https://uk.openfoodfacts.org), the open, contributor-edited product database. Search by product name, filter by category or brand, or resolve a batch of barcodes straight to full nutrition and scoring data — no account needed.
+Collect packaged food and drink sold in the United Kingdom from the open Open Food Facts database. Point the actor at a keyword, a category, a brand, a supermarket chain, or a list of barcodes and receive one clean JSON row per product. Every row is built from the live Open Food Facts product API and its search index, so it is only as complete as the volunteer-entered record behind it — no values are invented.
 
-## What this actor does
+The actor needs no sign-in, cookie, API key, or proxy configuration.
 
-- **Four lookup modes:** keyword `search`, exact `byBarcode` lookup, `byCategory` browsing, `byBrand` browsing
-- **Three Open Food Facts scores on every product:** Nutri-Score (A–E), NOVA processing group (1–4), Eco-Score (A–E)
-- **UK retail context** — a `stores` list of up to 5 UK retailers known to stock the product, alongside the full per-100g nutrition panel
-- **Grade filtering** — restrict any mode to a minimum Nutri-Score so you only get B-grade-or-better results, for example
-- **Empty fields are omitted** from every record — nothing is backfilled with placeholder values
+## What you can do with it
 
-## Output per product
+- **Seven ways to discover products** — keyword search, the whole UK catalogue, category browsing, brand browsing, retailer browsing, exact barcode/product-URL lookup, and Open Prices GBP product discovery.
+- **UK-scoped discovery** — discovery queries cover `en:united-kingdom` plus the populated `en:Scotland`, `en:Wales`, `en:England` and `en:northern-ireland` tags, then re-check the country tags after hydration. `byOpenPrices` starts from real GBP price records at UK stores, so it also finds products that carry no UK country tag at all.
+- **Compare the three Open Food Facts scores** — Nutri-Score (A–E), NOVA processing group (1–4), and Green-Score/Eco-Score (A+ to F), with numeric scores where Open Food Facts calculates them.
+- **Filter before you spend rows** — minimum Nutri-Score, exact NOVA group, minimum Green-Score, label, category, brand, and retailer filters combine in one query.
+- **Retail and label intelligence** — supermarkets recorded for each product, ingredient declarations, structured ingredient trees, allergens, traces, additives, labels, nutrient levels, packaging materials, and package photos.
+- **Open Prices enrichment and discovery** — optionally attach the latest crowd-sourced GBP price, date, shop name, and coordinates from the Open Prices project. `byOpenPrices` browses the 1,600+ products that have GBP price records, including products with no UK country tag.
+- **Large exports** — up to 50,000 rows. Requests above 10,000 use 92 created-time partitions because a single search-index query stops at 10,000 results. An independent 92-partition audit measured 201,492 products on 2026-11-28 against the legacy 201,694 count.
+- **Nothing padded** — a field that the source does not have for a product is omitted, never filled with `null`, `""`, or a placeholder.
 
-| Field | Description |
-|---|---|
-| `barcode` | EAN-13/EAN-8 code |
-| `productName` | Product name, typically in English |
-| `brand` / `brands[]` | Primary brand, plus every brand listed when there's more than one |
-| `categories[]` | Up to 10 category tags |
-| `nutritionGrade` | Nutri-Score, `a` (best) through `e` (worst) |
-| `novaGroup` | 1–4 processing-level classification |
-| `ecoscoreGrade` | Eco-Score, `a` through `e` |
-| `calories`, `fat`, `saturatedFat`, `carbohydrates`, `sugars`, `proteins`, `salt`, `fiber` | Nutrition panel, per 100g |
-| `ingredientsText` | Ingredients list as entered by contributors |
-| `allergens[]` | Allergen tags |
-| `labels[]` | Up to 10 quality/claim labels |
-| `quantity`, `packaging` | Pack size and packaging description |
-| `stores[]` | Up to 5 UK retailers known to stock the product |
-| `imageUrl` | Front-of-pack photo |
-| `productUrl` | The product's Open Food Facts page |
-| `sourceUrl` | The Open Food Facts UK site this run queried |
-| `recordType`, `scrapedAt` | Always `food_product`, plus the UTC scrape time |
+## Modes
 
-## Input
+| Mode | What it returns | Main field |
+|---|---|---|
+| `search` | Products matching a keyword, optionally narrowed by any filter | `searchQuery` |
+| `browse` | UK products in the chosen sort order, without a keyword | — |
+| `byCategory` | Products in one category | `categoryTag` |
+| `byBrand` | Products from one brand | `brandName` |
+| `byStore` | Products recorded at one UK retailer | `storeTag` |
+| `byBarcode` | Exact products for a list of codes or product URLs | `barcodes` |
+| `byOpenPrices` | Products with a recorded GBP price, including untagged products | — |
 
-| Field | Type | Default | Description |
+Category, brand, store, and label values accept a human name, an Open Food Facts taxonomy tag (for example `en:teas`), or a copied Open Food Facts URL. Names are normalised and, for categories and brands, resolved against the Open Food Facts autocomplete service before the query runs.
+
+## Output fields
+
+### Identity
+
+`barcode`, `productName`, `productNameEn`, `genericName`, `brand`, `brands`, `categories`, `categoriesTags`, `countries`, `countriesTags`, `soldInUnitedKingdom`, `productUrl`.
+
+`brand` is the first brand on the label; `brands` appears when the record carries more than one. `productUrl` points at the product page on the UK Open Food Facts site.
+
+### Scores and nutrition
+
+`nutritionGrade`, `nutriscoreScore`, `novaGroup`, `ecoscoreGrade`, `ecoscoreScore`, `novaGroupsMarkers`, `calories`, `energyKcal`, `energyKj`, `fat`, `saturatedFat`, `transFat`, `carbohydrates`, `sugars`, `addedSugars`, `proteins`, `salt`, `sodium`, `fiber`, `nutrientLevels`, `completenessScore`.
+
+All nutrition numbers are per 100 g or 100 ml as published by Open Food Facts. `nutrientLevels` carries the source's `low` / `moderate` / `high` rating for fat, saturated fat, sugars, and salt.
+
+### Ingredients, allergens, and labels
+
+`ingredientsText`, `ingredients`, `ingredientsCount`, `knownIngredientsCount`, `unknownIngredientsCount`, `ingredientsTags`, `ingredientsAnalysisTags`, `additives`, `additivesCount`, `allergens`, `allergensTags`, `traces`, `labels`, `labelsTags`.
+
+`ingredients` is a nested tree with taxonomy id, printed text, percentages, vegan/vegetarian flags, and palm-oil status. Allergens and labels are returned both as readable names and as raw taxonomy tags.
+
+### Pack, retail, and provenance
+
+`quantity`, `productQuantity`, `productQuantityUnit`, `servingSize`, `servingQuantity`, `servingQuantityUnit`, `packaging`, `packagingText`, `packagingTags`, `packagings`, `stores`, `storeCount`, `purchasePlaces`, `purchasePlacesTags`, `origins`, `originsText`, `manufacturingPlaces`, `embCodes`.
+
+### Images and lifecycle
+
+`imageUrl`, `imageFrontUrl`, `imageIngredientsUrl`, `imageNutritionUrl`, `imagePackagingUrl`, `imageSmallUrl`, `imageThumbUrl`, `imagePackagingSmallUrl`, `imagePackagingThumbUrl`, `uniqueScans`, `createdAt`, `lastModifiedAt`, `lastUpdatedAt`, `lastImageAt`, `statesTags`, `dataQualityTags`, `dataQualityErrorsTags`, `dataQualityWarningsTags`, `dataQualityInfoTags`, `isObsolete`.
+
+### Optional links and prices
+
+`officialUrl`, `officialUrlStatus`, `price`, `priceCurrency`, `priceDate`, `priceStore`, `priceLocation`, `priceLatitude`, `priceLongitude`, `priceIsDiscounted`, `priceWithoutDiscount`, `priceCount`.
+
+`officialUrl` is included only when Open Food Facts records a valid `http(s)` manufacturer link, and is marked `unverified` because external sites can block, move, or disappear. Price fields appear when `includePrices` is on and Open Prices has a matching record; `byOpenPrices` always attaches the GBP price record it used for discovery.
+
+Every row also carries `recordType` (`food_product`), `scrapedAt`, and `sourceUrl`.
+
+## Input reference
+
+| Input | Type | Default | Notes |
 |---|---|---|---|
-| `mode` | string | `search` | `search` / `byBarcode` / `byCategory` / `byBrand` |
-| `searchQuery` | string | `cheddar` | Keyword to search (mode=search) |
-| `barcodes` | array | `[]` | EAN-13/EAN-8 codes to resolve (mode=byBarcode) |
-| `categoryTag` | string | – | Category tag, e.g. `cheeses`, `biscuits` (mode=byCategory) |
-| `brandName` | string | – | Brand name, e.g. `Walkers`, `Heinz` (mode=byBrand) |
-| `nutritionGradeFilter` | string | – (none) | Keep only products at this Nutri-Score grade or better |
-| `maxItems` | int | `50` | Hard cap on emitted records (1–500) |
+| `mode` | select | `search` | `search`, `browse`, `byBarcode`, `byCategory`, `byBrand`, `byStore`, `byOpenPrices` |
+| `searchQuery` | text | - | Keyword for any discovery mode |
+| `barcodes` | string list | `[]` | EAN-8/EAN-13/UPC/GTIN or product URLs |
+| `categoryTag` | text | — | Category name, tag, or URL |
+| `brandName` | text | — | Brand name, tag, or URL |
+| `storeTag` | text | — | UK retailer name, tag, or URL |
+| `labelFilter` | text | — | Label name or tag, e.g. `organic`, `vegan` |
+| `nutritionGradeFilter` | select | none | Keep this Nutri-Score or better |
+| `novaGroupFilter` | select | none | Keep exactly this NOVA group |
+| `ecoscoreGradeFilter` | select | none | Keep this Green-Score or better (`a-plus` to `f`) |
+| `sortBy` | select | `relevance` | Relevance, popularity, last modified, created, Nutri-Score, Green-Score |
+| `maxItems` | integer | `50` | 1–50,000; above 10,000 uses 92 time partitions |
+| `includePrices` | boolean | `false` | Attach the latest Open Prices record; already on in `byOpenPrices` |
 
-### Example: resolve a shopping list of barcodes
-
-```json
-{
-  "mode": "byBarcode",
-  "barcodes": ["5000169005266", "5010477348938"]
-}
-```
-
-### Example: a supermarket brand's range, top grades only
-
-```json
-{
-  "mode": "byBrand",
-  "brandName": "Tesco",
-  "nutritionGradeFilter": "b",
-  "maxItems": 100
-}
-```
-
-### Example: browse a category by keyword
+### Example: a healthier basket search
 
 ```json
 {
   "mode": "search",
-  "searchQuery": "digestive biscuits",
-  "maxItems": 40
+  "searchQuery": "breakfast cereal",
+  "nutritionGradeFilter": "b",
+  "novaGroupFilter": "3",
+  "maxItems": 60
 }
 ```
 
-## Use cases
+### Example: one supermarket's own-brand range
 
-- **Shelf-health audits** — score a retailer's own-brand range by Nutri-Score and NOVA group
-- **Allergen and label checks** — scan a brand's catalog for allergen declarations and claims
-- **Barcode-to-nutrition enrichment** — attach calories, fat, and sugar data to POS or inventory data by EAN
-- **Category benchmarking** — compare processing level and Eco-Score across competing products
-- **Diet and recipe tools** — source per-100g nutrition data for UK grocery items
+```json
+{
+  "mode": "byBrand",
+  "brandName": "Sainsbury's",
+  "storeTag": "Sainsbury's",
+  "sortBy": "popularity",
+  "maxItems": 100
+}
+```
+
+### Example: barcode enrichment with prices
+
+```json
+{
+  "mode": "byBarcode",
+  "barcodes": ["5010044006482", "5000157024671", "5449000214799"],
+  "includePrices": true
+}
+```
+
+### Example: browse the UK catalogue
+
+```json
+{
+  "mode": "browse",
+  "sortBy": "created",
+  "maxItems": 500
+}
+```
+
+### Example: discover products with a GBP price record
+
+```json
+{
+  "mode": "byOpenPrices",
+  "maxItems": 200
+}
+```
+
+## Coverage and honest limits
+
+- **Search index window.** A single query returns at most 10,000 matches. For larger requests the actor splits the UK catalogue into 92 `created_t` slices (years 2012–2019, then months from 2020 onward). An independent audit on 2026-11-28 summed those exact slices to 201,492 products against a legacy count of 201,694 (0.10% index drift); the index changes as contributors edit.
+- **Hydration pace.** Full product records come from the v2 API in 100-code batches, about 1,000 products per minute at Open Food Facts' documented 10-search-requests-per-minute ceiling. Single barcode lookups run at the 15-per-minute product endpoint.
+- **Search-index fallback.** If the product API is persistently unavailable, the actor retries world, then the UK mirror, then emits the fields the search index carries (name, brands, categories, stores, labels, allergens, images, scores) and omits nutrition that only the product API has. `byOpenPrices` can also fall back to the product snapshot carried by Open Prices. Large runs can therefore contain rows with fewer fields when Open Food Facts is throttling its product endpoint.
+- **Score freshness.** The search index and the live product database can briefly disagree on a Nutri-Score, Green-Score or scan count while the community recalculates them. The audit measured a ~97-hour index lag and 2/30 Green-Score differences between index and product API. The actor prefers the live product API; index-only rows can carry the older value.
+- **Source gaps are real.** Crowd-sourced records can lack a name, ingredients, a photo, or a score. In a 100-product UK sample, labels were present on 44%, traces on 17%, stores on 50%, origins on 11%, manufacturing places on 16%, EMB codes on 10% and `nutriments` on 0% of index hits (hydration fills nutrition). Those fields are omitted from that row, never invented.
+- **No stock data.** Open Food Facts and Open Prices do not expose live stock or availability. An independent audit checked 23 full v2 payloads, v3, four mirrors, the 211-column CSV dump, the 193-key JSONL dump and 2,048 Open Prices rows; no stock field exists, so the actor does not guess it.
+- **Prices are sparse.** Open Prices is a separate volunteer project; most products have no recent GBP price.
+- **Untagged products.** `byOpenPrices` discovers products with actual GBP prices at UK stores even when their country tags do not include the UK (121 of 1,582 resolved GBP-priced codes in the audit, 97 of them carrying GB scan-popularity tags). Price records that cannot be joined to an Open Food Facts product identity are skipped, not padded. Products with no UK or sub-country tag, no GB popularity tag, and no GBP price record remain invisible; their barcode still resolves through `byBarcode`.
 
 ## FAQ
 
-**Does this need a login or API key?**
-No. Open Food Facts is a free, open database; no account or key is required.
+**Is an account or key required?**
+No. The actor reads public Open Food Facts data with no credentials and no proxy.
 
-**Why don't all products have a `stores` list?**
-`stores` only appears when a contributor has tagged which retailers carry that specific product — many entries simply don't have this filled in.
+**Does it scrape the global database or just the UK slice?**
+Discovery modes are UK-scoped, including the populated Scotland, Wales, England and Northern Ireland tags; `byOpenPrices` also includes products without a UK country tag when a GBP price was recorded at a UK store. The barcode mode is an exact, global lookup, because a barcode is a precise identifier; check `soldInUnitedKingdom` when that distinction matters.
 
-**What's the difference between `brand` and `brands`?**
-`brand` is the first/primary brand on the label. `brands[]` lists every brand name when a product carries more than one (common for co-branded or multi-label products); it's omitted when there's only one.
+**Why are some fields absent?**
+Open Food Facts is edited by volunteers. If nobody entered an ingredient list, allergen, photo, or score, the actor omits that field instead of inventing one.
 
-**How is Nutri-Score different from NOVA group?**
-Nutri-Score (A–E) scores a product's overall nutritional balance — sugar, salt, fat, fiber, protein. NOVA group (1–4) instead classifies how processed the food is, independent of its nutrient profile — so a 4 (ultra-processed) item can still carry a reasonable Nutri-Score.
+**What is the difference between Nutri-Score, NOVA, and Green-Score?**
+Nutri-Score grades nutritional balance from A to E. NOVA groups food by processing level from 1 to 4. Green-Score (formerly Eco-Score) grades environmental impact from A+ to F. Open Food Facts computes all three.
 
-**Can I filter by grade across every mode?**
-Yes — `nutritionGradeFilter` applies the same way whether you're searching by keyword or browsing a category or brand.
+**Why fewer than `maxItems` rows?**
+The query may have fewer matches, or filters may exclude products whose score is missing. A single index query also stops at 10,000; requests above that switch to time partitions automatically.
 
-**How fresh is the data?**
-As fresh as Open Food Facts' own database at request time — it's edited continuously by its contributor community, so scores and nutrition values can change between runs.
+**Why can a large run take a while?**
+The 100-code hydration batches are paced to respect Open Food Facts' rate limits. A 10,000-row run is roughly 100 hydration requests, and the actor reports progress in the log.
+
+**Is the order stable?**
+The actor breaks score and scan-count ties by barcode. The upstream index can still gain or lose documents between runs. Use `sortBy: "created"` when you need a deterministic export order.
+
+**Why does "most scanned" differ from the old browse page?**
+The UK site's popularity order is GB-specific. Only coarse `top-*-gb-scans-YYYY` popularity buckets are public; the exact GB scan values and within-bucket tie-break are not exposed. The actor sorts by the global `unique_scans_n` value, so its order is documented and stable but can differ from the site.
+
+**Can filters be combined?**
+Yes. Keyword, category, brand, store, label, Nutri-Score, NOVA, and Green-Score filters are combined in every discovery mode.
+
+**Where do prices come from?**
+The separate Open Prices project, an Open Food Facts sibling. The actor attaches the newest recorded GBP price for a product when one exists. It is off by default.
+
+**Are image URLs permanent?**
+They point at the Open Food Facts image CDN and were reachable when tested. A later contributor edit can replace a photo, so re-run the actor if a link stops working.
 
 **Is this affiliated with Open Food Facts?**
-No. This actor reads Open Food Facts' own free public data; it is not affiliated with or endorsed by the Open Food Facts association.
+No. It is an independent actor that reads Open Food Facts' public data; Open Food Facts does not endorse it.
+
+## Data licence
+
+Product data comes from Open Food Facts contributors and is available under the Open Database License (ODbL) 1.0; image files are CC BY-SA. If you republish the data, credit Open Food Facts and keep derived databases under the same licence.

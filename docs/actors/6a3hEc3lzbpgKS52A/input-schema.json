@@ -1,58 +1,129 @@
 {
-  "description": "Search UK food products from Open Food Facts UK by keyword, category, or brand.",
+  "description": "Choose what to collect from the UK Open Food Facts catalogue and narrow it by nutrition scores, retailer, label or sort order.",
   "properties": {
     "barcodes": {
       "default": [],
-      "description": "List of EAN-13 or EAN-8 barcodes to look up.",
+      "description": "EAN-8, EAN-13, UPC or GTIN codes, or Open Food Facts product URLs (mode=byBarcode). One per item; duplicates are removed.",
       "editor": "stringList",
       "prefill": [],
-      "title": "Barcodes / EANs (mode=byBarcode)",
+      "title": "Barcodes or product URLs",
       "type": "array"
     },
     "brandName": {
-      "description": "Brand to filter by, e.g. 'Walkers', 'Cadbury', 'Heinz', 'Tesco', 'Waitrose'.",
+      "description": "Brand name, taxonomy tag, or Open Food Facts brand URL. Examples: 'Tesco', 'Walkers', 'Heinz', 'Cadbury', 'Marks & Spencer'.",
       "editor": "textfield",
-      "title": "Brand name (mode=byBrand)",
+      "title": "Brand (mode=byBrand)",
       "type": "string"
     },
     "categoryTag": {
-      "description": "Open Food Facts category tag. Examples: 'cheeses', 'biscuits', 'cereals', 'crisps', 'teas', 'chocolates'.",
+      "description": "Category name, taxonomy tag, or Open Food Facts category URL. Examples: 'crisps', 'cheeses', 'breakfast cereals', 'en:teas'.",
       "editor": "textfield",
-      "title": "Category tag (mode=byCategory)",
+      "title": "Category (mode=byCategory)",
+      "type": "string"
+    },
+    "ecoscoreGradeFilter": {
+      "default": "",
+      "description": "Keep products with this Green-Score (Eco-Score) grade or better. A+ is best; F is worst.",
+      "editor": "select",
+      "enum": [
+        "",
+        "a-plus",
+        "a",
+        "b",
+        "c",
+        "d",
+        "e",
+        "f"
+      ],
+      "enumTitles": [
+        "No filter",
+        "A+ (best)",
+        "A or better",
+        "B or better",
+        "C or better",
+        "D or better",
+        "E or better",
+        "F"
+      ],
+      "prefill": "",
+      "title": "Green-Score filter",
+      "type": "string"
+    },
+    "includePrices": {
+      "default": false,
+      "description": "Attach the latest Open Prices record (GBP price, date, retailer and location) to each product. Prices are sparse and add one request per 100 products. The byOpenPrices mode always attaches the price it used for discovery.",
+      "prefill": false,
+      "title": "Include Open Prices",
+      "type": "boolean"
+    },
+    "labelFilter": {
+      "description": "Keep products carrying this label. Examples: 'organic', 'vegan', 'gluten-free', 'fair-trade'. Works in every discovery mode.",
+      "editor": "textfield",
+      "sectionCaption": "Filters",
+      "title": "Label filter",
       "type": "string"
     },
     "maxItems": {
       "default": 50,
-      "description": "Maximum number of products to return.",
-      "maximum": 500,
+      "description": "Maximum number of products to return. Values above 10,000 automatically use 92 created-time partitions because the search index caps a single query at 10,000 results.",
+      "maximum": 50000,
       "minimum": 1,
-      "prefill": 50,
+      "prefill": 3,
       "title": "Max items",
       "type": "integer"
     },
     "mode": {
       "default": "search",
-      "description": "What to scrape.",
+      "description": "What to scrape: a keyword search, the whole UK catalogue, a category, a brand, a retailer, exact barcodes, or products with a recorded GBP price.",
       "editor": "select",
       "enum": [
         "search",
+        "browse",
         "byBarcode",
         "byCategory",
-        "byBrand"
+        "byBrand",
+        "byStore",
+        "byOpenPrices"
       ],
       "enumTitles": [
-        "Search products by keyword",
-        "Lookup products by barcode (EAN)",
-        "Browse by category",
-        "Browse by brand"
+        "Search by keyword",
+        "Browse UK products",
+        "Look up barcodes or product URLs",
+        "Browse a category",
+        "Browse a brand",
+        "Browse a retailer",
+        "Browse Open Prices GBP products"
       ],
       "prefill": "search",
+      "sectionCaption": "What to scrape",
       "title": "Mode",
+      "type": "string"
+    },
+    "novaGroupFilter": {
+      "default": "",
+      "description": "Keep only products in this NOVA processing group: 1 = unprocessed, 2 = processed ingredients, 3 = processed, 4 = ultra-processed.",
+      "editor": "select",
+      "enum": [
+        "",
+        "1",
+        "2",
+        "3",
+        "4"
+      ],
+      "enumTitles": [
+        "No filter",
+        "1 - unprocessed or minimally processed",
+        "2 - processed culinary ingredients",
+        "3 - processed foods",
+        "4 - ultra-processed foods"
+      ],
+      "prefill": "",
+      "title": "NOVA group filter",
       "type": "string"
     },
     "nutritionGradeFilter": {
       "default": "",
-      "description": "Only return products with this Nutri-Score grade or better.",
+      "description": "Keep products with this Nutri-Score grade or better. Applies to discovery and barcode modes.",
       "editor": "select",
       "enum": [
         "",
@@ -65,21 +136,51 @@
       "enumTitles": [
         "No filter",
         "A (best)",
-        "B",
-        "C",
-        "D",
-        "E (worst)"
+        "B or better",
+        "C or better",
+        "D or better",
+        "E"
       ],
       "prefill": "",
-      "title": "Nutrition grade filter",
+      "title": "Nutri-Score filter",
       "type": "string"
     },
     "searchQuery": {
-      "default": "cheddar",
-      "description": "Free-text search term (mode=search). Examples: 'cheddar', 'digestive biscuits', 'baked beans', 'tea'.",
+      "description": "Keyword used in any discovery mode. UK examples: 'cheddar', 'digestive biscuits', 'baked beans', 'tea bags'. Leave empty in browse mode to list products without a keyword.",
       "editor": "textfield",
       "prefill": "cheddar",
       "title": "Search query",
+      "type": "string"
+    },
+    "sortBy": {
+      "default": "relevance",
+      "description": "Result order. 'Best match' uses keyword relevance; browse modes default to most scanned.",
+      "editor": "select",
+      "enum": [
+        "relevance",
+        "popularity",
+        "lastModified",
+        "created",
+        "nutriscore",
+        "ecoscore"
+      ],
+      "enumTitles": [
+        "Best match (keyword relevance)",
+        "Most scanned",
+        "Recently updated",
+        "Recently added",
+        "Best Nutri-Score",
+        "Best Green-Score"
+      ],
+      "prefill": "relevance",
+      "sectionCaption": "Output",
+      "title": "Sort by",
+      "type": "string"
+    },
+    "storeTag": {
+      "description": "UK retailer name, tag, or Open Food Facts store URL. Examples: 'Tesco', 'Sainsbury's', 'Asda', 'Morrisons', 'Waitrose', 'Aldi', 'Lidl', 'Co-op', 'Iceland', 'Ocado'.",
+      "editor": "textfield",
+      "title": "Retailer (mode=byStore)",
       "type": "string"
     }
   },

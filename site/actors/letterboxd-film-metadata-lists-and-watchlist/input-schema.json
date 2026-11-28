@@ -1,61 +1,120 @@
 {
-  "description": "Scrape film metadata, search results, popular films, lists, film reviews, byCrew (director/actor/studio/country), or user profiles + watchlists from Letterboxd.",
+  "description": "Scrape Letterboxd films, reviews, lists, browse pages, people filmographies, and public member activity. No login, cookies, API key, or proxy setup is required.",
   "properties": {
+    "browseUrl": {
+      "description": "Browse mode. Paste any Letterboxd /films/ page, for example /films/genre/horror/, /films/decade/1990s/, /films/year/2024/, /films/language/japanese/, /films/country/japan/, /films/theme/..., /films/on/netflix/, or /films/by/rating/.",
+      "editor": "textfield",
+      "prefill": "https://letterboxd.com/films/popular/this/week/",
+      "title": "Browse page URL",
+      "type": "string"
+    },
     "crewSlug": {
-      "description": "Letterboxd slug for the chosen `crewType`. E.g. `christopher-nolan` (director), `timothee-chalamet` (actor), `a24` (studio), `japan` or `south-korea` (country).",
+      "description": "Used by Filmographies mode. Letterboxd's URL slug, e.g. christopher-nolan, a24, or japan. Full profile URLs are accepted too.",
       "editor": "textfield",
       "prefill": "christopher-nolan",
-      "title": "Crew slug (mode=byCrew)",
+      "title": "Person, studio, or country slug",
       "type": "string"
     },
     "crewType": {
       "default": "director",
-      "description": "Which crew axis to browse films by.",
+      "description": "Used by Filmographies mode. Choose the role Letterboxd serves for the person or entity.",
       "editor": "select",
       "enum": [
         "director",
         "actor",
+        "writer",
+        "producer",
+        "composer",
+        "cinematography",
+        "editor",
+        "story",
+        "assistant-director",
+        "sound",
+        "costume-design",
+        "makeup",
+        "visual-effects",
+        "stunts",
+        "songs",
+        "special-effects",
+        "art-direction",
+        "set-decoration",
+        "production-design",
+        "camera-operator",
+        "additional-photography",
+        "lighting",
+        "additional-directing",
+        "executive-producer",
         "studio",
         "country"
       ],
       "enumTitles": [
         "Director",
         "Actor / cast member",
+        "Writer",
+        "Producer",
+        "Composer",
+        "Cinematographer",
+        "Editor",
+        "Story writer",
+        "Assistant director",
+        "Sound",
+        "Costume designer",
+        "Makeup",
+        "Visual effects",
+        "Stunts",
+        "Songs",
+        "Special effects",
+        "Art direction",
+        "Set decoration",
+        "Production designer",
+        "Camera operator",
+        "Additional photography",
+        "Lighting",
+        "Additional directing",
+        "Executive producer",
         "Production studio",
         "Country of origin"
       ],
       "prefill": "director",
-      "title": "Crew type (mode=byCrew)",
+      "title": "Filmography role",
       "type": "string"
+    },
+    "diaryYear": {
+      "description": "Diary mode only. Leave empty for the current year.",
+      "maximum": 2100,
+      "minimum": 1888,
+      "prefill": 2026,
+      "title": "Diary year",
+      "type": "integer"
     },
     "enrichSearchResults": {
       "default": false,
-      "description": "When `mode=search`, also visit each film's page to pull full metadata (rating, genres, cast). Adds ~0.5s per result but enables year/rating/genre filters.",
+      "description": "Search mode only. Off returns fast stubs. On visits each film page for full metadata, stats, and filters.",
       "prefill": false,
-      "title": "Enrich search results with full film page",
+      "title": "Load full film pages for search results",
       "type": "boolean"
     },
     "filmSlug": {
-      "description": "Single film slug or URL whose reviews to scrape (e.g. `parasite-2019`).",
+      "description": "Used by Reviews mode. A slug or full film URL.",
       "editor": "textfield",
       "prefill": "parasite-2019",
-      "title": "Film slug (mode=filmReviews)",
+      "title": "Film for reviews",
       "type": "string"
     },
     "filmSlugs": {
       "default": [
         "parasite-2019"
       ],
-      "description": "Film slugs (e.g. `parasite-2019`) or full Letterboxd URLs (`https://letterboxd.com/film/parasite-2019/`).",
+      "description": "Used by Films mode. Paste slugs (parasite-2019) or full Letterboxd film URLs. One record per film.",
       "editor": "stringList",
       "prefill": [
         "parasite-2019"
       ],
-      "title": "Film slugs / URLs (mode=film)",
+      "title": "Film slugs or URLs",
       "type": "array"
     },
     "genre": {
-      "description": "Drop films missing this genre. Also used to scope `mode=popular` URL.",
+      "description": "Optional genre filter. Popular films uses it in the browse URL; other modes use it to filter film records.",
       "editor": "select",
       "enum": [
         "Action",
@@ -99,76 +158,131 @@
         "War",
         "Western"
       ],
-      "title": "Genre filter",
+      "sectionCaption": "Optional filters. Filters that need full film data trigger a film-page fetch for accuracy.",
+      "title": "Genre",
       "type": "string"
     },
+    "includeAvailability": {
+      "default": false,
+      "description": "Adds the current region's streaming/rent/buy/disc offers and the trailer URL when Letterboxd publishes them. One extra request per film.",
+      "prefill": false,
+      "title": "Include where-to-watch offers and trailer",
+      "type": "boolean"
+    },
+    "includeStatistics": {
+      "default": true,
+      "description": "Adds watched / list / like counts, Top 500 rank, and the half-star rating histogram. Two extra requests per film; off for the smallest daily run.",
+      "prefill": false,
+      "sectionCaption": "Output size and optional extras.",
+      "title": "Include film statistics and rating histogram",
+      "type": "boolean"
+    },
     "listUrl": {
-      "description": "Full Letterboxd list URL (e.g. `https://letterboxd.com/dave/list/official-top-250-narrative-feature-films/`). Leave empty to fetch the popular-lists index for the chosen `popularPeriod`.",
+      "description": "Lists mode. Paste a member or official list URL to get one list record plus its films. Leave empty to get the popular-lists index for the chosen period.",
       "editor": "textfield",
-      "title": "List URL (mode=lists)",
+      "title": "List URL",
       "type": "string"
     },
     "maxItems": {
       "default": 25,
       "description": "Hard cap on emitted records.",
-      "maximum": 500,
+      "maximum": 1000,
       "minimum": 1,
-      "prefill": 25,
-      "title": "Max items",
+      "prefill": 1,
+      "title": "Maximum records",
+      "type": "integer"
+    },
+    "maxRating": {
+      "description": "0-500 scale (450 = 4.5 out of 5). Drop films above this.",
+      "maximum": 500,
+      "minimum": 0,
+      "title": "Maximum average rating",
+      "type": "integer"
+    },
+    "maxRuntime": {
+      "description": "Drop films longer than this.",
+      "maximum": 1000,
+      "minimum": 0,
+      "title": "Maximum runtime (minutes)",
       "type": "integer"
     },
     "maxYear": {
       "description": "Drop films released after this year.",
       "maximum": 2100,
       "minimum": 1880,
-      "title": "Max release year",
+      "title": "Latest release year",
       "type": "integer"
     },
     "minRating": {
-      "description": "Drop films with average rating (0-5 scale ×100, so 350 = 3.5/5) below this. Optional.",
+      "description": "0-500 scale (350 = 3.5 out of 5). Drop films below this.",
       "maximum": 500,
       "minimum": 0,
-      "title": "Min average rating",
+      "title": "Minimum average rating",
+      "type": "integer"
+    },
+    "minRatingsCount": {
+      "description": "Drop films with fewer member ratings than this.",
+      "maximum": 10000000,
+      "minimum": 0,
+      "title": "Minimum ratings count",
+      "type": "integer"
+    },
+    "minRuntime": {
+      "description": "Drop films shorter than this.",
+      "maximum": 1000,
+      "minimum": 0,
+      "title": "Minimum runtime (minutes)",
       "type": "integer"
     },
     "minYear": {
       "description": "Drop films released before this year.",
       "maximum": 2100,
       "minimum": 1880,
-      "title": "Min release year",
+      "title": "Earliest release year",
       "type": "integer"
     },
     "mode": {
       "default": "film",
-      "description": "What to fetch.",
+      "description": "Pick the kind of Letterboxd page you want. Every mode returns real public data and drops empty fields.",
       "editor": "select",
       "enum": [
         "film",
         "search",
         "userProfile",
+        "userWatchlist",
+        "userFilms",
+        "userDiary",
+        "userReviews",
+        "userLists",
         "lists",
         "popular",
+        "browse",
         "filmReviews",
-        "byCrew",
-        "userWatchlist"
+        "byCrew"
       ],
       "enumTitles": [
-        "Single film by slug or URL",
+        "Films by slug or URL",
         "Search films by title",
-        "User profile + activity stats",
-        "List contents (provide listUrl) OR popular lists index",
-        "Popular films (by week / month / year / all-time)",
-        "Reviews for a film (by activity)",
-        "Films by crew (director / actor / studio / country)",
-        "User watchlist (paginated)"
+        "Member profile and stats",
+        "Member watchlist",
+        "Member watched films and ratings",
+        "Member diary entries",
+        "Member reviews",
+        "Member lists",
+        "One list or the popular-lists index",
+        "Popular films (week / month / year / all-time)",
+        "Any Letterboxd /films/ browse page",
+        "Reviews for one film (sort and rating filters)",
+        "Films by a person, studio, or country"
       ],
       "prefill": "film",
-      "title": "Mode",
+      "sectionCaption": "Choose a mode and provide its target below.",
+      "title": "What to scrape",
       "type": "string"
     },
     "popularPeriod": {
       "default": "week",
-      "description": "Time window for popularity ranking.",
+      "description": "Used by Popular films and the popular-lists index.",
       "editor": "select",
       "enum": [
         "week",
@@ -183,39 +297,128 @@
         "All time"
       ],
       "prefill": "week",
-      "title": "Popular period (mode=popular / lists)",
+      "title": "Popular period",
       "type": "string"
     },
     "proxy": {
-      "default": {
-        "apifyProxyGroups": [
-          "RESIDENTIAL"
-        ],
-        "useApifyProxy": true
-      },
-      "description": "Optional Apify Proxy. Letterboxd's autocomplete endpoint (used by `mode=search`) blocks many datacenter IPs, so residential is recommended for search. `mode=film` and `mode=userProfile` work without proxy.",
+      "description": "Optional. The actor works without any proxy; supply an Apify Proxy configuration only if your network needs one.",
       "editor": "proxy",
-      "prefill": {
-        "apifyProxyGroups": [
-          "RESIDENTIAL"
-        ],
-        "useApifyProxy": true
-      },
+      "sectionCaption": "Optional proxy. Leave empty for the default direct connection.",
       "title": "Apify Proxy (optional)",
       "type": "object"
     },
+    "reviewFullText": {
+      "default": false,
+      "description": "Reviews mode only. Fetch the full body for truncated reviews (one extra request per truncated review).",
+      "prefill": false,
+      "title": "Load full review text",
+      "type": "boolean"
+    },
+    "reviewRating": {
+      "default": "any",
+      "description": "Reviews mode only. Exact half-star filter, or unrated reviews.",
+      "editor": "select",
+      "enum": [
+        "any",
+        "none",
+        "0.5",
+        "1",
+        "1.5",
+        "2",
+        "2.5",
+        "3",
+        "3.5",
+        "4",
+        "4.5",
+        "5"
+      ],
+      "enumTitles": [
+        "Any rating",
+        "No rating",
+        "0.5 stars",
+        "1 star",
+        "1.5 stars",
+        "2 stars",
+        "2.5 stars",
+        "3 stars",
+        "3.5 stars",
+        "4 stars",
+        "4.5 stars",
+        "5 stars"
+      ],
+      "prefill": "any",
+      "title": "Only reviews with this rating",
+      "type": "string"
+    },
+    "reviewSort": {
+      "default": "activity",
+      "description": "Reviews mode only.",
+      "editor": "select",
+      "enum": [
+        "activity",
+        "added",
+        "added-earliest",
+        "entry-rating",
+        "entry-rating-lowest"
+      ],
+      "enumTitles": [
+        "Review activity (most liked/commented)",
+        "Newest first",
+        "Earliest first",
+        "Highest rated first",
+        "Lowest rated first"
+      ],
+      "prefill": "activity",
+      "sectionCaption": "Review and member sub-options.",
+      "title": "Review order",
+      "type": "string"
+    },
     "searchQuery": {
-      "description": "Film title query (e.g. `Dune`, `The Godfather`). Note: the underlying autocomplete API returns at most ~100 results per query; for deeper results use `mode=film` with explicit `filmSlugs`.",
+      "description": "Used by Search mode. Letterboxd's autocomplete returns at most 100 matching films per query; use Films mode with explicit slugs for a deeper list.",
       "editor": "textfield",
       "prefill": "Dune",
-      "title": "Search query (mode=search)",
+      "title": "Search query",
+      "type": "string"
+    },
+    "userFilmRating": {
+      "default": "any",
+      "description": "Watched films mode only. Exact half-star filter.",
+      "editor": "select",
+      "enum": [
+        "any",
+        "0.5",
+        "1",
+        "1.5",
+        "2",
+        "2.5",
+        "3",
+        "3.5",
+        "4",
+        "4.5",
+        "5"
+      ],
+      "enumTitles": [
+        "Any rating",
+        "0.5 stars",
+        "1 star",
+        "1.5 stars",
+        "2 stars",
+        "2.5 stars",
+        "3 stars",
+        "3.5 stars",
+        "4 stars",
+        "4.5 stars",
+        "5 stars"
+      ],
+      "prefill": "any",
+      "title": "Only watched films with this rating",
       "type": "string"
     },
     "username": {
-      "description": "Letterboxd username (without @).",
+      "description": "Used by all member modes. The handle without @, or a profile URL.",
       "editor": "textfield",
       "prefill": "dave",
-      "title": "Username (mode=userProfile / userWatchlist)",
+      "title": "Member username",
       "type": "string"
     }
   },
