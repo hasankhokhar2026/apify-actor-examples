@@ -1,0 +1,98 @@
+{
+  "description": "Browse live event listings on Vivid Seats by performer/team/venue name, by city, or by category. Filter by date range and cap the number of results.",
+  "properties": {
+    "category": {
+      "default": "concerts",
+      "description": "Vivid Seats' top-level event category.",
+      "editor": "select",
+      "enum": [
+        "concerts",
+        "sports",
+        "theater",
+        "all"
+      ],
+      "enumTitles": [
+        "Concerts",
+        "Sports",
+        "Theater",
+        "All categories"
+      ],
+      "prefill": "concerts",
+      "title": "Category (mode=byCategory)",
+      "type": "string"
+    },
+    "cityQuery": {
+      "default": "Austin",
+      "description": "A US city or region name, e.g. `Chicago`, `Austin`, `Las Vegas`, `New York`.",
+      "editor": "textfield",
+      "prefill": "Austin",
+      "title": "City (mode=byCity)",
+      "type": "string"
+    },
+    "dateFrom": {
+      "description": "Only include events on or after this date (`YYYY-MM-DD`). Applies to every mode.",
+      "editor": "textfield",
+      "title": "Date from",
+      "type": "string"
+    },
+    "dateTo": {
+      "description": "Only include events on or before this date (`YYYY-MM-DD`). Applies to every mode.",
+      "editor": "textfield",
+      "title": "Date to",
+      "type": "string"
+    },
+    "maxItems": {
+      "default": 50,
+      "description": "Hard cap on emitted event records.",
+      "maximum": 1000,
+      "minimum": 1,
+      "prefill": 20,
+      "title": "Max items",
+      "type": "integer"
+    },
+    "mode": {
+      "default": "byCategory",
+      "description": "What to browse.",
+      "editor": "select",
+      "enum": [
+        "byCategory",
+        "search",
+        "byCity"
+      ],
+      "enumTitles": [
+        "Browse by category (concerts / sports / theater)",
+        "Search by performer, team, or venue name",
+        "Browse by city"
+      ],
+      "prefill": "byCategory",
+      "title": "Mode",
+      "type": "string"
+    },
+    "proxyConfiguration": {
+      "default": {
+        "useApifyProxy": true
+      },
+      "description": "Optional. Vivid Seats is protected by a bot-detection layer that blocks plain datacenter requests without a browser-matching TLS fingerprint; the actor already handles this in code. The free Apify AUTO proxy group can be enabled for extra IP diversity, but is not required.",
+      "editor": "proxy",
+      "prefill": {
+        "useApifyProxy": true
+      },
+      "title": "Proxy configuration",
+      "type": "object"
+    },
+    "searchQuery": {
+      "default": "New York Yankees",
+      "description": "Name of an artist, sports team, or venue, e.g. `Taylor Swift`, `New York Yankees`, `Madison Square Garden`.",
+      "editor": "textfield",
+      "prefill": "New York Yankees",
+      "title": "Performer, team, or venue name (mode=search)",
+      "type": "string"
+    }
+  },
+  "required": [
+    "mode"
+  ],
+  "schemaVersion": 1,
+  "title": "Vivid Seats Scraper Input",
+  "type": "object"
+}

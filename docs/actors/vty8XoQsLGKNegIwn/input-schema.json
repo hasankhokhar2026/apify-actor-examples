@@ -1,0 +1,163 @@
+{
+  "description": "Search Wegmans products by keyword, browse a category, or pull a featured collection.",
+  "properties": {
+    "category": {
+      "default": "milk",
+      "description": "Product category to browse (mode=byCategory).",
+      "editor": "select",
+      "enum": [
+        "milk",
+        "cheese_block",
+        "cheese_shredded",
+        "yogurt",
+        "eggs",
+        "butter",
+        "cream_cheese",
+        "tomatoes",
+        "potatoes",
+        "lettuce_and_greens",
+        "onions_and_garlic",
+        "peppers",
+        "mushrooms",
+        "cucumber",
+        "chicken",
+        "beef",
+        "pork",
+        "bacon",
+        "sausage",
+        "ground_meat_and_burgers",
+        "turkey",
+        "ham",
+        "frozen_pizza",
+        "ice_cream",
+        "frozen_vegetables",
+        "fresh_fish",
+        "frozen_fish",
+        "lobster_and_crab",
+        "shrimp",
+        "salmon",
+        "bakery_desserts",
+        "artisan_breads"
+      ],
+      "enumTitles": [
+        "Milk",
+        "Cheese (Block)",
+        "Cheese (Shredded)",
+        "Yogurt",
+        "Eggs",
+        "Butter",
+        "Cream Cheese",
+        "Tomatoes",
+        "Potatoes",
+        "Lettuce & Greens",
+        "Onions & Garlic",
+        "Peppers",
+        "Mushrooms",
+        "Cucumber",
+        "Chicken",
+        "Beef",
+        "Pork",
+        "Bacon",
+        "Sausage",
+        "Ground Meat & Burgers",
+        "Turkey",
+        "Ham",
+        "Frozen Pizza",
+        "Ice Cream",
+        "Frozen Vegetables",
+        "Fresh Fish",
+        "Frozen Fish",
+        "Lobster & Crab",
+        "Shrimp",
+        "Salmon",
+        "Bakery Desserts",
+        "Artisan Breads"
+      ],
+      "prefill": "milk",
+      "title": "Category",
+      "type": "string"
+    },
+    "dealsCollection": {
+      "default": "seasonal_entertaining",
+      "description": "Evergreen featured/discovery collection to browse (mode=deals). Wegmans does not publish clearance discount data publicly, so this surfaces its curated featured product sets instead.",
+      "editor": "select",
+      "enum": [
+        "seasonal_entertaining",
+        "gold_pan_meals",
+        "gluten_free",
+        "active_nutrition"
+      ],
+      "enumTitles": [
+        "Seasonal Entertaining",
+        "Gold Pan Meals",
+        "Living Gluten Free",
+        "Active & Sports Nutrition"
+      ],
+      "prefill": "seasonal_entertaining",
+      "title": "Featured collection",
+      "type": "string"
+    },
+    "maxItems": {
+      "default": 30,
+      "description": "Hard cap on emitted records.",
+      "maximum": 150,
+      "minimum": 1,
+      "prefill": 30,
+      "title": "Max items",
+      "type": "integer"
+    },
+    "maxPrice": {
+      "description": "Drop products pricier than this.",
+      "maximum": 1000,
+      "minimum": 0,
+      "title": "Max price (USD)",
+      "type": "number"
+    },
+    "minPrice": {
+      "description": "Drop products cheaper than this.",
+      "maximum": 1000,
+      "minimum": 0,
+      "title": "Min price (USD)",
+      "type": "number"
+    },
+    "minRating": {
+      "description": "Drop products with a lower average star rating.",
+      "maximum": 5,
+      "minimum": 0,
+      "title": "Min rating (0-5)",
+      "type": "number"
+    },
+    "mode": {
+      "default": "search",
+      "description": "What to fetch.",
+      "editor": "select",
+      "enum": [
+        "search",
+        "byCategory",
+        "deals"
+      ],
+      "enumTitles": [
+        "Search by keyword",
+        "Browse by category",
+        "Featured collections"
+      ],
+      "prefill": "search",
+      "title": "Mode",
+      "type": "string"
+    },
+    "searchQuery": {
+      "default": "milk",
+      "description": "Free-text product keyword (mode=search), e.g. `milk`, `chicken breast`, `ice cream`.",
+      "editor": "textfield",
+      "prefill": "milk",
+      "title": "Search query",
+      "type": "string"
+    }
+  },
+  "required": [
+    "mode"
+  ],
+  "schemaVersion": 1,
+  "title": "Wegmans Grocery Scraper Input",
+  "type": "object"
+}

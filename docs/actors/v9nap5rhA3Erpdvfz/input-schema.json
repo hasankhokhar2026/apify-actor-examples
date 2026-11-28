@@ -1,0 +1,121 @@
+{
+  "description": "Search property listings on Zameen.com by city, purpose, type, and filters.",
+  "properties": {
+    "bedrooms": {
+      "description": "Minimum number of bedrooms.",
+      "maximum": 10,
+      "minimum": 1,
+      "title": "Bedrooms",
+      "type": "integer"
+    },
+    "category": {
+      "default": "apartments",
+      "description": "Type of property to search for.",
+      "editor": "select",
+      "enum": [
+        "any",
+        "apartments",
+        "houses",
+        "plots",
+        "commercial"
+      ],
+      "enumTitles": [
+        "Any",
+        "Apartments",
+        "Houses",
+        "Plots",
+        "Commercial"
+      ],
+      "prefill": "apartments",
+      "title": "Property category",
+      "type": "string"
+    },
+    "city": {
+      "default": "Lahore",
+      "description": "City to search in (e.g. Lahore, Karachi, Islamabad, Rawalpindi).",
+      "editor": "select",
+      "enum": [
+        "Lahore",
+        "Karachi",
+        "Islamabad",
+        "Rawalpindi",
+        "Faisalabad",
+        "Multan",
+        "Peshawar",
+        "Quetta",
+        "Sialkot",
+        "Gujranwala"
+      ],
+      "enumTitles": [
+        "Lahore",
+        "Karachi",
+        "Islamabad",
+        "Rawalpindi",
+        "Faisalabad",
+        "Multan",
+        "Peshawar",
+        "Quetta",
+        "Sialkot",
+        "Gujranwala"
+      ],
+      "prefill": "Lahore",
+      "title": "City",
+      "type": "string"
+    },
+    "maxItems": {
+      "default": 20,
+      "description": "Maximum number of listings to return.",
+      "maximum": 500,
+      "minimum": 1,
+      "prefill": 20,
+      "title": "Max items",
+      "type": "integer"
+    },
+    "maxPrice": {
+      "description": "Maximum price filter in Pakistani Rupees.",
+      "minimum": 0,
+      "title": "Max price (PKR)",
+      "type": "integer"
+    },
+    "minPrice": {
+      "description": "Minimum price filter in Pakistani Rupees.",
+      "minimum": 0,
+      "title": "Min price (PKR)",
+      "type": "integer"
+    },
+    "mode": {
+      "default": "searchBuy",
+      "description": "What to fetch.",
+      "editor": "select",
+      "enum": [
+        "searchBuy",
+        "searchRent",
+        "searchByCity",
+        "propertyDetails"
+      ],
+      "enumTitles": [
+        "Search properties for sale",
+        "Search properties for rent",
+        "Search by city name",
+        "Property details by ID/URL"
+      ],
+      "prefill": "searchBuy",
+      "title": "Mode",
+      "type": "string"
+    },
+    "propertyIds": {
+      "default": [],
+      "description": "Zameen.com property IDs or URLs for detail scraping.",
+      "editor": "stringList",
+      "prefill": [],
+      "title": "Property IDs or URLs (mode=propertyDetails)",
+      "type": "array"
+    }
+  },
+  "required": [
+    "mode"
+  ],
+  "schemaVersion": 1,
+  "title": "Zameen Scraper Input",
+  "type": "object"
+}
